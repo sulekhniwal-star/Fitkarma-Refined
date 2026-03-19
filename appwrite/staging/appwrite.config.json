@@ -1,0 +1,1444 @@
+{
+    "projectId": "fitkarma-staging",
+    "projectName": "Fitkarma-staging",
+    "endpoint": "https://sgp.cloud.appwrite.io/v1",
+    "settings": {
+        "services": {
+            "account": true,
+            "avatars": true,
+            "databases": true,
+            "locale": true,
+            "health": true,
+            "storage": true,
+            "teams": true,
+            "users": true,
+            "sites": true,
+            "functions": true,
+            "graphql": true,
+            "messaging": true
+        },
+        "auth": {
+            "methods": {
+                "jwt": true,
+                "phone": true,
+                "invites": true,
+                "anonymous": true,
+                "email-otp": true,
+                "magic-url": true,
+                "email-password": true
+            },
+            "security": {
+                "duration": 31536000,
+                "limit": 0,
+                "sessionsLimit": 10,
+                "passwordHistory": 0,
+                "passwordDictionary": false,
+                "personalDataCheck": false,
+                "sessionAlerts": false,
+                "mockNumbers": []
+            }
+        }
+    },
+    "tablesDB": [
+        {
+            "$id": "fitkarma",
+            "$createdAt": "2024-01-01T00:00:00.000Z",
+            "$updatedAt": "2024-01-01T00:00:00.000Z",
+            "name": "Fitkarma DB",
+            "enabled": true,
+            "maximumCollections": 100
+        }
+    ],
+    "tables": [
+        {
+            "$id": "food_logs",
+            "$createdAt": "2024-01-01T00:00:00.000Z",
+            "$updatedAt": "2024-01-01T00:00:00.000Z",
+            "databaseId": "fitkarma",
+            "name": "Food Logs",
+            "enabled": true,
+            "documentSecurity": true,
+            "attributes": [
+                {
+                    "key": "userId",
+                    "type": "string",
+                    "size": 64,
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "foodItemId",
+                    "type": "string",
+                    "size": 64,
+                    "required": false,
+                    "array": false
+                },
+                {
+                    "key": "recipeId",
+                    "type": "string",
+                    "size": 64,
+                    "required": false,
+                    "array": false
+                },
+                {
+                    "key": "foodName",
+                    "type": "string",
+                    "size": 255,
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "mealType",
+                    "type": "string",
+                    "size": 32,
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "quantityG",
+                    "type": "double",
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "calories",
+                    "type": "double",
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "proteinG",
+                    "type": "double",
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "carbsG",
+                    "type": "double",
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "fatG",
+                    "type": "double",
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "fiberG",
+                    "type": "double",
+                    "required": false,
+                    "array": false
+                },
+                {
+                    "key": "vitaminDMcg",
+                    "type": "double",
+                    "required": false,
+                    "array": false
+                },
+                {
+                    "key": "vitaminB12Mcg",
+                    "type": "double",
+                    "required": false,
+                    "array": false
+                },
+                {
+                    "key": "ironMg",
+                    "type": "double",
+                    "required": false,
+                    "array": false
+                },
+                {
+                    "key": "calciumMg",
+                    "type": "double",
+                    "required": false,
+                    "array": false
+                },
+                {
+                    "key": "loggedAt",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "logMethod",
+                    "type": "string",
+                    "size": 32,
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "syncStatus",
+                    "type": "string",
+                    "size": 16,
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "idempotencyKey",
+                    "type": "string",
+                    "size": 64,
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "fieldVersions",
+                    "type": "string",
+                    "size": 512,
+                    "required": false,
+                    "array": false
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "idx_food_logs_user_logged",
+                    "type": "key",
+                    "attributes": [
+                        "userId",
+                        {
+                            "attribute": "loggedAt",
+                            "order": "DESC"
+                        }
+                    ],
+                    "orders": [
+                        "ASC",
+                        "DESC"
+                    ]
+                }
+            ]
+        },
+        {
+            "$id": "step_logs",
+            "$createdAt": "2024-01-01T00:00:00.000Z",
+            "$updatedAt": "2024-01-01T00:00:00.000Z",
+            "databaseId": "fitkarma",
+            "name": "Step Logs",
+            "enabled": true,
+            "documentSecurity": true,
+            "attributes": [
+                {
+                    "key": "userId",
+                    "type": "string",
+                    "size": 64,
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "steps",
+                    "type": "integer",
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "distanceM",
+                    "type": "integer",
+                    "required": false,
+                    "array": false
+                },
+                {
+                    "key": "calories",
+                    "type": "integer",
+                    "required": false,
+                    "array": false
+                },
+                {
+                    "key": "date",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "source",
+                    "type": "string",
+                    "size": 32,
+                    "required": false,
+                    "array": false
+                },
+                {
+                    "key": "syncStatus",
+                    "type": "string",
+                    "size": 16,
+                    "required": true,
+                    "array": false
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "idx_step_logs_user_date",
+                    "type": "key",
+                    "attributes": [
+                        "userId",
+                        {
+                            "attribute": "date",
+                            "order": "DESC"
+                        }
+                    ],
+                    "orders": [
+                        "ASC",
+                        "DESC"
+                    ]
+                }
+            ]
+        },
+        {
+            "$id": "workout_logs",
+            "$createdAt": "2024-01-01T00:00:00.000Z",
+            "$updatedAt": "2024-01-01T00:00:00.000Z",
+            "databaseId": "fitkarma",
+            "name": "Workout Logs",
+            "enabled": true,
+            "documentSecurity": true,
+            "attributes": [
+                {
+                    "key": "userId",
+                    "type": "string",
+                    "size": 64,
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "workoutType",
+                    "type": "string",
+                    "size": 64,
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "title",
+                    "type": "string",
+                    "size": 255,
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "durationMinutes",
+                    "type": "integer",
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "calories",
+                    "type": "integer",
+                    "required": false,
+                    "array": false
+                },
+                {
+                    "key": "avgHeartRate",
+                    "type": "integer",
+                    "required": false,
+                    "array": false
+                },
+                {
+                    "key": "maxHeartRate",
+                    "type": "integer",
+                    "required": false,
+                    "array": false
+                },
+                {
+                    "key": "distanceM",
+                    "type": "integer",
+                    "required": false,
+                    "array": false
+                },
+                {
+                    "key": "loggedAt",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "gpsData",
+                    "type": "string",
+                    "size": 4096,
+                    "required": false,
+                    "array": false
+                },
+                {
+                    "key": "syncStatus",
+                    "type": "string",
+                    "size": 16,
+                    "required": true,
+                    "array": false
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "idx_workout_logs_user_logged",
+                    "type": "key",
+                    "attributes": [
+                        "userId",
+                        {
+                            "attribute": "loggedAt",
+                            "order": "DESC"
+                        }
+                    ],
+                    "orders": [
+                        "ASC",
+                        "DESC"
+                    ]
+                }
+            ]
+        },
+        {
+            "$id": "blood_pressure_logs",
+            "$createdAt": "2024-01-01T00:00:00.000Z",
+            "$updatedAt": "2024-01-01T00:00:00.000Z",
+            "databaseId": "fitkarma",
+            "name": "Blood Pressure Logs",
+            "enabled": true,
+            "documentSecurity": true,
+            "attributes": [
+                {
+                    "key": "userId",
+                    "type": "string",
+                    "size": 64,
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "systolic",
+                    "type": "integer",
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "diastolic",
+                    "type": "integer",
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "pulse",
+                    "type": "integer",
+                    "required": false,
+                    "array": false
+                },
+                {
+                    "key": "measuredAt",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "notes",
+                    "type": "string",
+                    "size": 512,
+                    "required": false,
+                    "array": false
+                },
+                {
+                    "key": "syncStatus",
+                    "type": "string",
+                    "size": 16,
+                    "required": true,
+                    "array": false
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "idx_bp_logs_user_measured",
+                    "type": "key",
+                    "attributes": [
+                        "userId",
+                        {
+                            "attribute": "measuredAt",
+                            "order": "DESC"
+                        }
+                    ],
+                    "orders": [
+                        "ASC",
+                        "DESC"
+                    ]
+                }
+            ]
+        },
+        {
+            "$id": "glucose_logs",
+            "$createdAt": "2024-01-01T00:00:00.000Z",
+            "$updatedAt": "2024-01-01T00:00:00.000Z",
+            "databaseId": "fitkarma",
+            "name": "Glucose Logs",
+            "enabled": true,
+            "documentSecurity": true,
+            "attributes": [
+                {
+                    "key": "userId",
+                    "type": "string",
+                    "size": 64,
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "glucoseLevel",
+                    "type": "integer",
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "unit",
+                    "type": "string",
+                    "size": 8,
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "mealContext",
+                    "type": "string",
+                    "size": 32,
+                    "required": false,
+                    "array": false
+                },
+                {
+                    "key": "measuredAt",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "notes",
+                    "type": "string",
+                    "size": 512,
+                    "required": false,
+                    "array": false
+                },
+                {
+                    "key": "syncStatus",
+                    "type": "string",
+                    "size": 16,
+                    "required": true,
+                    "array": false
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "idx_glucose_logs_user_measured",
+                    "type": "key",
+                    "attributes": [
+                        "userId",
+                        {
+                            "attribute": "measuredAt",
+                            "order": "DESC"
+                        }
+                    ],
+                    "orders": [
+                        "ASC",
+                        "DESC"
+                    ]
+                }
+            ]
+        },
+        {
+            "$id": "mood_logs",
+            "$createdAt": "2024-01-01T00:00:00.000Z",
+            "$updatedAt": "2024-01-01T00:00:00.000Z",
+            "databaseId": "fitkarma",
+            "name": "Mood Logs",
+            "enabled": true,
+            "documentSecurity": true,
+            "attributes": [
+                {
+                    "key": "userId",
+                    "type": "string",
+                    "size": 64,
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "mood",
+                    "type": "string",
+                    "size": 32,
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "energy",
+                    "type": "integer",
+                    "required": false,
+                    "array": false
+                },
+                {
+                    "key": "notes",
+                    "type": "string",
+                    "size": 1024,
+                    "required": false,
+                    "array": false
+                },
+                {
+                    "key": "loggedAt",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "syncStatus",
+                    "type": "string",
+                    "size": 16,
+                    "required": true,
+                    "array": false
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "idx_mood_logs_user_logged",
+                    "type": "key",
+                    "attributes": [
+                        "userId",
+                        {
+                            "attribute": "loggedAt",
+                            "order": "DESC"
+                        }
+                    ],
+                    "orders": [
+                        "ASC",
+                        "DESC"
+                    ]
+                }
+            ]
+        },
+        {
+            "$id": "sleep_logs",
+            "$createdAt": "2024-01-01T00:00:00.000Z",
+            "$updatedAt": "2024-01-01T00:00:00.000Z",
+            "databaseId": "fitkarma",
+            "name": "Sleep Logs",
+            "enabled": true,
+            "documentSecurity": true,
+            "attributes": [
+                {
+                    "key": "userId",
+                    "type": "string",
+                    "size": 64,
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "sleepDuration",
+                    "type": "integer",
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "deepSleep",
+                    "type": "integer",
+                    "required": false,
+                    "array": false
+                },
+                {
+                    "key": "lightSleep",
+                    "type": "integer",
+                    "required": false,
+                    "array": false
+                },
+                {
+                    "key": "remSleep",
+                    "type": "integer",
+                    "required": false,
+                    "array": false
+                },
+                {
+                    "key": "awakeTime",
+                    "type": "integer",
+                    "required": false,
+                    "array": false
+                },
+                {
+                    "key": "date",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "syncStatus",
+                    "type": "string",
+                    "size": 16,
+                    "required": true,
+                    "array": false
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "idx_sleep_logs_user_date",
+                    "type": "key",
+                    "attributes": [
+                        "userId",
+                        {
+                            "attribute": "date",
+                            "order": "DESC"
+                        }
+                    ],
+                    "orders": [
+                        "ASC",
+                        "DESC"
+                    ]
+                }
+            ]
+        },
+        {
+            "$id": "food_items",
+            "$createdAt": "2024-01-01T00:00:00.000Z",
+            "$updatedAt": "2024-01-01T00:00:00.000Z",
+            "databaseId": "fitkarma",
+            "name": "Food Items",
+            "enabled": true,
+            "documentSecurity": true,
+            "attributes": [
+                {
+                    "key": "name",
+                    "type": "string",
+                    "size": 255,
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "brand",
+                    "type": "string",
+                    "size": 128,
+                    "required": false,
+                    "array": false
+                },
+                {
+                    "key": "servingSizeG",
+                    "type": "double",
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "calories",
+                    "type": "double",
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "proteinG",
+                    "type": "double",
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "carbsG",
+                    "type": "double",
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "fatG",
+                    "type": "double",
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "fiberG",
+                    "type": "double",
+                    "required": false,
+                    "array": false
+                },
+                {
+                    "key": "barcode",
+                    "type": "string",
+                    "size": 64,
+                    "required": false,
+                    "array": false
+                }
+            ],
+            "indexes": []
+        },
+        {
+            "$id": "habits",
+            "$createdAt": "2024-01-01T00:00:00.000Z",
+            "$updatedAt": "2024-01-01T00:00:00.000Z",
+            "databaseId": "fitkarma",
+            "name": "Habits",
+            "enabled": true,
+            "documentSecurity": true,
+            "attributes": [
+                {
+                    "key": "userId",
+                    "type": "string",
+                    "size": 64,
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "name",
+                    "type": "string",
+                    "size": 128,
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "description",
+                    "type": "string",
+                    "size": 512,
+                    "required": false,
+                    "array": false
+                },
+                {
+                    "key": "frequency",
+                    "type": "string",
+                    "size": 32,
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "targetDays",
+                    "type": "string",
+                    "size": 32,
+                    "required": false,
+                    "array": false
+                },
+                {
+                    "key": "reminderTime",
+                    "type": "datetime",
+                    "required": false,
+                    "array": false
+                },
+                {
+                    "key": "isActive",
+                    "type": "boolean",
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "createdAt",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false
+                }
+            ],
+            "indexes": []
+        },
+        {
+            "$id": "habit_completions",
+            "$createdAt": "2024-01-01T00:00:00.000Z",
+            "$updatedAt": "2024-01-01T00:00:00.000Z",
+            "databaseId": "fitkarma",
+            "name": "Habit Completions",
+            "enabled": true,
+            "documentSecurity": true,
+            "attributes": [
+                {
+                    "key": "userId",
+                    "type": "string",
+                    "size": 64,
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "habitId",
+                    "type": "string",
+                    "size": 64,
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "completedAt",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "notes",
+                    "type": "string",
+                    "size": 512,
+                    "required": false,
+                    "array": false
+                }
+            ],
+            "indexes": []
+        },
+        {
+            "$id": "body_measurements",
+            "$createdAt": "2024-01-01T00:00:00.000Z",
+            "$updatedAt": "2024-01-01T00:00:00.000Z",
+            "databaseId": "fitkarma",
+            "name": "Body Measurements",
+            "enabled": true,
+            "documentSecurity": true,
+            "attributes": [
+                {
+                    "key": "userId",
+                    "type": "string",
+                    "size": 64,
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "weight",
+                    "type": "double",
+                    "required": false,
+                    "array": false
+                },
+                {
+                    "key": "height",
+                    "type": "double",
+                    "required": false,
+                    "array": false
+                },
+                {
+                    "key": "bmi",
+                    "type": "double",
+                    "required": false,
+                    "array": false
+                },
+                {
+                    "key": "bodyFat",
+                    "type": "double",
+                    "required": false,
+                    "array": false
+                },
+                {
+                    "key": "waistCm",
+                    "type": "double",
+                    "required": false,
+                    "array": false
+                },
+                {
+                    "key": "chestCm",
+                    "type": "double",
+                    "required": false,
+                    "array": false
+                },
+                {
+                    "key": "hipCm",
+                    "type": "double",
+                    "required": false,
+                    "array": false
+                },
+                {
+                    "key": "measuredAt",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "notes",
+                    "type": "string",
+                    "size": 512,
+                    "required": false,
+                    "array": false
+                }
+            ],
+            "indexes": []
+        },
+        {
+            "$id": "medications",
+            "$createdAt": "2024-01-01T00:00:00.000Z",
+            "$updatedAt": "2024-01-01T00:00:00.000Z",
+            "databaseId": "fitkarma",
+            "name": "Medications",
+            "enabled": true,
+            "documentSecurity": true,
+            "attributes": [
+                {
+                    "key": "userId",
+                    "type": "string",
+                    "size": 64,
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "name",
+                    "type": "string",
+                    "size": 128,
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "dosage",
+                    "type": "string",
+                    "size": 64,
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "frequency",
+                    "type": "string",
+                    "size": 64,
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "startDate",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "endDate",
+                    "type": "datetime",
+                    "required": false,
+                    "array": false
+                },
+                {
+                    "key": "notes",
+                    "type": "string",
+                    "size": 512,
+                    "required": false,
+                    "array": false
+                },
+                {
+                    "key": "isActive",
+                    "type": "boolean",
+                    "required": true,
+                    "array": false
+                }
+            ],
+            "indexes": []
+        },
+        {
+            "$id": "recipes",
+            "$createdAt": "2024-01-01T00:00:00.000Z",
+            "$updatedAt": "2024-01-01T00:00:00.000Z",
+            "databaseId": "fitkarma",
+            "name": "Recipes",
+            "enabled": true,
+            "documentSecurity": true,
+            "attributes": [
+                {
+                    "key": "userId",
+                    "type": "string",
+                    "size": 64,
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "name",
+                    "type": "string",
+                    "size": 255,
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "description",
+                    "type": "string",
+                    "size": 1024,
+                    "required": false,
+                    "array": false
+                },
+                {
+                    "key": "ingredients",
+                    "type": "string",
+                    "size": 4096,
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "instructions",
+                    "type": "string",
+                    "size": 4096,
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "servings",
+                    "type": "integer",
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "prepTime",
+                    "type": "integer",
+                    "required": false,
+                    "array": false
+                },
+                {
+                    "key": "cookTime",
+                    "type": "integer",
+                    "required": false,
+                    "array": false
+                },
+                {
+                    "key": "calories",
+                    "type": "integer",
+                    "required": false,
+                    "array": false
+                },
+                {
+                    "key": "proteinG",
+                    "type": "double",
+                    "required": false,
+                    "array": false
+                },
+                {
+                    "key": "carbsG",
+                    "type": "double",
+                    "required": false,
+                    "array": false
+                },
+                {
+                    "key": "fatG",
+                    "type": "double",
+                    "required": false,
+                    "array": false
+                },
+                {
+                    "key": "isPublic",
+                    "type": "boolean",
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "createdAt",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false
+                }
+            ],
+            "indexes": []
+        },
+        {
+            "$id": "remote_config",
+            "$createdAt": "2024-01-01T00:00:00.000Z",
+            "$updatedAt": "2024-01-01T00:00:00.000Z",
+            "databaseId": "fitkarma",
+            "name": "Remote Config",
+            "enabled": true,
+            "documentSecurity": false,
+            "attributes": [
+                {
+                    "key": "key",
+                    "type": "string",
+                    "size": 128,
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "value",
+                    "type": "string",
+                    "size": 4096,
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "type",
+                    "type": "string",
+                    "size": 16,
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "lastUpdated",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false
+                }
+            ],
+            "indexes": []
+        },
+        {
+            "$id": "karma_transactions",
+            "$createdAt": "2024-01-01T00:00:00.000Z",
+            "$updatedAt": "2024-01-01T00:00:00.000Z",
+            "databaseId": "fitkarma",
+            "name": "Karma Transactions",
+            "enabled": true,
+            "documentSecurity": true,
+            "attributes": [
+                {
+                    "key": "userId",
+                    "type": "string",
+                    "size": 64,
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "amount",
+                    "type": "integer",
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "type",
+                    "type": "string",
+                    "size": 32,
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "reason",
+                    "type": "string",
+                    "size": 255,
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "createdAt",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false
+                }
+            ],
+            "indexes": []
+        },
+        {
+            "$id": "abha_links",
+            "$createdAt": "2024-01-01T00:00:00.000Z",
+            "$updatedAt": "2024-01-01T00:00:00.000Z",
+            "databaseId": "fitkarma",
+            "name": "ABHA Links",
+            "enabled": true,
+            "documentSecurity": true,
+            "attributes": [
+                {
+                    "key": "userId",
+                    "type": "string",
+                    "size": 64,
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "abhaId",
+                    "type": "string",
+                    "size": 64,
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "abhaNumber",
+                    "type": "string",
+                    "size": 14,
+                    "required": false,
+                    "array": false
+                },
+                {
+                    "key": "name",
+                    "type": "string",
+                    "size": 128,
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "dob",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "gender",
+                    "type": "string",
+                    "size": 16,
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "state",
+                    "type": "string",
+                    "size": 64,
+                    "required": false,
+                    "array": false
+                },
+                {
+                    "key": "district",
+                    "type": "string",
+                    "size": 64,
+                    "required": false,
+                    "array": false
+                },
+                {
+                    "key": "linkedAt",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false
+                }
+            ],
+            "indexes": []
+        },
+        {
+            "$id": "journal_entries",
+            "$createdAt": "2024-01-01T00:00:00.000Z",
+            "$updatedAt": "2024-01-01T00:00:00.000Z",
+            "databaseId": "fitkarma",
+            "name": "Journal Entries",
+            "enabled": true,
+            "documentSecurity": true,
+            "attributes": [
+                {
+                    "key": "userId",
+                    "type": "string",
+                    "size": 64,
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "title",
+                    "type": "string",
+                    "size": 255,
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "content",
+                    "type": "string",
+                    "size": 10000,
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "mood",
+                    "type": "string",
+                    "size": 32,
+                    "required": false,
+                    "array": false
+                },
+                {
+                    "key": "tags",
+                    "type": "string",
+                    "size": 256,
+                    "required": false,
+                    "array": false
+                },
+                {
+                    "key": "createdAt",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "updatedAt",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false
+                }
+            ],
+            "indexes": []
+        },
+        {
+            "$id": "lab_reports",
+            "$createdAt": "2024-01-01T00:00:00.000Z",
+            "$updatedAt": "2024-01-01T00:00:00.000Z",
+            "databaseId": "fitkarma",
+            "name": "Lab Reports",
+            "enabled": true,
+            "documentSecurity": true,
+            "attributes": [
+                {
+                    "key": "userId",
+                    "type": "string",
+                    "size": 64,
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "testName",
+                    "type": "string",
+                    "size": 255,
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "testDate",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "labName",
+                    "type": "string",
+                    "size": 128,
+                    "required": false,
+                    "array": false
+                },
+                {
+                    "key": "results",
+                    "type": "string",
+                    "size": 8192,
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "notes",
+                    "type": "string",
+                    "size": 1024,
+                    "required": false,
+                    "array": false
+                },
+                {
+                    "key": "fileUrl",
+                    "type": "string",
+                    "size": 512,
+                    "required": false,
+                    "array": false
+                }
+            ],
+            "indexes": []
+        },
+        {
+            "$id": "emergency_card",
+            "$createdAt": "2024-01-01T00:00:00.000Z",
+            "$updatedAt": "2024-01-01T00:00:00.000Z",
+            "databaseId": "fitkarma",
+            "name": "Emergency Card",
+            "enabled": true,
+            "documentSecurity": true,
+            "attributes": [
+                {
+                    "key": "userId",
+                    "type": "string",
+                    "size": 64,
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "bloodType",
+                    "type": "string",
+                    "size": 8,
+                    "required": false,
+                    "array": false
+                },
+                {
+                    "key": "emergencyContact",
+                    "type": "string",
+                    "size": 64,
+                    "required": false,
+                    "array": false
+                },
+                {
+                    "key": "emergencyPhone",
+                    "type": "string",
+                    "size": 20,
+                    "required": false,
+                    "array": false
+                },
+                {
+                    "key": "medicalConditions",
+                    "type": "string",
+                    "size": 1024,
+                    "required": false,
+                    "array": false
+                },
+                {
+                    "key": "allergies",
+                    "type": "string",
+                    "size": 512,
+                    "required": false,
+                    "array": false
+                },
+                {
+                    "key": "medications",
+                    "type": "string",
+                    "size": 1024,
+                    "required": false,
+                    "array": false
+                },
+                {
+                    "key": "doctorName",
+                    "type": "string",
+                    "size": 128,
+                    "required": false,
+                    "array": false
+                },
+                {
+                    "key": "doctorPhone",
+                    "type": "string",
+                    "size": 20,
+                    "required": false,
+                    "array": false
+                }
+            ],
+            "indexes": []
+        }
+    ],
+    "buckets": [],
+    "teams": [],
+    "topics": []
+}

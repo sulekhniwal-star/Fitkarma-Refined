@@ -1,0 +1,244 @@
+{
+    "projectId": "fitkarma-production",
+    "projectName": "Fitkarma-production",
+    "endpoint": "https://sgp.cloud.appwrite.io/v1",
+    "settings": {
+        "services": {
+            "account": true,
+            "avatars": true,
+            "databases": true,
+            "locale": true,
+            "health": true,
+            "storage": true,
+            "teams": true,
+            "users": true,
+            "sites": true,
+            "functions": true,
+            "graphql": true,
+            "messaging": true
+        },
+        "auth": {
+            "methods": {
+                "jwt": true,
+                "phone": true,
+                "invites": true,
+                "anonymous": true,
+                "email-otp": true,
+                "magic-url": true,
+                "email-password": true
+            },
+            "security": {
+                "duration": 31536000,
+                "limit": 0,
+                "sessionsLimit": 10,
+                "passwordHistory": 0,
+                "passwordDictionary": false,
+                "personalDataCheck": false,
+                "sessionAlerts": false,
+                "mockNumbers": []
+            }
+        }
+    },
+    "tablesDB": [
+        {
+            "$id": "fitkarma",
+            "name": "Fitkarma DB",
+            "enabled": true
+        }
+    ],
+    "tables": [
+        {
+            "$id": "blood_pressure_logs",
+            "$permissions": [],
+            "databaseId": "fitkarma",
+            "name": "Blood Pressure Logs",
+            "enabled": true,
+            "rowSecurity": false,
+            "columns": [],
+            "indexes": []
+        },
+        {
+            "$id": "step_logs",
+            "$permissions": [],
+            "databaseId": "fitkarma",
+            "name": "Step Logs",
+            "enabled": true,
+            "rowSecurity": false,
+            "columns": [],
+            "indexes": []
+        },
+        {
+            "$id": "body_measurements",
+            "$permissions": [],
+            "databaseId": "fitkarma",
+            "name": "Body Measurements",
+            "enabled": true,
+            "rowSecurity": false,
+            "columns": [],
+            "indexes": []
+        },
+        {
+            "$id": "workout_logs",
+            "$permissions": [],
+            "databaseId": "fitkarma",
+            "name": "Workout Logs",
+            "enabled": true,
+            "rowSecurity": false,
+            "columns": [],
+            "indexes": []
+        },
+        {
+            "$id": "glucose_logs",
+            "$permissions": [],
+            "databaseId": "fitkarma",
+            "name": "Glucose Logs",
+            "enabled": true,
+            "rowSecurity": false,
+            "columns": [],
+            "indexes": []
+        },
+        {
+            "$id": "karma_transactions",
+            "$permissions": [],
+            "databaseId": "fitkarma",
+            "name": "Karma Transactions",
+            "enabled": true,
+            "rowSecurity": false,
+            "columns": [],
+            "indexes": []
+        },
+        {
+            "$id": "mood_logs",
+            "$permissions": [],
+            "databaseId": "fitkarma",
+            "name": "Mood Logs",
+            "enabled": true,
+            "rowSecurity": false,
+            "columns": [],
+            "indexes": []
+        },
+        {
+            "$id": "habits",
+            "$permissions": [],
+            "databaseId": "fitkarma",
+            "name": "Habits",
+            "enabled": true,
+            "rowSecurity": false,
+            "columns": [],
+            "indexes": []
+        },
+        {
+            "$id": "medications",
+            "$permissions": [],
+            "databaseId": "fitkarma",
+            "name": "Medications",
+            "enabled": true,
+            "rowSecurity": false,
+            "columns": [],
+            "indexes": []
+        },
+        {
+            "$id": "food_items",
+            "$permissions": [],
+            "databaseId": "fitkarma",
+            "name": "Food Items",
+            "enabled": true,
+            "rowSecurity": false,
+            "columns": [],
+            "indexes": []
+        },
+        {
+            "$id": "emergency_card",
+            "$permissions": [],
+            "databaseId": "fitkarma",
+            "name": "Emergency Card",
+            "enabled": true,
+            "rowSecurity": false,
+            "columns": [],
+            "indexes": []
+        },
+        {
+            "$id": "journal_entries",
+            "$permissions": [],
+            "databaseId": "fitkarma",
+            "name": "Journal Entries",
+            "enabled": true,
+            "rowSecurity": false,
+            "columns": [],
+            "indexes": []
+        },
+        {
+            "$id": "lab_reports",
+            "$permissions": [],
+            "databaseId": "fitkarma",
+            "name": "Lab Reports",
+            "enabled": true,
+            "rowSecurity": false,
+            "columns": [],
+            "indexes": []
+        },
+        {
+            "$id": "abha_links",
+            "$permissions": [],
+            "databaseId": "fitkarma",
+            "name": "ABHA Links",
+            "enabled": true,
+            "rowSecurity": false,
+            "columns": [],
+            "indexes": []
+        },
+        {
+            "$id": "habit_completions",
+            "$permissions": [],
+            "databaseId": "fitkarma",
+            "name": "Habit Completions",
+            "enabled": true,
+            "rowSecurity": false,
+            "columns": [],
+            "indexes": []
+        },
+        {
+            "$id": "remote_config",
+            "$permissions": [],
+            "databaseId": "fitkarma",
+            "name": "Remote Config",
+            "enabled": true,
+            "rowSecurity": false,
+            "columns": [],
+            "indexes": []
+        },
+        {
+            "$id": "recipes",
+            "$permissions": [],
+            "databaseId": "fitkarma",
+            "name": "Recipes",
+            "enabled": true,
+            "rowSecurity": false,
+            "columns": [],
+            "indexes": []
+        },
+        {
+            "$id": "food_logs",
+            "$permissions": [],
+            "databaseId": "fitkarma",
+            "name": "Food Logs",
+            "enabled": true,
+            "rowSecurity": false,
+            "columns": [],
+            "indexes": []
+        },
+        {
+            "$id": "sleep_logs",
+            "$permissions": [],
+            "databaseId": "fitkarma",
+            "name": "Sleep Logs",
+            "enabled": true,
+            "rowSecurity": false,
+            "columns": [],
+            "indexes": []
+        }
+    ],
+    "buckets": [],
+    "teams": [],
+    "topics": []
+}
