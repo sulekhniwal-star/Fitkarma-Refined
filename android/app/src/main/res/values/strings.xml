@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="activity_rings_widget_description">Track your daily activity progress</string>
+    <string name="quick_log_widget_description">Quickly log your food intake</string>
+    <string name="water_widget_description">Track your daily water intake</string>
+</resources>

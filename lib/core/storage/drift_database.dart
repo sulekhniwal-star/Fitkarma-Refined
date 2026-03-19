@@ -295,6 +295,23 @@ class BloodPressureLogs extends Table {
   ];
 }
 
+class WaterLogs extends Table {
+  TextColumn get id => text()();
+  TextColumn get userId => text()();
+  DateTimeColumn get date => dateTime()();
+  IntColumn get glasses => integer()();
+  IntColumn get mlPerGlass => integer().withDefault(const Constant(250))();
+  TextColumn get source => text()();
+
+  @override
+  Set<Column> get primaryKey => {id};
+
+  @override
+  List<Index> get indexes => [
+    Index('idx_water_logs_user_date', 'userId, date'),
+  ];
+}
+
 class GlucoseLogs extends Table {
   TextColumn get id => text()();
   TextColumn get userId => text()();
@@ -611,6 +628,12 @@ class BloodPressureLogsDao extends DatabaseAccessor<AppDatabase>
   BloodPressureLogsDao(super.db);
 }
 
+@DriftAccessor(tables: [WaterLogs])
+class WaterLogsDao extends DatabaseAccessor<AppDatabase>
+    with _$WaterLogsDaoMixin {
+  WaterLogsDao(super.db);
+}
+
 @DriftAccessor(tables: [GlucoseLogs])
 class GlucoseLogsDao extends DatabaseAccessor<AppDatabase>
     with _$GlucoseLogsDaoMixin {
@@ -713,6 +736,7 @@ class UserProfilesDao extends DatabaseAccessor<AppDatabase>
     MealPlans,
     Recipes,
     BloodPressureLogs,
+    WaterLogs,
     GlucoseLogs,
     Spo2Logs,
     PeriodLogs,
@@ -745,6 +769,7 @@ class UserProfilesDao extends DatabaseAccessor<AppDatabase>
     MealPlansDao,
     RecipesDao,
     BloodPressureLogsDao,
+    WaterLogsDao,
     GlucoseLogsDao,
     Spo2LogsDao,
     PeriodLogsDao,

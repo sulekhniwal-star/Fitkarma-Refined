@@ -14,6 +14,7 @@ import 'features/auth/presentation/onboarding_screen_4.dart';
 import 'features/auth/presentation/onboarding_screen_5.dart';
 import 'features/auth/presentation/onboarding_screen_6.dart';
 import 'features/settings/presentation/settings_screen.dart';
+import 'features/dashboard/presentation/dashboard_screen.dart';
 import 'core/security/biometric_service.dart';
 
 // --- Deferred Imports ---
@@ -398,8 +399,7 @@ final _router = GoRouter(
       routes: [
         GoRoute(
           path: '/home/dashboard',
-          builder: (context, state) =>
-              const PlaceholderScreen(title: 'Dashboard'),
+          builder: (context, state) => const DashboardScreen(),
         ),
         GoRoute(
           path: '/settings',

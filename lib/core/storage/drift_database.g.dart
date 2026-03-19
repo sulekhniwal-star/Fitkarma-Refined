@@ -210,6 +210,18 @@ class BloodPressureLogsDaoManager {
       );
 }
 
+mixin _$WaterLogsDaoMixin on DatabaseAccessor<AppDatabase> {
+  $WaterLogsTable get waterLogs => attachedDatabase.waterLogs;
+  WaterLogsDaoManager get managers => WaterLogsDaoManager(this);
+}
+
+class WaterLogsDaoManager {
+  final _$WaterLogsDaoMixin _db;
+  WaterLogsDaoManager(this._db);
+  $$WaterLogsTableTableManager get waterLogs =>
+      $$WaterLogsTableTableManager(_db.attachedDatabase, _db.waterLogs);
+}
+
 mixin _$GlucoseLogsDaoMixin on DatabaseAccessor<AppDatabase> {
   $GlucoseLogsTable get glucoseLogs => attachedDatabase.glucoseLogs;
   GlucoseLogsDaoManager get managers => GlucoseLogsDaoManager(this);
@@ -8424,6 +8436,413 @@ class BloodPressureLogsCompanion extends UpdateCompanion<BloodPressureLog> {
           ..write('classification: $classification, ')
           ..write('source: $source, ')
           ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $WaterLogsTable extends WaterLogs
+    with TableInfo<$WaterLogsTable, WaterLog> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $WaterLogsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
+    'user_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _dateMeta = const VerificationMeta('date');
+  @override
+  late final GeneratedColumn<DateTime> date = GeneratedColumn<DateTime>(
+    'date',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _glassesMeta = const VerificationMeta(
+    'glasses',
+  );
+  @override
+  late final GeneratedColumn<int> glasses = GeneratedColumn<int>(
+    'glasses',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _mlPerGlassMeta = const VerificationMeta(
+    'mlPerGlass',
+  );
+  @override
+  late final GeneratedColumn<int> mlPerGlass = GeneratedColumn<int>(
+    'ml_per_glass',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(250),
+  );
+  static const VerificationMeta _sourceMeta = const VerificationMeta('source');
+  @override
+  late final GeneratedColumn<String> source = GeneratedColumn<String>(
+    'source',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    userId,
+    date,
+    glasses,
+    mlPerGlass,
+    source,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'water_logs';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<WaterLog> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_userIdMeta);
+    }
+    if (data.containsKey('date')) {
+      context.handle(
+        _dateMeta,
+        date.isAcceptableOrUnknown(data['date']!, _dateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_dateMeta);
+    }
+    if (data.containsKey('glasses')) {
+      context.handle(
+        _glassesMeta,
+        glasses.isAcceptableOrUnknown(data['glasses']!, _glassesMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_glassesMeta);
+    }
+    if (data.containsKey('ml_per_glass')) {
+      context.handle(
+        _mlPerGlassMeta,
+        mlPerGlass.isAcceptableOrUnknown(
+          data['ml_per_glass']!,
+          _mlPerGlassMeta,
+        ),
+      );
+    }
+    if (data.containsKey('source')) {
+      context.handle(
+        _sourceMeta,
+        source.isAcceptableOrUnknown(data['source']!, _sourceMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_sourceMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  WaterLog map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return WaterLog(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      userId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_id'],
+      )!,
+      date: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}date'],
+      )!,
+      glasses: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}glasses'],
+      )!,
+      mlPerGlass: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}ml_per_glass'],
+      )!,
+      source: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}source'],
+      )!,
+    );
+  }
+
+  @override
+  $WaterLogsTable createAlias(String alias) {
+    return $WaterLogsTable(attachedDatabase, alias);
+  }
+}
+
+class WaterLog extends DataClass implements Insertable<WaterLog> {
+  final String id;
+  final String userId;
+  final DateTime date;
+  final int glasses;
+  final int mlPerGlass;
+  final String source;
+  const WaterLog({
+    required this.id,
+    required this.userId,
+    required this.date,
+    required this.glasses,
+    required this.mlPerGlass,
+    required this.source,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['user_id'] = Variable<String>(userId);
+    map['date'] = Variable<DateTime>(date);
+    map['glasses'] = Variable<int>(glasses);
+    map['ml_per_glass'] = Variable<int>(mlPerGlass);
+    map['source'] = Variable<String>(source);
+    return map;
+  }
+
+  WaterLogsCompanion toCompanion(bool nullToAbsent) {
+    return WaterLogsCompanion(
+      id: Value(id),
+      userId: Value(userId),
+      date: Value(date),
+      glasses: Value(glasses),
+      mlPerGlass: Value(mlPerGlass),
+      source: Value(source),
+    );
+  }
+
+  factory WaterLog.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return WaterLog(
+      id: serializer.fromJson<String>(json['id']),
+      userId: serializer.fromJson<String>(json['userId']),
+      date: serializer.fromJson<DateTime>(json['date']),
+      glasses: serializer.fromJson<int>(json['glasses']),
+      mlPerGlass: serializer.fromJson<int>(json['mlPerGlass']),
+      source: serializer.fromJson<String>(json['source']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'userId': serializer.toJson<String>(userId),
+      'date': serializer.toJson<DateTime>(date),
+      'glasses': serializer.toJson<int>(glasses),
+      'mlPerGlass': serializer.toJson<int>(mlPerGlass),
+      'source': serializer.toJson<String>(source),
+    };
+  }
+
+  WaterLog copyWith({
+    String? id,
+    String? userId,
+    DateTime? date,
+    int? glasses,
+    int? mlPerGlass,
+    String? source,
+  }) => WaterLog(
+    id: id ?? this.id,
+    userId: userId ?? this.userId,
+    date: date ?? this.date,
+    glasses: glasses ?? this.glasses,
+    mlPerGlass: mlPerGlass ?? this.mlPerGlass,
+    source: source ?? this.source,
+  );
+  WaterLog copyWithCompanion(WaterLogsCompanion data) {
+    return WaterLog(
+      id: data.id.present ? data.id.value : this.id,
+      userId: data.userId.present ? data.userId.value : this.userId,
+      date: data.date.present ? data.date.value : this.date,
+      glasses: data.glasses.present ? data.glasses.value : this.glasses,
+      mlPerGlass: data.mlPerGlass.present
+          ? data.mlPerGlass.value
+          : this.mlPerGlass,
+      source: data.source.present ? data.source.value : this.source,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('WaterLog(')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('date: $date, ')
+          ..write('glasses: $glasses, ')
+          ..write('mlPerGlass: $mlPerGlass, ')
+          ..write('source: $source')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, userId, date, glasses, mlPerGlass, source);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is WaterLog &&
+          other.id == this.id &&
+          other.userId == this.userId &&
+          other.date == this.date &&
+          other.glasses == this.glasses &&
+          other.mlPerGlass == this.mlPerGlass &&
+          other.source == this.source);
+}
+
+class WaterLogsCompanion extends UpdateCompanion<WaterLog> {
+  final Value<String> id;
+  final Value<String> userId;
+  final Value<DateTime> date;
+  final Value<int> glasses;
+  final Value<int> mlPerGlass;
+  final Value<String> source;
+  final Value<int> rowid;
+  const WaterLogsCompanion({
+    this.id = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.date = const Value.absent(),
+    this.glasses = const Value.absent(),
+    this.mlPerGlass = const Value.absent(),
+    this.source = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  WaterLogsCompanion.insert({
+    required String id,
+    required String userId,
+    required DateTime date,
+    required int glasses,
+    this.mlPerGlass = const Value.absent(),
+    required String source,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       userId = Value(userId),
+       date = Value(date),
+       glasses = Value(glasses),
+       source = Value(source);
+  static Insertable<WaterLog> custom({
+    Expression<String>? id,
+    Expression<String>? userId,
+    Expression<DateTime>? date,
+    Expression<int>? glasses,
+    Expression<int>? mlPerGlass,
+    Expression<String>? source,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (userId != null) 'user_id': userId,
+      if (date != null) 'date': date,
+      if (glasses != null) 'glasses': glasses,
+      if (mlPerGlass != null) 'ml_per_glass': mlPerGlass,
+      if (source != null) 'source': source,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  WaterLogsCompanion copyWith({
+    Value<String>? id,
+    Value<String>? userId,
+    Value<DateTime>? date,
+    Value<int>? glasses,
+    Value<int>? mlPerGlass,
+    Value<String>? source,
+    Value<int>? rowid,
+  }) {
+    return WaterLogsCompanion(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      date: date ?? this.date,
+      glasses: glasses ?? this.glasses,
+      mlPerGlass: mlPerGlass ?? this.mlPerGlass,
+      source: source ?? this.source,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<String>(userId.value);
+    }
+    if (date.present) {
+      map['date'] = Variable<DateTime>(date.value);
+    }
+    if (glasses.present) {
+      map['glasses'] = Variable<int>(glasses.value);
+    }
+    if (mlPerGlass.present) {
+      map['ml_per_glass'] = Variable<int>(mlPerGlass.value);
+    }
+    if (source.present) {
+      map['source'] = Variable<String>(source.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('WaterLogsCompanion(')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('date: $date, ')
+          ..write('glasses: $glasses, ')
+          ..write('mlPerGlass: $mlPerGlass, ')
+          ..write('source: $source, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -16785,6 +17204,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $RecipesTable recipes = $RecipesTable(this);
   late final $BloodPressureLogsTable bloodPressureLogs =
       $BloodPressureLogsTable(this);
+  late final $WaterLogsTable waterLogs = $WaterLogsTable(this);
   late final $GlucoseLogsTable glucoseLogs = $GlucoseLogsTable(this);
   late final $Spo2LogsTable spo2Logs = $Spo2LogsTable(this);
   late final $PeriodLogsTable periodLogs = $PeriodLogsTable(this);
@@ -16834,6 +17254,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final BloodPressureLogsDao bloodPressureLogsDao = BloodPressureLogsDao(
     this as AppDatabase,
   );
+  late final WaterLogsDao waterLogsDao = WaterLogsDao(this as AppDatabase);
   late final GlucoseLogsDao glucoseLogsDao = GlucoseLogsDao(
     this as AppDatabase,
   );
@@ -16890,6 +17311,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     mealPlans,
     recipes,
     bloodPressureLogs,
+    waterLogs,
     glucoseLogs,
     spo2Logs,
     periodLogs,
@@ -20856,6 +21278,221 @@ typedef $$BloodPressureLogsTableProcessedTableManager =
         >,
       ),
       BloodPressureLog,
+      PrefetchHooks Function()
+    >;
+typedef $$WaterLogsTableCreateCompanionBuilder =
+    WaterLogsCompanion Function({
+      required String id,
+      required String userId,
+      required DateTime date,
+      required int glasses,
+      Value<int> mlPerGlass,
+      required String source,
+      Value<int> rowid,
+    });
+typedef $$WaterLogsTableUpdateCompanionBuilder =
+    WaterLogsCompanion Function({
+      Value<String> id,
+      Value<String> userId,
+      Value<DateTime> date,
+      Value<int> glasses,
+      Value<int> mlPerGlass,
+      Value<String> source,
+      Value<int> rowid,
+    });
+
+class $$WaterLogsTableFilterComposer
+    extends Composer<_$AppDatabase, $WaterLogsTable> {
+  $$WaterLogsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get date => $composableBuilder(
+    column: $table.date,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get glasses => $composableBuilder(
+    column: $table.glasses,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get mlPerGlass => $composableBuilder(
+    column: $table.mlPerGlass,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get source => $composableBuilder(
+    column: $table.source,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$WaterLogsTableOrderingComposer
+    extends Composer<_$AppDatabase, $WaterLogsTable> {
+  $$WaterLogsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get date => $composableBuilder(
+    column: $table.date,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get glasses => $composableBuilder(
+    column: $table.glasses,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get mlPerGlass => $composableBuilder(
+    column: $table.mlPerGlass,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get source => $composableBuilder(
+    column: $table.source,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$WaterLogsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $WaterLogsTable> {
+  $$WaterLogsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get userId =>
+      $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get date =>
+      $composableBuilder(column: $table.date, builder: (column) => column);
+
+  GeneratedColumn<int> get glasses =>
+      $composableBuilder(column: $table.glasses, builder: (column) => column);
+
+  GeneratedColumn<int> get mlPerGlass => $composableBuilder(
+    column: $table.mlPerGlass,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get source =>
+      $composableBuilder(column: $table.source, builder: (column) => column);
+}
+
+class $$WaterLogsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $WaterLogsTable,
+          WaterLog,
+          $$WaterLogsTableFilterComposer,
+          $$WaterLogsTableOrderingComposer,
+          $$WaterLogsTableAnnotationComposer,
+          $$WaterLogsTableCreateCompanionBuilder,
+          $$WaterLogsTableUpdateCompanionBuilder,
+          (WaterLog, BaseReferences<_$AppDatabase, $WaterLogsTable, WaterLog>),
+          WaterLog,
+          PrefetchHooks Function()
+        > {
+  $$WaterLogsTableTableManager(_$AppDatabase db, $WaterLogsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$WaterLogsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$WaterLogsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$WaterLogsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> userId = const Value.absent(),
+                Value<DateTime> date = const Value.absent(),
+                Value<int> glasses = const Value.absent(),
+                Value<int> mlPerGlass = const Value.absent(),
+                Value<String> source = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => WaterLogsCompanion(
+                id: id,
+                userId: userId,
+                date: date,
+                glasses: glasses,
+                mlPerGlass: mlPerGlass,
+                source: source,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String userId,
+                required DateTime date,
+                required int glasses,
+                Value<int> mlPerGlass = const Value.absent(),
+                required String source,
+                Value<int> rowid = const Value.absent(),
+              }) => WaterLogsCompanion.insert(
+                id: id,
+                userId: userId,
+                date: date,
+                glasses: glasses,
+                mlPerGlass: mlPerGlass,
+                source: source,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$WaterLogsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $WaterLogsTable,
+      WaterLog,
+      $$WaterLogsTableFilterComposer,
+      $$WaterLogsTableOrderingComposer,
+      $$WaterLogsTableAnnotationComposer,
+      $$WaterLogsTableCreateCompanionBuilder,
+      $$WaterLogsTableUpdateCompanionBuilder,
+      (WaterLog, BaseReferences<_$AppDatabase, $WaterLogsTable, WaterLog>),
+      WaterLog,
       PrefetchHooks Function()
     >;
 typedef $$GlucoseLogsTableCreateCompanionBuilder =
@@ -25148,6 +25785,8 @@ class $AppDatabaseManager {
       $$RecipesTableTableManager(_db, _db.recipes);
   $$BloodPressureLogsTableTableManager get bloodPressureLogs =>
       $$BloodPressureLogsTableTableManager(_db, _db.bloodPressureLogs);
+  $$WaterLogsTableTableManager get waterLogs =>
+      $$WaterLogsTableTableManager(_db, _db.waterLogs);
   $$GlucoseLogsTableTableManager get glucoseLogs =>
       $$GlucoseLogsTableTableManager(_db, _db.glucoseLogs);
   $$Spo2LogsTableTableManager get spo2Logs =>
