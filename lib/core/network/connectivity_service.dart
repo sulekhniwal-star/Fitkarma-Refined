@@ -82,6 +82,9 @@ final isOnlineStreamProvider = StreamProvider<bool>((ref) {
 });
 
 /// Provider for current online status
-final isOnlineProvider = StateProvider<bool>((ref) {
+///
+/// Note: For watching connectivity changes, use [isOnlineStreamProvider] instead.
+/// This provider returns the initial value at the time of reading.
+final isOnlineProvider = Provider<bool>((ref) {
   return ConnectivityService.instance.isOnline;
 });

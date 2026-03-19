@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:convert';
 import 'package:drift/drift.dart';
+import 'package:drift/native.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:fitkarma/core/security/encryption_converter.dart';
 import 'package:path_provider/path_provider.dart';
@@ -733,7 +734,7 @@ class AppDatabase extends _$AppDatabase {
       final dbFolder = await getApplicationDocumentsDirectory();
       final file = File(p.join(dbFolder.path, 'fitkarma.db'));
 
-      return NativeDatabase.createInBackground(
+      return NativeDatabase(
         file,
         setup: (rawDb) {
           rawDb.execute("PRAGMA key = '$encryptionKey'");

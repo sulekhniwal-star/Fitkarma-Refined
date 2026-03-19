@@ -8,20 +8,20 @@ part 'drift_service.g.dart';
 
 class DriftService {
   final AppDatabase db;
-  
+
   DriftService(this.db);
 
   /// Load RemoteConfig from local Drift database (RemoteConfigCache table)
   Future<RemoteConfigData?> getRemoteConfig() async {
     final results = await db.select(db.remoteConfigCache).get();
     if (results.isEmpty) return null;
-    
+
     final Map<String, dynamic> configs = {};
     for (var row in results) {
       final key = row.key;
       final value = row.value;
       final type = row.type;
-      
+
       if (type == 'bool') {
         configs[key] = value.toLowerCase() == 'true';
       } else if (type == 'json') {
@@ -43,7 +43,7 @@ class DriftService {
         final value = entry.value;
         String type = 'string';
         String stringValue = '';
-        
+
         if (value is bool) {
           type = 'bool';
           stringValue = value.toString();
@@ -73,9 +73,11 @@ class DriftService {
 }
 
 @Riverpod(keepAlive: true)
-DriftService driftService(DriftServiceRef ref) {
+DriftService driftService(Ref ref) {
   // This provider expects to be overridden in main.dart with a real DriftService instance,
   // or it could instantiate one if we had the encryption key ready.
   // For now, it throws to ensure the developer provides the actual initialised service.
-  throw UnimplementedError('DriftService needs to be initialised with master key and provided in main.dart');
+  throw UnimplementedError(
+    'DriftService needs to be initialised with master key and provided in main.dart',
+  );
 }
