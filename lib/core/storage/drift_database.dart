@@ -78,6 +78,11 @@ class FoodLogs extends Table {
 
   @override
   Set<Column> get primaryKey => {id};
+
+  @override
+  List<Index> get indexes => [
+    Index('idx_food_logs_user_logged', 'userId, loggedAt'),
+  ];
 }
 
 class FoodItems extends Table {
@@ -118,6 +123,11 @@ class WorkoutLogs extends Table {
 
   @override
   Set<Column> get primaryKey => {id};
+
+  @override
+  List<Index> get indexes => [
+    Index('idx_workout_logs_user_logged', 'userId, loggedAt'),
+  ];
 }
 
 class StepLogs extends Table {
@@ -129,6 +139,9 @@ class StepLogs extends Table {
 
   @override
   Set<Column> get primaryKey => {id};
+
+  @override
+  List<Index> get indexes => [Index('idx_step_logs_user_date', 'userId, date')];
 }
 
 class SleepLogs extends Table {
@@ -145,6 +158,11 @@ class SleepLogs extends Table {
 
   @override
   Set<Column> get primaryKey => {id};
+
+  @override
+  List<Index> get indexes => [
+    Index('idx_sleep_logs_user_date', 'userId, date'),
+  ];
 }
 
 class MoodLogs extends Table {
@@ -158,6 +176,11 @@ class MoodLogs extends Table {
 
   @override
   Set<Column> get primaryKey => {id};
+
+  @override
+  List<Index> get indexes => [
+    Index('idx_mood_logs_user_logged', 'userId, loggedAt'),
+  ];
 }
 
 // --- Lifestyle Tables ---
@@ -269,6 +292,11 @@ class BloodPressureLogs extends Table {
 
   @override
   Set<Column> get primaryKey => {id};
+
+  @override
+  List<Index> get indexes => [
+    Index('idx_bp_logs_user_logged', 'userId, loggedAt'),
+  ];
 }
 
 class GlucoseLogs extends Table {
@@ -286,6 +314,11 @@ class GlucoseLogs extends Table {
 
   @override
   Set<Column> get primaryKey => {id};
+
+  @override
+  List<Index> get indexes => [
+    Index('idx_glucose_logs_user_logged', 'userId, loggedAt'),
+  ];
 }
 
 class Spo2Logs extends Table {
