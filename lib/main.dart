@@ -1,25 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fitkarma/core/network/appwrite_client.dart';
+import 'app.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  // Initialize Appwrite Client
+  AppwriteClient.init();
+  
+  // Test connection (non-blocking)
+  AppwriteClient.testConnection();
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'FitKarma',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const Scaffold(
-        body: Center(
-          child: Text('FitKarma'),
-        ),
-      ),
-    );
-  }
+  runApp(
+    const ProviderScope(
+      child: FitKarmaApp(),
+    ),
+  );
 }

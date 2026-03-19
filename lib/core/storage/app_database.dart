@@ -431,147 +431,147 @@ class PersonalRecords extends Table {
 
 @DriftAccessor(tables: [SyncQueue])
 class SyncQueueDao extends DatabaseAccessor<AppDatabase> with _$SyncQueueDaoMixin {
-  SyncQueueDao(AppDatabase db) : super(db);
+  SyncQueueDao(super.db);
 }
 
 @DriftAccessor(tables: [SyncDeadLetter])
 class SyncDeadLetterDao extends DatabaseAccessor<AppDatabase> with _$SyncDeadLetterDaoMixin {
-  SyncDeadLetterDao(AppDatabase db) : super(db);
+  SyncDeadLetterDao(super.db);
 }
 
 @DriftAccessor(tables: [FoodLogs])
 class FoodLogsDao extends DatabaseAccessor<AppDatabase> with _$FoodLogsDaoMixin {
-  FoodLogsDao(AppDatabase db) : super(db);
+  FoodLogsDao(super.db);
 }
 
 @DriftAccessor(tables: [FoodItems])
 class FoodItemsDao extends DatabaseAccessor<AppDatabase> with _$FoodItemsDaoMixin {
-  FoodItemsDao(AppDatabase db) : super(db);
+  FoodItemsDao(super.db);
 }
 
 @DriftAccessor(tables: [WorkoutLogs])
 class WorkoutLogsDao extends DatabaseAccessor<AppDatabase> with _$WorkoutLogsDaoMixin {
-  WorkoutLogsDao(AppDatabase db) : super(db);
+  WorkoutLogsDao(super.db);
 }
 
 @DriftAccessor(tables: [StepLogs])
 class StepLogsDao extends DatabaseAccessor<AppDatabase> with _$StepLogsDaoMixin {
-  StepLogsDao(AppDatabase db) : super(db);
+  StepLogsDao(super.db);
 }
 
 @DriftAccessor(tables: [SleepLogs])
 class SleepLogsDao extends DatabaseAccessor<AppDatabase> with _$SleepLogsDaoMixin {
-  SleepLogsDao(AppDatabase db) : super(db);
+  SleepLogsDao(super.db);
 }
 
 @DriftAccessor(tables: [MoodLogs])
 class MoodLogsDao extends DatabaseAccessor<AppDatabase> with _$MoodLogsDaoMixin {
-  MoodLogsDao(AppDatabase db) : super(db);
+  MoodLogsDao(super.db);
 }
 
 @DriftAccessor(tables: [Habits])
 class HabitsDao extends DatabaseAccessor<AppDatabase> with _$HabitsDaoMixin {
-  HabitsDao(AppDatabase db) : super(db);
+  HabitsDao(super.db);
 }
 
 @DriftAccessor(tables: [HabitCompletions])
 class HabitCompletionsDao extends DatabaseAccessor<AppDatabase> with _$HabitCompletionsDaoMixin {
-  HabitCompletionsDao(AppDatabase db) : super(db);
+  HabitCompletionsDao(super.db);
 }
 
 @DriftAccessor(tables: [BodyMeasurements])
 class BodyMeasurementsDao extends DatabaseAccessor<AppDatabase> with _$BodyMeasurementsDaoMixin {
-  BodyMeasurementsDao(AppDatabase db) : super(db);
+  BodyMeasurementsDao(super.db);
 }
 
 @DriftAccessor(tables: [Medications])
 class MedicationsDao extends DatabaseAccessor<AppDatabase> with _$MedicationsDaoMixin {
-  MedicationsDao(AppDatabase db) : super(db);
+  MedicationsDao(super.db);
 }
 
 @DriftAccessor(tables: [FastingLogs])
 class FastingLogsDao extends DatabaseAccessor<AppDatabase> with _$FastingLogsDaoMixin {
-  FastingLogsDao(AppDatabase db) : super(db);
+  FastingLogsDao(super.db);
 }
 
 @DriftAccessor(tables: [MealPlans])
 class MealPlansDao extends DatabaseAccessor<AppDatabase> with _$MealPlansDaoMixin {
-  MealPlansDao(AppDatabase db) : super(db);
+  MealPlansDao(super.db);
 }
 
 @DriftAccessor(tables: [Recipes])
 class RecipesDao extends DatabaseAccessor<AppDatabase> with _$RecipesDaoMixin {
-  RecipesDao(AppDatabase db) : super(db);
+  RecipesDao(super.db);
 }
 
 @DriftAccessor(tables: [BloodPressureLogs])
 class BloodPressureLogsDao extends DatabaseAccessor<AppDatabase> with _$BloodPressureLogsDaoMixin {
-  BloodPressureLogsDao(AppDatabase db) : super(db);
+  BloodPressureLogsDao(super.db);
 }
 
 @DriftAccessor(tables: [GlucoseLogs])
 class GlucoseLogsDao extends DatabaseAccessor<AppDatabase> with _$GlucoseLogsDaoMixin {
-  GlucoseLogsDao(AppDatabase db) : super(db);
+  GlucoseLogsDao(super.db);
 }
 
 @DriftAccessor(tables: [Spo2Logs])
 class Spo2LogsDao extends DatabaseAccessor<AppDatabase> with _$Spo2LogsDaoMixin {
-  Spo2LogsDao(AppDatabase db) : super(db);
+  Spo2LogsDao(super.db);
 }
 
 @DriftAccessor(tables: [PeriodLogs])
 class PeriodLogsDao extends DatabaseAccessor<AppDatabase> with _$PeriodLogsDaoMixin {
-  PeriodLogsDao(AppDatabase db) : super(db);
+  PeriodLogsDao(super.db);
 }
 
 @DriftAccessor(tables: [JournalEntries])
 class JournalEntriesDao extends DatabaseAccessor<AppDatabase> with _$JournalEntriesDaoMixin {
-  JournalEntriesDao(AppDatabase db) : super(db);
+  JournalEntriesDao(super.db);
 }
 
 @DriftAccessor(tables: [DoctorAppointments])
 class DoctorAppointmentsDao extends DatabaseAccessor<AppDatabase> with _$DoctorAppointmentsDaoMixin {
-  DoctorAppointmentsDao(AppDatabase db) : super(db);
+  DoctorAppointmentsDao(super.db);
 }
 
 @DriftAccessor(tables: [LabReports])
 class LabReportsDao extends DatabaseAccessor<AppDatabase> with _$LabReportsDaoMixin {
-  LabReportsDao(AppDatabase db) : super(db);
+  LabReportsDao(super.db);
 }
 
 @DriftAccessor(tables: [AbhaLinks])
 class AbhaLinksDao extends DatabaseAccessor<AppDatabase> with _$AbhaLinksDaoMixin {
-  AbhaLinksDao(AppDatabase db) : super(db);
+  AbhaLinksDao(super.db);
 }
 
 @DriftAccessor(tables: [EmergencyCard])
 class EmergencyCardDao extends DatabaseAccessor<AppDatabase> with _$EmergencyCardDaoMixin {
-  EmergencyCardDao(AppDatabase db) : super(db);
+  EmergencyCardDao(super.db);
 }
 
 @DriftAccessor(tables: [FestivalCalendar])
 class FestivalCalendarDao extends DatabaseAccessor<AppDatabase> with _$FestivalCalendarDaoMixin {
-  FestivalCalendarDao(AppDatabase db) : super(db);
+  FestivalCalendarDao(super.db);
 }
 
 @DriftAccessor(tables: [RemoteConfigCache])
 class RemoteConfigCacheDao extends DatabaseAccessor<AppDatabase> with _$RemoteConfigCacheDaoMixin {
-  RemoteConfigCacheDao(AppDatabase db) : super(db);
+  RemoteConfigCacheDao(super.db);
 }
 
 @DriftAccessor(tables: [KarmaTransactions])
 class KarmaTransactionsDao extends DatabaseAccessor<AppDatabase> with _$KarmaTransactionsDaoMixin {
-  KarmaTransactionsDao(AppDatabase db) : super(db);
+  KarmaTransactionsDao(super.db);
 }
 
 @DriftAccessor(tables: [NutritionGoals])
 class NutritionGoalsDao extends DatabaseAccessor<AppDatabase> with _$NutritionGoalsDaoMixin {
-  NutritionGoalsDao(AppDatabase db) : super(db);
+  NutritionGoalsDao(super.db);
 }
 
 @DriftAccessor(tables: [PersonalRecords])
 class PersonalRecordsDao extends DatabaseAccessor<AppDatabase> with _$PersonalRecordsDaoMixin {
-  PersonalRecordsDao(AppDatabase db) : super(db);
+  PersonalRecordsDao(super.db);
 }
 
 // --- Database Class ---

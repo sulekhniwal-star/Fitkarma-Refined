@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:fitkarma/core/network/appwrite_client.dart';
 import 'package:fitkarma/core/constants/api_endpoints.dart';
-import 'package:fitkarma/core/storage/app_database.dart';
 import 'package:fitkarma/core/storage/drift_service.dart';
 
 part 'remote_config.g.dart';
