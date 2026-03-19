@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'app_database.dart';
+part of 'drift_database.dart';
 
 // ignore_for_file: type=lint
 mixin _$SyncQueueDaoMixin on DatabaseAccessor<AppDatabase> {
@@ -7869,37 +7869,33 @@ class $BloodPressureLogsTable extends BloodPressureLogs
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _systolicMeta = const VerificationMeta(
-    'systolic',
-  );
   @override
-  late final GeneratedColumn<int> systolic = GeneratedColumn<int>(
-    'systolic',
-    aliasedName,
-    false,
-    type: DriftSqlType.int,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _diastolicMeta = const VerificationMeta(
-    'diastolic',
-  );
+  late final GeneratedColumnWithTypeConverter<int?, String> systolic =
+      GeneratedColumn<String>(
+        'systolic',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      ).withConverter<int?>($BloodPressureLogsTable.$convertersystolic);
   @override
-  late final GeneratedColumn<int> diastolic = GeneratedColumn<int>(
-    'diastolic',
-    aliasedName,
-    false,
-    type: DriftSqlType.int,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _pulseMeta = const VerificationMeta('pulse');
+  late final GeneratedColumnWithTypeConverter<int?, String> diastolic =
+      GeneratedColumn<String>(
+        'diastolic',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      ).withConverter<int?>($BloodPressureLogsTable.$converterdiastolic);
   @override
-  late final GeneratedColumn<int> pulse = GeneratedColumn<int>(
-    'pulse',
-    aliasedName,
-    true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-  );
+  late final GeneratedColumnWithTypeConverter<int?, String> pulse =
+      GeneratedColumn<String>(
+        'pulse',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      ).withConverter<int?>($BloodPressureLogsTable.$converterpulse);
   static const VerificationMeta _loggedAtMeta = const VerificationMeta(
     'loggedAt',
   );
@@ -7979,28 +7975,6 @@ class $BloodPressureLogsTable extends BloodPressureLogs
     } else if (isInserting) {
       context.missing(_userIdMeta);
     }
-    if (data.containsKey('systolic')) {
-      context.handle(
-        _systolicMeta,
-        systolic.isAcceptableOrUnknown(data['systolic']!, _systolicMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_systolicMeta);
-    }
-    if (data.containsKey('diastolic')) {
-      context.handle(
-        _diastolicMeta,
-        diastolic.isAcceptableOrUnknown(data['diastolic']!, _diastolicMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_diastolicMeta);
-    }
-    if (data.containsKey('pulse')) {
-      context.handle(
-        _pulseMeta,
-        pulse.isAcceptableOrUnknown(data['pulse']!, _pulseMeta),
-      );
-    }
     if (data.containsKey('logged_at')) {
       context.handle(
         _loggedAtMeta,
@@ -8056,17 +8030,23 @@ class $BloodPressureLogsTable extends BloodPressureLogs
         DriftSqlType.string,
         data['${effectivePrefix}user_id'],
       )!,
-      systolic: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}systolic'],
-      )!,
-      diastolic: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}diastolic'],
-      )!,
-      pulse: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}pulse'],
+      systolic: $BloodPressureLogsTable.$convertersystolic.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}systolic'],
+        )!,
+      ),
+      diastolic: $BloodPressureLogsTable.$converterdiastolic.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}diastolic'],
+        )!,
+      ),
+      pulse: $BloodPressureLogsTable.$converterpulse.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}pulse'],
+        ),
       ),
       loggedAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
@@ -8091,14 +8071,21 @@ class $BloodPressureLogsTable extends BloodPressureLogs
   $BloodPressureLogsTable createAlias(String alias) {
     return $BloodPressureLogsTable(attachedDatabase, alias);
   }
+
+  static TypeConverter<int?, String?> $convertersystolic =
+      BpDataClassConverters.intConverter;
+  static TypeConverter<int?, String?> $converterdiastolic =
+      BpDataClassConverters.intConverter;
+  static TypeConverter<int?, String?> $converterpulse =
+      BpDataClassConverters.intConverter;
 }
 
 class BloodPressureLog extends DataClass
     implements Insertable<BloodPressureLog> {
   final String id;
   final String userId;
-  final int systolic;
-  final int diastolic;
+  final int? systolic;
+  final int? diastolic;
   final int? pulse;
   final DateTime loggedAt;
   final String classification;
@@ -8107,8 +8094,8 @@ class BloodPressureLog extends DataClass
   const BloodPressureLog({
     required this.id,
     required this.userId,
-    required this.systolic,
-    required this.diastolic,
+    this.systolic,
+    this.diastolic,
     this.pulse,
     required this.loggedAt,
     required this.classification,
@@ -8120,10 +8107,20 @@ class BloodPressureLog extends DataClass
     final map = <String, Expression>{};
     map['id'] = Variable<String>(id);
     map['user_id'] = Variable<String>(userId);
-    map['systolic'] = Variable<int>(systolic);
-    map['diastolic'] = Variable<int>(diastolic);
+    if (!nullToAbsent || systolic != null) {
+      map['systolic'] = Variable<String>(
+        $BloodPressureLogsTable.$convertersystolic.toSql(systolic),
+      );
+    }
+    if (!nullToAbsent || diastolic != null) {
+      map['diastolic'] = Variable<String>(
+        $BloodPressureLogsTable.$converterdiastolic.toSql(diastolic),
+      );
+    }
     if (!nullToAbsent || pulse != null) {
-      map['pulse'] = Variable<int>(pulse);
+      map['pulse'] = Variable<String>(
+        $BloodPressureLogsTable.$converterpulse.toSql(pulse),
+      );
     }
     map['logged_at'] = Variable<DateTime>(loggedAt);
     map['classification'] = Variable<String>(classification);
@@ -8136,8 +8133,12 @@ class BloodPressureLog extends DataClass
     return BloodPressureLogsCompanion(
       id: Value(id),
       userId: Value(userId),
-      systolic: Value(systolic),
-      diastolic: Value(diastolic),
+      systolic: systolic == null && nullToAbsent
+          ? const Value.absent()
+          : Value(systolic),
+      diastolic: diastolic == null && nullToAbsent
+          ? const Value.absent()
+          : Value(diastolic),
       pulse: pulse == null && nullToAbsent
           ? const Value.absent()
           : Value(pulse),
@@ -8156,8 +8157,8 @@ class BloodPressureLog extends DataClass
     return BloodPressureLog(
       id: serializer.fromJson<String>(json['id']),
       userId: serializer.fromJson<String>(json['userId']),
-      systolic: serializer.fromJson<int>(json['systolic']),
-      diastolic: serializer.fromJson<int>(json['diastolic']),
+      systolic: serializer.fromJson<int?>(json['systolic']),
+      diastolic: serializer.fromJson<int?>(json['diastolic']),
       pulse: serializer.fromJson<int?>(json['pulse']),
       loggedAt: serializer.fromJson<DateTime>(json['loggedAt']),
       classification: serializer.fromJson<String>(json['classification']),
@@ -8171,8 +8172,8 @@ class BloodPressureLog extends DataClass
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
       'userId': serializer.toJson<String>(userId),
-      'systolic': serializer.toJson<int>(systolic),
-      'diastolic': serializer.toJson<int>(diastolic),
+      'systolic': serializer.toJson<int?>(systolic),
+      'diastolic': serializer.toJson<int?>(diastolic),
       'pulse': serializer.toJson<int?>(pulse),
       'loggedAt': serializer.toJson<DateTime>(loggedAt),
       'classification': serializer.toJson<String>(classification),
@@ -8184,8 +8185,8 @@ class BloodPressureLog extends DataClass
   BloodPressureLog copyWith({
     String? id,
     String? userId,
-    int? systolic,
-    int? diastolic,
+    Value<int?> systolic = const Value.absent(),
+    Value<int?> diastolic = const Value.absent(),
     Value<int?> pulse = const Value.absent(),
     DateTime? loggedAt,
     String? classification,
@@ -8194,8 +8195,8 @@ class BloodPressureLog extends DataClass
   }) => BloodPressureLog(
     id: id ?? this.id,
     userId: userId ?? this.userId,
-    systolic: systolic ?? this.systolic,
-    diastolic: diastolic ?? this.diastolic,
+    systolic: systolic.present ? systolic.value : this.systolic,
+    diastolic: diastolic.present ? diastolic.value : this.diastolic,
     pulse: pulse.present ? pulse.value : this.pulse,
     loggedAt: loggedAt ?? this.loggedAt,
     classification: classification ?? this.classification,
@@ -8266,8 +8267,8 @@ class BloodPressureLog extends DataClass
 class BloodPressureLogsCompanion extends UpdateCompanion<BloodPressureLog> {
   final Value<String> id;
   final Value<String> userId;
-  final Value<int> systolic;
-  final Value<int> diastolic;
+  final Value<int?> systolic;
+  final Value<int?> diastolic;
   final Value<int?> pulse;
   final Value<DateTime> loggedAt;
   final Value<String> classification;
@@ -8289,8 +8290,8 @@ class BloodPressureLogsCompanion extends UpdateCompanion<BloodPressureLog> {
   BloodPressureLogsCompanion.insert({
     required String id,
     required String userId,
-    required int systolic,
-    required int diastolic,
+    required int? systolic,
+    required int? diastolic,
     this.pulse = const Value.absent(),
     required DateTime loggedAt,
     required String classification,
@@ -8308,9 +8309,9 @@ class BloodPressureLogsCompanion extends UpdateCompanion<BloodPressureLog> {
   static Insertable<BloodPressureLog> custom({
     Expression<String>? id,
     Expression<String>? userId,
-    Expression<int>? systolic,
-    Expression<int>? diastolic,
-    Expression<int>? pulse,
+    Expression<String>? systolic,
+    Expression<String>? diastolic,
+    Expression<String>? pulse,
     Expression<DateTime>? loggedAt,
     Expression<String>? classification,
     Expression<String>? source,
@@ -8334,8 +8335,8 @@ class BloodPressureLogsCompanion extends UpdateCompanion<BloodPressureLog> {
   BloodPressureLogsCompanion copyWith({
     Value<String>? id,
     Value<String>? userId,
-    Value<int>? systolic,
-    Value<int>? diastolic,
+    Value<int?>? systolic,
+    Value<int?>? diastolic,
     Value<int?>? pulse,
     Value<DateTime>? loggedAt,
     Value<String>? classification,
@@ -8367,13 +8368,19 @@ class BloodPressureLogsCompanion extends UpdateCompanion<BloodPressureLog> {
       map['user_id'] = Variable<String>(userId.value);
     }
     if (systolic.present) {
-      map['systolic'] = Variable<int>(systolic.value);
+      map['systolic'] = Variable<String>(
+        $BloodPressureLogsTable.$convertersystolic.toSql(systolic.value),
+      );
     }
     if (diastolic.present) {
-      map['diastolic'] = Variable<int>(diastolic.value);
+      map['diastolic'] = Variable<String>(
+        $BloodPressureLogsTable.$converterdiastolic.toSql(diastolic.value),
+      );
     }
     if (pulse.present) {
-      map['pulse'] = Variable<int>(pulse.value);
+      map['pulse'] = Variable<String>(
+        $BloodPressureLogsTable.$converterpulse.toSql(pulse.value),
+      );
     }
     if (loggedAt.present) {
       map['logged_at'] = Variable<DateTime>(loggedAt.value);
@@ -8435,17 +8442,15 @@ class $GlucoseLogsTable extends GlucoseLogs
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _glucoseMgdlMeta = const VerificationMeta(
-    'glucoseMgdl',
-  );
   @override
-  late final GeneratedColumn<double> glucoseMgdl = GeneratedColumn<double>(
-    'glucose_mgdl',
-    aliasedName,
-    false,
-    type: DriftSqlType.double,
-    requiredDuringInsert: true,
-  );
+  late final GeneratedColumnWithTypeConverter<double?, String> glucoseMgdl =
+      GeneratedColumn<String>(
+        'glucose_mgdl',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      ).withConverter<double?>($GlucoseLogsTable.$converterglucoseMgdl);
   static const VerificationMeta _readingTypeMeta = const VerificationMeta(
     'readingType',
   );
@@ -8559,17 +8564,6 @@ class $GlucoseLogsTable extends GlucoseLogs
     } else if (isInserting) {
       context.missing(_userIdMeta);
     }
-    if (data.containsKey('glucose_mgdl')) {
-      context.handle(
-        _glucoseMgdlMeta,
-        glucoseMgdl.isAcceptableOrUnknown(
-          data['glucose_mgdl']!,
-          _glucoseMgdlMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_glucoseMgdlMeta);
-    }
     if (data.containsKey('reading_type')) {
       context.handle(
         _readingTypeMeta,
@@ -8651,10 +8645,12 @@ class $GlucoseLogsTable extends GlucoseLogs
         DriftSqlType.string,
         data['${effectivePrefix}user_id'],
       )!,
-      glucoseMgdl: attachedDatabase.typeMapping.read(
-        DriftSqlType.double,
-        data['${effectivePrefix}glucose_mgdl'],
-      )!,
+      glucoseMgdl: $GlucoseLogsTable.$converterglucoseMgdl.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}glucose_mgdl'],
+        )!,
+      ),
       readingType: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}reading_type'],
@@ -8690,12 +8686,15 @@ class $GlucoseLogsTable extends GlucoseLogs
   $GlucoseLogsTable createAlias(String alias) {
     return $GlucoseLogsTable(attachedDatabase, alias);
   }
+
+  static TypeConverter<double?, String?> $converterglucoseMgdl =
+      BpDataClassConverters.doubleConverter;
 }
 
 class GlucoseLog extends DataClass implements Insertable<GlucoseLog> {
   final String id;
   final String userId;
-  final double glucoseMgdl;
+  final double? glucoseMgdl;
   final String readingType;
   final String? foodLogId;
   final DateTime loggedAt;
@@ -8706,7 +8705,7 @@ class GlucoseLog extends DataClass implements Insertable<GlucoseLog> {
   const GlucoseLog({
     required this.id,
     required this.userId,
-    required this.glucoseMgdl,
+    this.glucoseMgdl,
     required this.readingType,
     this.foodLogId,
     required this.loggedAt,
@@ -8720,7 +8719,11 @@ class GlucoseLog extends DataClass implements Insertable<GlucoseLog> {
     final map = <String, Expression>{};
     map['id'] = Variable<String>(id);
     map['user_id'] = Variable<String>(userId);
-    map['glucose_mgdl'] = Variable<double>(glucoseMgdl);
+    if (!nullToAbsent || glucoseMgdl != null) {
+      map['glucose_mgdl'] = Variable<String>(
+        $GlucoseLogsTable.$converterglucoseMgdl.toSql(glucoseMgdl),
+      );
+    }
     map['reading_type'] = Variable<String>(readingType);
     if (!nullToAbsent || foodLogId != null) {
       map['food_log_id'] = Variable<String>(foodLogId);
@@ -8739,7 +8742,9 @@ class GlucoseLog extends DataClass implements Insertable<GlucoseLog> {
     return GlucoseLogsCompanion(
       id: Value(id),
       userId: Value(userId),
-      glucoseMgdl: Value(glucoseMgdl),
+      glucoseMgdl: glucoseMgdl == null && nullToAbsent
+          ? const Value.absent()
+          : Value(glucoseMgdl),
       readingType: Value(readingType),
       foodLogId: foodLogId == null && nullToAbsent
           ? const Value.absent()
@@ -8762,7 +8767,7 @@ class GlucoseLog extends DataClass implements Insertable<GlucoseLog> {
     return GlucoseLog(
       id: serializer.fromJson<String>(json['id']),
       userId: serializer.fromJson<String>(json['userId']),
-      glucoseMgdl: serializer.fromJson<double>(json['glucoseMgdl']),
+      glucoseMgdl: serializer.fromJson<double?>(json['glucoseMgdl']),
       readingType: serializer.fromJson<String>(json['readingType']),
       foodLogId: serializer.fromJson<String?>(json['foodLogId']),
       loggedAt: serializer.fromJson<DateTime>(json['loggedAt']),
@@ -8778,7 +8783,7 @@ class GlucoseLog extends DataClass implements Insertable<GlucoseLog> {
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
       'userId': serializer.toJson<String>(userId),
-      'glucoseMgdl': serializer.toJson<double>(glucoseMgdl),
+      'glucoseMgdl': serializer.toJson<double?>(glucoseMgdl),
       'readingType': serializer.toJson<String>(readingType),
       'foodLogId': serializer.toJson<String?>(foodLogId),
       'loggedAt': serializer.toJson<DateTime>(loggedAt),
@@ -8792,7 +8797,7 @@ class GlucoseLog extends DataClass implements Insertable<GlucoseLog> {
   GlucoseLog copyWith({
     String? id,
     String? userId,
-    double? glucoseMgdl,
+    Value<double?> glucoseMgdl = const Value.absent(),
     String? readingType,
     Value<String?> foodLogId = const Value.absent(),
     DateTime? loggedAt,
@@ -8803,7 +8808,7 @@ class GlucoseLog extends DataClass implements Insertable<GlucoseLog> {
   }) => GlucoseLog(
     id: id ?? this.id,
     userId: userId ?? this.userId,
-    glucoseMgdl: glucoseMgdl ?? this.glucoseMgdl,
+    glucoseMgdl: glucoseMgdl.present ? glucoseMgdl.value : this.glucoseMgdl,
     readingType: readingType ?? this.readingType,
     foodLogId: foodLogId.present ? foodLogId.value : this.foodLogId,
     loggedAt: loggedAt ?? this.loggedAt,
@@ -8888,7 +8893,7 @@ class GlucoseLog extends DataClass implements Insertable<GlucoseLog> {
 class GlucoseLogsCompanion extends UpdateCompanion<GlucoseLog> {
   final Value<String> id;
   final Value<String> userId;
-  final Value<double> glucoseMgdl;
+  final Value<double?> glucoseMgdl;
   final Value<String> readingType;
   final Value<String?> foodLogId;
   final Value<DateTime> loggedAt;
@@ -8913,7 +8918,7 @@ class GlucoseLogsCompanion extends UpdateCompanion<GlucoseLog> {
   GlucoseLogsCompanion.insert({
     required String id,
     required String userId,
-    required double glucoseMgdl,
+    required double? glucoseMgdl,
     required String readingType,
     this.foodLogId = const Value.absent(),
     required DateTime loggedAt,
@@ -8933,7 +8938,7 @@ class GlucoseLogsCompanion extends UpdateCompanion<GlucoseLog> {
   static Insertable<GlucoseLog> custom({
     Expression<String>? id,
     Expression<String>? userId,
-    Expression<double>? glucoseMgdl,
+    Expression<String>? glucoseMgdl,
     Expression<String>? readingType,
     Expression<String>? foodLogId,
     Expression<DateTime>? loggedAt,
@@ -8961,7 +8966,7 @@ class GlucoseLogsCompanion extends UpdateCompanion<GlucoseLog> {
   GlucoseLogsCompanion copyWith({
     Value<String>? id,
     Value<String>? userId,
-    Value<double>? glucoseMgdl,
+    Value<double?>? glucoseMgdl,
     Value<String>? readingType,
     Value<String?>? foodLogId,
     Value<DateTime>? loggedAt,
@@ -8996,7 +9001,9 @@ class GlucoseLogsCompanion extends UpdateCompanion<GlucoseLog> {
       map['user_id'] = Variable<String>(userId.value);
     }
     if (glucoseMgdl.present) {
-      map['glucose_mgdl'] = Variable<double>(glucoseMgdl.value);
+      map['glucose_mgdl'] = Variable<String>(
+        $GlucoseLogsTable.$converterglucoseMgdl.toSql(glucoseMgdl.value),
+      );
     }
     if (readingType.present) {
       map['reading_type'] = Variable<String>(readingType.value);
@@ -9067,28 +9074,24 @@ class $Spo2LogsTable extends Spo2Logs with TableInfo<$Spo2LogsTable, Spo2Log> {
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _spo2PercentageMeta = const VerificationMeta(
-    'spo2Percentage',
-  );
   @override
-  late final GeneratedColumn<double> spo2Percentage = GeneratedColumn<double>(
-    'spo2_percentage',
-    aliasedName,
-    false,
-    type: DriftSqlType.double,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _pulseRateMeta = const VerificationMeta(
-    'pulseRate',
-  );
+  late final GeneratedColumnWithTypeConverter<double?, String> spo2Percentage =
+      GeneratedColumn<String>(
+        'spo2_percentage',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      ).withConverter<double?>($Spo2LogsTable.$converterspo2Percentage);
   @override
-  late final GeneratedColumn<int> pulseRate = GeneratedColumn<int>(
-    'pulse_rate',
-    aliasedName,
-    true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-  );
+  late final GeneratedColumnWithTypeConverter<int?, String> pulseRate =
+      GeneratedColumn<String>(
+        'pulse_rate',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      ).withConverter<int?>($Spo2LogsTable.$converterpulseRate);
   static const VerificationMeta _loggedAtMeta = const VerificationMeta(
     'loggedAt',
   );
@@ -9133,23 +9136,6 @@ class $Spo2LogsTable extends Spo2Logs with TableInfo<$Spo2LogsTable, Spo2Log> {
     } else if (isInserting) {
       context.missing(_userIdMeta);
     }
-    if (data.containsKey('spo2_percentage')) {
-      context.handle(
-        _spo2PercentageMeta,
-        spo2Percentage.isAcceptableOrUnknown(
-          data['spo2_percentage']!,
-          _spo2PercentageMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_spo2PercentageMeta);
-    }
-    if (data.containsKey('pulse_rate')) {
-      context.handle(
-        _pulseRateMeta,
-        pulseRate.isAcceptableOrUnknown(data['pulse_rate']!, _pulseRateMeta),
-      );
-    }
     if (data.containsKey('logged_at')) {
       context.handle(
         _loggedAtMeta,
@@ -9175,13 +9161,17 @@ class $Spo2LogsTable extends Spo2Logs with TableInfo<$Spo2LogsTable, Spo2Log> {
         DriftSqlType.string,
         data['${effectivePrefix}user_id'],
       )!,
-      spo2Percentage: attachedDatabase.typeMapping.read(
-        DriftSqlType.double,
-        data['${effectivePrefix}spo2_percentage'],
-      )!,
-      pulseRate: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}pulse_rate'],
+      spo2Percentage: $Spo2LogsTable.$converterspo2Percentage.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}spo2_percentage'],
+        )!,
+      ),
+      pulseRate: $Spo2LogsTable.$converterpulseRate.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}pulse_rate'],
+        ),
       ),
       loggedAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
@@ -9194,18 +9184,23 @@ class $Spo2LogsTable extends Spo2Logs with TableInfo<$Spo2LogsTable, Spo2Log> {
   $Spo2LogsTable createAlias(String alias) {
     return $Spo2LogsTable(attachedDatabase, alias);
   }
+
+  static TypeConverter<double?, String?> $converterspo2Percentage =
+      BpDataClassConverters.doubleConverter;
+  static TypeConverter<int?, String?> $converterpulseRate =
+      BpDataClassConverters.intConverter;
 }
 
 class Spo2Log extends DataClass implements Insertable<Spo2Log> {
   final String id;
   final String userId;
-  final double spo2Percentage;
+  final double? spo2Percentage;
   final int? pulseRate;
   final DateTime loggedAt;
   const Spo2Log({
     required this.id,
     required this.userId,
-    required this.spo2Percentage,
+    this.spo2Percentage,
     this.pulseRate,
     required this.loggedAt,
   });
@@ -9214,9 +9209,15 @@ class Spo2Log extends DataClass implements Insertable<Spo2Log> {
     final map = <String, Expression>{};
     map['id'] = Variable<String>(id);
     map['user_id'] = Variable<String>(userId);
-    map['spo2_percentage'] = Variable<double>(spo2Percentage);
+    if (!nullToAbsent || spo2Percentage != null) {
+      map['spo2_percentage'] = Variable<String>(
+        $Spo2LogsTable.$converterspo2Percentage.toSql(spo2Percentage),
+      );
+    }
     if (!nullToAbsent || pulseRate != null) {
-      map['pulse_rate'] = Variable<int>(pulseRate);
+      map['pulse_rate'] = Variable<String>(
+        $Spo2LogsTable.$converterpulseRate.toSql(pulseRate),
+      );
     }
     map['logged_at'] = Variable<DateTime>(loggedAt);
     return map;
@@ -9226,7 +9227,9 @@ class Spo2Log extends DataClass implements Insertable<Spo2Log> {
     return Spo2LogsCompanion(
       id: Value(id),
       userId: Value(userId),
-      spo2Percentage: Value(spo2Percentage),
+      spo2Percentage: spo2Percentage == null && nullToAbsent
+          ? const Value.absent()
+          : Value(spo2Percentage),
       pulseRate: pulseRate == null && nullToAbsent
           ? const Value.absent()
           : Value(pulseRate),
@@ -9242,7 +9245,7 @@ class Spo2Log extends DataClass implements Insertable<Spo2Log> {
     return Spo2Log(
       id: serializer.fromJson<String>(json['id']),
       userId: serializer.fromJson<String>(json['userId']),
-      spo2Percentage: serializer.fromJson<double>(json['spo2Percentage']),
+      spo2Percentage: serializer.fromJson<double?>(json['spo2Percentage']),
       pulseRate: serializer.fromJson<int?>(json['pulseRate']),
       loggedAt: serializer.fromJson<DateTime>(json['loggedAt']),
     );
@@ -9253,7 +9256,7 @@ class Spo2Log extends DataClass implements Insertable<Spo2Log> {
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
       'userId': serializer.toJson<String>(userId),
-      'spo2Percentage': serializer.toJson<double>(spo2Percentage),
+      'spo2Percentage': serializer.toJson<double?>(spo2Percentage),
       'pulseRate': serializer.toJson<int?>(pulseRate),
       'loggedAt': serializer.toJson<DateTime>(loggedAt),
     };
@@ -9262,13 +9265,15 @@ class Spo2Log extends DataClass implements Insertable<Spo2Log> {
   Spo2Log copyWith({
     String? id,
     String? userId,
-    double? spo2Percentage,
+    Value<double?> spo2Percentage = const Value.absent(),
     Value<int?> pulseRate = const Value.absent(),
     DateTime? loggedAt,
   }) => Spo2Log(
     id: id ?? this.id,
     userId: userId ?? this.userId,
-    spo2Percentage: spo2Percentage ?? this.spo2Percentage,
+    spo2Percentage: spo2Percentage.present
+        ? spo2Percentage.value
+        : this.spo2Percentage,
     pulseRate: pulseRate.present ? pulseRate.value : this.pulseRate,
     loggedAt: loggedAt ?? this.loggedAt,
   );
@@ -9313,7 +9318,7 @@ class Spo2Log extends DataClass implements Insertable<Spo2Log> {
 class Spo2LogsCompanion extends UpdateCompanion<Spo2Log> {
   final Value<String> id;
   final Value<String> userId;
-  final Value<double> spo2Percentage;
+  final Value<double?> spo2Percentage;
   final Value<int?> pulseRate;
   final Value<DateTime> loggedAt;
   final Value<int> rowid;
@@ -9328,7 +9333,7 @@ class Spo2LogsCompanion extends UpdateCompanion<Spo2Log> {
   Spo2LogsCompanion.insert({
     required String id,
     required String userId,
-    required double spo2Percentage,
+    required double? spo2Percentage,
     this.pulseRate = const Value.absent(),
     required DateTime loggedAt,
     this.rowid = const Value.absent(),
@@ -9339,8 +9344,8 @@ class Spo2LogsCompanion extends UpdateCompanion<Spo2Log> {
   static Insertable<Spo2Log> custom({
     Expression<String>? id,
     Expression<String>? userId,
-    Expression<double>? spo2Percentage,
-    Expression<int>? pulseRate,
+    Expression<String>? spo2Percentage,
+    Expression<String>? pulseRate,
     Expression<DateTime>? loggedAt,
     Expression<int>? rowid,
   }) {
@@ -9357,7 +9362,7 @@ class Spo2LogsCompanion extends UpdateCompanion<Spo2Log> {
   Spo2LogsCompanion copyWith({
     Value<String>? id,
     Value<String>? userId,
-    Value<double>? spo2Percentage,
+    Value<double?>? spo2Percentage,
     Value<int?>? pulseRate,
     Value<DateTime>? loggedAt,
     Value<int>? rowid,
@@ -9382,10 +9387,14 @@ class Spo2LogsCompanion extends UpdateCompanion<Spo2Log> {
       map['user_id'] = Variable<String>(userId.value);
     }
     if (spo2Percentage.present) {
-      map['spo2_percentage'] = Variable<double>(spo2Percentage.value);
+      map['spo2_percentage'] = Variable<String>(
+        $Spo2LogsTable.$converterspo2Percentage.toSql(spo2Percentage.value),
+      );
     }
     if (pulseRate.present) {
-      map['pulse_rate'] = Variable<int>(pulseRate.value);
+      map['pulse_rate'] = Variable<String>(
+        $Spo2LogsTable.$converterpulseRate.toSql(pulseRate.value),
+      );
     }
     if (loggedAt.present) {
       map['logged_at'] = Variable<DateTime>(loggedAt.value);
@@ -9443,28 +9452,24 @@ class $PeriodLogsTable extends PeriodLogs
     type: DriftSqlType.dateTime,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _symptomsMeta = const VerificationMeta(
-    'symptoms',
-  );
   @override
-  late final GeneratedColumn<String> symptoms = GeneratedColumn<String>(
-    'symptoms',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _flowTypeMeta = const VerificationMeta(
-    'flowType',
-  );
+  late final GeneratedColumnWithTypeConverter<String?, String> symptoms =
+      GeneratedColumn<String>(
+        'symptoms',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      ).withConverter<String?>($PeriodLogsTable.$convertersymptoms);
   @override
-  late final GeneratedColumn<String> flowType = GeneratedColumn<String>(
-    'flow_type',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
+  late final GeneratedColumnWithTypeConverter<String?, String> flowType =
+      GeneratedColumn<String>(
+        'flow_type',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      ).withConverter<String?>($PeriodLogsTable.$converterflowType);
   @override
   List<GeneratedColumn> get $columns => [id, userId, date, symptoms, flowType];
   @override
@@ -9500,18 +9505,6 @@ class $PeriodLogsTable extends PeriodLogs
     } else if (isInserting) {
       context.missing(_dateMeta);
     }
-    if (data.containsKey('symptoms')) {
-      context.handle(
-        _symptomsMeta,
-        symptoms.isAcceptableOrUnknown(data['symptoms']!, _symptomsMeta),
-      );
-    }
-    if (data.containsKey('flow_type')) {
-      context.handle(
-        _flowTypeMeta,
-        flowType.isAcceptableOrUnknown(data['flow_type']!, _flowTypeMeta),
-      );
-    }
     return context;
   }
 
@@ -9533,13 +9526,17 @@ class $PeriodLogsTable extends PeriodLogs
         DriftSqlType.dateTime,
         data['${effectivePrefix}date'],
       )!,
-      symptoms: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}symptoms'],
+      symptoms: $PeriodLogsTable.$convertersymptoms.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}symptoms'],
+        ),
       ),
-      flowType: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}flow_type'],
+      flowType: $PeriodLogsTable.$converterflowType.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}flow_type'],
+        ),
       ),
     );
   }
@@ -9548,6 +9545,11 @@ class $PeriodLogsTable extends PeriodLogs
   $PeriodLogsTable createAlias(String alias) {
     return $PeriodLogsTable(attachedDatabase, alias);
   }
+
+  static TypeConverter<String?, String?> $convertersymptoms =
+      PeriodDataClassConverters.text;
+  static TypeConverter<String?, String?> $converterflowType =
+      PeriodDataClassConverters.text;
 }
 
 class PeriodLog extends DataClass implements Insertable<PeriodLog> {
@@ -9570,10 +9572,14 @@ class PeriodLog extends DataClass implements Insertable<PeriodLog> {
     map['user_id'] = Variable<String>(userId);
     map['date'] = Variable<DateTime>(date);
     if (!nullToAbsent || symptoms != null) {
-      map['symptoms'] = Variable<String>(symptoms);
+      map['symptoms'] = Variable<String>(
+        $PeriodLogsTable.$convertersymptoms.toSql(symptoms),
+      );
     }
     if (!nullToAbsent || flowType != null) {
-      map['flow_type'] = Variable<String>(flowType);
+      map['flow_type'] = Variable<String>(
+        $PeriodLogsTable.$converterflowType.toSql(flowType),
+      );
     }
     return map;
   }
@@ -9739,10 +9745,14 @@ class PeriodLogsCompanion extends UpdateCompanion<PeriodLog> {
       map['date'] = Variable<DateTime>(date.value);
     }
     if (symptoms.present) {
-      map['symptoms'] = Variable<String>(symptoms.value);
+      map['symptoms'] = Variable<String>(
+        $PeriodLogsTable.$convertersymptoms.toSql(symptoms.value),
+      );
     }
     if (flowType.present) {
-      map['flow_type'] = Variable<String>(flowType.value);
+      map['flow_type'] = Variable<String>(
+        $PeriodLogsTable.$converterflowType.toSql(flowType.value),
+      );
     }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
@@ -9799,17 +9809,15 @@ class $JournalEntriesTable extends JournalEntries
     type: DriftSqlType.dateTime,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _contentMeta = const VerificationMeta(
-    'content',
-  );
   @override
-  late final GeneratedColumn<String> content = GeneratedColumn<String>(
-    'content',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
+  late final GeneratedColumnWithTypeConverter<String?, String> content =
+      GeneratedColumn<String>(
+        'content',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      ).withConverter<String?>($JournalEntriesTable.$convertercontent);
   @override
   List<GeneratedColumn> get $columns => [id, userId, createdAt, content];
   @override
@@ -9845,14 +9853,6 @@ class $JournalEntriesTable extends JournalEntries
     } else if (isInserting) {
       context.missing(_createdAtMeta);
     }
-    if (data.containsKey('content')) {
-      context.handle(
-        _contentMeta,
-        content.isAcceptableOrUnknown(data['content']!, _contentMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_contentMeta);
-    }
     return context;
   }
 
@@ -9874,10 +9874,12 @@ class $JournalEntriesTable extends JournalEntries
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
       )!,
-      content: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}content'],
-      )!,
+      content: $JournalEntriesTable.$convertercontent.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}content'],
+        )!,
+      ),
     );
   }
 
@@ -9885,18 +9887,21 @@ class $JournalEntriesTable extends JournalEntries
   $JournalEntriesTable createAlias(String alias) {
     return $JournalEntriesTable(attachedDatabase, alias);
   }
+
+  static TypeConverter<String?, String?> $convertercontent =
+      JournalDataClassConverters.text;
 }
 
 class JournalEntry extends DataClass implements Insertable<JournalEntry> {
   final String id;
   final String userId;
   final DateTime createdAt;
-  final String content;
+  final String? content;
   const JournalEntry({
     required this.id,
     required this.userId,
     required this.createdAt,
-    required this.content,
+    this.content,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -9904,7 +9909,11 @@ class JournalEntry extends DataClass implements Insertable<JournalEntry> {
     map['id'] = Variable<String>(id);
     map['user_id'] = Variable<String>(userId);
     map['created_at'] = Variable<DateTime>(createdAt);
-    map['content'] = Variable<String>(content);
+    if (!nullToAbsent || content != null) {
+      map['content'] = Variable<String>(
+        $JournalEntriesTable.$convertercontent.toSql(content),
+      );
+    }
     return map;
   }
 
@@ -9913,7 +9922,9 @@ class JournalEntry extends DataClass implements Insertable<JournalEntry> {
       id: Value(id),
       userId: Value(userId),
       createdAt: Value(createdAt),
-      content: Value(content),
+      content: content == null && nullToAbsent
+          ? const Value.absent()
+          : Value(content),
     );
   }
 
@@ -9926,7 +9937,7 @@ class JournalEntry extends DataClass implements Insertable<JournalEntry> {
       id: serializer.fromJson<String>(json['id']),
       userId: serializer.fromJson<String>(json['userId']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
-      content: serializer.fromJson<String>(json['content']),
+      content: serializer.fromJson<String?>(json['content']),
     );
   }
   @override
@@ -9936,7 +9947,7 @@ class JournalEntry extends DataClass implements Insertable<JournalEntry> {
       'id': serializer.toJson<String>(id),
       'userId': serializer.toJson<String>(userId),
       'createdAt': serializer.toJson<DateTime>(createdAt),
-      'content': serializer.toJson<String>(content),
+      'content': serializer.toJson<String?>(content),
     };
   }
 
@@ -9944,12 +9955,12 @@ class JournalEntry extends DataClass implements Insertable<JournalEntry> {
     String? id,
     String? userId,
     DateTime? createdAt,
-    String? content,
+    Value<String?> content = const Value.absent(),
   }) => JournalEntry(
     id: id ?? this.id,
     userId: userId ?? this.userId,
     createdAt: createdAt ?? this.createdAt,
-    content: content ?? this.content,
+    content: content.present ? content.value : this.content,
   );
   JournalEntry copyWithCompanion(JournalEntriesCompanion data) {
     return JournalEntry(
@@ -9987,7 +9998,7 @@ class JournalEntriesCompanion extends UpdateCompanion<JournalEntry> {
   final Value<String> id;
   final Value<String> userId;
   final Value<DateTime> createdAt;
-  final Value<String> content;
+  final Value<String?> content;
   final Value<int> rowid;
   const JournalEntriesCompanion({
     this.id = const Value.absent(),
@@ -10000,7 +10011,7 @@ class JournalEntriesCompanion extends UpdateCompanion<JournalEntry> {
     required String id,
     required String userId,
     required DateTime createdAt,
-    required String content,
+    required String? content,
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        userId = Value(userId),
@@ -10026,7 +10037,7 @@ class JournalEntriesCompanion extends UpdateCompanion<JournalEntry> {
     Value<String>? id,
     Value<String>? userId,
     Value<DateTime>? createdAt,
-    Value<String>? content,
+    Value<String?>? content,
     Value<int>? rowid,
   }) {
     return JournalEntriesCompanion(
@@ -10051,7 +10062,9 @@ class JournalEntriesCompanion extends UpdateCompanion<JournalEntry> {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
     if (content.present) {
-      map['content'] = Variable<String>(content.value);
+      map['content'] = Variable<String>(
+        $JournalEntriesTable.$convertercontent.toSql(content.value),
+      );
     }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
@@ -10130,15 +10143,15 @@ class $DoctorAppointmentsTable extends DoctorAppointments
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _notesMeta = const VerificationMeta('notes');
   @override
-  late final GeneratedColumn<String> notes = GeneratedColumn<String>(
-    'notes',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
+  late final GeneratedColumnWithTypeConverter<String?, String> notes =
+      GeneratedColumn<String>(
+        'notes',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      ).withConverter<String?>($DoctorAppointmentsTable.$converternotes);
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -10198,12 +10211,6 @@ class $DoctorAppointmentsTable extends DoctorAppointments
         specialty.isAcceptableOrUnknown(data['specialty']!, _specialtyMeta),
       );
     }
-    if (data.containsKey('notes')) {
-      context.handle(
-        _notesMeta,
-        notes.isAcceptableOrUnknown(data['notes']!, _notesMeta),
-      );
-    }
     return context;
   }
 
@@ -10233,9 +10240,11 @@ class $DoctorAppointmentsTable extends DoctorAppointments
         DriftSqlType.string,
         data['${effectivePrefix}specialty'],
       ),
-      notes: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}notes'],
+      notes: $DoctorAppointmentsTable.$converternotes.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}notes'],
+        ),
       ),
     );
   }
@@ -10244,6 +10253,9 @@ class $DoctorAppointmentsTable extends DoctorAppointments
   $DoctorAppointmentsTable createAlias(String alias) {
     return $DoctorAppointmentsTable(attachedDatabase, alias);
   }
+
+  static TypeConverter<String?, String?> $converternotes =
+      AppointmentsDataClassConverters.text;
 }
 
 class DoctorAppointment extends DataClass
@@ -10273,7 +10285,9 @@ class DoctorAppointment extends DataClass
       map['specialty'] = Variable<String>(specialty);
     }
     if (!nullToAbsent || notes != null) {
-      map['notes'] = Variable<String>(notes);
+      map['notes'] = Variable<String>(
+        $DoctorAppointmentsTable.$converternotes.toSql(notes),
+      );
     }
     return map;
   }
@@ -10466,7 +10480,9 @@ class DoctorAppointmentsCompanion extends UpdateCompanion<DoctorAppointment> {
       map['specialty'] = Variable<String>(specialty.value);
     }
     if (notes.present) {
-      map['notes'] = Variable<String>(notes.value);
+      map['notes'] = Variable<String>(
+        $DoctorAppointmentsTable.$converternotes.toSql(notes.value),
+      );
     }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
@@ -10535,28 +10551,24 @@ class $LabReportsTable extends LabReports
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _extractedValuesMeta = const VerificationMeta(
-    'extractedValues',
-  );
   @override
-  late final GeneratedColumn<String> extractedValues = GeneratedColumn<String>(
-    'extracted_values',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _rawTextMeta = const VerificationMeta(
-    'rawText',
-  );
+  late final GeneratedColumnWithTypeConverter<String?, String> extractedValues =
+      GeneratedColumn<String>(
+        'extracted_values',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      ).withConverter<String?>($LabReportsTable.$converterextractedValues);
   @override
-  late final GeneratedColumn<String> rawText = GeneratedColumn<String>(
-    'raw_text',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
+  late final GeneratedColumnWithTypeConverter<String?, String> rawText =
+      GeneratedColumn<String>(
+        'raw_text',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      ).withConverter<String?>($LabReportsTable.$converterrawText);
   static const VerificationMeta _confirmedByUserMeta = const VerificationMeta(
     'confirmedByUser',
   );
@@ -10633,23 +10645,6 @@ class $LabReportsTable extends LabReports
     } else if (isInserting) {
       context.missing(_labNameMeta);
     }
-    if (data.containsKey('extracted_values')) {
-      context.handle(
-        _extractedValuesMeta,
-        extractedValues.isAcceptableOrUnknown(
-          data['extracted_values']!,
-          _extractedValuesMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_extractedValuesMeta);
-    }
-    if (data.containsKey('raw_text')) {
-      context.handle(
-        _rawTextMeta,
-        rawText.isAcceptableOrUnknown(data['raw_text']!, _rawTextMeta),
-      );
-    }
     if (data.containsKey('confirmed_by_user')) {
       context.handle(
         _confirmedByUserMeta,
@@ -10692,13 +10687,17 @@ class $LabReportsTable extends LabReports
         DriftSqlType.string,
         data['${effectivePrefix}lab_name'],
       )!,
-      extractedValues: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}extracted_values'],
-      )!,
-      rawText: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}raw_text'],
+      extractedValues: $LabReportsTable.$converterextractedValues.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}extracted_values'],
+        )!,
+      ),
+      rawText: $LabReportsTable.$converterrawText.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}raw_text'],
+        ),
       ),
       confirmedByUser: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
@@ -10715,6 +10714,11 @@ class $LabReportsTable extends LabReports
   $LabReportsTable createAlias(String alias) {
     return $LabReportsTable(attachedDatabase, alias);
   }
+
+  static TypeConverter<String?, String?> $converterextractedValues =
+      LabReportsDataClassConverters.text;
+  static TypeConverter<String?, String?> $converterrawText =
+      LabReportsDataClassConverters.text;
 }
 
 class LabReport extends DataClass implements Insertable<LabReport> {
@@ -10722,7 +10726,7 @@ class LabReport extends DataClass implements Insertable<LabReport> {
   final String userId;
   final DateTime reportDate;
   final String labName;
-  final String extractedValues;
+  final String? extractedValues;
   final String? rawText;
   final bool confirmedByUser;
   final String source;
@@ -10731,7 +10735,7 @@ class LabReport extends DataClass implements Insertable<LabReport> {
     required this.userId,
     required this.reportDate,
     required this.labName,
-    required this.extractedValues,
+    this.extractedValues,
     this.rawText,
     required this.confirmedByUser,
     required this.source,
@@ -10743,9 +10747,15 @@ class LabReport extends DataClass implements Insertable<LabReport> {
     map['user_id'] = Variable<String>(userId);
     map['report_date'] = Variable<DateTime>(reportDate);
     map['lab_name'] = Variable<String>(labName);
-    map['extracted_values'] = Variable<String>(extractedValues);
+    if (!nullToAbsent || extractedValues != null) {
+      map['extracted_values'] = Variable<String>(
+        $LabReportsTable.$converterextractedValues.toSql(extractedValues),
+      );
+    }
     if (!nullToAbsent || rawText != null) {
-      map['raw_text'] = Variable<String>(rawText);
+      map['raw_text'] = Variable<String>(
+        $LabReportsTable.$converterrawText.toSql(rawText),
+      );
     }
     map['confirmed_by_user'] = Variable<bool>(confirmedByUser);
     map['source'] = Variable<String>(source);
@@ -10758,7 +10768,9 @@ class LabReport extends DataClass implements Insertable<LabReport> {
       userId: Value(userId),
       reportDate: Value(reportDate),
       labName: Value(labName),
-      extractedValues: Value(extractedValues),
+      extractedValues: extractedValues == null && nullToAbsent
+          ? const Value.absent()
+          : Value(extractedValues),
       rawText: rawText == null && nullToAbsent
           ? const Value.absent()
           : Value(rawText),
@@ -10777,7 +10789,7 @@ class LabReport extends DataClass implements Insertable<LabReport> {
       userId: serializer.fromJson<String>(json['userId']),
       reportDate: serializer.fromJson<DateTime>(json['reportDate']),
       labName: serializer.fromJson<String>(json['labName']),
-      extractedValues: serializer.fromJson<String>(json['extractedValues']),
+      extractedValues: serializer.fromJson<String?>(json['extractedValues']),
       rawText: serializer.fromJson<String?>(json['rawText']),
       confirmedByUser: serializer.fromJson<bool>(json['confirmedByUser']),
       source: serializer.fromJson<String>(json['source']),
@@ -10791,7 +10803,7 @@ class LabReport extends DataClass implements Insertable<LabReport> {
       'userId': serializer.toJson<String>(userId),
       'reportDate': serializer.toJson<DateTime>(reportDate),
       'labName': serializer.toJson<String>(labName),
-      'extractedValues': serializer.toJson<String>(extractedValues),
+      'extractedValues': serializer.toJson<String?>(extractedValues),
       'rawText': serializer.toJson<String?>(rawText),
       'confirmedByUser': serializer.toJson<bool>(confirmedByUser),
       'source': serializer.toJson<String>(source),
@@ -10803,7 +10815,7 @@ class LabReport extends DataClass implements Insertable<LabReport> {
     String? userId,
     DateTime? reportDate,
     String? labName,
-    String? extractedValues,
+    Value<String?> extractedValues = const Value.absent(),
     Value<String?> rawText = const Value.absent(),
     bool? confirmedByUser,
     String? source,
@@ -10812,7 +10824,9 @@ class LabReport extends DataClass implements Insertable<LabReport> {
     userId: userId ?? this.userId,
     reportDate: reportDate ?? this.reportDate,
     labName: labName ?? this.labName,
-    extractedValues: extractedValues ?? this.extractedValues,
+    extractedValues: extractedValues.present
+        ? extractedValues.value
+        : this.extractedValues,
     rawText: rawText.present ? rawText.value : this.rawText,
     confirmedByUser: confirmedByUser ?? this.confirmedByUser,
     source: source ?? this.source,
@@ -10881,7 +10895,7 @@ class LabReportsCompanion extends UpdateCompanion<LabReport> {
   final Value<String> userId;
   final Value<DateTime> reportDate;
   final Value<String> labName;
-  final Value<String> extractedValues;
+  final Value<String?> extractedValues;
   final Value<String?> rawText;
   final Value<bool> confirmedByUser;
   final Value<String> source;
@@ -10902,7 +10916,7 @@ class LabReportsCompanion extends UpdateCompanion<LabReport> {
     required String userId,
     required DateTime reportDate,
     required String labName,
-    required String extractedValues,
+    required String? extractedValues,
     this.rawText = const Value.absent(),
     this.confirmedByUser = const Value.absent(),
     required String source,
@@ -10942,7 +10956,7 @@ class LabReportsCompanion extends UpdateCompanion<LabReport> {
     Value<String>? userId,
     Value<DateTime>? reportDate,
     Value<String>? labName,
-    Value<String>? extractedValues,
+    Value<String?>? extractedValues,
     Value<String?>? rawText,
     Value<bool>? confirmedByUser,
     Value<String>? source,
@@ -10977,10 +10991,14 @@ class LabReportsCompanion extends UpdateCompanion<LabReport> {
       map['lab_name'] = Variable<String>(labName.value);
     }
     if (extractedValues.present) {
-      map['extracted_values'] = Variable<String>(extractedValues.value);
+      map['extracted_values'] = Variable<String>(
+        $LabReportsTable.$converterextractedValues.toSql(extractedValues.value),
+      );
     }
     if (rawText.present) {
-      map['raw_text'] = Variable<String>(rawText.value);
+      map['raw_text'] = Variable<String>(
+        $LabReportsTable.$converterrawText.toSql(rawText.value),
+      );
     }
     if (confirmedByUser.present) {
       map['confirmed_by_user'] = Variable<bool>(confirmedByUser.value);
@@ -18995,8 +19013,8 @@ typedef $$BloodPressureLogsTableCreateCompanionBuilder =
     BloodPressureLogsCompanion Function({
       required String id,
       required String userId,
-      required int systolic,
-      required int diastolic,
+      required int? systolic,
+      required int? diastolic,
       Value<int?> pulse,
       required DateTime loggedAt,
       required String classification,
@@ -19008,8 +19026,8 @@ typedef $$BloodPressureLogsTableUpdateCompanionBuilder =
     BloodPressureLogsCompanion Function({
       Value<String> id,
       Value<String> userId,
-      Value<int> systolic,
-      Value<int> diastolic,
+      Value<int?> systolic,
+      Value<int?> diastolic,
       Value<int?> pulse,
       Value<DateTime> loggedAt,
       Value<String> classification,
@@ -19037,20 +19055,23 @@ class $$BloodPressureLogsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<int> get systolic => $composableBuilder(
-    column: $table.systolic,
-    builder: (column) => ColumnFilters(column),
-  );
+  ColumnWithTypeConverterFilters<int?, int, String> get systolic =>
+      $composableBuilder(
+        column: $table.systolic,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 
-  ColumnFilters<int> get diastolic => $composableBuilder(
-    column: $table.diastolic,
-    builder: (column) => ColumnFilters(column),
-  );
+  ColumnWithTypeConverterFilters<int?, int, String> get diastolic =>
+      $composableBuilder(
+        column: $table.diastolic,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 
-  ColumnFilters<int> get pulse => $composableBuilder(
-    column: $table.pulse,
-    builder: (column) => ColumnFilters(column),
-  );
+  ColumnWithTypeConverterFilters<int?, int, String> get pulse =>
+      $composableBuilder(
+        column: $table.pulse,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 
   ColumnFilters<DateTime> get loggedAt => $composableBuilder(
     column: $table.loggedAt,
@@ -19092,17 +19113,17 @@ class $$BloodPressureLogsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<int> get systolic => $composableBuilder(
+  ColumnOrderings<String> get systolic => $composableBuilder(
     column: $table.systolic,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<int> get diastolic => $composableBuilder(
+  ColumnOrderings<String> get diastolic => $composableBuilder(
     column: $table.diastolic,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<int> get pulse => $composableBuilder(
+  ColumnOrderings<String> get pulse => $composableBuilder(
     column: $table.pulse,
     builder: (column) => ColumnOrderings(column),
   );
@@ -19143,13 +19164,13 @@ class $$BloodPressureLogsTableAnnotationComposer
   GeneratedColumn<String> get userId =>
       $composableBuilder(column: $table.userId, builder: (column) => column);
 
-  GeneratedColumn<int> get systolic =>
+  GeneratedColumnWithTypeConverter<int?, String> get systolic =>
       $composableBuilder(column: $table.systolic, builder: (column) => column);
 
-  GeneratedColumn<int> get diastolic =>
+  GeneratedColumnWithTypeConverter<int?, String> get diastolic =>
       $composableBuilder(column: $table.diastolic, builder: (column) => column);
 
-  GeneratedColumn<int> get pulse =>
+  GeneratedColumnWithTypeConverter<int?, String> get pulse =>
       $composableBuilder(column: $table.pulse, builder: (column) => column);
 
   GeneratedColumn<DateTime> get loggedAt =>
@@ -19211,8 +19232,8 @@ class $$BloodPressureLogsTableTableManager
               ({
                 Value<String> id = const Value.absent(),
                 Value<String> userId = const Value.absent(),
-                Value<int> systolic = const Value.absent(),
-                Value<int> diastolic = const Value.absent(),
+                Value<int?> systolic = const Value.absent(),
+                Value<int?> diastolic = const Value.absent(),
                 Value<int?> pulse = const Value.absent(),
                 Value<DateTime> loggedAt = const Value.absent(),
                 Value<String> classification = const Value.absent(),
@@ -19235,8 +19256,8 @@ class $$BloodPressureLogsTableTableManager
               ({
                 required String id,
                 required String userId,
-                required int systolic,
-                required int diastolic,
+                required int? systolic,
+                required int? diastolic,
                 Value<int?> pulse = const Value.absent(),
                 required DateTime loggedAt,
                 required String classification,
@@ -19288,7 +19309,7 @@ typedef $$GlucoseLogsTableCreateCompanionBuilder =
     GlucoseLogsCompanion Function({
       required String id,
       required String userId,
-      required double glucoseMgdl,
+      required double? glucoseMgdl,
       required String readingType,
       Value<String?> foodLogId,
       required DateTime loggedAt,
@@ -19302,7 +19323,7 @@ typedef $$GlucoseLogsTableUpdateCompanionBuilder =
     GlucoseLogsCompanion Function({
       Value<String> id,
       Value<String> userId,
-      Value<double> glucoseMgdl,
+      Value<double?> glucoseMgdl,
       Value<String> readingType,
       Value<String?> foodLogId,
       Value<DateTime> loggedAt,
@@ -19332,10 +19353,11 @@ class $$GlucoseLogsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<double> get glucoseMgdl => $composableBuilder(
-    column: $table.glucoseMgdl,
-    builder: (column) => ColumnFilters(column),
-  );
+  ColumnWithTypeConverterFilters<double?, double, String> get glucoseMgdl =>
+      $composableBuilder(
+        column: $table.glucoseMgdl,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 
   ColumnFilters<String> get readingType => $composableBuilder(
     column: $table.readingType,
@@ -19392,7 +19414,7 @@ class $$GlucoseLogsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<double> get glucoseMgdl => $composableBuilder(
+  ColumnOrderings<String> get glucoseMgdl => $composableBuilder(
     column: $table.glucoseMgdl,
     builder: (column) => ColumnOrderings(column),
   );
@@ -19448,10 +19470,11 @@ class $$GlucoseLogsTableAnnotationComposer
   GeneratedColumn<String> get userId =>
       $composableBuilder(column: $table.userId, builder: (column) => column);
 
-  GeneratedColumn<double> get glucoseMgdl => $composableBuilder(
-    column: $table.glucoseMgdl,
-    builder: (column) => column,
-  );
+  GeneratedColumnWithTypeConverter<double?, String> get glucoseMgdl =>
+      $composableBuilder(
+        column: $table.glucoseMgdl,
+        builder: (column) => column,
+      );
 
   GeneratedColumn<String> get readingType => $composableBuilder(
     column: $table.readingType,
@@ -19516,7 +19539,7 @@ class $$GlucoseLogsTableTableManager
               ({
                 Value<String> id = const Value.absent(),
                 Value<String> userId = const Value.absent(),
-                Value<double> glucoseMgdl = const Value.absent(),
+                Value<double?> glucoseMgdl = const Value.absent(),
                 Value<String> readingType = const Value.absent(),
                 Value<String?> foodLogId = const Value.absent(),
                 Value<DateTime> loggedAt = const Value.absent(),
@@ -19542,7 +19565,7 @@ class $$GlucoseLogsTableTableManager
               ({
                 required String id,
                 required String userId,
-                required double glucoseMgdl,
+                required double? glucoseMgdl,
                 required String readingType,
                 Value<String?> foodLogId = const Value.absent(),
                 required DateTime loggedAt,
@@ -19593,7 +19616,7 @@ typedef $$Spo2LogsTableCreateCompanionBuilder =
     Spo2LogsCompanion Function({
       required String id,
       required String userId,
-      required double spo2Percentage,
+      required double? spo2Percentage,
       Value<int?> pulseRate,
       required DateTime loggedAt,
       Value<int> rowid,
@@ -19602,7 +19625,7 @@ typedef $$Spo2LogsTableUpdateCompanionBuilder =
     Spo2LogsCompanion Function({
       Value<String> id,
       Value<String> userId,
-      Value<double> spo2Percentage,
+      Value<double?> spo2Percentage,
       Value<int?> pulseRate,
       Value<DateTime> loggedAt,
       Value<int> rowid,
@@ -19627,15 +19650,17 @@ class $$Spo2LogsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<double> get spo2Percentage => $composableBuilder(
-    column: $table.spo2Percentage,
-    builder: (column) => ColumnFilters(column),
-  );
+  ColumnWithTypeConverterFilters<double?, double, String> get spo2Percentage =>
+      $composableBuilder(
+        column: $table.spo2Percentage,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 
-  ColumnFilters<int> get pulseRate => $composableBuilder(
-    column: $table.pulseRate,
-    builder: (column) => ColumnFilters(column),
-  );
+  ColumnWithTypeConverterFilters<int?, int, String> get pulseRate =>
+      $composableBuilder(
+        column: $table.pulseRate,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 
   ColumnFilters<DateTime> get loggedAt => $composableBuilder(
     column: $table.loggedAt,
@@ -19662,12 +19687,12 @@ class $$Spo2LogsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<double> get spo2Percentage => $composableBuilder(
+  ColumnOrderings<String> get spo2Percentage => $composableBuilder(
     column: $table.spo2Percentage,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<int> get pulseRate => $composableBuilder(
+  ColumnOrderings<String> get pulseRate => $composableBuilder(
     column: $table.pulseRate,
     builder: (column) => ColumnOrderings(column),
   );
@@ -19693,12 +19718,13 @@ class $$Spo2LogsTableAnnotationComposer
   GeneratedColumn<String> get userId =>
       $composableBuilder(column: $table.userId, builder: (column) => column);
 
-  GeneratedColumn<double> get spo2Percentage => $composableBuilder(
-    column: $table.spo2Percentage,
-    builder: (column) => column,
-  );
+  GeneratedColumnWithTypeConverter<double?, String> get spo2Percentage =>
+      $composableBuilder(
+        column: $table.spo2Percentage,
+        builder: (column) => column,
+      );
 
-  GeneratedColumn<int> get pulseRate =>
+  GeneratedColumnWithTypeConverter<int?, String> get pulseRate =>
       $composableBuilder(column: $table.pulseRate, builder: (column) => column);
 
   GeneratedColumn<DateTime> get loggedAt =>
@@ -19735,7 +19761,7 @@ class $$Spo2LogsTableTableManager
               ({
                 Value<String> id = const Value.absent(),
                 Value<String> userId = const Value.absent(),
-                Value<double> spo2Percentage = const Value.absent(),
+                Value<double?> spo2Percentage = const Value.absent(),
                 Value<int?> pulseRate = const Value.absent(),
                 Value<DateTime> loggedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
@@ -19751,7 +19777,7 @@ class $$Spo2LogsTableTableManager
               ({
                 required String id,
                 required String userId,
-                required double spo2Percentage,
+                required double? spo2Percentage,
                 Value<int?> pulseRate = const Value.absent(),
                 required DateTime loggedAt,
                 Value<int> rowid = const Value.absent(),
@@ -19828,15 +19854,17 @@ class $$PeriodLogsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get symptoms => $composableBuilder(
-    column: $table.symptoms,
-    builder: (column) => ColumnFilters(column),
-  );
+  ColumnWithTypeConverterFilters<String?, String, String> get symptoms =>
+      $composableBuilder(
+        column: $table.symptoms,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 
-  ColumnFilters<String> get flowType => $composableBuilder(
-    column: $table.flowType,
-    builder: (column) => ColumnFilters(column),
-  );
+  ColumnWithTypeConverterFilters<String?, String, String> get flowType =>
+      $composableBuilder(
+        column: $table.flowType,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 }
 
 class $$PeriodLogsTableOrderingComposer
@@ -19892,10 +19920,10 @@ class $$PeriodLogsTableAnnotationComposer
   GeneratedColumn<DateTime> get date =>
       $composableBuilder(column: $table.date, builder: (column) => column);
 
-  GeneratedColumn<String> get symptoms =>
+  GeneratedColumnWithTypeConverter<String?, String> get symptoms =>
       $composableBuilder(column: $table.symptoms, builder: (column) => column);
 
-  GeneratedColumn<String> get flowType =>
+  GeneratedColumnWithTypeConverter<String?, String> get flowType =>
       $composableBuilder(column: $table.flowType, builder: (column) => column);
 }
 
@@ -19987,7 +20015,7 @@ typedef $$JournalEntriesTableCreateCompanionBuilder =
       required String id,
       required String userId,
       required DateTime createdAt,
-      required String content,
+      required String? content,
       Value<int> rowid,
     });
 typedef $$JournalEntriesTableUpdateCompanionBuilder =
@@ -19995,7 +20023,7 @@ typedef $$JournalEntriesTableUpdateCompanionBuilder =
       Value<String> id,
       Value<String> userId,
       Value<DateTime> createdAt,
-      Value<String> content,
+      Value<String?> content,
       Value<int> rowid,
     });
 
@@ -20023,10 +20051,11 @@ class $$JournalEntriesTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get content => $composableBuilder(
-    column: $table.content,
-    builder: (column) => ColumnFilters(column),
-  );
+  ColumnWithTypeConverterFilters<String?, String, String> get content =>
+      $composableBuilder(
+        column: $table.content,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 }
 
 class $$JournalEntriesTableOrderingComposer
@@ -20077,7 +20106,7 @@ class $$JournalEntriesTableAnnotationComposer
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
-  GeneratedColumn<String> get content =>
+  GeneratedColumnWithTypeConverter<String?, String> get content =>
       $composableBuilder(column: $table.content, builder: (column) => column);
 }
 
@@ -20117,7 +20146,7 @@ class $$JournalEntriesTableTableManager
                 Value<String> id = const Value.absent(),
                 Value<String> userId = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
-                Value<String> content = const Value.absent(),
+                Value<String?> content = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => JournalEntriesCompanion(
                 id: id,
@@ -20131,7 +20160,7 @@ class $$JournalEntriesTableTableManager
                 required String id,
                 required String userId,
                 required DateTime createdAt,
-                required String content,
+                required String? content,
                 Value<int> rowid = const Value.absent(),
               }) => JournalEntriesCompanion.insert(
                 id: id,
@@ -20220,10 +20249,11 @@ class $$DoctorAppointmentsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get notes => $composableBuilder(
-    column: $table.notes,
-    builder: (column) => ColumnFilters(column),
-  );
+  ColumnWithTypeConverterFilters<String?, String, String> get notes =>
+      $composableBuilder(
+        column: $table.notes,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 }
 
 class $$DoctorAppointmentsTableOrderingComposer
@@ -20294,7 +20324,7 @@ class $$DoctorAppointmentsTableAnnotationComposer
   GeneratedColumn<String> get specialty =>
       $composableBuilder(column: $table.specialty, builder: (column) => column);
 
-  GeneratedColumn<String> get notes =>
+  GeneratedColumnWithTypeConverter<String?, String> get notes =>
       $composableBuilder(column: $table.notes, builder: (column) => column);
 }
 
@@ -20407,7 +20437,7 @@ typedef $$LabReportsTableCreateCompanionBuilder =
       required String userId,
       required DateTime reportDate,
       required String labName,
-      required String extractedValues,
+      required String? extractedValues,
       Value<String?> rawText,
       Value<bool> confirmedByUser,
       required String source,
@@ -20419,7 +20449,7 @@ typedef $$LabReportsTableUpdateCompanionBuilder =
       Value<String> userId,
       Value<DateTime> reportDate,
       Value<String> labName,
-      Value<String> extractedValues,
+      Value<String?> extractedValues,
       Value<String?> rawText,
       Value<bool> confirmedByUser,
       Value<String> source,
@@ -20455,15 +20485,17 @@ class $$LabReportsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get extractedValues => $composableBuilder(
-    column: $table.extractedValues,
-    builder: (column) => ColumnFilters(column),
-  );
+  ColumnWithTypeConverterFilters<String?, String, String> get extractedValues =>
+      $composableBuilder(
+        column: $table.extractedValues,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 
-  ColumnFilters<String> get rawText => $composableBuilder(
-    column: $table.rawText,
-    builder: (column) => ColumnFilters(column),
-  );
+  ColumnWithTypeConverterFilters<String?, String, String> get rawText =>
+      $composableBuilder(
+        column: $table.rawText,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 
   ColumnFilters<bool> get confirmedByUser => $composableBuilder(
     column: $table.confirmedByUser,
@@ -20549,12 +20581,13 @@ class $$LabReportsTableAnnotationComposer
   GeneratedColumn<String> get labName =>
       $composableBuilder(column: $table.labName, builder: (column) => column);
 
-  GeneratedColumn<String> get extractedValues => $composableBuilder(
-    column: $table.extractedValues,
-    builder: (column) => column,
-  );
+  GeneratedColumnWithTypeConverter<String?, String> get extractedValues =>
+      $composableBuilder(
+        column: $table.extractedValues,
+        builder: (column) => column,
+      );
 
-  GeneratedColumn<String> get rawText =>
+  GeneratedColumnWithTypeConverter<String?, String> get rawText =>
       $composableBuilder(column: $table.rawText, builder: (column) => column);
 
   GeneratedColumn<bool> get confirmedByUser => $composableBuilder(
@@ -20601,7 +20634,7 @@ class $$LabReportsTableTableManager
                 Value<String> userId = const Value.absent(),
                 Value<DateTime> reportDate = const Value.absent(),
                 Value<String> labName = const Value.absent(),
-                Value<String> extractedValues = const Value.absent(),
+                Value<String?> extractedValues = const Value.absent(),
                 Value<String?> rawText = const Value.absent(),
                 Value<bool> confirmedByUser = const Value.absent(),
                 Value<String> source = const Value.absent(),
@@ -20623,7 +20656,7 @@ class $$LabReportsTableTableManager
                 required String userId,
                 required DateTime reportDate,
                 required String labName,
-                required String extractedValues,
+                required String? extractedValues,
                 Value<String?> rawText = const Value.absent(),
                 Value<bool> confirmedByUser = const Value.absent(),
                 required String source,
