@@ -4,13 +4,29 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_jailbreak_detection/flutter_jailbreak_detection.dart';
 import 'shared/theme/app_theme.dart';
 import 'shared/theme/app_colors.dart';
+import 'features/auth/data/auth_aw_service.dart';
+import 'features/auth/presentation/login_screen.dart';
+import 'features/auth/presentation/register_screen.dart';
+import 'features/auth/presentation/onboarding_screen_1.dart';
+import 'features/auth/presentation/onboarding_screen_2.dart';
+import 'features/auth/presentation/onboarding_screen_3.dart';
+import 'features/auth/presentation/onboarding_screen_4.dart';
+import 'features/auth/presentation/onboarding_screen_5.dart';
+import 'features/auth/presentation/onboarding_screen_6.dart';
+import 'features/settings/presentation/settings_screen.dart';
+import 'core/security/biometric_service.dart';
 
 // --- Deferred Imports ---
-import 'features/social/presentation/social_feed_screen.dart' deferred as social;
-import 'features/workout/presentation/gps_workout_screen.dart' deferred as gps_workout;
-import 'features/mental_health/presentation/mental_health_screen.dart' deferred as mental_health;
-import 'features/meditation/presentation/meditation_screen.dart' deferred as meditation;
-import 'features/wearables/presentation/wearables_screen.dart' deferred as wearables;
+import 'features/social/presentation/social_feed_screen.dart'
+    deferred as social;
+import 'features/workout/presentation/gps_workout_screen.dart'
+    deferred as gps_workout;
+import 'features/mental_health/presentation/mental_health_screen.dart'
+    deferred as mental_health;
+import 'features/meditation/presentation/meditation_screen.dart'
+    deferred as meditation;
+import 'features/wearables/presentation/wearables_screen.dart'
+    deferred as wearables;
 
 // --- Placeholder Screens ---
 class PlaceholderScreen extends StatelessWidget {
@@ -43,6 +59,51 @@ final isRootedProvider = FutureProvider<bool>((ref) async {
   }
 });
 
+/// Splash screen that checks for valid session and redirects
+class _SplashScreen extends ConsumerStatefulWidget {
+  const _SplashScreen();
+
+  @override
+  ConsumerState<_SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends ConsumerState<_SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    _checkSessionAndRedirect();
+  }
+
+  Future<void> _checkSessionAndRedirect() async {
+    final authService = ref.read(_authServiceProvider);
+    final hasSession = await authService.hasValidSession();
+
+    if (!mounted) return;
+
+    if (hasSession) {
+      context.go('/home/dashboard');
+    } else {
+      context.go('/login');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(height: 16),
+            Text('Loading...'),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 // --- Navigation Shell ---
 class RootShell extends ConsumerWidget {
   final Widget child;
@@ -51,17 +112,18 @@ class RootShell extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final location = GoRouterState.of(context).uri.path;
-    final isRooted = ref.watch(isRootedProvider).maybeWhen(
-          data: (val) => val,
-          orElse: () => false,
-        );
+    final isRooted = ref
+        .watch(isRootedProvider)
+        .maybeWhen(data: (val) => val, orElse: () => false);
 
     int getIndex() {
       if (location.startsWith('/home/dashboard')) return 0;
       if (location.startsWith('/home/food')) return 1;
       if (location.startsWith('/home/workout')) return 2;
       if (location.startsWith('/home/steps')) return 3;
-      if (location.startsWith('/profile') || location.startsWith('/karma')) return 4;
+      if (location.startsWith('/profile') || location.startsWith('/karma')) {
+        return 4;
+      }
       return 0;
     }
 
@@ -95,12 +157,20 @@ class RootShell extends ConsumerWidget {
               width: double.infinity,
               child: Row(
                 children: [
-                  const Icon(Icons.security_rounded, color: Colors.white, size: 18),
+                  const Icon(
+                    Icons.security_rounded,
+                    color: Colors.white,
+                    size: 18,
+                  ),
                   const SizedBox(width: 8),
                   const Expanded(
                     child: Text(
                       'Security Alert: Device appears rooted/jailbroken. Encrypted health data may be at diminished risk.',
-                      style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 11,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ],
@@ -120,17 +190,41 @@ class RootShell extends ConsumerWidget {
         showUnselectedLabels: false,
         items: [
           _buildNavItem(Icons.home_outlined, Icons.home_rounded, 'Home', 'होम'),
-          _buildNavItem(Icons.restaurant_outlined, Icons.restaurant_rounded, 'Food', 'भोजन'),
-          _buildNavItem(Icons.fitness_center_outlined, Icons.fitness_center_rounded, 'Workout', 'कसरत'),
-          _buildNavItem(Icons.directions_walk_outlined, Icons.directions_walk_rounded, 'Steps', 'कदम'),
-          _buildNavItem(Icons.person_outline_rounded, Icons.person_rounded, 'Me', 'मेरा प्रोफाइल'),
+          _buildNavItem(
+            Icons.restaurant_outlined,
+            Icons.restaurant_rounded,
+            'Food',
+            'भोजन',
+          ),
+          _buildNavItem(
+            Icons.fitness_center_outlined,
+            Icons.fitness_center_rounded,
+            'Workout',
+            'कसरत',
+          ),
+          _buildNavItem(
+            Icons.directions_walk_outlined,
+            Icons.directions_walk_rounded,
+            'Steps',
+            'कदम',
+          ),
+          _buildNavItem(
+            Icons.person_outline_rounded,
+            Icons.person_rounded,
+            'Me',
+            'मेरा प्रोफाइल',
+          ),
         ],
       ),
     );
   }
 
   BottomNavigationBarItem _buildNavItem(
-      IconData icon, IconData activeIcon, String en, String hi) {
+    IconData icon,
+    IconData activeIcon,
+    String en,
+    String hi,
+  ) {
     return BottomNavigationBarItem(
       icon: _NavLabel(icon: icon, en: en, hi: hi, isActive: false),
       activeIcon: _NavLabel(icon: activeIcon, en: en, hi: hi, isActive: true),
@@ -145,11 +239,12 @@ class _NavLabel extends StatelessWidget {
   final String hi;
   final bool isActive;
 
-  const _NavLabel(
-      {required this.icon,
-      required this.en,
-      required this.hi,
-      required this.isActive});
+  const _NavLabel({
+    required this.icon,
+    required this.en,
+    required this.hi,
+    required this.isActive,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -215,14 +310,14 @@ class _DeferredLoaderState extends State<DeferredLoader> {
         if (snapshot.connectionState == ConnectionState.done) {
           if (snapshot.hasError) {
             return Scaffold(
-              body: Center(child: Text('Error loading module: ${snapshot.error}')),
+              body: Center(
+                child: Text('Error loading module: ${snapshot.error}'),
+              ),
             );
           }
           return widget.builder();
         }
-        return const Scaffold(
-          body: Center(child: CircularProgressIndicator()),
-        );
+        return const Scaffold(body: Center(child: CircularProgressIndicator()));
       },
     );
   }
@@ -232,26 +327,68 @@ class _DeferredLoaderState extends State<DeferredLoader> {
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigatorKey = GlobalKey<NavigatorState>();
 
+/// Auth service provider for session checking
+final _authServiceProvider = Provider<AuthAwService>((ref) {
+  return AuthAwService();
+});
+
+/// Initial location provider - checks for valid session on app start
+final _initialLocationProvider = FutureProvider<String>((ref) async {
+  final authService = ref.watch(_authServiceProvider);
+  final hasSession = await authService.hasValidSession();
+
+  if (hasSession) {
+    return '/home/dashboard';
+  }
+  return '/login';
+});
+
 final _router = GoRouter(
-  initialLocation: '/home/dashboard',
+  initialLocation: '/',
   navigatorKey: _rootNavigatorKey,
+  redirect: (context, state) {
+    // Skip redirect if already on splash, login, register, or onboarding
+    final path = state.uri.path;
+    if (path == '/' ||
+        path == '/login' ||
+        path == '/register' ||
+        path.startsWith('/onboarding')) {
+      return null;
+    }
+
+    // For all other routes, we'll check auth in the splash screen
+    return null;
+  },
   routes: [
-    GoRoute(
-      path: '/',
-      builder: (context, state) => const PlaceholderScreen(title: 'Splash'),
-    ),
-    GoRoute(
-      path: '/login',
-      builder: (context, state) => const PlaceholderScreen(title: 'Login'),
-    ),
+    GoRoute(path: '/', builder: (context, state) => const _SplashScreen()),
+    GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),
     GoRoute(
       path: '/register',
-      builder: (context, state) => const PlaceholderScreen(title: 'Register'),
+      builder: (context, state) => const RegisterScreen(),
     ),
     GoRoute(
-      path: '/onboarding/:step',
-      builder: (context, state) => PlaceholderScreen(
-          title: 'Onboarding Step ${state.pathParameters['step']}'),
+      path: '/onboarding/1',
+      builder: (context, state) => const OnboardingScreen1(),
+    ),
+    GoRoute(
+      path: '/onboarding/2',
+      builder: (context, state) => const OnboardingScreen2(),
+    ),
+    GoRoute(
+      path: '/onboarding/3',
+      builder: (context, state) => const OnboardingScreen3(),
+    ),
+    GoRoute(
+      path: '/onboarding/4',
+      builder: (context, state) => const OnboardingScreen4(),
+    ),
+    GoRoute(
+      path: '/onboarding/5',
+      builder: (context, state) => const OnboardingScreen5(),
+    ),
+    GoRoute(
+      path: '/onboarding/6',
+      builder: (context, state) => const OnboardingScreen6(),
     ),
 
     // --- Tabbed Shell ---
@@ -261,16 +398,23 @@ final _router = GoRouter(
       routes: [
         GoRoute(
           path: '/home/dashboard',
-          builder: (context, state) => const PlaceholderScreen(title: 'Dashboard'),
+          builder: (context, state) =>
+              const PlaceholderScreen(title: 'Dashboard'),
+        ),
+        GoRoute(
+          path: '/settings',
+          builder: (context, state) => const SettingsScreen(),
         ),
         GoRoute(
           path: '/home/food',
-          builder: (context, state) => const PlaceholderScreen(title: 'Food Home'),
+          builder: (context, state) =>
+              const PlaceholderScreen(title: 'Food Home'),
           routes: [
             GoRoute(
               path: 'log/:mealType',
               builder: (context, state) => PlaceholderScreen(
-                  title: 'Log ${state.pathParameters['mealType']}'),
+                title: 'Log ${state.pathParameters['mealType']}',
+              ),
             ),
             GoRoute(
               path: 'search',
@@ -295,7 +439,8 @@ final _router = GoRouter(
             GoRoute(
               path: 'detail/:id',
               builder: (context, state) => PlaceholderScreen(
-                  title: 'Food Detail ${state.pathParameters['id']}'),
+                title: 'Food Detail ${state.pathParameters['id']}',
+              ),
             ),
             GoRoute(
               path: 'recipes',
@@ -324,12 +469,14 @@ final _router = GoRouter(
             GoRoute(
               path: ':id',
               builder: (context, state) => PlaceholderScreen(
-                  title: 'Workout Detail ${state.pathParameters['id']}'),
+                title: 'Workout Detail ${state.pathParameters['id']}',
+              ),
             ),
             GoRoute(
               path: ':id/active',
               builder: (context, state) => PlaceholderScreen(
-                  title: 'Active Workout ${state.pathParameters['id']}'),
+                title: 'Active Workout ${state.pathParameters['id']}',
+              ),
             ),
             GoRoute(
               path: 'gps',
@@ -352,7 +499,8 @@ final _router = GoRouter(
         ),
         GoRoute(
           path: '/home/steps',
-          builder: (context, state) => const PlaceholderScreen(title: 'Steps Home'),
+          builder: (context, state) =>
+              const PlaceholderScreen(title: 'Steps Home'),
         ),
         GoRoute(
           path: '/home/social',
@@ -369,20 +517,23 @@ final _router = GoRouter(
                 GoRoute(
                   path: ':id',
                   builder: (context, state) => PlaceholderScreen(
-                      title: 'Group Detail ${state.pathParameters['id']}'),
+                    title: 'Group Detail ${state.pathParameters['id']}',
+                  ),
                 ),
               ],
             ),
             GoRoute(
               path: 'dm/:userId',
               builder: (context, state) => PlaceholderScreen(
-                  title: 'Direct Message ${state.pathParameters['userId']}'),
+                title: 'Direct Message ${state.pathParameters['userId']}',
+              ),
             ),
           ],
         ),
         GoRoute(
           path: '/profile',
-          builder: (context, state) => const PlaceholderScreen(title: 'Profile'),
+          builder: (context, state) =>
+              const PlaceholderScreen(title: 'Profile'),
           routes: [
             GoRoute(
               path: 'wearables',
@@ -403,19 +554,23 @@ final _router = GoRouter(
     ),
     GoRoute(
       path: '/sleep',
-      builder: (context, state) => const PlaceholderScreen(title: 'Sleep Tracker'),
+      builder: (context, state) =>
+          const PlaceholderScreen(title: 'Sleep Tracker'),
     ),
     GoRoute(
       path: '/mood',
-      builder: (context, state) => const PlaceholderScreen(title: 'Mood Tracker'),
+      builder: (context, state) =>
+          const PlaceholderScreen(title: 'Mood Tracker'),
     ),
     GoRoute(
       path: '/habits',
-      builder: (context, state) => const PlaceholderScreen(title: 'Habit Tracker'),
+      builder: (context, state) =>
+          const PlaceholderScreen(title: 'Habit Tracker'),
     ),
     GoRoute(
       path: '/period',
-      builder: (context, state) => const PlaceholderScreen(title: 'Period Tracker'),
+      builder: (context, state) =>
+          const PlaceholderScreen(title: 'Period Tracker'),
     ),
     GoRoute(
       path: '/medications',
@@ -429,7 +584,8 @@ final _router = GoRouter(
     ),
     GoRoute(
       path: '/ayurveda',
-      builder: (context, state) => const PlaceholderScreen(title: 'Ayurveda Hub'),
+      builder: (context, state) =>
+          const PlaceholderScreen(title: 'Ayurveda Hub'),
     ),
     GoRoute(
       path: '/family',
@@ -452,11 +608,13 @@ final _router = GoRouter(
     ),
     GoRoute(
       path: '/spo2',
-      builder: (context, state) => const PlaceholderScreen(title: 'SpO2 Tracker'),
+      builder: (context, state) =>
+          const PlaceholderScreen(title: 'SpO2 Tracker'),
     ),
     GoRoute(
       path: '/lab-reports',
-      builder: (context, state) => const PlaceholderScreen(title: 'Lab Reports'),
+      builder: (context, state) =>
+          const PlaceholderScreen(title: 'Lab Reports'),
     ),
     GoRoute(
       path: '/abha',
@@ -494,11 +652,95 @@ final _router = GoRouter(
   ],
 );
 
-class FitKarmaApp extends ConsumerWidget {
+class FitKarmaApp extends ConsumerStatefulWidget {
   const FitKarmaApp({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<FitKarmaApp> createState() => _FitKarmaAppState();
+}
+
+class _FitKarmaAppState extends ConsumerState<FitKarmaApp>
+    with WidgetsBindingObserver {
+  bool _isFirstLaunch = true;
+  bool _isAuthenticated = false;
+  bool _biometricEnabled = false;
+  final BiometricService _biometricService = biometricServiceProvider;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _checkBiometricSettings();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  Future<void> _checkBiometricSettings() async {
+    _biometricEnabled = await _biometricService.isBiometricLockEnabled();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // Check biometric on app resume (but not on first launch)
+    if (state == AppLifecycleState.resumed && !_isFirstLaunch) {
+      if (_biometricEnabled && !_isAuthenticated) {
+        _showBiometricLock();
+      }
+    } else if (state == AppLifecycleState.paused) {
+      // Reset authentication when app goes to background
+      _isFirstLaunch = false;
+    }
+  }
+
+  Future<void> _showBiometricLock() async {
+    if (!mounted) return;
+
+    final isAvailable = await _biometricService.isBiometricAvailable();
+    if (!isAvailable) return;
+
+    // Show biometric dialog
+    final authenticated = await _biometricService.authenticate(
+      reason: 'Authenticate to unlock Fitkarma',
+    );
+
+    if (mounted) {
+      setState(() {
+        _isAuthenticated = authenticated;
+      });
+
+      if (!authenticated) {
+        // Show locked screen
+        _showLockedScreen();
+      }
+    }
+  }
+
+  void _showLockedScreen() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        title: const Text('App Locked'),
+        content: const Text('Please authenticate to continue'),
+        actions: [
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(context);
+              await _showBiometricLock();
+            },
+            child: const Text('Try Again'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return MaterialApp.router(
       title: 'FitKarma',
       debugShowCheckedModeBanner: false,

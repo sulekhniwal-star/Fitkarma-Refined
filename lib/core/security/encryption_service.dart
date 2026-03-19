@@ -3,7 +3,6 @@ import 'dart:typed_data';
 
 import 'package:encrypt/encrypt.dart' as enc;
 import 'package:crypto/crypto.dart';
-import 'package:fitkarma/core/security/key_manager.dart';
 
 /// Data class identifiers for per-key derivation.
 /// Renamed to avoid conflict with drift's DataClass.

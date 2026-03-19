@@ -3,7 +3,6 @@ import 'dart:isolate';
 import 'dart:convert';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:crypto/crypto.dart';
 import 'package:appwrite/appwrite.dart';
 
 import 'package:fitkarma/core/constants/app_config.dart';

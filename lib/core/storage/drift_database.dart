@@ -1,14 +1,9 @@
 import 'dart:io';
-import 'dart:convert';
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
-import 'package:drift_flutter/drift_flutter.dart';
 import 'package:fitkarma/core/security/encryption_converter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
-import 'package:sqlite3_flutter_libs/sqlite3_flutter_libs.dart';
-import 'package:sqlcipher_flutter_libs/sqlcipher_flutter_libs.dart';
-import 'package:crypto/crypto.dart';
 
 part 'drift_database.g.dart';
 
@@ -483,6 +478,43 @@ class PersonalRecords extends Table {
   Set<Column> get primaryKey => {id};
 }
 
+// --- User Profiles (Onboarding) ---
+
+class UserProfiles extends Table {
+  TextColumn get id => text()();
+  TextColumn get userId => text()();
+  TextColumn get name => text()();
+  TextColumn get gender => text().nullable()();
+  DateTimeColumn get dateOfBirth => dateTime().nullable()();
+  RealColumn get heightCm => real().nullable()();
+  RealColumn get weightKg => real().nullable()();
+  TextColumn get fitnessGoal => text().nullable()();
+  TextColumn get activityLevel => text().nullable()();
+  TextColumn get chronicConditions => text().nullable()();
+  TextColumn get doshaQuizAnswers => text().nullable()();
+  RealColumn get vataPercentage => real().nullable()();
+  RealColumn get pittaPercentage => real().nullable()();
+  RealColumn get kaphaPercentage => real().nullable()();
+  TextColumn get dominantDosha => text().nullable()();
+  TextColumn get languageCode => text().nullable()();
+  BoolColumn get permissionStepCounter =>
+      boolean().withDefault(const Constant(false))();
+  BoolColumn get permissionHeartRate =>
+      boolean().withDefault(const Constant(false))();
+  BoolColumn get permissionSleep =>
+      boolean().withDefault(const Constant(false))();
+  TextColumn get abhaNumber => text().nullable()();
+  BoolColumn get abhaLinked => boolean().withDefault(const Constant(false))();
+  TextColumn get connectedWearables => text().nullable()();
+  IntColumn get xpPoints => integer().withDefault(const Constant(0))();
+  DateTimeColumn get createdAt => dateTime()();
+  DateTimeColumn get updatedAt => dateTime()();
+  TextColumn get syncStatus => text().withDefault(const Constant('pending'))();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
 // --- DAOs ---
 
 @DriftAccessor(tables: [SyncQueue])
@@ -657,6 +689,12 @@ class PersonalRecordsDao extends DatabaseAccessor<AppDatabase>
   PersonalRecordsDao(super.db);
 }
 
+@DriftAccessor(tables: [UserProfiles])
+class UserProfilesDao extends DatabaseAccessor<AppDatabase>
+    with _$UserProfilesDaoMixin {
+  UserProfilesDao(super.db);
+}
+
 // --- Database Class ---
 
 @DriftDatabase(
@@ -688,6 +726,7 @@ class PersonalRecordsDao extends DatabaseAccessor<AppDatabase>
     KarmaTransactions,
     NutritionGoals,
     PersonalRecords,
+    UserProfiles,
     SyncQueue,
     SyncDeadLetter,
   ],
@@ -719,6 +758,7 @@ class PersonalRecordsDao extends DatabaseAccessor<AppDatabase>
     KarmaTransactionsDao,
     NutritionGoalsDao,
     PersonalRecordsDao,
+    UserProfilesDao,
     SyncQueueDao,
     SyncDeadLetterDao,
   ],

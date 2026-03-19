@@ -268,7 +268,7 @@ class SyncQueueService {
     // await db?.syncQueueDao.delete(item.id);
 
     print(
-      'SyncQueue: Moved ${item.id} to dead-letter queue after ${_maxRetries} failures',
+      'SyncQueue: Moved ${item.id} to dead-letter queue after $_maxRetries failures',
     );
   }
 

@@ -392,6 +392,18 @@ class PersonalRecordsDaoManager {
       );
 }
 
+mixin _$UserProfilesDaoMixin on DatabaseAccessor<AppDatabase> {
+  $UserProfilesTable get userProfiles => attachedDatabase.userProfiles;
+  UserProfilesDaoManager get managers => UserProfilesDaoManager(this);
+}
+
+class UserProfilesDaoManager {
+  final _$UserProfilesDaoMixin _db;
+  UserProfilesDaoManager(this._db);
+  $$UserProfilesTableTableManager get userProfiles =>
+      $$UserProfilesTableTableManager(_db.attachedDatabase, _db.userProfiles);
+}
+
 class $FoodLogsTable extends FoodLogs with TableInfo<$FoodLogsTable, FoodLog> {
   @override
   final GeneratedDatabase attachedDatabase;
@@ -14121,6 +14133,1496 @@ class PersonalRecordsCompanion extends UpdateCompanion<PersonalRecord> {
   }
 }
 
+class $UserProfilesTable extends UserProfiles
+    with TableInfo<$UserProfilesTable, UserProfile> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $UserProfilesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
+    'user_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _genderMeta = const VerificationMeta('gender');
+  @override
+  late final GeneratedColumn<String> gender = GeneratedColumn<String>(
+    'gender',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _dateOfBirthMeta = const VerificationMeta(
+    'dateOfBirth',
+  );
+  @override
+  late final GeneratedColumn<DateTime> dateOfBirth = GeneratedColumn<DateTime>(
+    'date_of_birth',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _heightCmMeta = const VerificationMeta(
+    'heightCm',
+  );
+  @override
+  late final GeneratedColumn<double> heightCm = GeneratedColumn<double>(
+    'height_cm',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _weightKgMeta = const VerificationMeta(
+    'weightKg',
+  );
+  @override
+  late final GeneratedColumn<double> weightKg = GeneratedColumn<double>(
+    'weight_kg',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _fitnessGoalMeta = const VerificationMeta(
+    'fitnessGoal',
+  );
+  @override
+  late final GeneratedColumn<String> fitnessGoal = GeneratedColumn<String>(
+    'fitness_goal',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _activityLevelMeta = const VerificationMeta(
+    'activityLevel',
+  );
+  @override
+  late final GeneratedColumn<String> activityLevel = GeneratedColumn<String>(
+    'activity_level',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _chronicConditionsMeta = const VerificationMeta(
+    'chronicConditions',
+  );
+  @override
+  late final GeneratedColumn<String> chronicConditions =
+      GeneratedColumn<String>(
+        'chronic_conditions',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _doshaQuizAnswersMeta = const VerificationMeta(
+    'doshaQuizAnswers',
+  );
+  @override
+  late final GeneratedColumn<String> doshaQuizAnswers = GeneratedColumn<String>(
+    'dosha_quiz_answers',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _vataPercentageMeta = const VerificationMeta(
+    'vataPercentage',
+  );
+  @override
+  late final GeneratedColumn<double> vataPercentage = GeneratedColumn<double>(
+    'vata_percentage',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _pittaPercentageMeta = const VerificationMeta(
+    'pittaPercentage',
+  );
+  @override
+  late final GeneratedColumn<double> pittaPercentage = GeneratedColumn<double>(
+    'pitta_percentage',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _kaphaPercentageMeta = const VerificationMeta(
+    'kaphaPercentage',
+  );
+  @override
+  late final GeneratedColumn<double> kaphaPercentage = GeneratedColumn<double>(
+    'kapha_percentage',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _dominantDoshaMeta = const VerificationMeta(
+    'dominantDosha',
+  );
+  @override
+  late final GeneratedColumn<String> dominantDosha = GeneratedColumn<String>(
+    'dominant_dosha',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _languageCodeMeta = const VerificationMeta(
+    'languageCode',
+  );
+  @override
+  late final GeneratedColumn<String> languageCode = GeneratedColumn<String>(
+    'language_code',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _permissionStepCounterMeta =
+      const VerificationMeta('permissionStepCounter');
+  @override
+  late final GeneratedColumn<bool> permissionStepCounter =
+      GeneratedColumn<bool>(
+        'permission_step_counter',
+        aliasedName,
+        false,
+        type: DriftSqlType.bool,
+        requiredDuringInsert: false,
+        defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("permission_step_counter" IN (0, 1))',
+        ),
+        defaultValue: const Constant(false),
+      );
+  static const VerificationMeta _permissionHeartRateMeta =
+      const VerificationMeta('permissionHeartRate');
+  @override
+  late final GeneratedColumn<bool> permissionHeartRate = GeneratedColumn<bool>(
+    'permission_heart_rate',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("permission_heart_rate" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _permissionSleepMeta = const VerificationMeta(
+    'permissionSleep',
+  );
+  @override
+  late final GeneratedColumn<bool> permissionSleep = GeneratedColumn<bool>(
+    'permission_sleep',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("permission_sleep" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _abhaNumberMeta = const VerificationMeta(
+    'abhaNumber',
+  );
+  @override
+  late final GeneratedColumn<String> abhaNumber = GeneratedColumn<String>(
+    'abha_number',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _abhaLinkedMeta = const VerificationMeta(
+    'abhaLinked',
+  );
+  @override
+  late final GeneratedColumn<bool> abhaLinked = GeneratedColumn<bool>(
+    'abha_linked',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("abha_linked" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _connectedWearablesMeta =
+      const VerificationMeta('connectedWearables');
+  @override
+  late final GeneratedColumn<String> connectedWearables =
+      GeneratedColumn<String>(
+        'connected_wearables',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _xpPointsMeta = const VerificationMeta(
+    'xpPoints',
+  );
+  @override
+  late final GeneratedColumn<int> xpPoints = GeneratedColumn<int>(
+    'xp_points',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _syncStatusMeta = const VerificationMeta(
+    'syncStatus',
+  );
+  @override
+  late final GeneratedColumn<String> syncStatus = GeneratedColumn<String>(
+    'sync_status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('pending'),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    userId,
+    name,
+    gender,
+    dateOfBirth,
+    heightCm,
+    weightKg,
+    fitnessGoal,
+    activityLevel,
+    chronicConditions,
+    doshaQuizAnswers,
+    vataPercentage,
+    pittaPercentage,
+    kaphaPercentage,
+    dominantDosha,
+    languageCode,
+    permissionStepCounter,
+    permissionHeartRate,
+    permissionSleep,
+    abhaNumber,
+    abhaLinked,
+    connectedWearables,
+    xpPoints,
+    createdAt,
+    updatedAt,
+    syncStatus,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'user_profiles';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<UserProfile> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_userIdMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('gender')) {
+      context.handle(
+        _genderMeta,
+        gender.isAcceptableOrUnknown(data['gender']!, _genderMeta),
+      );
+    }
+    if (data.containsKey('date_of_birth')) {
+      context.handle(
+        _dateOfBirthMeta,
+        dateOfBirth.isAcceptableOrUnknown(
+          data['date_of_birth']!,
+          _dateOfBirthMeta,
+        ),
+      );
+    }
+    if (data.containsKey('height_cm')) {
+      context.handle(
+        _heightCmMeta,
+        heightCm.isAcceptableOrUnknown(data['height_cm']!, _heightCmMeta),
+      );
+    }
+    if (data.containsKey('weight_kg')) {
+      context.handle(
+        _weightKgMeta,
+        weightKg.isAcceptableOrUnknown(data['weight_kg']!, _weightKgMeta),
+      );
+    }
+    if (data.containsKey('fitness_goal')) {
+      context.handle(
+        _fitnessGoalMeta,
+        fitnessGoal.isAcceptableOrUnknown(
+          data['fitness_goal']!,
+          _fitnessGoalMeta,
+        ),
+      );
+    }
+    if (data.containsKey('activity_level')) {
+      context.handle(
+        _activityLevelMeta,
+        activityLevel.isAcceptableOrUnknown(
+          data['activity_level']!,
+          _activityLevelMeta,
+        ),
+      );
+    }
+    if (data.containsKey('chronic_conditions')) {
+      context.handle(
+        _chronicConditionsMeta,
+        chronicConditions.isAcceptableOrUnknown(
+          data['chronic_conditions']!,
+          _chronicConditionsMeta,
+        ),
+      );
+    }
+    if (data.containsKey('dosha_quiz_answers')) {
+      context.handle(
+        _doshaQuizAnswersMeta,
+        doshaQuizAnswers.isAcceptableOrUnknown(
+          data['dosha_quiz_answers']!,
+          _doshaQuizAnswersMeta,
+        ),
+      );
+    }
+    if (data.containsKey('vata_percentage')) {
+      context.handle(
+        _vataPercentageMeta,
+        vataPercentage.isAcceptableOrUnknown(
+          data['vata_percentage']!,
+          _vataPercentageMeta,
+        ),
+      );
+    }
+    if (data.containsKey('pitta_percentage')) {
+      context.handle(
+        _pittaPercentageMeta,
+        pittaPercentage.isAcceptableOrUnknown(
+          data['pitta_percentage']!,
+          _pittaPercentageMeta,
+        ),
+      );
+    }
+    if (data.containsKey('kapha_percentage')) {
+      context.handle(
+        _kaphaPercentageMeta,
+        kaphaPercentage.isAcceptableOrUnknown(
+          data['kapha_percentage']!,
+          _kaphaPercentageMeta,
+        ),
+      );
+    }
+    if (data.containsKey('dominant_dosha')) {
+      context.handle(
+        _dominantDoshaMeta,
+        dominantDosha.isAcceptableOrUnknown(
+          data['dominant_dosha']!,
+          _dominantDoshaMeta,
+        ),
+      );
+    }
+    if (data.containsKey('language_code')) {
+      context.handle(
+        _languageCodeMeta,
+        languageCode.isAcceptableOrUnknown(
+          data['language_code']!,
+          _languageCodeMeta,
+        ),
+      );
+    }
+    if (data.containsKey('permission_step_counter')) {
+      context.handle(
+        _permissionStepCounterMeta,
+        permissionStepCounter.isAcceptableOrUnknown(
+          data['permission_step_counter']!,
+          _permissionStepCounterMeta,
+        ),
+      );
+    }
+    if (data.containsKey('permission_heart_rate')) {
+      context.handle(
+        _permissionHeartRateMeta,
+        permissionHeartRate.isAcceptableOrUnknown(
+          data['permission_heart_rate']!,
+          _permissionHeartRateMeta,
+        ),
+      );
+    }
+    if (data.containsKey('permission_sleep')) {
+      context.handle(
+        _permissionSleepMeta,
+        permissionSleep.isAcceptableOrUnknown(
+          data['permission_sleep']!,
+          _permissionSleepMeta,
+        ),
+      );
+    }
+    if (data.containsKey('abha_number')) {
+      context.handle(
+        _abhaNumberMeta,
+        abhaNumber.isAcceptableOrUnknown(data['abha_number']!, _abhaNumberMeta),
+      );
+    }
+    if (data.containsKey('abha_linked')) {
+      context.handle(
+        _abhaLinkedMeta,
+        abhaLinked.isAcceptableOrUnknown(data['abha_linked']!, _abhaLinkedMeta),
+      );
+    }
+    if (data.containsKey('connected_wearables')) {
+      context.handle(
+        _connectedWearablesMeta,
+        connectedWearables.isAcceptableOrUnknown(
+          data['connected_wearables']!,
+          _connectedWearablesMeta,
+        ),
+      );
+    }
+    if (data.containsKey('xp_points')) {
+      context.handle(
+        _xpPointsMeta,
+        xpPoints.isAcceptableOrUnknown(data['xp_points']!, _xpPointsMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    if (data.containsKey('sync_status')) {
+      context.handle(
+        _syncStatusMeta,
+        syncStatus.isAcceptableOrUnknown(data['sync_status']!, _syncStatusMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  UserProfile map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return UserProfile(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      userId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_id'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      gender: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}gender'],
+      ),
+      dateOfBirth: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}date_of_birth'],
+      ),
+      heightCm: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}height_cm'],
+      ),
+      weightKg: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}weight_kg'],
+      ),
+      fitnessGoal: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}fitness_goal'],
+      ),
+      activityLevel: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}activity_level'],
+      ),
+      chronicConditions: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}chronic_conditions'],
+      ),
+      doshaQuizAnswers: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}dosha_quiz_answers'],
+      ),
+      vataPercentage: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}vata_percentage'],
+      ),
+      pittaPercentage: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}pitta_percentage'],
+      ),
+      kaphaPercentage: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}kapha_percentage'],
+      ),
+      dominantDosha: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}dominant_dosha'],
+      ),
+      languageCode: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}language_code'],
+      ),
+      permissionStepCounter: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}permission_step_counter'],
+      )!,
+      permissionHeartRate: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}permission_heart_rate'],
+      )!,
+      permissionSleep: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}permission_sleep'],
+      )!,
+      abhaNumber: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}abha_number'],
+      ),
+      abhaLinked: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}abha_linked'],
+      )!,
+      connectedWearables: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}connected_wearables'],
+      ),
+      xpPoints: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}xp_points'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      syncStatus: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sync_status'],
+      )!,
+    );
+  }
+
+  @override
+  $UserProfilesTable createAlias(String alias) {
+    return $UserProfilesTable(attachedDatabase, alias);
+  }
+}
+
+class UserProfile extends DataClass implements Insertable<UserProfile> {
+  final String id;
+  final String userId;
+  final String name;
+  final String? gender;
+  final DateTime? dateOfBirth;
+  final double? heightCm;
+  final double? weightKg;
+  final String? fitnessGoal;
+  final String? activityLevel;
+  final String? chronicConditions;
+  final String? doshaQuizAnswers;
+  final double? vataPercentage;
+  final double? pittaPercentage;
+  final double? kaphaPercentage;
+  final String? dominantDosha;
+  final String? languageCode;
+  final bool permissionStepCounter;
+  final bool permissionHeartRate;
+  final bool permissionSleep;
+  final String? abhaNumber;
+  final bool abhaLinked;
+  final String? connectedWearables;
+  final int xpPoints;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final String syncStatus;
+  const UserProfile({
+    required this.id,
+    required this.userId,
+    required this.name,
+    this.gender,
+    this.dateOfBirth,
+    this.heightCm,
+    this.weightKg,
+    this.fitnessGoal,
+    this.activityLevel,
+    this.chronicConditions,
+    this.doshaQuizAnswers,
+    this.vataPercentage,
+    this.pittaPercentage,
+    this.kaphaPercentage,
+    this.dominantDosha,
+    this.languageCode,
+    required this.permissionStepCounter,
+    required this.permissionHeartRate,
+    required this.permissionSleep,
+    this.abhaNumber,
+    required this.abhaLinked,
+    this.connectedWearables,
+    required this.xpPoints,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.syncStatus,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['user_id'] = Variable<String>(userId);
+    map['name'] = Variable<String>(name);
+    if (!nullToAbsent || gender != null) {
+      map['gender'] = Variable<String>(gender);
+    }
+    if (!nullToAbsent || dateOfBirth != null) {
+      map['date_of_birth'] = Variable<DateTime>(dateOfBirth);
+    }
+    if (!nullToAbsent || heightCm != null) {
+      map['height_cm'] = Variable<double>(heightCm);
+    }
+    if (!nullToAbsent || weightKg != null) {
+      map['weight_kg'] = Variable<double>(weightKg);
+    }
+    if (!nullToAbsent || fitnessGoal != null) {
+      map['fitness_goal'] = Variable<String>(fitnessGoal);
+    }
+    if (!nullToAbsent || activityLevel != null) {
+      map['activity_level'] = Variable<String>(activityLevel);
+    }
+    if (!nullToAbsent || chronicConditions != null) {
+      map['chronic_conditions'] = Variable<String>(chronicConditions);
+    }
+    if (!nullToAbsent || doshaQuizAnswers != null) {
+      map['dosha_quiz_answers'] = Variable<String>(doshaQuizAnswers);
+    }
+    if (!nullToAbsent || vataPercentage != null) {
+      map['vata_percentage'] = Variable<double>(vataPercentage);
+    }
+    if (!nullToAbsent || pittaPercentage != null) {
+      map['pitta_percentage'] = Variable<double>(pittaPercentage);
+    }
+    if (!nullToAbsent || kaphaPercentage != null) {
+      map['kapha_percentage'] = Variable<double>(kaphaPercentage);
+    }
+    if (!nullToAbsent || dominantDosha != null) {
+      map['dominant_dosha'] = Variable<String>(dominantDosha);
+    }
+    if (!nullToAbsent || languageCode != null) {
+      map['language_code'] = Variable<String>(languageCode);
+    }
+    map['permission_step_counter'] = Variable<bool>(permissionStepCounter);
+    map['permission_heart_rate'] = Variable<bool>(permissionHeartRate);
+    map['permission_sleep'] = Variable<bool>(permissionSleep);
+    if (!nullToAbsent || abhaNumber != null) {
+      map['abha_number'] = Variable<String>(abhaNumber);
+    }
+    map['abha_linked'] = Variable<bool>(abhaLinked);
+    if (!nullToAbsent || connectedWearables != null) {
+      map['connected_wearables'] = Variable<String>(connectedWearables);
+    }
+    map['xp_points'] = Variable<int>(xpPoints);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['sync_status'] = Variable<String>(syncStatus);
+    return map;
+  }
+
+  UserProfilesCompanion toCompanion(bool nullToAbsent) {
+    return UserProfilesCompanion(
+      id: Value(id),
+      userId: Value(userId),
+      name: Value(name),
+      gender: gender == null && nullToAbsent
+          ? const Value.absent()
+          : Value(gender),
+      dateOfBirth: dateOfBirth == null && nullToAbsent
+          ? const Value.absent()
+          : Value(dateOfBirth),
+      heightCm: heightCm == null && nullToAbsent
+          ? const Value.absent()
+          : Value(heightCm),
+      weightKg: weightKg == null && nullToAbsent
+          ? const Value.absent()
+          : Value(weightKg),
+      fitnessGoal: fitnessGoal == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fitnessGoal),
+      activityLevel: activityLevel == null && nullToAbsent
+          ? const Value.absent()
+          : Value(activityLevel),
+      chronicConditions: chronicConditions == null && nullToAbsent
+          ? const Value.absent()
+          : Value(chronicConditions),
+      doshaQuizAnswers: doshaQuizAnswers == null && nullToAbsent
+          ? const Value.absent()
+          : Value(doshaQuizAnswers),
+      vataPercentage: vataPercentage == null && nullToAbsent
+          ? const Value.absent()
+          : Value(vataPercentage),
+      pittaPercentage: pittaPercentage == null && nullToAbsent
+          ? const Value.absent()
+          : Value(pittaPercentage),
+      kaphaPercentage: kaphaPercentage == null && nullToAbsent
+          ? const Value.absent()
+          : Value(kaphaPercentage),
+      dominantDosha: dominantDosha == null && nullToAbsent
+          ? const Value.absent()
+          : Value(dominantDosha),
+      languageCode: languageCode == null && nullToAbsent
+          ? const Value.absent()
+          : Value(languageCode),
+      permissionStepCounter: Value(permissionStepCounter),
+      permissionHeartRate: Value(permissionHeartRate),
+      permissionSleep: Value(permissionSleep),
+      abhaNumber: abhaNumber == null && nullToAbsent
+          ? const Value.absent()
+          : Value(abhaNumber),
+      abhaLinked: Value(abhaLinked),
+      connectedWearables: connectedWearables == null && nullToAbsent
+          ? const Value.absent()
+          : Value(connectedWearables),
+      xpPoints: Value(xpPoints),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      syncStatus: Value(syncStatus),
+    );
+  }
+
+  factory UserProfile.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return UserProfile(
+      id: serializer.fromJson<String>(json['id']),
+      userId: serializer.fromJson<String>(json['userId']),
+      name: serializer.fromJson<String>(json['name']),
+      gender: serializer.fromJson<String?>(json['gender']),
+      dateOfBirth: serializer.fromJson<DateTime?>(json['dateOfBirth']),
+      heightCm: serializer.fromJson<double?>(json['heightCm']),
+      weightKg: serializer.fromJson<double?>(json['weightKg']),
+      fitnessGoal: serializer.fromJson<String?>(json['fitnessGoal']),
+      activityLevel: serializer.fromJson<String?>(json['activityLevel']),
+      chronicConditions: serializer.fromJson<String?>(
+        json['chronicConditions'],
+      ),
+      doshaQuizAnswers: serializer.fromJson<String?>(json['doshaQuizAnswers']),
+      vataPercentage: serializer.fromJson<double?>(json['vataPercentage']),
+      pittaPercentage: serializer.fromJson<double?>(json['pittaPercentage']),
+      kaphaPercentage: serializer.fromJson<double?>(json['kaphaPercentage']),
+      dominantDosha: serializer.fromJson<String?>(json['dominantDosha']),
+      languageCode: serializer.fromJson<String?>(json['languageCode']),
+      permissionStepCounter: serializer.fromJson<bool>(
+        json['permissionStepCounter'],
+      ),
+      permissionHeartRate: serializer.fromJson<bool>(
+        json['permissionHeartRate'],
+      ),
+      permissionSleep: serializer.fromJson<bool>(json['permissionSleep']),
+      abhaNumber: serializer.fromJson<String?>(json['abhaNumber']),
+      abhaLinked: serializer.fromJson<bool>(json['abhaLinked']),
+      connectedWearables: serializer.fromJson<String?>(
+        json['connectedWearables'],
+      ),
+      xpPoints: serializer.fromJson<int>(json['xpPoints']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      syncStatus: serializer.fromJson<String>(json['syncStatus']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'userId': serializer.toJson<String>(userId),
+      'name': serializer.toJson<String>(name),
+      'gender': serializer.toJson<String?>(gender),
+      'dateOfBirth': serializer.toJson<DateTime?>(dateOfBirth),
+      'heightCm': serializer.toJson<double?>(heightCm),
+      'weightKg': serializer.toJson<double?>(weightKg),
+      'fitnessGoal': serializer.toJson<String?>(fitnessGoal),
+      'activityLevel': serializer.toJson<String?>(activityLevel),
+      'chronicConditions': serializer.toJson<String?>(chronicConditions),
+      'doshaQuizAnswers': serializer.toJson<String?>(doshaQuizAnswers),
+      'vataPercentage': serializer.toJson<double?>(vataPercentage),
+      'pittaPercentage': serializer.toJson<double?>(pittaPercentage),
+      'kaphaPercentage': serializer.toJson<double?>(kaphaPercentage),
+      'dominantDosha': serializer.toJson<String?>(dominantDosha),
+      'languageCode': serializer.toJson<String?>(languageCode),
+      'permissionStepCounter': serializer.toJson<bool>(permissionStepCounter),
+      'permissionHeartRate': serializer.toJson<bool>(permissionHeartRate),
+      'permissionSleep': serializer.toJson<bool>(permissionSleep),
+      'abhaNumber': serializer.toJson<String?>(abhaNumber),
+      'abhaLinked': serializer.toJson<bool>(abhaLinked),
+      'connectedWearables': serializer.toJson<String?>(connectedWearables),
+      'xpPoints': serializer.toJson<int>(xpPoints),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'syncStatus': serializer.toJson<String>(syncStatus),
+    };
+  }
+
+  UserProfile copyWith({
+    String? id,
+    String? userId,
+    String? name,
+    Value<String?> gender = const Value.absent(),
+    Value<DateTime?> dateOfBirth = const Value.absent(),
+    Value<double?> heightCm = const Value.absent(),
+    Value<double?> weightKg = const Value.absent(),
+    Value<String?> fitnessGoal = const Value.absent(),
+    Value<String?> activityLevel = const Value.absent(),
+    Value<String?> chronicConditions = const Value.absent(),
+    Value<String?> doshaQuizAnswers = const Value.absent(),
+    Value<double?> vataPercentage = const Value.absent(),
+    Value<double?> pittaPercentage = const Value.absent(),
+    Value<double?> kaphaPercentage = const Value.absent(),
+    Value<String?> dominantDosha = const Value.absent(),
+    Value<String?> languageCode = const Value.absent(),
+    bool? permissionStepCounter,
+    bool? permissionHeartRate,
+    bool? permissionSleep,
+    Value<String?> abhaNumber = const Value.absent(),
+    bool? abhaLinked,
+    Value<String?> connectedWearables = const Value.absent(),
+    int? xpPoints,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    String? syncStatus,
+  }) => UserProfile(
+    id: id ?? this.id,
+    userId: userId ?? this.userId,
+    name: name ?? this.name,
+    gender: gender.present ? gender.value : this.gender,
+    dateOfBirth: dateOfBirth.present ? dateOfBirth.value : this.dateOfBirth,
+    heightCm: heightCm.present ? heightCm.value : this.heightCm,
+    weightKg: weightKg.present ? weightKg.value : this.weightKg,
+    fitnessGoal: fitnessGoal.present ? fitnessGoal.value : this.fitnessGoal,
+    activityLevel: activityLevel.present
+        ? activityLevel.value
+        : this.activityLevel,
+    chronicConditions: chronicConditions.present
+        ? chronicConditions.value
+        : this.chronicConditions,
+    doshaQuizAnswers: doshaQuizAnswers.present
+        ? doshaQuizAnswers.value
+        : this.doshaQuizAnswers,
+    vataPercentage: vataPercentage.present
+        ? vataPercentage.value
+        : this.vataPercentage,
+    pittaPercentage: pittaPercentage.present
+        ? pittaPercentage.value
+        : this.pittaPercentage,
+    kaphaPercentage: kaphaPercentage.present
+        ? kaphaPercentage.value
+        : this.kaphaPercentage,
+    dominantDosha: dominantDosha.present
+        ? dominantDosha.value
+        : this.dominantDosha,
+    languageCode: languageCode.present ? languageCode.value : this.languageCode,
+    permissionStepCounter: permissionStepCounter ?? this.permissionStepCounter,
+    permissionHeartRate: permissionHeartRate ?? this.permissionHeartRate,
+    permissionSleep: permissionSleep ?? this.permissionSleep,
+    abhaNumber: abhaNumber.present ? abhaNumber.value : this.abhaNumber,
+    abhaLinked: abhaLinked ?? this.abhaLinked,
+    connectedWearables: connectedWearables.present
+        ? connectedWearables.value
+        : this.connectedWearables,
+    xpPoints: xpPoints ?? this.xpPoints,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    syncStatus: syncStatus ?? this.syncStatus,
+  );
+  UserProfile copyWithCompanion(UserProfilesCompanion data) {
+    return UserProfile(
+      id: data.id.present ? data.id.value : this.id,
+      userId: data.userId.present ? data.userId.value : this.userId,
+      name: data.name.present ? data.name.value : this.name,
+      gender: data.gender.present ? data.gender.value : this.gender,
+      dateOfBirth: data.dateOfBirth.present
+          ? data.dateOfBirth.value
+          : this.dateOfBirth,
+      heightCm: data.heightCm.present ? data.heightCm.value : this.heightCm,
+      weightKg: data.weightKg.present ? data.weightKg.value : this.weightKg,
+      fitnessGoal: data.fitnessGoal.present
+          ? data.fitnessGoal.value
+          : this.fitnessGoal,
+      activityLevel: data.activityLevel.present
+          ? data.activityLevel.value
+          : this.activityLevel,
+      chronicConditions: data.chronicConditions.present
+          ? data.chronicConditions.value
+          : this.chronicConditions,
+      doshaQuizAnswers: data.doshaQuizAnswers.present
+          ? data.doshaQuizAnswers.value
+          : this.doshaQuizAnswers,
+      vataPercentage: data.vataPercentage.present
+          ? data.vataPercentage.value
+          : this.vataPercentage,
+      pittaPercentage: data.pittaPercentage.present
+          ? data.pittaPercentage.value
+          : this.pittaPercentage,
+      kaphaPercentage: data.kaphaPercentage.present
+          ? data.kaphaPercentage.value
+          : this.kaphaPercentage,
+      dominantDosha: data.dominantDosha.present
+          ? data.dominantDosha.value
+          : this.dominantDosha,
+      languageCode: data.languageCode.present
+          ? data.languageCode.value
+          : this.languageCode,
+      permissionStepCounter: data.permissionStepCounter.present
+          ? data.permissionStepCounter.value
+          : this.permissionStepCounter,
+      permissionHeartRate: data.permissionHeartRate.present
+          ? data.permissionHeartRate.value
+          : this.permissionHeartRate,
+      permissionSleep: data.permissionSleep.present
+          ? data.permissionSleep.value
+          : this.permissionSleep,
+      abhaNumber: data.abhaNumber.present
+          ? data.abhaNumber.value
+          : this.abhaNumber,
+      abhaLinked: data.abhaLinked.present
+          ? data.abhaLinked.value
+          : this.abhaLinked,
+      connectedWearables: data.connectedWearables.present
+          ? data.connectedWearables.value
+          : this.connectedWearables,
+      xpPoints: data.xpPoints.present ? data.xpPoints.value : this.xpPoints,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      syncStatus: data.syncStatus.present
+          ? data.syncStatus.value
+          : this.syncStatus,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('UserProfile(')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('name: $name, ')
+          ..write('gender: $gender, ')
+          ..write('dateOfBirth: $dateOfBirth, ')
+          ..write('heightCm: $heightCm, ')
+          ..write('weightKg: $weightKg, ')
+          ..write('fitnessGoal: $fitnessGoal, ')
+          ..write('activityLevel: $activityLevel, ')
+          ..write('chronicConditions: $chronicConditions, ')
+          ..write('doshaQuizAnswers: $doshaQuizAnswers, ')
+          ..write('vataPercentage: $vataPercentage, ')
+          ..write('pittaPercentage: $pittaPercentage, ')
+          ..write('kaphaPercentage: $kaphaPercentage, ')
+          ..write('dominantDosha: $dominantDosha, ')
+          ..write('languageCode: $languageCode, ')
+          ..write('permissionStepCounter: $permissionStepCounter, ')
+          ..write('permissionHeartRate: $permissionHeartRate, ')
+          ..write('permissionSleep: $permissionSleep, ')
+          ..write('abhaNumber: $abhaNumber, ')
+          ..write('abhaLinked: $abhaLinked, ')
+          ..write('connectedWearables: $connectedWearables, ')
+          ..write('xpPoints: $xpPoints, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    id,
+    userId,
+    name,
+    gender,
+    dateOfBirth,
+    heightCm,
+    weightKg,
+    fitnessGoal,
+    activityLevel,
+    chronicConditions,
+    doshaQuizAnswers,
+    vataPercentage,
+    pittaPercentage,
+    kaphaPercentage,
+    dominantDosha,
+    languageCode,
+    permissionStepCounter,
+    permissionHeartRate,
+    permissionSleep,
+    abhaNumber,
+    abhaLinked,
+    connectedWearables,
+    xpPoints,
+    createdAt,
+    updatedAt,
+    syncStatus,
+  ]);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is UserProfile &&
+          other.id == this.id &&
+          other.userId == this.userId &&
+          other.name == this.name &&
+          other.gender == this.gender &&
+          other.dateOfBirth == this.dateOfBirth &&
+          other.heightCm == this.heightCm &&
+          other.weightKg == this.weightKg &&
+          other.fitnessGoal == this.fitnessGoal &&
+          other.activityLevel == this.activityLevel &&
+          other.chronicConditions == this.chronicConditions &&
+          other.doshaQuizAnswers == this.doshaQuizAnswers &&
+          other.vataPercentage == this.vataPercentage &&
+          other.pittaPercentage == this.pittaPercentage &&
+          other.kaphaPercentage == this.kaphaPercentage &&
+          other.dominantDosha == this.dominantDosha &&
+          other.languageCode == this.languageCode &&
+          other.permissionStepCounter == this.permissionStepCounter &&
+          other.permissionHeartRate == this.permissionHeartRate &&
+          other.permissionSleep == this.permissionSleep &&
+          other.abhaNumber == this.abhaNumber &&
+          other.abhaLinked == this.abhaLinked &&
+          other.connectedWearables == this.connectedWearables &&
+          other.xpPoints == this.xpPoints &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.syncStatus == this.syncStatus);
+}
+
+class UserProfilesCompanion extends UpdateCompanion<UserProfile> {
+  final Value<String> id;
+  final Value<String> userId;
+  final Value<String> name;
+  final Value<String?> gender;
+  final Value<DateTime?> dateOfBirth;
+  final Value<double?> heightCm;
+  final Value<double?> weightKg;
+  final Value<String?> fitnessGoal;
+  final Value<String?> activityLevel;
+  final Value<String?> chronicConditions;
+  final Value<String?> doshaQuizAnswers;
+  final Value<double?> vataPercentage;
+  final Value<double?> pittaPercentage;
+  final Value<double?> kaphaPercentage;
+  final Value<String?> dominantDosha;
+  final Value<String?> languageCode;
+  final Value<bool> permissionStepCounter;
+  final Value<bool> permissionHeartRate;
+  final Value<bool> permissionSleep;
+  final Value<String?> abhaNumber;
+  final Value<bool> abhaLinked;
+  final Value<String?> connectedWearables;
+  final Value<int> xpPoints;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<String> syncStatus;
+  final Value<int> rowid;
+  const UserProfilesCompanion({
+    this.id = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.name = const Value.absent(),
+    this.gender = const Value.absent(),
+    this.dateOfBirth = const Value.absent(),
+    this.heightCm = const Value.absent(),
+    this.weightKg = const Value.absent(),
+    this.fitnessGoal = const Value.absent(),
+    this.activityLevel = const Value.absent(),
+    this.chronicConditions = const Value.absent(),
+    this.doshaQuizAnswers = const Value.absent(),
+    this.vataPercentage = const Value.absent(),
+    this.pittaPercentage = const Value.absent(),
+    this.kaphaPercentage = const Value.absent(),
+    this.dominantDosha = const Value.absent(),
+    this.languageCode = const Value.absent(),
+    this.permissionStepCounter = const Value.absent(),
+    this.permissionHeartRate = const Value.absent(),
+    this.permissionSleep = const Value.absent(),
+    this.abhaNumber = const Value.absent(),
+    this.abhaLinked = const Value.absent(),
+    this.connectedWearables = const Value.absent(),
+    this.xpPoints = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  UserProfilesCompanion.insert({
+    required String id,
+    required String userId,
+    required String name,
+    this.gender = const Value.absent(),
+    this.dateOfBirth = const Value.absent(),
+    this.heightCm = const Value.absent(),
+    this.weightKg = const Value.absent(),
+    this.fitnessGoal = const Value.absent(),
+    this.activityLevel = const Value.absent(),
+    this.chronicConditions = const Value.absent(),
+    this.doshaQuizAnswers = const Value.absent(),
+    this.vataPercentage = const Value.absent(),
+    this.pittaPercentage = const Value.absent(),
+    this.kaphaPercentage = const Value.absent(),
+    this.dominantDosha = const Value.absent(),
+    this.languageCode = const Value.absent(),
+    this.permissionStepCounter = const Value.absent(),
+    this.permissionHeartRate = const Value.absent(),
+    this.permissionSleep = const Value.absent(),
+    this.abhaNumber = const Value.absent(),
+    this.abhaLinked = const Value.absent(),
+    this.connectedWearables = const Value.absent(),
+    this.xpPoints = const Value.absent(),
+    required DateTime createdAt,
+    required DateTime updatedAt,
+    this.syncStatus = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       userId = Value(userId),
+       name = Value(name),
+       createdAt = Value(createdAt),
+       updatedAt = Value(updatedAt);
+  static Insertable<UserProfile> custom({
+    Expression<String>? id,
+    Expression<String>? userId,
+    Expression<String>? name,
+    Expression<String>? gender,
+    Expression<DateTime>? dateOfBirth,
+    Expression<double>? heightCm,
+    Expression<double>? weightKg,
+    Expression<String>? fitnessGoal,
+    Expression<String>? activityLevel,
+    Expression<String>? chronicConditions,
+    Expression<String>? doshaQuizAnswers,
+    Expression<double>? vataPercentage,
+    Expression<double>? pittaPercentage,
+    Expression<double>? kaphaPercentage,
+    Expression<String>? dominantDosha,
+    Expression<String>? languageCode,
+    Expression<bool>? permissionStepCounter,
+    Expression<bool>? permissionHeartRate,
+    Expression<bool>? permissionSleep,
+    Expression<String>? abhaNumber,
+    Expression<bool>? abhaLinked,
+    Expression<String>? connectedWearables,
+    Expression<int>? xpPoints,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<String>? syncStatus,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (userId != null) 'user_id': userId,
+      if (name != null) 'name': name,
+      if (gender != null) 'gender': gender,
+      if (dateOfBirth != null) 'date_of_birth': dateOfBirth,
+      if (heightCm != null) 'height_cm': heightCm,
+      if (weightKg != null) 'weight_kg': weightKg,
+      if (fitnessGoal != null) 'fitness_goal': fitnessGoal,
+      if (activityLevel != null) 'activity_level': activityLevel,
+      if (chronicConditions != null) 'chronic_conditions': chronicConditions,
+      if (doshaQuizAnswers != null) 'dosha_quiz_answers': doshaQuizAnswers,
+      if (vataPercentage != null) 'vata_percentage': vataPercentage,
+      if (pittaPercentage != null) 'pitta_percentage': pittaPercentage,
+      if (kaphaPercentage != null) 'kapha_percentage': kaphaPercentage,
+      if (dominantDosha != null) 'dominant_dosha': dominantDosha,
+      if (languageCode != null) 'language_code': languageCode,
+      if (permissionStepCounter != null)
+        'permission_step_counter': permissionStepCounter,
+      if (permissionHeartRate != null)
+        'permission_heart_rate': permissionHeartRate,
+      if (permissionSleep != null) 'permission_sleep': permissionSleep,
+      if (abhaNumber != null) 'abha_number': abhaNumber,
+      if (abhaLinked != null) 'abha_linked': abhaLinked,
+      if (connectedWearables != null) 'connected_wearables': connectedWearables,
+      if (xpPoints != null) 'xp_points': xpPoints,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (syncStatus != null) 'sync_status': syncStatus,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  UserProfilesCompanion copyWith({
+    Value<String>? id,
+    Value<String>? userId,
+    Value<String>? name,
+    Value<String?>? gender,
+    Value<DateTime?>? dateOfBirth,
+    Value<double?>? heightCm,
+    Value<double?>? weightKg,
+    Value<String?>? fitnessGoal,
+    Value<String?>? activityLevel,
+    Value<String?>? chronicConditions,
+    Value<String?>? doshaQuizAnswers,
+    Value<double?>? vataPercentage,
+    Value<double?>? pittaPercentage,
+    Value<double?>? kaphaPercentage,
+    Value<String?>? dominantDosha,
+    Value<String?>? languageCode,
+    Value<bool>? permissionStepCounter,
+    Value<bool>? permissionHeartRate,
+    Value<bool>? permissionSleep,
+    Value<String?>? abhaNumber,
+    Value<bool>? abhaLinked,
+    Value<String?>? connectedWearables,
+    Value<int>? xpPoints,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<String>? syncStatus,
+    Value<int>? rowid,
+  }) {
+    return UserProfilesCompanion(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      name: name ?? this.name,
+      gender: gender ?? this.gender,
+      dateOfBirth: dateOfBirth ?? this.dateOfBirth,
+      heightCm: heightCm ?? this.heightCm,
+      weightKg: weightKg ?? this.weightKg,
+      fitnessGoal: fitnessGoal ?? this.fitnessGoal,
+      activityLevel: activityLevel ?? this.activityLevel,
+      chronicConditions: chronicConditions ?? this.chronicConditions,
+      doshaQuizAnswers: doshaQuizAnswers ?? this.doshaQuizAnswers,
+      vataPercentage: vataPercentage ?? this.vataPercentage,
+      pittaPercentage: pittaPercentage ?? this.pittaPercentage,
+      kaphaPercentage: kaphaPercentage ?? this.kaphaPercentage,
+      dominantDosha: dominantDosha ?? this.dominantDosha,
+      languageCode: languageCode ?? this.languageCode,
+      permissionStepCounter:
+          permissionStepCounter ?? this.permissionStepCounter,
+      permissionHeartRate: permissionHeartRate ?? this.permissionHeartRate,
+      permissionSleep: permissionSleep ?? this.permissionSleep,
+      abhaNumber: abhaNumber ?? this.abhaNumber,
+      abhaLinked: abhaLinked ?? this.abhaLinked,
+      connectedWearables: connectedWearables ?? this.connectedWearables,
+      xpPoints: xpPoints ?? this.xpPoints,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      syncStatus: syncStatus ?? this.syncStatus,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<String>(userId.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (gender.present) {
+      map['gender'] = Variable<String>(gender.value);
+    }
+    if (dateOfBirth.present) {
+      map['date_of_birth'] = Variable<DateTime>(dateOfBirth.value);
+    }
+    if (heightCm.present) {
+      map['height_cm'] = Variable<double>(heightCm.value);
+    }
+    if (weightKg.present) {
+      map['weight_kg'] = Variable<double>(weightKg.value);
+    }
+    if (fitnessGoal.present) {
+      map['fitness_goal'] = Variable<String>(fitnessGoal.value);
+    }
+    if (activityLevel.present) {
+      map['activity_level'] = Variable<String>(activityLevel.value);
+    }
+    if (chronicConditions.present) {
+      map['chronic_conditions'] = Variable<String>(chronicConditions.value);
+    }
+    if (doshaQuizAnswers.present) {
+      map['dosha_quiz_answers'] = Variable<String>(doshaQuizAnswers.value);
+    }
+    if (vataPercentage.present) {
+      map['vata_percentage'] = Variable<double>(vataPercentage.value);
+    }
+    if (pittaPercentage.present) {
+      map['pitta_percentage'] = Variable<double>(pittaPercentage.value);
+    }
+    if (kaphaPercentage.present) {
+      map['kapha_percentage'] = Variable<double>(kaphaPercentage.value);
+    }
+    if (dominantDosha.present) {
+      map['dominant_dosha'] = Variable<String>(dominantDosha.value);
+    }
+    if (languageCode.present) {
+      map['language_code'] = Variable<String>(languageCode.value);
+    }
+    if (permissionStepCounter.present) {
+      map['permission_step_counter'] = Variable<bool>(
+        permissionStepCounter.value,
+      );
+    }
+    if (permissionHeartRate.present) {
+      map['permission_heart_rate'] = Variable<bool>(permissionHeartRate.value);
+    }
+    if (permissionSleep.present) {
+      map['permission_sleep'] = Variable<bool>(permissionSleep.value);
+    }
+    if (abhaNumber.present) {
+      map['abha_number'] = Variable<String>(abhaNumber.value);
+    }
+    if (abhaLinked.present) {
+      map['abha_linked'] = Variable<bool>(abhaLinked.value);
+    }
+    if (connectedWearables.present) {
+      map['connected_wearables'] = Variable<String>(connectedWearables.value);
+    }
+    if (xpPoints.present) {
+      map['xp_points'] = Variable<int>(xpPoints.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (syncStatus.present) {
+      map['sync_status'] = Variable<String>(syncStatus.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('UserProfilesCompanion(')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('name: $name, ')
+          ..write('gender: $gender, ')
+          ..write('dateOfBirth: $dateOfBirth, ')
+          ..write('heightCm: $heightCm, ')
+          ..write('weightKg: $weightKg, ')
+          ..write('fitnessGoal: $fitnessGoal, ')
+          ..write('activityLevel: $activityLevel, ')
+          ..write('chronicConditions: $chronicConditions, ')
+          ..write('doshaQuizAnswers: $doshaQuizAnswers, ')
+          ..write('vataPercentage: $vataPercentage, ')
+          ..write('pittaPercentage: $pittaPercentage, ')
+          ..write('kaphaPercentage: $kaphaPercentage, ')
+          ..write('dominantDosha: $dominantDosha, ')
+          ..write('languageCode: $languageCode, ')
+          ..write('permissionStepCounter: $permissionStepCounter, ')
+          ..write('permissionHeartRate: $permissionHeartRate, ')
+          ..write('permissionSleep: $permissionSleep, ')
+          ..write('abhaNumber: $abhaNumber, ')
+          ..write('abhaLinked: $abhaLinked, ')
+          ..write('connectedWearables: $connectedWearables, ')
+          ..write('xpPoints: $xpPoints, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $SyncQueueTable extends SyncQueue
     with TableInfo<$SyncQueueTable, SyncQueueEntry> {
   @override
@@ -15303,6 +16805,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $PersonalRecordsTable personalRecords = $PersonalRecordsTable(
     this,
   );
+  late final $UserProfilesTable userProfiles = $UserProfilesTable(this);
   late final $SyncQueueTable syncQueue = $SyncQueueTable(this);
   late final $SyncDeadLetterTable syncDeadLetter = $SyncDeadLetterTable(this);
   late final FoodLogsDao foodLogsDao = FoodLogsDao(this as AppDatabase);
@@ -15361,6 +16864,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final PersonalRecordsDao personalRecordsDao = PersonalRecordsDao(
     this as AppDatabase,
   );
+  late final UserProfilesDao userProfilesDao = UserProfilesDao(
+    this as AppDatabase,
+  );
   late final SyncQueueDao syncQueueDao = SyncQueueDao(this as AppDatabase);
   late final SyncDeadLetterDao syncDeadLetterDao = SyncDeadLetterDao(
     this as AppDatabase,
@@ -15397,6 +16903,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     karmaTransactions,
     nutritionGoals,
     personalRecords,
+    userProfiles,
     syncQueue,
     syncDeadLetter,
   ];
@@ -22402,6 +23909,639 @@ typedef $$PersonalRecordsTableProcessedTableManager =
       PersonalRecord,
       PrefetchHooks Function()
     >;
+typedef $$UserProfilesTableCreateCompanionBuilder =
+    UserProfilesCompanion Function({
+      required String id,
+      required String userId,
+      required String name,
+      Value<String?> gender,
+      Value<DateTime?> dateOfBirth,
+      Value<double?> heightCm,
+      Value<double?> weightKg,
+      Value<String?> fitnessGoal,
+      Value<String?> activityLevel,
+      Value<String?> chronicConditions,
+      Value<String?> doshaQuizAnswers,
+      Value<double?> vataPercentage,
+      Value<double?> pittaPercentage,
+      Value<double?> kaphaPercentage,
+      Value<String?> dominantDosha,
+      Value<String?> languageCode,
+      Value<bool> permissionStepCounter,
+      Value<bool> permissionHeartRate,
+      Value<bool> permissionSleep,
+      Value<String?> abhaNumber,
+      Value<bool> abhaLinked,
+      Value<String?> connectedWearables,
+      Value<int> xpPoints,
+      required DateTime createdAt,
+      required DateTime updatedAt,
+      Value<String> syncStatus,
+      Value<int> rowid,
+    });
+typedef $$UserProfilesTableUpdateCompanionBuilder =
+    UserProfilesCompanion Function({
+      Value<String> id,
+      Value<String> userId,
+      Value<String> name,
+      Value<String?> gender,
+      Value<DateTime?> dateOfBirth,
+      Value<double?> heightCm,
+      Value<double?> weightKg,
+      Value<String?> fitnessGoal,
+      Value<String?> activityLevel,
+      Value<String?> chronicConditions,
+      Value<String?> doshaQuizAnswers,
+      Value<double?> vataPercentage,
+      Value<double?> pittaPercentage,
+      Value<double?> kaphaPercentage,
+      Value<String?> dominantDosha,
+      Value<String?> languageCode,
+      Value<bool> permissionStepCounter,
+      Value<bool> permissionHeartRate,
+      Value<bool> permissionSleep,
+      Value<String?> abhaNumber,
+      Value<bool> abhaLinked,
+      Value<String?> connectedWearables,
+      Value<int> xpPoints,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> syncStatus,
+      Value<int> rowid,
+    });
+
+class $$UserProfilesTableFilterComposer
+    extends Composer<_$AppDatabase, $UserProfilesTable> {
+  $$UserProfilesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get gender => $composableBuilder(
+    column: $table.gender,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get dateOfBirth => $composableBuilder(
+    column: $table.dateOfBirth,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get heightCm => $composableBuilder(
+    column: $table.heightCm,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get weightKg => $composableBuilder(
+    column: $table.weightKg,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get fitnessGoal => $composableBuilder(
+    column: $table.fitnessGoal,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get activityLevel => $composableBuilder(
+    column: $table.activityLevel,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get chronicConditions => $composableBuilder(
+    column: $table.chronicConditions,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get doshaQuizAnswers => $composableBuilder(
+    column: $table.doshaQuizAnswers,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get vataPercentage => $composableBuilder(
+    column: $table.vataPercentage,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get pittaPercentage => $composableBuilder(
+    column: $table.pittaPercentage,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get kaphaPercentage => $composableBuilder(
+    column: $table.kaphaPercentage,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get dominantDosha => $composableBuilder(
+    column: $table.dominantDosha,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get languageCode => $composableBuilder(
+    column: $table.languageCode,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get permissionStepCounter => $composableBuilder(
+    column: $table.permissionStepCounter,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get permissionHeartRate => $composableBuilder(
+    column: $table.permissionHeartRate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get permissionSleep => $composableBuilder(
+    column: $table.permissionSleep,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get abhaNumber => $composableBuilder(
+    column: $table.abhaNumber,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get abhaLinked => $composableBuilder(
+    column: $table.abhaLinked,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get connectedWearables => $composableBuilder(
+    column: $table.connectedWearables,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get xpPoints => $composableBuilder(
+    column: $table.xpPoints,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$UserProfilesTableOrderingComposer
+    extends Composer<_$AppDatabase, $UserProfilesTable> {
+  $$UserProfilesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get gender => $composableBuilder(
+    column: $table.gender,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get dateOfBirth => $composableBuilder(
+    column: $table.dateOfBirth,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get heightCm => $composableBuilder(
+    column: $table.heightCm,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get weightKg => $composableBuilder(
+    column: $table.weightKg,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get fitnessGoal => $composableBuilder(
+    column: $table.fitnessGoal,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get activityLevel => $composableBuilder(
+    column: $table.activityLevel,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get chronicConditions => $composableBuilder(
+    column: $table.chronicConditions,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get doshaQuizAnswers => $composableBuilder(
+    column: $table.doshaQuizAnswers,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get vataPercentage => $composableBuilder(
+    column: $table.vataPercentage,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get pittaPercentage => $composableBuilder(
+    column: $table.pittaPercentage,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get kaphaPercentage => $composableBuilder(
+    column: $table.kaphaPercentage,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get dominantDosha => $composableBuilder(
+    column: $table.dominantDosha,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get languageCode => $composableBuilder(
+    column: $table.languageCode,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get permissionStepCounter => $composableBuilder(
+    column: $table.permissionStepCounter,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get permissionHeartRate => $composableBuilder(
+    column: $table.permissionHeartRate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get permissionSleep => $composableBuilder(
+    column: $table.permissionSleep,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get abhaNumber => $composableBuilder(
+    column: $table.abhaNumber,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get abhaLinked => $composableBuilder(
+    column: $table.abhaLinked,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get connectedWearables => $composableBuilder(
+    column: $table.connectedWearables,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get xpPoints => $composableBuilder(
+    column: $table.xpPoints,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$UserProfilesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $UserProfilesTable> {
+  $$UserProfilesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get userId =>
+      $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get gender =>
+      $composableBuilder(column: $table.gender, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get dateOfBirth => $composableBuilder(
+    column: $table.dateOfBirth,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get heightCm =>
+      $composableBuilder(column: $table.heightCm, builder: (column) => column);
+
+  GeneratedColumn<double> get weightKg =>
+      $composableBuilder(column: $table.weightKg, builder: (column) => column);
+
+  GeneratedColumn<String> get fitnessGoal => $composableBuilder(
+    column: $table.fitnessGoal,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get activityLevel => $composableBuilder(
+    column: $table.activityLevel,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get chronicConditions => $composableBuilder(
+    column: $table.chronicConditions,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get doshaQuizAnswers => $composableBuilder(
+    column: $table.doshaQuizAnswers,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get vataPercentage => $composableBuilder(
+    column: $table.vataPercentage,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get pittaPercentage => $composableBuilder(
+    column: $table.pittaPercentage,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get kaphaPercentage => $composableBuilder(
+    column: $table.kaphaPercentage,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get dominantDosha => $composableBuilder(
+    column: $table.dominantDosha,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get languageCode => $composableBuilder(
+    column: $table.languageCode,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get permissionStepCounter => $composableBuilder(
+    column: $table.permissionStepCounter,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get permissionHeartRate => $composableBuilder(
+    column: $table.permissionHeartRate,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get permissionSleep => $composableBuilder(
+    column: $table.permissionSleep,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get abhaNumber => $composableBuilder(
+    column: $table.abhaNumber,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get abhaLinked => $composableBuilder(
+    column: $table.abhaLinked,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get connectedWearables => $composableBuilder(
+    column: $table.connectedWearables,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get xpPoints =>
+      $composableBuilder(column: $table.xpPoints, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => column,
+  );
+}
+
+class $$UserProfilesTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $UserProfilesTable,
+          UserProfile,
+          $$UserProfilesTableFilterComposer,
+          $$UserProfilesTableOrderingComposer,
+          $$UserProfilesTableAnnotationComposer,
+          $$UserProfilesTableCreateCompanionBuilder,
+          $$UserProfilesTableUpdateCompanionBuilder,
+          (
+            UserProfile,
+            BaseReferences<_$AppDatabase, $UserProfilesTable, UserProfile>,
+          ),
+          UserProfile,
+          PrefetchHooks Function()
+        > {
+  $$UserProfilesTableTableManager(_$AppDatabase db, $UserProfilesTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$UserProfilesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$UserProfilesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$UserProfilesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> userId = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<String?> gender = const Value.absent(),
+                Value<DateTime?> dateOfBirth = const Value.absent(),
+                Value<double?> heightCm = const Value.absent(),
+                Value<double?> weightKg = const Value.absent(),
+                Value<String?> fitnessGoal = const Value.absent(),
+                Value<String?> activityLevel = const Value.absent(),
+                Value<String?> chronicConditions = const Value.absent(),
+                Value<String?> doshaQuizAnswers = const Value.absent(),
+                Value<double?> vataPercentage = const Value.absent(),
+                Value<double?> pittaPercentage = const Value.absent(),
+                Value<double?> kaphaPercentage = const Value.absent(),
+                Value<String?> dominantDosha = const Value.absent(),
+                Value<String?> languageCode = const Value.absent(),
+                Value<bool> permissionStepCounter = const Value.absent(),
+                Value<bool> permissionHeartRate = const Value.absent(),
+                Value<bool> permissionSleep = const Value.absent(),
+                Value<String?> abhaNumber = const Value.absent(),
+                Value<bool> abhaLinked = const Value.absent(),
+                Value<String?> connectedWearables = const Value.absent(),
+                Value<int> xpPoints = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => UserProfilesCompanion(
+                id: id,
+                userId: userId,
+                name: name,
+                gender: gender,
+                dateOfBirth: dateOfBirth,
+                heightCm: heightCm,
+                weightKg: weightKg,
+                fitnessGoal: fitnessGoal,
+                activityLevel: activityLevel,
+                chronicConditions: chronicConditions,
+                doshaQuizAnswers: doshaQuizAnswers,
+                vataPercentage: vataPercentage,
+                pittaPercentage: pittaPercentage,
+                kaphaPercentage: kaphaPercentage,
+                dominantDosha: dominantDosha,
+                languageCode: languageCode,
+                permissionStepCounter: permissionStepCounter,
+                permissionHeartRate: permissionHeartRate,
+                permissionSleep: permissionSleep,
+                abhaNumber: abhaNumber,
+                abhaLinked: abhaLinked,
+                connectedWearables: connectedWearables,
+                xpPoints: xpPoints,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                syncStatus: syncStatus,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String userId,
+                required String name,
+                Value<String?> gender = const Value.absent(),
+                Value<DateTime?> dateOfBirth = const Value.absent(),
+                Value<double?> heightCm = const Value.absent(),
+                Value<double?> weightKg = const Value.absent(),
+                Value<String?> fitnessGoal = const Value.absent(),
+                Value<String?> activityLevel = const Value.absent(),
+                Value<String?> chronicConditions = const Value.absent(),
+                Value<String?> doshaQuizAnswers = const Value.absent(),
+                Value<double?> vataPercentage = const Value.absent(),
+                Value<double?> pittaPercentage = const Value.absent(),
+                Value<double?> kaphaPercentage = const Value.absent(),
+                Value<String?> dominantDosha = const Value.absent(),
+                Value<String?> languageCode = const Value.absent(),
+                Value<bool> permissionStepCounter = const Value.absent(),
+                Value<bool> permissionHeartRate = const Value.absent(),
+                Value<bool> permissionSleep = const Value.absent(),
+                Value<String?> abhaNumber = const Value.absent(),
+                Value<bool> abhaLinked = const Value.absent(),
+                Value<String?> connectedWearables = const Value.absent(),
+                Value<int> xpPoints = const Value.absent(),
+                required DateTime createdAt,
+                required DateTime updatedAt,
+                Value<String> syncStatus = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => UserProfilesCompanion.insert(
+                id: id,
+                userId: userId,
+                name: name,
+                gender: gender,
+                dateOfBirth: dateOfBirth,
+                heightCm: heightCm,
+                weightKg: weightKg,
+                fitnessGoal: fitnessGoal,
+                activityLevel: activityLevel,
+                chronicConditions: chronicConditions,
+                doshaQuizAnswers: doshaQuizAnswers,
+                vataPercentage: vataPercentage,
+                pittaPercentage: pittaPercentage,
+                kaphaPercentage: kaphaPercentage,
+                dominantDosha: dominantDosha,
+                languageCode: languageCode,
+                permissionStepCounter: permissionStepCounter,
+                permissionHeartRate: permissionHeartRate,
+                permissionSleep: permissionSleep,
+                abhaNumber: abhaNumber,
+                abhaLinked: abhaLinked,
+                connectedWearables: connectedWearables,
+                xpPoints: xpPoints,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                syncStatus: syncStatus,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$UserProfilesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $UserProfilesTable,
+      UserProfile,
+      $$UserProfilesTableFilterComposer,
+      $$UserProfilesTableOrderingComposer,
+      $$UserProfilesTableAnnotationComposer,
+      $$UserProfilesTableCreateCompanionBuilder,
+      $$UserProfilesTableUpdateCompanionBuilder,
+      (
+        UserProfile,
+        BaseReferences<_$AppDatabase, $UserProfilesTable, UserProfile>,
+      ),
+      UserProfile,
+      PrefetchHooks Function()
+    >;
 typedef $$SyncQueueTableCreateCompanionBuilder =
     SyncQueueCompanion Function({
       required String id,
@@ -23034,6 +25174,8 @@ class $AppDatabaseManager {
       $$NutritionGoalsTableTableManager(_db, _db.nutritionGoals);
   $$PersonalRecordsTableTableManager get personalRecords =>
       $$PersonalRecordsTableTableManager(_db, _db.personalRecords);
+  $$UserProfilesTableTableManager get userProfiles =>
+      $$UserProfilesTableTableManager(_db, _db.userProfiles);
   $$SyncQueueTableTableManager get syncQueue =>
       $$SyncQueueTableTableManager(_db, _db.syncQueue);
   $$SyncDeadLetterTableTableManager get syncDeadLetter =>
