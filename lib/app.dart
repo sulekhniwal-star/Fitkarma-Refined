@@ -28,6 +28,7 @@ import 'features/meditation/presentation/meditation_screen.dart'
     deferred as meditation;
 import 'features/wearables/presentation/wearables_screen.dart'
     deferred as wearables;
+import 'features/steps/presentation/steps_screen.dart';
 
 // --- Placeholder Screens ---
 class PlaceholderScreen extends StatelessWidget {
@@ -400,6 +401,10 @@ final _router = GoRouter(
         GoRoute(
           path: '/home/dashboard',
           builder: (context, state) => const DashboardScreen(),
+        ),
+        GoRoute(
+          path: '/home/steps',
+          builder: (context, state) => const StepsScreen(),
         ),
         GoRoute(
           path: '/settings',
