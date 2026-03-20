@@ -1436,6 +1436,202 @@
                 }
             ],
             "indexes": []
+        },
+        {
+            "$id": "workouts",
+            "$createdAt": "2024-01-01T00:00:00.000Z",
+            "$updatedAt": "2024-01-01T00:00:00.000Z",
+            "databaseId": "fitkarma",
+            "name": "Workouts",
+            "enabled": true,
+            "documentSecurity": false,
+            "attributes": [
+                {
+                    "key": "title",
+                    "type": "string",
+                    "size": 255,
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "description",
+                    "type": "string",
+                    "size": 2000,
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "youtubeId",
+                    "type": "string",
+                    "size": 32,
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "thumbnailUrl",
+                    "type": "string",
+                    "size": 512,
+                    "required": false,
+                    "array": false
+                },
+                {
+                    "key": "durationMinutes",
+                    "type": "integer",
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "difficulty",
+                    "type": "string",
+                    "size": 32,
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "category",
+                    "type": "string",
+                    "size": 64,
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "caloriesPerSession",
+                    "type": "integer",
+                    "required": false,
+                    "array": false
+                },
+                {
+                    "key": "isFeatured",
+                    "type": "boolean",
+                    "required": true,
+                    "array": false
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "idx_workouts_category",
+                    "type": "key",
+                    "attributes": [
+                        "category"
+                    ],
+                    "orders": [
+                        "ASC"
+                    ]
+                },
+                {
+                    "key": "idx_workouts_difficulty",
+                    "type": "key",
+                    "attributes": [
+                        "difficulty"
+                    ],
+                    "orders": [
+                        "ASC"
+                    ]
+                }
+            ]
+        },
+        {
+            "$id": "scheduled_workouts",
+            "$createdAt": "2024-01-01T00:00:00.000Z",
+            "$updatedAt": "2024-01-01T00:00:00.000Z",
+            "databaseId": "fitkarma",
+            "name": "Scheduled Workouts",
+            "enabled": true,
+            "documentSecurity": true,
+            "attributes": [
+                {
+                    "key": "userId",
+                    "type": "string",
+                    "size": 64,
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "workoutId",
+                    "type": "string",
+                    "size": 64,
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "scheduledDate",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "scheduledTime",
+                    "type": "string",
+                    "size": 16,
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "isRestDay",
+                    "type": "boolean",
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "isCompleted",
+                    "type": "boolean",
+                    "required": true,
+                    "array": false
+                }
+            ],
+            "indexes": []
+        },
+        {
+            "$id": "personal_records",
+            "$createdAt": "2024-01-01T00:00:00.000Z",
+            "$updatedAt": "2024-01-01T00:00:00.000Z",
+            "databaseId": "fitkarma",
+            "name": "Personal Records",
+            "enabled": true,
+            "documentSecurity": true,
+            "attributes": [
+                {
+                    "key": "userId",
+                    "type": "string",
+                    "size": 64,
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "recordType",
+                    "type": "string",
+                    "size": 32,
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "exerciseName",
+                    "type": "string",
+                    "size": 128,
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "value",
+                    "type": "double",
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "unit",
+                    "type": "string",
+                    "size": 16,
+                    "required": true,
+                    "array": false
+                },
+                {
+                    "key": "achievedAt",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false
+                }
+            ],
+            "indexes": []
         }
     ],
     "buckets": [],

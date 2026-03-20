@@ -1,9 +1,9 @@
 // lib/features/food/presentation/barcode_scanner_screen.dart
-// Barcode scanner screen using flutter_barcode_scanner
+// Barcode scanner screen using mobile_scanner
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:fitkarma/features/food/data/openfoodfacts_service.dart';
 import 'package:fitkarma/features/food/data/food_providers.dart';
 import 'package:fitkarma/features/food/presentation/manual_entry_sheet.dart';
@@ -32,11 +32,23 @@ class _BarcodeScannerScreenState extends ConsumerState<BarcodeScannerScreen> {
   String? _scannedBarcode;
   OpenFoodFactsProduct? _product;
   String? _error;
+  MobileScannerController? _scannerController;
+  bool _torchEnabled = false;
 
   @override
   void initState() {
     super.initState();
-    _startScanning();
+    _scannerController = MobileScannerController(
+      detectionSpeed: DetectionSpeed.normal,
+      facing: CameraFacing.back,
+      torchEnabled: false,
+    );
+  }
+
+  @override
+  void dispose() {
+    _scannerController?.dispose();
+    super.dispose();
   }
 
   Future<void> _startScanning() async {
@@ -53,31 +65,22 @@ class _BarcodeScannerScreenState extends ConsumerState<BarcodeScannerScreen> {
       _isLoading = true;
       _error = null;
     });
+  }
 
-    try {
-      final barcode = await FlutterBarcodeScanner.scanBarcode(
-        '#FF6B35', // Scanner overlay color
-        'Cancel',
-        true, // Flash enabled
-        ScanMode.BARCODE,
-      );
-
-      if (barcode != null && barcode.isNotEmpty && barcode != '-1') {
-        setState(() {
-          _scannedBarcode = barcode;
-          _isScanning = false;
-        });
-        await _fetchProductData(barcode);
-      } else {
-        if (mounted) {
-          Navigator.pop(context);
+  void _handleBarcode(BarcodeCapture capture) {
+    if (_isLoading) {
+      final List<Barcode> barcodes = capture.barcodes;
+      if (barcodes.isNotEmpty) {
+        final barcode = barcodes.first.rawValue;
+        if (barcode != null && barcode.isNotEmpty) {
+          setState(() {
+            _scannedBarcode = barcode;
+            _isScanning = false;
+            _isLoading = false;
+          });
+          _fetchProductData(barcode);
         }
       }
-    } catch (e) {
-      setState(() {
-        _error = 'Failed to scan barcode: $e';
-        _isLoading = false;
-      });
     }
   }
 
@@ -155,40 +158,43 @@ class _BarcodeScannerScreenState extends ConsumerState<BarcodeScannerScreen> {
         Expanded(
           child: Stack(
             children: [
-              // Scanner preview placeholder - actual scanner would be here
-              Container(
-                color: Colors.black,
+              // MobileScanner widget for barcode scanning
+              MobileScanner(
+                controller: _scannerController!,
+                onDetect: _handleBarcode,
+              ),
+              // Scanner overlay
+              Center(
+                child: Container(
+                  width: 280,
+                  height: 150,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: AppColors.primary, width: 2),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+              // Instructions overlay
+              Positioned(
+                bottom: 20,
+                left: 0,
+                right: 0,
                 child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.qr_code_scanner,
-                        size: 100,
-                        color: AppColors.primary.withValues(alpha: 0.5),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.black54,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      'Point camera at barcode',
+                      style: AppTextStyles.bodyMedium.copyWith(
+                        color: Colors.white,
                       ),
-                      const SizedBox(height: 20),
-                      Text(
-                        'Point camera at barcode',
-                        style: AppTextStyles.bodyLarge.copyWith(
-                          color: Colors.white,
-                        ),
-                      ),
-                      const SizedBox(height: 40),
-                      ElevatedButton.icon(
-                        onPressed: _scanBarcode,
-                        icon: const Icon(Icons.camera_alt),
-                        label: const Text('Start Scanning'),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primary,
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 24,
-                            vertical: 12,
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                 ),
               ),
@@ -203,9 +209,23 @@ class _BarcodeScannerScreenState extends ConsumerState<BarcodeScannerScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _buildInfoChip(Icons.flash_on, 'Flash'),
-                _buildInfoChip(Icons.center_focus_strong, 'Focus'),
-                _buildInfoChip(Icons.image, 'Gallery'),
+                _buildInfoChip(
+                  _torchEnabled ? Icons.flash_on : Icons.flash_off,
+                  'Flash',
+                  onTap: () {
+                    _scannerController?.toggleTorch();
+                    setState(() {
+                      _torchEnabled = !_torchEnabled;
+                    });
+                  },
+                ),
+                _buildInfoChip(
+                  Icons.cameraswitch,
+                  'Switch',
+                  onTap: () {
+                    _scannerController?.switchCamera();
+                  },
+                ),
               ],
             ),
           ),
@@ -214,17 +234,20 @@ class _BarcodeScannerScreenState extends ConsumerState<BarcodeScannerScreen> {
     );
   }
 
-  Widget _buildInfoChip(IconData icon, String label) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(icon, color: Colors.white70),
-        const SizedBox(height: 4),
-        Text(
-          label,
-          style: const TextStyle(color: Colors.white70, fontSize: 12),
-        ),
-      ],
+  Widget _buildInfoChip(IconData icon, String label, {VoidCallback? onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, color: Colors.white70),
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: const TextStyle(color: Colors.white70, fontSize: 12),
+          ),
+        ],
+      ),
     );
   }
 

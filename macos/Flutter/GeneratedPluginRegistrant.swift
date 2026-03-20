@@ -19,6 +19,7 @@ import flutter_web_auth_2
 import geolocator_apple
 import just_audio
 import local_auth_darwin
+import mobile_scanner
 import objectbox_flutter_libs
 import package_info_plus
 import quill_native_bridge_macos
@@ -44,6 +45,7 @@ func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
   GeolocatorPlugin.register(with: registry.registrar(forPlugin: "GeolocatorPlugin"))
   JustAudioPlugin.register(with: registry.registrar(forPlugin: "JustAudioPlugin"))
   LocalAuthPlugin.register(with: registry.registrar(forPlugin: "LocalAuthPlugin"))
+  MobileScannerPlugin.register(with: registry.registrar(forPlugin: "MobileScannerPlugin"))
   ObjectboxFlutterLibsPlugin.register(with: registry.registrar(forPlugin: "ObjectboxFlutterLibsPlugin"))
   FPPPackageInfoPlusPlugin.register(with: registry.registrar(forPlugin: "FPPPackageInfoPlusPlugin"))
   QuillNativeBridgePlugin.register(with: registry.registrar(forPlugin: "QuillNativeBridgePlugin"))

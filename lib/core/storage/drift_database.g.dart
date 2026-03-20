@@ -4110,6 +4110,26 @@ class $WorkoutLogsTable extends WorkoutLogs
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _notesMeta = const VerificationMeta('notes');
+  @override
+  late final GeneratedColumn<String> notes = GeneratedColumn<String>(
+    'notes',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _gpsDataMeta = const VerificationMeta(
+    'gpsData',
+  );
+  @override
+  late final GeneratedColumn<String> gpsData = GeneratedColumn<String>(
+    'gps_data',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -4120,6 +4140,8 @@ class $WorkoutLogsTable extends WorkoutLogs
     caloriesBurned,
     workoutType,
     rpeLevel,
+    notes,
+    gpsData,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -4201,6 +4223,18 @@ class $WorkoutLogsTable extends WorkoutLogs
         rpeLevel.isAcceptableOrUnknown(data['rpe_level']!, _rpeLevelMeta),
       );
     }
+    if (data.containsKey('notes')) {
+      context.handle(
+        _notesMeta,
+        notes.isAcceptableOrUnknown(data['notes']!, _notesMeta),
+      );
+    }
+    if (data.containsKey('gps_data')) {
+      context.handle(
+        _gpsDataMeta,
+        gpsData.isAcceptableOrUnknown(data['gps_data']!, _gpsDataMeta),
+      );
+    }
     return context;
   }
 
@@ -4242,6 +4276,14 @@ class $WorkoutLogsTable extends WorkoutLogs
         DriftSqlType.string,
         data['${effectivePrefix}rpe_level'],
       ),
+      notes: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}notes'],
+      ),
+      gpsData: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}gps_data'],
+      ),
     );
   }
 
@@ -4260,6 +4302,8 @@ class WorkoutLog extends DataClass implements Insertable<WorkoutLog> {
   final double caloriesBurned;
   final String workoutType;
   final String? rpeLevel;
+  final String? notes;
+  final String? gpsData;
   const WorkoutLog({
     required this.id,
     required this.userId,
@@ -4269,6 +4313,8 @@ class WorkoutLog extends DataClass implements Insertable<WorkoutLog> {
     required this.caloriesBurned,
     required this.workoutType,
     this.rpeLevel,
+    this.notes,
+    this.gpsData,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -4282,6 +4328,12 @@ class WorkoutLog extends DataClass implements Insertable<WorkoutLog> {
     map['workout_type'] = Variable<String>(workoutType);
     if (!nullToAbsent || rpeLevel != null) {
       map['rpe_level'] = Variable<String>(rpeLevel);
+    }
+    if (!nullToAbsent || notes != null) {
+      map['notes'] = Variable<String>(notes);
+    }
+    if (!nullToAbsent || gpsData != null) {
+      map['gps_data'] = Variable<String>(gpsData);
     }
     return map;
   }
@@ -4298,6 +4350,12 @@ class WorkoutLog extends DataClass implements Insertable<WorkoutLog> {
       rpeLevel: rpeLevel == null && nullToAbsent
           ? const Value.absent()
           : Value(rpeLevel),
+      notes: notes == null && nullToAbsent
+          ? const Value.absent()
+          : Value(notes),
+      gpsData: gpsData == null && nullToAbsent
+          ? const Value.absent()
+          : Value(gpsData),
     );
   }
 
@@ -4315,6 +4373,8 @@ class WorkoutLog extends DataClass implements Insertable<WorkoutLog> {
       caloriesBurned: serializer.fromJson<double>(json['caloriesBurned']),
       workoutType: serializer.fromJson<String>(json['workoutType']),
       rpeLevel: serializer.fromJson<String?>(json['rpeLevel']),
+      notes: serializer.fromJson<String?>(json['notes']),
+      gpsData: serializer.fromJson<String?>(json['gpsData']),
     );
   }
   @override
@@ -4329,6 +4389,8 @@ class WorkoutLog extends DataClass implements Insertable<WorkoutLog> {
       'caloriesBurned': serializer.toJson<double>(caloriesBurned),
       'workoutType': serializer.toJson<String>(workoutType),
       'rpeLevel': serializer.toJson<String?>(rpeLevel),
+      'notes': serializer.toJson<String?>(notes),
+      'gpsData': serializer.toJson<String?>(gpsData),
     };
   }
 
@@ -4341,6 +4403,8 @@ class WorkoutLog extends DataClass implements Insertable<WorkoutLog> {
     double? caloriesBurned,
     String? workoutType,
     Value<String?> rpeLevel = const Value.absent(),
+    Value<String?> notes = const Value.absent(),
+    Value<String?> gpsData = const Value.absent(),
   }) => WorkoutLog(
     id: id ?? this.id,
     userId: userId ?? this.userId,
@@ -4350,6 +4414,8 @@ class WorkoutLog extends DataClass implements Insertable<WorkoutLog> {
     caloriesBurned: caloriesBurned ?? this.caloriesBurned,
     workoutType: workoutType ?? this.workoutType,
     rpeLevel: rpeLevel.present ? rpeLevel.value : this.rpeLevel,
+    notes: notes.present ? notes.value : this.notes,
+    gpsData: gpsData.present ? gpsData.value : this.gpsData,
   );
   WorkoutLog copyWithCompanion(WorkoutLogsCompanion data) {
     return WorkoutLog(
@@ -4367,6 +4433,8 @@ class WorkoutLog extends DataClass implements Insertable<WorkoutLog> {
           ? data.workoutType.value
           : this.workoutType,
       rpeLevel: data.rpeLevel.present ? data.rpeLevel.value : this.rpeLevel,
+      notes: data.notes.present ? data.notes.value : this.notes,
+      gpsData: data.gpsData.present ? data.gpsData.value : this.gpsData,
     );
   }
 
@@ -4380,7 +4448,9 @@ class WorkoutLog extends DataClass implements Insertable<WorkoutLog> {
           ..write('durationMin: $durationMin, ')
           ..write('caloriesBurned: $caloriesBurned, ')
           ..write('workoutType: $workoutType, ')
-          ..write('rpeLevel: $rpeLevel')
+          ..write('rpeLevel: $rpeLevel, ')
+          ..write('notes: $notes, ')
+          ..write('gpsData: $gpsData')
           ..write(')'))
         .toString();
   }
@@ -4395,6 +4465,8 @@ class WorkoutLog extends DataClass implements Insertable<WorkoutLog> {
     caloriesBurned,
     workoutType,
     rpeLevel,
+    notes,
+    gpsData,
   );
   @override
   bool operator ==(Object other) =>
@@ -4407,7 +4479,9 @@ class WorkoutLog extends DataClass implements Insertable<WorkoutLog> {
           other.durationMin == this.durationMin &&
           other.caloriesBurned == this.caloriesBurned &&
           other.workoutType == this.workoutType &&
-          other.rpeLevel == this.rpeLevel);
+          other.rpeLevel == this.rpeLevel &&
+          other.notes == this.notes &&
+          other.gpsData == this.gpsData);
 }
 
 class WorkoutLogsCompanion extends UpdateCompanion<WorkoutLog> {
@@ -4419,6 +4493,8 @@ class WorkoutLogsCompanion extends UpdateCompanion<WorkoutLog> {
   final Value<double> caloriesBurned;
   final Value<String> workoutType;
   final Value<String?> rpeLevel;
+  final Value<String?> notes;
+  final Value<String?> gpsData;
   final Value<int> rowid;
   const WorkoutLogsCompanion({
     this.id = const Value.absent(),
@@ -4429,6 +4505,8 @@ class WorkoutLogsCompanion extends UpdateCompanion<WorkoutLog> {
     this.caloriesBurned = const Value.absent(),
     this.workoutType = const Value.absent(),
     this.rpeLevel = const Value.absent(),
+    this.notes = const Value.absent(),
+    this.gpsData = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   WorkoutLogsCompanion.insert({
@@ -4440,6 +4518,8 @@ class WorkoutLogsCompanion extends UpdateCompanion<WorkoutLog> {
     required double caloriesBurned,
     required String workoutType,
     this.rpeLevel = const Value.absent(),
+    this.notes = const Value.absent(),
+    this.gpsData = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        userId = Value(userId),
@@ -4457,6 +4537,8 @@ class WorkoutLogsCompanion extends UpdateCompanion<WorkoutLog> {
     Expression<double>? caloriesBurned,
     Expression<String>? workoutType,
     Expression<String>? rpeLevel,
+    Expression<String>? notes,
+    Expression<String>? gpsData,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -4468,6 +4550,8 @@ class WorkoutLogsCompanion extends UpdateCompanion<WorkoutLog> {
       if (caloriesBurned != null) 'calories_burned': caloriesBurned,
       if (workoutType != null) 'workout_type': workoutType,
       if (rpeLevel != null) 'rpe_level': rpeLevel,
+      if (notes != null) 'notes': notes,
+      if (gpsData != null) 'gps_data': gpsData,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -4481,6 +4565,8 @@ class WorkoutLogsCompanion extends UpdateCompanion<WorkoutLog> {
     Value<double>? caloriesBurned,
     Value<String>? workoutType,
     Value<String?>? rpeLevel,
+    Value<String?>? notes,
+    Value<String?>? gpsData,
     Value<int>? rowid,
   }) {
     return WorkoutLogsCompanion(
@@ -4492,6 +4578,8 @@ class WorkoutLogsCompanion extends UpdateCompanion<WorkoutLog> {
       caloriesBurned: caloriesBurned ?? this.caloriesBurned,
       workoutType: workoutType ?? this.workoutType,
       rpeLevel: rpeLevel ?? this.rpeLevel,
+      notes: notes ?? this.notes,
+      gpsData: gpsData ?? this.gpsData,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -4523,6 +4611,12 @@ class WorkoutLogsCompanion extends UpdateCompanion<WorkoutLog> {
     if (rpeLevel.present) {
       map['rpe_level'] = Variable<String>(rpeLevel.value);
     }
+    if (notes.present) {
+      map['notes'] = Variable<String>(notes.value);
+    }
+    if (gpsData.present) {
+      map['gps_data'] = Variable<String>(gpsData.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -4540,6 +4634,8 @@ class WorkoutLogsCompanion extends UpdateCompanion<WorkoutLog> {
           ..write('caloriesBurned: $caloriesBurned, ')
           ..write('workoutType: $workoutType, ')
           ..write('rpeLevel: $rpeLevel, ')
+          ..write('notes: $notes, ')
+          ..write('gpsData: $gpsData, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -14398,6 +14494,17 @@ class $KarmaTransactionsTable extends KarmaTransactions
     type: DriftSqlType.int,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -14406,6 +14513,7 @@ class $KarmaTransactionsTable extends KarmaTransactions
     action,
     description,
     balanceAfter,
+    createdAt,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -14468,6 +14576,14 @@ class $KarmaTransactionsTable extends KarmaTransactions
     } else if (isInserting) {
       context.missing(_balanceAfterMeta);
     }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
     return context;
   }
 
@@ -14501,6 +14617,10 @@ class $KarmaTransactionsTable extends KarmaTransactions
         DriftSqlType.int,
         data['${effectivePrefix}balance_after'],
       )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
     );
   }
 
@@ -14518,6 +14638,7 @@ class KarmaTransaction extends DataClass
   final String action;
   final String? description;
   final int balanceAfter;
+  final DateTime createdAt;
   const KarmaTransaction({
     required this.id,
     required this.userId,
@@ -14525,6 +14646,7 @@ class KarmaTransaction extends DataClass
     required this.action,
     this.description,
     required this.balanceAfter,
+    required this.createdAt,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -14537,6 +14659,7 @@ class KarmaTransaction extends DataClass
       map['description'] = Variable<String>(description);
     }
     map['balance_after'] = Variable<int>(balanceAfter);
+    map['created_at'] = Variable<DateTime>(createdAt);
     return map;
   }
 
@@ -14550,6 +14673,7 @@ class KarmaTransaction extends DataClass
           ? const Value.absent()
           : Value(description),
       balanceAfter: Value(balanceAfter),
+      createdAt: Value(createdAt),
     );
   }
 
@@ -14565,6 +14689,7 @@ class KarmaTransaction extends DataClass
       action: serializer.fromJson<String>(json['action']),
       description: serializer.fromJson<String?>(json['description']),
       balanceAfter: serializer.fromJson<int>(json['balanceAfter']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
     );
   }
   @override
@@ -14577,6 +14702,7 @@ class KarmaTransaction extends DataClass
       'action': serializer.toJson<String>(action),
       'description': serializer.toJson<String?>(description),
       'balanceAfter': serializer.toJson<int>(balanceAfter),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
     };
   }
 
@@ -14587,6 +14713,7 @@ class KarmaTransaction extends DataClass
     String? action,
     Value<String?> description = const Value.absent(),
     int? balanceAfter,
+    DateTime? createdAt,
   }) => KarmaTransaction(
     id: id ?? this.id,
     userId: userId ?? this.userId,
@@ -14594,6 +14721,7 @@ class KarmaTransaction extends DataClass
     action: action ?? this.action,
     description: description.present ? description.value : this.description,
     balanceAfter: balanceAfter ?? this.balanceAfter,
+    createdAt: createdAt ?? this.createdAt,
   );
   KarmaTransaction copyWithCompanion(KarmaTransactionsCompanion data) {
     return KarmaTransaction(
@@ -14607,6 +14735,7 @@ class KarmaTransaction extends DataClass
       balanceAfter: data.balanceAfter.present
           ? data.balanceAfter.value
           : this.balanceAfter,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
     );
   }
 
@@ -14618,14 +14747,22 @@ class KarmaTransaction extends DataClass
           ..write('amount: $amount, ')
           ..write('action: $action, ')
           ..write('description: $description, ')
-          ..write('balanceAfter: $balanceAfter')
+          ..write('balanceAfter: $balanceAfter, ')
+          ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, userId, amount, action, description, balanceAfter);
+  int get hashCode => Object.hash(
+    id,
+    userId,
+    amount,
+    action,
+    description,
+    balanceAfter,
+    createdAt,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -14635,7 +14772,8 @@ class KarmaTransaction extends DataClass
           other.amount == this.amount &&
           other.action == this.action &&
           other.description == this.description &&
-          other.balanceAfter == this.balanceAfter);
+          other.balanceAfter == this.balanceAfter &&
+          other.createdAt == this.createdAt);
 }
 
 class KarmaTransactionsCompanion extends UpdateCompanion<KarmaTransaction> {
@@ -14645,6 +14783,7 @@ class KarmaTransactionsCompanion extends UpdateCompanion<KarmaTransaction> {
   final Value<String> action;
   final Value<String?> description;
   final Value<int> balanceAfter;
+  final Value<DateTime> createdAt;
   final Value<int> rowid;
   const KarmaTransactionsCompanion({
     this.id = const Value.absent(),
@@ -14653,6 +14792,7 @@ class KarmaTransactionsCompanion extends UpdateCompanion<KarmaTransaction> {
     this.action = const Value.absent(),
     this.description = const Value.absent(),
     this.balanceAfter = const Value.absent(),
+    this.createdAt = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   KarmaTransactionsCompanion.insert({
@@ -14662,12 +14802,14 @@ class KarmaTransactionsCompanion extends UpdateCompanion<KarmaTransaction> {
     required String action,
     this.description = const Value.absent(),
     required int balanceAfter,
+    required DateTime createdAt,
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        userId = Value(userId),
        amount = Value(amount),
        action = Value(action),
-       balanceAfter = Value(balanceAfter);
+       balanceAfter = Value(balanceAfter),
+       createdAt = Value(createdAt);
   static Insertable<KarmaTransaction> custom({
     Expression<String>? id,
     Expression<String>? userId,
@@ -14675,6 +14817,7 @@ class KarmaTransactionsCompanion extends UpdateCompanion<KarmaTransaction> {
     Expression<String>? action,
     Expression<String>? description,
     Expression<int>? balanceAfter,
+    Expression<DateTime>? createdAt,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -14684,6 +14827,7 @@ class KarmaTransactionsCompanion extends UpdateCompanion<KarmaTransaction> {
       if (action != null) 'action': action,
       if (description != null) 'description': description,
       if (balanceAfter != null) 'balance_after': balanceAfter,
+      if (createdAt != null) 'created_at': createdAt,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -14695,6 +14839,7 @@ class KarmaTransactionsCompanion extends UpdateCompanion<KarmaTransaction> {
     Value<String>? action,
     Value<String?>? description,
     Value<int>? balanceAfter,
+    Value<DateTime>? createdAt,
     Value<int>? rowid,
   }) {
     return KarmaTransactionsCompanion(
@@ -14704,6 +14849,7 @@ class KarmaTransactionsCompanion extends UpdateCompanion<KarmaTransaction> {
       action: action ?? this.action,
       description: description ?? this.description,
       balanceAfter: balanceAfter ?? this.balanceAfter,
+      createdAt: createdAt ?? this.createdAt,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -14729,6 +14875,9 @@ class KarmaTransactionsCompanion extends UpdateCompanion<KarmaTransaction> {
     if (balanceAfter.present) {
       map['balance_after'] = Variable<int>(balanceAfter.value);
     }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -14744,6 +14893,992 @@ class KarmaTransactionsCompanion extends UpdateCompanion<KarmaTransaction> {
           ..write('action: $action, ')
           ..write('description: $description, ')
           ..write('balanceAfter: $balanceAfter, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $KarmaProfilesTable extends KarmaProfiles
+    with TableInfo<$KarmaProfilesTable, KarmaProfile> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $KarmaProfilesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
+    'user_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _totalXpMeta = const VerificationMeta(
+    'totalXp',
+  );
+  @override
+  late final GeneratedColumn<int> totalXp = GeneratedColumn<int>(
+    'total_xp',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _levelMeta = const VerificationMeta('level');
+  @override
+  late final GeneratedColumn<int> level = GeneratedColumn<int>(
+    'level',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(1),
+  );
+  static const VerificationMeta _currentStreakMeta = const VerificationMeta(
+    'currentStreak',
+  );
+  @override
+  late final GeneratedColumn<int> currentStreak = GeneratedColumn<int>(
+    'current_streak',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _longestStreakMeta = const VerificationMeta(
+    'longestStreak',
+  );
+  @override
+  late final GeneratedColumn<int> longestStreak = GeneratedColumn<int>(
+    'longest_streak',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _lastActivityDateMeta = const VerificationMeta(
+    'lastActivityDate',
+  );
+  @override
+  late final GeneratedColumn<DateTime> lastActivityDate =
+      GeneratedColumn<DateTime>(
+        'last_activity_date',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _streakStartDateMeta = const VerificationMeta(
+    'streakStartDate',
+  );
+  @override
+  late final GeneratedColumn<DateTime> streakStartDate =
+      GeneratedColumn<DateTime>(
+        'streak_start_date',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _weeklyXpMeta = const VerificationMeta(
+    'weeklyXp',
+  );
+  @override
+  late final GeneratedColumn<int> weeklyXp = GeneratedColumn<int>(
+    'weekly_xp',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _weekStartDateMeta = const VerificationMeta(
+    'weekStartDate',
+  );
+  @override
+  late final GeneratedColumn<DateTime> weekStartDate =
+      GeneratedColumn<DateTime>(
+        'week_start_date',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _streakRecoveryUsed7DayMeta =
+      const VerificationMeta('streakRecoveryUsed7Day');
+  @override
+  late final GeneratedColumn<bool> streakRecoveryUsed7Day =
+      GeneratedColumn<bool>(
+        'streak_recovery_used7_day',
+        aliasedName,
+        false,
+        type: DriftSqlType.bool,
+        requiredDuringInsert: false,
+        defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("streak_recovery_used7_day" IN (0, 1))',
+        ),
+        defaultValue: const Constant(false),
+      );
+  static const VerificationMeta _streakRecoveryUsed30DayMeta =
+      const VerificationMeta('streakRecoveryUsed30Day');
+  @override
+  late final GeneratedColumn<bool> streakRecoveryUsed30Day =
+      GeneratedColumn<bool>(
+        'streak_recovery_used30_day',
+        aliasedName,
+        false,
+        type: DriftSqlType.bool,
+        requiredDuringInsert: false,
+        defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("streak_recovery_used30_day" IN (0, 1))',
+        ),
+        defaultValue: const Constant(false),
+      );
+  static const VerificationMeta _lastStreakRecovery7DayMeta =
+      const VerificationMeta('lastStreakRecovery7Day');
+  @override
+  late final GeneratedColumn<DateTime> lastStreakRecovery7Day =
+      GeneratedColumn<DateTime>(
+        'last_streak_recovery7_day',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _lastStreakRecovery30DayMeta =
+      const VerificationMeta('lastStreakRecovery30Day');
+  @override
+  late final GeneratedColumn<DateTime> lastStreakRecovery30Day =
+      GeneratedColumn<DateTime>(
+        'last_streak_recovery30_day',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    userId,
+    totalXp,
+    level,
+    currentStreak,
+    longestStreak,
+    lastActivityDate,
+    streakStartDate,
+    weeklyXp,
+    weekStartDate,
+    streakRecoveryUsed7Day,
+    streakRecoveryUsed30Day,
+    lastStreakRecovery7Day,
+    lastStreakRecovery30Day,
+    createdAt,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'karma_profiles';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<KarmaProfile> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_userIdMeta);
+    }
+    if (data.containsKey('total_xp')) {
+      context.handle(
+        _totalXpMeta,
+        totalXp.isAcceptableOrUnknown(data['total_xp']!, _totalXpMeta),
+      );
+    }
+    if (data.containsKey('level')) {
+      context.handle(
+        _levelMeta,
+        level.isAcceptableOrUnknown(data['level']!, _levelMeta),
+      );
+    }
+    if (data.containsKey('current_streak')) {
+      context.handle(
+        _currentStreakMeta,
+        currentStreak.isAcceptableOrUnknown(
+          data['current_streak']!,
+          _currentStreakMeta,
+        ),
+      );
+    }
+    if (data.containsKey('longest_streak')) {
+      context.handle(
+        _longestStreakMeta,
+        longestStreak.isAcceptableOrUnknown(
+          data['longest_streak']!,
+          _longestStreakMeta,
+        ),
+      );
+    }
+    if (data.containsKey('last_activity_date')) {
+      context.handle(
+        _lastActivityDateMeta,
+        lastActivityDate.isAcceptableOrUnknown(
+          data['last_activity_date']!,
+          _lastActivityDateMeta,
+        ),
+      );
+    }
+    if (data.containsKey('streak_start_date')) {
+      context.handle(
+        _streakStartDateMeta,
+        streakStartDate.isAcceptableOrUnknown(
+          data['streak_start_date']!,
+          _streakStartDateMeta,
+        ),
+      );
+    }
+    if (data.containsKey('weekly_xp')) {
+      context.handle(
+        _weeklyXpMeta,
+        weeklyXp.isAcceptableOrUnknown(data['weekly_xp']!, _weeklyXpMeta),
+      );
+    }
+    if (data.containsKey('week_start_date')) {
+      context.handle(
+        _weekStartDateMeta,
+        weekStartDate.isAcceptableOrUnknown(
+          data['week_start_date']!,
+          _weekStartDateMeta,
+        ),
+      );
+    }
+    if (data.containsKey('streak_recovery_used7_day')) {
+      context.handle(
+        _streakRecoveryUsed7DayMeta,
+        streakRecoveryUsed7Day.isAcceptableOrUnknown(
+          data['streak_recovery_used7_day']!,
+          _streakRecoveryUsed7DayMeta,
+        ),
+      );
+    }
+    if (data.containsKey('streak_recovery_used30_day')) {
+      context.handle(
+        _streakRecoveryUsed30DayMeta,
+        streakRecoveryUsed30Day.isAcceptableOrUnknown(
+          data['streak_recovery_used30_day']!,
+          _streakRecoveryUsed30DayMeta,
+        ),
+      );
+    }
+    if (data.containsKey('last_streak_recovery7_day')) {
+      context.handle(
+        _lastStreakRecovery7DayMeta,
+        lastStreakRecovery7Day.isAcceptableOrUnknown(
+          data['last_streak_recovery7_day']!,
+          _lastStreakRecovery7DayMeta,
+        ),
+      );
+    }
+    if (data.containsKey('last_streak_recovery30_day')) {
+      context.handle(
+        _lastStreakRecovery30DayMeta,
+        lastStreakRecovery30Day.isAcceptableOrUnknown(
+          data['last_streak_recovery30_day']!,
+          _lastStreakRecovery30DayMeta,
+        ),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  KarmaProfile map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return KarmaProfile(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      userId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_id'],
+      )!,
+      totalXp: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}total_xp'],
+      )!,
+      level: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}level'],
+      )!,
+      currentStreak: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}current_streak'],
+      )!,
+      longestStreak: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}longest_streak'],
+      )!,
+      lastActivityDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}last_activity_date'],
+      ),
+      streakStartDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}streak_start_date'],
+      ),
+      weeklyXp: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}weekly_xp'],
+      )!,
+      weekStartDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}week_start_date'],
+      ),
+      streakRecoveryUsed7Day: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}streak_recovery_used7_day'],
+      )!,
+      streakRecoveryUsed30Day: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}streak_recovery_used30_day'],
+      )!,
+      lastStreakRecovery7Day: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}last_streak_recovery7_day'],
+      ),
+      lastStreakRecovery30Day: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}last_streak_recovery30_day'],
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $KarmaProfilesTable createAlias(String alias) {
+    return $KarmaProfilesTable(attachedDatabase, alias);
+  }
+}
+
+class KarmaProfile extends DataClass implements Insertable<KarmaProfile> {
+  final String id;
+  final String userId;
+  final int totalXp;
+  final int level;
+  final int currentStreak;
+  final int longestStreak;
+  final DateTime? lastActivityDate;
+  final DateTime? streakStartDate;
+  final int weeklyXp;
+  final DateTime? weekStartDate;
+  final bool streakRecoveryUsed7Day;
+  final bool streakRecoveryUsed30Day;
+  final DateTime? lastStreakRecovery7Day;
+  final DateTime? lastStreakRecovery30Day;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  const KarmaProfile({
+    required this.id,
+    required this.userId,
+    required this.totalXp,
+    required this.level,
+    required this.currentStreak,
+    required this.longestStreak,
+    this.lastActivityDate,
+    this.streakStartDate,
+    required this.weeklyXp,
+    this.weekStartDate,
+    required this.streakRecoveryUsed7Day,
+    required this.streakRecoveryUsed30Day,
+    this.lastStreakRecovery7Day,
+    this.lastStreakRecovery30Day,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['user_id'] = Variable<String>(userId);
+    map['total_xp'] = Variable<int>(totalXp);
+    map['level'] = Variable<int>(level);
+    map['current_streak'] = Variable<int>(currentStreak);
+    map['longest_streak'] = Variable<int>(longestStreak);
+    if (!nullToAbsent || lastActivityDate != null) {
+      map['last_activity_date'] = Variable<DateTime>(lastActivityDate);
+    }
+    if (!nullToAbsent || streakStartDate != null) {
+      map['streak_start_date'] = Variable<DateTime>(streakStartDate);
+    }
+    map['weekly_xp'] = Variable<int>(weeklyXp);
+    if (!nullToAbsent || weekStartDate != null) {
+      map['week_start_date'] = Variable<DateTime>(weekStartDate);
+    }
+    map['streak_recovery_used7_day'] = Variable<bool>(streakRecoveryUsed7Day);
+    map['streak_recovery_used30_day'] = Variable<bool>(streakRecoveryUsed30Day);
+    if (!nullToAbsent || lastStreakRecovery7Day != null) {
+      map['last_streak_recovery7_day'] = Variable<DateTime>(
+        lastStreakRecovery7Day,
+      );
+    }
+    if (!nullToAbsent || lastStreakRecovery30Day != null) {
+      map['last_streak_recovery30_day'] = Variable<DateTime>(
+        lastStreakRecovery30Day,
+      );
+    }
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  KarmaProfilesCompanion toCompanion(bool nullToAbsent) {
+    return KarmaProfilesCompanion(
+      id: Value(id),
+      userId: Value(userId),
+      totalXp: Value(totalXp),
+      level: Value(level),
+      currentStreak: Value(currentStreak),
+      longestStreak: Value(longestStreak),
+      lastActivityDate: lastActivityDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastActivityDate),
+      streakStartDate: streakStartDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(streakStartDate),
+      weeklyXp: Value(weeklyXp),
+      weekStartDate: weekStartDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(weekStartDate),
+      streakRecoveryUsed7Day: Value(streakRecoveryUsed7Day),
+      streakRecoveryUsed30Day: Value(streakRecoveryUsed30Day),
+      lastStreakRecovery7Day: lastStreakRecovery7Day == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastStreakRecovery7Day),
+      lastStreakRecovery30Day: lastStreakRecovery30Day == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastStreakRecovery30Day),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory KarmaProfile.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return KarmaProfile(
+      id: serializer.fromJson<String>(json['id']),
+      userId: serializer.fromJson<String>(json['userId']),
+      totalXp: serializer.fromJson<int>(json['totalXp']),
+      level: serializer.fromJson<int>(json['level']),
+      currentStreak: serializer.fromJson<int>(json['currentStreak']),
+      longestStreak: serializer.fromJson<int>(json['longestStreak']),
+      lastActivityDate: serializer.fromJson<DateTime?>(
+        json['lastActivityDate'],
+      ),
+      streakStartDate: serializer.fromJson<DateTime?>(json['streakStartDate']),
+      weeklyXp: serializer.fromJson<int>(json['weeklyXp']),
+      weekStartDate: serializer.fromJson<DateTime?>(json['weekStartDate']),
+      streakRecoveryUsed7Day: serializer.fromJson<bool>(
+        json['streakRecoveryUsed7Day'],
+      ),
+      streakRecoveryUsed30Day: serializer.fromJson<bool>(
+        json['streakRecoveryUsed30Day'],
+      ),
+      lastStreakRecovery7Day: serializer.fromJson<DateTime?>(
+        json['lastStreakRecovery7Day'],
+      ),
+      lastStreakRecovery30Day: serializer.fromJson<DateTime?>(
+        json['lastStreakRecovery30Day'],
+      ),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'userId': serializer.toJson<String>(userId),
+      'totalXp': serializer.toJson<int>(totalXp),
+      'level': serializer.toJson<int>(level),
+      'currentStreak': serializer.toJson<int>(currentStreak),
+      'longestStreak': serializer.toJson<int>(longestStreak),
+      'lastActivityDate': serializer.toJson<DateTime?>(lastActivityDate),
+      'streakStartDate': serializer.toJson<DateTime?>(streakStartDate),
+      'weeklyXp': serializer.toJson<int>(weeklyXp),
+      'weekStartDate': serializer.toJson<DateTime?>(weekStartDate),
+      'streakRecoveryUsed7Day': serializer.toJson<bool>(streakRecoveryUsed7Day),
+      'streakRecoveryUsed30Day': serializer.toJson<bool>(
+        streakRecoveryUsed30Day,
+      ),
+      'lastStreakRecovery7Day': serializer.toJson<DateTime?>(
+        lastStreakRecovery7Day,
+      ),
+      'lastStreakRecovery30Day': serializer.toJson<DateTime?>(
+        lastStreakRecovery30Day,
+      ),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  KarmaProfile copyWith({
+    String? id,
+    String? userId,
+    int? totalXp,
+    int? level,
+    int? currentStreak,
+    int? longestStreak,
+    Value<DateTime?> lastActivityDate = const Value.absent(),
+    Value<DateTime?> streakStartDate = const Value.absent(),
+    int? weeklyXp,
+    Value<DateTime?> weekStartDate = const Value.absent(),
+    bool? streakRecoveryUsed7Day,
+    bool? streakRecoveryUsed30Day,
+    Value<DateTime?> lastStreakRecovery7Day = const Value.absent(),
+    Value<DateTime?> lastStreakRecovery30Day = const Value.absent(),
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) => KarmaProfile(
+    id: id ?? this.id,
+    userId: userId ?? this.userId,
+    totalXp: totalXp ?? this.totalXp,
+    level: level ?? this.level,
+    currentStreak: currentStreak ?? this.currentStreak,
+    longestStreak: longestStreak ?? this.longestStreak,
+    lastActivityDate: lastActivityDate.present
+        ? lastActivityDate.value
+        : this.lastActivityDate,
+    streakStartDate: streakStartDate.present
+        ? streakStartDate.value
+        : this.streakStartDate,
+    weeklyXp: weeklyXp ?? this.weeklyXp,
+    weekStartDate: weekStartDate.present
+        ? weekStartDate.value
+        : this.weekStartDate,
+    streakRecoveryUsed7Day:
+        streakRecoveryUsed7Day ?? this.streakRecoveryUsed7Day,
+    streakRecoveryUsed30Day:
+        streakRecoveryUsed30Day ?? this.streakRecoveryUsed30Day,
+    lastStreakRecovery7Day: lastStreakRecovery7Day.present
+        ? lastStreakRecovery7Day.value
+        : this.lastStreakRecovery7Day,
+    lastStreakRecovery30Day: lastStreakRecovery30Day.present
+        ? lastStreakRecovery30Day.value
+        : this.lastStreakRecovery30Day,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  KarmaProfile copyWithCompanion(KarmaProfilesCompanion data) {
+    return KarmaProfile(
+      id: data.id.present ? data.id.value : this.id,
+      userId: data.userId.present ? data.userId.value : this.userId,
+      totalXp: data.totalXp.present ? data.totalXp.value : this.totalXp,
+      level: data.level.present ? data.level.value : this.level,
+      currentStreak: data.currentStreak.present
+          ? data.currentStreak.value
+          : this.currentStreak,
+      longestStreak: data.longestStreak.present
+          ? data.longestStreak.value
+          : this.longestStreak,
+      lastActivityDate: data.lastActivityDate.present
+          ? data.lastActivityDate.value
+          : this.lastActivityDate,
+      streakStartDate: data.streakStartDate.present
+          ? data.streakStartDate.value
+          : this.streakStartDate,
+      weeklyXp: data.weeklyXp.present ? data.weeklyXp.value : this.weeklyXp,
+      weekStartDate: data.weekStartDate.present
+          ? data.weekStartDate.value
+          : this.weekStartDate,
+      streakRecoveryUsed7Day: data.streakRecoveryUsed7Day.present
+          ? data.streakRecoveryUsed7Day.value
+          : this.streakRecoveryUsed7Day,
+      streakRecoveryUsed30Day: data.streakRecoveryUsed30Day.present
+          ? data.streakRecoveryUsed30Day.value
+          : this.streakRecoveryUsed30Day,
+      lastStreakRecovery7Day: data.lastStreakRecovery7Day.present
+          ? data.lastStreakRecovery7Day.value
+          : this.lastStreakRecovery7Day,
+      lastStreakRecovery30Day: data.lastStreakRecovery30Day.present
+          ? data.lastStreakRecovery30Day.value
+          : this.lastStreakRecovery30Day,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('KarmaProfile(')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('totalXp: $totalXp, ')
+          ..write('level: $level, ')
+          ..write('currentStreak: $currentStreak, ')
+          ..write('longestStreak: $longestStreak, ')
+          ..write('lastActivityDate: $lastActivityDate, ')
+          ..write('streakStartDate: $streakStartDate, ')
+          ..write('weeklyXp: $weeklyXp, ')
+          ..write('weekStartDate: $weekStartDate, ')
+          ..write('streakRecoveryUsed7Day: $streakRecoveryUsed7Day, ')
+          ..write('streakRecoveryUsed30Day: $streakRecoveryUsed30Day, ')
+          ..write('lastStreakRecovery7Day: $lastStreakRecovery7Day, ')
+          ..write('lastStreakRecovery30Day: $lastStreakRecovery30Day, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    userId,
+    totalXp,
+    level,
+    currentStreak,
+    longestStreak,
+    lastActivityDate,
+    streakStartDate,
+    weeklyXp,
+    weekStartDate,
+    streakRecoveryUsed7Day,
+    streakRecoveryUsed30Day,
+    lastStreakRecovery7Day,
+    lastStreakRecovery30Day,
+    createdAt,
+    updatedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is KarmaProfile &&
+          other.id == this.id &&
+          other.userId == this.userId &&
+          other.totalXp == this.totalXp &&
+          other.level == this.level &&
+          other.currentStreak == this.currentStreak &&
+          other.longestStreak == this.longestStreak &&
+          other.lastActivityDate == this.lastActivityDate &&
+          other.streakStartDate == this.streakStartDate &&
+          other.weeklyXp == this.weeklyXp &&
+          other.weekStartDate == this.weekStartDate &&
+          other.streakRecoveryUsed7Day == this.streakRecoveryUsed7Day &&
+          other.streakRecoveryUsed30Day == this.streakRecoveryUsed30Day &&
+          other.lastStreakRecovery7Day == this.lastStreakRecovery7Day &&
+          other.lastStreakRecovery30Day == this.lastStreakRecovery30Day &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
+}
+
+class KarmaProfilesCompanion extends UpdateCompanion<KarmaProfile> {
+  final Value<String> id;
+  final Value<String> userId;
+  final Value<int> totalXp;
+  final Value<int> level;
+  final Value<int> currentStreak;
+  final Value<int> longestStreak;
+  final Value<DateTime?> lastActivityDate;
+  final Value<DateTime?> streakStartDate;
+  final Value<int> weeklyXp;
+  final Value<DateTime?> weekStartDate;
+  final Value<bool> streakRecoveryUsed7Day;
+  final Value<bool> streakRecoveryUsed30Day;
+  final Value<DateTime?> lastStreakRecovery7Day;
+  final Value<DateTime?> lastStreakRecovery30Day;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<int> rowid;
+  const KarmaProfilesCompanion({
+    this.id = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.totalXp = const Value.absent(),
+    this.level = const Value.absent(),
+    this.currentStreak = const Value.absent(),
+    this.longestStreak = const Value.absent(),
+    this.lastActivityDate = const Value.absent(),
+    this.streakStartDate = const Value.absent(),
+    this.weeklyXp = const Value.absent(),
+    this.weekStartDate = const Value.absent(),
+    this.streakRecoveryUsed7Day = const Value.absent(),
+    this.streakRecoveryUsed30Day = const Value.absent(),
+    this.lastStreakRecovery7Day = const Value.absent(),
+    this.lastStreakRecovery30Day = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  KarmaProfilesCompanion.insert({
+    required String id,
+    required String userId,
+    this.totalXp = const Value.absent(),
+    this.level = const Value.absent(),
+    this.currentStreak = const Value.absent(),
+    this.longestStreak = const Value.absent(),
+    this.lastActivityDate = const Value.absent(),
+    this.streakStartDate = const Value.absent(),
+    this.weeklyXp = const Value.absent(),
+    this.weekStartDate = const Value.absent(),
+    this.streakRecoveryUsed7Day = const Value.absent(),
+    this.streakRecoveryUsed30Day = const Value.absent(),
+    this.lastStreakRecovery7Day = const Value.absent(),
+    this.lastStreakRecovery30Day = const Value.absent(),
+    required DateTime createdAt,
+    required DateTime updatedAt,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       userId = Value(userId),
+       createdAt = Value(createdAt),
+       updatedAt = Value(updatedAt);
+  static Insertable<KarmaProfile> custom({
+    Expression<String>? id,
+    Expression<String>? userId,
+    Expression<int>? totalXp,
+    Expression<int>? level,
+    Expression<int>? currentStreak,
+    Expression<int>? longestStreak,
+    Expression<DateTime>? lastActivityDate,
+    Expression<DateTime>? streakStartDate,
+    Expression<int>? weeklyXp,
+    Expression<DateTime>? weekStartDate,
+    Expression<bool>? streakRecoveryUsed7Day,
+    Expression<bool>? streakRecoveryUsed30Day,
+    Expression<DateTime>? lastStreakRecovery7Day,
+    Expression<DateTime>? lastStreakRecovery30Day,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (userId != null) 'user_id': userId,
+      if (totalXp != null) 'total_xp': totalXp,
+      if (level != null) 'level': level,
+      if (currentStreak != null) 'current_streak': currentStreak,
+      if (longestStreak != null) 'longest_streak': longestStreak,
+      if (lastActivityDate != null) 'last_activity_date': lastActivityDate,
+      if (streakStartDate != null) 'streak_start_date': streakStartDate,
+      if (weeklyXp != null) 'weekly_xp': weeklyXp,
+      if (weekStartDate != null) 'week_start_date': weekStartDate,
+      if (streakRecoveryUsed7Day != null)
+        'streak_recovery_used7_day': streakRecoveryUsed7Day,
+      if (streakRecoveryUsed30Day != null)
+        'streak_recovery_used30_day': streakRecoveryUsed30Day,
+      if (lastStreakRecovery7Day != null)
+        'last_streak_recovery7_day': lastStreakRecovery7Day,
+      if (lastStreakRecovery30Day != null)
+        'last_streak_recovery30_day': lastStreakRecovery30Day,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  KarmaProfilesCompanion copyWith({
+    Value<String>? id,
+    Value<String>? userId,
+    Value<int>? totalXp,
+    Value<int>? level,
+    Value<int>? currentStreak,
+    Value<int>? longestStreak,
+    Value<DateTime?>? lastActivityDate,
+    Value<DateTime?>? streakStartDate,
+    Value<int>? weeklyXp,
+    Value<DateTime?>? weekStartDate,
+    Value<bool>? streakRecoveryUsed7Day,
+    Value<bool>? streakRecoveryUsed30Day,
+    Value<DateTime?>? lastStreakRecovery7Day,
+    Value<DateTime?>? lastStreakRecovery30Day,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<int>? rowid,
+  }) {
+    return KarmaProfilesCompanion(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      totalXp: totalXp ?? this.totalXp,
+      level: level ?? this.level,
+      currentStreak: currentStreak ?? this.currentStreak,
+      longestStreak: longestStreak ?? this.longestStreak,
+      lastActivityDate: lastActivityDate ?? this.lastActivityDate,
+      streakStartDate: streakStartDate ?? this.streakStartDate,
+      weeklyXp: weeklyXp ?? this.weeklyXp,
+      weekStartDate: weekStartDate ?? this.weekStartDate,
+      streakRecoveryUsed7Day:
+          streakRecoveryUsed7Day ?? this.streakRecoveryUsed7Day,
+      streakRecoveryUsed30Day:
+          streakRecoveryUsed30Day ?? this.streakRecoveryUsed30Day,
+      lastStreakRecovery7Day:
+          lastStreakRecovery7Day ?? this.lastStreakRecovery7Day,
+      lastStreakRecovery30Day:
+          lastStreakRecovery30Day ?? this.lastStreakRecovery30Day,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<String>(userId.value);
+    }
+    if (totalXp.present) {
+      map['total_xp'] = Variable<int>(totalXp.value);
+    }
+    if (level.present) {
+      map['level'] = Variable<int>(level.value);
+    }
+    if (currentStreak.present) {
+      map['current_streak'] = Variable<int>(currentStreak.value);
+    }
+    if (longestStreak.present) {
+      map['longest_streak'] = Variable<int>(longestStreak.value);
+    }
+    if (lastActivityDate.present) {
+      map['last_activity_date'] = Variable<DateTime>(lastActivityDate.value);
+    }
+    if (streakStartDate.present) {
+      map['streak_start_date'] = Variable<DateTime>(streakStartDate.value);
+    }
+    if (weeklyXp.present) {
+      map['weekly_xp'] = Variable<int>(weeklyXp.value);
+    }
+    if (weekStartDate.present) {
+      map['week_start_date'] = Variable<DateTime>(weekStartDate.value);
+    }
+    if (streakRecoveryUsed7Day.present) {
+      map['streak_recovery_used7_day'] = Variable<bool>(
+        streakRecoveryUsed7Day.value,
+      );
+    }
+    if (streakRecoveryUsed30Day.present) {
+      map['streak_recovery_used30_day'] = Variable<bool>(
+        streakRecoveryUsed30Day.value,
+      );
+    }
+    if (lastStreakRecovery7Day.present) {
+      map['last_streak_recovery7_day'] = Variable<DateTime>(
+        lastStreakRecovery7Day.value,
+      );
+    }
+    if (lastStreakRecovery30Day.present) {
+      map['last_streak_recovery30_day'] = Variable<DateTime>(
+        lastStreakRecovery30Day.value,
+      );
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('KarmaProfilesCompanion(')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('totalXp: $totalXp, ')
+          ..write('level: $level, ')
+          ..write('currentStreak: $currentStreak, ')
+          ..write('longestStreak: $longestStreak, ')
+          ..write('lastActivityDate: $lastActivityDate, ')
+          ..write('streakStartDate: $streakStartDate, ')
+          ..write('weeklyXp: $weeklyXp, ')
+          ..write('weekStartDate: $weekStartDate, ')
+          ..write('streakRecoveryUsed7Day: $streakRecoveryUsed7Day, ')
+          ..write('streakRecoveryUsed30Day: $streakRecoveryUsed30Day, ')
+          ..write('lastStreakRecovery7Day: $lastStreakRecovery7Day, ')
+          ..write('lastStreakRecovery30Day: $lastStreakRecovery30Day, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -15442,6 +16577,17 @@ class $PersonalRecordsTable extends PersonalRecords
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _recordTypeMeta = const VerificationMeta(
+    'recordType',
+  );
+  @override
+  late final GeneratedColumn<String> recordType = GeneratedColumn<String>(
+    'record_type',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
   static const VerificationMeta _exerciseNameMeta = const VerificationMeta(
     'exerciseName',
   );
@@ -15482,14 +16628,27 @@ class $PersonalRecordsTable extends PersonalRecords
     type: DriftSqlType.dateTime,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _workoutLogIdMeta = const VerificationMeta(
+    'workoutLogId',
+  );
+  @override
+  late final GeneratedColumn<String> workoutLogId = GeneratedColumn<String>(
+    'workout_log_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
     userId,
+    recordType,
     exerciseName,
     value,
     unit,
     achievedAt,
+    workoutLogId,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -15515,6 +16674,14 @@ class $PersonalRecordsTable extends PersonalRecords
       );
     } else if (isInserting) {
       context.missing(_userIdMeta);
+    }
+    if (data.containsKey('record_type')) {
+      context.handle(
+        _recordTypeMeta,
+        recordType.isAcceptableOrUnknown(data['record_type']!, _recordTypeMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_recordTypeMeta);
     }
     if (data.containsKey('exercise_name')) {
       context.handle(
@@ -15551,6 +16718,15 @@ class $PersonalRecordsTable extends PersonalRecords
     } else if (isInserting) {
       context.missing(_achievedAtMeta);
     }
+    if (data.containsKey('workout_log_id')) {
+      context.handle(
+        _workoutLogIdMeta,
+        workoutLogId.isAcceptableOrUnknown(
+          data['workout_log_id']!,
+          _workoutLogIdMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -15568,6 +16744,10 @@ class $PersonalRecordsTable extends PersonalRecords
         DriftSqlType.string,
         data['${effectivePrefix}user_id'],
       )!,
+      recordType: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}record_type'],
+      )!,
       exerciseName: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}exercise_name'],
@@ -15584,6 +16764,10 @@ class $PersonalRecordsTable extends PersonalRecords
         DriftSqlType.dateTime,
         data['${effectivePrefix}achieved_at'],
       )!,
+      workoutLogId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}workout_log_id'],
+      ),
     );
   }
 
@@ -15596,27 +16780,35 @@ class $PersonalRecordsTable extends PersonalRecords
 class PersonalRecord extends DataClass implements Insertable<PersonalRecord> {
   final String id;
   final String userId;
+  final String recordType;
   final String exerciseName;
   final double value;
   final String unit;
   final DateTime achievedAt;
+  final String? workoutLogId;
   const PersonalRecord({
     required this.id,
     required this.userId,
+    required this.recordType,
     required this.exerciseName,
     required this.value,
     required this.unit,
     required this.achievedAt,
+    this.workoutLogId,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<String>(id);
     map['user_id'] = Variable<String>(userId);
+    map['record_type'] = Variable<String>(recordType);
     map['exercise_name'] = Variable<String>(exerciseName);
     map['value'] = Variable<double>(value);
     map['unit'] = Variable<String>(unit);
     map['achieved_at'] = Variable<DateTime>(achievedAt);
+    if (!nullToAbsent || workoutLogId != null) {
+      map['workout_log_id'] = Variable<String>(workoutLogId);
+    }
     return map;
   }
 
@@ -15624,10 +16816,14 @@ class PersonalRecord extends DataClass implements Insertable<PersonalRecord> {
     return PersonalRecordsCompanion(
       id: Value(id),
       userId: Value(userId),
+      recordType: Value(recordType),
       exerciseName: Value(exerciseName),
       value: Value(value),
       unit: Value(unit),
       achievedAt: Value(achievedAt),
+      workoutLogId: workoutLogId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(workoutLogId),
     );
   }
 
@@ -15639,10 +16835,12 @@ class PersonalRecord extends DataClass implements Insertable<PersonalRecord> {
     return PersonalRecord(
       id: serializer.fromJson<String>(json['id']),
       userId: serializer.fromJson<String>(json['userId']),
+      recordType: serializer.fromJson<String>(json['recordType']),
       exerciseName: serializer.fromJson<String>(json['exerciseName']),
       value: serializer.fromJson<double>(json['value']),
       unit: serializer.fromJson<String>(json['unit']),
       achievedAt: serializer.fromJson<DateTime>(json['achievedAt']),
+      workoutLogId: serializer.fromJson<String?>(json['workoutLogId']),
     );
   }
   @override
@@ -15651,32 +16849,41 @@ class PersonalRecord extends DataClass implements Insertable<PersonalRecord> {
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
       'userId': serializer.toJson<String>(userId),
+      'recordType': serializer.toJson<String>(recordType),
       'exerciseName': serializer.toJson<String>(exerciseName),
       'value': serializer.toJson<double>(value),
       'unit': serializer.toJson<String>(unit),
       'achievedAt': serializer.toJson<DateTime>(achievedAt),
+      'workoutLogId': serializer.toJson<String?>(workoutLogId),
     };
   }
 
   PersonalRecord copyWith({
     String? id,
     String? userId,
+    String? recordType,
     String? exerciseName,
     double? value,
     String? unit,
     DateTime? achievedAt,
+    Value<String?> workoutLogId = const Value.absent(),
   }) => PersonalRecord(
     id: id ?? this.id,
     userId: userId ?? this.userId,
+    recordType: recordType ?? this.recordType,
     exerciseName: exerciseName ?? this.exerciseName,
     value: value ?? this.value,
     unit: unit ?? this.unit,
     achievedAt: achievedAt ?? this.achievedAt,
+    workoutLogId: workoutLogId.present ? workoutLogId.value : this.workoutLogId,
   );
   PersonalRecord copyWithCompanion(PersonalRecordsCompanion data) {
     return PersonalRecord(
       id: data.id.present ? data.id.value : this.id,
       userId: data.userId.present ? data.userId.value : this.userId,
+      recordType: data.recordType.present
+          ? data.recordType.value
+          : this.recordType,
       exerciseName: data.exerciseName.present
           ? data.exerciseName.value
           : this.exerciseName,
@@ -15685,6 +16892,9 @@ class PersonalRecord extends DataClass implements Insertable<PersonalRecord> {
       achievedAt: data.achievedAt.present
           ? data.achievedAt.value
           : this.achievedAt,
+      workoutLogId: data.workoutLogId.present
+          ? data.workoutLogId.value
+          : this.workoutLogId,
     );
   }
 
@@ -15693,56 +16903,75 @@ class PersonalRecord extends DataClass implements Insertable<PersonalRecord> {
     return (StringBuffer('PersonalRecord(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
+          ..write('recordType: $recordType, ')
           ..write('exerciseName: $exerciseName, ')
           ..write('value: $value, ')
           ..write('unit: $unit, ')
-          ..write('achievedAt: $achievedAt')
+          ..write('achievedAt: $achievedAt, ')
+          ..write('workoutLogId: $workoutLogId')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, userId, exerciseName, value, unit, achievedAt);
+  int get hashCode => Object.hash(
+    id,
+    userId,
+    recordType,
+    exerciseName,
+    value,
+    unit,
+    achievedAt,
+    workoutLogId,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is PersonalRecord &&
           other.id == this.id &&
           other.userId == this.userId &&
+          other.recordType == this.recordType &&
           other.exerciseName == this.exerciseName &&
           other.value == this.value &&
           other.unit == this.unit &&
-          other.achievedAt == this.achievedAt);
+          other.achievedAt == this.achievedAt &&
+          other.workoutLogId == this.workoutLogId);
 }
 
 class PersonalRecordsCompanion extends UpdateCompanion<PersonalRecord> {
   final Value<String> id;
   final Value<String> userId;
+  final Value<String> recordType;
   final Value<String> exerciseName;
   final Value<double> value;
   final Value<String> unit;
   final Value<DateTime> achievedAt;
+  final Value<String?> workoutLogId;
   final Value<int> rowid;
   const PersonalRecordsCompanion({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
+    this.recordType = const Value.absent(),
     this.exerciseName = const Value.absent(),
     this.value = const Value.absent(),
     this.unit = const Value.absent(),
     this.achievedAt = const Value.absent(),
+    this.workoutLogId = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   PersonalRecordsCompanion.insert({
     required String id,
     required String userId,
+    required String recordType,
     required String exerciseName,
     required double value,
     required String unit,
     required DateTime achievedAt,
+    this.workoutLogId = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        userId = Value(userId),
+       recordType = Value(recordType),
        exerciseName = Value(exerciseName),
        value = Value(value),
        unit = Value(unit),
@@ -15750,19 +16979,23 @@ class PersonalRecordsCompanion extends UpdateCompanion<PersonalRecord> {
   static Insertable<PersonalRecord> custom({
     Expression<String>? id,
     Expression<String>? userId,
+    Expression<String>? recordType,
     Expression<String>? exerciseName,
     Expression<double>? value,
     Expression<String>? unit,
     Expression<DateTime>? achievedAt,
+    Expression<String>? workoutLogId,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (userId != null) 'user_id': userId,
+      if (recordType != null) 'record_type': recordType,
       if (exerciseName != null) 'exercise_name': exerciseName,
       if (value != null) 'value': value,
       if (unit != null) 'unit': unit,
       if (achievedAt != null) 'achieved_at': achievedAt,
+      if (workoutLogId != null) 'workout_log_id': workoutLogId,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -15770,19 +17003,23 @@ class PersonalRecordsCompanion extends UpdateCompanion<PersonalRecord> {
   PersonalRecordsCompanion copyWith({
     Value<String>? id,
     Value<String>? userId,
+    Value<String>? recordType,
     Value<String>? exerciseName,
     Value<double>? value,
     Value<String>? unit,
     Value<DateTime>? achievedAt,
+    Value<String?>? workoutLogId,
     Value<int>? rowid,
   }) {
     return PersonalRecordsCompanion(
       id: id ?? this.id,
       userId: userId ?? this.userId,
+      recordType: recordType ?? this.recordType,
       exerciseName: exerciseName ?? this.exerciseName,
       value: value ?? this.value,
       unit: unit ?? this.unit,
       achievedAt: achievedAt ?? this.achievedAt,
+      workoutLogId: workoutLogId ?? this.workoutLogId,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -15796,6 +17033,9 @@ class PersonalRecordsCompanion extends UpdateCompanion<PersonalRecord> {
     if (userId.present) {
       map['user_id'] = Variable<String>(userId.value);
     }
+    if (recordType.present) {
+      map['record_type'] = Variable<String>(recordType.value);
+    }
     if (exerciseName.present) {
       map['exercise_name'] = Variable<String>(exerciseName.value);
     }
@@ -15808,6 +17048,9 @@ class PersonalRecordsCompanion extends UpdateCompanion<PersonalRecord> {
     if (achievedAt.present) {
       map['achieved_at'] = Variable<DateTime>(achievedAt.value);
     }
+    if (workoutLogId.present) {
+      map['workout_log_id'] = Variable<String>(workoutLogId.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -15819,10 +17062,12 @@ class PersonalRecordsCompanion extends UpdateCompanion<PersonalRecord> {
     return (StringBuffer('PersonalRecordsCompanion(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
+          ..write('recordType: $recordType, ')
           ..write('exerciseName: $exerciseName, ')
           ..write('value: $value, ')
           ..write('unit: $unit, ')
           ..write('achievedAt: $achievedAt, ')
+          ..write('workoutLogId: $workoutLogId, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -18501,6 +19746,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       $RemoteConfigCacheTable(this);
   late final $KarmaTransactionsTable karmaTransactions =
       $KarmaTransactionsTable(this);
+  late final $KarmaProfilesTable karmaProfiles = $KarmaProfilesTable(this);
   late final $NutritionGoalsTable nutritionGoals = $NutritionGoalsTable(this);
   late final $PersonalRecordsTable personalRecords = $PersonalRecordsTable(
     this,
@@ -18607,6 +19853,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     festivalCalendar,
     remoteConfigCache,
     karmaTransactions,
+    karmaProfiles,
     nutritionGoals,
     personalRecords,
     userProfiles,
@@ -20199,6 +21446,8 @@ typedef $$WorkoutLogsTableCreateCompanionBuilder =
       required double caloriesBurned,
       required String workoutType,
       Value<String?> rpeLevel,
+      Value<String?> notes,
+      Value<String?> gpsData,
       Value<int> rowid,
     });
 typedef $$WorkoutLogsTableUpdateCompanionBuilder =
@@ -20211,6 +21460,8 @@ typedef $$WorkoutLogsTableUpdateCompanionBuilder =
       Value<double> caloriesBurned,
       Value<String> workoutType,
       Value<String?> rpeLevel,
+      Value<String?> notes,
+      Value<String?> gpsData,
       Value<int> rowid,
     });
 
@@ -20260,6 +21511,16 @@ class $$WorkoutLogsTableFilterComposer
 
   ColumnFilters<String> get rpeLevel => $composableBuilder(
     column: $table.rpeLevel,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get notes => $composableBuilder(
+    column: $table.notes,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get gpsData => $composableBuilder(
+    column: $table.gpsData,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -20312,6 +21573,16 @@ class $$WorkoutLogsTableOrderingComposer
     column: $table.rpeLevel,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<String> get notes => $composableBuilder(
+    column: $table.notes,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get gpsData => $composableBuilder(
+    column: $table.gpsData,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$WorkoutLogsTableAnnotationComposer
@@ -20352,6 +21623,12 @@ class $$WorkoutLogsTableAnnotationComposer
 
   GeneratedColumn<String> get rpeLevel =>
       $composableBuilder(column: $table.rpeLevel, builder: (column) => column);
+
+  GeneratedColumn<String> get notes =>
+      $composableBuilder(column: $table.notes, builder: (column) => column);
+
+  GeneratedColumn<String> get gpsData =>
+      $composableBuilder(column: $table.gpsData, builder: (column) => column);
 }
 
 class $$WorkoutLogsTableTableManager
@@ -20393,6 +21670,8 @@ class $$WorkoutLogsTableTableManager
                 Value<double> caloriesBurned = const Value.absent(),
                 Value<String> workoutType = const Value.absent(),
                 Value<String?> rpeLevel = const Value.absent(),
+                Value<String?> notes = const Value.absent(),
+                Value<String?> gpsData = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => WorkoutLogsCompanion(
                 id: id,
@@ -20403,6 +21682,8 @@ class $$WorkoutLogsTableTableManager
                 caloriesBurned: caloriesBurned,
                 workoutType: workoutType,
                 rpeLevel: rpeLevel,
+                notes: notes,
+                gpsData: gpsData,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -20415,6 +21696,8 @@ class $$WorkoutLogsTableTableManager
                 required double caloriesBurned,
                 required String workoutType,
                 Value<String?> rpeLevel = const Value.absent(),
+                Value<String?> notes = const Value.absent(),
+                Value<String?> gpsData = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => WorkoutLogsCompanion.insert(
                 id: id,
@@ -20425,6 +21708,8 @@ class $$WorkoutLogsTableTableManager
                 caloriesBurned: caloriesBurned,
                 workoutType: workoutType,
                 rpeLevel: rpeLevel,
+                notes: notes,
+                gpsData: gpsData,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -25610,6 +26895,7 @@ typedef $$KarmaTransactionsTableCreateCompanionBuilder =
       required String action,
       Value<String?> description,
       required int balanceAfter,
+      required DateTime createdAt,
       Value<int> rowid,
     });
 typedef $$KarmaTransactionsTableUpdateCompanionBuilder =
@@ -25620,6 +26906,7 @@ typedef $$KarmaTransactionsTableUpdateCompanionBuilder =
       Value<String> action,
       Value<String?> description,
       Value<int> balanceAfter,
+      Value<DateTime> createdAt,
       Value<int> rowid,
     });
 
@@ -25659,6 +26946,11 @@ class $$KarmaTransactionsTableFilterComposer
 
   ColumnFilters<int> get balanceAfter => $composableBuilder(
     column: $table.balanceAfter,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -25701,6 +26993,11 @@ class $$KarmaTransactionsTableOrderingComposer
     column: $table.balanceAfter,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$KarmaTransactionsTableAnnotationComposer
@@ -25733,6 +27030,9 @@ class $$KarmaTransactionsTableAnnotationComposer
     column: $table.balanceAfter,
     builder: (column) => column,
   );
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
 }
 
 class $$KarmaTransactionsTableTableManager
@@ -25781,6 +27081,7 @@ class $$KarmaTransactionsTableTableManager
                 Value<String> action = const Value.absent(),
                 Value<String?> description = const Value.absent(),
                 Value<int> balanceAfter = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => KarmaTransactionsCompanion(
                 id: id,
@@ -25789,6 +27090,7 @@ class $$KarmaTransactionsTableTableManager
                 action: action,
                 description: description,
                 balanceAfter: balanceAfter,
+                createdAt: createdAt,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -25799,6 +27101,7 @@ class $$KarmaTransactionsTableTableManager
                 required String action,
                 Value<String?> description = const Value.absent(),
                 required int balanceAfter,
+                required DateTime createdAt,
                 Value<int> rowid = const Value.absent(),
               }) => KarmaTransactionsCompanion.insert(
                 id: id,
@@ -25807,6 +27110,7 @@ class $$KarmaTransactionsTableTableManager
                 action: action,
                 description: description,
                 balanceAfter: balanceAfter,
+                createdAt: createdAt,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -25836,6 +27140,433 @@ typedef $$KarmaTransactionsTableProcessedTableManager =
         >,
       ),
       KarmaTransaction,
+      PrefetchHooks Function()
+    >;
+typedef $$KarmaProfilesTableCreateCompanionBuilder =
+    KarmaProfilesCompanion Function({
+      required String id,
+      required String userId,
+      Value<int> totalXp,
+      Value<int> level,
+      Value<int> currentStreak,
+      Value<int> longestStreak,
+      Value<DateTime?> lastActivityDate,
+      Value<DateTime?> streakStartDate,
+      Value<int> weeklyXp,
+      Value<DateTime?> weekStartDate,
+      Value<bool> streakRecoveryUsed7Day,
+      Value<bool> streakRecoveryUsed30Day,
+      Value<DateTime?> lastStreakRecovery7Day,
+      Value<DateTime?> lastStreakRecovery30Day,
+      required DateTime createdAt,
+      required DateTime updatedAt,
+      Value<int> rowid,
+    });
+typedef $$KarmaProfilesTableUpdateCompanionBuilder =
+    KarmaProfilesCompanion Function({
+      Value<String> id,
+      Value<String> userId,
+      Value<int> totalXp,
+      Value<int> level,
+      Value<int> currentStreak,
+      Value<int> longestStreak,
+      Value<DateTime?> lastActivityDate,
+      Value<DateTime?> streakStartDate,
+      Value<int> weeklyXp,
+      Value<DateTime?> weekStartDate,
+      Value<bool> streakRecoveryUsed7Day,
+      Value<bool> streakRecoveryUsed30Day,
+      Value<DateTime?> lastStreakRecovery7Day,
+      Value<DateTime?> lastStreakRecovery30Day,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<int> rowid,
+    });
+
+class $$KarmaProfilesTableFilterComposer
+    extends Composer<_$AppDatabase, $KarmaProfilesTable> {
+  $$KarmaProfilesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get totalXp => $composableBuilder(
+    column: $table.totalXp,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get level => $composableBuilder(
+    column: $table.level,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get currentStreak => $composableBuilder(
+    column: $table.currentStreak,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get longestStreak => $composableBuilder(
+    column: $table.longestStreak,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get lastActivityDate => $composableBuilder(
+    column: $table.lastActivityDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get streakStartDate => $composableBuilder(
+    column: $table.streakStartDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get weeklyXp => $composableBuilder(
+    column: $table.weeklyXp,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get weekStartDate => $composableBuilder(
+    column: $table.weekStartDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get streakRecoveryUsed7Day => $composableBuilder(
+    column: $table.streakRecoveryUsed7Day,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get streakRecoveryUsed30Day => $composableBuilder(
+    column: $table.streakRecoveryUsed30Day,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get lastStreakRecovery7Day => $composableBuilder(
+    column: $table.lastStreakRecovery7Day,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get lastStreakRecovery30Day => $composableBuilder(
+    column: $table.lastStreakRecovery30Day,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$KarmaProfilesTableOrderingComposer
+    extends Composer<_$AppDatabase, $KarmaProfilesTable> {
+  $$KarmaProfilesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get totalXp => $composableBuilder(
+    column: $table.totalXp,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get level => $composableBuilder(
+    column: $table.level,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get currentStreak => $composableBuilder(
+    column: $table.currentStreak,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get longestStreak => $composableBuilder(
+    column: $table.longestStreak,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get lastActivityDate => $composableBuilder(
+    column: $table.lastActivityDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get streakStartDate => $composableBuilder(
+    column: $table.streakStartDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get weeklyXp => $composableBuilder(
+    column: $table.weeklyXp,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get weekStartDate => $composableBuilder(
+    column: $table.weekStartDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get streakRecoveryUsed7Day => $composableBuilder(
+    column: $table.streakRecoveryUsed7Day,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get streakRecoveryUsed30Day => $composableBuilder(
+    column: $table.streakRecoveryUsed30Day,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get lastStreakRecovery7Day => $composableBuilder(
+    column: $table.lastStreakRecovery7Day,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get lastStreakRecovery30Day => $composableBuilder(
+    column: $table.lastStreakRecovery30Day,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$KarmaProfilesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $KarmaProfilesTable> {
+  $$KarmaProfilesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get userId =>
+      $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<int> get totalXp =>
+      $composableBuilder(column: $table.totalXp, builder: (column) => column);
+
+  GeneratedColumn<int> get level =>
+      $composableBuilder(column: $table.level, builder: (column) => column);
+
+  GeneratedColumn<int> get currentStreak => $composableBuilder(
+    column: $table.currentStreak,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get longestStreak => $composableBuilder(
+    column: $table.longestStreak,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get lastActivityDate => $composableBuilder(
+    column: $table.lastActivityDate,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get streakStartDate => $composableBuilder(
+    column: $table.streakStartDate,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get weeklyXp =>
+      $composableBuilder(column: $table.weeklyXp, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get weekStartDate => $composableBuilder(
+    column: $table.weekStartDate,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get streakRecoveryUsed7Day => $composableBuilder(
+    column: $table.streakRecoveryUsed7Day,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get streakRecoveryUsed30Day => $composableBuilder(
+    column: $table.streakRecoveryUsed30Day,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get lastStreakRecovery7Day => $composableBuilder(
+    column: $table.lastStreakRecovery7Day,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get lastStreakRecovery30Day => $composableBuilder(
+    column: $table.lastStreakRecovery30Day,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+}
+
+class $$KarmaProfilesTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $KarmaProfilesTable,
+          KarmaProfile,
+          $$KarmaProfilesTableFilterComposer,
+          $$KarmaProfilesTableOrderingComposer,
+          $$KarmaProfilesTableAnnotationComposer,
+          $$KarmaProfilesTableCreateCompanionBuilder,
+          $$KarmaProfilesTableUpdateCompanionBuilder,
+          (
+            KarmaProfile,
+            BaseReferences<_$AppDatabase, $KarmaProfilesTable, KarmaProfile>,
+          ),
+          KarmaProfile,
+          PrefetchHooks Function()
+        > {
+  $$KarmaProfilesTableTableManager(_$AppDatabase db, $KarmaProfilesTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$KarmaProfilesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$KarmaProfilesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$KarmaProfilesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> userId = const Value.absent(),
+                Value<int> totalXp = const Value.absent(),
+                Value<int> level = const Value.absent(),
+                Value<int> currentStreak = const Value.absent(),
+                Value<int> longestStreak = const Value.absent(),
+                Value<DateTime?> lastActivityDate = const Value.absent(),
+                Value<DateTime?> streakStartDate = const Value.absent(),
+                Value<int> weeklyXp = const Value.absent(),
+                Value<DateTime?> weekStartDate = const Value.absent(),
+                Value<bool> streakRecoveryUsed7Day = const Value.absent(),
+                Value<bool> streakRecoveryUsed30Day = const Value.absent(),
+                Value<DateTime?> lastStreakRecovery7Day = const Value.absent(),
+                Value<DateTime?> lastStreakRecovery30Day = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => KarmaProfilesCompanion(
+                id: id,
+                userId: userId,
+                totalXp: totalXp,
+                level: level,
+                currentStreak: currentStreak,
+                longestStreak: longestStreak,
+                lastActivityDate: lastActivityDate,
+                streakStartDate: streakStartDate,
+                weeklyXp: weeklyXp,
+                weekStartDate: weekStartDate,
+                streakRecoveryUsed7Day: streakRecoveryUsed7Day,
+                streakRecoveryUsed30Day: streakRecoveryUsed30Day,
+                lastStreakRecovery7Day: lastStreakRecovery7Day,
+                lastStreakRecovery30Day: lastStreakRecovery30Day,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String userId,
+                Value<int> totalXp = const Value.absent(),
+                Value<int> level = const Value.absent(),
+                Value<int> currentStreak = const Value.absent(),
+                Value<int> longestStreak = const Value.absent(),
+                Value<DateTime?> lastActivityDate = const Value.absent(),
+                Value<DateTime?> streakStartDate = const Value.absent(),
+                Value<int> weeklyXp = const Value.absent(),
+                Value<DateTime?> weekStartDate = const Value.absent(),
+                Value<bool> streakRecoveryUsed7Day = const Value.absent(),
+                Value<bool> streakRecoveryUsed30Day = const Value.absent(),
+                Value<DateTime?> lastStreakRecovery7Day = const Value.absent(),
+                Value<DateTime?> lastStreakRecovery30Day = const Value.absent(),
+                required DateTime createdAt,
+                required DateTime updatedAt,
+                Value<int> rowid = const Value.absent(),
+              }) => KarmaProfilesCompanion.insert(
+                id: id,
+                userId: userId,
+                totalXp: totalXp,
+                level: level,
+                currentStreak: currentStreak,
+                longestStreak: longestStreak,
+                lastActivityDate: lastActivityDate,
+                streakStartDate: streakStartDate,
+                weeklyXp: weeklyXp,
+                weekStartDate: weekStartDate,
+                streakRecoveryUsed7Day: streakRecoveryUsed7Day,
+                streakRecoveryUsed30Day: streakRecoveryUsed30Day,
+                lastStreakRecovery7Day: lastStreakRecovery7Day,
+                lastStreakRecovery30Day: lastStreakRecovery30Day,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$KarmaProfilesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $KarmaProfilesTable,
+      KarmaProfile,
+      $$KarmaProfilesTableFilterComposer,
+      $$KarmaProfilesTableOrderingComposer,
+      $$KarmaProfilesTableAnnotationComposer,
+      $$KarmaProfilesTableCreateCompanionBuilder,
+      $$KarmaProfilesTableUpdateCompanionBuilder,
+      (
+        KarmaProfile,
+        BaseReferences<_$AppDatabase, $KarmaProfilesTable, KarmaProfile>,
+      ),
+      KarmaProfile,
       PrefetchHooks Function()
     >;
 typedef $$NutritionGoalsTableCreateCompanionBuilder =
@@ -26164,20 +27895,24 @@ typedef $$PersonalRecordsTableCreateCompanionBuilder =
     PersonalRecordsCompanion Function({
       required String id,
       required String userId,
+      required String recordType,
       required String exerciseName,
       required double value,
       required String unit,
       required DateTime achievedAt,
+      Value<String?> workoutLogId,
       Value<int> rowid,
     });
 typedef $$PersonalRecordsTableUpdateCompanionBuilder =
     PersonalRecordsCompanion Function({
       Value<String> id,
       Value<String> userId,
+      Value<String> recordType,
       Value<String> exerciseName,
       Value<double> value,
       Value<String> unit,
       Value<DateTime> achievedAt,
+      Value<String?> workoutLogId,
       Value<int> rowid,
     });
 
@@ -26200,6 +27935,11 @@ class $$PersonalRecordsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<String> get recordType => $composableBuilder(
+    column: $table.recordType,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<String> get exerciseName => $composableBuilder(
     column: $table.exerciseName,
     builder: (column) => ColumnFilters(column),
@@ -26217,6 +27957,11 @@ class $$PersonalRecordsTableFilterComposer
 
   ColumnFilters<DateTime> get achievedAt => $composableBuilder(
     column: $table.achievedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get workoutLogId => $composableBuilder(
+    column: $table.workoutLogId,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -26240,6 +27985,11 @@ class $$PersonalRecordsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get recordType => $composableBuilder(
+    column: $table.recordType,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get exerciseName => $composableBuilder(
     column: $table.exerciseName,
     builder: (column) => ColumnOrderings(column),
@@ -26259,6 +28009,11 @@ class $$PersonalRecordsTableOrderingComposer
     column: $table.achievedAt,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<String> get workoutLogId => $composableBuilder(
+    column: $table.workoutLogId,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$PersonalRecordsTableAnnotationComposer
@@ -26276,6 +28031,11 @@ class $$PersonalRecordsTableAnnotationComposer
   GeneratedColumn<String> get userId =>
       $composableBuilder(column: $table.userId, builder: (column) => column);
 
+  GeneratedColumn<String> get recordType => $composableBuilder(
+    column: $table.recordType,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<String> get exerciseName => $composableBuilder(
     column: $table.exerciseName,
     builder: (column) => column,
@@ -26289,6 +28049,11 @@ class $$PersonalRecordsTableAnnotationComposer
 
   GeneratedColumn<DateTime> get achievedAt => $composableBuilder(
     column: $table.achievedAt,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get workoutLogId => $composableBuilder(
+    column: $table.workoutLogId,
     builder: (column) => column,
   );
 }
@@ -26332,36 +28097,44 @@ class $$PersonalRecordsTableTableManager
               ({
                 Value<String> id = const Value.absent(),
                 Value<String> userId = const Value.absent(),
+                Value<String> recordType = const Value.absent(),
                 Value<String> exerciseName = const Value.absent(),
                 Value<double> value = const Value.absent(),
                 Value<String> unit = const Value.absent(),
                 Value<DateTime> achievedAt = const Value.absent(),
+                Value<String?> workoutLogId = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => PersonalRecordsCompanion(
                 id: id,
                 userId: userId,
+                recordType: recordType,
                 exerciseName: exerciseName,
                 value: value,
                 unit: unit,
                 achievedAt: achievedAt,
+                workoutLogId: workoutLogId,
                 rowid: rowid,
               ),
           createCompanionCallback:
               ({
                 required String id,
                 required String userId,
+                required String recordType,
                 required String exerciseName,
                 required double value,
                 required String unit,
                 required DateTime achievedAt,
+                Value<String?> workoutLogId = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => PersonalRecordsCompanion.insert(
                 id: id,
                 userId: userId,
+                recordType: recordType,
                 exerciseName: exerciseName,
                 value: value,
                 unit: unit,
                 achievedAt: achievedAt,
+                workoutLogId: workoutLogId,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -27654,6 +29427,8 @@ class $AppDatabaseManager {
       $$RemoteConfigCacheTableTableManager(_db, _db.remoteConfigCache);
   $$KarmaTransactionsTableTableManager get karmaTransactions =>
       $$KarmaTransactionsTableTableManager(_db, _db.karmaTransactions);
+  $$KarmaProfilesTableTableManager get karmaProfiles =>
+      $$KarmaProfilesTableTableManager(_db, _db.karmaProfiles);
   $$NutritionGoalsTableTableManager get nutritionGoals =>
       $$NutritionGoalsTableTableManager(_db, _db.nutritionGoals);
   $$PersonalRecordsTableTableManager get personalRecords =>

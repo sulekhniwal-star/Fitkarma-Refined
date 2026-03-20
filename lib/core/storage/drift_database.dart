@@ -144,6 +144,8 @@ class WorkoutLogs extends Table {
   RealColumn get caloriesBurned => real()();
   TextColumn get workoutType => text()();
   TextColumn get rpeLevel => text().nullable()();
+  TextColumn get notes => text().nullable()();
+  TextColumn get gpsData => text().nullable()();
 
   @override
   Set<Column> get primaryKey => {id};
@@ -151,6 +153,129 @@ class WorkoutLogs extends Table {
   @override
   List<Index> get indexes => [
     Index('idx_workout_logs_user_logged', 'userId, loggedAt'),
+  ];
+}
+
+// Predefined workout templates from Appwrite
+class Workouts extends Table {
+  TextColumn get id => text()();
+  TextColumn get title => text()();
+  TextColumn get description => text()();
+  TextColumn get youtubeId => text()();
+  TextColumn get thumbnailUrl => text().nullable()();
+  IntColumn get durationMinutes => integer()();
+  TextColumn get difficulty => text()(); // beginner, intermediate, advanced
+  TextColumn get category =>
+      text()(); // Yoga, HIIT, Strength, Dance, Bollywood, Pranayama
+  IntColumn get caloriesPerSession => integer().nullable()();
+  BoolColumn get isFeatured => boolean().withDefault(const Constant(false))();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
+// User-created custom workouts
+class CustomWorkouts extends Table {
+  TextColumn get id => text()();
+  TextColumn get userId => text()();
+  TextColumn get title => text()();
+  TextColumn get description => text().nullable()();
+  IntColumn get estimatedDurationMin => integer()();
+  TextColumn get category => text()();
+  DateTimeColumn get createdAt => dateTime()();
+  DateTimeColumn get lastPerformedAt => dateTime().nullable()();
+  IntColumn get timesPerformed => integer().withDefault(const Constant(0))();
+
+  @override
+  Set<Column> get primaryKey => {id};
+
+  @override
+  List<Index> get indexes => [Index('idx_custom_workouts_user', 'userId')];
+}
+
+// Exercises within custom workouts
+class CustomExercises extends Table {
+  TextColumn get id => text()();
+  TextColumn get customWorkoutId => text()();
+  TextColumn get name => text()();
+  TextColumn get instructions => text().nullable()();
+  IntColumn get sets => integer()();
+  IntColumn get reps => integer().nullable()();
+  IntColumn get durationSec => integer().nullable()(); // for timed exercises
+  RealColumn get weightKg => real().nullable()();
+  IntColumn get restTimeSec => integer().withDefault(const Constant(60))();
+  IntColumn get orderIndex => integer()();
+
+  @override
+  Set<Column> get primaryKey => {id};
+
+  @override
+  List<Index> get indexes => [
+    Index('idx_custom_exercises_workout', 'customWorkoutId'),
+  ];
+}
+
+// Scheduled workouts / workout calendar
+class ScheduledWorkouts extends Table {
+  TextColumn get id => text()();
+  TextColumn get userId => text()();
+  TextColumn get workoutId =>
+      text().nullable()(); // reference to predefined workout
+  TextColumn get customWorkoutId =>
+      text().nullable()(); // reference to custom workout
+  DateTimeColumn get scheduledDate => dateTime()();
+  TextColumn get scheduledTime => text()(); // HH:MM format
+  BoolColumn get isRestDay => boolean().withDefault(const Constant(false))();
+  BoolColumn get isCompleted => boolean().withDefault(const Constant(false))();
+  TextColumn get notes => text().nullable()();
+
+  @override
+  Set<Column> get primaryKey => {id};
+
+  @override
+  List<Index> get indexes => [
+    Index('idx_scheduled_workouts_user_date', 'userId, scheduledDate'),
+  ];
+}
+
+// Personal records tracking
+class PersonalRecords extends Table {
+  TextColumn get id => text()();
+  TextColumn get userId => text()();
+  TextColumn get recordType =>
+      text()(); // max_lift, fastest_5k, longest_run, etc.
+  TextColumn get exerciseName => text()();
+  RealColumn get value => real()();
+  TextColumn get unit => text()(); // kg, min, km, etc.
+  DateTimeColumn get achievedAt => dateTime()();
+  TextColumn get workoutLogId => text().nullable()();
+
+  @override
+  Set<Column> get primaryKey => {id};
+
+  @override
+  List<Index> get indexes => [
+    Index('idx_personal_records_user_type', 'userId, recordType'),
+  ];
+}
+
+// GPS track points for outdoor workouts
+class GpsTrackPoints extends Table {
+  TextColumn get id => text()();
+  TextColumn get workoutLogId => text()();
+  RealColumn get latitude => real()();
+  RealColumn get longitude => real()();
+  RealColumn get altitude => real().nullable()();
+  RealColumn get speed => real().nullable()();
+  DateTimeColumn get timestamp => dateTime()();
+  IntColumn get orderIndex => integer()();
+
+  @override
+  Set<Column> get primaryKey => {id};
+
+  @override
+  List<Index> get indexes => [
+    Index('idx_gps_track_points_workout', 'workoutLogId'),
   ];
 }
 
@@ -540,18 +665,6 @@ class NutritionGoals extends Table {
   RealColumn get vitaminB12Mcg => real().nullable()();
   RealColumn get ironMg => real().nullable()();
   RealColumn get calciumMg => real().nullable()();
-
-  @override
-  Set<Column> get primaryKey => {id};
-}
-
-class PersonalRecords extends Table {
-  TextColumn get id => text()();
-  TextColumn get userId => text()();
-  TextColumn get exerciseName => text()();
-  RealColumn get value => real()();
-  TextColumn get unit => text()();
-  DateTimeColumn get achievedAt => dateTime()();
 
   @override
   Set<Column> get primaryKey => {id};
