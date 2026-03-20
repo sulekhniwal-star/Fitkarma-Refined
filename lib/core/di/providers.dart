@@ -10,6 +10,8 @@ import 'dart:convert';
 import 'dart:math';
 import 'dart:io';
 
+import 'package:fitkarma/features/insight_engine/insight_service.dart';
+
 import 'package:appwrite/appwrite.dart' as appwrite;
 import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
@@ -374,6 +376,15 @@ class DatabaseTables {
   // TODO: Initialize table accessors
   // : users = db.users, meals = db.meals, workouts = db.workouts;
 }
+
+// =============================================================================
+// INSIGHT ENGINE
+// =============================================================================
+
+/// Insight service provider - manages insight generation and feedback
+final insightServiceProvider = Provider<InsightService>((ref) {
+  return InsightService();
+});
 
 // =============================================================================
 // CONNECTIVITY

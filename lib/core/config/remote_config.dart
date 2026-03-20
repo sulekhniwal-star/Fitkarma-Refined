@@ -19,14 +19,23 @@ class RemoteConfigData {
   /// Kill switch
   bool getKillSwitch(String key) => configs['kill.$key'] ?? false;
 
+  /// Server-defined insight rules (JSON array)
+  List<Map<String, dynamic>> getServerRules() {
+    final rules = configs['server_rules'];
+    if (rules is List) {
+      return rules.cast<Map<String, dynamic>>();
+    }
+    return [];
+  }
+
   /// A/B Test logic with hash-based rollout
   bool getABTest(String key, String userId) {
     final test = configs['ab.$key'];
     if (test == null || test is! Map) return false;
-    
+
     final int rolloutPct = test['rollout_pct'] ?? 0;
     final String seed = test['seed'] ?? key;
-    
+
     // Deterministic hash based on userId and test seed
     final int hash = '$userId:$seed'.hashCode.abs();
     return (hash % 100) < rolloutPct;
@@ -35,6 +44,37 @@ class RemoteConfigData {
   factory RemoteConfigData.defaults() => RemoteConfigData({
     'feature.abha_module': true,
     'kill.whatsapp_bot': false,
+    // Server-defined insight rules - can be updated without app release
+    // Example JSON structure:
+    // [
+    //   {
+    //     "id": "server_hydration_summer",
+    //     "name": "Summer Hydration",
+    //     "category": "hydration",
+    //     "priority": "high",
+    //     "data_type": "waterGlasses",
+    //     "threshold": { "type": "min", "value": 10 },
+    //     "message": "It's hot! Drink extra water today.",
+    //     "icon": "water_drop",
+    //     "color": "03A9F4",
+    //     "cooldown_days": 1,
+    //     "enabled": true
+    //   },
+    //   {
+    //     "id": "server_festival_tip",
+    //     "name": "Festival Health Tip",
+    //     "category": "nutrition",
+    //     "priority": "medium",
+    //     "data_type": "calories",
+    //     "threshold": { "type": "range", "min": 2000, "max": 3500 },
+    //     "message": "Festival season! Balance indulgence with protein.",
+    //     "icon": "celebration",
+    //     "color": "E91E63",
+    //     "cooldown_days": 7,
+    //     "enabled": true
+    //   }
+    // ]
+    'server_rules': <Map<String, dynamic>>[],
   });
 
   Map<String, dynamic> toJson() => configs;
@@ -49,10 +89,10 @@ class RemoteConfig extends _$RemoteConfig {
   Future<RemoteConfigData> build() async {
     // 1. Initialise with cached values immediately (sync/async depending on implementation)
     final cached = await _loadFromCache();
-    
+
     // 2. Fetch fresh config in background (non-blocking)
     _refreshInBackground();
-    
+
     return cached ?? RemoteConfigData.defaults();
   }
 
@@ -76,7 +116,7 @@ class RemoteConfig extends _$RemoteConfig {
       );
 
       final Map<String, dynamic> freshConfigs = {};
-      
+
       for (var doc in response.documents) {
         final key = doc.data['key'] as String;
         final value = doc.data['value'] as String;
@@ -95,7 +135,7 @@ class RemoteConfig extends _$RemoteConfig {
 
       if (freshConfigs.isNotEmpty) {
         final data = RemoteConfigData(freshConfigs);
-        
+
         // 1. Save to Drift cache
         try {
           final service = ref.read(driftServiceProvider);
@@ -103,7 +143,7 @@ class RemoteConfig extends _$RemoteConfig {
         } catch (e) {
           // Saving to cache failed, but we still update the memory state
         }
-        
+
         // 2. Update state to notify listeners
         state = AsyncValue.data(data);
       }

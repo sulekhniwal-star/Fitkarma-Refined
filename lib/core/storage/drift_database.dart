@@ -707,6 +707,72 @@ class UserProfiles extends Table {
   Set<Column> get primaryKey => {id};
 }
 
+// --- Insight Engine Tables ---
+
+/// Stores generated insights for user feedback tracking
+class InsightOutputs extends Table {
+  TextColumn get id => text()();
+  TextColumn get userId => text()();
+  TextColumn get ruleId => text()();
+  TextColumn get ruleName => text()();
+  TextColumn get message => text()();
+  IntColumn get category => integer()(); // InsightCategory index
+  IntColumn get priority => integer()(); // InsightPriority index
+  IntColumn get iconCodePoint => integer()();
+  TextColumn get iconFontFamily => text()();
+  IntColumn get colorValue => integer()();
+  DateTimeColumn get generatedAt => dateTime()();
+  DateTimeColumn get expiresAt => dateTime().nullable()();
+  IntColumn get status => integer()(); // InsightStatus index
+  IntColumn get feedback =>
+      integer().withDefault(const Constant(0))(); // InsightFeedback index
+  TextColumn get metadata => text().nullable()(); // JSON
+
+  @override
+  Set<Column> get primaryKey => {id};
+
+  @override
+  List<Index> get indexes => [
+    Index('idx_insight_outputs_user_generated', 'userId, generatedAt'),
+  ];
+}
+
+/// Tracks user feedback on insights to suppress unhelpful ones
+class InsightFeedbackLogs extends Table {
+  TextColumn get id => text()();
+  TextColumn get userId => text()();
+  TextColumn get ruleId => text()();
+  IntColumn get feedback =>
+      integer()(); // InsightFeedback: 0=none, 1=thumbsUp, 2=thumbsDown
+  DateTimeColumn get loggedAt => dateTime()();
+  TextColumn get insightId => text().nullable()();
+
+  @override
+  Set<Column> get primaryKey => {id};
+
+  @override
+  List<Index> get indexes => [
+    Index('idx_insight_feedback_user_rule', 'userId, ruleId'),
+  ];
+}
+
+/// Tracks when each rule was last shown to enforce cooldown
+class InsightRuleShownHistory extends Table {
+  TextColumn get id => text()();
+  TextColumn get userId => text()();
+  TextColumn get ruleId => text()();
+  DateTimeColumn get shownAt => dateTime()();
+  TextColumn get insightId => text()();
+
+  @override
+  Set<Column> get primaryKey => {id};
+
+  @override
+  List<Index> get indexes => [
+    Index('idx_insight_history_user_rule', 'userId, ruleId'),
+  ];
+}
+
 // --- DAOs ---
 
 @DriftAccessor(tables: [SyncQueue])
