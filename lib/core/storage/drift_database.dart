@@ -489,9 +489,43 @@ class KarmaTransactions extends Table {
   TextColumn get action => text()();
   TextColumn get description => text().nullable()();
   IntColumn get balanceAfter => integer()();
+  DateTimeColumn get createdAt => dateTime()();
 
   @override
   Set<Column> get primaryKey => {id};
+
+  @override
+  List<Index> get indexes => [
+    Index('idx_karma_transactions_user_created', 'userId, createdAt'),
+  ];
+}
+
+/// User karma profile - stores level, streaks, and multipliers
+class KarmaProfiles extends Table {
+  TextColumn get id => text()();
+  TextColumn get userId => text()();
+  IntColumn get totalXp => integer().withDefault(const Constant(0))();
+  IntColumn get level => integer().withDefault(const Constant(1))();
+  IntColumn get currentStreak => integer().withDefault(const Constant(0))();
+  IntColumn get longestStreak => integer().withDefault(const Constant(0))();
+  DateTimeColumn get lastActivityDate => dateTime().nullable()();
+  DateTimeColumn get streakStartDate => dateTime().nullable()();
+  IntColumn get weeklyXp => integer().withDefault(const Constant(0))();
+  DateTimeColumn get weekStartDate => dateTime().nullable()();
+  BoolColumn get streakRecoveryUsed7Day =>
+      boolean().withDefault(const Constant(false))();
+  BoolColumn get streakRecoveryUsed30Day =>
+      boolean().withDefault(const Constant(false))();
+  DateTimeColumn get lastStreakRecovery7Day => dateTime().nullable()();
+  DateTimeColumn get lastStreakRecovery30Day => dateTime().nullable()();
+  DateTimeColumn get createdAt => dateTime()();
+  DateTimeColumn get updatedAt => dateTime()();
+
+  @override
+  Set<Column> get primaryKey => {id};
+
+  @override
+  List<Index> get indexes => [Index('idx_karma_profiles_user', 'userId')];
 }
 
 class NutritionGoals extends Table {
@@ -783,6 +817,7 @@ class UserProfilesDao extends DatabaseAccessor<AppDatabase>
     FestivalCalendar,
     RemoteConfigCache,
     KarmaTransactions,
+    KarmaProfiles,
     NutritionGoals,
     PersonalRecords,
     UserProfiles,

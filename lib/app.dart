@@ -14,6 +14,9 @@ import 'features/auth/presentation/onboarding_screen_4.dart';
 import 'features/auth/presentation/onboarding_screen_5.dart';
 import 'features/auth/presentation/onboarding_screen_6.dart';
 import 'features/settings/presentation/settings_screen.dart';
+import 'features/karma/presentation/karma_hub_screen.dart';
+import 'features/karma/presentation/karma_store_screen.dart';
+import 'features/karma/presentation/leaderboard_screen.dart';
 import 'features/dashboard/presentation/dashboard_screen.dart';
 import 'core/security/biometric_service.dart';
 
@@ -555,7 +558,17 @@ final _router = GoRouter(
     // --- Standalone Features ---
     GoRoute(
       path: '/karma',
-      builder: (context, state) => const PlaceholderScreen(title: 'Karma Hub'),
+      builder: (context, state) => const KarmaHubScreen(),
+      routes: [
+        GoRoute(
+          path: 'store',
+          builder: (context, state) => const KarmaStoreScreen(),
+        ),
+        GoRoute(
+          path: 'leaderboard',
+          builder: (context, state) => const LeaderboardScreen(),
+        ),
+      ],
     ),
     GoRoute(
       path: '/sleep',
