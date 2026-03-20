@@ -54,6 +54,21 @@ class FoodItemsDaoManager {
       $$FoodItemsTableTableManager(_db.attachedDatabase, _db.foodItems);
 }
 
+mixin _$FoodSubmissionsDaoMixin on DatabaseAccessor<AppDatabase> {
+  $FoodSubmissionsTable get foodSubmissions => attachedDatabase.foodSubmissions;
+  FoodSubmissionsDaoManager get managers => FoodSubmissionsDaoManager(this);
+}
+
+class FoodSubmissionsDaoManager {
+  final _$FoodSubmissionsDaoMixin _db;
+  FoodSubmissionsDaoManager(this._db);
+  $$FoodSubmissionsTableTableManager get foodSubmissions =>
+      $$FoodSubmissionsTableTableManager(
+        _db.attachedDatabase,
+        _db.foodSubmissions,
+      );
+}
+
 mixin _$WorkoutLogsDaoMixin on DatabaseAccessor<AppDatabase> {
   $WorkoutLogsTable get workoutLogs => attachedDatabase.workoutLogs;
   WorkoutLogsDaoManager get managers => WorkoutLogsDaoManager(this);
@@ -2739,6 +2754,1268 @@ class FoodItemsCompanion extends UpdateCompanion<FoodItem> {
           ..write('restaurantName: $restaurantName, ')
           ..write('swiggyItemId: $swiggyItemId, ')
           ..write('zomatoItemId: $zomatoItemId, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $FoodSubmissionsTable extends FoodSubmissions
+    with TableInfo<$FoodSubmissionsTable, FoodSubmission> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $FoodSubmissionsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
+    'user_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _nameLocalMeta = const VerificationMeta(
+    'nameLocal',
+  );
+  @override
+  late final GeneratedColumn<String> nameLocal = GeneratedColumn<String>(
+    'name_local',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _regionMeta = const VerificationMeta('region');
+  @override
+  late final GeneratedColumn<String> region = GeneratedColumn<String>(
+    'region',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _caloriesPer100gMeta = const VerificationMeta(
+    'caloriesPer100g',
+  );
+  @override
+  late final GeneratedColumn<double> caloriesPer100g = GeneratedColumn<double>(
+    'calories_per100g',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _proteinPer100gMeta = const VerificationMeta(
+    'proteinPer100g',
+  );
+  @override
+  late final GeneratedColumn<double> proteinPer100g = GeneratedColumn<double>(
+    'protein_per100g',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _carbsPer100gMeta = const VerificationMeta(
+    'carbsPer100g',
+  );
+  @override
+  late final GeneratedColumn<double> carbsPer100g = GeneratedColumn<double>(
+    'carbs_per100g',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _fatPer100gMeta = const VerificationMeta(
+    'fatPer100g',
+  );
+  @override
+  late final GeneratedColumn<double> fatPer100g = GeneratedColumn<double>(
+    'fat_per100g',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _fiberPer100gMeta = const VerificationMeta(
+    'fiberPer100g',
+  );
+  @override
+  late final GeneratedColumn<double> fiberPer100g = GeneratedColumn<double>(
+    'fiber_per100g',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _vitaminDPer100gMeta = const VerificationMeta(
+    'vitaminDPer100g',
+  );
+  @override
+  late final GeneratedColumn<double> vitaminDPer100g = GeneratedColumn<double>(
+    'vitamin_d_per100g',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _vitaminB12Per100gMeta = const VerificationMeta(
+    'vitaminB12Per100g',
+  );
+  @override
+  late final GeneratedColumn<double> vitaminB12Per100g =
+      GeneratedColumn<double>(
+        'vitamin_b12_per100g',
+        aliasedName,
+        true,
+        type: DriftSqlType.double,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _ironPer100gMeta = const VerificationMeta(
+    'ironPer100g',
+  );
+  @override
+  late final GeneratedColumn<double> ironPer100g = GeneratedColumn<double>(
+    'iron_per100g',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _calciumPer100gMeta = const VerificationMeta(
+    'calciumPer100g',
+  );
+  @override
+  late final GeneratedColumn<double> calciumPer100g = GeneratedColumn<double>(
+    'calcium_per100g',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _servingSizesMeta = const VerificationMeta(
+    'servingSizes',
+  );
+  @override
+  late final GeneratedColumn<String> servingSizes = GeneratedColumn<String>(
+    'serving_sizes',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _notesMeta = const VerificationMeta('notes');
+  @override
+  late final GeneratedColumn<String> notes = GeneratedColumn<String>(
+    'notes',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _statusMeta = const VerificationMeta('status');
+  @override
+  late final GeneratedColumn<String> status = GeneratedColumn<String>(
+    'status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _submittedByMeta = const VerificationMeta(
+    'submittedBy',
+  );
+  @override
+  late final GeneratedColumn<String> submittedBy = GeneratedColumn<String>(
+    'submitted_by',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _submittedAtMeta = const VerificationMeta(
+    'submittedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> submittedAt = GeneratedColumn<DateTime>(
+    'submitted_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _reviewedByMeta = const VerificationMeta(
+    'reviewedBy',
+  );
+  @override
+  late final GeneratedColumn<String> reviewedBy = GeneratedColumn<String>(
+    'reviewed_by',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _reviewedAtMeta = const VerificationMeta(
+    'reviewedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> reviewedAt = GeneratedColumn<DateTime>(
+    'reviewed_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _rejectionReasonMeta = const VerificationMeta(
+    'rejectionReason',
+  );
+  @override
+  late final GeneratedColumn<String> rejectionReason = GeneratedColumn<String>(
+    'rejection_reason',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    userId,
+    name,
+    nameLocal,
+    region,
+    caloriesPer100g,
+    proteinPer100g,
+    carbsPer100g,
+    fatPer100g,
+    fiberPer100g,
+    vitaminDPer100g,
+    vitaminB12Per100g,
+    ironPer100g,
+    calciumPer100g,
+    servingSizes,
+    notes,
+    status,
+    submittedBy,
+    submittedAt,
+    reviewedBy,
+    reviewedAt,
+    rejectionReason,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'food_submissions';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<FoodSubmission> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_userIdMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('name_local')) {
+      context.handle(
+        _nameLocalMeta,
+        nameLocal.isAcceptableOrUnknown(data['name_local']!, _nameLocalMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameLocalMeta);
+    }
+    if (data.containsKey('region')) {
+      context.handle(
+        _regionMeta,
+        region.isAcceptableOrUnknown(data['region']!, _regionMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_regionMeta);
+    }
+    if (data.containsKey('calories_per100g')) {
+      context.handle(
+        _caloriesPer100gMeta,
+        caloriesPer100g.isAcceptableOrUnknown(
+          data['calories_per100g']!,
+          _caloriesPer100gMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_caloriesPer100gMeta);
+    }
+    if (data.containsKey('protein_per100g')) {
+      context.handle(
+        _proteinPer100gMeta,
+        proteinPer100g.isAcceptableOrUnknown(
+          data['protein_per100g']!,
+          _proteinPer100gMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_proteinPer100gMeta);
+    }
+    if (data.containsKey('carbs_per100g')) {
+      context.handle(
+        _carbsPer100gMeta,
+        carbsPer100g.isAcceptableOrUnknown(
+          data['carbs_per100g']!,
+          _carbsPer100gMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_carbsPer100gMeta);
+    }
+    if (data.containsKey('fat_per100g')) {
+      context.handle(
+        _fatPer100gMeta,
+        fatPer100g.isAcceptableOrUnknown(data['fat_per100g']!, _fatPer100gMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_fatPer100gMeta);
+    }
+    if (data.containsKey('fiber_per100g')) {
+      context.handle(
+        _fiberPer100gMeta,
+        fiberPer100g.isAcceptableOrUnknown(
+          data['fiber_per100g']!,
+          _fiberPer100gMeta,
+        ),
+      );
+    }
+    if (data.containsKey('vitamin_d_per100g')) {
+      context.handle(
+        _vitaminDPer100gMeta,
+        vitaminDPer100g.isAcceptableOrUnknown(
+          data['vitamin_d_per100g']!,
+          _vitaminDPer100gMeta,
+        ),
+      );
+    }
+    if (data.containsKey('vitamin_b12_per100g')) {
+      context.handle(
+        _vitaminB12Per100gMeta,
+        vitaminB12Per100g.isAcceptableOrUnknown(
+          data['vitamin_b12_per100g']!,
+          _vitaminB12Per100gMeta,
+        ),
+      );
+    }
+    if (data.containsKey('iron_per100g')) {
+      context.handle(
+        _ironPer100gMeta,
+        ironPer100g.isAcceptableOrUnknown(
+          data['iron_per100g']!,
+          _ironPer100gMeta,
+        ),
+      );
+    }
+    if (data.containsKey('calcium_per100g')) {
+      context.handle(
+        _calciumPer100gMeta,
+        calciumPer100g.isAcceptableOrUnknown(
+          data['calcium_per100g']!,
+          _calciumPer100gMeta,
+        ),
+      );
+    }
+    if (data.containsKey('serving_sizes')) {
+      context.handle(
+        _servingSizesMeta,
+        servingSizes.isAcceptableOrUnknown(
+          data['serving_sizes']!,
+          _servingSizesMeta,
+        ),
+      );
+    }
+    if (data.containsKey('notes')) {
+      context.handle(
+        _notesMeta,
+        notes.isAcceptableOrUnknown(data['notes']!, _notesMeta),
+      );
+    }
+    if (data.containsKey('status')) {
+      context.handle(
+        _statusMeta,
+        status.isAcceptableOrUnknown(data['status']!, _statusMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_statusMeta);
+    }
+    if (data.containsKey('submitted_by')) {
+      context.handle(
+        _submittedByMeta,
+        submittedBy.isAcceptableOrUnknown(
+          data['submitted_by']!,
+          _submittedByMeta,
+        ),
+      );
+    }
+    if (data.containsKey('submitted_at')) {
+      context.handle(
+        _submittedAtMeta,
+        submittedAt.isAcceptableOrUnknown(
+          data['submitted_at']!,
+          _submittedAtMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_submittedAtMeta);
+    }
+    if (data.containsKey('reviewed_by')) {
+      context.handle(
+        _reviewedByMeta,
+        reviewedBy.isAcceptableOrUnknown(data['reviewed_by']!, _reviewedByMeta),
+      );
+    }
+    if (data.containsKey('reviewed_at')) {
+      context.handle(
+        _reviewedAtMeta,
+        reviewedAt.isAcceptableOrUnknown(data['reviewed_at']!, _reviewedAtMeta),
+      );
+    }
+    if (data.containsKey('rejection_reason')) {
+      context.handle(
+        _rejectionReasonMeta,
+        rejectionReason.isAcceptableOrUnknown(
+          data['rejection_reason']!,
+          _rejectionReasonMeta,
+        ),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  FoodSubmission map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return FoodSubmission(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      userId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_id'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      nameLocal: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name_local'],
+      )!,
+      region: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}region'],
+      )!,
+      caloriesPer100g: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}calories_per100g'],
+      )!,
+      proteinPer100g: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}protein_per100g'],
+      )!,
+      carbsPer100g: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}carbs_per100g'],
+      )!,
+      fatPer100g: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}fat_per100g'],
+      )!,
+      fiberPer100g: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}fiber_per100g'],
+      ),
+      vitaminDPer100g: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}vitamin_d_per100g'],
+      ),
+      vitaminB12Per100g: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}vitamin_b12_per100g'],
+      ),
+      ironPer100g: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}iron_per100g'],
+      ),
+      calciumPer100g: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}calcium_per100g'],
+      ),
+      servingSizes: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}serving_sizes'],
+      ),
+      notes: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}notes'],
+      ),
+      status: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}status'],
+      )!,
+      submittedBy: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}submitted_by'],
+      ),
+      submittedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}submitted_at'],
+      )!,
+      reviewedBy: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}reviewed_by'],
+      ),
+      reviewedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}reviewed_at'],
+      ),
+      rejectionReason: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}rejection_reason'],
+      ),
+    );
+  }
+
+  @override
+  $FoodSubmissionsTable createAlias(String alias) {
+    return $FoodSubmissionsTable(attachedDatabase, alias);
+  }
+}
+
+class FoodSubmission extends DataClass implements Insertable<FoodSubmission> {
+  final String id;
+  final String userId;
+  final String name;
+  final String nameLocal;
+  final String region;
+  final double caloriesPer100g;
+  final double proteinPer100g;
+  final double carbsPer100g;
+  final double fatPer100g;
+  final double? fiberPer100g;
+  final double? vitaminDPer100g;
+  final double? vitaminB12Per100g;
+  final double? ironPer100g;
+  final double? calciumPer100g;
+  final String? servingSizes;
+  final String? notes;
+  final String status;
+  final String? submittedBy;
+  final DateTime submittedAt;
+  final String? reviewedBy;
+  final DateTime? reviewedAt;
+  final String? rejectionReason;
+  const FoodSubmission({
+    required this.id,
+    required this.userId,
+    required this.name,
+    required this.nameLocal,
+    required this.region,
+    required this.caloriesPer100g,
+    required this.proteinPer100g,
+    required this.carbsPer100g,
+    required this.fatPer100g,
+    this.fiberPer100g,
+    this.vitaminDPer100g,
+    this.vitaminB12Per100g,
+    this.ironPer100g,
+    this.calciumPer100g,
+    this.servingSizes,
+    this.notes,
+    required this.status,
+    this.submittedBy,
+    required this.submittedAt,
+    this.reviewedBy,
+    this.reviewedAt,
+    this.rejectionReason,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['user_id'] = Variable<String>(userId);
+    map['name'] = Variable<String>(name);
+    map['name_local'] = Variable<String>(nameLocal);
+    map['region'] = Variable<String>(region);
+    map['calories_per100g'] = Variable<double>(caloriesPer100g);
+    map['protein_per100g'] = Variable<double>(proteinPer100g);
+    map['carbs_per100g'] = Variable<double>(carbsPer100g);
+    map['fat_per100g'] = Variable<double>(fatPer100g);
+    if (!nullToAbsent || fiberPer100g != null) {
+      map['fiber_per100g'] = Variable<double>(fiberPer100g);
+    }
+    if (!nullToAbsent || vitaminDPer100g != null) {
+      map['vitamin_d_per100g'] = Variable<double>(vitaminDPer100g);
+    }
+    if (!nullToAbsent || vitaminB12Per100g != null) {
+      map['vitamin_b12_per100g'] = Variable<double>(vitaminB12Per100g);
+    }
+    if (!nullToAbsent || ironPer100g != null) {
+      map['iron_per100g'] = Variable<double>(ironPer100g);
+    }
+    if (!nullToAbsent || calciumPer100g != null) {
+      map['calcium_per100g'] = Variable<double>(calciumPer100g);
+    }
+    if (!nullToAbsent || servingSizes != null) {
+      map['serving_sizes'] = Variable<String>(servingSizes);
+    }
+    if (!nullToAbsent || notes != null) {
+      map['notes'] = Variable<String>(notes);
+    }
+    map['status'] = Variable<String>(status);
+    if (!nullToAbsent || submittedBy != null) {
+      map['submitted_by'] = Variable<String>(submittedBy);
+    }
+    map['submitted_at'] = Variable<DateTime>(submittedAt);
+    if (!nullToAbsent || reviewedBy != null) {
+      map['reviewed_by'] = Variable<String>(reviewedBy);
+    }
+    if (!nullToAbsent || reviewedAt != null) {
+      map['reviewed_at'] = Variable<DateTime>(reviewedAt);
+    }
+    if (!nullToAbsent || rejectionReason != null) {
+      map['rejection_reason'] = Variable<String>(rejectionReason);
+    }
+    return map;
+  }
+
+  FoodSubmissionsCompanion toCompanion(bool nullToAbsent) {
+    return FoodSubmissionsCompanion(
+      id: Value(id),
+      userId: Value(userId),
+      name: Value(name),
+      nameLocal: Value(nameLocal),
+      region: Value(region),
+      caloriesPer100g: Value(caloriesPer100g),
+      proteinPer100g: Value(proteinPer100g),
+      carbsPer100g: Value(carbsPer100g),
+      fatPer100g: Value(fatPer100g),
+      fiberPer100g: fiberPer100g == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fiberPer100g),
+      vitaminDPer100g: vitaminDPer100g == null && nullToAbsent
+          ? const Value.absent()
+          : Value(vitaminDPer100g),
+      vitaminB12Per100g: vitaminB12Per100g == null && nullToAbsent
+          ? const Value.absent()
+          : Value(vitaminB12Per100g),
+      ironPer100g: ironPer100g == null && nullToAbsent
+          ? const Value.absent()
+          : Value(ironPer100g),
+      calciumPer100g: calciumPer100g == null && nullToAbsent
+          ? const Value.absent()
+          : Value(calciumPer100g),
+      servingSizes: servingSizes == null && nullToAbsent
+          ? const Value.absent()
+          : Value(servingSizes),
+      notes: notes == null && nullToAbsent
+          ? const Value.absent()
+          : Value(notes),
+      status: Value(status),
+      submittedBy: submittedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(submittedBy),
+      submittedAt: Value(submittedAt),
+      reviewedBy: reviewedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(reviewedBy),
+      reviewedAt: reviewedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(reviewedAt),
+      rejectionReason: rejectionReason == null && nullToAbsent
+          ? const Value.absent()
+          : Value(rejectionReason),
+    );
+  }
+
+  factory FoodSubmission.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return FoodSubmission(
+      id: serializer.fromJson<String>(json['id']),
+      userId: serializer.fromJson<String>(json['userId']),
+      name: serializer.fromJson<String>(json['name']),
+      nameLocal: serializer.fromJson<String>(json['nameLocal']),
+      region: serializer.fromJson<String>(json['region']),
+      caloriesPer100g: serializer.fromJson<double>(json['caloriesPer100g']),
+      proteinPer100g: serializer.fromJson<double>(json['proteinPer100g']),
+      carbsPer100g: serializer.fromJson<double>(json['carbsPer100g']),
+      fatPer100g: serializer.fromJson<double>(json['fatPer100g']),
+      fiberPer100g: serializer.fromJson<double?>(json['fiberPer100g']),
+      vitaminDPer100g: serializer.fromJson<double?>(json['vitaminDPer100g']),
+      vitaminB12Per100g: serializer.fromJson<double?>(
+        json['vitaminB12Per100g'],
+      ),
+      ironPer100g: serializer.fromJson<double?>(json['ironPer100g']),
+      calciumPer100g: serializer.fromJson<double?>(json['calciumPer100g']),
+      servingSizes: serializer.fromJson<String?>(json['servingSizes']),
+      notes: serializer.fromJson<String?>(json['notes']),
+      status: serializer.fromJson<String>(json['status']),
+      submittedBy: serializer.fromJson<String?>(json['submittedBy']),
+      submittedAt: serializer.fromJson<DateTime>(json['submittedAt']),
+      reviewedBy: serializer.fromJson<String?>(json['reviewedBy']),
+      reviewedAt: serializer.fromJson<DateTime?>(json['reviewedAt']),
+      rejectionReason: serializer.fromJson<String?>(json['rejectionReason']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'userId': serializer.toJson<String>(userId),
+      'name': serializer.toJson<String>(name),
+      'nameLocal': serializer.toJson<String>(nameLocal),
+      'region': serializer.toJson<String>(region),
+      'caloriesPer100g': serializer.toJson<double>(caloriesPer100g),
+      'proteinPer100g': serializer.toJson<double>(proteinPer100g),
+      'carbsPer100g': serializer.toJson<double>(carbsPer100g),
+      'fatPer100g': serializer.toJson<double>(fatPer100g),
+      'fiberPer100g': serializer.toJson<double?>(fiberPer100g),
+      'vitaminDPer100g': serializer.toJson<double?>(vitaminDPer100g),
+      'vitaminB12Per100g': serializer.toJson<double?>(vitaminB12Per100g),
+      'ironPer100g': serializer.toJson<double?>(ironPer100g),
+      'calciumPer100g': serializer.toJson<double?>(calciumPer100g),
+      'servingSizes': serializer.toJson<String?>(servingSizes),
+      'notes': serializer.toJson<String?>(notes),
+      'status': serializer.toJson<String>(status),
+      'submittedBy': serializer.toJson<String?>(submittedBy),
+      'submittedAt': serializer.toJson<DateTime>(submittedAt),
+      'reviewedBy': serializer.toJson<String?>(reviewedBy),
+      'reviewedAt': serializer.toJson<DateTime?>(reviewedAt),
+      'rejectionReason': serializer.toJson<String?>(rejectionReason),
+    };
+  }
+
+  FoodSubmission copyWith({
+    String? id,
+    String? userId,
+    String? name,
+    String? nameLocal,
+    String? region,
+    double? caloriesPer100g,
+    double? proteinPer100g,
+    double? carbsPer100g,
+    double? fatPer100g,
+    Value<double?> fiberPer100g = const Value.absent(),
+    Value<double?> vitaminDPer100g = const Value.absent(),
+    Value<double?> vitaminB12Per100g = const Value.absent(),
+    Value<double?> ironPer100g = const Value.absent(),
+    Value<double?> calciumPer100g = const Value.absent(),
+    Value<String?> servingSizes = const Value.absent(),
+    Value<String?> notes = const Value.absent(),
+    String? status,
+    Value<String?> submittedBy = const Value.absent(),
+    DateTime? submittedAt,
+    Value<String?> reviewedBy = const Value.absent(),
+    Value<DateTime?> reviewedAt = const Value.absent(),
+    Value<String?> rejectionReason = const Value.absent(),
+  }) => FoodSubmission(
+    id: id ?? this.id,
+    userId: userId ?? this.userId,
+    name: name ?? this.name,
+    nameLocal: nameLocal ?? this.nameLocal,
+    region: region ?? this.region,
+    caloriesPer100g: caloriesPer100g ?? this.caloriesPer100g,
+    proteinPer100g: proteinPer100g ?? this.proteinPer100g,
+    carbsPer100g: carbsPer100g ?? this.carbsPer100g,
+    fatPer100g: fatPer100g ?? this.fatPer100g,
+    fiberPer100g: fiberPer100g.present ? fiberPer100g.value : this.fiberPer100g,
+    vitaminDPer100g: vitaminDPer100g.present
+        ? vitaminDPer100g.value
+        : this.vitaminDPer100g,
+    vitaminB12Per100g: vitaminB12Per100g.present
+        ? vitaminB12Per100g.value
+        : this.vitaminB12Per100g,
+    ironPer100g: ironPer100g.present ? ironPer100g.value : this.ironPer100g,
+    calciumPer100g: calciumPer100g.present
+        ? calciumPer100g.value
+        : this.calciumPer100g,
+    servingSizes: servingSizes.present ? servingSizes.value : this.servingSizes,
+    notes: notes.present ? notes.value : this.notes,
+    status: status ?? this.status,
+    submittedBy: submittedBy.present ? submittedBy.value : this.submittedBy,
+    submittedAt: submittedAt ?? this.submittedAt,
+    reviewedBy: reviewedBy.present ? reviewedBy.value : this.reviewedBy,
+    reviewedAt: reviewedAt.present ? reviewedAt.value : this.reviewedAt,
+    rejectionReason: rejectionReason.present
+        ? rejectionReason.value
+        : this.rejectionReason,
+  );
+  FoodSubmission copyWithCompanion(FoodSubmissionsCompanion data) {
+    return FoodSubmission(
+      id: data.id.present ? data.id.value : this.id,
+      userId: data.userId.present ? data.userId.value : this.userId,
+      name: data.name.present ? data.name.value : this.name,
+      nameLocal: data.nameLocal.present ? data.nameLocal.value : this.nameLocal,
+      region: data.region.present ? data.region.value : this.region,
+      caloriesPer100g: data.caloriesPer100g.present
+          ? data.caloriesPer100g.value
+          : this.caloriesPer100g,
+      proteinPer100g: data.proteinPer100g.present
+          ? data.proteinPer100g.value
+          : this.proteinPer100g,
+      carbsPer100g: data.carbsPer100g.present
+          ? data.carbsPer100g.value
+          : this.carbsPer100g,
+      fatPer100g: data.fatPer100g.present
+          ? data.fatPer100g.value
+          : this.fatPer100g,
+      fiberPer100g: data.fiberPer100g.present
+          ? data.fiberPer100g.value
+          : this.fiberPer100g,
+      vitaminDPer100g: data.vitaminDPer100g.present
+          ? data.vitaminDPer100g.value
+          : this.vitaminDPer100g,
+      vitaminB12Per100g: data.vitaminB12Per100g.present
+          ? data.vitaminB12Per100g.value
+          : this.vitaminB12Per100g,
+      ironPer100g: data.ironPer100g.present
+          ? data.ironPer100g.value
+          : this.ironPer100g,
+      calciumPer100g: data.calciumPer100g.present
+          ? data.calciumPer100g.value
+          : this.calciumPer100g,
+      servingSizes: data.servingSizes.present
+          ? data.servingSizes.value
+          : this.servingSizes,
+      notes: data.notes.present ? data.notes.value : this.notes,
+      status: data.status.present ? data.status.value : this.status,
+      submittedBy: data.submittedBy.present
+          ? data.submittedBy.value
+          : this.submittedBy,
+      submittedAt: data.submittedAt.present
+          ? data.submittedAt.value
+          : this.submittedAt,
+      reviewedBy: data.reviewedBy.present
+          ? data.reviewedBy.value
+          : this.reviewedBy,
+      reviewedAt: data.reviewedAt.present
+          ? data.reviewedAt.value
+          : this.reviewedAt,
+      rejectionReason: data.rejectionReason.present
+          ? data.rejectionReason.value
+          : this.rejectionReason,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('FoodSubmission(')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('name: $name, ')
+          ..write('nameLocal: $nameLocal, ')
+          ..write('region: $region, ')
+          ..write('caloriesPer100g: $caloriesPer100g, ')
+          ..write('proteinPer100g: $proteinPer100g, ')
+          ..write('carbsPer100g: $carbsPer100g, ')
+          ..write('fatPer100g: $fatPer100g, ')
+          ..write('fiberPer100g: $fiberPer100g, ')
+          ..write('vitaminDPer100g: $vitaminDPer100g, ')
+          ..write('vitaminB12Per100g: $vitaminB12Per100g, ')
+          ..write('ironPer100g: $ironPer100g, ')
+          ..write('calciumPer100g: $calciumPer100g, ')
+          ..write('servingSizes: $servingSizes, ')
+          ..write('notes: $notes, ')
+          ..write('status: $status, ')
+          ..write('submittedBy: $submittedBy, ')
+          ..write('submittedAt: $submittedAt, ')
+          ..write('reviewedBy: $reviewedBy, ')
+          ..write('reviewedAt: $reviewedAt, ')
+          ..write('rejectionReason: $rejectionReason')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    id,
+    userId,
+    name,
+    nameLocal,
+    region,
+    caloriesPer100g,
+    proteinPer100g,
+    carbsPer100g,
+    fatPer100g,
+    fiberPer100g,
+    vitaminDPer100g,
+    vitaminB12Per100g,
+    ironPer100g,
+    calciumPer100g,
+    servingSizes,
+    notes,
+    status,
+    submittedBy,
+    submittedAt,
+    reviewedBy,
+    reviewedAt,
+    rejectionReason,
+  ]);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is FoodSubmission &&
+          other.id == this.id &&
+          other.userId == this.userId &&
+          other.name == this.name &&
+          other.nameLocal == this.nameLocal &&
+          other.region == this.region &&
+          other.caloriesPer100g == this.caloriesPer100g &&
+          other.proteinPer100g == this.proteinPer100g &&
+          other.carbsPer100g == this.carbsPer100g &&
+          other.fatPer100g == this.fatPer100g &&
+          other.fiberPer100g == this.fiberPer100g &&
+          other.vitaminDPer100g == this.vitaminDPer100g &&
+          other.vitaminB12Per100g == this.vitaminB12Per100g &&
+          other.ironPer100g == this.ironPer100g &&
+          other.calciumPer100g == this.calciumPer100g &&
+          other.servingSizes == this.servingSizes &&
+          other.notes == this.notes &&
+          other.status == this.status &&
+          other.submittedBy == this.submittedBy &&
+          other.submittedAt == this.submittedAt &&
+          other.reviewedBy == this.reviewedBy &&
+          other.reviewedAt == this.reviewedAt &&
+          other.rejectionReason == this.rejectionReason);
+}
+
+class FoodSubmissionsCompanion extends UpdateCompanion<FoodSubmission> {
+  final Value<String> id;
+  final Value<String> userId;
+  final Value<String> name;
+  final Value<String> nameLocal;
+  final Value<String> region;
+  final Value<double> caloriesPer100g;
+  final Value<double> proteinPer100g;
+  final Value<double> carbsPer100g;
+  final Value<double> fatPer100g;
+  final Value<double?> fiberPer100g;
+  final Value<double?> vitaminDPer100g;
+  final Value<double?> vitaminB12Per100g;
+  final Value<double?> ironPer100g;
+  final Value<double?> calciumPer100g;
+  final Value<String?> servingSizes;
+  final Value<String?> notes;
+  final Value<String> status;
+  final Value<String?> submittedBy;
+  final Value<DateTime> submittedAt;
+  final Value<String?> reviewedBy;
+  final Value<DateTime?> reviewedAt;
+  final Value<String?> rejectionReason;
+  final Value<int> rowid;
+  const FoodSubmissionsCompanion({
+    this.id = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.name = const Value.absent(),
+    this.nameLocal = const Value.absent(),
+    this.region = const Value.absent(),
+    this.caloriesPer100g = const Value.absent(),
+    this.proteinPer100g = const Value.absent(),
+    this.carbsPer100g = const Value.absent(),
+    this.fatPer100g = const Value.absent(),
+    this.fiberPer100g = const Value.absent(),
+    this.vitaminDPer100g = const Value.absent(),
+    this.vitaminB12Per100g = const Value.absent(),
+    this.ironPer100g = const Value.absent(),
+    this.calciumPer100g = const Value.absent(),
+    this.servingSizes = const Value.absent(),
+    this.notes = const Value.absent(),
+    this.status = const Value.absent(),
+    this.submittedBy = const Value.absent(),
+    this.submittedAt = const Value.absent(),
+    this.reviewedBy = const Value.absent(),
+    this.reviewedAt = const Value.absent(),
+    this.rejectionReason = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  FoodSubmissionsCompanion.insert({
+    required String id,
+    required String userId,
+    required String name,
+    required String nameLocal,
+    required String region,
+    required double caloriesPer100g,
+    required double proteinPer100g,
+    required double carbsPer100g,
+    required double fatPer100g,
+    this.fiberPer100g = const Value.absent(),
+    this.vitaminDPer100g = const Value.absent(),
+    this.vitaminB12Per100g = const Value.absent(),
+    this.ironPer100g = const Value.absent(),
+    this.calciumPer100g = const Value.absent(),
+    this.servingSizes = const Value.absent(),
+    this.notes = const Value.absent(),
+    required String status,
+    this.submittedBy = const Value.absent(),
+    required DateTime submittedAt,
+    this.reviewedBy = const Value.absent(),
+    this.reviewedAt = const Value.absent(),
+    this.rejectionReason = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       userId = Value(userId),
+       name = Value(name),
+       nameLocal = Value(nameLocal),
+       region = Value(region),
+       caloriesPer100g = Value(caloriesPer100g),
+       proteinPer100g = Value(proteinPer100g),
+       carbsPer100g = Value(carbsPer100g),
+       fatPer100g = Value(fatPer100g),
+       status = Value(status),
+       submittedAt = Value(submittedAt);
+  static Insertable<FoodSubmission> custom({
+    Expression<String>? id,
+    Expression<String>? userId,
+    Expression<String>? name,
+    Expression<String>? nameLocal,
+    Expression<String>? region,
+    Expression<double>? caloriesPer100g,
+    Expression<double>? proteinPer100g,
+    Expression<double>? carbsPer100g,
+    Expression<double>? fatPer100g,
+    Expression<double>? fiberPer100g,
+    Expression<double>? vitaminDPer100g,
+    Expression<double>? vitaminB12Per100g,
+    Expression<double>? ironPer100g,
+    Expression<double>? calciumPer100g,
+    Expression<String>? servingSizes,
+    Expression<String>? notes,
+    Expression<String>? status,
+    Expression<String>? submittedBy,
+    Expression<DateTime>? submittedAt,
+    Expression<String>? reviewedBy,
+    Expression<DateTime>? reviewedAt,
+    Expression<String>? rejectionReason,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (userId != null) 'user_id': userId,
+      if (name != null) 'name': name,
+      if (nameLocal != null) 'name_local': nameLocal,
+      if (region != null) 'region': region,
+      if (caloriesPer100g != null) 'calories_per100g': caloriesPer100g,
+      if (proteinPer100g != null) 'protein_per100g': proteinPer100g,
+      if (carbsPer100g != null) 'carbs_per100g': carbsPer100g,
+      if (fatPer100g != null) 'fat_per100g': fatPer100g,
+      if (fiberPer100g != null) 'fiber_per100g': fiberPer100g,
+      if (vitaminDPer100g != null) 'vitamin_d_per100g': vitaminDPer100g,
+      if (vitaminB12Per100g != null) 'vitamin_b12_per100g': vitaminB12Per100g,
+      if (ironPer100g != null) 'iron_per100g': ironPer100g,
+      if (calciumPer100g != null) 'calcium_per100g': calciumPer100g,
+      if (servingSizes != null) 'serving_sizes': servingSizes,
+      if (notes != null) 'notes': notes,
+      if (status != null) 'status': status,
+      if (submittedBy != null) 'submitted_by': submittedBy,
+      if (submittedAt != null) 'submitted_at': submittedAt,
+      if (reviewedBy != null) 'reviewed_by': reviewedBy,
+      if (reviewedAt != null) 'reviewed_at': reviewedAt,
+      if (rejectionReason != null) 'rejection_reason': rejectionReason,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  FoodSubmissionsCompanion copyWith({
+    Value<String>? id,
+    Value<String>? userId,
+    Value<String>? name,
+    Value<String>? nameLocal,
+    Value<String>? region,
+    Value<double>? caloriesPer100g,
+    Value<double>? proteinPer100g,
+    Value<double>? carbsPer100g,
+    Value<double>? fatPer100g,
+    Value<double?>? fiberPer100g,
+    Value<double?>? vitaminDPer100g,
+    Value<double?>? vitaminB12Per100g,
+    Value<double?>? ironPer100g,
+    Value<double?>? calciumPer100g,
+    Value<String?>? servingSizes,
+    Value<String?>? notes,
+    Value<String>? status,
+    Value<String?>? submittedBy,
+    Value<DateTime>? submittedAt,
+    Value<String?>? reviewedBy,
+    Value<DateTime?>? reviewedAt,
+    Value<String?>? rejectionReason,
+    Value<int>? rowid,
+  }) {
+    return FoodSubmissionsCompanion(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      name: name ?? this.name,
+      nameLocal: nameLocal ?? this.nameLocal,
+      region: region ?? this.region,
+      caloriesPer100g: caloriesPer100g ?? this.caloriesPer100g,
+      proteinPer100g: proteinPer100g ?? this.proteinPer100g,
+      carbsPer100g: carbsPer100g ?? this.carbsPer100g,
+      fatPer100g: fatPer100g ?? this.fatPer100g,
+      fiberPer100g: fiberPer100g ?? this.fiberPer100g,
+      vitaminDPer100g: vitaminDPer100g ?? this.vitaminDPer100g,
+      vitaminB12Per100g: vitaminB12Per100g ?? this.vitaminB12Per100g,
+      ironPer100g: ironPer100g ?? this.ironPer100g,
+      calciumPer100g: calciumPer100g ?? this.calciumPer100g,
+      servingSizes: servingSizes ?? this.servingSizes,
+      notes: notes ?? this.notes,
+      status: status ?? this.status,
+      submittedBy: submittedBy ?? this.submittedBy,
+      submittedAt: submittedAt ?? this.submittedAt,
+      reviewedBy: reviewedBy ?? this.reviewedBy,
+      reviewedAt: reviewedAt ?? this.reviewedAt,
+      rejectionReason: rejectionReason ?? this.rejectionReason,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<String>(userId.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (nameLocal.present) {
+      map['name_local'] = Variable<String>(nameLocal.value);
+    }
+    if (region.present) {
+      map['region'] = Variable<String>(region.value);
+    }
+    if (caloriesPer100g.present) {
+      map['calories_per100g'] = Variable<double>(caloriesPer100g.value);
+    }
+    if (proteinPer100g.present) {
+      map['protein_per100g'] = Variable<double>(proteinPer100g.value);
+    }
+    if (carbsPer100g.present) {
+      map['carbs_per100g'] = Variable<double>(carbsPer100g.value);
+    }
+    if (fatPer100g.present) {
+      map['fat_per100g'] = Variable<double>(fatPer100g.value);
+    }
+    if (fiberPer100g.present) {
+      map['fiber_per100g'] = Variable<double>(fiberPer100g.value);
+    }
+    if (vitaminDPer100g.present) {
+      map['vitamin_d_per100g'] = Variable<double>(vitaminDPer100g.value);
+    }
+    if (vitaminB12Per100g.present) {
+      map['vitamin_b12_per100g'] = Variable<double>(vitaminB12Per100g.value);
+    }
+    if (ironPer100g.present) {
+      map['iron_per100g'] = Variable<double>(ironPer100g.value);
+    }
+    if (calciumPer100g.present) {
+      map['calcium_per100g'] = Variable<double>(calciumPer100g.value);
+    }
+    if (servingSizes.present) {
+      map['serving_sizes'] = Variable<String>(servingSizes.value);
+    }
+    if (notes.present) {
+      map['notes'] = Variable<String>(notes.value);
+    }
+    if (status.present) {
+      map['status'] = Variable<String>(status.value);
+    }
+    if (submittedBy.present) {
+      map['submitted_by'] = Variable<String>(submittedBy.value);
+    }
+    if (submittedAt.present) {
+      map['submitted_at'] = Variable<DateTime>(submittedAt.value);
+    }
+    if (reviewedBy.present) {
+      map['reviewed_by'] = Variable<String>(reviewedBy.value);
+    }
+    if (reviewedAt.present) {
+      map['reviewed_at'] = Variable<DateTime>(reviewedAt.value);
+    }
+    if (rejectionReason.present) {
+      map['rejection_reason'] = Variable<String>(rejectionReason.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('FoodSubmissionsCompanion(')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('name: $name, ')
+          ..write('nameLocal: $nameLocal, ')
+          ..write('region: $region, ')
+          ..write('caloriesPer100g: $caloriesPer100g, ')
+          ..write('proteinPer100g: $proteinPer100g, ')
+          ..write('carbsPer100g: $carbsPer100g, ')
+          ..write('fatPer100g: $fatPer100g, ')
+          ..write('fiberPer100g: $fiberPer100g, ')
+          ..write('vitaminDPer100g: $vitaminDPer100g, ')
+          ..write('vitaminB12Per100g: $vitaminB12Per100g, ')
+          ..write('ironPer100g: $ironPer100g, ')
+          ..write('calciumPer100g: $calciumPer100g, ')
+          ..write('servingSizes: $servingSizes, ')
+          ..write('notes: $notes, ')
+          ..write('status: $status, ')
+          ..write('submittedBy: $submittedBy, ')
+          ..write('submittedAt: $submittedAt, ')
+          ..write('reviewedBy: $reviewedBy, ')
+          ..write('reviewedAt: $reviewedAt, ')
+          ..write('rejectionReason: $rejectionReason, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -17187,6 +18464,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
   late final $FoodLogsTable foodLogs = $FoodLogsTable(this);
   late final $FoodItemsTable foodItems = $FoodItemsTable(this);
+  late final $FoodSubmissionsTable foodSubmissions = $FoodSubmissionsTable(
+    this,
+  );
   late final $WorkoutLogsTable workoutLogs = $WorkoutLogsTable(this);
   late final $StepLogsTable stepLogs = $StepLogsTable(this);
   late final $SleepLogsTable sleepLogs = $SleepLogsTable(this);
@@ -17230,6 +18510,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $SyncDeadLetterTable syncDeadLetter = $SyncDeadLetterTable(this);
   late final FoodLogsDao foodLogsDao = FoodLogsDao(this as AppDatabase);
   late final FoodItemsDao foodItemsDao = FoodItemsDao(this as AppDatabase);
+  late final FoodSubmissionsDao foodSubmissionsDao = FoodSubmissionsDao(
+    this as AppDatabase,
+  );
   late final WorkoutLogsDao workoutLogsDao = WorkoutLogsDao(
     this as AppDatabase,
   );
@@ -17299,6 +18582,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   List<DatabaseSchemaEntity> get allSchemaEntities => [
     foodLogs,
     foodItems,
+    foodSubmissions,
     workoutLogs,
     stepLogs,
     sleepLogs,
@@ -18344,6 +19628,565 @@ typedef $$FoodItemsTableProcessedTableManager =
       $$FoodItemsTableUpdateCompanionBuilder,
       (FoodItem, BaseReferences<_$AppDatabase, $FoodItemsTable, FoodItem>),
       FoodItem,
+      PrefetchHooks Function()
+    >;
+typedef $$FoodSubmissionsTableCreateCompanionBuilder =
+    FoodSubmissionsCompanion Function({
+      required String id,
+      required String userId,
+      required String name,
+      required String nameLocal,
+      required String region,
+      required double caloriesPer100g,
+      required double proteinPer100g,
+      required double carbsPer100g,
+      required double fatPer100g,
+      Value<double?> fiberPer100g,
+      Value<double?> vitaminDPer100g,
+      Value<double?> vitaminB12Per100g,
+      Value<double?> ironPer100g,
+      Value<double?> calciumPer100g,
+      Value<String?> servingSizes,
+      Value<String?> notes,
+      required String status,
+      Value<String?> submittedBy,
+      required DateTime submittedAt,
+      Value<String?> reviewedBy,
+      Value<DateTime?> reviewedAt,
+      Value<String?> rejectionReason,
+      Value<int> rowid,
+    });
+typedef $$FoodSubmissionsTableUpdateCompanionBuilder =
+    FoodSubmissionsCompanion Function({
+      Value<String> id,
+      Value<String> userId,
+      Value<String> name,
+      Value<String> nameLocal,
+      Value<String> region,
+      Value<double> caloriesPer100g,
+      Value<double> proteinPer100g,
+      Value<double> carbsPer100g,
+      Value<double> fatPer100g,
+      Value<double?> fiberPer100g,
+      Value<double?> vitaminDPer100g,
+      Value<double?> vitaminB12Per100g,
+      Value<double?> ironPer100g,
+      Value<double?> calciumPer100g,
+      Value<String?> servingSizes,
+      Value<String?> notes,
+      Value<String> status,
+      Value<String?> submittedBy,
+      Value<DateTime> submittedAt,
+      Value<String?> reviewedBy,
+      Value<DateTime?> reviewedAt,
+      Value<String?> rejectionReason,
+      Value<int> rowid,
+    });
+
+class $$FoodSubmissionsTableFilterComposer
+    extends Composer<_$AppDatabase, $FoodSubmissionsTable> {
+  $$FoodSubmissionsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get nameLocal => $composableBuilder(
+    column: $table.nameLocal,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get region => $composableBuilder(
+    column: $table.region,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get caloriesPer100g => $composableBuilder(
+    column: $table.caloriesPer100g,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get proteinPer100g => $composableBuilder(
+    column: $table.proteinPer100g,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get carbsPer100g => $composableBuilder(
+    column: $table.carbsPer100g,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get fatPer100g => $composableBuilder(
+    column: $table.fatPer100g,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get fiberPer100g => $composableBuilder(
+    column: $table.fiberPer100g,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get vitaminDPer100g => $composableBuilder(
+    column: $table.vitaminDPer100g,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get vitaminB12Per100g => $composableBuilder(
+    column: $table.vitaminB12Per100g,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get ironPer100g => $composableBuilder(
+    column: $table.ironPer100g,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get calciumPer100g => $composableBuilder(
+    column: $table.calciumPer100g,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get servingSizes => $composableBuilder(
+    column: $table.servingSizes,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get notes => $composableBuilder(
+    column: $table.notes,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get submittedBy => $composableBuilder(
+    column: $table.submittedBy,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get submittedAt => $composableBuilder(
+    column: $table.submittedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get reviewedBy => $composableBuilder(
+    column: $table.reviewedBy,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get reviewedAt => $composableBuilder(
+    column: $table.reviewedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get rejectionReason => $composableBuilder(
+    column: $table.rejectionReason,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$FoodSubmissionsTableOrderingComposer
+    extends Composer<_$AppDatabase, $FoodSubmissionsTable> {
+  $$FoodSubmissionsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get nameLocal => $composableBuilder(
+    column: $table.nameLocal,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get region => $composableBuilder(
+    column: $table.region,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get caloriesPer100g => $composableBuilder(
+    column: $table.caloriesPer100g,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get proteinPer100g => $composableBuilder(
+    column: $table.proteinPer100g,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get carbsPer100g => $composableBuilder(
+    column: $table.carbsPer100g,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get fatPer100g => $composableBuilder(
+    column: $table.fatPer100g,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get fiberPer100g => $composableBuilder(
+    column: $table.fiberPer100g,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get vitaminDPer100g => $composableBuilder(
+    column: $table.vitaminDPer100g,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get vitaminB12Per100g => $composableBuilder(
+    column: $table.vitaminB12Per100g,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get ironPer100g => $composableBuilder(
+    column: $table.ironPer100g,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get calciumPer100g => $composableBuilder(
+    column: $table.calciumPer100g,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get servingSizes => $composableBuilder(
+    column: $table.servingSizes,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get notes => $composableBuilder(
+    column: $table.notes,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get submittedBy => $composableBuilder(
+    column: $table.submittedBy,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get submittedAt => $composableBuilder(
+    column: $table.submittedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get reviewedBy => $composableBuilder(
+    column: $table.reviewedBy,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get reviewedAt => $composableBuilder(
+    column: $table.reviewedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get rejectionReason => $composableBuilder(
+    column: $table.rejectionReason,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$FoodSubmissionsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $FoodSubmissionsTable> {
+  $$FoodSubmissionsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get userId =>
+      $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get nameLocal =>
+      $composableBuilder(column: $table.nameLocal, builder: (column) => column);
+
+  GeneratedColumn<String> get region =>
+      $composableBuilder(column: $table.region, builder: (column) => column);
+
+  GeneratedColumn<double> get caloriesPer100g => $composableBuilder(
+    column: $table.caloriesPer100g,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get proteinPer100g => $composableBuilder(
+    column: $table.proteinPer100g,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get carbsPer100g => $composableBuilder(
+    column: $table.carbsPer100g,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get fatPer100g => $composableBuilder(
+    column: $table.fatPer100g,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get fiberPer100g => $composableBuilder(
+    column: $table.fiberPer100g,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get vitaminDPer100g => $composableBuilder(
+    column: $table.vitaminDPer100g,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get vitaminB12Per100g => $composableBuilder(
+    column: $table.vitaminB12Per100g,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get ironPer100g => $composableBuilder(
+    column: $table.ironPer100g,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get calciumPer100g => $composableBuilder(
+    column: $table.calciumPer100g,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get servingSizes => $composableBuilder(
+    column: $table.servingSizes,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get notes =>
+      $composableBuilder(column: $table.notes, builder: (column) => column);
+
+  GeneratedColumn<String> get status =>
+      $composableBuilder(column: $table.status, builder: (column) => column);
+
+  GeneratedColumn<String> get submittedBy => $composableBuilder(
+    column: $table.submittedBy,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get submittedAt => $composableBuilder(
+    column: $table.submittedAt,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get reviewedBy => $composableBuilder(
+    column: $table.reviewedBy,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get reviewedAt => $composableBuilder(
+    column: $table.reviewedAt,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get rejectionReason => $composableBuilder(
+    column: $table.rejectionReason,
+    builder: (column) => column,
+  );
+}
+
+class $$FoodSubmissionsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $FoodSubmissionsTable,
+          FoodSubmission,
+          $$FoodSubmissionsTableFilterComposer,
+          $$FoodSubmissionsTableOrderingComposer,
+          $$FoodSubmissionsTableAnnotationComposer,
+          $$FoodSubmissionsTableCreateCompanionBuilder,
+          $$FoodSubmissionsTableUpdateCompanionBuilder,
+          (
+            FoodSubmission,
+            BaseReferences<
+              _$AppDatabase,
+              $FoodSubmissionsTable,
+              FoodSubmission
+            >,
+          ),
+          FoodSubmission,
+          PrefetchHooks Function()
+        > {
+  $$FoodSubmissionsTableTableManager(
+    _$AppDatabase db,
+    $FoodSubmissionsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$FoodSubmissionsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$FoodSubmissionsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$FoodSubmissionsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> userId = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<String> nameLocal = const Value.absent(),
+                Value<String> region = const Value.absent(),
+                Value<double> caloriesPer100g = const Value.absent(),
+                Value<double> proteinPer100g = const Value.absent(),
+                Value<double> carbsPer100g = const Value.absent(),
+                Value<double> fatPer100g = const Value.absent(),
+                Value<double?> fiberPer100g = const Value.absent(),
+                Value<double?> vitaminDPer100g = const Value.absent(),
+                Value<double?> vitaminB12Per100g = const Value.absent(),
+                Value<double?> ironPer100g = const Value.absent(),
+                Value<double?> calciumPer100g = const Value.absent(),
+                Value<String?> servingSizes = const Value.absent(),
+                Value<String?> notes = const Value.absent(),
+                Value<String> status = const Value.absent(),
+                Value<String?> submittedBy = const Value.absent(),
+                Value<DateTime> submittedAt = const Value.absent(),
+                Value<String?> reviewedBy = const Value.absent(),
+                Value<DateTime?> reviewedAt = const Value.absent(),
+                Value<String?> rejectionReason = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => FoodSubmissionsCompanion(
+                id: id,
+                userId: userId,
+                name: name,
+                nameLocal: nameLocal,
+                region: region,
+                caloriesPer100g: caloriesPer100g,
+                proteinPer100g: proteinPer100g,
+                carbsPer100g: carbsPer100g,
+                fatPer100g: fatPer100g,
+                fiberPer100g: fiberPer100g,
+                vitaminDPer100g: vitaminDPer100g,
+                vitaminB12Per100g: vitaminB12Per100g,
+                ironPer100g: ironPer100g,
+                calciumPer100g: calciumPer100g,
+                servingSizes: servingSizes,
+                notes: notes,
+                status: status,
+                submittedBy: submittedBy,
+                submittedAt: submittedAt,
+                reviewedBy: reviewedBy,
+                reviewedAt: reviewedAt,
+                rejectionReason: rejectionReason,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String userId,
+                required String name,
+                required String nameLocal,
+                required String region,
+                required double caloriesPer100g,
+                required double proteinPer100g,
+                required double carbsPer100g,
+                required double fatPer100g,
+                Value<double?> fiberPer100g = const Value.absent(),
+                Value<double?> vitaminDPer100g = const Value.absent(),
+                Value<double?> vitaminB12Per100g = const Value.absent(),
+                Value<double?> ironPer100g = const Value.absent(),
+                Value<double?> calciumPer100g = const Value.absent(),
+                Value<String?> servingSizes = const Value.absent(),
+                Value<String?> notes = const Value.absent(),
+                required String status,
+                Value<String?> submittedBy = const Value.absent(),
+                required DateTime submittedAt,
+                Value<String?> reviewedBy = const Value.absent(),
+                Value<DateTime?> reviewedAt = const Value.absent(),
+                Value<String?> rejectionReason = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => FoodSubmissionsCompanion.insert(
+                id: id,
+                userId: userId,
+                name: name,
+                nameLocal: nameLocal,
+                region: region,
+                caloriesPer100g: caloriesPer100g,
+                proteinPer100g: proteinPer100g,
+                carbsPer100g: carbsPer100g,
+                fatPer100g: fatPer100g,
+                fiberPer100g: fiberPer100g,
+                vitaminDPer100g: vitaminDPer100g,
+                vitaminB12Per100g: vitaminB12Per100g,
+                ironPer100g: ironPer100g,
+                calciumPer100g: calciumPer100g,
+                servingSizes: servingSizes,
+                notes: notes,
+                status: status,
+                submittedBy: submittedBy,
+                submittedAt: submittedAt,
+                reviewedBy: reviewedBy,
+                reviewedAt: reviewedAt,
+                rejectionReason: rejectionReason,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$FoodSubmissionsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $FoodSubmissionsTable,
+      FoodSubmission,
+      $$FoodSubmissionsTableFilterComposer,
+      $$FoodSubmissionsTableOrderingComposer,
+      $$FoodSubmissionsTableAnnotationComposer,
+      $$FoodSubmissionsTableCreateCompanionBuilder,
+      $$FoodSubmissionsTableUpdateCompanionBuilder,
+      (
+        FoodSubmission,
+        BaseReferences<_$AppDatabase, $FoodSubmissionsTable, FoodSubmission>,
+      ),
+      FoodSubmission,
       PrefetchHooks Function()
     >;
 typedef $$WorkoutLogsTableCreateCompanionBuilder =
@@ -25761,6 +27604,8 @@ class $AppDatabaseManager {
       $$FoodLogsTableTableManager(_db, _db.foodLogs);
   $$FoodItemsTableTableManager get foodItems =>
       $$FoodItemsTableTableManager(_db, _db.foodItems);
+  $$FoodSubmissionsTableTableManager get foodSubmissions =>
+      $$FoodSubmissionsTableTableManager(_db, _db.foodSubmissions);
   $$WorkoutLogsTableTableManager get workoutLogs =>
       $$WorkoutLogsTableTableManager(_db, _db.workoutLogs);
   $$StepLogsTableTableManager get stepLogs =>

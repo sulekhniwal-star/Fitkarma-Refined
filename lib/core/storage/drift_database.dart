@@ -81,6 +81,34 @@ class FoodLogs extends Table {
   ];
 }
 
+class FoodSubmissions extends Table {
+  TextColumn get id => text()();
+  TextColumn get userId => text()();
+  TextColumn get name => text()();
+  TextColumn get nameLocal => text()();
+  TextColumn get region => text()();
+  RealColumn get caloriesPer100g => real()();
+  RealColumn get proteinPer100g => real()();
+  RealColumn get carbsPer100g => real()();
+  RealColumn get fatPer100g => real()();
+  RealColumn get fiberPer100g => real().nullable()();
+  RealColumn get vitaminDPer100g => real().nullable()();
+  RealColumn get vitaminB12Per100g => real().nullable()();
+  RealColumn get ironPer100g => real().nullable()();
+  RealColumn get calciumPer100g => real().nullable()();
+  TextColumn get servingSizes => text().nullable()();
+  TextColumn get notes => text().nullable()();
+  TextColumn get status => text()(); // 'pending' | 'approved' | 'rejected'
+  TextColumn get submittedBy => text().nullable()();
+  DateTimeColumn get submittedAt => dateTime()();
+  TextColumn get reviewedBy => text().nullable()();
+  DateTimeColumn get reviewedAt => dateTime().nullable()();
+  TextColumn get rejectionReason => text().nullable()();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
 class FoodItems extends Table {
   TextColumn get id => text()();
   TextColumn get name => text()();
@@ -558,6 +586,12 @@ class FoodItemsDao extends DatabaseAccessor<AppDatabase>
   FoodItemsDao(super.db);
 }
 
+@DriftAccessor(tables: [FoodSubmissions])
+class FoodSubmissionsDao extends DatabaseAccessor<AppDatabase>
+    with _$FoodSubmissionsDaoMixin {
+  FoodSubmissionsDao(super.db);
+}
+
 @DriftAccessor(tables: [WorkoutLogs])
 class WorkoutLogsDao extends DatabaseAccessor<AppDatabase>
     with _$WorkoutLogsDaoMixin {
@@ -724,6 +758,7 @@ class UserProfilesDao extends DatabaseAccessor<AppDatabase>
   tables: [
     FoodLogs,
     FoodItems,
+    FoodSubmissions,
     WorkoutLogs,
     StepLogs,
     SleepLogs,
@@ -757,6 +792,7 @@ class UserProfilesDao extends DatabaseAccessor<AppDatabase>
   daos: [
     FoodLogsDao,
     FoodItemsDao,
+    FoodSubmissionsDao,
     WorkoutLogsDao,
     StepLogsDao,
     SleepLogsDao,
