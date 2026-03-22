@@ -261,6 +261,7 @@ final chronicConditionsList = [
   ChronicCondition(id: 'diabetes', name: 'Diabetes', icon: '🩸'),
   ChronicCondition(id: 'hypertension', name: 'Hypertension', icon: '💓'),
   ChronicCondition(id: 'pcod', name: 'PCOD', icon: '🔄'),
+  ChronicCondition(id: 'pcos', name: 'PCOS', icon: '🔄'),
   ChronicCondition(id: 'hypothyroidism', name: 'Hypothyroidism', icon: '⚖️'),
   ChronicCondition(id: 'asthma', name: 'Asthma', icon: '🫁'),
 ];

@@ -138,7 +138,7 @@ class SleepQualityRule extends InsightRule {
     } else if (quality >= 70) {
       return '👍 Good sleep quality today. Keep it up!';
     } else if (quality < 50) {
-      return '😴 Sleep quality was low (${quality}%). Try going to bed earlier tomorrow.';
+      return '😴 Sleep quality was low ($quality%). Try going to bed earlier tomorrow.';
     }
     return null;
   }

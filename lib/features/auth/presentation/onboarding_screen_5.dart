@@ -328,7 +328,7 @@ class _PermissionCard extends StatelessWidget {
           Switch(
             value: isEnabled,
             onChanged: onToggle,
-            activeColor: AppColors.success,
+            activeThumbColor: AppColors.success,
           ),
         ],
       ),

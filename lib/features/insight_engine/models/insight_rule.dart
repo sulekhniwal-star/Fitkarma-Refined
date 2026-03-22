@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
 
 /// Priority levels for insight rules
 enum InsightPriority { critical, high, medium, low }

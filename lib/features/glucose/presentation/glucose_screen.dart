@@ -231,7 +231,7 @@ class _GlucoseScreenState extends ConsumerState<GlucoseScreen> {
                       child: Column(
                         children: [
                           Text(
-                            '${log.glucoseMgdl!.toStringAsFixed(0)}',
+                            log.glucoseMgdl!.toStringAsFixed(0),
                             style: TextStyle(
                               fontSize: 32,
                               fontWeight: FontWeight.bold,
@@ -295,7 +295,7 @@ class _GlucoseScreenState extends ConsumerState<GlucoseScreen> {
               loading: () => const Center(
                 child: CircularProgressIndicator(),
               ),
-              error: (_, __) => _buildNoDataPlaceholder('Error loading data'),
+              error: (_, _) => _buildNoDataPlaceholder('Error loading data'),
             ),
           ],
         ),
@@ -424,7 +424,7 @@ class _GlucoseScreenState extends ConsumerState<GlucoseScreen> {
               loading: () => const Center(
                 child: CircularProgressIndicator(),
               ),
-              error: (_, __) => _buildNoDataPlaceholder('Error loading data'),
+              error: (_, _) => _buildNoDataPlaceholder('Error loading data'),
             ),
           ],
         ),
@@ -497,7 +497,7 @@ class _GlucoseScreenState extends ConsumerState<GlucoseScreen> {
               loading: () => const Center(
                 child: CircularProgressIndicator(),
               ),
-              error: (_, __) => _buildNoDataPlaceholder('Error loading data'),
+              error: (_, _) => _buildNoDataPlaceholder('Error loading data'),
             ),
           ],
         ),
@@ -588,7 +588,7 @@ class _GlucoseScreenState extends ConsumerState<GlucoseScreen> {
                 height: 200,
                 child: Center(child: CircularProgressIndicator()),
               ),
-              error: (_, __) => _buildNoDataPlaceholder('Error loading data'),
+              error: (_, _) => _buildNoDataPlaceholder('Error loading data'),
             ),
             const SizedBox(height: 8),
             const Center(child: GlucoseChartLegend()),

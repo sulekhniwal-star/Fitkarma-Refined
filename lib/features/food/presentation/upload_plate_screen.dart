@@ -394,12 +394,12 @@ class _UploadPlateScreenState extends ConsumerState<UploadPlateScreen> {
                     children: [
                       _buildInfoItem(
                         'Calories',
-                        '${_selectedFood!.estimatedCalories?.toStringAsFixed(0) ?? '--'}',
+                        _selectedFood!.estimatedCalories?.toStringAsFixed(0) ?? '--',
                         'kcal',
                       ),
                       _buildInfoItem(
                         'Confidence',
-                        '${(_selectedFood!.confidence * 100).toStringAsFixed(0)}',
+                        (_selectedFood!.confidence * 100).toStringAsFixed(0),
                         '%',
                       ),
                     ],

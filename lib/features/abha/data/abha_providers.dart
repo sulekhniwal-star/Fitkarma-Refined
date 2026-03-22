@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-import '../../../core/di/providers.dart';
 import 'abha_service.dart';
 import 'models/abha_profile.dart';
 import 'models/abha_health_records.dart';

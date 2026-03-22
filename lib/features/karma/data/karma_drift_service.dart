@@ -97,9 +97,7 @@ class KarmaDriftService {
       } else if (difference == 1) {
         // Consecutive day, increment streak
         newStreak++;
-        if (streakStartDate == null) {
-          streakStartDate = profile.lastActivityDate;
-        }
+        streakStartDate ??= profile.lastActivityDate;
       } else {
         // Streak broken
         newStreak = 1;

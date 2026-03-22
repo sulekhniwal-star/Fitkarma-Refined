@@ -46,7 +46,7 @@ class AppointmentsScreen extends ConsumerWidget {
             );
           },
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (_, __) => _buildEmptyState(),
+          error: (_, _) => _buildEmptyState(),
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(

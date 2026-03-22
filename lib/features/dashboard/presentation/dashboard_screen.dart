@@ -151,7 +151,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               radius: 28,
               child: CircularProgressIndicator(strokeWidth: 2),
             ),
-            error: (_, __) => const CircleAvatar(
+            error: (_, _) => const CircleAvatar(
               radius: 28,
               backgroundColor: AppColors.error,
               child: Icon(Icons.error, color: Colors.white),
@@ -183,7 +183,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     width: 100,
                     child: LinearProgressIndicator(),
                   ),
-                  error: (_, __) => const Text('Error'),
+                  error: (_, _) => const Text('Error'),
                 ),
               ],
             ),
@@ -226,7 +226,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               width: 80,
               child: LinearProgressIndicator(),
             ),
-            error: (_, __) => const SizedBox.shrink(),
+            error: (_, _) => const SizedBox.shrink(),
           ),
         ],
       ),
@@ -430,7 +430,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         height: 100,
         child: Center(child: CircularProgressIndicator()),
       ),
-      error: (_, __) => const SizedBox.shrink(),
+      error: (_, _) => const SizedBox.shrink(),
     );
   }
 
@@ -909,6 +909,14 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       elevation: 8.0,
       shape: const CircleBorder(),
       children: [
+        SpeedDialChild(
+          child: const Icon(Icons.track_changes),
+          backgroundColor: AppColors.primary,
+          foregroundColor: Colors.white,
+          label: 'Habits',
+          labelStyle: AppTextStyles.labelMedium,
+          onTap: () => context.go('/home/habits'),
+        ),
         SpeedDialChild(
           child: const Icon(Icons.restaurant),
           backgroundColor: AppColors.primary,

@@ -530,7 +530,7 @@ class _FoodLogCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  '${log.calories.toStringAsFixed(0)}',
+                  log.calories.toStringAsFixed(0),
                   style: AppTextStyles.statMedium.copyWith(
                     color: AppColors.primary,
                   ),

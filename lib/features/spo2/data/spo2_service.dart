@@ -122,7 +122,7 @@ class SpO2Service {
 
     await db.into(db.spo2Logs).insert(companion);
 
-    return (await db.select(db.spo2Logs)
+    return (db.select(db.spo2Logs)
           ..where((t) => t.id.equals(id)))
         .getSingle();
   }

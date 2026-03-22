@@ -66,7 +66,7 @@ class LabReportDueRule extends InsightRule {
         .inDays;
 
     if (daysSinceLastReport >= 30) {
-      return '🩺 It\'s been ${daysSinceLastReport} days since your last lab report. Consider uploading a new one to track your health trends.';
+      return '🩺 It\'s been $daysSinceLastReport days since your last lab report. Consider uploading a new one to track your health trends.';
     }
 
     return null;

@@ -17,7 +17,20 @@ import 'features/settings/presentation/settings_screen.dart';
 import 'features/karma/presentation/karma_hub_screen.dart';
 import 'features/karma/presentation/karma_store_screen.dart';
 import 'features/karma/presentation/leaderboard_screen.dart';
+import 'features/ayurveda/presentation/ayurveda_hub_screen.dart';
+import 'features/ayurveda/presentation/dosha_quiz_screen.dart';
+import 'features/ayurveda/presentation/dosha_profile_screen.dart';
+import 'features/ayurveda/presentation/daily_rituals_screen.dart';
+import 'features/ayurveda/presentation/seasonal_plan_screen.dart';
+import 'features/ayurveda/presentation/herbal_remedies_screen.dart';
 import 'features/dashboard/presentation/dashboard_screen.dart';
+import 'features/sleep/presentation/sleep_screen.dart';
+import 'features/measurements/presentation/measurement_screen.dart';
+import 'features/fasting/presentation/fasting_screen.dart';
+import 'features/meal_planner/presentation/meal_planner_screen.dart';
+import 'features/food/presentation/recipe_browser_screen.dart';
+import 'features/food/presentation/recipe_builder_screen.dart';
+import 'features/journal/presentation/journal_screen.dart';
 import 'core/security/biometric_service.dart';
 
 // --- Deferred Imports ---
@@ -29,9 +42,11 @@ import 'features/mental_health/presentation/mental_health_screen.dart'
     deferred as mental_health;
 import 'features/meditation/presentation/meditation_screen.dart'
     deferred as meditation;
+import 'features/meditation/presentation/breathing_exercise_screen.dart';
 import 'features/wearables/presentation/wearables_screen.dart'
     deferred as wearables;
 import 'features/steps/presentation/steps_screen.dart';
+import 'features/habits/presentation/habits_screen.dart';
 import 'features/lab_reports/presentation/lab_report_scan_screen.dart';
 
 // --- Placeholder Screens ---
@@ -411,6 +426,10 @@ final _router = GoRouter(
           builder: (context, state) => const StepsScreen(),
         ),
         GoRoute(
+          path: '/home/habits',
+          builder: (context, state) => const HabitsScreen(),
+        ),
+        GoRoute(
           path: '/settings',
           builder: (context, state) => const SettingsScreen(),
         ),
@@ -453,20 +472,17 @@ final _router = GoRouter(
             ),
             GoRoute(
               path: 'recipes',
-              builder: (context, state) =>
-                  const PlaceholderScreen(title: 'Recipe Browser'),
+              builder: (context, state) => const RecipeBrowserScreen(),
               routes: [
                 GoRoute(
                   path: 'new',
-                  builder: (context, state) =>
-                      const PlaceholderScreen(title: 'Recipe Builder'),
+                  builder: (context, state) => const RecipeBuilderScreen(),
                 ),
               ],
             ),
             GoRoute(
               path: 'planner',
-              builder: (context, state) =>
-                  const PlaceholderScreen(title: 'Meal Planner'),
+              builder: (context, state) => const MealPlannerScreen(),
             ),
           ],
         ),
@@ -571,11 +587,35 @@ final _router = GoRouter(
         ),
       ],
     ),
+
+    // --- Ayurveda Routes ---
     GoRoute(
-      path: '/sleep',
-      builder: (context, state) =>
-          const PlaceholderScreen(title: 'Sleep Tracker'),
+      path: '/ayurveda',
+      builder: (context, state) => const AyurvedaHubScreen(),
+      routes: [
+        GoRoute(
+          path: 'quiz',
+          builder: (context, state) => const DoshaQuizScreen(),
+        ),
+        GoRoute(
+          path: 'profile',
+          builder: (context, state) => const DoshaProfileScreen(),
+        ),
+        GoRoute(
+          path: 'rituals',
+          builder: (context, state) => const DailyRitualsScreen(),
+        ),
+        GoRoute(
+          path: 'seasonal',
+          builder: (context, state) => const SeasonalPlanScreen(),
+        ),
+        GoRoute(
+          path: 'herbs',
+          builder: (context, state) => const HerbalRemediesScreen(),
+        ),
+      ],
     ),
+    GoRoute(path: '/sleep', builder: (context, state) => const SleepScreen()),
     GoRoute(
       path: '/mood',
       builder: (context, state) =>
@@ -598,8 +638,7 @@ final _router = GoRouter(
     ),
     GoRoute(
       path: '/body-metrics',
-      builder: (context, state) =>
-          const PlaceholderScreen(title: 'Body Measurements'),
+      builder: (context, state) => const MeasurementScreen(),
     ),
     GoRoute(
       path: '/ayurveda',
@@ -651,8 +690,7 @@ final _router = GoRouter(
     ),
     GoRoute(
       path: '/fasting',
-      builder: (context, state) =>
-          const PlaceholderScreen(title: 'Fasting Tracker'),
+      builder: (context, state) => const FastingScreen(),
     ),
     GoRoute(
       path: '/meditation',
@@ -660,10 +698,19 @@ final _router = GoRouter(
         loader: meditation.loadLibrary,
         builder: () => meditation.MeditationScreen(),
       ),
+      routes: [
+        GoRoute(
+          path: 'breathing/:exerciseId',
+          builder: (context, state) {
+            final exerciseId = state.pathParameters['exerciseId'];
+            return const BreathingExerciseScreen();
+          },
+        ),
+      ],
     ),
     GoRoute(
       path: '/journal',
-      builder: (context, state) => const PlaceholderScreen(title: 'Journal'),
+      builder: (context, state) => const JournalScreen(),
     ),
     GoRoute(
       path: '/mental-health',

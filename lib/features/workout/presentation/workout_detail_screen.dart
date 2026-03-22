@@ -21,7 +21,7 @@ class WorkoutDetailScreen extends ConsumerStatefulWidget {
 
 class _WorkoutDetailScreenState extends ConsumerState<WorkoutDetailScreen> {
   YoutubePlayerController? _youtubeController;
-  bool _isPlayerReady = false;
+  final bool _isPlayerReady = false;
 
   @override
   void dispose() {

@@ -53,7 +53,7 @@ class InactivityService {
   /// Record user activity
   void recordActivity() {
     _lastActivityTime = DateTime.now();
-    debugPrint('Activity recorded at ${_lastActivityTime}');
+    debugPrint('Activity recorded at $_lastActivityTime');
   }
 
   /// Check for inactivity

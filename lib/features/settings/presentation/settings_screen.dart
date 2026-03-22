@@ -7,6 +7,7 @@ import 'package:fitkarma/shared/widgets/abha_badge.dart';
 import 'package:fitkarma/features/abha/presentation/link_abha_screen.dart';
 import 'package:fitkarma/features/abha/presentation/abha_profile_screen.dart';
 import 'package:fitkarma/features/abha/data/abha_providers.dart';
+import 'package:fitkarma/features/period/presentation/period_tracking_screen.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
@@ -18,6 +19,7 @@ class SettingsScreen extends ConsumerStatefulWidget {
 class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   bool _biometricEnabled = false;
   bool _biometricAvailable = false;
+  bool _periodSyncEnabled = false; // Default is local-only
   final BiometricService _biometricService = biometricServiceProvider;
 
   @override
@@ -76,6 +78,29 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         ),
       );
     }
+  }
+
+  void _togglePeriodSync(bool value) {
+    setState(() {
+      _periodSyncEnabled = value;
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          value
+              ? 'Period data sync enabled - your data will be backed up to cloud'
+              : 'Period data sync disabled - data stored locally only',
+        ),
+        backgroundColor: value ? AppColors.success : AppColors.warning,
+      ),
+    );
+  }
+
+  void _navigateToPeriodTracking() {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => const PeriodTrackingScreen()),
+    );
   }
 
   Future<void> _navigateToLinkABHA() async {
@@ -152,6 +177,31 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
           const Divider(height: 32),
 
+          // Health Data Section
+          _buildSectionHeader('Health Data'),
+          _buildSettingTile(
+            icon: Icons.cloud_sync_outlined,
+            title: 'Sync Period Data',
+            subtitle: 'Enable cloud sync for period data (opt-in)',
+            trailing: Switch(
+              value: _periodSyncEnabled,
+              onChanged: _togglePeriodSync,
+              activeThumbColor: AppColors.primary,
+            ),
+          ),
+          _buildSettingTile(
+            icon: Icons.woman_outlined,
+            title: 'Period Tracking',
+            subtitle: 'Track your menstrual cycle',
+            trailing: const Icon(
+              Icons.chevron_right,
+              color: AppColors.textMuted,
+            ),
+            onTap: _navigateToPeriodTracking,
+          ),
+
+          const Divider(height: 32),
+
           // Security Section
           _buildSectionHeader('Security'),
           _buildSettingTile(
@@ -163,7 +213,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             trailing: Switch(
               value: _biometricEnabled,
               onChanged: _biometricAvailable ? _toggleBiometric : null,
-              activeColor: AppColors.primary,
+              activeThumbColor: AppColors.primary,
             ),
           ),
 

@@ -42,13 +42,13 @@ class ProteinGoalRule extends InsightRule {
     final percentage = (protein / goal * 100).round();
 
     if (percentage >= 100) {
-      return '🎉 Amazing! You hit ${percentage}% of your daily protein goal!';
+      return '🎉 Amazing! You hit $percentage% of your daily protein goal!';
     } else if (percentage >= 75) {
-      return '💪 So close! You\'ve reached ${percentage}% of your protein goal. Just a bit more!';
+      return '💪 So close! You\'ve reached $percentage% of your protein goal. Just a bit more!';
     } else if (percentage >= 50) {
-      return '🥚 You\'re at ${percentage}% of your protein goal. Keep going!';
+      return '🥚 You\'re at $percentage% of your protein goal. Keep going!';
     } else if (percentage >= 25) {
-      return '🍗 ${percentage}% protein done. Consider adding some protein-rich foods.';
+      return '🍗 $percentage% protein done. Consider adding some protein-rich foods.';
     }
     return null;
   }
@@ -143,7 +143,7 @@ class CalorieGoalRule extends InsightRule {
       final proteinPercent = (proteinCals / calories * 100).round();
 
       if (proteinPercent > 40) {
-        return '🥗 Great protein distribution! ${proteinPercent}% of your calories from protein.';
+        return '🥗 Great protein distribution! $proteinPercent% of your calories from protein.';
       }
     }
 
@@ -201,7 +201,7 @@ class MacroBalanceRule extends InsightRule {
 
     // Check for high protein
     if (proteinPercent >= 35 && proteinPercent <= 50) {
-      return '💪 Your macros are well-balanced with ${proteinPercent}% protein - great for fitness!';
+      return '💪 Your macros are well-balanced with $proteinPercent% protein - great for fitness!';
     }
 
     return null;

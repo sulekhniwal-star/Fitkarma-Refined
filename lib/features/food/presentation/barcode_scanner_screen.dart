@@ -288,7 +288,7 @@ class _BarcodeScannerScreenState extends ConsumerState<BarcodeScannerScreen> {
                   child: Image.network(
                     _product!.imageUrl!,
                     fit: BoxFit.contain,
-                    errorBuilder: (_, __, ___) => const Icon(
+                    errorBuilder: (_, _, _) => const Icon(
                       Icons.fastfood,
                       size: 80,
                       color: AppColors.textSecondary,

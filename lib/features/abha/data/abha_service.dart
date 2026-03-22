@@ -207,8 +207,9 @@ class ABHAService {
       final queryParams = <String, dynamic>{'pageSize': pageSize};
 
       if (recordType != null) queryParams['recordType'] = recordType;
-      if (fromDate != null)
+      if (fromDate != null) {
         queryParams['fromDate'] = fromDate.toIso8601String();
+      }
       if (toDate != null) queryParams['toDate'] = toDate.toIso8601String();
       if (nextPageToken != null) queryParams['nextPageToken'] = nextPageToken;
 

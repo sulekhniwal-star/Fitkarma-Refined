@@ -3,7 +3,6 @@
 
 import 'package:drift/drift.dart';
 import 'package:fitkarma/core/storage/drift_database.dart';
-import 'package:fitkarma/core/security/encryption_service.dart';
 import 'package:uuid/uuid.dart';
 
 /// BP Classification based on AHA guidelines

@@ -4,7 +4,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fitkarma/core/storage/drift_database.dart';
 import 'package:fitkarma/features/bp/data/bp_service.dart';
-import 'package:fitkarma/features/karma/data/karma_models.dart';
 
 /// Provider for database instance (must be overridden)
 final bpDatabaseProvider = Provider<AppDatabase>((ref) {

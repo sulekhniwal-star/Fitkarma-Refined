@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
-import 'package:drift/drift.dart';
 import 'package:appwrite/appwrite.dart';
 import 'package:fitkarma/core/network/appwrite_client.dart';
 import 'package:fitkarma/core/network/connectivity_service.dart';

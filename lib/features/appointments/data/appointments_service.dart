@@ -92,7 +92,7 @@ class AppointmentsService {
       );
     }
 
-    return (await db.select(db.doctorAppointments)
+    return (db.select(db.doctorAppointments)
           ..where((t) => t.id.equals(id)))
         .getSingle();
   }

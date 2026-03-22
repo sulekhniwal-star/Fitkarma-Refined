@@ -346,7 +346,7 @@ class _VoiceSearchScreenState extends ConsumerState<VoiceSearchScreen>
                   padding: const EdgeInsets.symmetric(vertical: 16),
                 ),
                 child: Text(
-                  'Log as "${_recognizedText}"',
+                  'Log as "$_recognizedText"',
                   style: AppTextStyles.buttonLarge.copyWith(
                     color: AppColors.primary,
                   ),
@@ -389,22 +389,22 @@ class _VoiceSearchScreenState extends ConsumerState<VoiceSearchScreen>
             children: [
               _buildNutrientInfo(
                 'Calories',
-                '${nutrition['calories']!.toStringAsFixed(0)}',
+                nutrition['calories']!.toStringAsFixed(0),
                 'kcal',
               ),
               _buildNutrientInfo(
                 'Protein',
-                '${nutrition['protein']!.toStringAsFixed(1)}',
+                nutrition['protein']!.toStringAsFixed(1),
                 'g',
               ),
               _buildNutrientInfo(
                 'Carbs',
-                '${nutrition['carbs']!.toStringAsFixed(1)}',
+                nutrition['carbs']!.toStringAsFixed(1),
                 'g',
               ),
               _buildNutrientInfo(
                 'Fat',
-                '${nutrition['fat']!.toStringAsFixed(1)}',
+                nutrition['fat']!.toStringAsFixed(1),
                 'g',
               ),
             ],

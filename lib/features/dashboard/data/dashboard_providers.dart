@@ -4,7 +4,6 @@
 import 'package:drift/drift.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fitkarma/core/storage/drift_database.dart';
-import 'package:fitkarma/core/di/providers.dart';
 import 'package:fitkarma/features/auth/data/auth_aw_service.dart';
 
 // ============================================================================

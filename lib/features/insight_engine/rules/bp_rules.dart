@@ -40,9 +40,9 @@ class BpNormalRule extends InsightRule {
     if (systolic == null || diastolic == null) return null;
 
     if (systolic < 120 && diastolic < 80) {
-      return '❤️ Your BP is optimal (${systolic}/${diastolic} mmHg). Great job!';
+      return '❤️ Your BP is optimal ($systolic/$diastolic mmHg). Great job!';
     } else if (systolic < 130 && diastolic < 80) {
-      return '👍 Your BP is elevated (${systolic}/${diastolic} mmHg). Keep it up!';
+      return '👍 Your BP is elevated ($systolic/$diastolic mmHg). Keep it up!';
     }
     return null;
   }
@@ -87,9 +87,9 @@ class BpWarningRule extends InsightRule {
 
     // High BP - Stage 1 or 2 hypertension
     if (systolic >= 140 || diastolic >= 90) {
-      return '⚠️ Your BP is high (${systolic}/${diastolic} mmHg). Consult your doctor.';
+      return '⚠️ Your BP is high ($systolic/$diastolic mmHg). Consult your doctor.';
     } else if (systolic >= 130 || diastolic >= 80) {
-      return '⚡ Your BP is elevated (${systolic}/${diastolic} mmHg). Monitor closely and reduce salt.';
+      return '⚡ Your BP is elevated ($systolic/$diastolic mmHg). Monitor closely and reduce salt.';
     }
     return null;
   }

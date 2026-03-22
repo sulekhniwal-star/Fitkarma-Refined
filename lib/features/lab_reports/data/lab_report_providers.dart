@@ -173,10 +173,8 @@ class LabReportScanNotifier extends Notifier<LabReportScanState> {
           return;
       }
 
-      if (updatedData != null) {
-        state = state.copyWith(extractedData: updatedData);
-      }
-    }
+      state = state.copyWith(extractedData: updatedData);
+        }
   }
 
   /// Set saving state

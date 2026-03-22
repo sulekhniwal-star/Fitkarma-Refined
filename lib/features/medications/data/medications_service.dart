@@ -1,6 +1,8 @@
 // lib/features/medications/data/medications_service.dart
 // Medications Service with prescription photo support
 
+import 'dart:convert';
+
 import 'package:drift/drift.dart';
 import 'package:fitkarma/core/storage/drift_database.dart';
 import 'package:uuid/uuid.dart';
@@ -153,6 +155,9 @@ class MedicationsService {
     required String dose,
     required String frequency,
     required String category,
+    bool isActive = true,
+    String? reminderTime,
+    int? refillDurationDays,
     DateTime? startDate,
     DateTime? endDate,
     DateTime? nextRefillDate,
@@ -160,6 +165,13 @@ class MedicationsService {
     String? notes,
   }) async {
     final id = _uuid.v4();
+    final now = DateTime.now();
+
+    // Calculate next refill date if refill duration is provided
+    DateTime? calculatedRefillDate = nextRefillDate;
+    if (refillDurationDays != null && startDate != null) {
+      calculatedRefillDate = startDate.add(Duration(days: refillDurationDays));
+    }
 
     final companion = MedicationsCompanion(
       id: Value(id),
@@ -168,7 +180,16 @@ class MedicationsService {
       dose: Value(dose),
       frequency: Value(frequency),
       category: Value(category),
-      nextRefillDate: Value(nextRefillDate),
+      isActive: Value(isActive),
+      reminderTime: Value(reminderTime),
+      refillDurationDays: Value(refillDurationDays),
+      startDate: Value(startDate ?? now),
+      nextRefillDate: Value(calculatedRefillDate),
+      notes: Value(notes),
+      syncStatus: const Value('pending'),
+      idempotencyKey: Value(
+        '${userId}_medication_${now.millisecondsSinceEpoch}',
+      ),
     );
 
     await db.into(db.medications).insert(companion);
@@ -178,9 +199,9 @@ class MedicationsService {
       await _savePrescriptionPhoto(id, prescriptionPhotoPath);
     }
 
-    return (await db.select(db.medications)
-          ..where((t) => t.id.equals(id)))
-        .getSingle();
+    return (db.select(
+      db.medications,
+    )..where((t) => t.id.equals(id))).getSingle();
   }
 
   /// Create medication from extracted prescription data
@@ -239,9 +260,23 @@ class MedicationsService {
     String? dose,
     String? frequency,
     String? category,
+    bool? isActive,
+    String? reminderTime,
+    int? refillDurationDays,
     DateTime? nextRefillDate,
     String? notes,
   }) async {
+    // Recalculate refill date if refill duration changed
+    DateTime? calculatedRefillDate = nextRefillDate;
+    if (refillDurationDays != null) {
+      final existing = await getMedicationById(medicationId);
+      if (existing != null && existing.startDate != null) {
+        calculatedRefillDate = existing.startDate!.add(
+          Duration(days: refillDurationDays),
+        );
+      }
+    }
+
     await (db.update(
       db.medications,
     )..where((t) => t.id.equals(medicationId))).write(
@@ -250,7 +285,16 @@ class MedicationsService {
         dose: dose != null ? Value(dose) : const Value.absent(),
         frequency: frequency != null ? Value(frequency) : const Value.absent(),
         category: category != null ? Value(category) : const Value.absent(),
-        nextRefillDate: Value(nextRefillDate),
+        isActive: isActive != null ? Value(isActive) : const Value.absent(),
+        reminderTime: reminderTime != null
+            ? Value(reminderTime)
+            : const Value.absent(),
+        refillDurationDays: refillDurationDays != null
+            ? Value(refillDurationDays)
+            : const Value.absent(),
+        nextRefillDate: Value(calculatedRefillDate),
+        notes: notes != null ? Value(notes) : const Value.absent(),
+        syncStatus: const Value('pending'),
       ),
     );
   }
@@ -293,6 +337,67 @@ class MedicationsService {
           )
           ..orderBy([(t) => OrderingTerm.asc(t.nextRefillDate)]))
         .get();
+  }
+
+  /// Get medications needing refill in 3 days (for refill alerts)
+  Future<List<Medication>> getMedicationsNeedingRefillAlert(
+    String userId,
+  ) async {
+    final now = DateTime.now();
+    final refillSoon = now.add(const Duration(days: 3));
+
+    return (db.select(db.medications)
+          ..where(
+            (t) =>
+                t.userId.equals(userId) &
+                t.isActive.equals(true) &
+                t.nextRefillDate.isNotNull() &
+                t.nextRefillDate.isSmallerOrEqualValue(refillSoon),
+          )
+          ..orderBy([(t) => OrderingTerm.asc(t.nextRefillDate)]))
+        .get();
+  }
+
+  /// Populate Emergency Card with active medications
+  Future<void> populateEmergencyCardWithMedications(String userId) async {
+    final activeMeds = await getActiveMedications(userId);
+
+    // Convert medications to JSON format for emergency card
+    final medsJson = activeMeds
+        .map(
+          (med) => {
+            'name': med.name,
+            'dose': med.dose,
+            'frequency': med.frequency,
+          },
+        )
+        .toList();
+
+    final medsJsonString = medsJson.isNotEmpty ? json.encode(medsJson) : null;
+
+    final cardId = 'emergency_card_$userId';
+
+    // Check if emergency card exists
+    final existingCard = await (db.select(
+      db.emergencyCard,
+    )..where((t) => t.userId.equals(userId))).getSingleOrNull();
+
+    if (existingCard != null) {
+      // Update existing card
+      await (db.update(db.emergencyCard)..where((t) => t.id.equals(cardId)))
+          .write(EmergencyCardCompanion(medications: Value(medsJsonString)));
+    } else {
+      // Create new card with medications
+      await db
+          .into(db.emergencyCard)
+          .insert(
+            EmergencyCardCompanion.insert(
+              id: cardId,
+              userId: userId,
+              medications: Value(medsJsonString),
+            ),
+          );
+    }
   }
 
   /// Dispose services

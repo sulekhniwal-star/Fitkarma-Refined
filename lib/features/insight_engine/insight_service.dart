@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:fitkarma/features/insight_engine/models/insight_output.dart';
 import 'package:fitkarma/features/insight_engine/models/insight_rule.dart';

@@ -19,7 +19,7 @@ class BpTrendChart extends StatefulWidget {
 
 class _BpTrendChartState extends State<BpTrendChart> {
   int _selectedPeriod = 7; // 7, 30, or 90 days
-  List<BloodPressureLog> _logs = [];
+  final List<BloodPressureLog> _logs = [];
   bool _isLoading = true;
 
   @override

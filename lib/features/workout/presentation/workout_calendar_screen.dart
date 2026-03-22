@@ -3,7 +3,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fitkarma/features/workout/data/workout_providers.dart';
 
 class WorkoutCalendarScreen extends ConsumerStatefulWidget {
   const WorkoutCalendarScreen({super.key});

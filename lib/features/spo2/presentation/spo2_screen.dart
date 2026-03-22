@@ -141,7 +141,7 @@ class _SpO2ScreenState extends ConsumerState<SpO2Screen> {
               loading: () => const Center(
                 child: CircularProgressIndicator(color: Colors.white),
               ),
-              error: (_, __) => const Text(
+              error: (_, _) => const Text(
                 'Error loading data',
                 style: TextStyle(color: Colors.white),
               ),
@@ -218,7 +218,7 @@ class _SpO2ScreenState extends ConsumerState<SpO2Screen> {
                           child: Column(
                             children: [
                               Text(
-                                '${log.spo2Percentage!.toStringAsFixed(0)}',
+                                log.spo2Percentage!.toStringAsFixed(0),
                                 style: TextStyle(
                                   fontSize: 32,
                                   fontWeight: FontWeight.bold,
@@ -316,7 +316,7 @@ class _SpO2ScreenState extends ConsumerState<SpO2Screen> {
                 );
               },
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (_, __) => _buildNoDataPlaceholder('Error loading data'),
+              error: (_, _) => _buildNoDataPlaceholder('Error loading data'),
             ),
           ],
         ),
@@ -352,7 +352,7 @@ class _SpO2ScreenState extends ConsumerState<SpO2Screen> {
                 height: 200,
                 child: Center(child: CircularProgressIndicator()),
               ),
-              error: (_, __) => _buildNoDataPlaceholder('Error loading data'),
+              error: (_, _) => _buildNoDataPlaceholder('Error loading data'),
             ),
           ],
         ),

@@ -4,7 +4,6 @@
 import 'package:appwrite/appwrite.dart' as appwrite;
 import 'package:flutter/foundation.dart';
 import 'package:fitkarma/core/network/appwrite_client.dart';
-import 'package:fitkarma/core/constants/app_config.dart';
 import 'package:fitkarma/features/auth/data/auth_aw_service.dart';
 
 /// Collection IDs for food-related data

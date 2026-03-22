@@ -372,6 +372,11 @@ class BodyMeasurements extends Table {
   RealColumn get bodyFatPercentage => real().nullable()();
   RealColumn get waistCm => real().nullable()();
   RealColumn get hipCm => real().nullable()();
+  RealColumn get chestCm => real().nullable()();
+  RealColumn get armsCm => real().nullable()();
+  RealColumn get thighsCm => real().nullable()();
+  TextColumn get photoPath =>
+      text().nullable()(); // Local path only - never synced
 
   @override
   Set<Column> get primaryKey => {id};
@@ -385,10 +390,24 @@ class Medications extends Table {
   TextColumn get frequency => text()();
   TextColumn get category =>
       text()(); // Prescription, OTC, Supplement, Ayurvedic
+  BoolColumn get isActive => boolean().withDefault(const Constant(true))();
+  TextColumn get reminderTime => text().nullable()(); // HH:mm format
+  IntColumn get refillDurationDays =>
+      integer().nullable()(); // Estimated days until refill
   DateTimeColumn get nextRefillDate => dateTime().nullable()();
+  DateTimeColumn get startDate => dateTime().nullable()();
+  TextColumn get notes => text().nullable()();
+  TextColumn get syncStatus => text()(); // 'synced' | 'pending'
+  TextColumn get idempotencyKey => text()();
 
   @override
   Set<Column> get primaryKey => {id};
+
+  @override
+  List<Index> get indexes => [
+    Index('idx_medications_user', 'userId'),
+    Index('idx_medications_active', 'userId, isActive'),
+  ];
 }
 
 class FastingLogs extends Table {
@@ -396,7 +415,21 @@ class FastingLogs extends Table {
   TextColumn get userId => text()();
   DateTimeColumn get fastStart => dateTime()();
   DateTimeColumn get fastEnd => dateTime().nullable()();
-  TextColumn get fastType => text()();
+  TextColumn get fastType =>
+      text()(); // '16:8' | '18:6' | '5:2' | 'omad' | 'custom' | 'ramadan'
+  BoolColumn get isCompleted => boolean().withDefault(const Constant(false))();
+  IntColumn get targetDurationHours =>
+      integer().withDefault(const Constant(16))();
+  TextColumn get hydrationAlerts =>
+      text().nullable()(); // JSON: alert intervals in minutes
+  DateTimeColumn get sehriTime =>
+      dateTime().nullable()(); // Ramadan: Sehri time
+  DateTimeColumn get iftarTime =>
+      dateTime().nullable()(); // Ramadan: Iftar time
+  BoolColumn get isRamadanMode =>
+      boolean().withDefault(const Constant(false))();
+  IntColumn get xpEarned => integer().withDefault(const Constant(0))();
+  TextColumn get notes => text().nullable()();
 
   @override
   Set<Column> get primaryKey => {id};
@@ -405,24 +438,118 @@ class FastingLogs extends Table {
 class MealPlans extends Table {
   TextColumn get id => text()();
   TextColumn get userId => text()();
-  DateTimeColumn get date => dateTime()();
-  TextColumn get mealType => text()();
-  TextColumn get planDetails => text()(); // JSON
+  DateTimeColumn get weekStartDate =>
+      dateTime()(); // Start of the week (Monday)
+  TextColumn get cuisineRegion =>
+      text()(); // 'north_indian', 'south_indian', 'bengali', 'gujarati', 'mixed'
+  TextColumn get status => text().withDefault(
+    const Constant('active'),
+  )(); // 'active', 'completed', 'archived'
+  DateTimeColumn get createdAt => dateTime()();
+  DateTimeColumn get updatedAt => dateTime()();
 
   @override
   Set<Column> get primaryKey => {id};
+
+  @override
+  List<Index> get indexes => [
+    Index('idx_meal_plans_user_week', 'userId, weekStartDate'),
+  ];
+}
+
+/// Individual meal entries within a meal plan
+class MealPlanEntries extends Table {
+  TextColumn get id => text()();
+  TextColumn get mealPlanId => text()();
+  TextColumn get userId => text()();
+  DateTimeColumn get date => dateTime()();
+  TextColumn get mealType =>
+      text()(); // 'breakfast', 'lunch', 'dinner', 'snack'
+  TextColumn get foodItemId => text().nullable()(); // Reference to FoodItems
+  TextColumn get foodName => text()();
+  TextColumn get foodNameLocal => text().nullable()();
+  RealColumn get quantityG => real()();
+  RealColumn get calories => real()();
+  RealColumn get proteinG => real()();
+  RealColumn get carbsG => real()();
+  RealColumn get fatG => real()();
+  RealColumn get fiberG => real().nullable()();
+  RealColumn get vitaminDMcg => real().nullable()();
+  RealColumn get vitaminB12Mcg => real().nullable()();
+  RealColumn get ironMg => real().nullable()();
+  RealColumn get calciumMg => real().nullable()();
+  TextColumn get status => text().withDefault(
+    const Constant('planned'),
+  )(); // 'planned', 'logged', 'skipped'
+  TextColumn get loggedFoodLogId =>
+      text().nullable()(); // Reference to FoodLog if logged
+  TextColumn get region => text().nullable()(); // Cuisine region of this meal
+  TextColumn get notes => text().nullable()();
+  DateTimeColumn get createdAt => dateTime()();
+  DateTimeColumn get updatedAt => dateTime()();
+
+  @override
+  Set<Column> get primaryKey => {id};
+
+  @override
+  List<Index> get indexes => [
+    Index('idx_meal_plan_entries_plan', 'mealPlanId'),
+    Index('idx_meal_plan_entries_user_date', 'userId, date'),
+  ];
+}
+
+/// Auto-generated grocery lists from meal plans
+class GroceryLists extends Table {
+  TextColumn get id => text()();
+  TextColumn get userId => text()();
+  TextColumn get mealPlanId => text().nullable()();
+  TextColumn get name => text()();
+  TextColumn get items =>
+      text()(); // JSON: [{foodItemId, foodName, quantityG, unit, isPurchased}]
+  TextColumn get status =>
+      text().withDefault(const Constant('active'))(); // 'active', 'completed'
+  DateTimeColumn get startDate => dateTime()();
+  DateTimeColumn get endDate => dateTime()();
+  DateTimeColumn get createdAt => dateTime()();
+  DateTimeColumn get updatedAt => dateTime()();
+
+  @override
+  Set<Column> get primaryKey => {id};
+
+  @override
+  List<Index> get indexes => [Index('idx_grocery_lists_user', 'userId')];
 }
 
 class Recipes extends Table {
   TextColumn get id => text()();
   TextColumn get userId => text()();
   TextColumn get title => text()();
-  TextColumn get ingredients => text()(); // JSON
-  TextColumn get instructions => text()(); // JSON
-  RealColumn get totalCalories => real().nullable()();
+  TextColumn get description => text().nullable()();
+  TextColumn get ingredients =>
+      text()(); // JSON - array of {foodItemId, name, quantityG}
+  TextColumn get instructions =>
+      text()(); // JSON - array of instruction strings
+  IntColumn get servings => integer().withDefault(const Constant(1))();
+  RealColumn get caloriesPerServing => real().nullable()();
+  RealColumn get proteinPerServing => real().nullable()();
+  RealColumn get carbsPerServing => real().nullable()();
+  RealColumn get fatPerServing => real().nullable()();
+  RealColumn get fiberPerServing => real().nullable()();
+  RealColumn get vitaminDPerServing => real().nullable()();
+  RealColumn get vitaminB12PerServing => real().nullable()();
+  RealColumn get ironPerServing => real().nullable()();
+  RealColumn get calciumPerServing => real().nullable()();
+  BoolColumn get isPublic => boolean().withDefault(const Constant(false))();
+  TextColumn get imageUrl => text().nullable()();
+  DateTimeColumn get createdAt => dateTime()();
+  DateTimeColumn get updatedAt => dateTime()();
+  TextColumn get syncStatus => text()(); // 'synced' | 'pending'
 
   @override
   Set<Column> get primaryKey => {id};
+
+  @override
+  List<Index> get indexes => [Index('idx_recipes_user', 'userId')];
 }
 
 // --- Health (Encrypted) Tables ---
@@ -504,24 +631,73 @@ class PeriodLogs extends Table {
   TextColumn get id => text()();
   TextColumn get userId => text()();
   DateTimeColumn get date => dateTime()();
-  TextColumn get symptoms =>
-      text().nullable().map(PeriodDataClassConverters.text)(); // JSON
-  TextColumn get flowType =>
+
+  // Cycle tracking
+  DateTimeColumn get cycleStartDate => dateTime().nullable()();
+  DateTimeColumn get cycleEndDate => dateTime().nullable()();
+  IntColumn get cycleLength => integer().nullable()(); // Days
+  IntColumn get periodLength => integer().nullable()(); // Days
+
+  // Predictions (calculated, not encrypted)
+  DateTimeColumn get predictedNextPeriod => dateTime().nullable()();
+  DateTimeColumn get predictedOvulationDate => dateTime().nullable()();
+
+  // Current day status
+  BoolColumn get isPeriodDay => boolean().withDefault(const Constant(false))();
+
+  // Flow and symptoms (encrypted JSON)
+  TextColumn get flowIntensity => text().nullable().map(
+    PeriodDataClassConverters.text,
+  )(); // 'light', 'medium', 'heavy'
+  TextColumn get symptoms => text().nullable().map(
+    PeriodDataClassConverters.text,
+  )(); // JSON: {cramps, bloating, moodSwings, headache, fatigue, spotting}
+
+  // PCOD/PCOS management
+  BoolColumn get isPcodPcos => boolean().withDefault(const Constant(false))();
+
+  // Notes (encrypted)
+  TextColumn get notes =>
       text().nullable().map(PeriodDataClassConverters.text)();
+
+  // Sync status
+  TextColumn get syncStatus => text()(); // 'synced' | 'pending'
+  TextColumn get idempotencyKey => text()();
 
   @override
   Set<Column> get primaryKey => {id};
+
+  @override
+  List<Index> get indexes => [
+    Index('idx_period_logs_user_date', 'userId, date'),
+    Index('idx_period_logs_user_cycle', 'userId, cycleStartDate'),
+  ];
 }
 
 class JournalEntries extends Table {
   TextColumn get id => text()();
   TextColumn get userId => text()();
+  TextColumn get title => text().nullable()();
+  TextColumn get content => text().map(
+    JournalDataClassConverters.text,
+  )(); // Encrypted JSON (Quill Delta)
+  TextColumn get promptId => text().nullable()(); // Reference to weekly prompt
+  RealColumn get sentimentScore => real().nullable()(); // -1.0 to 1.0
+  TextColumn get moodTag =>
+      text().nullable()(); // 'positive', 'negative', 'neutral'
   DateTimeColumn get createdAt => dateTime()();
-  TextColumn get content =>
-      text().map(JournalDataClassConverters.text)(); // Encrypted
+  DateTimeColumn get updatedAt => dateTime().nullable()();
+  TextColumn get syncStatus => text()(); // 'synced' | 'pending' | 'conflict'
+  TextColumn get idempotencyKey => text()();
+  TextColumn get fieldVersions => text().nullable()();
 
   @override
   Set<Column> get primaryKey => {id};
+
+  @override
+  List<Index> get indexes => [
+    Index('idx_journal_user_created', 'userId, createdAt'),
+  ];
 }
 
 class DoctorAppointments extends Table {
@@ -579,6 +755,8 @@ class EmergencyCard extends Table {
   TextColumn get allergies => text().nullable()();
   TextColumn get chronicConditions => text().nullable()();
   TextColumn get emergencyContact => text().nullable()();
+  TextColumn get medications =>
+      text().nullable()(); // JSON: [{name, dose, frequency}]
 
   @override
   Set<Column> get primaryKey => {id};
@@ -695,6 +873,8 @@ class UserProfiles extends Table {
       boolean().withDefault(const Constant(false))();
   BoolColumn get permissionSleep =>
       boolean().withDefault(const Constant(false))();
+  TextColumn get chronotype =>
+      text().nullable()(); // 'earlyBird', 'intermediate', 'nightOwl'
   TextColumn get abhaNumber => text().nullable()();
   BoolColumn get abhaLinked => boolean().withDefault(const Constant(false))();
   TextColumn get connectedWearables => text().nullable()();
@@ -858,10 +1038,16 @@ class FastingLogsDao extends DatabaseAccessor<AppDatabase>
   FastingLogsDao(super.db);
 }
 
-@DriftAccessor(tables: [MealPlans])
+@DriftAccessor(tables: [MealPlans, MealPlanEntries])
 class MealPlansDao extends DatabaseAccessor<AppDatabase>
     with _$MealPlansDaoMixin {
   MealPlansDao(super.db);
+}
+
+@DriftAccessor(tables: [GroceryLists])
+class GroceryListsDao extends DatabaseAccessor<AppDatabase>
+    with _$GroceryListsDaoMixin {
+  GroceryListsDao(super.db);
 }
 
 @DriftAccessor(tables: [Recipes])
@@ -1017,6 +1203,7 @@ class UserProfilesDao extends DatabaseAccessor<AppDatabase>
     MedicationsDao,
     FastingLogsDao,
     MealPlansDao,
+    GroceryListsDao,
     RecipesDao,
     BloodPressureLogsDao,
     WaterLogsDao,
@@ -1129,6 +1316,8 @@ class AppDatabase extends _$AppDatabase {
               userId: userId,
               createdAt: DateTime.now(),
               content: 'This is a sensitive journal entry.',
+              syncStatus: 'pending',
+              idempotencyKey: '${userId}_journal_migration',
             ),
           );
 

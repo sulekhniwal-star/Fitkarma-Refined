@@ -2,7 +2,6 @@
 // BP Screen - Main screen for blood pressure tracking
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:fitkarma/features/bp/data/bp_service.dart';
 import 'package:fitkarma/features/bp/presentation/bp_logging_sheet.dart';
 import 'package:fitkarma/features/bp/presentation/bp_trend_chart.dart';

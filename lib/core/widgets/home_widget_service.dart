@@ -1,9 +1,7 @@
 // lib/core/widgets/home_widget_service.dart
 // Home Widget service for Android/iOS widgets
 
-import 'dart:convert';
 import 'package:home_widget/home_widget.dart';
-import 'package:fitkarma/features/dashboard/data/dashboard_providers.dart';
 
 class HomeWidgetService {
   static const String appGroupId = 'com.fitkarma.fitkarma';

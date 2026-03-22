@@ -3,6 +3,7 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  audioplayers_windows
   connectivity_plus
   desktop_webview_window
   file_selector_windows
@@ -12,6 +13,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   geolocator_windows
   local_auth_windows
   objectbox_flutter_libs
+  record_windows
   sentry_flutter
   speech_to_text_windows
   sqlite3_flutter_libs

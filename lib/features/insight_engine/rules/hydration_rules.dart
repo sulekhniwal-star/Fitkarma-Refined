@@ -40,11 +40,11 @@ class HydrationGoalRule extends InsightRule {
     if (glasses == null || goal == null || goal <= 0) return null;
 
     if (glasses >= goal) {
-      return '💧 Hydration goal achieved! ${glasses} glasses - great job!';
+      return '💧 Hydration goal achieved! $glasses glasses - great job!';
     } else if (glasses >= goal * 0.75) {
-      return '💧 Almost there! ${glasses}/${goal} glasses. Keep drinking!';
+      return '💧 Almost there! $glasses/$goal glasses. Keep drinking!';
     } else if (glasses >= goal * 0.5) {
-      return '💧 ${glasses}/${goal} glasses. You\'re halfway there!';
+      return '💧 $glasses/$goal glasses. You\'re halfway there!';
     }
     return null;
   }
@@ -88,7 +88,7 @@ class LowHydrationRule extends InsightRule {
     if (glasses == null || goal == null) return null;
 
     if (glasses < goal * 0.25 && glasses > 0) {
-      return '💧 Only ${glasses} glasses so far. Try to drink more water!';
+      return '💧 Only $glasses glasses so far. Try to drink more water!';
     } else if (glasses == 0) {
       return '🚰 Don\'t forget to hydrate! Start with a glass of water.';
     }
@@ -136,9 +136,9 @@ class HydrationStreakRule extends InsightRule {
     if (glasses == null || goal == null || glasses < goal) return null;
 
     if (streak >= 7) {
-      return '🌊 ${streak}-day hydration streak! Your body thanks you!';
+      return '🌊 $streak-day hydration streak! Your body thanks you!';
     } else if (streak >= 3) {
-      return '💧 ${streak} days of hitting your water goal. Keep it going!';
+      return '💧 $streak days of hitting your water goal. Keep it going!';
     }
     return null;
   }

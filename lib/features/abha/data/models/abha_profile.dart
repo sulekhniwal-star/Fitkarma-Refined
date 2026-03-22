@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 /// ABHA Profile model representing the user's national health ID profile
 /// This data is fetched from the NHA (National Health Authority) API

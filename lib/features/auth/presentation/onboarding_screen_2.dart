@@ -88,13 +88,16 @@ class _OnboardingScreen2State extends ConsumerState<OnboardingScreen2> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final state = ref.read(onboardingStateProvider).state;
-      if (state.heightCm != null)
+      if (state.heightCm != null) {
         _heightController.text = state.heightCm!.toStringAsFixed(0);
-      if (state.weightKg != null)
+      }
+      if (state.weightKg != null) {
         _weightController.text = state.weightKg!.toStringAsFixed(1);
+      }
       if (state.fitnessGoal != null) _selectedFitnessGoal = state.fitnessGoal;
-      if (state.activityLevel != null)
+      if (state.activityLevel != null) {
         _selectedActivityLevel = state.activityLevel;
+      }
     });
   }
 

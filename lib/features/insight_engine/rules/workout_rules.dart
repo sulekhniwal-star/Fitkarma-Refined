@@ -40,11 +40,11 @@ class WorkoutCompletedRule extends InsightRule {
     if (workoutMin == null || workoutMin == 0) return null;
 
     if (workoutMin >= 45) {
-      return '💪 Amazing workout! ${workoutMin} minutes - that\'s a solid session!';
+      return '💪 Amazing workout! $workoutMin minutes - that\'s a solid session!';
     } else if (workoutMin >= 30) {
-      return '🔥 Great workout today! ${workoutMin} minutes in the books.';
+      return '🔥 Great workout today! $workoutMin minutes in the books.';
     } else if (workoutMin >= 15) {
-      return '👍 Good start! ${workoutMin} minutes. Every bit counts!';
+      return '👍 Good start! $workoutMin minutes. Every bit counts!';
     }
     return null;
   }
@@ -87,13 +87,13 @@ class WorkoutStreakRule extends InsightRule {
     if (streak == null || streak == 0) return null;
 
     if (streak >= 30) {
-      return '🏆 Incredible! ${streak}-day workout streak! You\'re unstoppable!';
+      return '🏆 Incredible! $streak-day workout streak! You\'re unstoppable!';
     } else if (streak >= 14) {
-      return '🔥 Amazing! ${streak} days strong! Keep the momentum going!';
+      return '🔥 Amazing! $streak days strong! Keep the momentum going!';
     } else if (streak >= 7) {
-      return '💪 ${streak}-day streak! You\'re building a great habit!';
+      return '💪 $streak-day streak! You\'re building a great habit!';
     } else if (streak >= 3) {
-      return '👍 ${streak}-day workout streak! Keep it up!';
+      return '👍 $streak-day workout streak! Keep it up!';
     }
     return null;
   }
@@ -139,7 +139,7 @@ class NoWorkoutRule extends InsightRule {
     final streak = userData['workoutStreak'] as int?;
 
     if (streak != null && streak > 0) {
-      return '😴 Rest day? You have a ${streak}-day streak to protect!';
+      return '😴 Rest day? You have a $streak-day streak to protect!';
     } else {
       return '🏃 Consider adding a quick workout today. Even 15 minutes helps!';
     }
@@ -188,7 +188,7 @@ class StepsGoalRule extends InsightRule {
     if (percentage >= 100) {
       return '🎯 Steps goal crushed! ${steps.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')} steps - amazing!';
     } else if (percentage >= 75) {
-      return '🚶 ${percentage}% of your ${goal.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')} step goal. Almost there!';
+      return '🚶 $percentage% of your ${goal.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')} step goal. Almost there!';
     }
     return null;
   }

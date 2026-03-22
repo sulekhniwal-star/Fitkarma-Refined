@@ -121,10 +121,10 @@ class _StepsScreenState extends ConsumerState<StepsScreen>
                 data: (todaySteps) => dailyGoalAsync.when(
                   data: (dailyGoal) => _buildGoalRing(todaySteps, dailyGoal),
                   loading: () => const CircularProgressIndicator(),
-                  error: (_, __) => _buildGoalRing(todaySteps, 10000),
+                  error: (_, _) => _buildGoalRing(todaySteps, 10000),
                 ),
                 loading: () => const Center(child: CircularProgressIndicator()),
-                error: (_, __) => _buildGoalRing(0, 10000),
+                error: (_, _) => _buildGoalRing(0, 10000),
               ),
               const SizedBox(height: 32),
 
@@ -133,10 +133,10 @@ class _StepsScreenState extends ConsumerState<StepsScreen>
                 data: (todaySteps) => dailyGoalAsync.when(
                   data: (dailyGoal) => _buildStatsRow(todaySteps, dailyGoal),
                   loading: () => const SizedBox(),
-                  error: (_, __) => _buildStatsRow(todaySteps, 10000),
+                  error: (_, _) => _buildStatsRow(todaySteps, 10000),
                 ),
                 loading: () => const SizedBox(),
-                error: (_, __) => _buildStatsRow(0, 10000),
+                error: (_, _) => _buildStatsRow(0, 10000),
               ),
               const SizedBox(height: 32),
 
@@ -152,7 +152,7 @@ class _StepsScreenState extends ConsumerState<StepsScreen>
                   height: 200,
                   child: Center(child: CircularProgressIndicator()),
                 ),
-                error: (_, __) => const SizedBox(
+                error: (_, _) => const SizedBox(
                   height: 200,
                   child: Center(child: Text('Error loading weekly data')),
                 ),
@@ -271,7 +271,7 @@ class _StepsScreenState extends ConsumerState<StepsScreen>
         ),
         _buildStatItem(
           icon: Icons.local_fire_department,
-          value: '${calories.toStringAsFixed(0)}',
+          value: calories.toStringAsFixed(0),
           label: 'Calories',
         ),
       ],

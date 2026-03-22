@@ -10,6 +10,7 @@ import 'package:fitkarma/features/food/data/food_aw_service.dart';
 import 'package:fitkarma/features/food/data/food_repository.dart';
 import 'package:fitkarma/features/auth/data/auth_aw_service.dart';
 import 'package:fitkarma/core/network/connectivity_service.dart';
+import 'package:fitkarma/features/food/data/recipe_service.dart';
 
 /// Provider for the food drift service
 final foodDriftServiceProvider = Provider<FoodDriftService>((ref) {
@@ -334,3 +335,318 @@ Map<String, double> calculateScaledNutrients({
     'calcium': (baseCalciumPer100g ?? 0) * scale,
   };
 }
+
+// ============== RECIPE PROVIDERS ==============
+
+/// Provider for the recipe service
+final recipeServiceProvider = Provider<RecipeService>((ref) {
+  final db = ref.watch(databaseProvider);
+  return RecipeService(db);
+});
+
+/// State for recipe builder
+class RecipeBuilderState {
+  final String title;
+  final String? description;
+  final List<RecipeIngredient> ingredients;
+  final List<String> instructions;
+  final int servings;
+  final double caloriesPerServing;
+  final double proteinPerServing;
+  final double carbsPerServing;
+  final double fatPerServing;
+  final double? fiberPerServing;
+  final double? vitaminDPerServing;
+  final double? vitaminB12PerServing;
+  final double? ironPerServing;
+  final double? calciumPerServing;
+  final bool isPublic;
+  final bool isLoading;
+  final String? error;
+
+  RecipeBuilderState({
+    this.title = '',
+    this.description,
+    this.ingredients = const [],
+    this.instructions = const [],
+    this.servings = 1,
+    this.caloriesPerServing = 0,
+    this.proteinPerServing = 0,
+    this.carbsPerServing = 0,
+    this.fatPerServing = 0,
+    this.fiberPerServing,
+    this.vitaminDPerServing,
+    this.vitaminB12PerServing,
+    this.ironPerServing,
+    this.calciumPerServing,
+    this.isPublic = false,
+    this.isLoading = false,
+    this.error,
+  });
+
+  RecipeBuilderState copyWith({
+    String? title,
+    String? description,
+    List<RecipeIngredient>? ingredients,
+    List<String>? instructions,
+    int? servings,
+    double? caloriesPerServing,
+    double? proteinPerServing,
+    double? carbsPerServing,
+    double? fatPerServing,
+    double? fiberPerServing,
+    double? vitaminDPerServing,
+    double? vitaminB12PerServing,
+    double? ironPerServing,
+    double? calciumPerServing,
+    bool? isPublic,
+    bool? isLoading,
+    String? error,
+  }) {
+    return RecipeBuilderState(
+      title: title ?? this.title,
+      description: description ?? this.description,
+      ingredients: ingredients ?? this.ingredients,
+      instructions: instructions ?? this.instructions,
+      servings: servings ?? this.servings,
+      caloriesPerServing: caloriesPerServing ?? this.caloriesPerServing,
+      proteinPerServing: proteinPerServing ?? this.proteinPerServing,
+      carbsPerServing: carbsPerServing ?? this.carbsPerServing,
+      fatPerServing: fatPerServing ?? this.fatPerServing,
+      fiberPerServing: fiberPerServing ?? this.fiberPerServing,
+      vitaminDPerServing: vitaminDPerServing ?? this.vitaminDPerServing,
+      vitaminB12PerServing: vitaminB12PerServing ?? this.vitaminB12PerServing,
+      ironPerServing: ironPerServing ?? this.ironPerServing,
+      calciumPerServing: calciumPerServing ?? this.calciumPerServing,
+      isPublic: isPublic ?? this.isPublic,
+      isLoading: isLoading ?? this.isLoading,
+      error: error,
+    );
+  }
+}
+
+/// Notifier for recipe builder state
+class RecipeBuilderNotifier extends Notifier<RecipeBuilderState> {
+  @override
+  RecipeBuilderState build() {
+    return RecipeBuilderState();
+  }
+
+  /// Update recipe title
+  void setTitle(String title) {
+    state = state.copyWith(title: title);
+  }
+
+  /// Update recipe description
+  void setDescription(String? description) {
+    state = state.copyWith(description: description);
+  }
+
+  /// Add ingredient to recipe
+  void addIngredient(RecipeIngredient ingredient) {
+    state = state.copyWith(ingredients: [...state.ingredients, ingredient]);
+    _calculateNutrients();
+  }
+
+  /// Remove ingredient from recipe
+  void removeIngredient(int index) {
+    final newIngredients = List<RecipeIngredient>.from(state.ingredients);
+    newIngredients.removeAt(index);
+    state = state.copyWith(ingredients: newIngredients);
+    _calculateNutrients();
+  }
+
+  /// Update ingredient quantity
+  void updateIngredientQuantity(int index, double quantityG) {
+    final newIngredients = List<RecipeIngredient>.from(state.ingredients);
+    newIngredients[index] = RecipeIngredient(
+      foodItemId: newIngredients[index].foodItemId,
+      name: newIngredients[index].name,
+      quantityG: quantityG,
+    );
+    state = state.copyWith(ingredients: newIngredients);
+    _calculateNutrients();
+  }
+
+  /// Add instruction
+  void addInstruction(String instruction) {
+    state = state.copyWith(instructions: [...state.instructions, instruction]);
+  }
+
+  /// Remove instruction
+  void removeInstruction(int index) {
+    final newInstructions = List<String>.from(state.instructions);
+    newInstructions.removeAt(index);
+    state = state.copyWith(instructions: newInstructions);
+  }
+
+  /// Update instruction
+  void updateInstruction(int index, String instruction) {
+    final newInstructions = List<String>.from(state.instructions);
+    newInstructions[index] = instruction;
+    state = state.copyWith(instructions: newInstructions);
+  }
+
+  /// Set servings count
+  void setServings(int servings) {
+    state = state.copyWith(servings: servings);
+    _calculateNutrients();
+  }
+
+  /// Toggle public/private
+  void setPublic(bool isPublic) {
+    state = state.copyWith(isPublic: isPublic);
+  }
+
+  /// Calculate nutrients per serving based on ingredients
+  Future<void> _calculateNutrients() async {
+    if (state.ingredients.isEmpty) {
+      state = state.copyWith(
+        caloriesPerServing: 0,
+        proteinPerServing: 0,
+        carbsPerServing: 0,
+        fatPerServing: 0,
+        fiberPerServing: 0,
+        vitaminDPerServing: 0,
+        vitaminB12PerServing: 0,
+        ironPerServing: 0,
+        calciumPerServing: 0,
+      );
+      return;
+    }
+
+    try {
+      final recipeService = ref.read(recipeServiceProvider);
+      final db = await recipeService.db
+          .select(recipeService.db.foodItems)
+          .get();
+
+      // Create a map for quick lookup
+      final foodMap = {for (var f in db) f.id: f};
+
+      double totalCalories = 0;
+      double totalProtein = 0;
+      double totalCarbs = 0;
+      double totalFat = 0;
+      double totalFiber = 0;
+      double totalVitaminD = 0;
+      double totalVitaminB12 = 0;
+      double totalIron = 0;
+      double totalCalcium = 0;
+
+      for (final ingredient in state.ingredients) {
+        final food = foodMap[ingredient.foodItemId];
+        if (food != null) {
+          final scale = ingredient.quantityG / 100;
+          totalCalories += (food.caloriesPer100g ?? 0) * scale;
+          totalProtein += (food.proteinPer100g ?? 0) * scale;
+          totalCarbs += (food.carbsPer100g ?? 0) * scale;
+          totalFat += (food.fatPer100g ?? 0) * scale;
+          totalFiber += (food.fiberPer100g ?? 0) * scale;
+          totalVitaminD += (food.vitaminDPer100g ?? 0) * scale;
+          totalVitaminB12 += (food.vitaminB12Per100g ?? 0) * scale;
+          totalIron += (food.ironPer100g ?? 0) * scale;
+          totalCalcium += (food.calciumPer100g ?? 0) * scale;
+        }
+      }
+
+      final servings = state.servings > 0 ? state.servings : 1;
+
+      state = state.copyWith(
+        caloriesPerServing: totalCalories / servings,
+        proteinPerServing: totalProtein / servings,
+        carbsPerServing: totalCarbs / servings,
+        fatPerServing: totalFat / servings,
+        fiberPerServing: totalFiber / servings,
+        vitaminDPerServing: totalVitaminD / servings,
+        vitaminB12PerServing: totalVitaminB12 / servings,
+        ironPerServing: totalIron / servings,
+        calciumPerServing: totalCalcium / servings,
+      );
+    } catch (e) {
+      // Silent fail - keep existing values
+    }
+  }
+
+  /// Save recipe
+  Future<String?> saveRecipe() async {
+    if (state.title.isEmpty) {
+      state = state.copyWith(error: 'Please enter a recipe title');
+      return null;
+    }
+
+    if (state.ingredients.isEmpty) {
+      state = state.copyWith(error: 'Please add at least one ingredient');
+      return null;
+    }
+
+    state = state.copyWith(isLoading: true, error: null);
+
+    try {
+      final recipeService = ref.read(recipeServiceProvider);
+      final authService = AuthAwService();
+      final userId = await authService.getStoredUserId();
+
+      if (userId == null) {
+        state = state.copyWith(
+          isLoading: false,
+          error: 'Please login to save recipes',
+        );
+        return null;
+      }
+
+      final recipeId = await recipeService.createRecipe(
+        userId: userId,
+        title: state.title,
+        description: state.description,
+        ingredients: state.ingredients,
+        instructions: state.instructions,
+        servings: state.servings,
+        caloriesPerServing: state.caloriesPerServing,
+        proteinPerServing: state.proteinPerServing,
+        carbsPerServing: state.carbsPerServing,
+        fatPerServing: state.fatPerServing,
+        fiberPerServing: state.fiberPerServing,
+        vitaminDPerServing: state.vitaminDPerServing,
+        vitaminB12PerServing: state.vitaminB12PerServing,
+        ironPerServing: state.ironPerServing,
+        calciumPerServing: state.calciumPerServing,
+        isPublic: state.isPublic,
+      );
+
+      state = state.copyWith(isLoading: false);
+      return recipeId;
+    } catch (e) {
+      state = state.copyWith(isLoading: false, error: e.toString());
+      return null;
+    }
+  }
+
+  /// Reset builder state
+  void reset() {
+    state = RecipeBuilderState();
+  }
+}
+
+/// Provider for recipe builder state
+final recipeBuilderProvider =
+    NotifierProvider<RecipeBuilderNotifier, RecipeBuilderState>(() {
+      return RecipeBuilderNotifier();
+    });
+
+/// Provider for user's recipes
+final userRecipesProvider = FutureProvider<List<Recipe>>((ref) async {
+  final recipeService = ref.watch(recipeServiceProvider);
+  final authService = AuthAwService();
+  final userId = await authService.getStoredUserId();
+
+  if (userId == null) return [];
+
+  return await recipeService.getUserRecipes(userId);
+});
+
+/// Provider for community (public) recipes
+final communityRecipesProvider = FutureProvider<List<Recipe>>((ref) async {
+  final recipeService = ref.watch(recipeServiceProvider);
+  return await recipeService.getPublicRecipes();
+});

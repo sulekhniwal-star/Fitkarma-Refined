@@ -322,7 +322,7 @@ class GlucoseService {
 
     await db.into(db.glucoseLogs).insert(companion);
 
-    return (await db.select(db.glucoseLogs)
+    return (db.select(db.glucoseLogs)
           ..where((t) => t.id.equals(id)))
         .getSingle();
   }

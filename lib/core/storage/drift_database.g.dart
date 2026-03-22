@@ -187,6 +187,7 @@ class FastingLogsDaoManager {
 
 mixin _$MealPlansDaoMixin on DatabaseAccessor<AppDatabase> {
   $MealPlansTable get mealPlans => attachedDatabase.mealPlans;
+  $MealPlanEntriesTable get mealPlanEntries => attachedDatabase.mealPlanEntries;
   MealPlansDaoManager get managers => MealPlansDaoManager(this);
 }
 
@@ -195,6 +196,23 @@ class MealPlansDaoManager {
   MealPlansDaoManager(this._db);
   $$MealPlansTableTableManager get mealPlans =>
       $$MealPlansTableTableManager(_db.attachedDatabase, _db.mealPlans);
+  $$MealPlanEntriesTableTableManager get mealPlanEntries =>
+      $$MealPlanEntriesTableTableManager(
+        _db.attachedDatabase,
+        _db.mealPlanEntries,
+      );
+}
+
+mixin _$GroceryListsDaoMixin on DatabaseAccessor<AppDatabase> {
+  $GroceryListsTable get groceryLists => attachedDatabase.groceryLists;
+  GroceryListsDaoManager get managers => GroceryListsDaoManager(this);
+}
+
+class GroceryListsDaoManager {
+  final _$GroceryListsDaoMixin _db;
+  GroceryListsDaoManager(this._db);
+  $$GroceryListsTableTableManager get groceryLists =>
+      $$GroceryListsTableTableManager(_db.attachedDatabase, _db.groceryLists);
 }
 
 mixin _$RecipesDaoMixin on DatabaseAccessor<AppDatabase> {
@@ -7199,6 +7217,48 @@ class $BodyMeasurementsTable extends BodyMeasurements
     type: DriftSqlType.double,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _chestCmMeta = const VerificationMeta(
+    'chestCm',
+  );
+  @override
+  late final GeneratedColumn<double> chestCm = GeneratedColumn<double>(
+    'chest_cm',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _armsCmMeta = const VerificationMeta('armsCm');
+  @override
+  late final GeneratedColumn<double> armsCm = GeneratedColumn<double>(
+    'arms_cm',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _thighsCmMeta = const VerificationMeta(
+    'thighsCm',
+  );
+  @override
+  late final GeneratedColumn<double> thighsCm = GeneratedColumn<double>(
+    'thighs_cm',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _photoPathMeta = const VerificationMeta(
+    'photoPath',
+  );
+  @override
+  late final GeneratedColumn<String> photoPath = GeneratedColumn<String>(
+    'photo_path',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -7209,6 +7269,10 @@ class $BodyMeasurementsTable extends BodyMeasurements
     bodyFatPercentage,
     waistCm,
     hipCm,
+    chestCm,
+    armsCm,
+    thighsCm,
+    photoPath,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -7276,6 +7340,30 @@ class $BodyMeasurementsTable extends BodyMeasurements
         hipCm.isAcceptableOrUnknown(data['hip_cm']!, _hipCmMeta),
       );
     }
+    if (data.containsKey('chest_cm')) {
+      context.handle(
+        _chestCmMeta,
+        chestCm.isAcceptableOrUnknown(data['chest_cm']!, _chestCmMeta),
+      );
+    }
+    if (data.containsKey('arms_cm')) {
+      context.handle(
+        _armsCmMeta,
+        armsCm.isAcceptableOrUnknown(data['arms_cm']!, _armsCmMeta),
+      );
+    }
+    if (data.containsKey('thighs_cm')) {
+      context.handle(
+        _thighsCmMeta,
+        thighsCm.isAcceptableOrUnknown(data['thighs_cm']!, _thighsCmMeta),
+      );
+    }
+    if (data.containsKey('photo_path')) {
+      context.handle(
+        _photoPathMeta,
+        photoPath.isAcceptableOrUnknown(data['photo_path']!, _photoPathMeta),
+      );
+    }
     return context;
   }
 
@@ -7317,6 +7405,22 @@ class $BodyMeasurementsTable extends BodyMeasurements
         DriftSqlType.double,
         data['${effectivePrefix}hip_cm'],
       ),
+      chestCm: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}chest_cm'],
+      ),
+      armsCm: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}arms_cm'],
+      ),
+      thighsCm: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}thighs_cm'],
+      ),
+      photoPath: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}photo_path'],
+      ),
     );
   }
 
@@ -7335,6 +7439,10 @@ class BodyMeasurement extends DataClass implements Insertable<BodyMeasurement> {
   final double? bodyFatPercentage;
   final double? waistCm;
   final double? hipCm;
+  final double? chestCm;
+  final double? armsCm;
+  final double? thighsCm;
+  final String? photoPath;
   const BodyMeasurement({
     required this.id,
     required this.userId,
@@ -7344,6 +7452,10 @@ class BodyMeasurement extends DataClass implements Insertable<BodyMeasurement> {
     this.bodyFatPercentage,
     this.waistCm,
     this.hipCm,
+    this.chestCm,
+    this.armsCm,
+    this.thighsCm,
+    this.photoPath,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -7365,6 +7477,18 @@ class BodyMeasurement extends DataClass implements Insertable<BodyMeasurement> {
     }
     if (!nullToAbsent || hipCm != null) {
       map['hip_cm'] = Variable<double>(hipCm);
+    }
+    if (!nullToAbsent || chestCm != null) {
+      map['chest_cm'] = Variable<double>(chestCm);
+    }
+    if (!nullToAbsent || armsCm != null) {
+      map['arms_cm'] = Variable<double>(armsCm);
+    }
+    if (!nullToAbsent || thighsCm != null) {
+      map['thighs_cm'] = Variable<double>(thighsCm);
+    }
+    if (!nullToAbsent || photoPath != null) {
+      map['photo_path'] = Variable<String>(photoPath);
     }
     return map;
   }
@@ -7389,6 +7513,18 @@ class BodyMeasurement extends DataClass implements Insertable<BodyMeasurement> {
       hipCm: hipCm == null && nullToAbsent
           ? const Value.absent()
           : Value(hipCm),
+      chestCm: chestCm == null && nullToAbsent
+          ? const Value.absent()
+          : Value(chestCm),
+      armsCm: armsCm == null && nullToAbsent
+          ? const Value.absent()
+          : Value(armsCm),
+      thighsCm: thighsCm == null && nullToAbsent
+          ? const Value.absent()
+          : Value(thighsCm),
+      photoPath: photoPath == null && nullToAbsent
+          ? const Value.absent()
+          : Value(photoPath),
     );
   }
 
@@ -7408,6 +7544,10 @@ class BodyMeasurement extends DataClass implements Insertable<BodyMeasurement> {
       ),
       waistCm: serializer.fromJson<double?>(json['waistCm']),
       hipCm: serializer.fromJson<double?>(json['hipCm']),
+      chestCm: serializer.fromJson<double?>(json['chestCm']),
+      armsCm: serializer.fromJson<double?>(json['armsCm']),
+      thighsCm: serializer.fromJson<double?>(json['thighsCm']),
+      photoPath: serializer.fromJson<String?>(json['photoPath']),
     );
   }
   @override
@@ -7422,6 +7562,10 @@ class BodyMeasurement extends DataClass implements Insertable<BodyMeasurement> {
       'bodyFatPercentage': serializer.toJson<double?>(bodyFatPercentage),
       'waistCm': serializer.toJson<double?>(waistCm),
       'hipCm': serializer.toJson<double?>(hipCm),
+      'chestCm': serializer.toJson<double?>(chestCm),
+      'armsCm': serializer.toJson<double?>(armsCm),
+      'thighsCm': serializer.toJson<double?>(thighsCm),
+      'photoPath': serializer.toJson<String?>(photoPath),
     };
   }
 
@@ -7434,6 +7578,10 @@ class BodyMeasurement extends DataClass implements Insertable<BodyMeasurement> {
     Value<double?> bodyFatPercentage = const Value.absent(),
     Value<double?> waistCm = const Value.absent(),
     Value<double?> hipCm = const Value.absent(),
+    Value<double?> chestCm = const Value.absent(),
+    Value<double?> armsCm = const Value.absent(),
+    Value<double?> thighsCm = const Value.absent(),
+    Value<String?> photoPath = const Value.absent(),
   }) => BodyMeasurement(
     id: id ?? this.id,
     userId: userId ?? this.userId,
@@ -7445,6 +7593,10 @@ class BodyMeasurement extends DataClass implements Insertable<BodyMeasurement> {
         : this.bodyFatPercentage,
     waistCm: waistCm.present ? waistCm.value : this.waistCm,
     hipCm: hipCm.present ? hipCm.value : this.hipCm,
+    chestCm: chestCm.present ? chestCm.value : this.chestCm,
+    armsCm: armsCm.present ? armsCm.value : this.armsCm,
+    thighsCm: thighsCm.present ? thighsCm.value : this.thighsCm,
+    photoPath: photoPath.present ? photoPath.value : this.photoPath,
   );
   BodyMeasurement copyWithCompanion(BodyMeasurementsCompanion data) {
     return BodyMeasurement(
@@ -7460,6 +7612,10 @@ class BodyMeasurement extends DataClass implements Insertable<BodyMeasurement> {
           : this.bodyFatPercentage,
       waistCm: data.waistCm.present ? data.waistCm.value : this.waistCm,
       hipCm: data.hipCm.present ? data.hipCm.value : this.hipCm,
+      chestCm: data.chestCm.present ? data.chestCm.value : this.chestCm,
+      armsCm: data.armsCm.present ? data.armsCm.value : this.armsCm,
+      thighsCm: data.thighsCm.present ? data.thighsCm.value : this.thighsCm,
+      photoPath: data.photoPath.present ? data.photoPath.value : this.photoPath,
     );
   }
 
@@ -7473,7 +7629,11 @@ class BodyMeasurement extends DataClass implements Insertable<BodyMeasurement> {
           ..write('heightCm: $heightCm, ')
           ..write('bodyFatPercentage: $bodyFatPercentage, ')
           ..write('waistCm: $waistCm, ')
-          ..write('hipCm: $hipCm')
+          ..write('hipCm: $hipCm, ')
+          ..write('chestCm: $chestCm, ')
+          ..write('armsCm: $armsCm, ')
+          ..write('thighsCm: $thighsCm, ')
+          ..write('photoPath: $photoPath')
           ..write(')'))
         .toString();
   }
@@ -7488,6 +7648,10 @@ class BodyMeasurement extends DataClass implements Insertable<BodyMeasurement> {
     bodyFatPercentage,
     waistCm,
     hipCm,
+    chestCm,
+    armsCm,
+    thighsCm,
+    photoPath,
   );
   @override
   bool operator ==(Object other) =>
@@ -7500,7 +7664,11 @@ class BodyMeasurement extends DataClass implements Insertable<BodyMeasurement> {
           other.heightCm == this.heightCm &&
           other.bodyFatPercentage == this.bodyFatPercentage &&
           other.waistCm == this.waistCm &&
-          other.hipCm == this.hipCm);
+          other.hipCm == this.hipCm &&
+          other.chestCm == this.chestCm &&
+          other.armsCm == this.armsCm &&
+          other.thighsCm == this.thighsCm &&
+          other.photoPath == this.photoPath);
 }
 
 class BodyMeasurementsCompanion extends UpdateCompanion<BodyMeasurement> {
@@ -7512,6 +7680,10 @@ class BodyMeasurementsCompanion extends UpdateCompanion<BodyMeasurement> {
   final Value<double?> bodyFatPercentage;
   final Value<double?> waistCm;
   final Value<double?> hipCm;
+  final Value<double?> chestCm;
+  final Value<double?> armsCm;
+  final Value<double?> thighsCm;
+  final Value<String?> photoPath;
   final Value<int> rowid;
   const BodyMeasurementsCompanion({
     this.id = const Value.absent(),
@@ -7522,6 +7694,10 @@ class BodyMeasurementsCompanion extends UpdateCompanion<BodyMeasurement> {
     this.bodyFatPercentage = const Value.absent(),
     this.waistCm = const Value.absent(),
     this.hipCm = const Value.absent(),
+    this.chestCm = const Value.absent(),
+    this.armsCm = const Value.absent(),
+    this.thighsCm = const Value.absent(),
+    this.photoPath = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   BodyMeasurementsCompanion.insert({
@@ -7533,6 +7709,10 @@ class BodyMeasurementsCompanion extends UpdateCompanion<BodyMeasurement> {
     this.bodyFatPercentage = const Value.absent(),
     this.waistCm = const Value.absent(),
     this.hipCm = const Value.absent(),
+    this.chestCm = const Value.absent(),
+    this.armsCm = const Value.absent(),
+    this.thighsCm = const Value.absent(),
+    this.photoPath = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        userId = Value(userId),
@@ -7546,6 +7726,10 @@ class BodyMeasurementsCompanion extends UpdateCompanion<BodyMeasurement> {
     Expression<double>? bodyFatPercentage,
     Expression<double>? waistCm,
     Expression<double>? hipCm,
+    Expression<double>? chestCm,
+    Expression<double>? armsCm,
+    Expression<double>? thighsCm,
+    Expression<String>? photoPath,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -7557,6 +7741,10 @@ class BodyMeasurementsCompanion extends UpdateCompanion<BodyMeasurement> {
       if (bodyFatPercentage != null) 'body_fat_percentage': bodyFatPercentage,
       if (waistCm != null) 'waist_cm': waistCm,
       if (hipCm != null) 'hip_cm': hipCm,
+      if (chestCm != null) 'chest_cm': chestCm,
+      if (armsCm != null) 'arms_cm': armsCm,
+      if (thighsCm != null) 'thighs_cm': thighsCm,
+      if (photoPath != null) 'photo_path': photoPath,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -7570,6 +7758,10 @@ class BodyMeasurementsCompanion extends UpdateCompanion<BodyMeasurement> {
     Value<double?>? bodyFatPercentage,
     Value<double?>? waistCm,
     Value<double?>? hipCm,
+    Value<double?>? chestCm,
+    Value<double?>? armsCm,
+    Value<double?>? thighsCm,
+    Value<String?>? photoPath,
     Value<int>? rowid,
   }) {
     return BodyMeasurementsCompanion(
@@ -7581,6 +7773,10 @@ class BodyMeasurementsCompanion extends UpdateCompanion<BodyMeasurement> {
       bodyFatPercentage: bodyFatPercentage ?? this.bodyFatPercentage,
       waistCm: waistCm ?? this.waistCm,
       hipCm: hipCm ?? this.hipCm,
+      chestCm: chestCm ?? this.chestCm,
+      armsCm: armsCm ?? this.armsCm,
+      thighsCm: thighsCm ?? this.thighsCm,
+      photoPath: photoPath ?? this.photoPath,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -7612,6 +7808,18 @@ class BodyMeasurementsCompanion extends UpdateCompanion<BodyMeasurement> {
     if (hipCm.present) {
       map['hip_cm'] = Variable<double>(hipCm.value);
     }
+    if (chestCm.present) {
+      map['chest_cm'] = Variable<double>(chestCm.value);
+    }
+    if (armsCm.present) {
+      map['arms_cm'] = Variable<double>(armsCm.value);
+    }
+    if (thighsCm.present) {
+      map['thighs_cm'] = Variable<double>(thighsCm.value);
+    }
+    if (photoPath.present) {
+      map['photo_path'] = Variable<String>(photoPath.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -7629,6 +7837,10 @@ class BodyMeasurementsCompanion extends UpdateCompanion<BodyMeasurement> {
           ..write('bodyFatPercentage: $bodyFatPercentage, ')
           ..write('waistCm: $waistCm, ')
           ..write('hipCm: $hipCm, ')
+          ..write('chestCm: $chestCm, ')
+          ..write('armsCm: $armsCm, ')
+          ..write('thighsCm: $thighsCm, ')
+          ..write('photoPath: $photoPath, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -7699,6 +7911,42 @@ class $MedicationsTable extends Medications
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _isActiveMeta = const VerificationMeta(
+    'isActive',
+  );
+  @override
+  late final GeneratedColumn<bool> isActive = GeneratedColumn<bool>(
+    'is_active',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_active" IN (0, 1))',
+    ),
+    defaultValue: const Constant(true),
+  );
+  static const VerificationMeta _reminderTimeMeta = const VerificationMeta(
+    'reminderTime',
+  );
+  @override
+  late final GeneratedColumn<String> reminderTime = GeneratedColumn<String>(
+    'reminder_time',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _refillDurationDaysMeta =
+      const VerificationMeta('refillDurationDays');
+  @override
+  late final GeneratedColumn<int> refillDurationDays = GeneratedColumn<int>(
+    'refill_duration_days',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _nextRefillDateMeta = const VerificationMeta(
     'nextRefillDate',
   );
@@ -7711,6 +7959,48 @@ class $MedicationsTable extends Medications
         type: DriftSqlType.dateTime,
         requiredDuringInsert: false,
       );
+  static const VerificationMeta _startDateMeta = const VerificationMeta(
+    'startDate',
+  );
+  @override
+  late final GeneratedColumn<DateTime> startDate = GeneratedColumn<DateTime>(
+    'start_date',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _notesMeta = const VerificationMeta('notes');
+  @override
+  late final GeneratedColumn<String> notes = GeneratedColumn<String>(
+    'notes',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _syncStatusMeta = const VerificationMeta(
+    'syncStatus',
+  );
+  @override
+  late final GeneratedColumn<String> syncStatus = GeneratedColumn<String>(
+    'sync_status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _idempotencyKeyMeta = const VerificationMeta(
+    'idempotencyKey',
+  );
+  @override
+  late final GeneratedColumn<String> idempotencyKey = GeneratedColumn<String>(
+    'idempotency_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -7719,7 +8009,14 @@ class $MedicationsTable extends Medications
     dose,
     frequency,
     category,
+    isActive,
+    reminderTime,
+    refillDurationDays,
     nextRefillDate,
+    startDate,
+    notes,
+    syncStatus,
+    idempotencyKey,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -7778,6 +8075,30 @@ class $MedicationsTable extends Medications
     } else if (isInserting) {
       context.missing(_categoryMeta);
     }
+    if (data.containsKey('is_active')) {
+      context.handle(
+        _isActiveMeta,
+        isActive.isAcceptableOrUnknown(data['is_active']!, _isActiveMeta),
+      );
+    }
+    if (data.containsKey('reminder_time')) {
+      context.handle(
+        _reminderTimeMeta,
+        reminderTime.isAcceptableOrUnknown(
+          data['reminder_time']!,
+          _reminderTimeMeta,
+        ),
+      );
+    }
+    if (data.containsKey('refill_duration_days')) {
+      context.handle(
+        _refillDurationDaysMeta,
+        refillDurationDays.isAcceptableOrUnknown(
+          data['refill_duration_days']!,
+          _refillDurationDaysMeta,
+        ),
+      );
+    }
     if (data.containsKey('next_refill_date')) {
       context.handle(
         _nextRefillDateMeta,
@@ -7786,6 +8107,37 @@ class $MedicationsTable extends Medications
           _nextRefillDateMeta,
         ),
       );
+    }
+    if (data.containsKey('start_date')) {
+      context.handle(
+        _startDateMeta,
+        startDate.isAcceptableOrUnknown(data['start_date']!, _startDateMeta),
+      );
+    }
+    if (data.containsKey('notes')) {
+      context.handle(
+        _notesMeta,
+        notes.isAcceptableOrUnknown(data['notes']!, _notesMeta),
+      );
+    }
+    if (data.containsKey('sync_status')) {
+      context.handle(
+        _syncStatusMeta,
+        syncStatus.isAcceptableOrUnknown(data['sync_status']!, _syncStatusMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_syncStatusMeta);
+    }
+    if (data.containsKey('idempotency_key')) {
+      context.handle(
+        _idempotencyKeyMeta,
+        idempotencyKey.isAcceptableOrUnknown(
+          data['idempotency_key']!,
+          _idempotencyKeyMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_idempotencyKeyMeta);
     }
     return context;
   }
@@ -7820,10 +8172,38 @@ class $MedicationsTable extends Medications
         DriftSqlType.string,
         data['${effectivePrefix}category'],
       )!,
+      isActive: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_active'],
+      )!,
+      reminderTime: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}reminder_time'],
+      ),
+      refillDurationDays: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}refill_duration_days'],
+      ),
       nextRefillDate: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}next_refill_date'],
       ),
+      startDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}start_date'],
+      ),
+      notes: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}notes'],
+      ),
+      syncStatus: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sync_status'],
+      )!,
+      idempotencyKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}idempotency_key'],
+      )!,
     );
   }
 
@@ -7840,7 +8220,14 @@ class Medication extends DataClass implements Insertable<Medication> {
   final String dose;
   final String frequency;
   final String category;
+  final bool isActive;
+  final String? reminderTime;
+  final int? refillDurationDays;
   final DateTime? nextRefillDate;
+  final DateTime? startDate;
+  final String? notes;
+  final String syncStatus;
+  final String idempotencyKey;
   const Medication({
     required this.id,
     required this.userId,
@@ -7848,7 +8235,14 @@ class Medication extends DataClass implements Insertable<Medication> {
     required this.dose,
     required this.frequency,
     required this.category,
+    required this.isActive,
+    this.reminderTime,
+    this.refillDurationDays,
     this.nextRefillDate,
+    this.startDate,
+    this.notes,
+    required this.syncStatus,
+    required this.idempotencyKey,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -7859,9 +8253,24 @@ class Medication extends DataClass implements Insertable<Medication> {
     map['dose'] = Variable<String>(dose);
     map['frequency'] = Variable<String>(frequency);
     map['category'] = Variable<String>(category);
+    map['is_active'] = Variable<bool>(isActive);
+    if (!nullToAbsent || reminderTime != null) {
+      map['reminder_time'] = Variable<String>(reminderTime);
+    }
+    if (!nullToAbsent || refillDurationDays != null) {
+      map['refill_duration_days'] = Variable<int>(refillDurationDays);
+    }
     if (!nullToAbsent || nextRefillDate != null) {
       map['next_refill_date'] = Variable<DateTime>(nextRefillDate);
     }
+    if (!nullToAbsent || startDate != null) {
+      map['start_date'] = Variable<DateTime>(startDate);
+    }
+    if (!nullToAbsent || notes != null) {
+      map['notes'] = Variable<String>(notes);
+    }
+    map['sync_status'] = Variable<String>(syncStatus);
+    map['idempotency_key'] = Variable<String>(idempotencyKey);
     return map;
   }
 
@@ -7873,9 +8282,24 @@ class Medication extends DataClass implements Insertable<Medication> {
       dose: Value(dose),
       frequency: Value(frequency),
       category: Value(category),
+      isActive: Value(isActive),
+      reminderTime: reminderTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(reminderTime),
+      refillDurationDays: refillDurationDays == null && nullToAbsent
+          ? const Value.absent()
+          : Value(refillDurationDays),
       nextRefillDate: nextRefillDate == null && nullToAbsent
           ? const Value.absent()
           : Value(nextRefillDate),
+      startDate: startDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(startDate),
+      notes: notes == null && nullToAbsent
+          ? const Value.absent()
+          : Value(notes),
+      syncStatus: Value(syncStatus),
+      idempotencyKey: Value(idempotencyKey),
     );
   }
 
@@ -7891,7 +8315,14 @@ class Medication extends DataClass implements Insertable<Medication> {
       dose: serializer.fromJson<String>(json['dose']),
       frequency: serializer.fromJson<String>(json['frequency']),
       category: serializer.fromJson<String>(json['category']),
+      isActive: serializer.fromJson<bool>(json['isActive']),
+      reminderTime: serializer.fromJson<String?>(json['reminderTime']),
+      refillDurationDays: serializer.fromJson<int?>(json['refillDurationDays']),
       nextRefillDate: serializer.fromJson<DateTime?>(json['nextRefillDate']),
+      startDate: serializer.fromJson<DateTime?>(json['startDate']),
+      notes: serializer.fromJson<String?>(json['notes']),
+      syncStatus: serializer.fromJson<String>(json['syncStatus']),
+      idempotencyKey: serializer.fromJson<String>(json['idempotencyKey']),
     );
   }
   @override
@@ -7904,7 +8335,14 @@ class Medication extends DataClass implements Insertable<Medication> {
       'dose': serializer.toJson<String>(dose),
       'frequency': serializer.toJson<String>(frequency),
       'category': serializer.toJson<String>(category),
+      'isActive': serializer.toJson<bool>(isActive),
+      'reminderTime': serializer.toJson<String?>(reminderTime),
+      'refillDurationDays': serializer.toJson<int?>(refillDurationDays),
       'nextRefillDate': serializer.toJson<DateTime?>(nextRefillDate),
+      'startDate': serializer.toJson<DateTime?>(startDate),
+      'notes': serializer.toJson<String?>(notes),
+      'syncStatus': serializer.toJson<String>(syncStatus),
+      'idempotencyKey': serializer.toJson<String>(idempotencyKey),
     };
   }
 
@@ -7915,7 +8353,14 @@ class Medication extends DataClass implements Insertable<Medication> {
     String? dose,
     String? frequency,
     String? category,
+    bool? isActive,
+    Value<String?> reminderTime = const Value.absent(),
+    Value<int?> refillDurationDays = const Value.absent(),
     Value<DateTime?> nextRefillDate = const Value.absent(),
+    Value<DateTime?> startDate = const Value.absent(),
+    Value<String?> notes = const Value.absent(),
+    String? syncStatus,
+    String? idempotencyKey,
   }) => Medication(
     id: id ?? this.id,
     userId: userId ?? this.userId,
@@ -7923,9 +8368,18 @@ class Medication extends DataClass implements Insertable<Medication> {
     dose: dose ?? this.dose,
     frequency: frequency ?? this.frequency,
     category: category ?? this.category,
+    isActive: isActive ?? this.isActive,
+    reminderTime: reminderTime.present ? reminderTime.value : this.reminderTime,
+    refillDurationDays: refillDurationDays.present
+        ? refillDurationDays.value
+        : this.refillDurationDays,
     nextRefillDate: nextRefillDate.present
         ? nextRefillDate.value
         : this.nextRefillDate,
+    startDate: startDate.present ? startDate.value : this.startDate,
+    notes: notes.present ? notes.value : this.notes,
+    syncStatus: syncStatus ?? this.syncStatus,
+    idempotencyKey: idempotencyKey ?? this.idempotencyKey,
   );
   Medication copyWithCompanion(MedicationsCompanion data) {
     return Medication(
@@ -7935,9 +8389,24 @@ class Medication extends DataClass implements Insertable<Medication> {
       dose: data.dose.present ? data.dose.value : this.dose,
       frequency: data.frequency.present ? data.frequency.value : this.frequency,
       category: data.category.present ? data.category.value : this.category,
+      isActive: data.isActive.present ? data.isActive.value : this.isActive,
+      reminderTime: data.reminderTime.present
+          ? data.reminderTime.value
+          : this.reminderTime,
+      refillDurationDays: data.refillDurationDays.present
+          ? data.refillDurationDays.value
+          : this.refillDurationDays,
       nextRefillDate: data.nextRefillDate.present
           ? data.nextRefillDate.value
           : this.nextRefillDate,
+      startDate: data.startDate.present ? data.startDate.value : this.startDate,
+      notes: data.notes.present ? data.notes.value : this.notes,
+      syncStatus: data.syncStatus.present
+          ? data.syncStatus.value
+          : this.syncStatus,
+      idempotencyKey: data.idempotencyKey.present
+          ? data.idempotencyKey.value
+          : this.idempotencyKey,
     );
   }
 
@@ -7950,14 +8419,35 @@ class Medication extends DataClass implements Insertable<Medication> {
           ..write('dose: $dose, ')
           ..write('frequency: $frequency, ')
           ..write('category: $category, ')
-          ..write('nextRefillDate: $nextRefillDate')
+          ..write('isActive: $isActive, ')
+          ..write('reminderTime: $reminderTime, ')
+          ..write('refillDurationDays: $refillDurationDays, ')
+          ..write('nextRefillDate: $nextRefillDate, ')
+          ..write('startDate: $startDate, ')
+          ..write('notes: $notes, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('idempotencyKey: $idempotencyKey')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, userId, name, dose, frequency, category, nextRefillDate);
+  int get hashCode => Object.hash(
+    id,
+    userId,
+    name,
+    dose,
+    frequency,
+    category,
+    isActive,
+    reminderTime,
+    refillDurationDays,
+    nextRefillDate,
+    startDate,
+    notes,
+    syncStatus,
+    idempotencyKey,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -7968,7 +8458,14 @@ class Medication extends DataClass implements Insertable<Medication> {
           other.dose == this.dose &&
           other.frequency == this.frequency &&
           other.category == this.category &&
-          other.nextRefillDate == this.nextRefillDate);
+          other.isActive == this.isActive &&
+          other.reminderTime == this.reminderTime &&
+          other.refillDurationDays == this.refillDurationDays &&
+          other.nextRefillDate == this.nextRefillDate &&
+          other.startDate == this.startDate &&
+          other.notes == this.notes &&
+          other.syncStatus == this.syncStatus &&
+          other.idempotencyKey == this.idempotencyKey);
 }
 
 class MedicationsCompanion extends UpdateCompanion<Medication> {
@@ -7978,7 +8475,14 @@ class MedicationsCompanion extends UpdateCompanion<Medication> {
   final Value<String> dose;
   final Value<String> frequency;
   final Value<String> category;
+  final Value<bool> isActive;
+  final Value<String?> reminderTime;
+  final Value<int?> refillDurationDays;
   final Value<DateTime?> nextRefillDate;
+  final Value<DateTime?> startDate;
+  final Value<String?> notes;
+  final Value<String> syncStatus;
+  final Value<String> idempotencyKey;
   final Value<int> rowid;
   const MedicationsCompanion({
     this.id = const Value.absent(),
@@ -7987,7 +8491,14 @@ class MedicationsCompanion extends UpdateCompanion<Medication> {
     this.dose = const Value.absent(),
     this.frequency = const Value.absent(),
     this.category = const Value.absent(),
+    this.isActive = const Value.absent(),
+    this.reminderTime = const Value.absent(),
+    this.refillDurationDays = const Value.absent(),
     this.nextRefillDate = const Value.absent(),
+    this.startDate = const Value.absent(),
+    this.notes = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    this.idempotencyKey = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   MedicationsCompanion.insert({
@@ -7997,14 +8508,23 @@ class MedicationsCompanion extends UpdateCompanion<Medication> {
     required String dose,
     required String frequency,
     required String category,
+    this.isActive = const Value.absent(),
+    this.reminderTime = const Value.absent(),
+    this.refillDurationDays = const Value.absent(),
     this.nextRefillDate = const Value.absent(),
+    this.startDate = const Value.absent(),
+    this.notes = const Value.absent(),
+    required String syncStatus,
+    required String idempotencyKey,
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        userId = Value(userId),
        name = Value(name),
        dose = Value(dose),
        frequency = Value(frequency),
-       category = Value(category);
+       category = Value(category),
+       syncStatus = Value(syncStatus),
+       idempotencyKey = Value(idempotencyKey);
   static Insertable<Medication> custom({
     Expression<String>? id,
     Expression<String>? userId,
@@ -8012,7 +8532,14 @@ class MedicationsCompanion extends UpdateCompanion<Medication> {
     Expression<String>? dose,
     Expression<String>? frequency,
     Expression<String>? category,
+    Expression<bool>? isActive,
+    Expression<String>? reminderTime,
+    Expression<int>? refillDurationDays,
     Expression<DateTime>? nextRefillDate,
+    Expression<DateTime>? startDate,
+    Expression<String>? notes,
+    Expression<String>? syncStatus,
+    Expression<String>? idempotencyKey,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -8022,7 +8549,15 @@ class MedicationsCompanion extends UpdateCompanion<Medication> {
       if (dose != null) 'dose': dose,
       if (frequency != null) 'frequency': frequency,
       if (category != null) 'category': category,
+      if (isActive != null) 'is_active': isActive,
+      if (reminderTime != null) 'reminder_time': reminderTime,
+      if (refillDurationDays != null)
+        'refill_duration_days': refillDurationDays,
       if (nextRefillDate != null) 'next_refill_date': nextRefillDate,
+      if (startDate != null) 'start_date': startDate,
+      if (notes != null) 'notes': notes,
+      if (syncStatus != null) 'sync_status': syncStatus,
+      if (idempotencyKey != null) 'idempotency_key': idempotencyKey,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -8034,7 +8569,14 @@ class MedicationsCompanion extends UpdateCompanion<Medication> {
     Value<String>? dose,
     Value<String>? frequency,
     Value<String>? category,
+    Value<bool>? isActive,
+    Value<String?>? reminderTime,
+    Value<int?>? refillDurationDays,
     Value<DateTime?>? nextRefillDate,
+    Value<DateTime?>? startDate,
+    Value<String?>? notes,
+    Value<String>? syncStatus,
+    Value<String>? idempotencyKey,
     Value<int>? rowid,
   }) {
     return MedicationsCompanion(
@@ -8044,7 +8586,14 @@ class MedicationsCompanion extends UpdateCompanion<Medication> {
       dose: dose ?? this.dose,
       frequency: frequency ?? this.frequency,
       category: category ?? this.category,
+      isActive: isActive ?? this.isActive,
+      reminderTime: reminderTime ?? this.reminderTime,
+      refillDurationDays: refillDurationDays ?? this.refillDurationDays,
       nextRefillDate: nextRefillDate ?? this.nextRefillDate,
+      startDate: startDate ?? this.startDate,
+      notes: notes ?? this.notes,
+      syncStatus: syncStatus ?? this.syncStatus,
+      idempotencyKey: idempotencyKey ?? this.idempotencyKey,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -8070,8 +8619,29 @@ class MedicationsCompanion extends UpdateCompanion<Medication> {
     if (category.present) {
       map['category'] = Variable<String>(category.value);
     }
+    if (isActive.present) {
+      map['is_active'] = Variable<bool>(isActive.value);
+    }
+    if (reminderTime.present) {
+      map['reminder_time'] = Variable<String>(reminderTime.value);
+    }
+    if (refillDurationDays.present) {
+      map['refill_duration_days'] = Variable<int>(refillDurationDays.value);
+    }
     if (nextRefillDate.present) {
       map['next_refill_date'] = Variable<DateTime>(nextRefillDate.value);
+    }
+    if (startDate.present) {
+      map['start_date'] = Variable<DateTime>(startDate.value);
+    }
+    if (notes.present) {
+      map['notes'] = Variable<String>(notes.value);
+    }
+    if (syncStatus.present) {
+      map['sync_status'] = Variable<String>(syncStatus.value);
+    }
+    if (idempotencyKey.present) {
+      map['idempotency_key'] = Variable<String>(idempotencyKey.value);
     }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
@@ -8088,7 +8658,14 @@ class MedicationsCompanion extends UpdateCompanion<Medication> {
           ..write('dose: $dose, ')
           ..write('frequency: $frequency, ')
           ..write('category: $category, ')
+          ..write('isActive: $isActive, ')
+          ..write('reminderTime: $reminderTime, ')
+          ..write('refillDurationDays: $refillDurationDays, ')
           ..write('nextRefillDate: $nextRefillDate, ')
+          ..write('startDate: $startDate, ')
+          ..write('notes: $notes, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -8152,6 +8729,101 @@ class $FastingLogsTable extends FastingLogs
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _isCompletedMeta = const VerificationMeta(
+    'isCompleted',
+  );
+  @override
+  late final GeneratedColumn<bool> isCompleted = GeneratedColumn<bool>(
+    'is_completed',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_completed" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _targetDurationHoursMeta =
+      const VerificationMeta('targetDurationHours');
+  @override
+  late final GeneratedColumn<int> targetDurationHours = GeneratedColumn<int>(
+    'target_duration_hours',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(16),
+  );
+  static const VerificationMeta _hydrationAlertsMeta = const VerificationMeta(
+    'hydrationAlerts',
+  );
+  @override
+  late final GeneratedColumn<String> hydrationAlerts = GeneratedColumn<String>(
+    'hydration_alerts',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _sehriTimeMeta = const VerificationMeta(
+    'sehriTime',
+  );
+  @override
+  late final GeneratedColumn<DateTime> sehriTime = GeneratedColumn<DateTime>(
+    'sehri_time',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _iftarTimeMeta = const VerificationMeta(
+    'iftarTime',
+  );
+  @override
+  late final GeneratedColumn<DateTime> iftarTime = GeneratedColumn<DateTime>(
+    'iftar_time',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _isRamadanModeMeta = const VerificationMeta(
+    'isRamadanMode',
+  );
+  @override
+  late final GeneratedColumn<bool> isRamadanMode = GeneratedColumn<bool>(
+    'is_ramadan_mode',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_ramadan_mode" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _xpEarnedMeta = const VerificationMeta(
+    'xpEarned',
+  );
+  @override
+  late final GeneratedColumn<int> xpEarned = GeneratedColumn<int>(
+    'xp_earned',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _notesMeta = const VerificationMeta('notes');
+  @override
+  late final GeneratedColumn<String> notes = GeneratedColumn<String>(
+    'notes',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -8159,6 +8831,14 @@ class $FastingLogsTable extends FastingLogs
     fastStart,
     fastEnd,
     fastType,
+    isCompleted,
+    targetDurationHours,
+    hydrationAlerts,
+    sehriTime,
+    iftarTime,
+    isRamadanMode,
+    xpEarned,
+    notes,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -8207,6 +8887,66 @@ class $FastingLogsTable extends FastingLogs
     } else if (isInserting) {
       context.missing(_fastTypeMeta);
     }
+    if (data.containsKey('is_completed')) {
+      context.handle(
+        _isCompletedMeta,
+        isCompleted.isAcceptableOrUnknown(
+          data['is_completed']!,
+          _isCompletedMeta,
+        ),
+      );
+    }
+    if (data.containsKey('target_duration_hours')) {
+      context.handle(
+        _targetDurationHoursMeta,
+        targetDurationHours.isAcceptableOrUnknown(
+          data['target_duration_hours']!,
+          _targetDurationHoursMeta,
+        ),
+      );
+    }
+    if (data.containsKey('hydration_alerts')) {
+      context.handle(
+        _hydrationAlertsMeta,
+        hydrationAlerts.isAcceptableOrUnknown(
+          data['hydration_alerts']!,
+          _hydrationAlertsMeta,
+        ),
+      );
+    }
+    if (data.containsKey('sehri_time')) {
+      context.handle(
+        _sehriTimeMeta,
+        sehriTime.isAcceptableOrUnknown(data['sehri_time']!, _sehriTimeMeta),
+      );
+    }
+    if (data.containsKey('iftar_time')) {
+      context.handle(
+        _iftarTimeMeta,
+        iftarTime.isAcceptableOrUnknown(data['iftar_time']!, _iftarTimeMeta),
+      );
+    }
+    if (data.containsKey('is_ramadan_mode')) {
+      context.handle(
+        _isRamadanModeMeta,
+        isRamadanMode.isAcceptableOrUnknown(
+          data['is_ramadan_mode']!,
+          _isRamadanModeMeta,
+        ),
+      );
+    }
+    if (data.containsKey('xp_earned')) {
+      context.handle(
+        _xpEarnedMeta,
+        xpEarned.isAcceptableOrUnknown(data['xp_earned']!, _xpEarnedMeta),
+      );
+    }
+    if (data.containsKey('notes')) {
+      context.handle(
+        _notesMeta,
+        notes.isAcceptableOrUnknown(data['notes']!, _notesMeta),
+      );
+    }
     return context;
   }
 
@@ -8236,6 +8976,38 @@ class $FastingLogsTable extends FastingLogs
         DriftSqlType.string,
         data['${effectivePrefix}fast_type'],
       )!,
+      isCompleted: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_completed'],
+      )!,
+      targetDurationHours: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}target_duration_hours'],
+      )!,
+      hydrationAlerts: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}hydration_alerts'],
+      ),
+      sehriTime: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}sehri_time'],
+      ),
+      iftarTime: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}iftar_time'],
+      ),
+      isRamadanMode: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_ramadan_mode'],
+      )!,
+      xpEarned: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}xp_earned'],
+      )!,
+      notes: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}notes'],
+      ),
     );
   }
 
@@ -8251,12 +9023,28 @@ class FastingLog extends DataClass implements Insertable<FastingLog> {
   final DateTime fastStart;
   final DateTime? fastEnd;
   final String fastType;
+  final bool isCompleted;
+  final int targetDurationHours;
+  final String? hydrationAlerts;
+  final DateTime? sehriTime;
+  final DateTime? iftarTime;
+  final bool isRamadanMode;
+  final int xpEarned;
+  final String? notes;
   const FastingLog({
     required this.id,
     required this.userId,
     required this.fastStart,
     this.fastEnd,
     required this.fastType,
+    required this.isCompleted,
+    required this.targetDurationHours,
+    this.hydrationAlerts,
+    this.sehriTime,
+    this.iftarTime,
+    required this.isRamadanMode,
+    required this.xpEarned,
+    this.notes,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -8268,6 +9056,22 @@ class FastingLog extends DataClass implements Insertable<FastingLog> {
       map['fast_end'] = Variable<DateTime>(fastEnd);
     }
     map['fast_type'] = Variable<String>(fastType);
+    map['is_completed'] = Variable<bool>(isCompleted);
+    map['target_duration_hours'] = Variable<int>(targetDurationHours);
+    if (!nullToAbsent || hydrationAlerts != null) {
+      map['hydration_alerts'] = Variable<String>(hydrationAlerts);
+    }
+    if (!nullToAbsent || sehriTime != null) {
+      map['sehri_time'] = Variable<DateTime>(sehriTime);
+    }
+    if (!nullToAbsent || iftarTime != null) {
+      map['iftar_time'] = Variable<DateTime>(iftarTime);
+    }
+    map['is_ramadan_mode'] = Variable<bool>(isRamadanMode);
+    map['xp_earned'] = Variable<int>(xpEarned);
+    if (!nullToAbsent || notes != null) {
+      map['notes'] = Variable<String>(notes);
+    }
     return map;
   }
 
@@ -8280,6 +9084,22 @@ class FastingLog extends DataClass implements Insertable<FastingLog> {
           ? const Value.absent()
           : Value(fastEnd),
       fastType: Value(fastType),
+      isCompleted: Value(isCompleted),
+      targetDurationHours: Value(targetDurationHours),
+      hydrationAlerts: hydrationAlerts == null && nullToAbsent
+          ? const Value.absent()
+          : Value(hydrationAlerts),
+      sehriTime: sehriTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(sehriTime),
+      iftarTime: iftarTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(iftarTime),
+      isRamadanMode: Value(isRamadanMode),
+      xpEarned: Value(xpEarned),
+      notes: notes == null && nullToAbsent
+          ? const Value.absent()
+          : Value(notes),
     );
   }
 
@@ -8294,6 +9114,16 @@ class FastingLog extends DataClass implements Insertable<FastingLog> {
       fastStart: serializer.fromJson<DateTime>(json['fastStart']),
       fastEnd: serializer.fromJson<DateTime?>(json['fastEnd']),
       fastType: serializer.fromJson<String>(json['fastType']),
+      isCompleted: serializer.fromJson<bool>(json['isCompleted']),
+      targetDurationHours: serializer.fromJson<int>(
+        json['targetDurationHours'],
+      ),
+      hydrationAlerts: serializer.fromJson<String?>(json['hydrationAlerts']),
+      sehriTime: serializer.fromJson<DateTime?>(json['sehriTime']),
+      iftarTime: serializer.fromJson<DateTime?>(json['iftarTime']),
+      isRamadanMode: serializer.fromJson<bool>(json['isRamadanMode']),
+      xpEarned: serializer.fromJson<int>(json['xpEarned']),
+      notes: serializer.fromJson<String?>(json['notes']),
     );
   }
   @override
@@ -8305,6 +9135,14 @@ class FastingLog extends DataClass implements Insertable<FastingLog> {
       'fastStart': serializer.toJson<DateTime>(fastStart),
       'fastEnd': serializer.toJson<DateTime?>(fastEnd),
       'fastType': serializer.toJson<String>(fastType),
+      'isCompleted': serializer.toJson<bool>(isCompleted),
+      'targetDurationHours': serializer.toJson<int>(targetDurationHours),
+      'hydrationAlerts': serializer.toJson<String?>(hydrationAlerts),
+      'sehriTime': serializer.toJson<DateTime?>(sehriTime),
+      'iftarTime': serializer.toJson<DateTime?>(iftarTime),
+      'isRamadanMode': serializer.toJson<bool>(isRamadanMode),
+      'xpEarned': serializer.toJson<int>(xpEarned),
+      'notes': serializer.toJson<String?>(notes),
     };
   }
 
@@ -8314,12 +9152,30 @@ class FastingLog extends DataClass implements Insertable<FastingLog> {
     DateTime? fastStart,
     Value<DateTime?> fastEnd = const Value.absent(),
     String? fastType,
+    bool? isCompleted,
+    int? targetDurationHours,
+    Value<String?> hydrationAlerts = const Value.absent(),
+    Value<DateTime?> sehriTime = const Value.absent(),
+    Value<DateTime?> iftarTime = const Value.absent(),
+    bool? isRamadanMode,
+    int? xpEarned,
+    Value<String?> notes = const Value.absent(),
   }) => FastingLog(
     id: id ?? this.id,
     userId: userId ?? this.userId,
     fastStart: fastStart ?? this.fastStart,
     fastEnd: fastEnd.present ? fastEnd.value : this.fastEnd,
     fastType: fastType ?? this.fastType,
+    isCompleted: isCompleted ?? this.isCompleted,
+    targetDurationHours: targetDurationHours ?? this.targetDurationHours,
+    hydrationAlerts: hydrationAlerts.present
+        ? hydrationAlerts.value
+        : this.hydrationAlerts,
+    sehriTime: sehriTime.present ? sehriTime.value : this.sehriTime,
+    iftarTime: iftarTime.present ? iftarTime.value : this.iftarTime,
+    isRamadanMode: isRamadanMode ?? this.isRamadanMode,
+    xpEarned: xpEarned ?? this.xpEarned,
+    notes: notes.present ? notes.value : this.notes,
   );
   FastingLog copyWithCompanion(FastingLogsCompanion data) {
     return FastingLog(
@@ -8328,6 +9184,22 @@ class FastingLog extends DataClass implements Insertable<FastingLog> {
       fastStart: data.fastStart.present ? data.fastStart.value : this.fastStart,
       fastEnd: data.fastEnd.present ? data.fastEnd.value : this.fastEnd,
       fastType: data.fastType.present ? data.fastType.value : this.fastType,
+      isCompleted: data.isCompleted.present
+          ? data.isCompleted.value
+          : this.isCompleted,
+      targetDurationHours: data.targetDurationHours.present
+          ? data.targetDurationHours.value
+          : this.targetDurationHours,
+      hydrationAlerts: data.hydrationAlerts.present
+          ? data.hydrationAlerts.value
+          : this.hydrationAlerts,
+      sehriTime: data.sehriTime.present ? data.sehriTime.value : this.sehriTime,
+      iftarTime: data.iftarTime.present ? data.iftarTime.value : this.iftarTime,
+      isRamadanMode: data.isRamadanMode.present
+          ? data.isRamadanMode.value
+          : this.isRamadanMode,
+      xpEarned: data.xpEarned.present ? data.xpEarned.value : this.xpEarned,
+      notes: data.notes.present ? data.notes.value : this.notes,
     );
   }
 
@@ -8338,13 +9210,35 @@ class FastingLog extends DataClass implements Insertable<FastingLog> {
           ..write('userId: $userId, ')
           ..write('fastStart: $fastStart, ')
           ..write('fastEnd: $fastEnd, ')
-          ..write('fastType: $fastType')
+          ..write('fastType: $fastType, ')
+          ..write('isCompleted: $isCompleted, ')
+          ..write('targetDurationHours: $targetDurationHours, ')
+          ..write('hydrationAlerts: $hydrationAlerts, ')
+          ..write('sehriTime: $sehriTime, ')
+          ..write('iftarTime: $iftarTime, ')
+          ..write('isRamadanMode: $isRamadanMode, ')
+          ..write('xpEarned: $xpEarned, ')
+          ..write('notes: $notes')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, userId, fastStart, fastEnd, fastType);
+  int get hashCode => Object.hash(
+    id,
+    userId,
+    fastStart,
+    fastEnd,
+    fastType,
+    isCompleted,
+    targetDurationHours,
+    hydrationAlerts,
+    sehriTime,
+    iftarTime,
+    isRamadanMode,
+    xpEarned,
+    notes,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -8353,7 +9247,15 @@ class FastingLog extends DataClass implements Insertable<FastingLog> {
           other.userId == this.userId &&
           other.fastStart == this.fastStart &&
           other.fastEnd == this.fastEnd &&
-          other.fastType == this.fastType);
+          other.fastType == this.fastType &&
+          other.isCompleted == this.isCompleted &&
+          other.targetDurationHours == this.targetDurationHours &&
+          other.hydrationAlerts == this.hydrationAlerts &&
+          other.sehriTime == this.sehriTime &&
+          other.iftarTime == this.iftarTime &&
+          other.isRamadanMode == this.isRamadanMode &&
+          other.xpEarned == this.xpEarned &&
+          other.notes == this.notes);
 }
 
 class FastingLogsCompanion extends UpdateCompanion<FastingLog> {
@@ -8362,6 +9264,14 @@ class FastingLogsCompanion extends UpdateCompanion<FastingLog> {
   final Value<DateTime> fastStart;
   final Value<DateTime?> fastEnd;
   final Value<String> fastType;
+  final Value<bool> isCompleted;
+  final Value<int> targetDurationHours;
+  final Value<String?> hydrationAlerts;
+  final Value<DateTime?> sehriTime;
+  final Value<DateTime?> iftarTime;
+  final Value<bool> isRamadanMode;
+  final Value<int> xpEarned;
+  final Value<String?> notes;
   final Value<int> rowid;
   const FastingLogsCompanion({
     this.id = const Value.absent(),
@@ -8369,6 +9279,14 @@ class FastingLogsCompanion extends UpdateCompanion<FastingLog> {
     this.fastStart = const Value.absent(),
     this.fastEnd = const Value.absent(),
     this.fastType = const Value.absent(),
+    this.isCompleted = const Value.absent(),
+    this.targetDurationHours = const Value.absent(),
+    this.hydrationAlerts = const Value.absent(),
+    this.sehriTime = const Value.absent(),
+    this.iftarTime = const Value.absent(),
+    this.isRamadanMode = const Value.absent(),
+    this.xpEarned = const Value.absent(),
+    this.notes = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   FastingLogsCompanion.insert({
@@ -8377,6 +9295,14 @@ class FastingLogsCompanion extends UpdateCompanion<FastingLog> {
     required DateTime fastStart,
     this.fastEnd = const Value.absent(),
     required String fastType,
+    this.isCompleted = const Value.absent(),
+    this.targetDurationHours = const Value.absent(),
+    this.hydrationAlerts = const Value.absent(),
+    this.sehriTime = const Value.absent(),
+    this.iftarTime = const Value.absent(),
+    this.isRamadanMode = const Value.absent(),
+    this.xpEarned = const Value.absent(),
+    this.notes = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        userId = Value(userId),
@@ -8388,6 +9314,14 @@ class FastingLogsCompanion extends UpdateCompanion<FastingLog> {
     Expression<DateTime>? fastStart,
     Expression<DateTime>? fastEnd,
     Expression<String>? fastType,
+    Expression<bool>? isCompleted,
+    Expression<int>? targetDurationHours,
+    Expression<String>? hydrationAlerts,
+    Expression<DateTime>? sehriTime,
+    Expression<DateTime>? iftarTime,
+    Expression<bool>? isRamadanMode,
+    Expression<int>? xpEarned,
+    Expression<String>? notes,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -8396,6 +9330,15 @@ class FastingLogsCompanion extends UpdateCompanion<FastingLog> {
       if (fastStart != null) 'fast_start': fastStart,
       if (fastEnd != null) 'fast_end': fastEnd,
       if (fastType != null) 'fast_type': fastType,
+      if (isCompleted != null) 'is_completed': isCompleted,
+      if (targetDurationHours != null)
+        'target_duration_hours': targetDurationHours,
+      if (hydrationAlerts != null) 'hydration_alerts': hydrationAlerts,
+      if (sehriTime != null) 'sehri_time': sehriTime,
+      if (iftarTime != null) 'iftar_time': iftarTime,
+      if (isRamadanMode != null) 'is_ramadan_mode': isRamadanMode,
+      if (xpEarned != null) 'xp_earned': xpEarned,
+      if (notes != null) 'notes': notes,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -8406,6 +9349,14 @@ class FastingLogsCompanion extends UpdateCompanion<FastingLog> {
     Value<DateTime>? fastStart,
     Value<DateTime?>? fastEnd,
     Value<String>? fastType,
+    Value<bool>? isCompleted,
+    Value<int>? targetDurationHours,
+    Value<String?>? hydrationAlerts,
+    Value<DateTime?>? sehriTime,
+    Value<DateTime?>? iftarTime,
+    Value<bool>? isRamadanMode,
+    Value<int>? xpEarned,
+    Value<String?>? notes,
     Value<int>? rowid,
   }) {
     return FastingLogsCompanion(
@@ -8414,6 +9365,14 @@ class FastingLogsCompanion extends UpdateCompanion<FastingLog> {
       fastStart: fastStart ?? this.fastStart,
       fastEnd: fastEnd ?? this.fastEnd,
       fastType: fastType ?? this.fastType,
+      isCompleted: isCompleted ?? this.isCompleted,
+      targetDurationHours: targetDurationHours ?? this.targetDurationHours,
+      hydrationAlerts: hydrationAlerts ?? this.hydrationAlerts,
+      sehriTime: sehriTime ?? this.sehriTime,
+      iftarTime: iftarTime ?? this.iftarTime,
+      isRamadanMode: isRamadanMode ?? this.isRamadanMode,
+      xpEarned: xpEarned ?? this.xpEarned,
+      notes: notes ?? this.notes,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -8436,6 +9395,30 @@ class FastingLogsCompanion extends UpdateCompanion<FastingLog> {
     if (fastType.present) {
       map['fast_type'] = Variable<String>(fastType.value);
     }
+    if (isCompleted.present) {
+      map['is_completed'] = Variable<bool>(isCompleted.value);
+    }
+    if (targetDurationHours.present) {
+      map['target_duration_hours'] = Variable<int>(targetDurationHours.value);
+    }
+    if (hydrationAlerts.present) {
+      map['hydration_alerts'] = Variable<String>(hydrationAlerts.value);
+    }
+    if (sehriTime.present) {
+      map['sehri_time'] = Variable<DateTime>(sehriTime.value);
+    }
+    if (iftarTime.present) {
+      map['iftar_time'] = Variable<DateTime>(iftarTime.value);
+    }
+    if (isRamadanMode.present) {
+      map['is_ramadan_mode'] = Variable<bool>(isRamadanMode.value);
+    }
+    if (xpEarned.present) {
+      map['xp_earned'] = Variable<int>(xpEarned.value);
+    }
+    if (notes.present) {
+      map['notes'] = Variable<String>(notes.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -8450,6 +9433,14 @@ class FastingLogsCompanion extends UpdateCompanion<FastingLog> {
           ..write('fastStart: $fastStart, ')
           ..write('fastEnd: $fastEnd, ')
           ..write('fastType: $fastType, ')
+          ..write('isCompleted: $isCompleted, ')
+          ..write('targetDurationHours: $targetDurationHours, ')
+          ..write('hydrationAlerts: $hydrationAlerts, ')
+          ..write('sehriTime: $sehriTime, ')
+          ..write('iftarTime: $iftarTime, ')
+          ..write('isRamadanMode: $isRamadanMode, ')
+          ..write('xpEarned: $xpEarned, ')
+          ..write('notes: $notes, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -8480,44 +9471,70 @@ class $MealPlansTable extends MealPlans
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _dateMeta = const VerificationMeta('date');
+  static const VerificationMeta _weekStartDateMeta = const VerificationMeta(
+    'weekStartDate',
+  );
   @override
-  late final GeneratedColumn<DateTime> date = GeneratedColumn<DateTime>(
-    'date',
+  late final GeneratedColumn<DateTime> weekStartDate =
+      GeneratedColumn<DateTime>(
+        'week_start_date',
+        aliasedName,
+        false,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _cuisineRegionMeta = const VerificationMeta(
+    'cuisineRegion',
+  );
+  @override
+  late final GeneratedColumn<String> cuisineRegion = GeneratedColumn<String>(
+    'cuisine_region',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _statusMeta = const VerificationMeta('status');
+  @override
+  late final GeneratedColumn<String> status = GeneratedColumn<String>(
+    'status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('active'),
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
     aliasedName,
     false,
     type: DriftSqlType.dateTime,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _mealTypeMeta = const VerificationMeta(
-    'mealType',
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
   );
   @override
-  late final GeneratedColumn<String> mealType = GeneratedColumn<String>(
-    'meal_type',
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
     aliasedName,
     false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _planDetailsMeta = const VerificationMeta(
-    'planDetails',
-  );
-  @override
-  late final GeneratedColumn<String> planDetails = GeneratedColumn<String>(
-    'plan_details',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
+    type: DriftSqlType.dateTime,
     requiredDuringInsert: true,
   );
   @override
   List<GeneratedColumn> get $columns => [
     id,
     userId,
-    date,
-    mealType,
-    planDetails,
+    weekStartDate,
+    cuisineRegion,
+    status,
+    createdAt,
+    updatedAt,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -8544,32 +9561,49 @@ class $MealPlansTable extends MealPlans
     } else if (isInserting) {
       context.missing(_userIdMeta);
     }
-    if (data.containsKey('date')) {
+    if (data.containsKey('week_start_date')) {
       context.handle(
-        _dateMeta,
-        date.isAcceptableOrUnknown(data['date']!, _dateMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_dateMeta);
-    }
-    if (data.containsKey('meal_type')) {
-      context.handle(
-        _mealTypeMeta,
-        mealType.isAcceptableOrUnknown(data['meal_type']!, _mealTypeMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_mealTypeMeta);
-    }
-    if (data.containsKey('plan_details')) {
-      context.handle(
-        _planDetailsMeta,
-        planDetails.isAcceptableOrUnknown(
-          data['plan_details']!,
-          _planDetailsMeta,
+        _weekStartDateMeta,
+        weekStartDate.isAcceptableOrUnknown(
+          data['week_start_date']!,
+          _weekStartDateMeta,
         ),
       );
     } else if (isInserting) {
-      context.missing(_planDetailsMeta);
+      context.missing(_weekStartDateMeta);
+    }
+    if (data.containsKey('cuisine_region')) {
+      context.handle(
+        _cuisineRegionMeta,
+        cuisineRegion.isAcceptableOrUnknown(
+          data['cuisine_region']!,
+          _cuisineRegionMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_cuisineRegionMeta);
+    }
+    if (data.containsKey('status')) {
+      context.handle(
+        _statusMeta,
+        status.isAcceptableOrUnknown(data['status']!, _statusMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
     }
     return context;
   }
@@ -8588,17 +9622,25 @@ class $MealPlansTable extends MealPlans
         DriftSqlType.string,
         data['${effectivePrefix}user_id'],
       )!,
-      date: attachedDatabase.typeMapping.read(
+      weekStartDate: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
-        data['${effectivePrefix}date'],
+        data['${effectivePrefix}week_start_date'],
       )!,
-      mealType: attachedDatabase.typeMapping.read(
+      cuisineRegion: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}meal_type'],
+        data['${effectivePrefix}cuisine_region'],
       )!,
-      planDetails: attachedDatabase.typeMapping.read(
+      status: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}plan_details'],
+        data['${effectivePrefix}status'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
       )!,
     );
   }
@@ -8612,24 +9654,30 @@ class $MealPlansTable extends MealPlans
 class MealPlan extends DataClass implements Insertable<MealPlan> {
   final String id;
   final String userId;
-  final DateTime date;
-  final String mealType;
-  final String planDetails;
+  final DateTime weekStartDate;
+  final String cuisineRegion;
+  final String status;
+  final DateTime createdAt;
+  final DateTime updatedAt;
   const MealPlan({
     required this.id,
     required this.userId,
-    required this.date,
-    required this.mealType,
-    required this.planDetails,
+    required this.weekStartDate,
+    required this.cuisineRegion,
+    required this.status,
+    required this.createdAt,
+    required this.updatedAt,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<String>(id);
     map['user_id'] = Variable<String>(userId);
-    map['date'] = Variable<DateTime>(date);
-    map['meal_type'] = Variable<String>(mealType);
-    map['plan_details'] = Variable<String>(planDetails);
+    map['week_start_date'] = Variable<DateTime>(weekStartDate);
+    map['cuisine_region'] = Variable<String>(cuisineRegion);
+    map['status'] = Variable<String>(status);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
     return map;
   }
 
@@ -8637,9 +9685,11 @@ class MealPlan extends DataClass implements Insertable<MealPlan> {
     return MealPlansCompanion(
       id: Value(id),
       userId: Value(userId),
-      date: Value(date),
-      mealType: Value(mealType),
-      planDetails: Value(planDetails),
+      weekStartDate: Value(weekStartDate),
+      cuisineRegion: Value(cuisineRegion),
+      status: Value(status),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
     );
   }
 
@@ -8651,9 +9701,11 @@ class MealPlan extends DataClass implements Insertable<MealPlan> {
     return MealPlan(
       id: serializer.fromJson<String>(json['id']),
       userId: serializer.fromJson<String>(json['userId']),
-      date: serializer.fromJson<DateTime>(json['date']),
-      mealType: serializer.fromJson<String>(json['mealType']),
-      planDetails: serializer.fromJson<String>(json['planDetails']),
+      weekStartDate: serializer.fromJson<DateTime>(json['weekStartDate']),
+      cuisineRegion: serializer.fromJson<String>(json['cuisineRegion']),
+      status: serializer.fromJson<String>(json['status']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
     );
   }
   @override
@@ -8662,34 +9714,44 @@ class MealPlan extends DataClass implements Insertable<MealPlan> {
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
       'userId': serializer.toJson<String>(userId),
-      'date': serializer.toJson<DateTime>(date),
-      'mealType': serializer.toJson<String>(mealType),
-      'planDetails': serializer.toJson<String>(planDetails),
+      'weekStartDate': serializer.toJson<DateTime>(weekStartDate),
+      'cuisineRegion': serializer.toJson<String>(cuisineRegion),
+      'status': serializer.toJson<String>(status),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
     };
   }
 
   MealPlan copyWith({
     String? id,
     String? userId,
-    DateTime? date,
-    String? mealType,
-    String? planDetails,
+    DateTime? weekStartDate,
+    String? cuisineRegion,
+    String? status,
+    DateTime? createdAt,
+    DateTime? updatedAt,
   }) => MealPlan(
     id: id ?? this.id,
     userId: userId ?? this.userId,
-    date: date ?? this.date,
-    mealType: mealType ?? this.mealType,
-    planDetails: planDetails ?? this.planDetails,
+    weekStartDate: weekStartDate ?? this.weekStartDate,
+    cuisineRegion: cuisineRegion ?? this.cuisineRegion,
+    status: status ?? this.status,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
   );
   MealPlan copyWithCompanion(MealPlansCompanion data) {
     return MealPlan(
       id: data.id.present ? data.id.value : this.id,
       userId: data.userId.present ? data.userId.value : this.userId,
-      date: data.date.present ? data.date.value : this.date,
-      mealType: data.mealType.present ? data.mealType.value : this.mealType,
-      planDetails: data.planDetails.present
-          ? data.planDetails.value
-          : this.planDetails,
+      weekStartDate: data.weekStartDate.present
+          ? data.weekStartDate.value
+          : this.weekStartDate,
+      cuisineRegion: data.cuisineRegion.present
+          ? data.cuisineRegion.value
+          : this.cuisineRegion,
+      status: data.status.present ? data.status.value : this.status,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
   }
 
@@ -8698,67 +9760,90 @@ class MealPlan extends DataClass implements Insertable<MealPlan> {
     return (StringBuffer('MealPlan(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
-          ..write('date: $date, ')
-          ..write('mealType: $mealType, ')
-          ..write('planDetails: $planDetails')
+          ..write('weekStartDate: $weekStartDate, ')
+          ..write('cuisineRegion: $cuisineRegion, ')
+          ..write('status: $status, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, userId, date, mealType, planDetails);
+  int get hashCode => Object.hash(
+    id,
+    userId,
+    weekStartDate,
+    cuisineRegion,
+    status,
+    createdAt,
+    updatedAt,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is MealPlan &&
           other.id == this.id &&
           other.userId == this.userId &&
-          other.date == this.date &&
-          other.mealType == this.mealType &&
-          other.planDetails == this.planDetails);
+          other.weekStartDate == this.weekStartDate &&
+          other.cuisineRegion == this.cuisineRegion &&
+          other.status == this.status &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
 }
 
 class MealPlansCompanion extends UpdateCompanion<MealPlan> {
   final Value<String> id;
   final Value<String> userId;
-  final Value<DateTime> date;
-  final Value<String> mealType;
-  final Value<String> planDetails;
+  final Value<DateTime> weekStartDate;
+  final Value<String> cuisineRegion;
+  final Value<String> status;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
   final Value<int> rowid;
   const MealPlansCompanion({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
-    this.date = const Value.absent(),
-    this.mealType = const Value.absent(),
-    this.planDetails = const Value.absent(),
+    this.weekStartDate = const Value.absent(),
+    this.cuisineRegion = const Value.absent(),
+    this.status = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   MealPlansCompanion.insert({
     required String id,
     required String userId,
-    required DateTime date,
-    required String mealType,
-    required String planDetails,
+    required DateTime weekStartDate,
+    required String cuisineRegion,
+    this.status = const Value.absent(),
+    required DateTime createdAt,
+    required DateTime updatedAt,
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        userId = Value(userId),
-       date = Value(date),
-       mealType = Value(mealType),
-       planDetails = Value(planDetails);
+       weekStartDate = Value(weekStartDate),
+       cuisineRegion = Value(cuisineRegion),
+       createdAt = Value(createdAt),
+       updatedAt = Value(updatedAt);
   static Insertable<MealPlan> custom({
     Expression<String>? id,
     Expression<String>? userId,
-    Expression<DateTime>? date,
-    Expression<String>? mealType,
-    Expression<String>? planDetails,
+    Expression<DateTime>? weekStartDate,
+    Expression<String>? cuisineRegion,
+    Expression<String>? status,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (userId != null) 'user_id': userId,
-      if (date != null) 'date': date,
-      if (mealType != null) 'meal_type': mealType,
-      if (planDetails != null) 'plan_details': planDetails,
+      if (weekStartDate != null) 'week_start_date': weekStartDate,
+      if (cuisineRegion != null) 'cuisine_region': cuisineRegion,
+      if (status != null) 'status': status,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -8766,17 +9851,21 @@ class MealPlansCompanion extends UpdateCompanion<MealPlan> {
   MealPlansCompanion copyWith({
     Value<String>? id,
     Value<String>? userId,
-    Value<DateTime>? date,
-    Value<String>? mealType,
-    Value<String>? planDetails,
+    Value<DateTime>? weekStartDate,
+    Value<String>? cuisineRegion,
+    Value<String>? status,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
     Value<int>? rowid,
   }) {
     return MealPlansCompanion(
       id: id ?? this.id,
       userId: userId ?? this.userId,
-      date: date ?? this.date,
-      mealType: mealType ?? this.mealType,
-      planDetails: planDetails ?? this.planDetails,
+      weekStartDate: weekStartDate ?? this.weekStartDate,
+      cuisineRegion: cuisineRegion ?? this.cuisineRegion,
+      status: status ?? this.status,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -8790,14 +9879,20 @@ class MealPlansCompanion extends UpdateCompanion<MealPlan> {
     if (userId.present) {
       map['user_id'] = Variable<String>(userId.value);
     }
-    if (date.present) {
-      map['date'] = Variable<DateTime>(date.value);
+    if (weekStartDate.present) {
+      map['week_start_date'] = Variable<DateTime>(weekStartDate.value);
     }
-    if (mealType.present) {
-      map['meal_type'] = Variable<String>(mealType.value);
+    if (cuisineRegion.present) {
+      map['cuisine_region'] = Variable<String>(cuisineRegion.value);
     }
-    if (planDetails.present) {
-      map['plan_details'] = Variable<String>(planDetails.value);
+    if (status.present) {
+      map['status'] = Variable<String>(status.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
     }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
@@ -8810,9 +9905,11 @@ class MealPlansCompanion extends UpdateCompanion<MealPlan> {
     return (StringBuffer('MealPlansCompanion(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
-          ..write('date: $date, ')
-          ..write('mealType: $mealType, ')
-          ..write('planDetails: $planDetails, ')
+          ..write('weekStartDate: $weekStartDate, ')
+          ..write('cuisineRegion: $cuisineRegion, ')
+          ..write('status: $status, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -8851,6 +9948,17 @@ class $RecipesTable extends Recipes with TableInfo<$RecipesTable, Recipe> {
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _descriptionMeta = const VerificationMeta(
+    'description',
+  );
+  @override
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+    'description',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _ingredientsMeta = const VerificationMeta(
     'ingredients',
   );
@@ -8873,25 +9981,201 @@ class $RecipesTable extends Recipes with TableInfo<$RecipesTable, Recipe> {
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _totalCaloriesMeta = const VerificationMeta(
-    'totalCalories',
+  static const VerificationMeta _servingsMeta = const VerificationMeta(
+    'servings',
   );
   @override
-  late final GeneratedColumn<double> totalCalories = GeneratedColumn<double>(
-    'total_calories',
+  late final GeneratedColumn<int> servings = GeneratedColumn<int>(
+    'servings',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(1),
+  );
+  static const VerificationMeta _caloriesPerServingMeta =
+      const VerificationMeta('caloriesPerServing');
+  @override
+  late final GeneratedColumn<double> caloriesPerServing =
+      GeneratedColumn<double>(
+        'calories_per_serving',
+        aliasedName,
+        true,
+        type: DriftSqlType.double,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _proteinPerServingMeta = const VerificationMeta(
+    'proteinPerServing',
+  );
+  @override
+  late final GeneratedColumn<double> proteinPerServing =
+      GeneratedColumn<double>(
+        'protein_per_serving',
+        aliasedName,
+        true,
+        type: DriftSqlType.double,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _carbsPerServingMeta = const VerificationMeta(
+    'carbsPerServing',
+  );
+  @override
+  late final GeneratedColumn<double> carbsPerServing = GeneratedColumn<double>(
+    'carbs_per_serving',
     aliasedName,
     true,
     type: DriftSqlType.double,
     requiredDuringInsert: false,
+  );
+  static const VerificationMeta _fatPerServingMeta = const VerificationMeta(
+    'fatPerServing',
+  );
+  @override
+  late final GeneratedColumn<double> fatPerServing = GeneratedColumn<double>(
+    'fat_per_serving',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _fiberPerServingMeta = const VerificationMeta(
+    'fiberPerServing',
+  );
+  @override
+  late final GeneratedColumn<double> fiberPerServing = GeneratedColumn<double>(
+    'fiber_per_serving',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _vitaminDPerServingMeta =
+      const VerificationMeta('vitaminDPerServing');
+  @override
+  late final GeneratedColumn<double> vitaminDPerServing =
+      GeneratedColumn<double>(
+        'vitamin_d_per_serving',
+        aliasedName,
+        true,
+        type: DriftSqlType.double,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _vitaminB12PerServingMeta =
+      const VerificationMeta('vitaminB12PerServing');
+  @override
+  late final GeneratedColumn<double> vitaminB12PerServing =
+      GeneratedColumn<double>(
+        'vitamin_b12_per_serving',
+        aliasedName,
+        true,
+        type: DriftSqlType.double,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _ironPerServingMeta = const VerificationMeta(
+    'ironPerServing',
+  );
+  @override
+  late final GeneratedColumn<double> ironPerServing = GeneratedColumn<double>(
+    'iron_per_serving',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _calciumPerServingMeta = const VerificationMeta(
+    'calciumPerServing',
+  );
+  @override
+  late final GeneratedColumn<double> calciumPerServing =
+      GeneratedColumn<double>(
+        'calcium_per_serving',
+        aliasedName,
+        true,
+        type: DriftSqlType.double,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _isPublicMeta = const VerificationMeta(
+    'isPublic',
+  );
+  @override
+  late final GeneratedColumn<bool> isPublic = GeneratedColumn<bool>(
+    'is_public',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_public" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _imageUrlMeta = const VerificationMeta(
+    'imageUrl',
+  );
+  @override
+  late final GeneratedColumn<String> imageUrl = GeneratedColumn<String>(
+    'image_url',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _syncStatusMeta = const VerificationMeta(
+    'syncStatus',
+  );
+  @override
+  late final GeneratedColumn<String> syncStatus = GeneratedColumn<String>(
+    'sync_status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
   );
   @override
   List<GeneratedColumn> get $columns => [
     id,
     userId,
     title,
+    description,
     ingredients,
     instructions,
-    totalCalories,
+    servings,
+    caloriesPerServing,
+    proteinPerServing,
+    carbsPerServing,
+    fatPerServing,
+    fiberPerServing,
+    vitaminDPerServing,
+    vitaminB12PerServing,
+    ironPerServing,
+    calciumPerServing,
+    isPublic,
+    imageUrl,
+    createdAt,
+    updatedAt,
+    syncStatus,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -8926,6 +10210,15 @@ class $RecipesTable extends Recipes with TableInfo<$RecipesTable, Recipe> {
     } else if (isInserting) {
       context.missing(_titleMeta);
     }
+    if (data.containsKey('description')) {
+      context.handle(
+        _descriptionMeta,
+        description.isAcceptableOrUnknown(
+          data['description']!,
+          _descriptionMeta,
+        ),
+      );
+    }
     if (data.containsKey('ingredients')) {
       context.handle(
         _ingredientsMeta,
@@ -8948,14 +10241,128 @@ class $RecipesTable extends Recipes with TableInfo<$RecipesTable, Recipe> {
     } else if (isInserting) {
       context.missing(_instructionsMeta);
     }
-    if (data.containsKey('total_calories')) {
+    if (data.containsKey('servings')) {
       context.handle(
-        _totalCaloriesMeta,
-        totalCalories.isAcceptableOrUnknown(
-          data['total_calories']!,
-          _totalCaloriesMeta,
+        _servingsMeta,
+        servings.isAcceptableOrUnknown(data['servings']!, _servingsMeta),
+      );
+    }
+    if (data.containsKey('calories_per_serving')) {
+      context.handle(
+        _caloriesPerServingMeta,
+        caloriesPerServing.isAcceptableOrUnknown(
+          data['calories_per_serving']!,
+          _caloriesPerServingMeta,
         ),
       );
+    }
+    if (data.containsKey('protein_per_serving')) {
+      context.handle(
+        _proteinPerServingMeta,
+        proteinPerServing.isAcceptableOrUnknown(
+          data['protein_per_serving']!,
+          _proteinPerServingMeta,
+        ),
+      );
+    }
+    if (data.containsKey('carbs_per_serving')) {
+      context.handle(
+        _carbsPerServingMeta,
+        carbsPerServing.isAcceptableOrUnknown(
+          data['carbs_per_serving']!,
+          _carbsPerServingMeta,
+        ),
+      );
+    }
+    if (data.containsKey('fat_per_serving')) {
+      context.handle(
+        _fatPerServingMeta,
+        fatPerServing.isAcceptableOrUnknown(
+          data['fat_per_serving']!,
+          _fatPerServingMeta,
+        ),
+      );
+    }
+    if (data.containsKey('fiber_per_serving')) {
+      context.handle(
+        _fiberPerServingMeta,
+        fiberPerServing.isAcceptableOrUnknown(
+          data['fiber_per_serving']!,
+          _fiberPerServingMeta,
+        ),
+      );
+    }
+    if (data.containsKey('vitamin_d_per_serving')) {
+      context.handle(
+        _vitaminDPerServingMeta,
+        vitaminDPerServing.isAcceptableOrUnknown(
+          data['vitamin_d_per_serving']!,
+          _vitaminDPerServingMeta,
+        ),
+      );
+    }
+    if (data.containsKey('vitamin_b12_per_serving')) {
+      context.handle(
+        _vitaminB12PerServingMeta,
+        vitaminB12PerServing.isAcceptableOrUnknown(
+          data['vitamin_b12_per_serving']!,
+          _vitaminB12PerServingMeta,
+        ),
+      );
+    }
+    if (data.containsKey('iron_per_serving')) {
+      context.handle(
+        _ironPerServingMeta,
+        ironPerServing.isAcceptableOrUnknown(
+          data['iron_per_serving']!,
+          _ironPerServingMeta,
+        ),
+      );
+    }
+    if (data.containsKey('calcium_per_serving')) {
+      context.handle(
+        _calciumPerServingMeta,
+        calciumPerServing.isAcceptableOrUnknown(
+          data['calcium_per_serving']!,
+          _calciumPerServingMeta,
+        ),
+      );
+    }
+    if (data.containsKey('is_public')) {
+      context.handle(
+        _isPublicMeta,
+        isPublic.isAcceptableOrUnknown(data['is_public']!, _isPublicMeta),
+      );
+    }
+    if (data.containsKey('image_url')) {
+      context.handle(
+        _imageUrlMeta,
+        imageUrl.isAcceptableOrUnknown(data['image_url']!, _imageUrlMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    if (data.containsKey('sync_status')) {
+      context.handle(
+        _syncStatusMeta,
+        syncStatus.isAcceptableOrUnknown(data['sync_status']!, _syncStatusMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_syncStatusMeta);
     }
     return context;
   }
@@ -8978,6 +10385,10 @@ class $RecipesTable extends Recipes with TableInfo<$RecipesTable, Recipe> {
         DriftSqlType.string,
         data['${effectivePrefix}title'],
       )!,
+      description: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description'],
+      ),
       ingredients: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}ingredients'],
@@ -8986,10 +10397,66 @@ class $RecipesTable extends Recipes with TableInfo<$RecipesTable, Recipe> {
         DriftSqlType.string,
         data['${effectivePrefix}instructions'],
       )!,
-      totalCalories: attachedDatabase.typeMapping.read(
+      servings: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}servings'],
+      )!,
+      caloriesPerServing: attachedDatabase.typeMapping.read(
         DriftSqlType.double,
-        data['${effectivePrefix}total_calories'],
+        data['${effectivePrefix}calories_per_serving'],
       ),
+      proteinPerServing: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}protein_per_serving'],
+      ),
+      carbsPerServing: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}carbs_per_serving'],
+      ),
+      fatPerServing: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}fat_per_serving'],
+      ),
+      fiberPerServing: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}fiber_per_serving'],
+      ),
+      vitaminDPerServing: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}vitamin_d_per_serving'],
+      ),
+      vitaminB12PerServing: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}vitamin_b12_per_serving'],
+      ),
+      ironPerServing: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}iron_per_serving'],
+      ),
+      calciumPerServing: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}calcium_per_serving'],
+      ),
+      isPublic: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_public'],
+      )!,
+      imageUrl: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}image_url'],
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      syncStatus: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sync_status'],
+      )!,
     );
   }
 
@@ -9003,16 +10470,46 @@ class Recipe extends DataClass implements Insertable<Recipe> {
   final String id;
   final String userId;
   final String title;
+  final String? description;
   final String ingredients;
   final String instructions;
-  final double? totalCalories;
+  final int servings;
+  final double? caloriesPerServing;
+  final double? proteinPerServing;
+  final double? carbsPerServing;
+  final double? fatPerServing;
+  final double? fiberPerServing;
+  final double? vitaminDPerServing;
+  final double? vitaminB12PerServing;
+  final double? ironPerServing;
+  final double? calciumPerServing;
+  final bool isPublic;
+  final String? imageUrl;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final String syncStatus;
   const Recipe({
     required this.id,
     required this.userId,
     required this.title,
+    this.description,
     required this.ingredients,
     required this.instructions,
-    this.totalCalories,
+    required this.servings,
+    this.caloriesPerServing,
+    this.proteinPerServing,
+    this.carbsPerServing,
+    this.fatPerServing,
+    this.fiberPerServing,
+    this.vitaminDPerServing,
+    this.vitaminB12PerServing,
+    this.ironPerServing,
+    this.calciumPerServing,
+    required this.isPublic,
+    this.imageUrl,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.syncStatus,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -9020,11 +10517,46 @@ class Recipe extends DataClass implements Insertable<Recipe> {
     map['id'] = Variable<String>(id);
     map['user_id'] = Variable<String>(userId);
     map['title'] = Variable<String>(title);
+    if (!nullToAbsent || description != null) {
+      map['description'] = Variable<String>(description);
+    }
     map['ingredients'] = Variable<String>(ingredients);
     map['instructions'] = Variable<String>(instructions);
-    if (!nullToAbsent || totalCalories != null) {
-      map['total_calories'] = Variable<double>(totalCalories);
+    map['servings'] = Variable<int>(servings);
+    if (!nullToAbsent || caloriesPerServing != null) {
+      map['calories_per_serving'] = Variable<double>(caloriesPerServing);
     }
+    if (!nullToAbsent || proteinPerServing != null) {
+      map['protein_per_serving'] = Variable<double>(proteinPerServing);
+    }
+    if (!nullToAbsent || carbsPerServing != null) {
+      map['carbs_per_serving'] = Variable<double>(carbsPerServing);
+    }
+    if (!nullToAbsent || fatPerServing != null) {
+      map['fat_per_serving'] = Variable<double>(fatPerServing);
+    }
+    if (!nullToAbsent || fiberPerServing != null) {
+      map['fiber_per_serving'] = Variable<double>(fiberPerServing);
+    }
+    if (!nullToAbsent || vitaminDPerServing != null) {
+      map['vitamin_d_per_serving'] = Variable<double>(vitaminDPerServing);
+    }
+    if (!nullToAbsent || vitaminB12PerServing != null) {
+      map['vitamin_b12_per_serving'] = Variable<double>(vitaminB12PerServing);
+    }
+    if (!nullToAbsent || ironPerServing != null) {
+      map['iron_per_serving'] = Variable<double>(ironPerServing);
+    }
+    if (!nullToAbsent || calciumPerServing != null) {
+      map['calcium_per_serving'] = Variable<double>(calciumPerServing);
+    }
+    map['is_public'] = Variable<bool>(isPublic);
+    if (!nullToAbsent || imageUrl != null) {
+      map['image_url'] = Variable<String>(imageUrl);
+    }
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['sync_status'] = Variable<String>(syncStatus);
     return map;
   }
 
@@ -9033,11 +10565,46 @@ class Recipe extends DataClass implements Insertable<Recipe> {
       id: Value(id),
       userId: Value(userId),
       title: Value(title),
+      description: description == null && nullToAbsent
+          ? const Value.absent()
+          : Value(description),
       ingredients: Value(ingredients),
       instructions: Value(instructions),
-      totalCalories: totalCalories == null && nullToAbsent
+      servings: Value(servings),
+      caloriesPerServing: caloriesPerServing == null && nullToAbsent
           ? const Value.absent()
-          : Value(totalCalories),
+          : Value(caloriesPerServing),
+      proteinPerServing: proteinPerServing == null && nullToAbsent
+          ? const Value.absent()
+          : Value(proteinPerServing),
+      carbsPerServing: carbsPerServing == null && nullToAbsent
+          ? const Value.absent()
+          : Value(carbsPerServing),
+      fatPerServing: fatPerServing == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fatPerServing),
+      fiberPerServing: fiberPerServing == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fiberPerServing),
+      vitaminDPerServing: vitaminDPerServing == null && nullToAbsent
+          ? const Value.absent()
+          : Value(vitaminDPerServing),
+      vitaminB12PerServing: vitaminB12PerServing == null && nullToAbsent
+          ? const Value.absent()
+          : Value(vitaminB12PerServing),
+      ironPerServing: ironPerServing == null && nullToAbsent
+          ? const Value.absent()
+          : Value(ironPerServing),
+      calciumPerServing: calciumPerServing == null && nullToAbsent
+          ? const Value.absent()
+          : Value(calciumPerServing),
+      isPublic: Value(isPublic),
+      imageUrl: imageUrl == null && nullToAbsent
+          ? const Value.absent()
+          : Value(imageUrl),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      syncStatus: Value(syncStatus),
     );
   }
 
@@ -9050,9 +10617,34 @@ class Recipe extends DataClass implements Insertable<Recipe> {
       id: serializer.fromJson<String>(json['id']),
       userId: serializer.fromJson<String>(json['userId']),
       title: serializer.fromJson<String>(json['title']),
+      description: serializer.fromJson<String?>(json['description']),
       ingredients: serializer.fromJson<String>(json['ingredients']),
       instructions: serializer.fromJson<String>(json['instructions']),
-      totalCalories: serializer.fromJson<double?>(json['totalCalories']),
+      servings: serializer.fromJson<int>(json['servings']),
+      caloriesPerServing: serializer.fromJson<double?>(
+        json['caloriesPerServing'],
+      ),
+      proteinPerServing: serializer.fromJson<double?>(
+        json['proteinPerServing'],
+      ),
+      carbsPerServing: serializer.fromJson<double?>(json['carbsPerServing']),
+      fatPerServing: serializer.fromJson<double?>(json['fatPerServing']),
+      fiberPerServing: serializer.fromJson<double?>(json['fiberPerServing']),
+      vitaminDPerServing: serializer.fromJson<double?>(
+        json['vitaminDPerServing'],
+      ),
+      vitaminB12PerServing: serializer.fromJson<double?>(
+        json['vitaminB12PerServing'],
+      ),
+      ironPerServing: serializer.fromJson<double?>(json['ironPerServing']),
+      calciumPerServing: serializer.fromJson<double?>(
+        json['calciumPerServing'],
+      ),
+      isPublic: serializer.fromJson<bool>(json['isPublic']),
+      imageUrl: serializer.fromJson<String?>(json['imageUrl']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      syncStatus: serializer.fromJson<String>(json['syncStatus']),
     );
   }
   @override
@@ -9062,9 +10654,24 @@ class Recipe extends DataClass implements Insertable<Recipe> {
       'id': serializer.toJson<String>(id),
       'userId': serializer.toJson<String>(userId),
       'title': serializer.toJson<String>(title),
+      'description': serializer.toJson<String?>(description),
       'ingredients': serializer.toJson<String>(ingredients),
       'instructions': serializer.toJson<String>(instructions),
-      'totalCalories': serializer.toJson<double?>(totalCalories),
+      'servings': serializer.toJson<int>(servings),
+      'caloriesPerServing': serializer.toJson<double?>(caloriesPerServing),
+      'proteinPerServing': serializer.toJson<double?>(proteinPerServing),
+      'carbsPerServing': serializer.toJson<double?>(carbsPerServing),
+      'fatPerServing': serializer.toJson<double?>(fatPerServing),
+      'fiberPerServing': serializer.toJson<double?>(fiberPerServing),
+      'vitaminDPerServing': serializer.toJson<double?>(vitaminDPerServing),
+      'vitaminB12PerServing': serializer.toJson<double?>(vitaminB12PerServing),
+      'ironPerServing': serializer.toJson<double?>(ironPerServing),
+      'calciumPerServing': serializer.toJson<double?>(calciumPerServing),
+      'isPublic': serializer.toJson<bool>(isPublic),
+      'imageUrl': serializer.toJson<String?>(imageUrl),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'syncStatus': serializer.toJson<String>(syncStatus),
     };
   }
 
@@ -9072,33 +10679,114 @@ class Recipe extends DataClass implements Insertable<Recipe> {
     String? id,
     String? userId,
     String? title,
+    Value<String?> description = const Value.absent(),
     String? ingredients,
     String? instructions,
-    Value<double?> totalCalories = const Value.absent(),
+    int? servings,
+    Value<double?> caloriesPerServing = const Value.absent(),
+    Value<double?> proteinPerServing = const Value.absent(),
+    Value<double?> carbsPerServing = const Value.absent(),
+    Value<double?> fatPerServing = const Value.absent(),
+    Value<double?> fiberPerServing = const Value.absent(),
+    Value<double?> vitaminDPerServing = const Value.absent(),
+    Value<double?> vitaminB12PerServing = const Value.absent(),
+    Value<double?> ironPerServing = const Value.absent(),
+    Value<double?> calciumPerServing = const Value.absent(),
+    bool? isPublic,
+    Value<String?> imageUrl = const Value.absent(),
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    String? syncStatus,
   }) => Recipe(
     id: id ?? this.id,
     userId: userId ?? this.userId,
     title: title ?? this.title,
+    description: description.present ? description.value : this.description,
     ingredients: ingredients ?? this.ingredients,
     instructions: instructions ?? this.instructions,
-    totalCalories: totalCalories.present
-        ? totalCalories.value
-        : this.totalCalories,
+    servings: servings ?? this.servings,
+    caloriesPerServing: caloriesPerServing.present
+        ? caloriesPerServing.value
+        : this.caloriesPerServing,
+    proteinPerServing: proteinPerServing.present
+        ? proteinPerServing.value
+        : this.proteinPerServing,
+    carbsPerServing: carbsPerServing.present
+        ? carbsPerServing.value
+        : this.carbsPerServing,
+    fatPerServing: fatPerServing.present
+        ? fatPerServing.value
+        : this.fatPerServing,
+    fiberPerServing: fiberPerServing.present
+        ? fiberPerServing.value
+        : this.fiberPerServing,
+    vitaminDPerServing: vitaminDPerServing.present
+        ? vitaminDPerServing.value
+        : this.vitaminDPerServing,
+    vitaminB12PerServing: vitaminB12PerServing.present
+        ? vitaminB12PerServing.value
+        : this.vitaminB12PerServing,
+    ironPerServing: ironPerServing.present
+        ? ironPerServing.value
+        : this.ironPerServing,
+    calciumPerServing: calciumPerServing.present
+        ? calciumPerServing.value
+        : this.calciumPerServing,
+    isPublic: isPublic ?? this.isPublic,
+    imageUrl: imageUrl.present ? imageUrl.value : this.imageUrl,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    syncStatus: syncStatus ?? this.syncStatus,
   );
   Recipe copyWithCompanion(RecipesCompanion data) {
     return Recipe(
       id: data.id.present ? data.id.value : this.id,
       userId: data.userId.present ? data.userId.value : this.userId,
       title: data.title.present ? data.title.value : this.title,
+      description: data.description.present
+          ? data.description.value
+          : this.description,
       ingredients: data.ingredients.present
           ? data.ingredients.value
           : this.ingredients,
       instructions: data.instructions.present
           ? data.instructions.value
           : this.instructions,
-      totalCalories: data.totalCalories.present
-          ? data.totalCalories.value
-          : this.totalCalories,
+      servings: data.servings.present ? data.servings.value : this.servings,
+      caloriesPerServing: data.caloriesPerServing.present
+          ? data.caloriesPerServing.value
+          : this.caloriesPerServing,
+      proteinPerServing: data.proteinPerServing.present
+          ? data.proteinPerServing.value
+          : this.proteinPerServing,
+      carbsPerServing: data.carbsPerServing.present
+          ? data.carbsPerServing.value
+          : this.carbsPerServing,
+      fatPerServing: data.fatPerServing.present
+          ? data.fatPerServing.value
+          : this.fatPerServing,
+      fiberPerServing: data.fiberPerServing.present
+          ? data.fiberPerServing.value
+          : this.fiberPerServing,
+      vitaminDPerServing: data.vitaminDPerServing.present
+          ? data.vitaminDPerServing.value
+          : this.vitaminDPerServing,
+      vitaminB12PerServing: data.vitaminB12PerServing.present
+          ? data.vitaminB12PerServing.value
+          : this.vitaminB12PerServing,
+      ironPerServing: data.ironPerServing.present
+          ? data.ironPerServing.value
+          : this.ironPerServing,
+      calciumPerServing: data.calciumPerServing.present
+          ? data.calciumPerServing.value
+          : this.calciumPerServing,
+      isPublic: data.isPublic.present ? data.isPublic.value : this.isPublic,
+      imageUrl: data.imageUrl.present ? data.imageUrl.value : this.imageUrl,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      syncStatus: data.syncStatus.present
+          ? data.syncStatus.value
+          : this.syncStatus,
     );
   }
 
@@ -9108,16 +10796,52 @@ class Recipe extends DataClass implements Insertable<Recipe> {
           ..write('id: $id, ')
           ..write('userId: $userId, ')
           ..write('title: $title, ')
+          ..write('description: $description, ')
           ..write('ingredients: $ingredients, ')
           ..write('instructions: $instructions, ')
-          ..write('totalCalories: $totalCalories')
+          ..write('servings: $servings, ')
+          ..write('caloriesPerServing: $caloriesPerServing, ')
+          ..write('proteinPerServing: $proteinPerServing, ')
+          ..write('carbsPerServing: $carbsPerServing, ')
+          ..write('fatPerServing: $fatPerServing, ')
+          ..write('fiberPerServing: $fiberPerServing, ')
+          ..write('vitaminDPerServing: $vitaminDPerServing, ')
+          ..write('vitaminB12PerServing: $vitaminB12PerServing, ')
+          ..write('ironPerServing: $ironPerServing, ')
+          ..write('calciumPerServing: $calciumPerServing, ')
+          ..write('isPublic: $isPublic, ')
+          ..write('imageUrl: $imageUrl, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, userId, title, ingredients, instructions, totalCalories);
+  int get hashCode => Object.hashAll([
+    id,
+    userId,
+    title,
+    description,
+    ingredients,
+    instructions,
+    servings,
+    caloriesPerServing,
+    proteinPerServing,
+    carbsPerServing,
+    fatPerServing,
+    fiberPerServing,
+    vitaminDPerServing,
+    vitaminB12PerServing,
+    ironPerServing,
+    calciumPerServing,
+    isPublic,
+    imageUrl,
+    createdAt,
+    updatedAt,
+    syncStatus,
+  ]);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -9125,57 +10849,153 @@ class Recipe extends DataClass implements Insertable<Recipe> {
           other.id == this.id &&
           other.userId == this.userId &&
           other.title == this.title &&
+          other.description == this.description &&
           other.ingredients == this.ingredients &&
           other.instructions == this.instructions &&
-          other.totalCalories == this.totalCalories);
+          other.servings == this.servings &&
+          other.caloriesPerServing == this.caloriesPerServing &&
+          other.proteinPerServing == this.proteinPerServing &&
+          other.carbsPerServing == this.carbsPerServing &&
+          other.fatPerServing == this.fatPerServing &&
+          other.fiberPerServing == this.fiberPerServing &&
+          other.vitaminDPerServing == this.vitaminDPerServing &&
+          other.vitaminB12PerServing == this.vitaminB12PerServing &&
+          other.ironPerServing == this.ironPerServing &&
+          other.calciumPerServing == this.calciumPerServing &&
+          other.isPublic == this.isPublic &&
+          other.imageUrl == this.imageUrl &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.syncStatus == this.syncStatus);
 }
 
 class RecipesCompanion extends UpdateCompanion<Recipe> {
   final Value<String> id;
   final Value<String> userId;
   final Value<String> title;
+  final Value<String?> description;
   final Value<String> ingredients;
   final Value<String> instructions;
-  final Value<double?> totalCalories;
+  final Value<int> servings;
+  final Value<double?> caloriesPerServing;
+  final Value<double?> proteinPerServing;
+  final Value<double?> carbsPerServing;
+  final Value<double?> fatPerServing;
+  final Value<double?> fiberPerServing;
+  final Value<double?> vitaminDPerServing;
+  final Value<double?> vitaminB12PerServing;
+  final Value<double?> ironPerServing;
+  final Value<double?> calciumPerServing;
+  final Value<bool> isPublic;
+  final Value<String?> imageUrl;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<String> syncStatus;
   final Value<int> rowid;
   const RecipesCompanion({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
     this.title = const Value.absent(),
+    this.description = const Value.absent(),
     this.ingredients = const Value.absent(),
     this.instructions = const Value.absent(),
-    this.totalCalories = const Value.absent(),
+    this.servings = const Value.absent(),
+    this.caloriesPerServing = const Value.absent(),
+    this.proteinPerServing = const Value.absent(),
+    this.carbsPerServing = const Value.absent(),
+    this.fatPerServing = const Value.absent(),
+    this.fiberPerServing = const Value.absent(),
+    this.vitaminDPerServing = const Value.absent(),
+    this.vitaminB12PerServing = const Value.absent(),
+    this.ironPerServing = const Value.absent(),
+    this.calciumPerServing = const Value.absent(),
+    this.isPublic = const Value.absent(),
+    this.imageUrl = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   RecipesCompanion.insert({
     required String id,
     required String userId,
     required String title,
+    this.description = const Value.absent(),
     required String ingredients,
     required String instructions,
-    this.totalCalories = const Value.absent(),
+    this.servings = const Value.absent(),
+    this.caloriesPerServing = const Value.absent(),
+    this.proteinPerServing = const Value.absent(),
+    this.carbsPerServing = const Value.absent(),
+    this.fatPerServing = const Value.absent(),
+    this.fiberPerServing = const Value.absent(),
+    this.vitaminDPerServing = const Value.absent(),
+    this.vitaminB12PerServing = const Value.absent(),
+    this.ironPerServing = const Value.absent(),
+    this.calciumPerServing = const Value.absent(),
+    this.isPublic = const Value.absent(),
+    this.imageUrl = const Value.absent(),
+    required DateTime createdAt,
+    required DateTime updatedAt,
+    required String syncStatus,
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        userId = Value(userId),
        title = Value(title),
        ingredients = Value(ingredients),
-       instructions = Value(instructions);
+       instructions = Value(instructions),
+       createdAt = Value(createdAt),
+       updatedAt = Value(updatedAt),
+       syncStatus = Value(syncStatus);
   static Insertable<Recipe> custom({
     Expression<String>? id,
     Expression<String>? userId,
     Expression<String>? title,
+    Expression<String>? description,
     Expression<String>? ingredients,
     Expression<String>? instructions,
-    Expression<double>? totalCalories,
+    Expression<int>? servings,
+    Expression<double>? caloriesPerServing,
+    Expression<double>? proteinPerServing,
+    Expression<double>? carbsPerServing,
+    Expression<double>? fatPerServing,
+    Expression<double>? fiberPerServing,
+    Expression<double>? vitaminDPerServing,
+    Expression<double>? vitaminB12PerServing,
+    Expression<double>? ironPerServing,
+    Expression<double>? calciumPerServing,
+    Expression<bool>? isPublic,
+    Expression<String>? imageUrl,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<String>? syncStatus,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (userId != null) 'user_id': userId,
       if (title != null) 'title': title,
+      if (description != null) 'description': description,
       if (ingredients != null) 'ingredients': ingredients,
       if (instructions != null) 'instructions': instructions,
-      if (totalCalories != null) 'total_calories': totalCalories,
+      if (servings != null) 'servings': servings,
+      if (caloriesPerServing != null)
+        'calories_per_serving': caloriesPerServing,
+      if (proteinPerServing != null) 'protein_per_serving': proteinPerServing,
+      if (carbsPerServing != null) 'carbs_per_serving': carbsPerServing,
+      if (fatPerServing != null) 'fat_per_serving': fatPerServing,
+      if (fiberPerServing != null) 'fiber_per_serving': fiberPerServing,
+      if (vitaminDPerServing != null)
+        'vitamin_d_per_serving': vitaminDPerServing,
+      if (vitaminB12PerServing != null)
+        'vitamin_b12_per_serving': vitaminB12PerServing,
+      if (ironPerServing != null) 'iron_per_serving': ironPerServing,
+      if (calciumPerServing != null) 'calcium_per_serving': calciumPerServing,
+      if (isPublic != null) 'is_public': isPublic,
+      if (imageUrl != null) 'image_url': imageUrl,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (syncStatus != null) 'sync_status': syncStatus,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -9184,18 +11004,48 @@ class RecipesCompanion extends UpdateCompanion<Recipe> {
     Value<String>? id,
     Value<String>? userId,
     Value<String>? title,
+    Value<String?>? description,
     Value<String>? ingredients,
     Value<String>? instructions,
-    Value<double?>? totalCalories,
+    Value<int>? servings,
+    Value<double?>? caloriesPerServing,
+    Value<double?>? proteinPerServing,
+    Value<double?>? carbsPerServing,
+    Value<double?>? fatPerServing,
+    Value<double?>? fiberPerServing,
+    Value<double?>? vitaminDPerServing,
+    Value<double?>? vitaminB12PerServing,
+    Value<double?>? ironPerServing,
+    Value<double?>? calciumPerServing,
+    Value<bool>? isPublic,
+    Value<String?>? imageUrl,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<String>? syncStatus,
     Value<int>? rowid,
   }) {
     return RecipesCompanion(
       id: id ?? this.id,
       userId: userId ?? this.userId,
       title: title ?? this.title,
+      description: description ?? this.description,
       ingredients: ingredients ?? this.ingredients,
       instructions: instructions ?? this.instructions,
-      totalCalories: totalCalories ?? this.totalCalories,
+      servings: servings ?? this.servings,
+      caloriesPerServing: caloriesPerServing ?? this.caloriesPerServing,
+      proteinPerServing: proteinPerServing ?? this.proteinPerServing,
+      carbsPerServing: carbsPerServing ?? this.carbsPerServing,
+      fatPerServing: fatPerServing ?? this.fatPerServing,
+      fiberPerServing: fiberPerServing ?? this.fiberPerServing,
+      vitaminDPerServing: vitaminDPerServing ?? this.vitaminDPerServing,
+      vitaminB12PerServing: vitaminB12PerServing ?? this.vitaminB12PerServing,
+      ironPerServing: ironPerServing ?? this.ironPerServing,
+      calciumPerServing: calciumPerServing ?? this.calciumPerServing,
+      isPublic: isPublic ?? this.isPublic,
+      imageUrl: imageUrl ?? this.imageUrl,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      syncStatus: syncStatus ?? this.syncStatus,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -9212,14 +11062,61 @@ class RecipesCompanion extends UpdateCompanion<Recipe> {
     if (title.present) {
       map['title'] = Variable<String>(title.value);
     }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
     if (ingredients.present) {
       map['ingredients'] = Variable<String>(ingredients.value);
     }
     if (instructions.present) {
       map['instructions'] = Variable<String>(instructions.value);
     }
-    if (totalCalories.present) {
-      map['total_calories'] = Variable<double>(totalCalories.value);
+    if (servings.present) {
+      map['servings'] = Variable<int>(servings.value);
+    }
+    if (caloriesPerServing.present) {
+      map['calories_per_serving'] = Variable<double>(caloriesPerServing.value);
+    }
+    if (proteinPerServing.present) {
+      map['protein_per_serving'] = Variable<double>(proteinPerServing.value);
+    }
+    if (carbsPerServing.present) {
+      map['carbs_per_serving'] = Variable<double>(carbsPerServing.value);
+    }
+    if (fatPerServing.present) {
+      map['fat_per_serving'] = Variable<double>(fatPerServing.value);
+    }
+    if (fiberPerServing.present) {
+      map['fiber_per_serving'] = Variable<double>(fiberPerServing.value);
+    }
+    if (vitaminDPerServing.present) {
+      map['vitamin_d_per_serving'] = Variable<double>(vitaminDPerServing.value);
+    }
+    if (vitaminB12PerServing.present) {
+      map['vitamin_b12_per_serving'] = Variable<double>(
+        vitaminB12PerServing.value,
+      );
+    }
+    if (ironPerServing.present) {
+      map['iron_per_serving'] = Variable<double>(ironPerServing.value);
+    }
+    if (calciumPerServing.present) {
+      map['calcium_per_serving'] = Variable<double>(calciumPerServing.value);
+    }
+    if (isPublic.present) {
+      map['is_public'] = Variable<bool>(isPublic.value);
+    }
+    if (imageUrl.present) {
+      map['image_url'] = Variable<String>(imageUrl.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (syncStatus.present) {
+      map['sync_status'] = Variable<String>(syncStatus.value);
     }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
@@ -9233,9 +11130,24 @@ class RecipesCompanion extends UpdateCompanion<Recipe> {
           ..write('id: $id, ')
           ..write('userId: $userId, ')
           ..write('title: $title, ')
+          ..write('description: $description, ')
           ..write('ingredients: $ingredients, ')
           ..write('instructions: $instructions, ')
-          ..write('totalCalories: $totalCalories, ')
+          ..write('servings: $servings, ')
+          ..write('caloriesPerServing: $caloriesPerServing, ')
+          ..write('proteinPerServing: $proteinPerServing, ')
+          ..write('carbsPerServing: $carbsPerServing, ')
+          ..write('fatPerServing: $fatPerServing, ')
+          ..write('fiberPerServing: $fiberPerServing, ')
+          ..write('vitaminDPerServing: $vitaminDPerServing, ')
+          ..write('vitaminB12PerServing: $vitaminB12PerServing, ')
+          ..write('ironPerServing: $ironPerServing, ')
+          ..write('calciumPerServing: $calciumPerServing, ')
+          ..write('isPublic: $isPublic, ')
+          ..write('imageUrl: $imageUrl, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -11256,6 +13168,97 @@ class $PeriodLogsTable extends PeriodLogs
     type: DriftSqlType.dateTime,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _cycleStartDateMeta = const VerificationMeta(
+    'cycleStartDate',
+  );
+  @override
+  late final GeneratedColumn<DateTime> cycleStartDate =
+      GeneratedColumn<DateTime>(
+        'cycle_start_date',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _cycleEndDateMeta = const VerificationMeta(
+    'cycleEndDate',
+  );
+  @override
+  late final GeneratedColumn<DateTime> cycleEndDate = GeneratedColumn<DateTime>(
+    'cycle_end_date',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _cycleLengthMeta = const VerificationMeta(
+    'cycleLength',
+  );
+  @override
+  late final GeneratedColumn<int> cycleLength = GeneratedColumn<int>(
+    'cycle_length',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _periodLengthMeta = const VerificationMeta(
+    'periodLength',
+  );
+  @override
+  late final GeneratedColumn<int> periodLength = GeneratedColumn<int>(
+    'period_length',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _predictedNextPeriodMeta =
+      const VerificationMeta('predictedNextPeriod');
+  @override
+  late final GeneratedColumn<DateTime> predictedNextPeriod =
+      GeneratedColumn<DateTime>(
+        'predicted_next_period',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _predictedOvulationDateMeta =
+      const VerificationMeta('predictedOvulationDate');
+  @override
+  late final GeneratedColumn<DateTime> predictedOvulationDate =
+      GeneratedColumn<DateTime>(
+        'predicted_ovulation_date',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _isPeriodDayMeta = const VerificationMeta(
+    'isPeriodDay',
+  );
+  @override
+  late final GeneratedColumn<bool> isPeriodDay = GeneratedColumn<bool>(
+    'is_period_day',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_period_day" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  @override
+  late final GeneratedColumnWithTypeConverter<String?, String> flowIntensity =
+      GeneratedColumn<String>(
+        'flow_intensity',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      ).withConverter<String?>($PeriodLogsTable.$converterflowIntensity);
   @override
   late final GeneratedColumnWithTypeConverter<String?, String> symptoms =
       GeneratedColumn<String>(
@@ -11265,17 +13268,71 @@ class $PeriodLogsTable extends PeriodLogs
         type: DriftSqlType.string,
         requiredDuringInsert: false,
       ).withConverter<String?>($PeriodLogsTable.$convertersymptoms);
+  static const VerificationMeta _isPcodPcosMeta = const VerificationMeta(
+    'isPcodPcos',
+  );
   @override
-  late final GeneratedColumnWithTypeConverter<String?, String> flowType =
+  late final GeneratedColumn<bool> isPcodPcos = GeneratedColumn<bool>(
+    'is_pcod_pcos',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_pcod_pcos" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  @override
+  late final GeneratedColumnWithTypeConverter<String?, String> notes =
       GeneratedColumn<String>(
-        'flow_type',
+        'notes',
         aliasedName,
         true,
         type: DriftSqlType.string,
         requiredDuringInsert: false,
-      ).withConverter<String?>($PeriodLogsTable.$converterflowType);
+      ).withConverter<String?>($PeriodLogsTable.$converternotes);
+  static const VerificationMeta _syncStatusMeta = const VerificationMeta(
+    'syncStatus',
+  );
   @override
-  List<GeneratedColumn> get $columns => [id, userId, date, symptoms, flowType];
+  late final GeneratedColumn<String> syncStatus = GeneratedColumn<String>(
+    'sync_status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _idempotencyKeyMeta = const VerificationMeta(
+    'idempotencyKey',
+  );
+  @override
+  late final GeneratedColumn<String> idempotencyKey = GeneratedColumn<String>(
+    'idempotency_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    userId,
+    date,
+    cycleStartDate,
+    cycleEndDate,
+    cycleLength,
+    periodLength,
+    predictedNextPeriod,
+    predictedOvulationDate,
+    isPeriodDay,
+    flowIntensity,
+    symptoms,
+    isPcodPcos,
+    notes,
+    syncStatus,
+    idempotencyKey,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -11309,6 +13366,97 @@ class $PeriodLogsTable extends PeriodLogs
     } else if (isInserting) {
       context.missing(_dateMeta);
     }
+    if (data.containsKey('cycle_start_date')) {
+      context.handle(
+        _cycleStartDateMeta,
+        cycleStartDate.isAcceptableOrUnknown(
+          data['cycle_start_date']!,
+          _cycleStartDateMeta,
+        ),
+      );
+    }
+    if (data.containsKey('cycle_end_date')) {
+      context.handle(
+        _cycleEndDateMeta,
+        cycleEndDate.isAcceptableOrUnknown(
+          data['cycle_end_date']!,
+          _cycleEndDateMeta,
+        ),
+      );
+    }
+    if (data.containsKey('cycle_length')) {
+      context.handle(
+        _cycleLengthMeta,
+        cycleLength.isAcceptableOrUnknown(
+          data['cycle_length']!,
+          _cycleLengthMeta,
+        ),
+      );
+    }
+    if (data.containsKey('period_length')) {
+      context.handle(
+        _periodLengthMeta,
+        periodLength.isAcceptableOrUnknown(
+          data['period_length']!,
+          _periodLengthMeta,
+        ),
+      );
+    }
+    if (data.containsKey('predicted_next_period')) {
+      context.handle(
+        _predictedNextPeriodMeta,
+        predictedNextPeriod.isAcceptableOrUnknown(
+          data['predicted_next_period']!,
+          _predictedNextPeriodMeta,
+        ),
+      );
+    }
+    if (data.containsKey('predicted_ovulation_date')) {
+      context.handle(
+        _predictedOvulationDateMeta,
+        predictedOvulationDate.isAcceptableOrUnknown(
+          data['predicted_ovulation_date']!,
+          _predictedOvulationDateMeta,
+        ),
+      );
+    }
+    if (data.containsKey('is_period_day')) {
+      context.handle(
+        _isPeriodDayMeta,
+        isPeriodDay.isAcceptableOrUnknown(
+          data['is_period_day']!,
+          _isPeriodDayMeta,
+        ),
+      );
+    }
+    if (data.containsKey('is_pcod_pcos')) {
+      context.handle(
+        _isPcodPcosMeta,
+        isPcodPcos.isAcceptableOrUnknown(
+          data['is_pcod_pcos']!,
+          _isPcodPcosMeta,
+        ),
+      );
+    }
+    if (data.containsKey('sync_status')) {
+      context.handle(
+        _syncStatusMeta,
+        syncStatus.isAcceptableOrUnknown(data['sync_status']!, _syncStatusMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_syncStatusMeta);
+    }
+    if (data.containsKey('idempotency_key')) {
+      context.handle(
+        _idempotencyKeyMeta,
+        idempotencyKey.isAcceptableOrUnknown(
+          data['idempotency_key']!,
+          _idempotencyKeyMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_idempotencyKeyMeta);
+    }
     return context;
   }
 
@@ -11330,18 +13478,64 @@ class $PeriodLogsTable extends PeriodLogs
         DriftSqlType.dateTime,
         data['${effectivePrefix}date'],
       )!,
+      cycleStartDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}cycle_start_date'],
+      ),
+      cycleEndDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}cycle_end_date'],
+      ),
+      cycleLength: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}cycle_length'],
+      ),
+      periodLength: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}period_length'],
+      ),
+      predictedNextPeriod: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}predicted_next_period'],
+      ),
+      predictedOvulationDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}predicted_ovulation_date'],
+      ),
+      isPeriodDay: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_period_day'],
+      )!,
+      flowIntensity: $PeriodLogsTable.$converterflowIntensity.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}flow_intensity'],
+        ),
+      ),
       symptoms: $PeriodLogsTable.$convertersymptoms.fromSql(
         attachedDatabase.typeMapping.read(
           DriftSqlType.string,
           data['${effectivePrefix}symptoms'],
         ),
       ),
-      flowType: $PeriodLogsTable.$converterflowType.fromSql(
+      isPcodPcos: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_pcod_pcos'],
+      )!,
+      notes: $PeriodLogsTable.$converternotes.fromSql(
         attachedDatabase.typeMapping.read(
           DriftSqlType.string,
-          data['${effectivePrefix}flow_type'],
+          data['${effectivePrefix}notes'],
         ),
       ),
+      syncStatus: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sync_status'],
+      )!,
+      idempotencyKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}idempotency_key'],
+      )!,
     );
   }
 
@@ -11350,9 +13544,11 @@ class $PeriodLogsTable extends PeriodLogs
     return $PeriodLogsTable(attachedDatabase, alias);
   }
 
+  static TypeConverter<String?, String?> $converterflowIntensity =
+      PeriodDataClassConverters.text;
   static TypeConverter<String?, String?> $convertersymptoms =
       PeriodDataClassConverters.text;
-  static TypeConverter<String?, String?> $converterflowType =
+  static TypeConverter<String?, String?> $converternotes =
       PeriodDataClassConverters.text;
 }
 
@@ -11360,14 +13556,36 @@ class PeriodLog extends DataClass implements Insertable<PeriodLog> {
   final String id;
   final String userId;
   final DateTime date;
+  final DateTime? cycleStartDate;
+  final DateTime? cycleEndDate;
+  final int? cycleLength;
+  final int? periodLength;
+  final DateTime? predictedNextPeriod;
+  final DateTime? predictedOvulationDate;
+  final bool isPeriodDay;
+  final String? flowIntensity;
   final String? symptoms;
-  final String? flowType;
+  final bool isPcodPcos;
+  final String? notes;
+  final String syncStatus;
+  final String idempotencyKey;
   const PeriodLog({
     required this.id,
     required this.userId,
     required this.date,
+    this.cycleStartDate,
+    this.cycleEndDate,
+    this.cycleLength,
+    this.periodLength,
+    this.predictedNextPeriod,
+    this.predictedOvulationDate,
+    required this.isPeriodDay,
+    this.flowIntensity,
     this.symptoms,
-    this.flowType,
+    required this.isPcodPcos,
+    this.notes,
+    required this.syncStatus,
+    required this.idempotencyKey,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -11375,16 +13593,45 @@ class PeriodLog extends DataClass implements Insertable<PeriodLog> {
     map['id'] = Variable<String>(id);
     map['user_id'] = Variable<String>(userId);
     map['date'] = Variable<DateTime>(date);
+    if (!nullToAbsent || cycleStartDate != null) {
+      map['cycle_start_date'] = Variable<DateTime>(cycleStartDate);
+    }
+    if (!nullToAbsent || cycleEndDate != null) {
+      map['cycle_end_date'] = Variable<DateTime>(cycleEndDate);
+    }
+    if (!nullToAbsent || cycleLength != null) {
+      map['cycle_length'] = Variable<int>(cycleLength);
+    }
+    if (!nullToAbsent || periodLength != null) {
+      map['period_length'] = Variable<int>(periodLength);
+    }
+    if (!nullToAbsent || predictedNextPeriod != null) {
+      map['predicted_next_period'] = Variable<DateTime>(predictedNextPeriod);
+    }
+    if (!nullToAbsent || predictedOvulationDate != null) {
+      map['predicted_ovulation_date'] = Variable<DateTime>(
+        predictedOvulationDate,
+      );
+    }
+    map['is_period_day'] = Variable<bool>(isPeriodDay);
+    if (!nullToAbsent || flowIntensity != null) {
+      map['flow_intensity'] = Variable<String>(
+        $PeriodLogsTable.$converterflowIntensity.toSql(flowIntensity),
+      );
+    }
     if (!nullToAbsent || symptoms != null) {
       map['symptoms'] = Variable<String>(
         $PeriodLogsTable.$convertersymptoms.toSql(symptoms),
       );
     }
-    if (!nullToAbsent || flowType != null) {
-      map['flow_type'] = Variable<String>(
-        $PeriodLogsTable.$converterflowType.toSql(flowType),
+    map['is_pcod_pcos'] = Variable<bool>(isPcodPcos);
+    if (!nullToAbsent || notes != null) {
+      map['notes'] = Variable<String>(
+        $PeriodLogsTable.$converternotes.toSql(notes),
       );
     }
+    map['sync_status'] = Variable<String>(syncStatus);
+    map['idempotency_key'] = Variable<String>(idempotencyKey);
     return map;
   }
 
@@ -11393,12 +13640,37 @@ class PeriodLog extends DataClass implements Insertable<PeriodLog> {
       id: Value(id),
       userId: Value(userId),
       date: Value(date),
+      cycleStartDate: cycleStartDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(cycleStartDate),
+      cycleEndDate: cycleEndDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(cycleEndDate),
+      cycleLength: cycleLength == null && nullToAbsent
+          ? const Value.absent()
+          : Value(cycleLength),
+      periodLength: periodLength == null && nullToAbsent
+          ? const Value.absent()
+          : Value(periodLength),
+      predictedNextPeriod: predictedNextPeriod == null && nullToAbsent
+          ? const Value.absent()
+          : Value(predictedNextPeriod),
+      predictedOvulationDate: predictedOvulationDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(predictedOvulationDate),
+      isPeriodDay: Value(isPeriodDay),
+      flowIntensity: flowIntensity == null && nullToAbsent
+          ? const Value.absent()
+          : Value(flowIntensity),
       symptoms: symptoms == null && nullToAbsent
           ? const Value.absent()
           : Value(symptoms),
-      flowType: flowType == null && nullToAbsent
+      isPcodPcos: Value(isPcodPcos),
+      notes: notes == null && nullToAbsent
           ? const Value.absent()
-          : Value(flowType),
+          : Value(notes),
+      syncStatus: Value(syncStatus),
+      idempotencyKey: Value(idempotencyKey),
     );
   }
 
@@ -11411,8 +13683,23 @@ class PeriodLog extends DataClass implements Insertable<PeriodLog> {
       id: serializer.fromJson<String>(json['id']),
       userId: serializer.fromJson<String>(json['userId']),
       date: serializer.fromJson<DateTime>(json['date']),
+      cycleStartDate: serializer.fromJson<DateTime?>(json['cycleStartDate']),
+      cycleEndDate: serializer.fromJson<DateTime?>(json['cycleEndDate']),
+      cycleLength: serializer.fromJson<int?>(json['cycleLength']),
+      periodLength: serializer.fromJson<int?>(json['periodLength']),
+      predictedNextPeriod: serializer.fromJson<DateTime?>(
+        json['predictedNextPeriod'],
+      ),
+      predictedOvulationDate: serializer.fromJson<DateTime?>(
+        json['predictedOvulationDate'],
+      ),
+      isPeriodDay: serializer.fromJson<bool>(json['isPeriodDay']),
+      flowIntensity: serializer.fromJson<String?>(json['flowIntensity']),
       symptoms: serializer.fromJson<String?>(json['symptoms']),
-      flowType: serializer.fromJson<String?>(json['flowType']),
+      isPcodPcos: serializer.fromJson<bool>(json['isPcodPcos']),
+      notes: serializer.fromJson<String?>(json['notes']),
+      syncStatus: serializer.fromJson<String>(json['syncStatus']),
+      idempotencyKey: serializer.fromJson<String>(json['idempotencyKey']),
     );
   }
   @override
@@ -11422,8 +13709,21 @@ class PeriodLog extends DataClass implements Insertable<PeriodLog> {
       'id': serializer.toJson<String>(id),
       'userId': serializer.toJson<String>(userId),
       'date': serializer.toJson<DateTime>(date),
+      'cycleStartDate': serializer.toJson<DateTime?>(cycleStartDate),
+      'cycleEndDate': serializer.toJson<DateTime?>(cycleEndDate),
+      'cycleLength': serializer.toJson<int?>(cycleLength),
+      'periodLength': serializer.toJson<int?>(periodLength),
+      'predictedNextPeriod': serializer.toJson<DateTime?>(predictedNextPeriod),
+      'predictedOvulationDate': serializer.toJson<DateTime?>(
+        predictedOvulationDate,
+      ),
+      'isPeriodDay': serializer.toJson<bool>(isPeriodDay),
+      'flowIntensity': serializer.toJson<String?>(flowIntensity),
       'symptoms': serializer.toJson<String?>(symptoms),
-      'flowType': serializer.toJson<String?>(flowType),
+      'isPcodPcos': serializer.toJson<bool>(isPcodPcos),
+      'notes': serializer.toJson<String?>(notes),
+      'syncStatus': serializer.toJson<String>(syncStatus),
+      'idempotencyKey': serializer.toJson<String>(idempotencyKey),
     };
   }
 
@@ -11431,22 +13731,85 @@ class PeriodLog extends DataClass implements Insertable<PeriodLog> {
     String? id,
     String? userId,
     DateTime? date,
+    Value<DateTime?> cycleStartDate = const Value.absent(),
+    Value<DateTime?> cycleEndDate = const Value.absent(),
+    Value<int?> cycleLength = const Value.absent(),
+    Value<int?> periodLength = const Value.absent(),
+    Value<DateTime?> predictedNextPeriod = const Value.absent(),
+    Value<DateTime?> predictedOvulationDate = const Value.absent(),
+    bool? isPeriodDay,
+    Value<String?> flowIntensity = const Value.absent(),
     Value<String?> symptoms = const Value.absent(),
-    Value<String?> flowType = const Value.absent(),
+    bool? isPcodPcos,
+    Value<String?> notes = const Value.absent(),
+    String? syncStatus,
+    String? idempotencyKey,
   }) => PeriodLog(
     id: id ?? this.id,
     userId: userId ?? this.userId,
     date: date ?? this.date,
+    cycleStartDate: cycleStartDate.present
+        ? cycleStartDate.value
+        : this.cycleStartDate,
+    cycleEndDate: cycleEndDate.present ? cycleEndDate.value : this.cycleEndDate,
+    cycleLength: cycleLength.present ? cycleLength.value : this.cycleLength,
+    periodLength: periodLength.present ? periodLength.value : this.periodLength,
+    predictedNextPeriod: predictedNextPeriod.present
+        ? predictedNextPeriod.value
+        : this.predictedNextPeriod,
+    predictedOvulationDate: predictedOvulationDate.present
+        ? predictedOvulationDate.value
+        : this.predictedOvulationDate,
+    isPeriodDay: isPeriodDay ?? this.isPeriodDay,
+    flowIntensity: flowIntensity.present
+        ? flowIntensity.value
+        : this.flowIntensity,
     symptoms: symptoms.present ? symptoms.value : this.symptoms,
-    flowType: flowType.present ? flowType.value : this.flowType,
+    isPcodPcos: isPcodPcos ?? this.isPcodPcos,
+    notes: notes.present ? notes.value : this.notes,
+    syncStatus: syncStatus ?? this.syncStatus,
+    idempotencyKey: idempotencyKey ?? this.idempotencyKey,
   );
   PeriodLog copyWithCompanion(PeriodLogsCompanion data) {
     return PeriodLog(
       id: data.id.present ? data.id.value : this.id,
       userId: data.userId.present ? data.userId.value : this.userId,
       date: data.date.present ? data.date.value : this.date,
+      cycleStartDate: data.cycleStartDate.present
+          ? data.cycleStartDate.value
+          : this.cycleStartDate,
+      cycleEndDate: data.cycleEndDate.present
+          ? data.cycleEndDate.value
+          : this.cycleEndDate,
+      cycleLength: data.cycleLength.present
+          ? data.cycleLength.value
+          : this.cycleLength,
+      periodLength: data.periodLength.present
+          ? data.periodLength.value
+          : this.periodLength,
+      predictedNextPeriod: data.predictedNextPeriod.present
+          ? data.predictedNextPeriod.value
+          : this.predictedNextPeriod,
+      predictedOvulationDate: data.predictedOvulationDate.present
+          ? data.predictedOvulationDate.value
+          : this.predictedOvulationDate,
+      isPeriodDay: data.isPeriodDay.present
+          ? data.isPeriodDay.value
+          : this.isPeriodDay,
+      flowIntensity: data.flowIntensity.present
+          ? data.flowIntensity.value
+          : this.flowIntensity,
       symptoms: data.symptoms.present ? data.symptoms.value : this.symptoms,
-      flowType: data.flowType.present ? data.flowType.value : this.flowType,
+      isPcodPcos: data.isPcodPcos.present
+          ? data.isPcodPcos.value
+          : this.isPcodPcos,
+      notes: data.notes.present ? data.notes.value : this.notes,
+      syncStatus: data.syncStatus.present
+          ? data.syncStatus.value
+          : this.syncStatus,
+      idempotencyKey: data.idempotencyKey.present
+          ? data.idempotencyKey.value
+          : this.idempotencyKey,
     );
   }
 
@@ -11456,14 +13819,42 @@ class PeriodLog extends DataClass implements Insertable<PeriodLog> {
           ..write('id: $id, ')
           ..write('userId: $userId, ')
           ..write('date: $date, ')
+          ..write('cycleStartDate: $cycleStartDate, ')
+          ..write('cycleEndDate: $cycleEndDate, ')
+          ..write('cycleLength: $cycleLength, ')
+          ..write('periodLength: $periodLength, ')
+          ..write('predictedNextPeriod: $predictedNextPeriod, ')
+          ..write('predictedOvulationDate: $predictedOvulationDate, ')
+          ..write('isPeriodDay: $isPeriodDay, ')
+          ..write('flowIntensity: $flowIntensity, ')
           ..write('symptoms: $symptoms, ')
-          ..write('flowType: $flowType')
+          ..write('isPcodPcos: $isPcodPcos, ')
+          ..write('notes: $notes, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('idempotencyKey: $idempotencyKey')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, userId, date, symptoms, flowType);
+  int get hashCode => Object.hash(
+    id,
+    userId,
+    date,
+    cycleStartDate,
+    cycleEndDate,
+    cycleLength,
+    periodLength,
+    predictedNextPeriod,
+    predictedOvulationDate,
+    isPeriodDay,
+    flowIntensity,
+    symptoms,
+    isPcodPcos,
+    notes,
+    syncStatus,
+    idempotencyKey,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -11471,49 +13862,119 @@ class PeriodLog extends DataClass implements Insertable<PeriodLog> {
           other.id == this.id &&
           other.userId == this.userId &&
           other.date == this.date &&
+          other.cycleStartDate == this.cycleStartDate &&
+          other.cycleEndDate == this.cycleEndDate &&
+          other.cycleLength == this.cycleLength &&
+          other.periodLength == this.periodLength &&
+          other.predictedNextPeriod == this.predictedNextPeriod &&
+          other.predictedOvulationDate == this.predictedOvulationDate &&
+          other.isPeriodDay == this.isPeriodDay &&
+          other.flowIntensity == this.flowIntensity &&
           other.symptoms == this.symptoms &&
-          other.flowType == this.flowType);
+          other.isPcodPcos == this.isPcodPcos &&
+          other.notes == this.notes &&
+          other.syncStatus == this.syncStatus &&
+          other.idempotencyKey == this.idempotencyKey);
 }
 
 class PeriodLogsCompanion extends UpdateCompanion<PeriodLog> {
   final Value<String> id;
   final Value<String> userId;
   final Value<DateTime> date;
+  final Value<DateTime?> cycleStartDate;
+  final Value<DateTime?> cycleEndDate;
+  final Value<int?> cycleLength;
+  final Value<int?> periodLength;
+  final Value<DateTime?> predictedNextPeriod;
+  final Value<DateTime?> predictedOvulationDate;
+  final Value<bool> isPeriodDay;
+  final Value<String?> flowIntensity;
   final Value<String?> symptoms;
-  final Value<String?> flowType;
+  final Value<bool> isPcodPcos;
+  final Value<String?> notes;
+  final Value<String> syncStatus;
+  final Value<String> idempotencyKey;
   final Value<int> rowid;
   const PeriodLogsCompanion({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
     this.date = const Value.absent(),
+    this.cycleStartDate = const Value.absent(),
+    this.cycleEndDate = const Value.absent(),
+    this.cycleLength = const Value.absent(),
+    this.periodLength = const Value.absent(),
+    this.predictedNextPeriod = const Value.absent(),
+    this.predictedOvulationDate = const Value.absent(),
+    this.isPeriodDay = const Value.absent(),
+    this.flowIntensity = const Value.absent(),
     this.symptoms = const Value.absent(),
-    this.flowType = const Value.absent(),
+    this.isPcodPcos = const Value.absent(),
+    this.notes = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    this.idempotencyKey = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   PeriodLogsCompanion.insert({
     required String id,
     required String userId,
     required DateTime date,
+    this.cycleStartDate = const Value.absent(),
+    this.cycleEndDate = const Value.absent(),
+    this.cycleLength = const Value.absent(),
+    this.periodLength = const Value.absent(),
+    this.predictedNextPeriod = const Value.absent(),
+    this.predictedOvulationDate = const Value.absent(),
+    this.isPeriodDay = const Value.absent(),
+    this.flowIntensity = const Value.absent(),
     this.symptoms = const Value.absent(),
-    this.flowType = const Value.absent(),
+    this.isPcodPcos = const Value.absent(),
+    this.notes = const Value.absent(),
+    required String syncStatus,
+    required String idempotencyKey,
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        userId = Value(userId),
-       date = Value(date);
+       date = Value(date),
+       syncStatus = Value(syncStatus),
+       idempotencyKey = Value(idempotencyKey);
   static Insertable<PeriodLog> custom({
     Expression<String>? id,
     Expression<String>? userId,
     Expression<DateTime>? date,
+    Expression<DateTime>? cycleStartDate,
+    Expression<DateTime>? cycleEndDate,
+    Expression<int>? cycleLength,
+    Expression<int>? periodLength,
+    Expression<DateTime>? predictedNextPeriod,
+    Expression<DateTime>? predictedOvulationDate,
+    Expression<bool>? isPeriodDay,
+    Expression<String>? flowIntensity,
     Expression<String>? symptoms,
-    Expression<String>? flowType,
+    Expression<bool>? isPcodPcos,
+    Expression<String>? notes,
+    Expression<String>? syncStatus,
+    Expression<String>? idempotencyKey,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (userId != null) 'user_id': userId,
       if (date != null) 'date': date,
+      if (cycleStartDate != null) 'cycle_start_date': cycleStartDate,
+      if (cycleEndDate != null) 'cycle_end_date': cycleEndDate,
+      if (cycleLength != null) 'cycle_length': cycleLength,
+      if (periodLength != null) 'period_length': periodLength,
+      if (predictedNextPeriod != null)
+        'predicted_next_period': predictedNextPeriod,
+      if (predictedOvulationDate != null)
+        'predicted_ovulation_date': predictedOvulationDate,
+      if (isPeriodDay != null) 'is_period_day': isPeriodDay,
+      if (flowIntensity != null) 'flow_intensity': flowIntensity,
       if (symptoms != null) 'symptoms': symptoms,
-      if (flowType != null) 'flow_type': flowType,
+      if (isPcodPcos != null) 'is_pcod_pcos': isPcodPcos,
+      if (notes != null) 'notes': notes,
+      if (syncStatus != null) 'sync_status': syncStatus,
+      if (idempotencyKey != null) 'idempotency_key': idempotencyKey,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -11522,16 +13983,39 @@ class PeriodLogsCompanion extends UpdateCompanion<PeriodLog> {
     Value<String>? id,
     Value<String>? userId,
     Value<DateTime>? date,
+    Value<DateTime?>? cycleStartDate,
+    Value<DateTime?>? cycleEndDate,
+    Value<int?>? cycleLength,
+    Value<int?>? periodLength,
+    Value<DateTime?>? predictedNextPeriod,
+    Value<DateTime?>? predictedOvulationDate,
+    Value<bool>? isPeriodDay,
+    Value<String?>? flowIntensity,
     Value<String?>? symptoms,
-    Value<String?>? flowType,
+    Value<bool>? isPcodPcos,
+    Value<String?>? notes,
+    Value<String>? syncStatus,
+    Value<String>? idempotencyKey,
     Value<int>? rowid,
   }) {
     return PeriodLogsCompanion(
       id: id ?? this.id,
       userId: userId ?? this.userId,
       date: date ?? this.date,
+      cycleStartDate: cycleStartDate ?? this.cycleStartDate,
+      cycleEndDate: cycleEndDate ?? this.cycleEndDate,
+      cycleLength: cycleLength ?? this.cycleLength,
+      periodLength: periodLength ?? this.periodLength,
+      predictedNextPeriod: predictedNextPeriod ?? this.predictedNextPeriod,
+      predictedOvulationDate:
+          predictedOvulationDate ?? this.predictedOvulationDate,
+      isPeriodDay: isPeriodDay ?? this.isPeriodDay,
+      flowIntensity: flowIntensity ?? this.flowIntensity,
       symptoms: symptoms ?? this.symptoms,
-      flowType: flowType ?? this.flowType,
+      isPcodPcos: isPcodPcos ?? this.isPcodPcos,
+      notes: notes ?? this.notes,
+      syncStatus: syncStatus ?? this.syncStatus,
+      idempotencyKey: idempotencyKey ?? this.idempotencyKey,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -11548,15 +14032,54 @@ class PeriodLogsCompanion extends UpdateCompanion<PeriodLog> {
     if (date.present) {
       map['date'] = Variable<DateTime>(date.value);
     }
+    if (cycleStartDate.present) {
+      map['cycle_start_date'] = Variable<DateTime>(cycleStartDate.value);
+    }
+    if (cycleEndDate.present) {
+      map['cycle_end_date'] = Variable<DateTime>(cycleEndDate.value);
+    }
+    if (cycleLength.present) {
+      map['cycle_length'] = Variable<int>(cycleLength.value);
+    }
+    if (periodLength.present) {
+      map['period_length'] = Variable<int>(periodLength.value);
+    }
+    if (predictedNextPeriod.present) {
+      map['predicted_next_period'] = Variable<DateTime>(
+        predictedNextPeriod.value,
+      );
+    }
+    if (predictedOvulationDate.present) {
+      map['predicted_ovulation_date'] = Variable<DateTime>(
+        predictedOvulationDate.value,
+      );
+    }
+    if (isPeriodDay.present) {
+      map['is_period_day'] = Variable<bool>(isPeriodDay.value);
+    }
+    if (flowIntensity.present) {
+      map['flow_intensity'] = Variable<String>(
+        $PeriodLogsTable.$converterflowIntensity.toSql(flowIntensity.value),
+      );
+    }
     if (symptoms.present) {
       map['symptoms'] = Variable<String>(
         $PeriodLogsTable.$convertersymptoms.toSql(symptoms.value),
       );
     }
-    if (flowType.present) {
-      map['flow_type'] = Variable<String>(
-        $PeriodLogsTable.$converterflowType.toSql(flowType.value),
+    if (isPcodPcos.present) {
+      map['is_pcod_pcos'] = Variable<bool>(isPcodPcos.value);
+    }
+    if (notes.present) {
+      map['notes'] = Variable<String>(
+        $PeriodLogsTable.$converternotes.toSql(notes.value),
       );
+    }
+    if (syncStatus.present) {
+      map['sync_status'] = Variable<String>(syncStatus.value);
+    }
+    if (idempotencyKey.present) {
+      map['idempotency_key'] = Variable<String>(idempotencyKey.value);
     }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
@@ -11570,8 +14093,19 @@ class PeriodLogsCompanion extends UpdateCompanion<PeriodLog> {
           ..write('id: $id, ')
           ..write('userId: $userId, ')
           ..write('date: $date, ')
+          ..write('cycleStartDate: $cycleStartDate, ')
+          ..write('cycleEndDate: $cycleEndDate, ')
+          ..write('cycleLength: $cycleLength, ')
+          ..write('periodLength: $periodLength, ')
+          ..write('predictedNextPeriod: $predictedNextPeriod, ')
+          ..write('predictedOvulationDate: $predictedOvulationDate, ')
+          ..write('isPeriodDay: $isPeriodDay, ')
+          ..write('flowIntensity: $flowIntensity, ')
           ..write('symptoms: $symptoms, ')
-          ..write('flowType: $flowType, ')
+          ..write('isPcodPcos: $isPcodPcos, ')
+          ..write('notes: $notes, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -11602,6 +14136,57 @@ class $JournalEntriesTable extends JournalEntries
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _titleMeta = const VerificationMeta('title');
+  @override
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
+    'title',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  @override
+  late final GeneratedColumnWithTypeConverter<String?, String> content =
+      GeneratedColumn<String>(
+        'content',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      ).withConverter<String?>($JournalEntriesTable.$convertercontent);
+  static const VerificationMeta _promptIdMeta = const VerificationMeta(
+    'promptId',
+  );
+  @override
+  late final GeneratedColumn<String> promptId = GeneratedColumn<String>(
+    'prompt_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _sentimentScoreMeta = const VerificationMeta(
+    'sentimentScore',
+  );
+  @override
+  late final GeneratedColumn<double> sentimentScore = GeneratedColumn<double>(
+    'sentiment_score',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _moodTagMeta = const VerificationMeta(
+    'moodTag',
+  );
+  @override
+  late final GeneratedColumn<String> moodTag = GeneratedColumn<String>(
+    'mood_tag',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -11613,17 +14198,65 @@ class $JournalEntriesTable extends JournalEntries
     type: DriftSqlType.dateTime,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
   @override
-  late final GeneratedColumnWithTypeConverter<String?, String> content =
-      GeneratedColumn<String>(
-        'content',
-        aliasedName,
-        false,
-        type: DriftSqlType.string,
-        requiredDuringInsert: true,
-      ).withConverter<String?>($JournalEntriesTable.$convertercontent);
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _syncStatusMeta = const VerificationMeta(
+    'syncStatus',
+  );
   @override
-  List<GeneratedColumn> get $columns => [id, userId, createdAt, content];
+  late final GeneratedColumn<String> syncStatus = GeneratedColumn<String>(
+    'sync_status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _idempotencyKeyMeta = const VerificationMeta(
+    'idempotencyKey',
+  );
+  @override
+  late final GeneratedColumn<String> idempotencyKey = GeneratedColumn<String>(
+    'idempotency_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _fieldVersionsMeta = const VerificationMeta(
+    'fieldVersions',
+  );
+  @override
+  late final GeneratedColumn<String> fieldVersions = GeneratedColumn<String>(
+    'field_versions',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    userId,
+    title,
+    content,
+    promptId,
+    sentimentScore,
+    moodTag,
+    createdAt,
+    updatedAt,
+    syncStatus,
+    idempotencyKey,
+    fieldVersions,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -11649,6 +14282,33 @@ class $JournalEntriesTable extends JournalEntries
     } else if (isInserting) {
       context.missing(_userIdMeta);
     }
+    if (data.containsKey('title')) {
+      context.handle(
+        _titleMeta,
+        title.isAcceptableOrUnknown(data['title']!, _titleMeta),
+      );
+    }
+    if (data.containsKey('prompt_id')) {
+      context.handle(
+        _promptIdMeta,
+        promptId.isAcceptableOrUnknown(data['prompt_id']!, _promptIdMeta),
+      );
+    }
+    if (data.containsKey('sentiment_score')) {
+      context.handle(
+        _sentimentScoreMeta,
+        sentimentScore.isAcceptableOrUnknown(
+          data['sentiment_score']!,
+          _sentimentScoreMeta,
+        ),
+      );
+    }
+    if (data.containsKey('mood_tag')) {
+      context.handle(
+        _moodTagMeta,
+        moodTag.isAcceptableOrUnknown(data['mood_tag']!, _moodTagMeta),
+      );
+    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
@@ -11656,6 +14316,40 @@ class $JournalEntriesTable extends JournalEntries
       );
     } else if (isInserting) {
       context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    if (data.containsKey('sync_status')) {
+      context.handle(
+        _syncStatusMeta,
+        syncStatus.isAcceptableOrUnknown(data['sync_status']!, _syncStatusMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_syncStatusMeta);
+    }
+    if (data.containsKey('idempotency_key')) {
+      context.handle(
+        _idempotencyKeyMeta,
+        idempotencyKey.isAcceptableOrUnknown(
+          data['idempotency_key']!,
+          _idempotencyKeyMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_idempotencyKeyMeta);
+    }
+    if (data.containsKey('field_versions')) {
+      context.handle(
+        _fieldVersionsMeta,
+        fieldVersions.isAcceptableOrUnknown(
+          data['field_versions']!,
+          _fieldVersionsMeta,
+        ),
+      );
     }
     return context;
   }
@@ -11674,15 +14368,47 @@ class $JournalEntriesTable extends JournalEntries
         DriftSqlType.string,
         data['${effectivePrefix}user_id'],
       )!,
-      createdAt: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}created_at'],
-      )!,
+      title: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}title'],
+      ),
       content: $JournalEntriesTable.$convertercontent.fromSql(
         attachedDatabase.typeMapping.read(
           DriftSqlType.string,
           data['${effectivePrefix}content'],
         )!,
+      ),
+      promptId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}prompt_id'],
+      ),
+      sentimentScore: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}sentiment_score'],
+      ),
+      moodTag: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}mood_tag'],
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      ),
+      syncStatus: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sync_status'],
+      )!,
+      idempotencyKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}idempotency_key'],
+      )!,
+      fieldVersions: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}field_versions'],
       ),
     );
   }
@@ -11699,24 +14425,60 @@ class $JournalEntriesTable extends JournalEntries
 class JournalEntry extends DataClass implements Insertable<JournalEntry> {
   final String id;
   final String userId;
-  final DateTime createdAt;
+  final String? title;
   final String? content;
+  final String? promptId;
+  final double? sentimentScore;
+  final String? moodTag;
+  final DateTime createdAt;
+  final DateTime? updatedAt;
+  final String syncStatus;
+  final String idempotencyKey;
+  final String? fieldVersions;
   const JournalEntry({
     required this.id,
     required this.userId,
-    required this.createdAt,
+    this.title,
     this.content,
+    this.promptId,
+    this.sentimentScore,
+    this.moodTag,
+    required this.createdAt,
+    this.updatedAt,
+    required this.syncStatus,
+    required this.idempotencyKey,
+    this.fieldVersions,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<String>(id);
     map['user_id'] = Variable<String>(userId);
-    map['created_at'] = Variable<DateTime>(createdAt);
+    if (!nullToAbsent || title != null) {
+      map['title'] = Variable<String>(title);
+    }
     if (!nullToAbsent || content != null) {
       map['content'] = Variable<String>(
         $JournalEntriesTable.$convertercontent.toSql(content),
       );
+    }
+    if (!nullToAbsent || promptId != null) {
+      map['prompt_id'] = Variable<String>(promptId);
+    }
+    if (!nullToAbsent || sentimentScore != null) {
+      map['sentiment_score'] = Variable<double>(sentimentScore);
+    }
+    if (!nullToAbsent || moodTag != null) {
+      map['mood_tag'] = Variable<String>(moodTag);
+    }
+    map['created_at'] = Variable<DateTime>(createdAt);
+    if (!nullToAbsent || updatedAt != null) {
+      map['updated_at'] = Variable<DateTime>(updatedAt);
+    }
+    map['sync_status'] = Variable<String>(syncStatus);
+    map['idempotency_key'] = Variable<String>(idempotencyKey);
+    if (!nullToAbsent || fieldVersions != null) {
+      map['field_versions'] = Variable<String>(fieldVersions);
     }
     return map;
   }
@@ -11725,10 +14487,30 @@ class JournalEntry extends DataClass implements Insertable<JournalEntry> {
     return JournalEntriesCompanion(
       id: Value(id),
       userId: Value(userId),
-      createdAt: Value(createdAt),
+      title: title == null && nullToAbsent
+          ? const Value.absent()
+          : Value(title),
       content: content == null && nullToAbsent
           ? const Value.absent()
           : Value(content),
+      promptId: promptId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(promptId),
+      sentimentScore: sentimentScore == null && nullToAbsent
+          ? const Value.absent()
+          : Value(sentimentScore),
+      moodTag: moodTag == null && nullToAbsent
+          ? const Value.absent()
+          : Value(moodTag),
+      createdAt: Value(createdAt),
+      updatedAt: updatedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(updatedAt),
+      syncStatus: Value(syncStatus),
+      idempotencyKey: Value(idempotencyKey),
+      fieldVersions: fieldVersions == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fieldVersions),
     );
   }
 
@@ -11740,8 +14522,16 @@ class JournalEntry extends DataClass implements Insertable<JournalEntry> {
     return JournalEntry(
       id: serializer.fromJson<String>(json['id']),
       userId: serializer.fromJson<String>(json['userId']),
-      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      title: serializer.fromJson<String?>(json['title']),
       content: serializer.fromJson<String?>(json['content']),
+      promptId: serializer.fromJson<String?>(json['promptId']),
+      sentimentScore: serializer.fromJson<double?>(json['sentimentScore']),
+      moodTag: serializer.fromJson<String?>(json['moodTag']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime?>(json['updatedAt']),
+      syncStatus: serializer.fromJson<String>(json['syncStatus']),
+      idempotencyKey: serializer.fromJson<String>(json['idempotencyKey']),
+      fieldVersions: serializer.fromJson<String?>(json['fieldVersions']),
     );
   }
   @override
@@ -11750,28 +14540,72 @@ class JournalEntry extends DataClass implements Insertable<JournalEntry> {
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
       'userId': serializer.toJson<String>(userId),
-      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'title': serializer.toJson<String?>(title),
       'content': serializer.toJson<String?>(content),
+      'promptId': serializer.toJson<String?>(promptId),
+      'sentimentScore': serializer.toJson<double?>(sentimentScore),
+      'moodTag': serializer.toJson<String?>(moodTag),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime?>(updatedAt),
+      'syncStatus': serializer.toJson<String>(syncStatus),
+      'idempotencyKey': serializer.toJson<String>(idempotencyKey),
+      'fieldVersions': serializer.toJson<String?>(fieldVersions),
     };
   }
 
   JournalEntry copyWith({
     String? id,
     String? userId,
-    DateTime? createdAt,
+    Value<String?> title = const Value.absent(),
     Value<String?> content = const Value.absent(),
+    Value<String?> promptId = const Value.absent(),
+    Value<double?> sentimentScore = const Value.absent(),
+    Value<String?> moodTag = const Value.absent(),
+    DateTime? createdAt,
+    Value<DateTime?> updatedAt = const Value.absent(),
+    String? syncStatus,
+    String? idempotencyKey,
+    Value<String?> fieldVersions = const Value.absent(),
   }) => JournalEntry(
     id: id ?? this.id,
     userId: userId ?? this.userId,
-    createdAt: createdAt ?? this.createdAt,
+    title: title.present ? title.value : this.title,
     content: content.present ? content.value : this.content,
+    promptId: promptId.present ? promptId.value : this.promptId,
+    sentimentScore: sentimentScore.present
+        ? sentimentScore.value
+        : this.sentimentScore,
+    moodTag: moodTag.present ? moodTag.value : this.moodTag,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt.present ? updatedAt.value : this.updatedAt,
+    syncStatus: syncStatus ?? this.syncStatus,
+    idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+    fieldVersions: fieldVersions.present
+        ? fieldVersions.value
+        : this.fieldVersions,
   );
   JournalEntry copyWithCompanion(JournalEntriesCompanion data) {
     return JournalEntry(
       id: data.id.present ? data.id.value : this.id,
       userId: data.userId.present ? data.userId.value : this.userId,
-      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      title: data.title.present ? data.title.value : this.title,
       content: data.content.present ? data.content.value : this.content,
+      promptId: data.promptId.present ? data.promptId.value : this.promptId,
+      sentimentScore: data.sentimentScore.present
+          ? data.sentimentScore.value
+          : this.sentimentScore,
+      moodTag: data.moodTag.present ? data.moodTag.value : this.moodTag,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      syncStatus: data.syncStatus.present
+          ? data.syncStatus.value
+          : this.syncStatus,
+      idempotencyKey: data.idempotencyKey.present
+          ? data.idempotencyKey.value
+          : this.idempotencyKey,
+      fieldVersions: data.fieldVersions.present
+          ? data.fieldVersions.value
+          : this.fieldVersions,
     );
   }
 
@@ -11780,59 +14614,130 @@ class JournalEntry extends DataClass implements Insertable<JournalEntry> {
     return (StringBuffer('JournalEntry(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
+          ..write('title: $title, ')
+          ..write('content: $content, ')
+          ..write('promptId: $promptId, ')
+          ..write('sentimentScore: $sentimentScore, ')
+          ..write('moodTag: $moodTag, ')
           ..write('createdAt: $createdAt, ')
-          ..write('content: $content')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('fieldVersions: $fieldVersions')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, userId, createdAt, content);
+  int get hashCode => Object.hash(
+    id,
+    userId,
+    title,
+    content,
+    promptId,
+    sentimentScore,
+    moodTag,
+    createdAt,
+    updatedAt,
+    syncStatus,
+    idempotencyKey,
+    fieldVersions,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is JournalEntry &&
           other.id == this.id &&
           other.userId == this.userId &&
+          other.title == this.title &&
+          other.content == this.content &&
+          other.promptId == this.promptId &&
+          other.sentimentScore == this.sentimentScore &&
+          other.moodTag == this.moodTag &&
           other.createdAt == this.createdAt &&
-          other.content == this.content);
+          other.updatedAt == this.updatedAt &&
+          other.syncStatus == this.syncStatus &&
+          other.idempotencyKey == this.idempotencyKey &&
+          other.fieldVersions == this.fieldVersions);
 }
 
 class JournalEntriesCompanion extends UpdateCompanion<JournalEntry> {
   final Value<String> id;
   final Value<String> userId;
-  final Value<DateTime> createdAt;
+  final Value<String?> title;
   final Value<String?> content;
+  final Value<String?> promptId;
+  final Value<double?> sentimentScore;
+  final Value<String?> moodTag;
+  final Value<DateTime> createdAt;
+  final Value<DateTime?> updatedAt;
+  final Value<String> syncStatus;
+  final Value<String> idempotencyKey;
+  final Value<String?> fieldVersions;
   final Value<int> rowid;
   const JournalEntriesCompanion({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
-    this.createdAt = const Value.absent(),
+    this.title = const Value.absent(),
     this.content = const Value.absent(),
+    this.promptId = const Value.absent(),
+    this.sentimentScore = const Value.absent(),
+    this.moodTag = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    this.idempotencyKey = const Value.absent(),
+    this.fieldVersions = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   JournalEntriesCompanion.insert({
     required String id,
     required String userId,
-    required DateTime createdAt,
+    this.title = const Value.absent(),
     required String? content,
+    this.promptId = const Value.absent(),
+    this.sentimentScore = const Value.absent(),
+    this.moodTag = const Value.absent(),
+    required DateTime createdAt,
+    this.updatedAt = const Value.absent(),
+    required String syncStatus,
+    required String idempotencyKey,
+    this.fieldVersions = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        userId = Value(userId),
+       content = Value(content),
        createdAt = Value(createdAt),
-       content = Value(content);
+       syncStatus = Value(syncStatus),
+       idempotencyKey = Value(idempotencyKey);
   static Insertable<JournalEntry> custom({
     Expression<String>? id,
     Expression<String>? userId,
-    Expression<DateTime>? createdAt,
+    Expression<String>? title,
     Expression<String>? content,
+    Expression<String>? promptId,
+    Expression<double>? sentimentScore,
+    Expression<String>? moodTag,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<String>? syncStatus,
+    Expression<String>? idempotencyKey,
+    Expression<String>? fieldVersions,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (userId != null) 'user_id': userId,
-      if (createdAt != null) 'created_at': createdAt,
+      if (title != null) 'title': title,
       if (content != null) 'content': content,
+      if (promptId != null) 'prompt_id': promptId,
+      if (sentimentScore != null) 'sentiment_score': sentimentScore,
+      if (moodTag != null) 'mood_tag': moodTag,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (syncStatus != null) 'sync_status': syncStatus,
+      if (idempotencyKey != null) 'idempotency_key': idempotencyKey,
+      if (fieldVersions != null) 'field_versions': fieldVersions,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -11840,15 +14745,31 @@ class JournalEntriesCompanion extends UpdateCompanion<JournalEntry> {
   JournalEntriesCompanion copyWith({
     Value<String>? id,
     Value<String>? userId,
-    Value<DateTime>? createdAt,
+    Value<String?>? title,
     Value<String?>? content,
+    Value<String?>? promptId,
+    Value<double?>? sentimentScore,
+    Value<String?>? moodTag,
+    Value<DateTime>? createdAt,
+    Value<DateTime?>? updatedAt,
+    Value<String>? syncStatus,
+    Value<String>? idempotencyKey,
+    Value<String?>? fieldVersions,
     Value<int>? rowid,
   }) {
     return JournalEntriesCompanion(
       id: id ?? this.id,
       userId: userId ?? this.userId,
-      createdAt: createdAt ?? this.createdAt,
+      title: title ?? this.title,
       content: content ?? this.content,
+      promptId: promptId ?? this.promptId,
+      sentimentScore: sentimentScore ?? this.sentimentScore,
+      moodTag: moodTag ?? this.moodTag,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      syncStatus: syncStatus ?? this.syncStatus,
+      idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+      fieldVersions: fieldVersions ?? this.fieldVersions,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -11862,13 +14783,37 @@ class JournalEntriesCompanion extends UpdateCompanion<JournalEntry> {
     if (userId.present) {
       map['user_id'] = Variable<String>(userId.value);
     }
-    if (createdAt.present) {
-      map['created_at'] = Variable<DateTime>(createdAt.value);
+    if (title.present) {
+      map['title'] = Variable<String>(title.value);
     }
     if (content.present) {
       map['content'] = Variable<String>(
         $JournalEntriesTable.$convertercontent.toSql(content.value),
       );
+    }
+    if (promptId.present) {
+      map['prompt_id'] = Variable<String>(promptId.value);
+    }
+    if (sentimentScore.present) {
+      map['sentiment_score'] = Variable<double>(sentimentScore.value);
+    }
+    if (moodTag.present) {
+      map['mood_tag'] = Variable<String>(moodTag.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (syncStatus.present) {
+      map['sync_status'] = Variable<String>(syncStatus.value);
+    }
+    if (idempotencyKey.present) {
+      map['idempotency_key'] = Variable<String>(idempotencyKey.value);
+    }
+    if (fieldVersions.present) {
+      map['field_versions'] = Variable<String>(fieldVersions.value);
     }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
@@ -11881,8 +14826,16 @@ class JournalEntriesCompanion extends UpdateCompanion<JournalEntry> {
     return (StringBuffer('JournalEntriesCompanion(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
-          ..write('createdAt: $createdAt, ')
+          ..write('title: $title, ')
           ..write('content: $content, ')
+          ..write('promptId: $promptId, ')
+          ..write('sentimentScore: $sentimentScore, ')
+          ..write('moodTag: $moodTag, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('fieldVersions: $fieldVersions, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -13374,6 +16327,17 @@ class $EmergencyCardTable extends EmergencyCard
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _medicationsMeta = const VerificationMeta(
+    'medications',
+  );
+  @override
+  late final GeneratedColumn<String> medications = GeneratedColumn<String>(
+    'medications',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -13382,6 +16346,7 @@ class $EmergencyCardTable extends EmergencyCard
     allergies,
     chronicConditions,
     emergencyContact,
+    medications,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -13438,6 +16403,15 @@ class $EmergencyCardTable extends EmergencyCard
         ),
       );
     }
+    if (data.containsKey('medications')) {
+      context.handle(
+        _medicationsMeta,
+        medications.isAcceptableOrUnknown(
+          data['medications']!,
+          _medicationsMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -13471,6 +16445,10 @@ class $EmergencyCardTable extends EmergencyCard
         DriftSqlType.string,
         data['${effectivePrefix}emergency_contact'],
       ),
+      medications: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}medications'],
+      ),
     );
   }
 
@@ -13488,6 +16466,7 @@ class EmergencyCardData extends DataClass
   final String? allergies;
   final String? chronicConditions;
   final String? emergencyContact;
+  final String? medications;
   const EmergencyCardData({
     required this.id,
     required this.userId,
@@ -13495,6 +16474,7 @@ class EmergencyCardData extends DataClass
     this.allergies,
     this.chronicConditions,
     this.emergencyContact,
+    this.medications,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -13512,6 +16492,9 @@ class EmergencyCardData extends DataClass
     }
     if (!nullToAbsent || emergencyContact != null) {
       map['emergency_contact'] = Variable<String>(emergencyContact);
+    }
+    if (!nullToAbsent || medications != null) {
+      map['medications'] = Variable<String>(medications);
     }
     return map;
   }
@@ -13532,6 +16515,9 @@ class EmergencyCardData extends DataClass
       emergencyContact: emergencyContact == null && nullToAbsent
           ? const Value.absent()
           : Value(emergencyContact),
+      medications: medications == null && nullToAbsent
+          ? const Value.absent()
+          : Value(medications),
     );
   }
 
@@ -13549,6 +16535,7 @@ class EmergencyCardData extends DataClass
         json['chronicConditions'],
       ),
       emergencyContact: serializer.fromJson<String?>(json['emergencyContact']),
+      medications: serializer.fromJson<String?>(json['medications']),
     );
   }
   @override
@@ -13561,6 +16548,7 @@ class EmergencyCardData extends DataClass
       'allergies': serializer.toJson<String?>(allergies),
       'chronicConditions': serializer.toJson<String?>(chronicConditions),
       'emergencyContact': serializer.toJson<String?>(emergencyContact),
+      'medications': serializer.toJson<String?>(medications),
     };
   }
 
@@ -13571,6 +16559,7 @@ class EmergencyCardData extends DataClass
     Value<String?> allergies = const Value.absent(),
     Value<String?> chronicConditions = const Value.absent(),
     Value<String?> emergencyContact = const Value.absent(),
+    Value<String?> medications = const Value.absent(),
   }) => EmergencyCardData(
     id: id ?? this.id,
     userId: userId ?? this.userId,
@@ -13582,6 +16571,7 @@ class EmergencyCardData extends DataClass
     emergencyContact: emergencyContact.present
         ? emergencyContact.value
         : this.emergencyContact,
+    medications: medications.present ? medications.value : this.medications,
   );
   EmergencyCardData copyWithCompanion(EmergencyCardCompanion data) {
     return EmergencyCardData(
@@ -13597,6 +16587,9 @@ class EmergencyCardData extends DataClass
       emergencyContact: data.emergencyContact.present
           ? data.emergencyContact.value
           : this.emergencyContact,
+      medications: data.medications.present
+          ? data.medications.value
+          : this.medications,
     );
   }
 
@@ -13608,7 +16601,8 @@ class EmergencyCardData extends DataClass
           ..write('bloodGroup: $bloodGroup, ')
           ..write('allergies: $allergies, ')
           ..write('chronicConditions: $chronicConditions, ')
-          ..write('emergencyContact: $emergencyContact')
+          ..write('emergencyContact: $emergencyContact, ')
+          ..write('medications: $medications')
           ..write(')'))
         .toString();
   }
@@ -13621,6 +16615,7 @@ class EmergencyCardData extends DataClass
     allergies,
     chronicConditions,
     emergencyContact,
+    medications,
   );
   @override
   bool operator ==(Object other) =>
@@ -13631,7 +16626,8 @@ class EmergencyCardData extends DataClass
           other.bloodGroup == this.bloodGroup &&
           other.allergies == this.allergies &&
           other.chronicConditions == this.chronicConditions &&
-          other.emergencyContact == this.emergencyContact);
+          other.emergencyContact == this.emergencyContact &&
+          other.medications == this.medications);
 }
 
 class EmergencyCardCompanion extends UpdateCompanion<EmergencyCardData> {
@@ -13641,6 +16637,7 @@ class EmergencyCardCompanion extends UpdateCompanion<EmergencyCardData> {
   final Value<String?> allergies;
   final Value<String?> chronicConditions;
   final Value<String?> emergencyContact;
+  final Value<String?> medications;
   final Value<int> rowid;
   const EmergencyCardCompanion({
     this.id = const Value.absent(),
@@ -13649,6 +16646,7 @@ class EmergencyCardCompanion extends UpdateCompanion<EmergencyCardData> {
     this.allergies = const Value.absent(),
     this.chronicConditions = const Value.absent(),
     this.emergencyContact = const Value.absent(),
+    this.medications = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   EmergencyCardCompanion.insert({
@@ -13658,6 +16656,7 @@ class EmergencyCardCompanion extends UpdateCompanion<EmergencyCardData> {
     this.allergies = const Value.absent(),
     this.chronicConditions = const Value.absent(),
     this.emergencyContact = const Value.absent(),
+    this.medications = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        userId = Value(userId);
@@ -13668,6 +16667,7 @@ class EmergencyCardCompanion extends UpdateCompanion<EmergencyCardData> {
     Expression<String>? allergies,
     Expression<String>? chronicConditions,
     Expression<String>? emergencyContact,
+    Expression<String>? medications,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -13677,6 +16677,7 @@ class EmergencyCardCompanion extends UpdateCompanion<EmergencyCardData> {
       if (allergies != null) 'allergies': allergies,
       if (chronicConditions != null) 'chronic_conditions': chronicConditions,
       if (emergencyContact != null) 'emergency_contact': emergencyContact,
+      if (medications != null) 'medications': medications,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -13688,6 +16689,7 @@ class EmergencyCardCompanion extends UpdateCompanion<EmergencyCardData> {
     Value<String?>? allergies,
     Value<String?>? chronicConditions,
     Value<String?>? emergencyContact,
+    Value<String?>? medications,
     Value<int>? rowid,
   }) {
     return EmergencyCardCompanion(
@@ -13697,6 +16699,7 @@ class EmergencyCardCompanion extends UpdateCompanion<EmergencyCardData> {
       allergies: allergies ?? this.allergies,
       chronicConditions: chronicConditions ?? this.chronicConditions,
       emergencyContact: emergencyContact ?? this.emergencyContact,
+      medications: medications ?? this.medications,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -13722,6 +16725,9 @@ class EmergencyCardCompanion extends UpdateCompanion<EmergencyCardData> {
     if (emergencyContact.present) {
       map['emergency_contact'] = Variable<String>(emergencyContact.value);
     }
+    if (medications.present) {
+      map['medications'] = Variable<String>(medications.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -13737,6 +16743,7 @@ class EmergencyCardCompanion extends UpdateCompanion<EmergencyCardData> {
           ..write('allergies: $allergies, ')
           ..write('chronicConditions: $chronicConditions, ')
           ..write('emergencyContact: $emergencyContact, ')
+          ..write('medications: $medications, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -17293,6 +20300,17 @@ class $UserProfilesTable extends UserProfiles
     ),
     defaultValue: const Constant(false),
   );
+  static const VerificationMeta _chronotypeMeta = const VerificationMeta(
+    'chronotype',
+  );
+  @override
+  late final GeneratedColumn<String> chronotype = GeneratedColumn<String>(
+    'chronotype',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _abhaNumberMeta = const VerificationMeta(
     'abhaNumber',
   );
@@ -17397,6 +20415,7 @@ class $UserProfilesTable extends UserProfiles
     permissionStepCounter,
     permissionHeartRate,
     permissionSleep,
+    chronotype,
     abhaNumber,
     abhaLinked,
     connectedWearables,
@@ -17573,6 +20592,12 @@ class $UserProfilesTable extends UserProfiles
         ),
       );
     }
+    if (data.containsKey('chronotype')) {
+      context.handle(
+        _chronotypeMeta,
+        chronotype.isAcceptableOrUnknown(data['chronotype']!, _chronotypeMeta),
+      );
+    }
     if (data.containsKey('abha_number')) {
       context.handle(
         _abhaNumberMeta,
@@ -17707,6 +20732,10 @@ class $UserProfilesTable extends UserProfiles
         DriftSqlType.bool,
         data['${effectivePrefix}permission_sleep'],
       )!,
+      chronotype: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}chronotype'],
+      ),
       abhaNumber: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}abha_number'],
@@ -17764,6 +20793,7 @@ class UserProfile extends DataClass implements Insertable<UserProfile> {
   final bool permissionStepCounter;
   final bool permissionHeartRate;
   final bool permissionSleep;
+  final String? chronotype;
   final String? abhaNumber;
   final bool abhaLinked;
   final String? connectedWearables;
@@ -17791,6 +20821,7 @@ class UserProfile extends DataClass implements Insertable<UserProfile> {
     required this.permissionStepCounter,
     required this.permissionHeartRate,
     required this.permissionSleep,
+    this.chronotype,
     this.abhaNumber,
     required this.abhaLinked,
     this.connectedWearables,
@@ -17847,6 +20878,9 @@ class UserProfile extends DataClass implements Insertable<UserProfile> {
     map['permission_step_counter'] = Variable<bool>(permissionStepCounter);
     map['permission_heart_rate'] = Variable<bool>(permissionHeartRate);
     map['permission_sleep'] = Variable<bool>(permissionSleep);
+    if (!nullToAbsent || chronotype != null) {
+      map['chronotype'] = Variable<String>(chronotype);
+    }
     if (!nullToAbsent || abhaNumber != null) {
       map['abha_number'] = Variable<String>(abhaNumber);
     }
@@ -17908,6 +20942,9 @@ class UserProfile extends DataClass implements Insertable<UserProfile> {
       permissionStepCounter: Value(permissionStepCounter),
       permissionHeartRate: Value(permissionHeartRate),
       permissionSleep: Value(permissionSleep),
+      chronotype: chronotype == null && nullToAbsent
+          ? const Value.absent()
+          : Value(chronotype),
       abhaNumber: abhaNumber == null && nullToAbsent
           ? const Value.absent()
           : Value(abhaNumber),
@@ -17953,6 +20990,7 @@ class UserProfile extends DataClass implements Insertable<UserProfile> {
         json['permissionHeartRate'],
       ),
       permissionSleep: serializer.fromJson<bool>(json['permissionSleep']),
+      chronotype: serializer.fromJson<String?>(json['chronotype']),
       abhaNumber: serializer.fromJson<String?>(json['abhaNumber']),
       abhaLinked: serializer.fromJson<bool>(json['abhaLinked']),
       connectedWearables: serializer.fromJson<String?>(
@@ -17987,6 +21025,7 @@ class UserProfile extends DataClass implements Insertable<UserProfile> {
       'permissionStepCounter': serializer.toJson<bool>(permissionStepCounter),
       'permissionHeartRate': serializer.toJson<bool>(permissionHeartRate),
       'permissionSleep': serializer.toJson<bool>(permissionSleep),
+      'chronotype': serializer.toJson<String?>(chronotype),
       'abhaNumber': serializer.toJson<String?>(abhaNumber),
       'abhaLinked': serializer.toJson<bool>(abhaLinked),
       'connectedWearables': serializer.toJson<String?>(connectedWearables),
@@ -18017,6 +21056,7 @@ class UserProfile extends DataClass implements Insertable<UserProfile> {
     bool? permissionStepCounter,
     bool? permissionHeartRate,
     bool? permissionSleep,
+    Value<String?> chronotype = const Value.absent(),
     Value<String?> abhaNumber = const Value.absent(),
     bool? abhaLinked,
     Value<String?> connectedWearables = const Value.absent(),
@@ -18058,6 +21098,7 @@ class UserProfile extends DataClass implements Insertable<UserProfile> {
     permissionStepCounter: permissionStepCounter ?? this.permissionStepCounter,
     permissionHeartRate: permissionHeartRate ?? this.permissionHeartRate,
     permissionSleep: permissionSleep ?? this.permissionSleep,
+    chronotype: chronotype.present ? chronotype.value : this.chronotype,
     abhaNumber: abhaNumber.present ? abhaNumber.value : this.abhaNumber,
     abhaLinked: abhaLinked ?? this.abhaLinked,
     connectedWearables: connectedWearables.present
@@ -18115,6 +21156,9 @@ class UserProfile extends DataClass implements Insertable<UserProfile> {
       permissionSleep: data.permissionSleep.present
           ? data.permissionSleep.value
           : this.permissionSleep,
+      chronotype: data.chronotype.present
+          ? data.chronotype.value
+          : this.chronotype,
       abhaNumber: data.abhaNumber.present
           ? data.abhaNumber.value
           : this.abhaNumber,
@@ -18155,6 +21199,7 @@ class UserProfile extends DataClass implements Insertable<UserProfile> {
           ..write('permissionStepCounter: $permissionStepCounter, ')
           ..write('permissionHeartRate: $permissionHeartRate, ')
           ..write('permissionSleep: $permissionSleep, ')
+          ..write('chronotype: $chronotype, ')
           ..write('abhaNumber: $abhaNumber, ')
           ..write('abhaLinked: $abhaLinked, ')
           ..write('connectedWearables: $connectedWearables, ')
@@ -18187,6 +21232,7 @@ class UserProfile extends DataClass implements Insertable<UserProfile> {
     permissionStepCounter,
     permissionHeartRate,
     permissionSleep,
+    chronotype,
     abhaNumber,
     abhaLinked,
     connectedWearables,
@@ -18218,6 +21264,7 @@ class UserProfile extends DataClass implements Insertable<UserProfile> {
           other.permissionStepCounter == this.permissionStepCounter &&
           other.permissionHeartRate == this.permissionHeartRate &&
           other.permissionSleep == this.permissionSleep &&
+          other.chronotype == this.chronotype &&
           other.abhaNumber == this.abhaNumber &&
           other.abhaLinked == this.abhaLinked &&
           other.connectedWearables == this.connectedWearables &&
@@ -18247,6 +21294,7 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfile> {
   final Value<bool> permissionStepCounter;
   final Value<bool> permissionHeartRate;
   final Value<bool> permissionSleep;
+  final Value<String?> chronotype;
   final Value<String?> abhaNumber;
   final Value<bool> abhaLinked;
   final Value<String?> connectedWearables;
@@ -18275,6 +21323,7 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfile> {
     this.permissionStepCounter = const Value.absent(),
     this.permissionHeartRate = const Value.absent(),
     this.permissionSleep = const Value.absent(),
+    this.chronotype = const Value.absent(),
     this.abhaNumber = const Value.absent(),
     this.abhaLinked = const Value.absent(),
     this.connectedWearables = const Value.absent(),
@@ -18304,6 +21353,7 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfile> {
     this.permissionStepCounter = const Value.absent(),
     this.permissionHeartRate = const Value.absent(),
     this.permissionSleep = const Value.absent(),
+    this.chronotype = const Value.absent(),
     this.abhaNumber = const Value.absent(),
     this.abhaLinked = const Value.absent(),
     this.connectedWearables = const Value.absent(),
@@ -18337,6 +21387,7 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfile> {
     Expression<bool>? permissionStepCounter,
     Expression<bool>? permissionHeartRate,
     Expression<bool>? permissionSleep,
+    Expression<String>? chronotype,
     Expression<String>? abhaNumber,
     Expression<bool>? abhaLinked,
     Expression<String>? connectedWearables,
@@ -18368,6 +21419,7 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfile> {
       if (permissionHeartRate != null)
         'permission_heart_rate': permissionHeartRate,
       if (permissionSleep != null) 'permission_sleep': permissionSleep,
+      if (chronotype != null) 'chronotype': chronotype,
       if (abhaNumber != null) 'abha_number': abhaNumber,
       if (abhaLinked != null) 'abha_linked': abhaLinked,
       if (connectedWearables != null) 'connected_wearables': connectedWearables,
@@ -18399,6 +21451,7 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfile> {
     Value<bool>? permissionStepCounter,
     Value<bool>? permissionHeartRate,
     Value<bool>? permissionSleep,
+    Value<String?>? chronotype,
     Value<String?>? abhaNumber,
     Value<bool>? abhaLinked,
     Value<String?>? connectedWearables,
@@ -18429,6 +21482,7 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfile> {
           permissionStepCounter ?? this.permissionStepCounter,
       permissionHeartRate: permissionHeartRate ?? this.permissionHeartRate,
       permissionSleep: permissionSleep ?? this.permissionSleep,
+      chronotype: chronotype ?? this.chronotype,
       abhaNumber: abhaNumber ?? this.abhaNumber,
       abhaLinked: abhaLinked ?? this.abhaLinked,
       connectedWearables: connectedWearables ?? this.connectedWearables,
@@ -18502,6 +21556,9 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfile> {
     if (permissionSleep.present) {
       map['permission_sleep'] = Variable<bool>(permissionSleep.value);
     }
+    if (chronotype.present) {
+      map['chronotype'] = Variable<String>(chronotype.value);
+    }
     if (abhaNumber.present) {
       map['abha_number'] = Variable<String>(abhaNumber.value);
     }
@@ -18551,6 +21608,7 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfile> {
           ..write('permissionStepCounter: $permissionStepCounter, ')
           ..write('permissionHeartRate: $permissionHeartRate, ')
           ..write('permissionSleep: $permissionSleep, ')
+          ..write('chronotype: $chronotype, ')
           ..write('abhaNumber: $abhaNumber, ')
           ..write('abhaLinked: $abhaLinked, ')
           ..write('connectedWearables: $connectedWearables, ')
@@ -19779,6 +22837,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     this as AppDatabase,
   );
   late final MealPlansDao mealPlansDao = MealPlansDao(this as AppDatabase);
+  late final GroceryListsDao groceryListsDao = GroceryListsDao(
+    this as AppDatabase,
+  );
   late final RecipesDao recipesDao = RecipesDao(this as AppDatabase);
   late final BloodPressureLogsDao bloodPressureLogsDao = BloodPressureLogsDao(
     this as AppDatabase,
@@ -23000,6 +26061,10 @@ typedef $$BodyMeasurementsTableCreateCompanionBuilder =
       Value<double?> bodyFatPercentage,
       Value<double?> waistCm,
       Value<double?> hipCm,
+      Value<double?> chestCm,
+      Value<double?> armsCm,
+      Value<double?> thighsCm,
+      Value<String?> photoPath,
       Value<int> rowid,
     });
 typedef $$BodyMeasurementsTableUpdateCompanionBuilder =
@@ -23012,6 +26077,10 @@ typedef $$BodyMeasurementsTableUpdateCompanionBuilder =
       Value<double?> bodyFatPercentage,
       Value<double?> waistCm,
       Value<double?> hipCm,
+      Value<double?> chestCm,
+      Value<double?> armsCm,
+      Value<double?> thighsCm,
+      Value<String?> photoPath,
       Value<int> rowid,
     });
 
@@ -23061,6 +26130,26 @@ class $$BodyMeasurementsTableFilterComposer
 
   ColumnFilters<double> get hipCm => $composableBuilder(
     column: $table.hipCm,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get chestCm => $composableBuilder(
+    column: $table.chestCm,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get armsCm => $composableBuilder(
+    column: $table.armsCm,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get thighsCm => $composableBuilder(
+    column: $table.thighsCm,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get photoPath => $composableBuilder(
+    column: $table.photoPath,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -23113,6 +26202,26 @@ class $$BodyMeasurementsTableOrderingComposer
     column: $table.hipCm,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<double> get chestCm => $composableBuilder(
+    column: $table.chestCm,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get armsCm => $composableBuilder(
+    column: $table.armsCm,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get thighsCm => $composableBuilder(
+    column: $table.thighsCm,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get photoPath => $composableBuilder(
+    column: $table.photoPath,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$BodyMeasurementsTableAnnotationComposer
@@ -23151,6 +26260,18 @@ class $$BodyMeasurementsTableAnnotationComposer
 
   GeneratedColumn<double> get hipCm =>
       $composableBuilder(column: $table.hipCm, builder: (column) => column);
+
+  GeneratedColumn<double> get chestCm =>
+      $composableBuilder(column: $table.chestCm, builder: (column) => column);
+
+  GeneratedColumn<double> get armsCm =>
+      $composableBuilder(column: $table.armsCm, builder: (column) => column);
+
+  GeneratedColumn<double> get thighsCm =>
+      $composableBuilder(column: $table.thighsCm, builder: (column) => column);
+
+  GeneratedColumn<String> get photoPath =>
+      $composableBuilder(column: $table.photoPath, builder: (column) => column);
 }
 
 class $$BodyMeasurementsTableTableManager
@@ -23198,6 +26319,10 @@ class $$BodyMeasurementsTableTableManager
                 Value<double?> bodyFatPercentage = const Value.absent(),
                 Value<double?> waistCm = const Value.absent(),
                 Value<double?> hipCm = const Value.absent(),
+                Value<double?> chestCm = const Value.absent(),
+                Value<double?> armsCm = const Value.absent(),
+                Value<double?> thighsCm = const Value.absent(),
+                Value<String?> photoPath = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => BodyMeasurementsCompanion(
                 id: id,
@@ -23208,6 +26333,10 @@ class $$BodyMeasurementsTableTableManager
                 bodyFatPercentage: bodyFatPercentage,
                 waistCm: waistCm,
                 hipCm: hipCm,
+                chestCm: chestCm,
+                armsCm: armsCm,
+                thighsCm: thighsCm,
+                photoPath: photoPath,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -23220,6 +26349,10 @@ class $$BodyMeasurementsTableTableManager
                 Value<double?> bodyFatPercentage = const Value.absent(),
                 Value<double?> waistCm = const Value.absent(),
                 Value<double?> hipCm = const Value.absent(),
+                Value<double?> chestCm = const Value.absent(),
+                Value<double?> armsCm = const Value.absent(),
+                Value<double?> thighsCm = const Value.absent(),
+                Value<String?> photoPath = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => BodyMeasurementsCompanion.insert(
                 id: id,
@@ -23230,6 +26363,10 @@ class $$BodyMeasurementsTableTableManager
                 bodyFatPercentage: bodyFatPercentage,
                 waistCm: waistCm,
                 hipCm: hipCm,
+                chestCm: chestCm,
+                armsCm: armsCm,
+                thighsCm: thighsCm,
+                photoPath: photoPath,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -23265,7 +26402,14 @@ typedef $$MedicationsTableCreateCompanionBuilder =
       required String dose,
       required String frequency,
       required String category,
+      Value<bool> isActive,
+      Value<String?> reminderTime,
+      Value<int?> refillDurationDays,
       Value<DateTime?> nextRefillDate,
+      Value<DateTime?> startDate,
+      Value<String?> notes,
+      required String syncStatus,
+      required String idempotencyKey,
       Value<int> rowid,
     });
 typedef $$MedicationsTableUpdateCompanionBuilder =
@@ -23276,7 +26420,14 @@ typedef $$MedicationsTableUpdateCompanionBuilder =
       Value<String> dose,
       Value<String> frequency,
       Value<String> category,
+      Value<bool> isActive,
+      Value<String?> reminderTime,
+      Value<int?> refillDurationDays,
       Value<DateTime?> nextRefillDate,
+      Value<DateTime?> startDate,
+      Value<String?> notes,
+      Value<String> syncStatus,
+      Value<String> idempotencyKey,
       Value<int> rowid,
     });
 
@@ -23319,8 +26470,43 @@ class $$MedicationsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<bool> get isActive => $composableBuilder(
+    column: $table.isActive,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get reminderTime => $composableBuilder(
+    column: $table.reminderTime,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get refillDurationDays => $composableBuilder(
+    column: $table.refillDurationDays,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<DateTime> get nextRefillDate => $composableBuilder(
     column: $table.nextRefillDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get startDate => $composableBuilder(
+    column: $table.startDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get notes => $composableBuilder(
+    column: $table.notes,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -23364,8 +26550,43 @@ class $$MedicationsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<bool> get isActive => $composableBuilder(
+    column: $table.isActive,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get reminderTime => $composableBuilder(
+    column: $table.reminderTime,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get refillDurationDays => $composableBuilder(
+    column: $table.refillDurationDays,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get nextRefillDate => $composableBuilder(
     column: $table.nextRefillDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get startDate => $composableBuilder(
+    column: $table.startDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get notes => $composableBuilder(
+    column: $table.notes,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
     builder: (column) => ColumnOrderings(column),
   );
 }
@@ -23397,8 +26618,37 @@ class $$MedicationsTableAnnotationComposer
   GeneratedColumn<String> get category =>
       $composableBuilder(column: $table.category, builder: (column) => column);
 
+  GeneratedColumn<bool> get isActive =>
+      $composableBuilder(column: $table.isActive, builder: (column) => column);
+
+  GeneratedColumn<String> get reminderTime => $composableBuilder(
+    column: $table.reminderTime,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get refillDurationDays => $composableBuilder(
+    column: $table.refillDurationDays,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<DateTime> get nextRefillDate => $composableBuilder(
     column: $table.nextRefillDate,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get startDate =>
+      $composableBuilder(column: $table.startDate, builder: (column) => column);
+
+  GeneratedColumn<String> get notes =>
+      $composableBuilder(column: $table.notes, builder: (column) => column);
+
+  GeneratedColumn<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
     builder: (column) => column,
   );
 }
@@ -23440,7 +26690,14 @@ class $$MedicationsTableTableManager
                 Value<String> dose = const Value.absent(),
                 Value<String> frequency = const Value.absent(),
                 Value<String> category = const Value.absent(),
+                Value<bool> isActive = const Value.absent(),
+                Value<String?> reminderTime = const Value.absent(),
+                Value<int?> refillDurationDays = const Value.absent(),
                 Value<DateTime?> nextRefillDate = const Value.absent(),
+                Value<DateTime?> startDate = const Value.absent(),
+                Value<String?> notes = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                Value<String> idempotencyKey = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => MedicationsCompanion(
                 id: id,
@@ -23449,7 +26706,14 @@ class $$MedicationsTableTableManager
                 dose: dose,
                 frequency: frequency,
                 category: category,
+                isActive: isActive,
+                reminderTime: reminderTime,
+                refillDurationDays: refillDurationDays,
                 nextRefillDate: nextRefillDate,
+                startDate: startDate,
+                notes: notes,
+                syncStatus: syncStatus,
+                idempotencyKey: idempotencyKey,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -23460,7 +26724,14 @@ class $$MedicationsTableTableManager
                 required String dose,
                 required String frequency,
                 required String category,
+                Value<bool> isActive = const Value.absent(),
+                Value<String?> reminderTime = const Value.absent(),
+                Value<int?> refillDurationDays = const Value.absent(),
                 Value<DateTime?> nextRefillDate = const Value.absent(),
+                Value<DateTime?> startDate = const Value.absent(),
+                Value<String?> notes = const Value.absent(),
+                required String syncStatus,
+                required String idempotencyKey,
                 Value<int> rowid = const Value.absent(),
               }) => MedicationsCompanion.insert(
                 id: id,
@@ -23469,7 +26740,14 @@ class $$MedicationsTableTableManager
                 dose: dose,
                 frequency: frequency,
                 category: category,
+                isActive: isActive,
+                reminderTime: reminderTime,
+                refillDurationDays: refillDurationDays,
                 nextRefillDate: nextRefillDate,
+                startDate: startDate,
+                notes: notes,
+                syncStatus: syncStatus,
+                idempotencyKey: idempotencyKey,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -23504,6 +26782,14 @@ typedef $$FastingLogsTableCreateCompanionBuilder =
       required DateTime fastStart,
       Value<DateTime?> fastEnd,
       required String fastType,
+      Value<bool> isCompleted,
+      Value<int> targetDurationHours,
+      Value<String?> hydrationAlerts,
+      Value<DateTime?> sehriTime,
+      Value<DateTime?> iftarTime,
+      Value<bool> isRamadanMode,
+      Value<int> xpEarned,
+      Value<String?> notes,
       Value<int> rowid,
     });
 typedef $$FastingLogsTableUpdateCompanionBuilder =
@@ -23513,6 +26799,14 @@ typedef $$FastingLogsTableUpdateCompanionBuilder =
       Value<DateTime> fastStart,
       Value<DateTime?> fastEnd,
       Value<String> fastType,
+      Value<bool> isCompleted,
+      Value<int> targetDurationHours,
+      Value<String?> hydrationAlerts,
+      Value<DateTime?> sehriTime,
+      Value<DateTime?> iftarTime,
+      Value<bool> isRamadanMode,
+      Value<int> xpEarned,
+      Value<String?> notes,
       Value<int> rowid,
     });
 
@@ -23547,6 +26841,46 @@ class $$FastingLogsTableFilterComposer
 
   ColumnFilters<String> get fastType => $composableBuilder(
     column: $table.fastType,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isCompleted => $composableBuilder(
+    column: $table.isCompleted,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get targetDurationHours => $composableBuilder(
+    column: $table.targetDurationHours,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get hydrationAlerts => $composableBuilder(
+    column: $table.hydrationAlerts,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get sehriTime => $composableBuilder(
+    column: $table.sehriTime,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get iftarTime => $composableBuilder(
+    column: $table.iftarTime,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isRamadanMode => $composableBuilder(
+    column: $table.isRamadanMode,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get xpEarned => $composableBuilder(
+    column: $table.xpEarned,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get notes => $composableBuilder(
+    column: $table.notes,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -23584,6 +26918,46 @@ class $$FastingLogsTableOrderingComposer
     column: $table.fastType,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<bool> get isCompleted => $composableBuilder(
+    column: $table.isCompleted,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get targetDurationHours => $composableBuilder(
+    column: $table.targetDurationHours,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get hydrationAlerts => $composableBuilder(
+    column: $table.hydrationAlerts,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get sehriTime => $composableBuilder(
+    column: $table.sehriTime,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get iftarTime => $composableBuilder(
+    column: $table.iftarTime,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isRamadanMode => $composableBuilder(
+    column: $table.isRamadanMode,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get xpEarned => $composableBuilder(
+    column: $table.xpEarned,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get notes => $composableBuilder(
+    column: $table.notes,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$FastingLogsTableAnnotationComposer
@@ -23609,6 +26983,38 @@ class $$FastingLogsTableAnnotationComposer
 
   GeneratedColumn<String> get fastType =>
       $composableBuilder(column: $table.fastType, builder: (column) => column);
+
+  GeneratedColumn<bool> get isCompleted => $composableBuilder(
+    column: $table.isCompleted,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get targetDurationHours => $composableBuilder(
+    column: $table.targetDurationHours,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get hydrationAlerts => $composableBuilder(
+    column: $table.hydrationAlerts,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get sehriTime =>
+      $composableBuilder(column: $table.sehriTime, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get iftarTime =>
+      $composableBuilder(column: $table.iftarTime, builder: (column) => column);
+
+  GeneratedColumn<bool> get isRamadanMode => $composableBuilder(
+    column: $table.isRamadanMode,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get xpEarned =>
+      $composableBuilder(column: $table.xpEarned, builder: (column) => column);
+
+  GeneratedColumn<String> get notes =>
+      $composableBuilder(column: $table.notes, builder: (column) => column);
 }
 
 class $$FastingLogsTableTableManager
@@ -23647,6 +27053,14 @@ class $$FastingLogsTableTableManager
                 Value<DateTime> fastStart = const Value.absent(),
                 Value<DateTime?> fastEnd = const Value.absent(),
                 Value<String> fastType = const Value.absent(),
+                Value<bool> isCompleted = const Value.absent(),
+                Value<int> targetDurationHours = const Value.absent(),
+                Value<String?> hydrationAlerts = const Value.absent(),
+                Value<DateTime?> sehriTime = const Value.absent(),
+                Value<DateTime?> iftarTime = const Value.absent(),
+                Value<bool> isRamadanMode = const Value.absent(),
+                Value<int> xpEarned = const Value.absent(),
+                Value<String?> notes = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => FastingLogsCompanion(
                 id: id,
@@ -23654,6 +27068,14 @@ class $$FastingLogsTableTableManager
                 fastStart: fastStart,
                 fastEnd: fastEnd,
                 fastType: fastType,
+                isCompleted: isCompleted,
+                targetDurationHours: targetDurationHours,
+                hydrationAlerts: hydrationAlerts,
+                sehriTime: sehriTime,
+                iftarTime: iftarTime,
+                isRamadanMode: isRamadanMode,
+                xpEarned: xpEarned,
+                notes: notes,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -23663,6 +27085,14 @@ class $$FastingLogsTableTableManager
                 required DateTime fastStart,
                 Value<DateTime?> fastEnd = const Value.absent(),
                 required String fastType,
+                Value<bool> isCompleted = const Value.absent(),
+                Value<int> targetDurationHours = const Value.absent(),
+                Value<String?> hydrationAlerts = const Value.absent(),
+                Value<DateTime?> sehriTime = const Value.absent(),
+                Value<DateTime?> iftarTime = const Value.absent(),
+                Value<bool> isRamadanMode = const Value.absent(),
+                Value<int> xpEarned = const Value.absent(),
+                Value<String?> notes = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => FastingLogsCompanion.insert(
                 id: id,
@@ -23670,6 +27100,14 @@ class $$FastingLogsTableTableManager
                 fastStart: fastStart,
                 fastEnd: fastEnd,
                 fastType: fastType,
+                isCompleted: isCompleted,
+                targetDurationHours: targetDurationHours,
+                hydrationAlerts: hydrationAlerts,
+                sehriTime: sehriTime,
+                iftarTime: iftarTime,
+                isRamadanMode: isRamadanMode,
+                xpEarned: xpEarned,
+                notes: notes,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -23701,18 +27139,22 @@ typedef $$MealPlansTableCreateCompanionBuilder =
     MealPlansCompanion Function({
       required String id,
       required String userId,
-      required DateTime date,
-      required String mealType,
-      required String planDetails,
+      required DateTime weekStartDate,
+      required String cuisineRegion,
+      Value<String> status,
+      required DateTime createdAt,
+      required DateTime updatedAt,
       Value<int> rowid,
     });
 typedef $$MealPlansTableUpdateCompanionBuilder =
     MealPlansCompanion Function({
       Value<String> id,
       Value<String> userId,
-      Value<DateTime> date,
-      Value<String> mealType,
-      Value<String> planDetails,
+      Value<DateTime> weekStartDate,
+      Value<String> cuisineRegion,
+      Value<String> status,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
       Value<int> rowid,
     });
 
@@ -23735,18 +27177,28 @@ class $$MealPlansTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<DateTime> get date => $composableBuilder(
-    column: $table.date,
+  ColumnFilters<DateTime> get weekStartDate => $composableBuilder(
+    column: $table.weekStartDate,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get mealType => $composableBuilder(
-    column: $table.mealType,
+  ColumnFilters<String> get cuisineRegion => $composableBuilder(
+    column: $table.cuisineRegion,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get planDetails => $composableBuilder(
-    column: $table.planDetails,
+  ColumnFilters<String> get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -23770,18 +27222,28 @@ class $$MealPlansTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<DateTime> get date => $composableBuilder(
-    column: $table.date,
+  ColumnOrderings<DateTime> get weekStartDate => $composableBuilder(
+    column: $table.weekStartDate,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get mealType => $composableBuilder(
-    column: $table.mealType,
+  ColumnOrderings<String> get cuisineRegion => $composableBuilder(
+    column: $table.cuisineRegion,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get planDetails => $composableBuilder(
-    column: $table.planDetails,
+  ColumnOrderings<String> get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
     builder: (column) => ColumnOrderings(column),
   );
 }
@@ -23801,16 +27263,24 @@ class $$MealPlansTableAnnotationComposer
   GeneratedColumn<String> get userId =>
       $composableBuilder(column: $table.userId, builder: (column) => column);
 
-  GeneratedColumn<DateTime> get date =>
-      $composableBuilder(column: $table.date, builder: (column) => column);
-
-  GeneratedColumn<String> get mealType =>
-      $composableBuilder(column: $table.mealType, builder: (column) => column);
-
-  GeneratedColumn<String> get planDetails => $composableBuilder(
-    column: $table.planDetails,
+  GeneratedColumn<DateTime> get weekStartDate => $composableBuilder(
+    column: $table.weekStartDate,
     builder: (column) => column,
   );
+
+  GeneratedColumn<String> get cuisineRegion => $composableBuilder(
+    column: $table.cuisineRegion,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get status =>
+      $composableBuilder(column: $table.status, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
 }
 
 class $$MealPlansTableTableManager
@@ -23843,32 +27313,40 @@ class $$MealPlansTableTableManager
               ({
                 Value<String> id = const Value.absent(),
                 Value<String> userId = const Value.absent(),
-                Value<DateTime> date = const Value.absent(),
-                Value<String> mealType = const Value.absent(),
-                Value<String> planDetails = const Value.absent(),
+                Value<DateTime> weekStartDate = const Value.absent(),
+                Value<String> cuisineRegion = const Value.absent(),
+                Value<String> status = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => MealPlansCompanion(
                 id: id,
                 userId: userId,
-                date: date,
-                mealType: mealType,
-                planDetails: planDetails,
+                weekStartDate: weekStartDate,
+                cuisineRegion: cuisineRegion,
+                status: status,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
                 rowid: rowid,
               ),
           createCompanionCallback:
               ({
                 required String id,
                 required String userId,
-                required DateTime date,
-                required String mealType,
-                required String planDetails,
+                required DateTime weekStartDate,
+                required String cuisineRegion,
+                Value<String> status = const Value.absent(),
+                required DateTime createdAt,
+                required DateTime updatedAt,
                 Value<int> rowid = const Value.absent(),
               }) => MealPlansCompanion.insert(
                 id: id,
                 userId: userId,
-                date: date,
-                mealType: mealType,
-                planDetails: planDetails,
+                weekStartDate: weekStartDate,
+                cuisineRegion: cuisineRegion,
+                status: status,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -23898,9 +27376,24 @@ typedef $$RecipesTableCreateCompanionBuilder =
       required String id,
       required String userId,
       required String title,
+      Value<String?> description,
       required String ingredients,
       required String instructions,
-      Value<double?> totalCalories,
+      Value<int> servings,
+      Value<double?> caloriesPerServing,
+      Value<double?> proteinPerServing,
+      Value<double?> carbsPerServing,
+      Value<double?> fatPerServing,
+      Value<double?> fiberPerServing,
+      Value<double?> vitaminDPerServing,
+      Value<double?> vitaminB12PerServing,
+      Value<double?> ironPerServing,
+      Value<double?> calciumPerServing,
+      Value<bool> isPublic,
+      Value<String?> imageUrl,
+      required DateTime createdAt,
+      required DateTime updatedAt,
+      required String syncStatus,
       Value<int> rowid,
     });
 typedef $$RecipesTableUpdateCompanionBuilder =
@@ -23908,9 +27401,24 @@ typedef $$RecipesTableUpdateCompanionBuilder =
       Value<String> id,
       Value<String> userId,
       Value<String> title,
+      Value<String?> description,
       Value<String> ingredients,
       Value<String> instructions,
-      Value<double?> totalCalories,
+      Value<int> servings,
+      Value<double?> caloriesPerServing,
+      Value<double?> proteinPerServing,
+      Value<double?> carbsPerServing,
+      Value<double?> fatPerServing,
+      Value<double?> fiberPerServing,
+      Value<double?> vitaminDPerServing,
+      Value<double?> vitaminB12PerServing,
+      Value<double?> ironPerServing,
+      Value<double?> calciumPerServing,
+      Value<bool> isPublic,
+      Value<String?> imageUrl,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> syncStatus,
       Value<int> rowid,
     });
 
@@ -23938,6 +27446,11 @@ class $$RecipesTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<String> get ingredients => $composableBuilder(
     column: $table.ingredients,
     builder: (column) => ColumnFilters(column),
@@ -23948,8 +27461,78 @@ class $$RecipesTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<double> get totalCalories => $composableBuilder(
-    column: $table.totalCalories,
+  ColumnFilters<int> get servings => $composableBuilder(
+    column: $table.servings,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get caloriesPerServing => $composableBuilder(
+    column: $table.caloriesPerServing,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get proteinPerServing => $composableBuilder(
+    column: $table.proteinPerServing,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get carbsPerServing => $composableBuilder(
+    column: $table.carbsPerServing,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get fatPerServing => $composableBuilder(
+    column: $table.fatPerServing,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get fiberPerServing => $composableBuilder(
+    column: $table.fiberPerServing,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get vitaminDPerServing => $composableBuilder(
+    column: $table.vitaminDPerServing,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get vitaminB12PerServing => $composableBuilder(
+    column: $table.vitaminB12PerServing,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get ironPerServing => $composableBuilder(
+    column: $table.ironPerServing,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get calciumPerServing => $composableBuilder(
+    column: $table.calciumPerServing,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isPublic => $composableBuilder(
+    column: $table.isPublic,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get imageUrl => $composableBuilder(
+    column: $table.imageUrl,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -23978,6 +27561,11 @@ class $$RecipesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get ingredients => $composableBuilder(
     column: $table.ingredients,
     builder: (column) => ColumnOrderings(column),
@@ -23988,8 +27576,78 @@ class $$RecipesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<double> get totalCalories => $composableBuilder(
-    column: $table.totalCalories,
+  ColumnOrderings<int> get servings => $composableBuilder(
+    column: $table.servings,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get caloriesPerServing => $composableBuilder(
+    column: $table.caloriesPerServing,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get proteinPerServing => $composableBuilder(
+    column: $table.proteinPerServing,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get carbsPerServing => $composableBuilder(
+    column: $table.carbsPerServing,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get fatPerServing => $composableBuilder(
+    column: $table.fatPerServing,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get fiberPerServing => $composableBuilder(
+    column: $table.fiberPerServing,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get vitaminDPerServing => $composableBuilder(
+    column: $table.vitaminDPerServing,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get vitaminB12PerServing => $composableBuilder(
+    column: $table.vitaminB12PerServing,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get ironPerServing => $composableBuilder(
+    column: $table.ironPerServing,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get calciumPerServing => $composableBuilder(
+    column: $table.calciumPerServing,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isPublic => $composableBuilder(
+    column: $table.isPublic,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get imageUrl => $composableBuilder(
+    column: $table.imageUrl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
     builder: (column) => ColumnOrderings(column),
   );
 }
@@ -24012,6 +27670,11 @@ class $$RecipesTableAnnotationComposer
   GeneratedColumn<String> get title =>
       $composableBuilder(column: $table.title, builder: (column) => column);
 
+  GeneratedColumn<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<String> get ingredients => $composableBuilder(
     column: $table.ingredients,
     builder: (column) => column,
@@ -24022,8 +27685,68 @@ class $$RecipesTableAnnotationComposer
     builder: (column) => column,
   );
 
-  GeneratedColumn<double> get totalCalories => $composableBuilder(
-    column: $table.totalCalories,
+  GeneratedColumn<int> get servings =>
+      $composableBuilder(column: $table.servings, builder: (column) => column);
+
+  GeneratedColumn<double> get caloriesPerServing => $composableBuilder(
+    column: $table.caloriesPerServing,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get proteinPerServing => $composableBuilder(
+    column: $table.proteinPerServing,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get carbsPerServing => $composableBuilder(
+    column: $table.carbsPerServing,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get fatPerServing => $composableBuilder(
+    column: $table.fatPerServing,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get fiberPerServing => $composableBuilder(
+    column: $table.fiberPerServing,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get vitaminDPerServing => $composableBuilder(
+    column: $table.vitaminDPerServing,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get vitaminB12PerServing => $composableBuilder(
+    column: $table.vitaminB12PerServing,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get ironPerServing => $composableBuilder(
+    column: $table.ironPerServing,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get calciumPerServing => $composableBuilder(
+    column: $table.calciumPerServing,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get isPublic =>
+      $composableBuilder(column: $table.isPublic, builder: (column) => column);
+
+  GeneratedColumn<String> get imageUrl =>
+      $composableBuilder(column: $table.imageUrl, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
     builder: (column) => column,
   );
 }
@@ -24059,17 +27782,47 @@ class $$RecipesTableTableManager
                 Value<String> id = const Value.absent(),
                 Value<String> userId = const Value.absent(),
                 Value<String> title = const Value.absent(),
+                Value<String?> description = const Value.absent(),
                 Value<String> ingredients = const Value.absent(),
                 Value<String> instructions = const Value.absent(),
-                Value<double?> totalCalories = const Value.absent(),
+                Value<int> servings = const Value.absent(),
+                Value<double?> caloriesPerServing = const Value.absent(),
+                Value<double?> proteinPerServing = const Value.absent(),
+                Value<double?> carbsPerServing = const Value.absent(),
+                Value<double?> fatPerServing = const Value.absent(),
+                Value<double?> fiberPerServing = const Value.absent(),
+                Value<double?> vitaminDPerServing = const Value.absent(),
+                Value<double?> vitaminB12PerServing = const Value.absent(),
+                Value<double?> ironPerServing = const Value.absent(),
+                Value<double?> calciumPerServing = const Value.absent(),
+                Value<bool> isPublic = const Value.absent(),
+                Value<String?> imageUrl = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => RecipesCompanion(
                 id: id,
                 userId: userId,
                 title: title,
+                description: description,
                 ingredients: ingredients,
                 instructions: instructions,
-                totalCalories: totalCalories,
+                servings: servings,
+                caloriesPerServing: caloriesPerServing,
+                proteinPerServing: proteinPerServing,
+                carbsPerServing: carbsPerServing,
+                fatPerServing: fatPerServing,
+                fiberPerServing: fiberPerServing,
+                vitaminDPerServing: vitaminDPerServing,
+                vitaminB12PerServing: vitaminB12PerServing,
+                ironPerServing: ironPerServing,
+                calciumPerServing: calciumPerServing,
+                isPublic: isPublic,
+                imageUrl: imageUrl,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                syncStatus: syncStatus,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -24077,17 +27830,47 @@ class $$RecipesTableTableManager
                 required String id,
                 required String userId,
                 required String title,
+                Value<String?> description = const Value.absent(),
                 required String ingredients,
                 required String instructions,
-                Value<double?> totalCalories = const Value.absent(),
+                Value<int> servings = const Value.absent(),
+                Value<double?> caloriesPerServing = const Value.absent(),
+                Value<double?> proteinPerServing = const Value.absent(),
+                Value<double?> carbsPerServing = const Value.absent(),
+                Value<double?> fatPerServing = const Value.absent(),
+                Value<double?> fiberPerServing = const Value.absent(),
+                Value<double?> vitaminDPerServing = const Value.absent(),
+                Value<double?> vitaminB12PerServing = const Value.absent(),
+                Value<double?> ironPerServing = const Value.absent(),
+                Value<double?> calciumPerServing = const Value.absent(),
+                Value<bool> isPublic = const Value.absent(),
+                Value<String?> imageUrl = const Value.absent(),
+                required DateTime createdAt,
+                required DateTime updatedAt,
+                required String syncStatus,
                 Value<int> rowid = const Value.absent(),
               }) => RecipesCompanion.insert(
                 id: id,
                 userId: userId,
                 title: title,
+                description: description,
                 ingredients: ingredients,
                 instructions: instructions,
-                totalCalories: totalCalories,
+                servings: servings,
+                caloriesPerServing: caloriesPerServing,
+                proteinPerServing: proteinPerServing,
+                carbsPerServing: carbsPerServing,
+                fatPerServing: fatPerServing,
+                fiberPerServing: fiberPerServing,
+                vitaminDPerServing: vitaminDPerServing,
+                vitaminB12PerServing: vitaminB12PerServing,
+                ironPerServing: ironPerServing,
+                calciumPerServing: calciumPerServing,
+                isPublic: isPublic,
+                imageUrl: imageUrl,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                syncStatus: syncStatus,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -25134,8 +28917,19 @@ typedef $$PeriodLogsTableCreateCompanionBuilder =
       required String id,
       required String userId,
       required DateTime date,
+      Value<DateTime?> cycleStartDate,
+      Value<DateTime?> cycleEndDate,
+      Value<int?> cycleLength,
+      Value<int?> periodLength,
+      Value<DateTime?> predictedNextPeriod,
+      Value<DateTime?> predictedOvulationDate,
+      Value<bool> isPeriodDay,
+      Value<String?> flowIntensity,
       Value<String?> symptoms,
-      Value<String?> flowType,
+      Value<bool> isPcodPcos,
+      Value<String?> notes,
+      required String syncStatus,
+      required String idempotencyKey,
       Value<int> rowid,
     });
 typedef $$PeriodLogsTableUpdateCompanionBuilder =
@@ -25143,8 +28937,19 @@ typedef $$PeriodLogsTableUpdateCompanionBuilder =
       Value<String> id,
       Value<String> userId,
       Value<DateTime> date,
+      Value<DateTime?> cycleStartDate,
+      Value<DateTime?> cycleEndDate,
+      Value<int?> cycleLength,
+      Value<int?> periodLength,
+      Value<DateTime?> predictedNextPeriod,
+      Value<DateTime?> predictedOvulationDate,
+      Value<bool> isPeriodDay,
+      Value<String?> flowIntensity,
       Value<String?> symptoms,
-      Value<String?> flowType,
+      Value<bool> isPcodPcos,
+      Value<String?> notes,
+      Value<String> syncStatus,
+      Value<String> idempotencyKey,
       Value<int> rowid,
     });
 
@@ -25172,17 +28977,73 @@ class $$PeriodLogsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<DateTime> get cycleStartDate => $composableBuilder(
+    column: $table.cycleStartDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get cycleEndDate => $composableBuilder(
+    column: $table.cycleEndDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get cycleLength => $composableBuilder(
+    column: $table.cycleLength,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get periodLength => $composableBuilder(
+    column: $table.periodLength,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get predictedNextPeriod => $composableBuilder(
+    column: $table.predictedNextPeriod,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get predictedOvulationDate => $composableBuilder(
+    column: $table.predictedOvulationDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isPeriodDay => $composableBuilder(
+    column: $table.isPeriodDay,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<String?, String, String> get flowIntensity =>
+      $composableBuilder(
+        column: $table.flowIntensity,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
+
   ColumnWithTypeConverterFilters<String?, String, String> get symptoms =>
       $composableBuilder(
         column: $table.symptoms,
         builder: (column) => ColumnWithTypeConverterFilters(column),
       );
 
-  ColumnWithTypeConverterFilters<String?, String, String> get flowType =>
+  ColumnFilters<bool> get isPcodPcos => $composableBuilder(
+    column: $table.isPcodPcos,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<String?, String, String> get notes =>
       $composableBuilder(
-        column: $table.flowType,
+        column: $table.notes,
         builder: (column) => ColumnWithTypeConverterFilters(column),
       );
+
+  ColumnFilters<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnFilters(column),
+  );
 }
 
 class $$PeriodLogsTableOrderingComposer
@@ -25209,13 +29070,68 @@ class $$PeriodLogsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<DateTime> get cycleStartDate => $composableBuilder(
+    column: $table.cycleStartDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get cycleEndDate => $composableBuilder(
+    column: $table.cycleEndDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get cycleLength => $composableBuilder(
+    column: $table.cycleLength,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get periodLength => $composableBuilder(
+    column: $table.periodLength,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get predictedNextPeriod => $composableBuilder(
+    column: $table.predictedNextPeriod,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get predictedOvulationDate => $composableBuilder(
+    column: $table.predictedOvulationDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isPeriodDay => $composableBuilder(
+    column: $table.isPeriodDay,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get flowIntensity => $composableBuilder(
+    column: $table.flowIntensity,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get symptoms => $composableBuilder(
     column: $table.symptoms,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get flowType => $composableBuilder(
-    column: $table.flowType,
+  ColumnOrderings<bool> get isPcodPcos => $composableBuilder(
+    column: $table.isPcodPcos,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get notes => $composableBuilder(
+    column: $table.notes,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
     builder: (column) => ColumnOrderings(column),
   );
 }
@@ -25238,11 +29154,67 @@ class $$PeriodLogsTableAnnotationComposer
   GeneratedColumn<DateTime> get date =>
       $composableBuilder(column: $table.date, builder: (column) => column);
 
+  GeneratedColumn<DateTime> get cycleStartDate => $composableBuilder(
+    column: $table.cycleStartDate,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get cycleEndDate => $composableBuilder(
+    column: $table.cycleEndDate,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get cycleLength => $composableBuilder(
+    column: $table.cycleLength,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get periodLength => $composableBuilder(
+    column: $table.periodLength,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get predictedNextPeriod => $composableBuilder(
+    column: $table.predictedNextPeriod,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get predictedOvulationDate => $composableBuilder(
+    column: $table.predictedOvulationDate,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get isPeriodDay => $composableBuilder(
+    column: $table.isPeriodDay,
+    builder: (column) => column,
+  );
+
+  GeneratedColumnWithTypeConverter<String?, String> get flowIntensity =>
+      $composableBuilder(
+        column: $table.flowIntensity,
+        builder: (column) => column,
+      );
+
   GeneratedColumnWithTypeConverter<String?, String> get symptoms =>
       $composableBuilder(column: $table.symptoms, builder: (column) => column);
 
-  GeneratedColumnWithTypeConverter<String?, String> get flowType =>
-      $composableBuilder(column: $table.flowType, builder: (column) => column);
+  GeneratedColumn<bool> get isPcodPcos => $composableBuilder(
+    column: $table.isPcodPcos,
+    builder: (column) => column,
+  );
+
+  GeneratedColumnWithTypeConverter<String?, String> get notes =>
+      $composableBuilder(column: $table.notes, builder: (column) => column);
+
+  GeneratedColumn<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => column,
+  );
 }
 
 class $$PeriodLogsTableTableManager
@@ -25279,15 +29251,37 @@ class $$PeriodLogsTableTableManager
                 Value<String> id = const Value.absent(),
                 Value<String> userId = const Value.absent(),
                 Value<DateTime> date = const Value.absent(),
+                Value<DateTime?> cycleStartDate = const Value.absent(),
+                Value<DateTime?> cycleEndDate = const Value.absent(),
+                Value<int?> cycleLength = const Value.absent(),
+                Value<int?> periodLength = const Value.absent(),
+                Value<DateTime?> predictedNextPeriod = const Value.absent(),
+                Value<DateTime?> predictedOvulationDate = const Value.absent(),
+                Value<bool> isPeriodDay = const Value.absent(),
+                Value<String?> flowIntensity = const Value.absent(),
                 Value<String?> symptoms = const Value.absent(),
-                Value<String?> flowType = const Value.absent(),
+                Value<bool> isPcodPcos = const Value.absent(),
+                Value<String?> notes = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                Value<String> idempotencyKey = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => PeriodLogsCompanion(
                 id: id,
                 userId: userId,
                 date: date,
+                cycleStartDate: cycleStartDate,
+                cycleEndDate: cycleEndDate,
+                cycleLength: cycleLength,
+                periodLength: periodLength,
+                predictedNextPeriod: predictedNextPeriod,
+                predictedOvulationDate: predictedOvulationDate,
+                isPeriodDay: isPeriodDay,
+                flowIntensity: flowIntensity,
                 symptoms: symptoms,
-                flowType: flowType,
+                isPcodPcos: isPcodPcos,
+                notes: notes,
+                syncStatus: syncStatus,
+                idempotencyKey: idempotencyKey,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -25295,15 +29289,37 @@ class $$PeriodLogsTableTableManager
                 required String id,
                 required String userId,
                 required DateTime date,
+                Value<DateTime?> cycleStartDate = const Value.absent(),
+                Value<DateTime?> cycleEndDate = const Value.absent(),
+                Value<int?> cycleLength = const Value.absent(),
+                Value<int?> periodLength = const Value.absent(),
+                Value<DateTime?> predictedNextPeriod = const Value.absent(),
+                Value<DateTime?> predictedOvulationDate = const Value.absent(),
+                Value<bool> isPeriodDay = const Value.absent(),
+                Value<String?> flowIntensity = const Value.absent(),
                 Value<String?> symptoms = const Value.absent(),
-                Value<String?> flowType = const Value.absent(),
+                Value<bool> isPcodPcos = const Value.absent(),
+                Value<String?> notes = const Value.absent(),
+                required String syncStatus,
+                required String idempotencyKey,
                 Value<int> rowid = const Value.absent(),
               }) => PeriodLogsCompanion.insert(
                 id: id,
                 userId: userId,
                 date: date,
+                cycleStartDate: cycleStartDate,
+                cycleEndDate: cycleEndDate,
+                cycleLength: cycleLength,
+                periodLength: periodLength,
+                predictedNextPeriod: predictedNextPeriod,
+                predictedOvulationDate: predictedOvulationDate,
+                isPeriodDay: isPeriodDay,
+                flowIntensity: flowIntensity,
                 symptoms: symptoms,
-                flowType: flowType,
+                isPcodPcos: isPcodPcos,
+                notes: notes,
+                syncStatus: syncStatus,
+                idempotencyKey: idempotencyKey,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -25332,16 +29348,32 @@ typedef $$JournalEntriesTableCreateCompanionBuilder =
     JournalEntriesCompanion Function({
       required String id,
       required String userId,
-      required DateTime createdAt,
+      Value<String?> title,
       required String? content,
+      Value<String?> promptId,
+      Value<double?> sentimentScore,
+      Value<String?> moodTag,
+      required DateTime createdAt,
+      Value<DateTime?> updatedAt,
+      required String syncStatus,
+      required String idempotencyKey,
+      Value<String?> fieldVersions,
       Value<int> rowid,
     });
 typedef $$JournalEntriesTableUpdateCompanionBuilder =
     JournalEntriesCompanion Function({
       Value<String> id,
       Value<String> userId,
-      Value<DateTime> createdAt,
+      Value<String?> title,
       Value<String?> content,
+      Value<String?> promptId,
+      Value<double?> sentimentScore,
+      Value<String?> moodTag,
+      Value<DateTime> createdAt,
+      Value<DateTime?> updatedAt,
+      Value<String> syncStatus,
+      Value<String> idempotencyKey,
+      Value<String?> fieldVersions,
       Value<int> rowid,
     });
 
@@ -25364,8 +29396,8 @@ class $$JournalEntriesTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<DateTime> get createdAt => $composableBuilder(
-    column: $table.createdAt,
+  ColumnFilters<String> get title => $composableBuilder(
+    column: $table.title,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -25374,6 +29406,46 @@ class $$JournalEntriesTableFilterComposer
         column: $table.content,
         builder: (column) => ColumnWithTypeConverterFilters(column),
       );
+
+  ColumnFilters<String> get promptId => $composableBuilder(
+    column: $table.promptId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get sentimentScore => $composableBuilder(
+    column: $table.sentimentScore,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get moodTag => $composableBuilder(
+    column: $table.moodTag,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
+    builder: (column) => ColumnFilters(column),
+  );
 }
 
 class $$JournalEntriesTableOrderingComposer
@@ -25395,13 +29467,53 @@ class $$JournalEntriesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
-    column: $table.createdAt,
+  ColumnOrderings<String> get title => $composableBuilder(
+    column: $table.title,
     builder: (column) => ColumnOrderings(column),
   );
 
   ColumnOrderings<String> get content => $composableBuilder(
     column: $table.content,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get promptId => $composableBuilder(
+    column: $table.promptId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get sentimentScore => $composableBuilder(
+    column: $table.sentimentScore,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get moodTag => $composableBuilder(
+    column: $table.moodTag,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
     builder: (column) => ColumnOrderings(column),
   );
 }
@@ -25421,11 +29533,43 @@ class $$JournalEntriesTableAnnotationComposer
   GeneratedColumn<String> get userId =>
       $composableBuilder(column: $table.userId, builder: (column) => column);
 
-  GeneratedColumn<DateTime> get createdAt =>
-      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+  GeneratedColumn<String> get title =>
+      $composableBuilder(column: $table.title, builder: (column) => column);
 
   GeneratedColumnWithTypeConverter<String?, String> get content =>
       $composableBuilder(column: $table.content, builder: (column) => column);
+
+  GeneratedColumn<String> get promptId =>
+      $composableBuilder(column: $table.promptId, builder: (column) => column);
+
+  GeneratedColumn<double> get sentimentScore => $composableBuilder(
+    column: $table.sentimentScore,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get moodTag =>
+      $composableBuilder(column: $table.moodTag, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
+    builder: (column) => column,
+  );
 }
 
 class $$JournalEntriesTableTableManager
@@ -25463,28 +29607,60 @@ class $$JournalEntriesTableTableManager
               ({
                 Value<String> id = const Value.absent(),
                 Value<String> userId = const Value.absent(),
-                Value<DateTime> createdAt = const Value.absent(),
+                Value<String?> title = const Value.absent(),
                 Value<String?> content = const Value.absent(),
+                Value<String?> promptId = const Value.absent(),
+                Value<double?> sentimentScore = const Value.absent(),
+                Value<String?> moodTag = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime?> updatedAt = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                Value<String> idempotencyKey = const Value.absent(),
+                Value<String?> fieldVersions = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => JournalEntriesCompanion(
                 id: id,
                 userId: userId,
-                createdAt: createdAt,
+                title: title,
                 content: content,
+                promptId: promptId,
+                sentimentScore: sentimentScore,
+                moodTag: moodTag,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                syncStatus: syncStatus,
+                idempotencyKey: idempotencyKey,
+                fieldVersions: fieldVersions,
                 rowid: rowid,
               ),
           createCompanionCallback:
               ({
                 required String id,
                 required String userId,
-                required DateTime createdAt,
+                Value<String?> title = const Value.absent(),
                 required String? content,
+                Value<String?> promptId = const Value.absent(),
+                Value<double?> sentimentScore = const Value.absent(),
+                Value<String?> moodTag = const Value.absent(),
+                required DateTime createdAt,
+                Value<DateTime?> updatedAt = const Value.absent(),
+                required String syncStatus,
+                required String idempotencyKey,
+                Value<String?> fieldVersions = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => JournalEntriesCompanion.insert(
                 id: id,
                 userId: userId,
-                createdAt: createdAt,
+                title: title,
                 content: content,
+                promptId: promptId,
+                sentimentScore: sentimentScore,
+                moodTag: moodTag,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                syncStatus: syncStatus,
+                idempotencyKey: idempotencyKey,
+                fieldVersions: fieldVersions,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -26256,6 +30432,7 @@ typedef $$EmergencyCardTableCreateCompanionBuilder =
       Value<String?> allergies,
       Value<String?> chronicConditions,
       Value<String?> emergencyContact,
+      Value<String?> medications,
       Value<int> rowid,
     });
 typedef $$EmergencyCardTableUpdateCompanionBuilder =
@@ -26266,6 +30443,7 @@ typedef $$EmergencyCardTableUpdateCompanionBuilder =
       Value<String?> allergies,
       Value<String?> chronicConditions,
       Value<String?> emergencyContact,
+      Value<String?> medications,
       Value<int> rowid,
     });
 
@@ -26305,6 +30483,11 @@ class $$EmergencyCardTableFilterComposer
 
   ColumnFilters<String> get emergencyContact => $composableBuilder(
     column: $table.emergencyContact,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get medications => $composableBuilder(
+    column: $table.medications,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -26347,6 +30530,11 @@ class $$EmergencyCardTableOrderingComposer
     column: $table.emergencyContact,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<String> get medications => $composableBuilder(
+    column: $table.medications,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$EmergencyCardTableAnnotationComposer
@@ -26379,6 +30567,11 @@ class $$EmergencyCardTableAnnotationComposer
 
   GeneratedColumn<String> get emergencyContact => $composableBuilder(
     column: $table.emergencyContact,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get medications => $composableBuilder(
+    column: $table.medications,
     builder: (column) => column,
   );
 }
@@ -26424,6 +30617,7 @@ class $$EmergencyCardTableTableManager
                 Value<String?> allergies = const Value.absent(),
                 Value<String?> chronicConditions = const Value.absent(),
                 Value<String?> emergencyContact = const Value.absent(),
+                Value<String?> medications = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => EmergencyCardCompanion(
                 id: id,
@@ -26432,6 +30626,7 @@ class $$EmergencyCardTableTableManager
                 allergies: allergies,
                 chronicConditions: chronicConditions,
                 emergencyContact: emergencyContact,
+                medications: medications,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -26442,6 +30637,7 @@ class $$EmergencyCardTableTableManager
                 Value<String?> allergies = const Value.absent(),
                 Value<String?> chronicConditions = const Value.absent(),
                 Value<String?> emergencyContact = const Value.absent(),
+                Value<String?> medications = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => EmergencyCardCompanion.insert(
                 id: id,
@@ -26450,6 +30646,7 @@ class $$EmergencyCardTableTableManager
                 allergies: allergies,
                 chronicConditions: chronicConditions,
                 emergencyContact: emergencyContact,
+                medications: medications,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -28183,6 +32380,7 @@ typedef $$UserProfilesTableCreateCompanionBuilder =
       Value<bool> permissionStepCounter,
       Value<bool> permissionHeartRate,
       Value<bool> permissionSleep,
+      Value<String?> chronotype,
       Value<String?> abhaNumber,
       Value<bool> abhaLinked,
       Value<String?> connectedWearables,
@@ -28213,6 +32411,7 @@ typedef $$UserProfilesTableUpdateCompanionBuilder =
       Value<bool> permissionStepCounter,
       Value<bool> permissionHeartRate,
       Value<bool> permissionSleep,
+      Value<String?> chronotype,
       Value<String?> abhaNumber,
       Value<bool> abhaLinked,
       Value<String?> connectedWearables,
@@ -28324,6 +32523,11 @@ class $$UserProfilesTableFilterComposer
 
   ColumnFilters<bool> get permissionSleep => $composableBuilder(
     column: $table.permissionSleep,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get chronotype => $composableBuilder(
+    column: $table.chronotype,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -28467,6 +32671,11 @@ class $$UserProfilesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get chronotype => $composableBuilder(
+    column: $table.chronotype,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get abhaNumber => $composableBuilder(
     column: $table.abhaNumber,
     builder: (column) => ColumnOrderings(column),
@@ -28595,6 +32804,11 @@ class $$UserProfilesTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumn<String> get chronotype => $composableBuilder(
+    column: $table.chronotype,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<String> get abhaNumber => $composableBuilder(
     column: $table.abhaNumber,
     builder: (column) => column,
@@ -28675,6 +32889,7 @@ class $$UserProfilesTableTableManager
                 Value<bool> permissionStepCounter = const Value.absent(),
                 Value<bool> permissionHeartRate = const Value.absent(),
                 Value<bool> permissionSleep = const Value.absent(),
+                Value<String?> chronotype = const Value.absent(),
                 Value<String?> abhaNumber = const Value.absent(),
                 Value<bool> abhaLinked = const Value.absent(),
                 Value<String?> connectedWearables = const Value.absent(),
@@ -28703,6 +32918,7 @@ class $$UserProfilesTableTableManager
                 permissionStepCounter: permissionStepCounter,
                 permissionHeartRate: permissionHeartRate,
                 permissionSleep: permissionSleep,
+                chronotype: chronotype,
                 abhaNumber: abhaNumber,
                 abhaLinked: abhaLinked,
                 connectedWearables: connectedWearables,
@@ -28733,6 +32949,7 @@ class $$UserProfilesTableTableManager
                 Value<bool> permissionStepCounter = const Value.absent(),
                 Value<bool> permissionHeartRate = const Value.absent(),
                 Value<bool> permissionSleep = const Value.absent(),
+                Value<String?> chronotype = const Value.absent(),
                 Value<String?> abhaNumber = const Value.absent(),
                 Value<bool> abhaLinked = const Value.absent(),
                 Value<String?> connectedWearables = const Value.absent(),
@@ -28761,6 +32978,7 @@ class $$UserProfilesTableTableManager
                 permissionStepCounter: permissionStepCounter,
                 permissionHeartRate: permissionHeartRate,
                 permissionSleep: permissionSleep,
+                chronotype: chronotype,
                 abhaNumber: abhaNumber,
                 abhaLinked: abhaLinked,
                 connectedWearables: connectedWearables,
