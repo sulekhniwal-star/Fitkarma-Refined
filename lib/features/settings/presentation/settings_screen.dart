@@ -3,6 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fitkarma/core/security/biometric_service.dart';
 import 'package:fitkarma/shared/theme/app_colors.dart';
 import 'package:fitkarma/shared/theme/app_text_styles.dart';
+import 'package:fitkarma/shared/widgets/abha_badge.dart';
+import 'package:fitkarma/features/abha/presentation/link_abha_screen.dart';
+import 'package:fitkarma/features/abha/presentation/abha_profile_screen.dart';
+import 'package:fitkarma/features/abha/data/abha_providers.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
@@ -20,6 +24,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   void initState() {
     super.initState();
     _loadSettings();
+    _loadABHAStatus();
   }
 
   Future<void> _loadSettings() async {
@@ -27,6 +32,19 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     _biometricAvailable = await _biometricService.isBiometricAvailable();
     if (mounted) {
       setState(() {});
+    }
+  }
+
+  Future<void> _loadABHAStatus() async {
+    // Load ABHA profile to check if linked
+    try {
+      final profileNotifier = ref.read(abhaProfileProvider);
+      await profileNotifier.loadProfile();
+      if (mounted) {
+        setState(() {});
+      }
+    } catch (e) {
+      // ABHA service not initialized yet, ignore
     }
   }
 
@@ -60,8 +78,32 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     }
   }
 
+  Future<void> _navigateToLinkABHA() async {
+    final result = await Navigator.of(context).push<bool>(
+      MaterialPageRoute(builder: (context) => const LinkABHAScreen()),
+    );
+
+    if (result == true && mounted) {
+      // Refresh ABHA status
+      await _loadABHAStatus();
+    }
+  }
+
+  Future<void> _navigateToABHAProfile() async {
+    await Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (context) => const ABHAProfileScreen()));
+
+    // Refresh on return
+    await _loadABHAStatus();
+  }
+
   @override
   Widget build(BuildContext context) {
+    // Watch for ABHA profile changes
+    final abhaProfileState = ref.watch(abhaProfileProvider);
+    final isAbhaLinked = abhaProfileState.state.isLinked;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Settings'),
@@ -73,6 +115,42 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       body: ListView(
         children: [
           const SizedBox(height: 16),
+
+          // Linked Accounts Section
+          _buildSectionHeader('Linked Accounts'),
+          _buildSettingTile(
+            icon: Icons.health_and_safety_rounded,
+            title: 'ABHA ID',
+            subtitle: isAbhaLinked
+                ? abhaProfileState.state.profile?.displayName ?? 'Linked'
+                : 'Link your Ayushman Bharat Health Account',
+            trailing: isAbhaLinked
+                ? Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ABHABadge(isLinked: true),
+                      const SizedBox(width: 4),
+                      const Icon(
+                        Icons.chevron_right,
+                        color: AppColors.textMuted,
+                      ),
+                    ],
+                  )
+                : Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ABHABadge(isLinked: false),
+                      const SizedBox(width: 4),
+                      const Icon(
+                        Icons.chevron_right,
+                        color: AppColors.textMuted,
+                      ),
+                    ],
+                  ),
+            onTap: isAbhaLinked ? _navigateToABHAProfile : _navigateToLinkABHA,
+          ),
+
+          const Divider(height: 32),
 
           // Security Section
           _buildSectionHeader('Security'),

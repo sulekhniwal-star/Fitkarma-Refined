@@ -32,6 +32,7 @@ import 'features/meditation/presentation/meditation_screen.dart'
 import 'features/wearables/presentation/wearables_screen.dart'
     deferred as wearables;
 import 'features/steps/presentation/steps_screen.dart';
+import 'features/lab_reports/presentation/lab_report_scan_screen.dart';
 
 // --- Placeholder Screens ---
 class PlaceholderScreen extends StatelessWidget {
@@ -633,6 +634,10 @@ final _router = GoRouter(
       path: '/lab-reports',
       builder: (context, state) =>
           const PlaceholderScreen(title: 'Lab Reports'),
+    ),
+    GoRoute(
+      path: '/lab-reports/scan',
+      builder: (context, state) => const LabReportScanScreen(),
     ),
     GoRoute(
       path: '/abha',

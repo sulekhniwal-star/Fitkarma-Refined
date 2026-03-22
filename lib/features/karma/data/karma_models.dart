@@ -184,6 +184,24 @@ class KarmaAction {
       isDaily: true,
       category: 'health',
     ),
+    // BP actions
+    KarmaAction(
+      id: 'log_bp',
+      name: 'Log Blood Pressure',
+      description: 'Log your blood pressure reading',
+      baseXp: 5,
+      isDaily: true,
+      category: 'health',
+    ),
+    // Glucose actions
+    KarmaAction(
+      id: 'log_glucose',
+      name: 'Log Glucose',
+      description: 'Log your blood glucose reading',
+      baseXp: 5,
+      isDaily: true,
+      category: 'health',
+    ),
     // Habits
     KarmaAction(
       id: 'complete_habit',

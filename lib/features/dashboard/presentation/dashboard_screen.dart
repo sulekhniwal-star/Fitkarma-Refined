@@ -957,6 +957,14 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           labelStyle: AppTextStyles.labelMedium,
           onTap: () => context.go('/home/health/glucose'),
         ),
+        SpeedDialChild(
+          child: const Icon(Icons.description),
+          backgroundColor: AppColors.purple,
+          foregroundColor: Colors.white,
+          label: 'Lab Report',
+          labelStyle: AppTextStyles.labelMedium,
+          onTap: () => context.go('/lab-reports/scan'),
+        ),
       ],
     );
   }

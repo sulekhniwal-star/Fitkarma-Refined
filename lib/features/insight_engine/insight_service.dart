@@ -11,6 +11,7 @@ import 'package:fitkarma/features/insight_engine/rules/workout_rules.dart';
 import 'package:fitkarma/features/insight_engine/rules/hydration_rules.dart';
 import 'package:fitkarma/features/insight_engine/rules/cross_module_rules.dart';
 import 'package:fitkarma/features/insight_engine/rules/mood_rules.dart';
+import 'package:fitkarma/features/insight_engine/rules/lab_report_rules.dart';
 
 /// Main service for insight engine - coordinates data loading, rule evaluation, and storage
 ///
@@ -40,6 +41,7 @@ class InsightService {
       ...getHydrationRules(),
       ...getMoodRules(),
       ...getCrossModuleRules(),
+      ...getLabReportRules(),
     ];
   }
 
