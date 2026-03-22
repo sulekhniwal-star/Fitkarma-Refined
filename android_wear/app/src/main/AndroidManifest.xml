@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Permissions -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.BODY_SENSORS" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="com.google.android.permission.WRITE_EXTERNAL_STORAGE" />
+    
+    <!-- Wear OS permissions -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    
+    <application
+        android:name=".FitkarmaWearApp"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="Fitkarma"
+        android:supportsRtl="true"
+        android:theme="@android:style/Theme.DeviceDefault"
+        tools:targetApi="34">
+
+        <!-- Main Activity -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:label="Fitkarma"
+            android:theme="@android:style/Theme.DeviceDefault">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Tile Service for Activity Tile -->
+        <service
+            android:name=".tiles.FitkarmaActivityTileService"
+            android:exported="true"
+            android:icon="@drawable/ic_tile"
+            android:label="@string/activity_tile_label"
+            android:description="@string/activity_tile_description">
+            <intent-filter>
+                <action android:name="androidx.wear.tiles.action.BIND_TILE_SERVICE" />
+            </intent-filter>
+            <meta-data
+                android:name="androidx.wear.tiles.PROPERTY_DEVICE_WIDTH"
+                android:value="192" />
+            <meta-data
+                android:name="androidx.wear.tiles.PROPERTY_DEVICE_HEIGHT"
+                android:value="192" />
+        </service>
+
+        <!-- Tile Service for Workout Tile -->
+        <service
+            android:name=".tiles.WorkoutTileService"
+            android:exported="true"
+            android:icon="@drawable/ic_workout"
+            android:label="@string/workout_tile_label"
+            android:description="@string/workout_tile_description">
+            <intent-filter>
+                <action android:name="androidx.wear.tiles.action.BIND_TILE_SERVICE" />
+            </intent-filter>
+        </service>
+
+        <!-- Complication Provider Service -->
+        <service
+            android:name=".complications.FitkarmaComplicationService"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:description="@string/complication_description">
+            <intent-filter>
+                <action android:name="androidx.wear.complications.action.SUPPORTED_TYPES" />
+            </intent-filter>
+            <meta-data
+                android:name="androidx.wear.complications.SUPPORTED_TYPES"
+                android:value="SHORT_TEXT,SMALL_IMAGE,RANGED_VALUE" />
+        </service>
+
+        <!-- Data Layer Listener Service -->
+        <service
+            android:name=".data.FitkarmaDataListenerService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
+                <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
+            </intent-filter>
+            <meta-data
+                android:name="com.google.android.wearable.cacheable"
+                android:value="fitkarma" />
+        </service>
+
+    </application>
+
+</manifest>
