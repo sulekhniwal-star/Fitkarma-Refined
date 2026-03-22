@@ -1,0 +1,13 @@
+{
+    "name": "fitbit-oauth",
+    "version": "1.0.0",
+    "description": "Fitbit OAuth2 authentication and data sync for Fitkarma",
+    "main": "src/index.js",
+    "scripts": {
+        "start": "src/index.js"
+    },
+    "dependencies": {
+        "node-fetch": "^2.7.0",
+        "appwrite": "^22.0.0"
+    }
+}
