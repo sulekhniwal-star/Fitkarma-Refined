@@ -5,7 +5,6 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:fitkarma/features/health/data/health_data_service.dart';
 import 'package:fitkarma/core/network/connectivity_service.dart';
-import 'package:fitkarma/core/storage/drift_service.dart';
 
 /// Wearable device types supported by Fitkarma
 enum WearableType {

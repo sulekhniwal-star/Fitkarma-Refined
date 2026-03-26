@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:drift/drift.dart';
 import 'package:fitkarma/core/storage/drift_database.dart';
-import 'package:fitkarma/core/security/encryption_service.dart';
 
 /// Service for managing period logs with encryption and cycle predictions.
 /// All sensitive data is encrypted using HKDF-derived period key.
@@ -43,7 +42,7 @@ class PeriodService {
     // Calculate cycle predictions if we have enough data
     CyclePredictions? predictions;
     if (isFirstDayOfCycle) {
-      predictions = await _calculatePredictions(userId, cycleStartDate!);
+      predictions = await _calculatePredictions(userId, cycleStartDate);
     }
 
     await db

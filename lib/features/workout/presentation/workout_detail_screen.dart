@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
-import 'package:fitkarma/features/workout/data/workout_aw_service.dart';
 import 'package:fitkarma/features/workout/data/workout_providers.dart';
 import 'package:fitkarma/features/workout/presentation/workout_complete_screen.dart';
 

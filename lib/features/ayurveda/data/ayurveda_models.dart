@@ -281,18 +281,24 @@ class DoshaResult {
     }
 
     // Two doshas close together (within 10 points) - dual dosha
-    if (v >= 35 && v - p <= closeThreshold && v > k)
+    if (v >= 35 && v - p <= closeThreshold && v > k) {
       return DominantDosha.vataPitta;
-    if (v >= 35 && v - k <= closeThreshold && v > p)
+    }
+    if (v >= 35 && v - k <= closeThreshold && v > p) {
       return DominantDosha.vataKapha;
-    if (p >= 35 && p - k <= closeThreshold && p > v)
+    }
+    if (p >= 35 && p - k <= closeThreshold && p > v) {
       return DominantDosha.pittaKapha;
-    if (p >= 35 && p - v <= closeThreshold && p > k)
+    }
+    if (p >= 35 && p - v <= closeThreshold && p > k) {
       return DominantDosha.vataPitta;
-    if (k >= 35 && k - v <= closeThreshold && k > p)
+    }
+    if (k >= 35 && k - v <= closeThreshold && k > p) {
       return DominantDosha.vataKapha;
-    if (k >= 35 && k - p <= closeThreshold && k > v)
+    }
+    if (k >= 35 && k - p <= closeThreshold && k > v) {
       return DominantDosha.pittaKapha;
+    }
 
     // All three relatively equal
     return DominantDosha.tridoshic;

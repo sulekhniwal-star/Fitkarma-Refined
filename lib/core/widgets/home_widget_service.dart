@@ -101,6 +101,29 @@ class HomeWidgetService {
   ) async {
     await HomeWidget.registerInteractivityCallback(callback);
   }
+
+  /// Update the emergency card widget with data
+  static Future<void> updateEmergencyCardWidget({
+    String? bloodGroup,
+    String? emergencyContact,
+  }) async {
+    // Save data to home widget storage
+    await HomeWidget.saveWidgetData<String>(
+      'emergency_blood_group',
+      bloodGroup ?? 'N/A',
+    );
+    await HomeWidget.saveWidgetData<String>(
+      'emergency_contact',
+      emergencyContact ?? 'N/A',
+    );
+
+    // Update the widget
+    await HomeWidget.updateWidget(
+      name: 'EmergencyWidgetProvider',
+      androidName: 'EmergencyWidgetProvider',
+      iOSName: 'EmergencyWidget',
+    );
+  }
 }
 
 /// Background callback handler for widget interactions
@@ -116,6 +139,9 @@ Future<void> widgetBackgroundCallback(Uri? uri) async {
       break;
     case 'log_food':
       // Navigate to food log - handled by the app
+      break;
+    case 'emergency_card':
+      // Emergency card - the app will handle navigation via deep link
       break;
   }
 }

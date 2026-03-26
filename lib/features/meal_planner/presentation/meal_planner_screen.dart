@@ -7,7 +7,6 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:fitkarma/features/meal_planner/data/meal_planner_providers.dart';
 import 'package:fitkarma/features/meal_planner/data/indian_meal_templates.dart';
-import 'package:fitkarma/features/food/data/food_providers.dart';
 
 class MealPlannerScreen extends ConsumerStatefulWidget {
   const MealPlannerScreen({super.key});
@@ -215,7 +214,7 @@ class _MealPlannerScreenState extends ConsumerState<MealPlannerScreen>
             ),
             const SizedBox(height: 16),
             Text(
-              'No ${mealType} planned',
+              'No $mealType planned',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 color: Theme.of(context).colorScheme.outline,
               ),

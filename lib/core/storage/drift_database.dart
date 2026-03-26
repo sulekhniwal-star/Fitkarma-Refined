@@ -848,6 +848,30 @@ class NutritionGoals extends Table {
   Set<Column> get primaryKey => {id};
 }
 
+class ReferralRecords extends Table {
+  TextColumn get id => text()();
+  TextColumn get referrerUserId => text()(); // User who referred
+  TextColumn get referredUserId => text()(); // User who was referred
+  TextColumn get referralCode => text()(); // Code used
+  BoolColumn get referredUserOnboarded =>
+      boolean().withDefault(const Constant(false))();
+  IntColumn get referrerXpEarned =>
+      integer().withDefault(const Constant(0))(); // XP earned by referrer
+  IntColumn get referredUserXpEarned =>
+      integer().withDefault(const Constant(0))(); // XP earned by referred user
+  DateTimeColumn get createdAt => dateTime()();
+  DateTimeColumn get onboardedAt => dateTime().nullable()();
+
+  @override
+  Set<Column> get primaryKey => {id};
+
+  @override
+  List<Index> get indexes => [
+    Index('idx_referral_referrer', 'referrerUserId'),
+    Index('idx_referral_referred', 'referredUserId'),
+  ];
+}
+
 // --- User Profiles (Onboarding) ---
 
 class UserProfiles extends Table {
@@ -879,6 +903,15 @@ class UserProfiles extends Table {
   BoolColumn get abhaLinked => boolean().withDefault(const Constant(false))();
   TextColumn get connectedWearables => text().nullable()();
   IntColumn get xpPoints => integer().withDefault(const Constant(0))();
+  // Referral system fields
+  TextColumn get referralCode =>
+      text().nullable()(); // User's unique referral code
+  TextColumn get referredBy =>
+      text().nullable()(); // Referral code used when signing up
+  IntColumn get referralCount =>
+      integer().withDefault(const Constant(0))(); // Number of users referred
+  IntColumn get referralXpEarned =>
+      integer().withDefault(const Constant(0))(); // XP earned from referrals
   DateTimeColumn get createdAt => dateTime()();
   DateTimeColumn get updatedAt => dateTime()();
   TextColumn get syncStatus => text().withDefault(const Constant('pending'))();
@@ -1168,6 +1201,8 @@ class UserProfilesDao extends DatabaseAccessor<AppDatabase>
     Medications,
     FastingLogs,
     MealPlans,
+    MealPlanEntries,
+    GroceryLists,
     Recipes,
     BloodPressureLogs,
     WaterLogs,

@@ -1,8 +1,6 @@
 // lib/features/mental_health/data/cbt_program_service.dart
 // CBT-Lite Stress Program - 7-day program with prompts tied to user's actual logged data
 
-import 'dart:convert';
-import 'package:drift/drift.dart';
 import 'package:fitkarma/core/storage/drift_database.dart';
 
 /// CBT Program Day Structure
@@ -255,7 +253,7 @@ class CbtProgramService {
       prompt: CbtPrompt(
         question: 'How are you feeling right now, in this moment?',
         contextFromData: context.isNotEmpty
-            ? context + 'This awareness is the first step toward recovery.'
+            ? '${context}This awareness is the first step toward recovery.'
             : null,
         suggestedResponses: [
           'I feel exhausted but relieved to be here',
@@ -302,7 +300,7 @@ class CbtProgramService {
       prompt: CbtPrompt(
         question: 'What currently prevents you from getting good sleep?',
         contextFromData: sleepContext.isNotEmpty
-            ? sleepContext + 'Let\'s identify barriers to better rest.'
+            ? '${sleepContext}Let\'s identify barriers to better rest.'
             : null,
         suggestedResponses: [
           'Racing thoughts keep me awake',
@@ -350,8 +348,7 @@ class CbtProgramService {
         question:
             'What activities or situations leave you feeling most drained?',
         contextFromData: energyContext.isNotEmpty
-            ? energyContext +
-                  'Identifying these helps you plan restorative breaks.'
+            ? '${energyContext}Identifying these helps you plan restorative breaks.'
             : null,
         suggestedResponses: [
           'Work meetings and deadlines',

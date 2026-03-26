@@ -62,7 +62,7 @@ class _FastingScreenState extends ConsumerState<FastingScreen> {
                   return const SizedBox();
                 },
                 loading: () => const SizedBox(),
-                error: (_, __) => const SizedBox(),
+                error: (_, _) => const SizedBox(),
               ),
 
               // Tips Card
@@ -244,7 +244,7 @@ class _FastingScreenState extends ConsumerState<FastingScreen> {
         );
       },
       loading: () => const SizedBox(),
-      error: (_, __) => const SizedBox(),
+      error: (_, _) => const SizedBox(),
     );
   }
 
@@ -357,7 +357,7 @@ class _FastingScreenState extends ConsumerState<FastingScreen> {
           child: Center(child: CircularProgressIndicator()),
         ),
       ),
-      error: (_, __) => const Card(
+      error: (_, _) => const Card(
         child: Padding(
           padding: EdgeInsets.all(16),
           child: Text('Unable to load statistics'),
@@ -494,7 +494,7 @@ class _FastingScreenState extends ConsumerState<FastingScreen> {
         }
       },
       loading: () => const SizedBox(),
-      error: (_, __) => FloatingActionButton.extended(
+      error: (_, _) => FloatingActionButton.extended(
         onPressed: () {},
         backgroundColor: Colors.grey,
         foregroundColor: Colors.white,

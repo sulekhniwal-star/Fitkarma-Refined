@@ -7,6 +7,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:fitkarma/features/workout/data/pr_detection_service.dart';
+import 'package:fitkarma/features/workout/presentation/pr_celebration_widget.dart';
+import 'package:fitkarma/features/auth/data/auth_aw_service.dart';
 
 class GpsWorkoutScreen extends ConsumerStatefulWidget {
   const GpsWorkoutScreen({super.key});
@@ -310,10 +313,42 @@ class _GpsWorkoutScreenState extends ConsumerState<GpsWorkoutScreen> {
     );
   }
 
-  void _showCompletionDialog() {
-    showDialog(
+  void _showCompletionDialog() async {
+    // Calculate average speed in m/s
+    final averageSpeed = _elapsedSeconds > 0
+        ? _totalDistanceMeters / _elapsedSeconds
+        : 0.0;
+
+    // Check for PRs
+    List<DetectedPR> prs = [];
+    try {
+      final authService = AuthAwService();
+      final userId = await authService.getStoredUserId();
+      if (userId != null) {
+        final prService = PRDetectionService();
+        prs = await prService.checkForPRs(
+          userId: userId,
+          workoutType: 'Running',
+          durationMinutes: _elapsedSeconds ~/ 60,
+          totalDistanceMeters: _totalDistanceMeters,
+          averageSpeed: averageSpeed,
+        );
+
+        // Record PRs and award XP
+        for (final pr in prs) {
+          await prService.recordPRAndAwardXP(userId: userId, pr: pr);
+        }
+      }
+    } catch (e) {
+      debugPrint('Error checking for PRs: $e');
+    }
+
+    if (!mounted) return;
+
+    // Show completion dialog first
+    await showDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         title: const Text('Workout Complete! 🎉'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -323,6 +358,26 @@ class _GpsWorkoutScreenState extends ConsumerState<GpsWorkoutScreen> {
             Text(
               'Distance: ${_totalDistanceMeters > 1000 ? '${(_totalDistanceMeters / 1000).toStringAsFixed(2)} km' : '${_totalDistanceMeters.toStringAsFixed(0)} m'}',
             ),
+            if (prs.isNotEmpty) ...[
+              const SizedBox(height: 16),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.amber.shade50,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.emoji_events, color: Colors.amber),
+                    const SizedBox(width: 8),
+                    Text(
+                      '${prs.length} New PR${prs.length > 1 ? 's' : ''}!',
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ),
+            ],
             const SizedBox(height: 16),
             const Text('Great job on your outdoor workout!'),
           ],
@@ -330,7 +385,7 @@ class _GpsWorkoutScreenState extends ConsumerState<GpsWorkoutScreen> {
         actions: [
           ElevatedButton(
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.pop(dialogContext);
               Navigator.pop(context);
             },
             child: const Text('Save & Exit'),
@@ -338,6 +393,16 @@ class _GpsWorkoutScreenState extends ConsumerState<GpsWorkoutScreen> {
         ],
       ),
     );
+
+    // Show PR celebration after dialog
+    if (prs.isNotEmpty && mounted) {
+      await Future.delayed(const Duration(milliseconds: 300));
+      if (prs.length == 1) {
+        showPRCelebration(context, prs.first);
+      } else {
+        showMultiplePRCelebration(context, prs);
+      }
+    }
   }
 }
 

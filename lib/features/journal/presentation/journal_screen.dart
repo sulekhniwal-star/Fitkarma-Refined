@@ -6,7 +6,6 @@ import 'package:intl/intl.dart';
 import 'package:fitkarma/core/storage/drift_database.dart';
 import 'package:fitkarma/features/auth/data/auth_aw_service.dart';
 import 'package:fitkarma/features/journal/data/journal_providers.dart';
-import 'package:fitkarma/features/journal/data/journal_service.dart';
 
 /// Main journal screen showing list of entries and entry creation
 class JournalScreen extends ConsumerStatefulWidget {

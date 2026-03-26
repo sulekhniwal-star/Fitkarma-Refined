@@ -725,7 +725,7 @@ class _PeriodTrackingScreenState extends ConsumerState<PeriodTrackingScreen> {
                   ),
                 );
               },
-              activeColor: AppColors.primary,
+              activeThumbColor: AppColors.primary,
             ),
           ],
         ),

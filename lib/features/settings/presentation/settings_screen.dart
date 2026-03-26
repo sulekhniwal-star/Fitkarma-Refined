@@ -1,13 +1,15 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fitkarma/core/security/biometric_service.dart';
+import 'package:fitkarma/core/di/providers.dart';
+import 'package:fitkarma/core/network/sync_queue.dart';
+import 'package:fitkarma/features/abha/data/abha_providers.dart';
+import 'package:fitkarma/features/abha/presentation/abha_profile_screen.dart';
+import 'package:fitkarma/features/abha/presentation/link_abha_screen.dart';
+import 'package:fitkarma/features/period/presentation/period_tracking_screen.dart';
 import 'package:fitkarma/shared/theme/app_colors.dart';
 import 'package:fitkarma/shared/theme/app_text_styles.dart';
 import 'package:fitkarma/shared/widgets/abha_badge.dart';
-import 'package:fitkarma/features/abha/presentation/link_abha_screen.dart';
-import 'package:fitkarma/features/abha/presentation/abha_profile_screen.dart';
-import 'package:fitkarma/features/abha/data/abha_providers.dart';
-import 'package:fitkarma/features/period/presentation/period_tracking_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fitkarma/core/security/biometric_service.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
@@ -80,6 +82,44 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     }
   }
 
+  Future<void> _toggleLowDataMode(bool value) async {
+    // Get sync queue instance and update interval
+    final syncQueue = SyncQueueService.instance;
+    syncQueue.updateSyncInterval();
+
+    await ref.read(lowDataModeServiceProvider).setLowDataMode(value);
+
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            value
+                ? 'Low Data Mode enabled - images disabled, sync reduced to every 6 hours'
+                : 'Low Data Mode disabled',
+          ),
+          backgroundColor: value ? AppColors.warning : AppColors.success,
+        ),
+      );
+    }
+  }
+
+  Future<void> _toggleAutoDetect(bool value) async {
+    await ref.read(lowDataModeServiceProvider).setAutoDetect(value);
+
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            value
+                ? 'Auto-detect enabled - will automatically enable on slow connections'
+                : 'Auto-detect disabled',
+          ),
+          backgroundColor: AppColors.success,
+        ),
+      );
+    }
+  }
+
   void _togglePeriodSync(bool value) {
     setState(() {
       _periodSyncEnabled = value;
@@ -128,6 +168,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     // Watch for ABHA profile changes
     final abhaProfileState = ref.watch(abhaProfileProvider);
     final isAbhaLinked = abhaProfileState.state.isLinked;
+
+    // Watch for low data mode changes
+    final lowDataModeEnabled = ref
+        .watch(lowDataModeServiceProvider)
+        .isLowDataModeEnabled;
 
     return Scaffold(
       appBar: AppBar(
@@ -201,6 +246,47 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           ),
 
           const Divider(height: 32),
+
+          const Divider(height: 32),
+
+          // Data & Sync Section
+          _buildSectionHeader('Data & Sync'),
+          _buildSettingTile(
+            icon: Icons.data_saver_on_outlined,
+            title: 'Low Data Mode',
+            subtitle: 'Disable images, sync every 6 hours',
+            trailing: Switch(
+              value: lowDataModeEnabled,
+              onChanged: _toggleLowDataMode,
+              activeThumbColor: AppColors.primary,
+            ),
+            onTap: () => _toggleLowDataMode(!lowDataModeEnabled),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 72, right: 16),
+            child: Row(
+              children: [
+                Icon(Icons.wifi_find, size: 18, color: AppColors.textMuted),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    'Auto-detect slow connections',
+                    style: AppTextStyles.bodySmall.copyWith(
+                      color: AppColors.textMuted,
+                    ),
+                  ),
+                ),
+                Switch(
+                  value: ref
+                      .watch(lowDataModeServiceProvider)
+                      .isAutoDetectEnabled,
+                  onChanged: _toggleAutoDetect,
+                  activeThumbColor: AppColors.primary,
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 8),
 
           // Security Section
           _buildSectionHeader('Security'),

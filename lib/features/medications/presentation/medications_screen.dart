@@ -172,7 +172,7 @@ class _MedicationsScreenState extends ConsumerState<MedicationsScreen> {
 
                 // Frequency
                 DropdownButtonFormField<String>(
-                  value: frequency,
+                  initialValue: frequency,
                   decoration: const InputDecoration(
                     labelText: 'Frequency',
                     border: OutlineInputBorder(),
@@ -193,7 +193,7 @@ class _MedicationsScreenState extends ConsumerState<MedicationsScreen> {
 
                 // Category
                 DropdownButtonFormField<String>(
-                  value: category,
+                  initialValue: category,
                   decoration: const InputDecoration(
                     labelText: 'Category',
                     border: OutlineInputBorder(),

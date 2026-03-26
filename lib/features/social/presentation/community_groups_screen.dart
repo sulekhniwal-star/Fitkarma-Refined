@@ -6,7 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fitkarma/features/auth/data/auth_aw_service.dart';
 import 'package:fitkarma/features/social/data/social_models.dart';
 import 'package:fitkarma/features/social/data/social_providers.dart';
-import 'package:fitkarma/shared/theme/app_colors.dart';
 
 /// Community Groups Screen
 class CommunityGroupsScreen extends ConsumerStatefulWidget {
@@ -293,7 +292,7 @@ class _GroupCard extends ConsumerWidget {
                   height: 20,
                   child: CircularProgressIndicator(strokeWidth: 2),
                 ),
-                error: (_, __) => ElevatedButton(
+                error: (_, _) => ElevatedButton(
                   onPressed: () => _joinGroup(context, ref),
                   child: const Text('Join'),
                 ),
@@ -590,7 +589,7 @@ class _GroupDetailScreenState extends ConsumerState<_GroupDetailScreen>
         title: groupAsync.when(
           data: (group) => Text(group?.name ?? 'Group'),
           loading: () => const Text('Loading...'),
-          error: (_, __) => const Text('Group'),
+          error: (_, _) => const Text('Group'),
         ),
         bottom: TabBar(
           controller: _tabController,

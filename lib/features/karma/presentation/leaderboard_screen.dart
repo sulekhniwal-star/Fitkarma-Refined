@@ -20,7 +20,7 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 4, vsync: this);
   }
 
   @override
@@ -40,6 +40,7 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
             Tab(text: 'Friends'),
             Tab(text: 'City'),
             Tab(text: 'National'),
+            Tab(text: 'Referrals'),
           ],
         ),
       ),
@@ -73,6 +74,7 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
                 _LeaderboardList(type: 'friends'),
                 _LeaderboardList(type: 'city'),
                 _LeaderboardList(type: 'national'),
+                _LeaderboardList(type: 'referrals'),
               ],
             ),
           ),
@@ -153,6 +155,8 @@ class _LeaderboardList extends ConsumerWidget {
         return 'Users in your city will appear here';
       case 'national':
         return 'Top users across India will appear here';
+      case 'referrals':
+        return 'Share your referral code to climb the ranks!';
       default:
         return '';
     }

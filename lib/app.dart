@@ -31,6 +31,8 @@ import 'features/meal_planner/presentation/meal_planner_screen.dart';
 import 'features/food/presentation/recipe_browser_screen.dart';
 import 'features/food/presentation/recipe_builder_screen.dart';
 import 'features/journal/presentation/journal_screen.dart';
+import 'features/emergency_card/presentation/emergency_card_screen.dart';
+import 'features/reports/presentation/reports_screen.dart';
 import 'core/security/biometric_service.dart';
 
 // --- Deferred Imports ---
@@ -652,8 +654,7 @@ final _router = GoRouter(
     ),
     GoRoute(
       path: '/emergency',
-      builder: (context, state) =>
-          const PlaceholderScreen(title: 'Emergency Card'),
+      builder: (context, state) => const EmergencyCardScreen(),
     ),
     GoRoute(
       path: '/blood-pressure',
@@ -677,6 +678,15 @@ final _router = GoRouter(
     GoRoute(
       path: '/lab-reports/scan',
       builder: (context, state) => const LabReportScanScreen(),
+    ),
+    GoRoute(
+      path: '/reports',
+      builder: (context, state) {
+        // Get user info from state or use defaults
+        final userId = state.uri.queryParameters['userId'] ?? '';
+        final userName = state.uri.queryParameters['userName'] ?? 'User';
+        return ReportsScreen(userId: userId, userName: userName);
+      },
     ),
     GoRoute(
       path: '/abha',
@@ -718,6 +728,38 @@ final _router = GoRouter(
         loader: mental_health.loadLibrary,
         builder: () => mental_health.MentalHealthScreen(),
       ),
+    ),
+
+    // --- Festival Routes ---
+    GoRoute(
+      path: '/home/festival',
+      builder: (context, state) =>
+          const PlaceholderScreen(title: 'Festival Hub'),
+      routes: [
+        GoRoute(
+          path: 'navratri',
+          builder: (context, state) =>
+              const PlaceholderScreen(title: 'Navratri'),
+        ),
+        GoRoute(
+          path: 'ramadan',
+          builder: (context, state) =>
+              const PlaceholderScreen(title: 'Ramadan'),
+        ),
+        GoRoute(
+          path: 'diwali',
+          builder: (context, state) => const PlaceholderScreen(title: 'Diwali'),
+        ),
+        GoRoute(
+          path: 'karwa-chauth',
+          builder: (context, state) =>
+              const PlaceholderScreen(title: 'Karwa Chauth'),
+        ),
+        GoRoute(
+          path: 'holi',
+          builder: (context, state) => const PlaceholderScreen(title: 'Holi'),
+        ),
+      ],
     ),
   ],
 );

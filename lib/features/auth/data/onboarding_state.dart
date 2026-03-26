@@ -40,6 +40,11 @@ class OnboardingState {
   List<String> connectedWearables =
       []; // 'fitbit', 'garmin', 'apple_health', 'google_fit'
 
+  // Referral system
+  String?
+  referralCode; // User's unique referral code (generated at registration)
+  String? referredByCode; // Referral code used when signing up
+
   // Computed properties
   int get age {
     if (dateOfBirth == null) return 0;
@@ -218,6 +223,8 @@ class OnboardingState {
     String? abhaNumber,
     bool? abhaLinked,
     List<String>? connectedWearables,
+    String? referralCode,
+    String? referredByCode,
   }) {
     return OnboardingState()
       ..name = name ?? this.name
@@ -242,7 +249,9 @@ class OnboardingState {
       ..abhaNumber = abhaNumber ?? this.abhaNumber
       ..abhaLinked = abhaLinked ?? this.abhaLinked
       ..connectedWearables =
-          connectedWearables ?? List.from(this.connectedWearables);
+          connectedWearables ?? List.from(this.connectedWearables)
+      ..referralCode = referralCode ?? this.referralCode
+      ..referredByCode = referredByCode ?? this.referredByCode;
   }
 }
 

@@ -50,7 +50,7 @@ class HealthDataService {
   StreamSubscription<StepCount>? _stepSubscription;
 
   // Permission states for each data type
-  Map<FitkarmaHealthDataType, bool> _permissionStates = {};
+  final Map<FitkarmaHealthDataType, bool> _permissionStates = {};
 
   // Step stream controller for real-time updates
   final _stepStreamController = StreamController<int>.broadcast();

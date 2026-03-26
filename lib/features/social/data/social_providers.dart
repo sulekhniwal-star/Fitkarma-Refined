@@ -2,7 +2,6 @@
 // Riverpod providers for Social features
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fitkarma/features/auth/data/auth_aw_service.dart';
 import 'social_models.dart';
 import 'social_aw_service.dart';
 

@@ -356,33 +356,33 @@ class BurnoutService {
     int score = 0;
 
     // Mood contribution (max 25 points)
-    if (avgMoodScore <= 2)
+    if (avgMoodScore <= 2) {
       score += 25;
-    else if (avgMoodScore <= 2.5)
+    } else if (avgMoodScore <= 2.5)
       score += 20;
     else if (avgMoodScore <= 3)
       score += 10;
 
     // Energy contribution (max 20 points)
-    if (avgEnergyLevel <= 3)
+    if (avgEnergyLevel <= 3) {
       score += 20;
-    else if (avgEnergyLevel <= 4)
+    } else if (avgEnergyLevel <= 4)
       score += 15;
     else if (avgEnergyLevel <= 5)
       score += 5;
 
     // Sleep duration contribution (max 15 points)
-    if (avgSleepDuration < 300)
+    if (avgSleepDuration < 300) {
       score += 15; // < 5 hours
-    else if (avgSleepDuration < 360)
+    } else if (avgSleepDuration < 360)
       score += 10; // < 6 hours
     else if (avgSleepDuration < 420)
       score += 5; // < 7 hours
 
     // Sleep quality contribution (max 15 points)
-    if (avgSleepQuality <= 3)
+    if (avgSleepQuality <= 3) {
       score += 15;
-    else if (avgSleepQuality <= 4)
+    } else if (avgSleepQuality <= 4)
       score += 10;
     else if (avgSleepQuality <= 5)
       score += 5;
@@ -393,9 +393,9 @@ class BurnoutService {
       consecutivePoorSleepDays,
       consecutiveLowEnergyDays,
     ].reduce((a, b) => a > b ? a : b);
-    if (maxConsecutive >= 7)
+    if (maxConsecutive >= 7) {
       score += 25;
-    else if (maxConsecutive >= 5)
+    } else if (maxConsecutive >= 5)
       score += 20;
     else if (maxConsecutive >= 3)
       score += 10;

@@ -7,7 +7,6 @@ import 'package:fitkarma/features/ayurveda/data/ayurveda_service.dart';
 import 'package:fitkarma/features/ayurveda/data/dosha_quiz_data.dart';
 import 'package:fitkarma/features/ayurveda/data/ritucharya_data.dart';
 import 'package:fitkarma/features/ayurveda/data/herbal_remedies_data.dart';
-import 'package:fitkarma/features/ayurveda/data/dinacharya_data.dart';
 
 /// Ayurveda service provider
 final ayurvedaServiceProvider = Provider<AyurvedaService>((ref) {

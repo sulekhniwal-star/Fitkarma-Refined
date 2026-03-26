@@ -760,7 +760,7 @@ class _CreateHabitSheetState extends ConsumerState<CreateHabitSheet> {
                     const SizedBox(width: 12),
                     Expanded(
                       child: DropdownButtonFormField<String>(
-                        value: _selectedUnit,
+                        initialValue: _selectedUnit,
                         decoration: InputDecoration(
                           labelText: 'Unit',
                           filled: true,
@@ -789,7 +789,7 @@ class _CreateHabitSheetState extends ConsumerState<CreateHabitSheet> {
 
                 // Frequency
                 DropdownButtonFormField<String>(
-                  value: _selectedFrequency,
+                  initialValue: _selectedFrequency,
                   decoration: InputDecoration(
                     labelText: 'Frequency',
                     filled: true,

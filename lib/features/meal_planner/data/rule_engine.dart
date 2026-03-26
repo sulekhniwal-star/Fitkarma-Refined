@@ -1,7 +1,6 @@
 // lib/features/meal_planner/data/rule_engine.dart
 // Rule Engine for generating meal suggestions based on TDEE, dosha, and nutrition gaps
 
-import 'dart:math';
 
 /// Nutrition targets based on TDEE
 class NutritionTargets {

@@ -2,7 +2,6 @@
 // Delta sync service for fetching data since last_sync_at
 
 import 'dart:async';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fitkarma/features/health/data/health_data_service.dart';
 import 'package:fitkarma/features/wearables/data/wearable_sync_service.dart';

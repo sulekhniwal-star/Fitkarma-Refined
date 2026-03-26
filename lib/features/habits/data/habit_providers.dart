@@ -7,7 +7,6 @@ import 'package:fitkarma/features/dashboard/data/dashboard_providers.dart';
 import 'package:fitkarma/features/habits/data/habit_drift_service.dart';
 import 'package:fitkarma/features/habits/data/habit_models.dart';
 import 'package:fitkarma/features/karma/data/karma_drift_service.dart';
-import 'package:fitkarma/features/karma/data/karma_providers.dart';
 
 /// Provider for the current user ID
 final habitUserIdProvider = FutureProvider<String?>((ref) async {

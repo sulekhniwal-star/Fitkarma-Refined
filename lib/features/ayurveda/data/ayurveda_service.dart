@@ -39,9 +39,7 @@ class AyurvedaService {
   /// Get or create profile
   AyurvedaProfile getOrCreateProfile(String odUserId) {
     var profile = _profiles[odUserId];
-    if (profile == null) {
-      profile = createProfile(odUserId);
-    }
+    profile ??= createProfile(odUserId);
     return profile;
   }
 

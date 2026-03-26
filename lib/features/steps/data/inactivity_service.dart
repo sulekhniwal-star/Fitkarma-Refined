@@ -2,7 +2,6 @@
 // Service to detect phone inactivity and send reminders
 
 import 'dart:async';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
 class InactivityService {

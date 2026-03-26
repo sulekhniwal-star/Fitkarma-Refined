@@ -5,8 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:fitkarma/shared/theme/app_colors.dart';
 import 'package:fitkarma/core/storage/drift_database.dart';
-import 'package:fitkarma/features/bp/data/bp_service.dart';
-import 'package:drift/drift.dart' hide Column;
 
 class BpTrendChart extends StatefulWidget {
   final String userId;

@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:fitkarma/features/ayurveda/data/ayurveda_providers.dart';
-import 'package:fitkarma/features/ayurveda/data/dosha_quiz_data.dart';
 import 'package:fitkarma/shared/theme/app_colors.dart';
 
 class DoshaQuizScreen extends ConsumerWidget {

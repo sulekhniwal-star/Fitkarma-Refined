@@ -7,7 +7,6 @@ import 'package:fitkarma/features/auth/data/auth_aw_service.dart';
 import 'package:fitkarma/features/social/data/social_models.dart';
 import 'package:fitkarma/features/social/data/social_providers.dart';
 import 'package:fitkarma/shared/theme/app_colors.dart';
-import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 /// Social Feed Screen

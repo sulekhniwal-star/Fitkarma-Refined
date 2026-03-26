@@ -7,7 +7,6 @@ import 'package:fitkarma/features/food/data/food_providers.dart';
 import 'package:fitkarma/features/food/data/recipe_service.dart';
 import 'package:fitkarma/core/storage/drift_database.dart';
 import 'package:fitkarma/shared/theme/app_colors.dart';
-import 'package:fitkarma/shared/theme/app_text_styles.dart';
 import 'package:go_router/go_router.dart';
 
 /// Recipe Builder Screen - Create recipes with ingredients from food DB
@@ -415,7 +414,7 @@ class _RecipeBuilderScreenState extends ConsumerState<RecipeBuilderScreen> {
           title,
           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
-        if (action != null) action,
+        ?action,
       ],
     );
   }

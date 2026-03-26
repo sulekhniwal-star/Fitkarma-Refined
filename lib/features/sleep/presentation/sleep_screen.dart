@@ -4,12 +4,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fitkarma/features/sleep/data/sleep_providers.dart';
-import 'package:fitkarma/features/sleep/data/sleep_service.dart';
 import 'package:fitkarma/features/sleep/presentation/sleep_logging_sheet.dart';
 import 'package:fitkarma/features/sleep/presentation/sleep_chart.dart';
 import 'package:fitkarma/shared/theme/app_colors.dart';
 import 'package:fitkarma/shared/theme/app_text_styles.dart';
-import 'package:fitkarma/core/storage/drift_service.dart';
 
 class SleepScreen extends ConsumerStatefulWidget {
   const SleepScreen({super.key});

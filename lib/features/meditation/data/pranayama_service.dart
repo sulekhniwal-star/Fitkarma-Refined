@@ -3,7 +3,6 @@
 
 import 'dart:async';
 import 'package:fitkarma/features/meditation/data/pranayama_models.dart';
-import 'package:fitkarma/features/meditation/data/pranayama_data.dart';
 
 /// Service to manage breathing exercise sessions
 class PranayamaService {

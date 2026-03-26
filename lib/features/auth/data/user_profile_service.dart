@@ -26,6 +26,9 @@ class UserProfileService {
     // Calculate XP
     int xpEarned = 50; // Base XP for completing onboarding
     if (state.abhaLinked) xpEarned += 100; // Bonus for ABHA link
+    if (state.referredByCode != null) {
+      xpEarned += 100; // Bonus for being referred
+    }
 
     final profileId = 'profile_$userId';
 
@@ -94,6 +97,8 @@ class UserProfileService {
               abhaLinked: Value(state.abhaLinked),
               connectedWearables: Value(connectedWearablesJson),
               xpPoints: Value(xpEarned),
+              referralCode: Value(state.referralCode),
+              referredBy: Value(state.referredByCode),
               createdAt: now,
               updatedAt: now,
               syncStatus: const Value('pending'),
@@ -110,6 +115,12 @@ class UserProfileService {
   ) async {
     const databaseId = 'fitkarma';
     const collectionId = 'users';
+
+    // Calculate XP with referral bonus
+    int xpEarned = state.abhaLinked ? 150 : 50;
+    if (state.referredByCode != null) {
+      xpEarned += 100; // Bonus for being referred
+    }
 
     // Prepare the document data
     final Map<String, dynamic> documentData = {
@@ -132,7 +143,9 @@ class UserProfileService {
       'permissionSleep': state.permissionSleep,
       'abhaLinked': state.abhaLinked,
       'connectedWearables': state.connectedWearables,
-      'xpPoints': state.abhaLinked ? 150 : 50,
+      'xpPoints': xpEarned,
+      'referralCode': state.referralCode,
+      'referredBy': state.referredByCode,
       'onboardingCompleted': true,
     };
 

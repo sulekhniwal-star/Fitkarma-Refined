@@ -4,7 +4,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fitkarma/features/food/data/food_providers.dart';
-import 'package:fitkarma/features/food/data/recipe_service.dart';
 import 'package:fitkarma/core/storage/drift_database.dart';
 import 'package:fitkarma/shared/theme/app_colors.dart';
 import 'package:go_router/go_router.dart';

@@ -7,10 +7,8 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:fitkarma/features/food/data/openfoodfacts_service.dart';
 import 'package:fitkarma/features/food/data/food_providers.dart';
 import 'package:fitkarma/features/food/presentation/manual_entry_sheet.dart';
-import 'package:fitkarma/core/storage/drift_database.dart';
 import 'package:fitkarma/shared/theme/app_colors.dart';
 import 'package:fitkarma/shared/theme/app_text_styles.dart';
-import 'package:drift/drift.dart' hide Column;
 
 /// Provider for OpenFoodFacts service
 final openFoodFactsServiceProvider = Provider<OpenFoodFactsService>((ref) {

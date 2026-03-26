@@ -5,6 +5,7 @@ import 'package:crypto/crypto.dart';
 import 'package:appwrite/appwrite.dart';
 import 'package:fitkarma/core/network/appwrite_client.dart';
 import 'package:fitkarma/core/network/connectivity_service.dart';
+import 'package:fitkarma/core/network/low_data_mode_service.dart';
 import 'package:fitkarma/core/storage/drift_database.dart';
 
 /// Sync priority levels
@@ -101,17 +102,36 @@ class SyncQueueService {
           }
         });
 
-    // Set up a periodic timer to check queue
-    _syncTimer = Timer.periodic(
-      const Duration(seconds: 30),
-      (_) => _flushQueue(),
-    );
+    // Set up periodic timer with dynamic interval based on low data mode
+    _startSyncTimer();
 
     // Set up delta sync timer (every 5 minutes when online)
     _deltaSyncTimer = Timer.periodic(
       const Duration(minutes: 5),
       (_) => _performDeltaSync(),
     );
+  }
+
+  /// Start or restart the sync timer based on low data mode
+  void _startSyncTimer() {
+    // Cancel existing timer if any
+    _syncTimer?.cancel();
+
+    // Get the appropriate sync interval
+    final intervalMinutes = LowDataModeService.instance.syncIntervalMinutes;
+    print('SyncQueue: Setting sync interval to $intervalMinutes minutes');
+
+    // Set up periodic timer
+    _syncTimer = Timer.periodic(
+      Duration(minutes: intervalMinutes),
+      (_) => _flushQueue(),
+    );
+  }
+
+  /// Update sync interval when low data mode changes
+  /// Call this when low data mode is toggled
+  void updateSyncInterval() {
+    _startSyncTimer();
   }
 
   /// Add an item to the sync queue
