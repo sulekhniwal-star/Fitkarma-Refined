@@ -42,7 +42,8 @@ class AW {
   static const syncDeadLetter       = 'sync_dead_letter';    // NEW
 
   // Storage Buckets
-  static const avatarsBucket        = 'avatars';
-  static const postsBucket          = 'posts_media';
-  static const healthReportsBucket  = 'health_reports_share'; // NEW — time-limited share links
+  static const assetsBucket         = 'assets';
+  static const avatarsBucket        = assetsBucket;
+  static const postsBucket          = assetsBucket;
+  static const healthReportsBucket  = assetsBucket; // NEW — time-limited share links
 }

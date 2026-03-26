@@ -1,0 +1,12 @@
+{
+    "name": "razorpay-webhook",
+    "version": "1.0.0",
+    "description": "Handle Razorpay webhooks for payments and subscriptions",
+    "main": "src/index.js",
+    "scripts": {
+        "start": "src/index.js"
+    },
+    "dependencies": {
+        "node-appwrite": "^8.0.0"
+    }
+}
