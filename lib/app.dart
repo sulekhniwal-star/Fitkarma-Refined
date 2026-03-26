@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_jailbreak_detection/flutter_jailbreak_detection.dart';
@@ -764,6 +765,8 @@ final _router = GoRouter(
   ],
 );
 
+import 'package:fitkarma/l10n/app_localizations.dart';
+
 class FitKarmaApp extends ConsumerStatefulWidget {
   const FitKarmaApp({super.key});
 
@@ -860,6 +863,37 @@ class _FitKarmaAppState extends ConsumerState<FitKarmaApp>
       darkTheme: AppTheme.dark,
       themeMode: ThemeMode.system,
       routerConfig: _router,
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('en'), // English
+        Locale('as'), // Assamese
+        Locale('bn'), // Bengali
+        Locale('brx'), // Bodo
+        Locale('doi'), // Dogri
+        Locale('gu'), // Gujarati
+        Locale('hi'), // Hindi
+        Locale('kn'), // Kannada
+        Locale('ks'), // Kashmiri
+        Locale('kok'), // Konkani
+        Locale('mai'), // Maithili
+        Locale('ml'), // Malayalam
+        Locale('mni'), // Manipuri
+        Locale('mr'), // Marathi
+        Locale('ne'), // Nepali
+        Locale('or'), // Oriya
+        Locale('pa'), // Punjabi
+        Locale('sa'), // Sanskrit
+        Locale('sat'), // Santali
+        Locale('sd'), // Sindhi
+        Locale('ta'), // Tamil
+        Locale('te'), // Telugu
+        Locale('ur'), // Urdu
+      ],
     );
   }
 }

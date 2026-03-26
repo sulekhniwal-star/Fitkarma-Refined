@@ -3,7 +3,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '../data/subscription_models.dart';
 import '../data/subscription_providers.dart';
 import '../data/upipay_service.dart';

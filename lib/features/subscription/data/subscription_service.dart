@@ -4,7 +4,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:appwrite/appwrite.dart' as appwrite;
 import 'package:fitkarma/core/network/appwrite_client.dart';
-import 'package:fitkarma/core/constants/api_endpoints.dart';
 import 'subscription_models.dart';
 
 /// Collection IDs for subscription features

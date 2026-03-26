@@ -2,7 +2,6 @@
 // Razorpay payment integration service
 
 import 'package:flutter/foundation.dart';
-import 'package:appwrite/appwrite.dart' as appwrite;
 import 'package:fitkarma/core/constants/app_config.dart';
 import 'subscription_models.dart';
 
