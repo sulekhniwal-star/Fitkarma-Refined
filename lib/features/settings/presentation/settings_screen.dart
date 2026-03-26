@@ -1,5 +1,6 @@
 import 'package:fitkarma/core/di/providers.dart';
 import 'package:fitkarma/core/network/sync_queue.dart';
+import 'package:fitkarma/core/theme/accessibility_provider.dart';
 import 'package:fitkarma/features/abha/data/abha_providers.dart';
 import 'package:fitkarma/features/abha/presentation/abha_profile_screen.dart';
 import 'package:fitkarma/features/abha/presentation/link_abha_screen.dart';
@@ -304,6 +305,75 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           ),
 
           const Divider(height: 32),
+
+          // Accessibility Section
+          _buildSectionHeader('Accessibility'),
+          _buildSettingTile(
+            icon: Icons.contrast,
+            title: 'High Contrast Mode',
+            subtitle: 'Black background with white text and orange accents',
+            trailing: Switch(
+              value:
+                  ref.watch(accessibilityProvider).themeMode ==
+                  AppThemeMode.highContrast,
+              onChanged: (value) {
+                ref
+                    .read(accessibilityProvider.notifier)
+                    .setThemeMode(
+                      value ? AppThemeMode.highContrast : AppThemeMode.system,
+                    );
+              },
+              activeThumbColor: AppColors.primary,
+            ),
+          ),
+          _buildSettingTile(
+            icon: Icons.text_fields,
+            title: 'Dyslexia-Friendly Font',
+            subtitle: 'OpenDyslexic font for easier reading',
+            trailing: Switch(
+              value: ref.watch(accessibilityProvider).enableDyslexiaFont,
+              onChanged: (value) {
+                ref
+                    .read(accessibilityProvider.notifier)
+                    .setEnableDyslexiaFont(value);
+              },
+              activeThumbColor: AppColors.primary,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 72, right: 16),
+            child: Row(
+              children: [
+                Icon(Icons.text_decrease, size: 18, color: AppColors.textMuted),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    'Font Scale: ${(ref.watch(accessibilityProvider).fontScale * 100).round()}%',
+                    style: AppTextStyles.bodySmall.copyWith(
+                      color: AppColors.textMuted,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 72, right: 16, top: 8),
+            child: Slider(
+              value: ref.watch(accessibilityProvider).fontScale,
+              min: 0.8,
+              max: 2.0,
+              divisions: 12,
+              label:
+                  '${(ref.watch(accessibilityProvider).fontScale * 100).round()}%',
+              onChanged: (value) {
+                ref.read(accessibilityProvider.notifier).setFontScale(value);
+              },
+              activeColor: AppColors.primary,
+              inactiveColor: AppColors.divider,
+            ),
+          ),
+          const SizedBox(height: 8),
 
           // About Section
           _buildSectionHeader('About'),

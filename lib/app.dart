@@ -51,6 +51,7 @@ import 'features/wearables/presentation/wearables_screen.dart'
 import 'features/steps/presentation/steps_screen.dart';
 import 'features/habits/presentation/habits_screen.dart';
 import 'features/lab_reports/presentation/lab_report_scan_screen.dart';
+import 'core/theme/accessibility_provider.dart';
 
 // --- Placeholder Screens ---
 class PlaceholderScreen extends StatelessWidget {
@@ -765,8 +766,6 @@ final _router = GoRouter(
   ],
 );
 
-import 'package:fitkarma/l10n/app_localizations.dart';
-
 class FitKarmaApp extends ConsumerStatefulWidget {
   const FitKarmaApp({super.key});
 
@@ -856,15 +855,23 @@ class _FitKarmaAppState extends ConsumerState<FitKarmaApp>
 
   @override
   Widget build(BuildContext context) {
+    final accessibilitySettings = ref.watch(accessibilityProvider);
+    final themeMode = ref.watch(effectiveThemeModeProvider);
+
+    // Determine which theme to use based on accessibility settings
+    ThemeData? resolvedTheme;
+    if (accessibilitySettings.themeMode == AppThemeMode.highContrast) {
+      resolvedTheme = HighContrastTheme.theme;
+    }
+
     return MaterialApp.router(
       title: 'FitKarma',
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.light,
-      darkTheme: AppTheme.dark,
-      themeMode: ThemeMode.system,
+      theme: resolvedTheme ?? AppTheme.light,
+      darkTheme: resolvedTheme ?? AppTheme.dark,
+      themeMode: themeMode,
       routerConfig: _router,
       localizationsDelegates: const [
-        AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
