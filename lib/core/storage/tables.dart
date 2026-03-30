@@ -21,6 +21,11 @@ class FoodLogs extends Table {
   TextColumn get imageUrl => text().nullable()();
   DateTimeColumn get createdAt => dateTime()();
   DateTimeColumn get updatedAt => dateTime()();
+
+  @override
+  List<Set<Column>> get indexes => [
+        {userId, loggedAt},
+      ];
 }
 
 class FoodItems extends Table {
@@ -59,6 +64,11 @@ class WorkoutLogs extends Table {
   DateTimeColumn get loggedAt => dateTime()();
   DateTimeColumn get createdAt => dateTime()();
   DateTimeColumn get updatedAt => dateTime()();
+
+  @override
+  List<Set<Column>> get indexes => [
+        {userId, loggedAt},
+      ];
 }
 
 class StepLogs extends Table {
@@ -71,6 +81,11 @@ class StepLogs extends Table {
   DateTimeColumn get date => dateTime()();
   DateTimeColumn get createdAt => dateTime()();
   DateTimeColumn get updatedAt => dateTime()();
+
+  @override
+  List<Set<Column>> get indexes => [
+        {userId, date},
+      ];
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -91,6 +106,11 @@ class SleepLogs extends Table {
   TextColumn get notes => text().nullable()();
   DateTimeColumn get createdAt => dateTime()();
   DateTimeColumn get updatedAt => dateTime()();
+
+  @override
+  List<Set<Column>> get indexes => [
+        {userId, sleepStart},
+      ];
 }
 
 class MoodLogs extends Table {
@@ -105,6 +125,11 @@ class MoodLogs extends Table {
   DateTimeColumn get loggedAt => dateTime()();
   DateTimeColumn get createdAt => dateTime()();
   DateTimeColumn get updatedAt => dateTime()();
+
+  @override
+  List<Set<Column>> get indexes => [
+        {userId, loggedAt},
+      ];
 }
 
 class Habits extends Table {
@@ -233,6 +258,11 @@ class BloodPressureLogs extends Table {
   DateTimeColumn get loggedAt => dateTime()();
   DateTimeColumn get createdAt => dateTime()();
   DateTimeColumn get updatedAt => dateTime()();
+
+  @override
+  List<Set<Column>> get indexes => [
+        {userId, loggedAt},
+      ];
 }
 
 class GlucoseLogs extends Table {
@@ -245,6 +275,11 @@ class GlucoseLogs extends Table {
   DateTimeColumn get loggedAt => dateTime()();
   DateTimeColumn get createdAt => dateTime()();
   DateTimeColumn get updatedAt => dateTime()();
+
+  @override
+  List<Set<Column>> get indexes => [
+        {userId, loggedAt},
+      ];
 }
 
 class Spo2Logs extends Table {

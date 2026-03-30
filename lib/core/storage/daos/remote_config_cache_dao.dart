@@ -10,6 +10,9 @@ class RemoteConfigCacheDao extends DatabaseAccessor<AppDatabase>
     with _$RemoteConfigCacheDaoMixin {
   RemoteConfigCacheDao(super.db);
 
+  Future<List<RemoteConfigCacheData>> getAll() =>
+      select(remoteConfigCache).get();
+
   Future<RemoteConfigCacheData?> getByKey(String key) =>
       (select(remoteConfigCache)..where((t) => t.key.equals(key)))
           .getSingleOrNull();
