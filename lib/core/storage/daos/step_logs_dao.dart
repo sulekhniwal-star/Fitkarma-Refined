@@ -5,7 +5,7 @@ import '../app_database.dart';
 part 'step_logs_dao.g.dart';
 
 
-@DriftDatabase(tables: [StepLogs])
+@DriftAccessor(tables: [StepLogs])
 class StepLogsDao extends DatabaseAccessor<AppDatabase>
     with _$StepLogsDaoMixin {
   StepLogsDao(super.db);

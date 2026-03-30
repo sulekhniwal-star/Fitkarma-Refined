@@ -5,7 +5,7 @@ import '../app_database.dart';
 part 'nutrition_goals_dao.g.dart';
 
 
-@DriftDatabase(tables: [NutritionGoals])
+@DriftAccessor(tables: [NutritionGoals])
 class NutritionGoalsDao extends DatabaseAccessor<AppDatabase>
     with _$NutritionGoalsDaoMixin {
   NutritionGoalsDao(super.db);

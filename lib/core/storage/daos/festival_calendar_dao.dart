@@ -5,7 +5,7 @@ import '../app_database.dart';
 part 'festival_calendar_dao.g.dart';
 
 
-@DriftDatabase(tables: [FestivalCalendar])
+@DriftAccessor(tables: [FestivalCalendar])
 class FestivalCalendarDao extends DatabaseAccessor<AppDatabase>
     with _$FestivalCalendarDaoMixin {
   FestivalCalendarDao(super.db);

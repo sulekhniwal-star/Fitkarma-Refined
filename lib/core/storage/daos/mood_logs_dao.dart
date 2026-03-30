@@ -5,7 +5,7 @@ import '../app_database.dart';
 part 'mood_logs_dao.g.dart';
 
 
-@DriftDatabase(tables: [MoodLogs])
+@DriftAccessor(tables: [MoodLogs])
 class MoodLogsDao extends DatabaseAccessor<AppDatabase>
     with _$MoodLogsDaoMixin {
   MoodLogsDao(super.db);

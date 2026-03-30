@@ -5,7 +5,7 @@ import '../app_database.dart';
 part 'spo2_logs_dao.g.dart';
 
 
-@DriftDatabase(tables: [Spo2Logs])
+@DriftAccessor(tables: [Spo2Logs])
 class Spo2LogsDao extends DatabaseAccessor<AppDatabase>
     with _$Spo2LogsDaoMixin {
   Spo2LogsDao(super.db);

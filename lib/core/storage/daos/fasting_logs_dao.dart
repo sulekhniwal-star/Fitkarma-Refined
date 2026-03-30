@@ -5,7 +5,7 @@ import '../app_database.dart';
 part 'fasting_logs_dao.g.dart';
 
 
-@DriftDatabase(tables: [FastingLogs])
+@DriftAccessor(tables: [FastingLogs])
 class FastingLogsDao extends DatabaseAccessor<AppDatabase>
     with _$FastingLogsDaoMixin {
   FastingLogsDao(super.db);

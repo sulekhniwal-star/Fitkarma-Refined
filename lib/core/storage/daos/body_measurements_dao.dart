@@ -5,7 +5,7 @@ import '../app_database.dart';
 part 'body_measurements_dao.g.dart';
 
 
-@DriftDatabase(tables: [BodyMeasurements])
+@DriftAccessor(tables: [BodyMeasurements])
 class BodyMeasurementsDao extends DatabaseAccessor<AppDatabase>
     with _$BodyMeasurementsDaoMixin {
   BodyMeasurementsDao(super.db);

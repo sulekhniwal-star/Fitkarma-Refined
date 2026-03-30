@@ -5,7 +5,7 @@ import '../app_database.dart';
 part 'habits_dao.g.dart';
 
 
-@DriftDatabase(tables: [Habits, HabitCompletions])
+@DriftAccessor(tables: [Habits, HabitCompletions])
 class HabitsDao extends DatabaseAccessor<AppDatabase>
     with _$HabitsDaoMixin {
   HabitsDao(super.db);

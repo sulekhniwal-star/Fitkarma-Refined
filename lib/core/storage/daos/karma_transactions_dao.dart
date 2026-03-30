@@ -5,7 +5,7 @@ import '../app_database.dart';
 part 'karma_transactions_dao.g.dart';
 
 
-@DriftDatabase(tables: [KarmaTransactions])
+@DriftAccessor(tables: [KarmaTransactions])
 class KarmaTransactionsDao extends DatabaseAccessor<AppDatabase>
     with _$KarmaTransactionsDaoMixin {
   KarmaTransactionsDao(super.db);

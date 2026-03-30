@@ -19712,6 +19712,60 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   );
   late final $SyncQueueTable syncQueue = $SyncQueueTable(this);
   late final $SyncDeadLetterTable syncDeadLetter = $SyncDeadLetterTable(this);
+  late final FoodLogsDao foodLogsDao = FoodLogsDao(this as AppDatabase);
+  late final FoodItemsDao foodItemsDao = FoodItemsDao(this as AppDatabase);
+  late final WorkoutLogsDao workoutLogsDao = WorkoutLogsDao(
+    this as AppDatabase,
+  );
+  late final StepLogsDao stepLogsDao = StepLogsDao(this as AppDatabase);
+  late final SleepLogsDao sleepLogsDao = SleepLogsDao(this as AppDatabase);
+  late final MoodLogsDao moodLogsDao = MoodLogsDao(this as AppDatabase);
+  late final HabitsDao habitsDao = HabitsDao(this as AppDatabase);
+  late final BodyMeasurementsDao bodyMeasurementsDao = BodyMeasurementsDao(
+    this as AppDatabase,
+  );
+  late final MedicationsDao medicationsDao = MedicationsDao(
+    this as AppDatabase,
+  );
+  late final FastingLogsDao fastingLogsDao = FastingLogsDao(
+    this as AppDatabase,
+  );
+  late final MealPlansDao mealPlansDao = MealPlansDao(this as AppDatabase);
+  late final RecipesDao recipesDao = RecipesDao(this as AppDatabase);
+  late final BloodPressureLogsDao bloodPressureLogsDao = BloodPressureLogsDao(
+    this as AppDatabase,
+  );
+  late final GlucoseLogsDao glucoseLogsDao = GlucoseLogsDao(
+    this as AppDatabase,
+  );
+  late final Spo2LogsDao spo2LogsDao = Spo2LogsDao(this as AppDatabase);
+  late final PeriodLogsDao periodLogsDao = PeriodLogsDao(this as AppDatabase);
+  late final JournalEntriesDao journalEntriesDao = JournalEntriesDao(
+    this as AppDatabase,
+  );
+  late final DoctorAppointmentsDao doctorAppointmentsDao =
+      DoctorAppointmentsDao(this as AppDatabase);
+  late final LabReportsDao labReportsDao = LabReportsDao(this as AppDatabase);
+  late final AbhaLinksDao abhaLinksDao = AbhaLinksDao(this as AppDatabase);
+  late final EmergencyCardDao emergencyCardDao = EmergencyCardDao(
+    this as AppDatabase,
+  );
+  late final FestivalCalendarDao festivalCalendarDao = FestivalCalendarDao(
+    this as AppDatabase,
+  );
+  late final RemoteConfigCacheDao remoteConfigCacheDao = RemoteConfigCacheDao(
+    this as AppDatabase,
+  );
+  late final KarmaTransactionsDao karmaTransactionsDao = KarmaTransactionsDao(
+    this as AppDatabase,
+  );
+  late final NutritionGoalsDao nutritionGoalsDao = NutritionGoalsDao(
+    this as AppDatabase,
+  );
+  late final PersonalRecordsDao personalRecordsDao = PersonalRecordsDao(
+    this as AppDatabase,
+  );
+  late final SyncQueueDao syncQueueDao = SyncQueueDao(this as AppDatabase);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();

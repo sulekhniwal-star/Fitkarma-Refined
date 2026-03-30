@@ -5,7 +5,7 @@ import '../app_database.dart';
 part 'period_logs_dao.g.dart';
 
 
-@DriftDatabase(tables: [PeriodLogs])
+@DriftAccessor(tables: [PeriodLogs])
 class PeriodLogsDao extends DatabaseAccessor<AppDatabase>
     with _$PeriodLogsDaoMixin {
   PeriodLogsDao(super.db);

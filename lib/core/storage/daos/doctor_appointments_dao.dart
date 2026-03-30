@@ -5,7 +5,7 @@ import '../app_database.dart';
 part 'doctor_appointments_dao.g.dart';
 
 
-@DriftDatabase(tables: [DoctorAppointments])
+@DriftAccessor(tables: [DoctorAppointments])
 class DoctorAppointmentsDao extends DatabaseAccessor<AppDatabase>
     with _$DoctorAppointmentsDaoMixin {
   DoctorAppointmentsDao(super.db);

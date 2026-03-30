@@ -5,7 +5,7 @@ import '../app_database.dart';
 part 'food_logs_dao.g.dart';
 
 
-@DriftDatabase(tables: [FoodLogs])
+@DriftAccessor(tables: [FoodLogs])
 class FoodLogsDao extends DatabaseAccessor<AppDatabase>
     with _$FoodLogsDaoMixin {
   FoodLogsDao(super.db);

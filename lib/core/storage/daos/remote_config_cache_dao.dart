@@ -5,7 +5,7 @@ import '../app_database.dart';
 part 'remote_config_cache_dao.g.dart';
 
 
-@DriftDatabase(tables: [RemoteConfigCache])
+@DriftAccessor(tables: [RemoteConfigCache])
 class RemoteConfigCacheDao extends DatabaseAccessor<AppDatabase>
     with _$RemoteConfigCacheDaoMixin {
   RemoteConfigCacheDao(super.db);

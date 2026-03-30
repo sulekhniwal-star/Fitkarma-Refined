@@ -5,7 +5,7 @@ import '../app_database.dart';
 part 'journal_entries_dao.g.dart';
 
 
-@DriftDatabase(tables: [JournalEntries])
+@DriftAccessor(tables: [JournalEntries])
 class JournalEntriesDao extends DatabaseAccessor<AppDatabase>
     with _$JournalEntriesDaoMixin {
   JournalEntriesDao(super.db);

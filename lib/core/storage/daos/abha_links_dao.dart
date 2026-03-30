@@ -5,7 +5,7 @@ import '../app_database.dart';
 part 'abha_links_dao.g.dart';
 
 
-@DriftDatabase(tables: [AbhaLinks])
+@DriftAccessor(tables: [AbhaLinks])
 class AbhaLinksDao extends DatabaseAccessor<AppDatabase>
     with _$AbhaLinksDaoMixin {
   AbhaLinksDao(super.db);

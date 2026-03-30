@@ -5,7 +5,7 @@ import '../app_database.dart';
 part 'emergency_card_dao.g.dart';
 
 
-@DriftDatabase(tables: [EmergencyCard])
+@DriftAccessor(tables: [EmergencyCard])
 class EmergencyCardDao extends DatabaseAccessor<AppDatabase>
     with _$EmergencyCardDaoMixin {
   EmergencyCardDao(super.db);

@@ -5,7 +5,7 @@ import '../app_database.dart';
 part 'blood_pressure_logs_dao.g.dart';
 
 
-@DriftDatabase(tables: [BloodPressureLogs])
+@DriftAccessor(tables: [BloodPressureLogs])
 class BloodPressureLogsDao extends DatabaseAccessor<AppDatabase>
     with _$BloodPressureLogsDaoMixin {
   BloodPressureLogsDao(super.db);

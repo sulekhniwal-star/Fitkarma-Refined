@@ -5,7 +5,7 @@ import '../app_database.dart';
 part 'lab_reports_dao.g.dart';
 
 
-@DriftDatabase(tables: [LabReports])
+@DriftAccessor(tables: [LabReports])
 class LabReportsDao extends DatabaseAccessor<AppDatabase>
     with _$LabReportsDaoMixin {
   LabReportsDao(super.db);

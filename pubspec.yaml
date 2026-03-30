@@ -27,6 +27,7 @@ dependencies:
 
   # HTTP client
   http: ^1.6.0
+  dio: ^5.4.3
 
   # Local storage
   shared_preferences: ^2.5.5
@@ -44,6 +45,9 @@ dependencies:
 
   # Cryptography (HKDF key derivation)
   cryptography: ^2.9.0
+
+  # Security — root/jailbreak detection
+  flutter_jailbreak_detection: ^1.10.0
 
 dev_dependencies:
   flutter_test:

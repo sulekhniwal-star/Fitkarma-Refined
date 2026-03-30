@@ -5,7 +5,7 @@ import '../app_database.dart';
 part 'sleep_logs_dao.g.dart';
 
 
-@DriftDatabase(tables: [SleepLogs])
+@DriftAccessor(tables: [SleepLogs])
 class SleepLogsDao extends DatabaseAccessor<AppDatabase>
     with _$SleepLogsDaoMixin {
   SleepLogsDao(super.db);
