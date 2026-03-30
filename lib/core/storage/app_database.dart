@@ -1,6 +1,6 @@
 import 'package:drift/drift.dart';
-import 'package:drift_flutter/drift_flutter.dart';
 
+import 'drift_database.dart';
 import 'tables.dart';
 import 'daos/food_logs_dao.dart';
 import 'daos/food_items_dao.dart';
@@ -101,7 +101,14 @@ part 'app_database.g.dart';
   ],
 )
 class AppDatabase extends _$AppDatabase {
-  AppDatabase() : super(_openConnection());
+  AppDatabase._(super.executor);
+
+  static Future<AppDatabase> create() async {
+    final executor = await _openConnection();
+    return AppDatabase._(executor);
+  }
+
+  AppDatabase.forTesting(super.executor);
 
   @override
   int get schemaVersion => 5;
@@ -192,12 +199,7 @@ class AppDatabase extends _$AppDatabase {
     ''');
   }
 
-  static QueryExecutor _openConnection() {
-    return driftDatabase(
-      name: 'fitkarma_db',
-      native: const DriftNativeOptions(
-        shareAcrossIsolates: true,
-      ),
-    );
+  static Future<QueryExecutor> _openConnection() {
+    return EncryptedDriftDatabase.open(databaseName: 'fitkarma.db');
   }
 }
