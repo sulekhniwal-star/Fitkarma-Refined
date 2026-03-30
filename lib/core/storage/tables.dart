@@ -461,6 +461,10 @@ class SyncQueue extends Table {
   TextColumn get payload => text()(); // JSON of the record data
   TextColumn get status => text().withDefault(const Constant('pending'))(); // pending, processing, completed, failed
   IntColumn get retryCount => integer().withDefault(const Constant(0))();
+  TextColumn get idempotencyKey => text()(); // sha256(userId + entity + localId + createdAt)
+  IntColumn get priority => integer().withDefault(const Constant(2))(); // 0=critical, 1=high, 2=normal, 3=low
+  TextColumn get versionVector => text().nullable()(); // JSON per-field {field: updatedAt} map
+  TextColumn get userId => text()();
   DateTimeColumn get createdAt => dateTime()();
   DateTimeColumn get lastAttemptAt => dateTime().nullable()();
 }
@@ -471,7 +475,10 @@ class SyncDeadLetter extends Table {
   IntColumn get recordId => integer()();
   TextColumn get operation => text()();
   TextColumn get payload => text()();
+  TextColumn get idempotencyKey => text()();
+  IntColumn get priority => integer().withDefault(const Constant(2))();
   TextColumn get errorMessage => text().nullable()();
   IntColumn get originalRetryCount => integer()();
+  TextColumn get userId => text()();
   DateTimeColumn get createdAt => dateTime()();
 }

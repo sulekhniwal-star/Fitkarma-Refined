@@ -18684,6 +18684,49 @@ class $SyncQueueTable extends SyncQueue
     requiredDuringInsert: false,
     defaultValue: const Constant(0),
   );
+  static const VerificationMeta _idempotencyKeyMeta = const VerificationMeta(
+    'idempotencyKey',
+  );
+  @override
+  late final GeneratedColumn<String> idempotencyKey = GeneratedColumn<String>(
+    'idempotency_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _priorityMeta = const VerificationMeta(
+    'priority',
+  );
+  @override
+  late final GeneratedColumn<int> priority = GeneratedColumn<int>(
+    'priority',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(2),
+  );
+  static const VerificationMeta _versionVectorMeta = const VerificationMeta(
+    'versionVector',
+  );
+  @override
+  late final GeneratedColumn<String> versionVector = GeneratedColumn<String>(
+    'version_vector',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
+    'user_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -18716,6 +18759,10 @@ class $SyncQueueTable extends SyncQueue
     payload,
     status,
     retryCount,
+    idempotencyKey,
+    priority,
+    versionVector,
+    userId,
     createdAt,
     lastAttemptAt,
   ];
@@ -18778,6 +18825,40 @@ class $SyncQueueTable extends SyncQueue
         retryCount.isAcceptableOrUnknown(data['retry_count']!, _retryCountMeta),
       );
     }
+    if (data.containsKey('idempotency_key')) {
+      context.handle(
+        _idempotencyKeyMeta,
+        idempotencyKey.isAcceptableOrUnknown(
+          data['idempotency_key']!,
+          _idempotencyKeyMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_idempotencyKeyMeta);
+    }
+    if (data.containsKey('priority')) {
+      context.handle(
+        _priorityMeta,
+        priority.isAcceptableOrUnknown(data['priority']!, _priorityMeta),
+      );
+    }
+    if (data.containsKey('version_vector')) {
+      context.handle(
+        _versionVectorMeta,
+        versionVector.isAcceptableOrUnknown(
+          data['version_vector']!,
+          _versionVectorMeta,
+        ),
+      );
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_userIdMeta);
+    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
@@ -18832,6 +18913,22 @@ class $SyncQueueTable extends SyncQueue
         DriftSqlType.int,
         data['${effectivePrefix}retry_count'],
       )!,
+      idempotencyKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}idempotency_key'],
+      )!,
+      priority: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}priority'],
+      )!,
+      versionVector: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}version_vector'],
+      ),
+      userId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_id'],
+      )!,
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -18857,6 +18954,10 @@ class SyncQueueData extends DataClass implements Insertable<SyncQueueData> {
   final String payload;
   final String status;
   final int retryCount;
+  final String idempotencyKey;
+  final int priority;
+  final String? versionVector;
+  final String userId;
   final DateTime createdAt;
   final DateTime? lastAttemptAt;
   const SyncQueueData({
@@ -18867,6 +18968,10 @@ class SyncQueueData extends DataClass implements Insertable<SyncQueueData> {
     required this.payload,
     required this.status,
     required this.retryCount,
+    required this.idempotencyKey,
+    required this.priority,
+    this.versionVector,
+    required this.userId,
     required this.createdAt,
     this.lastAttemptAt,
   });
@@ -18880,6 +18985,12 @@ class SyncQueueData extends DataClass implements Insertable<SyncQueueData> {
     map['payload'] = Variable<String>(payload);
     map['status'] = Variable<String>(status);
     map['retry_count'] = Variable<int>(retryCount);
+    map['idempotency_key'] = Variable<String>(idempotencyKey);
+    map['priority'] = Variable<int>(priority);
+    if (!nullToAbsent || versionVector != null) {
+      map['version_vector'] = Variable<String>(versionVector);
+    }
+    map['user_id'] = Variable<String>(userId);
     map['created_at'] = Variable<DateTime>(createdAt);
     if (!nullToAbsent || lastAttemptAt != null) {
       map['last_attempt_at'] = Variable<DateTime>(lastAttemptAt);
@@ -18896,6 +19007,12 @@ class SyncQueueData extends DataClass implements Insertable<SyncQueueData> {
       payload: Value(payload),
       status: Value(status),
       retryCount: Value(retryCount),
+      idempotencyKey: Value(idempotencyKey),
+      priority: Value(priority),
+      versionVector: versionVector == null && nullToAbsent
+          ? const Value.absent()
+          : Value(versionVector),
+      userId: Value(userId),
       createdAt: Value(createdAt),
       lastAttemptAt: lastAttemptAt == null && nullToAbsent
           ? const Value.absent()
@@ -18916,6 +19033,10 @@ class SyncQueueData extends DataClass implements Insertable<SyncQueueData> {
       payload: serializer.fromJson<String>(json['payload']),
       status: serializer.fromJson<String>(json['status']),
       retryCount: serializer.fromJson<int>(json['retryCount']),
+      idempotencyKey: serializer.fromJson<String>(json['idempotencyKey']),
+      priority: serializer.fromJson<int>(json['priority']),
+      versionVector: serializer.fromJson<String?>(json['versionVector']),
+      userId: serializer.fromJson<String>(json['userId']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       lastAttemptAt: serializer.fromJson<DateTime?>(json['lastAttemptAt']),
     );
@@ -18931,6 +19052,10 @@ class SyncQueueData extends DataClass implements Insertable<SyncQueueData> {
       'payload': serializer.toJson<String>(payload),
       'status': serializer.toJson<String>(status),
       'retryCount': serializer.toJson<int>(retryCount),
+      'idempotencyKey': serializer.toJson<String>(idempotencyKey),
+      'priority': serializer.toJson<int>(priority),
+      'versionVector': serializer.toJson<String?>(versionVector),
+      'userId': serializer.toJson<String>(userId),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'lastAttemptAt': serializer.toJson<DateTime?>(lastAttemptAt),
     };
@@ -18944,6 +19069,10 @@ class SyncQueueData extends DataClass implements Insertable<SyncQueueData> {
     String? payload,
     String? status,
     int? retryCount,
+    String? idempotencyKey,
+    int? priority,
+    Value<String?> versionVector = const Value.absent(),
+    String? userId,
     DateTime? createdAt,
     Value<DateTime?> lastAttemptAt = const Value.absent(),
   }) => SyncQueueData(
@@ -18954,6 +19083,12 @@ class SyncQueueData extends DataClass implements Insertable<SyncQueueData> {
     payload: payload ?? this.payload,
     status: status ?? this.status,
     retryCount: retryCount ?? this.retryCount,
+    idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+    priority: priority ?? this.priority,
+    versionVector: versionVector.present
+        ? versionVector.value
+        : this.versionVector,
+    userId: userId ?? this.userId,
     createdAt: createdAt ?? this.createdAt,
     lastAttemptAt: lastAttemptAt.present
         ? lastAttemptAt.value
@@ -18970,6 +19105,14 @@ class SyncQueueData extends DataClass implements Insertable<SyncQueueData> {
       retryCount: data.retryCount.present
           ? data.retryCount.value
           : this.retryCount,
+      idempotencyKey: data.idempotencyKey.present
+          ? data.idempotencyKey.value
+          : this.idempotencyKey,
+      priority: data.priority.present ? data.priority.value : this.priority,
+      versionVector: data.versionVector.present
+          ? data.versionVector.value
+          : this.versionVector,
+      userId: data.userId.present ? data.userId.value : this.userId,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       lastAttemptAt: data.lastAttemptAt.present
           ? data.lastAttemptAt.value
@@ -18987,6 +19130,10 @@ class SyncQueueData extends DataClass implements Insertable<SyncQueueData> {
           ..write('payload: $payload, ')
           ..write('status: $status, ')
           ..write('retryCount: $retryCount, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('priority: $priority, ')
+          ..write('versionVector: $versionVector, ')
+          ..write('userId: $userId, ')
           ..write('createdAt: $createdAt, ')
           ..write('lastAttemptAt: $lastAttemptAt')
           ..write(')'))
@@ -19002,6 +19149,10 @@ class SyncQueueData extends DataClass implements Insertable<SyncQueueData> {
     payload,
     status,
     retryCount,
+    idempotencyKey,
+    priority,
+    versionVector,
+    userId,
     createdAt,
     lastAttemptAt,
   );
@@ -19016,6 +19167,10 @@ class SyncQueueData extends DataClass implements Insertable<SyncQueueData> {
           other.payload == this.payload &&
           other.status == this.status &&
           other.retryCount == this.retryCount &&
+          other.idempotencyKey == this.idempotencyKey &&
+          other.priority == this.priority &&
+          other.versionVector == this.versionVector &&
+          other.userId == this.userId &&
           other.createdAt == this.createdAt &&
           other.lastAttemptAt == this.lastAttemptAt);
 }
@@ -19028,6 +19183,10 @@ class SyncQueueCompanion extends UpdateCompanion<SyncQueueData> {
   final Value<String> payload;
   final Value<String> status;
   final Value<int> retryCount;
+  final Value<String> idempotencyKey;
+  final Value<int> priority;
+  final Value<String?> versionVector;
+  final Value<String> userId;
   final Value<DateTime> createdAt;
   final Value<DateTime?> lastAttemptAt;
   const SyncQueueCompanion({
@@ -19038,6 +19197,10 @@ class SyncQueueCompanion extends UpdateCompanion<SyncQueueData> {
     this.payload = const Value.absent(),
     this.status = const Value.absent(),
     this.retryCount = const Value.absent(),
+    this.idempotencyKey = const Value.absent(),
+    this.priority = const Value.absent(),
+    this.versionVector = const Value.absent(),
+    this.userId = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.lastAttemptAt = const Value.absent(),
   });
@@ -19049,12 +19212,18 @@ class SyncQueueCompanion extends UpdateCompanion<SyncQueueData> {
     required String payload,
     this.status = const Value.absent(),
     this.retryCount = const Value.absent(),
+    required String idempotencyKey,
+    this.priority = const Value.absent(),
+    this.versionVector = const Value.absent(),
+    required String userId,
     required DateTime createdAt,
     this.lastAttemptAt = const Value.absent(),
   }) : syncTable = Value(syncTable),
        recordId = Value(recordId),
        operation = Value(operation),
        payload = Value(payload),
+       idempotencyKey = Value(idempotencyKey),
+       userId = Value(userId),
        createdAt = Value(createdAt);
   static Insertable<SyncQueueData> custom({
     Expression<int>? id,
@@ -19064,6 +19233,10 @@ class SyncQueueCompanion extends UpdateCompanion<SyncQueueData> {
     Expression<String>? payload,
     Expression<String>? status,
     Expression<int>? retryCount,
+    Expression<String>? idempotencyKey,
+    Expression<int>? priority,
+    Expression<String>? versionVector,
+    Expression<String>? userId,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? lastAttemptAt,
   }) {
@@ -19075,6 +19248,10 @@ class SyncQueueCompanion extends UpdateCompanion<SyncQueueData> {
       if (payload != null) 'payload': payload,
       if (status != null) 'status': status,
       if (retryCount != null) 'retry_count': retryCount,
+      if (idempotencyKey != null) 'idempotency_key': idempotencyKey,
+      if (priority != null) 'priority': priority,
+      if (versionVector != null) 'version_vector': versionVector,
+      if (userId != null) 'user_id': userId,
       if (createdAt != null) 'created_at': createdAt,
       if (lastAttemptAt != null) 'last_attempt_at': lastAttemptAt,
     });
@@ -19088,6 +19265,10 @@ class SyncQueueCompanion extends UpdateCompanion<SyncQueueData> {
     Value<String>? payload,
     Value<String>? status,
     Value<int>? retryCount,
+    Value<String>? idempotencyKey,
+    Value<int>? priority,
+    Value<String?>? versionVector,
+    Value<String>? userId,
     Value<DateTime>? createdAt,
     Value<DateTime?>? lastAttemptAt,
   }) {
@@ -19099,6 +19280,10 @@ class SyncQueueCompanion extends UpdateCompanion<SyncQueueData> {
       payload: payload ?? this.payload,
       status: status ?? this.status,
       retryCount: retryCount ?? this.retryCount,
+      idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+      priority: priority ?? this.priority,
+      versionVector: versionVector ?? this.versionVector,
+      userId: userId ?? this.userId,
       createdAt: createdAt ?? this.createdAt,
       lastAttemptAt: lastAttemptAt ?? this.lastAttemptAt,
     );
@@ -19128,6 +19313,18 @@ class SyncQueueCompanion extends UpdateCompanion<SyncQueueData> {
     if (retryCount.present) {
       map['retry_count'] = Variable<int>(retryCount.value);
     }
+    if (idempotencyKey.present) {
+      map['idempotency_key'] = Variable<String>(idempotencyKey.value);
+    }
+    if (priority.present) {
+      map['priority'] = Variable<int>(priority.value);
+    }
+    if (versionVector.present) {
+      map['version_vector'] = Variable<String>(versionVector.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<String>(userId.value);
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -19147,6 +19344,10 @@ class SyncQueueCompanion extends UpdateCompanion<SyncQueueData> {
           ..write('payload: $payload, ')
           ..write('status: $status, ')
           ..write('retryCount: $retryCount, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('priority: $priority, ')
+          ..write('versionVector: $versionVector, ')
+          ..write('userId: $userId, ')
           ..write('createdAt: $createdAt, ')
           ..write('lastAttemptAt: $lastAttemptAt')
           ..write(')'))
@@ -19217,6 +19418,29 @@ class $SyncDeadLetterTable extends SyncDeadLetter
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _idempotencyKeyMeta = const VerificationMeta(
+    'idempotencyKey',
+  );
+  @override
+  late final GeneratedColumn<String> idempotencyKey = GeneratedColumn<String>(
+    'idempotency_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _priorityMeta = const VerificationMeta(
+    'priority',
+  );
+  @override
+  late final GeneratedColumn<int> priority = GeneratedColumn<int>(
+    'priority',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(2),
+  );
   static const VerificationMeta _errorMessageMeta = const VerificationMeta(
     'errorMessage',
   );
@@ -19238,6 +19462,15 @@ class $SyncDeadLetterTable extends SyncDeadLetter
     type: DriftSqlType.int,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
+    'user_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -19256,8 +19489,11 @@ class $SyncDeadLetterTable extends SyncDeadLetter
     recordId,
     operation,
     payload,
+    idempotencyKey,
+    priority,
     errorMessage,
     originalRetryCount,
+    userId,
     createdAt,
   ];
   @override
@@ -19307,6 +19543,23 @@ class $SyncDeadLetterTable extends SyncDeadLetter
     } else if (isInserting) {
       context.missing(_payloadMeta);
     }
+    if (data.containsKey('idempotency_key')) {
+      context.handle(
+        _idempotencyKeyMeta,
+        idempotencyKey.isAcceptableOrUnknown(
+          data['idempotency_key']!,
+          _idempotencyKeyMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_idempotencyKeyMeta);
+    }
+    if (data.containsKey('priority')) {
+      context.handle(
+        _priorityMeta,
+        priority.isAcceptableOrUnknown(data['priority']!, _priorityMeta),
+      );
+    }
     if (data.containsKey('error_message')) {
       context.handle(
         _errorMessageMeta,
@@ -19326,6 +19579,14 @@ class $SyncDeadLetterTable extends SyncDeadLetter
       );
     } else if (isInserting) {
       context.missing(_originalRetryCountMeta);
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_userIdMeta);
     }
     if (data.containsKey('created_at')) {
       context.handle(
@@ -19364,6 +19625,14 @@ class $SyncDeadLetterTable extends SyncDeadLetter
         DriftSqlType.string,
         data['${effectivePrefix}payload'],
       )!,
+      idempotencyKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}idempotency_key'],
+      )!,
+      priority: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}priority'],
+      )!,
       errorMessage: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}error_message'],
@@ -19371,6 +19640,10 @@ class $SyncDeadLetterTable extends SyncDeadLetter
       originalRetryCount: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}original_retry_count'],
+      )!,
+      userId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_id'],
       )!,
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
@@ -19392,8 +19665,11 @@ class SyncDeadLetterData extends DataClass
   final int recordId;
   final String operation;
   final String payload;
+  final String idempotencyKey;
+  final int priority;
   final String? errorMessage;
   final int originalRetryCount;
+  final String userId;
   final DateTime createdAt;
   const SyncDeadLetterData({
     required this.id,
@@ -19401,8 +19677,11 @@ class SyncDeadLetterData extends DataClass
     required this.recordId,
     required this.operation,
     required this.payload,
+    required this.idempotencyKey,
+    required this.priority,
     this.errorMessage,
     required this.originalRetryCount,
+    required this.userId,
     required this.createdAt,
   });
   @override
@@ -19413,10 +19692,13 @@ class SyncDeadLetterData extends DataClass
     map['record_id'] = Variable<int>(recordId);
     map['operation'] = Variable<String>(operation);
     map['payload'] = Variable<String>(payload);
+    map['idempotency_key'] = Variable<String>(idempotencyKey);
+    map['priority'] = Variable<int>(priority);
     if (!nullToAbsent || errorMessage != null) {
       map['error_message'] = Variable<String>(errorMessage);
     }
     map['original_retry_count'] = Variable<int>(originalRetryCount);
+    map['user_id'] = Variable<String>(userId);
     map['created_at'] = Variable<DateTime>(createdAt);
     return map;
   }
@@ -19428,10 +19710,13 @@ class SyncDeadLetterData extends DataClass
       recordId: Value(recordId),
       operation: Value(operation),
       payload: Value(payload),
+      idempotencyKey: Value(idempotencyKey),
+      priority: Value(priority),
       errorMessage: errorMessage == null && nullToAbsent
           ? const Value.absent()
           : Value(errorMessage),
       originalRetryCount: Value(originalRetryCount),
+      userId: Value(userId),
       createdAt: Value(createdAt),
     );
   }
@@ -19447,8 +19732,11 @@ class SyncDeadLetterData extends DataClass
       recordId: serializer.fromJson<int>(json['recordId']),
       operation: serializer.fromJson<String>(json['operation']),
       payload: serializer.fromJson<String>(json['payload']),
+      idempotencyKey: serializer.fromJson<String>(json['idempotencyKey']),
+      priority: serializer.fromJson<int>(json['priority']),
       errorMessage: serializer.fromJson<String?>(json['errorMessage']),
       originalRetryCount: serializer.fromJson<int>(json['originalRetryCount']),
+      userId: serializer.fromJson<String>(json['userId']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
     );
   }
@@ -19461,8 +19749,11 @@ class SyncDeadLetterData extends DataClass
       'recordId': serializer.toJson<int>(recordId),
       'operation': serializer.toJson<String>(operation),
       'payload': serializer.toJson<String>(payload),
+      'idempotencyKey': serializer.toJson<String>(idempotencyKey),
+      'priority': serializer.toJson<int>(priority),
       'errorMessage': serializer.toJson<String?>(errorMessage),
       'originalRetryCount': serializer.toJson<int>(originalRetryCount),
+      'userId': serializer.toJson<String>(userId),
       'createdAt': serializer.toJson<DateTime>(createdAt),
     };
   }
@@ -19473,8 +19764,11 @@ class SyncDeadLetterData extends DataClass
     int? recordId,
     String? operation,
     String? payload,
+    String? idempotencyKey,
+    int? priority,
     Value<String?> errorMessage = const Value.absent(),
     int? originalRetryCount,
+    String? userId,
     DateTime? createdAt,
   }) => SyncDeadLetterData(
     id: id ?? this.id,
@@ -19482,8 +19776,11 @@ class SyncDeadLetterData extends DataClass
     recordId: recordId ?? this.recordId,
     operation: operation ?? this.operation,
     payload: payload ?? this.payload,
+    idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+    priority: priority ?? this.priority,
     errorMessage: errorMessage.present ? errorMessage.value : this.errorMessage,
     originalRetryCount: originalRetryCount ?? this.originalRetryCount,
+    userId: userId ?? this.userId,
     createdAt: createdAt ?? this.createdAt,
   );
   SyncDeadLetterData copyWithCompanion(SyncDeadLetterCompanion data) {
@@ -19493,12 +19790,17 @@ class SyncDeadLetterData extends DataClass
       recordId: data.recordId.present ? data.recordId.value : this.recordId,
       operation: data.operation.present ? data.operation.value : this.operation,
       payload: data.payload.present ? data.payload.value : this.payload,
+      idempotencyKey: data.idempotencyKey.present
+          ? data.idempotencyKey.value
+          : this.idempotencyKey,
+      priority: data.priority.present ? data.priority.value : this.priority,
       errorMessage: data.errorMessage.present
           ? data.errorMessage.value
           : this.errorMessage,
       originalRetryCount: data.originalRetryCount.present
           ? data.originalRetryCount.value
           : this.originalRetryCount,
+      userId: data.userId.present ? data.userId.value : this.userId,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
     );
   }
@@ -19511,8 +19813,11 @@ class SyncDeadLetterData extends DataClass
           ..write('recordId: $recordId, ')
           ..write('operation: $operation, ')
           ..write('payload: $payload, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('priority: $priority, ')
           ..write('errorMessage: $errorMessage, ')
           ..write('originalRetryCount: $originalRetryCount, ')
+          ..write('userId: $userId, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
@@ -19525,8 +19830,11 @@ class SyncDeadLetterData extends DataClass
     recordId,
     operation,
     payload,
+    idempotencyKey,
+    priority,
     errorMessage,
     originalRetryCount,
+    userId,
     createdAt,
   );
   @override
@@ -19538,8 +19846,11 @@ class SyncDeadLetterData extends DataClass
           other.recordId == this.recordId &&
           other.operation == this.operation &&
           other.payload == this.payload &&
+          other.idempotencyKey == this.idempotencyKey &&
+          other.priority == this.priority &&
           other.errorMessage == this.errorMessage &&
           other.originalRetryCount == this.originalRetryCount &&
+          other.userId == this.userId &&
           other.createdAt == this.createdAt);
 }
 
@@ -19549,8 +19860,11 @@ class SyncDeadLetterCompanion extends UpdateCompanion<SyncDeadLetterData> {
   final Value<int> recordId;
   final Value<String> operation;
   final Value<String> payload;
+  final Value<String> idempotencyKey;
+  final Value<int> priority;
   final Value<String?> errorMessage;
   final Value<int> originalRetryCount;
+  final Value<String> userId;
   final Value<DateTime> createdAt;
   const SyncDeadLetterCompanion({
     this.id = const Value.absent(),
@@ -19558,8 +19872,11 @@ class SyncDeadLetterCompanion extends UpdateCompanion<SyncDeadLetterData> {
     this.recordId = const Value.absent(),
     this.operation = const Value.absent(),
     this.payload = const Value.absent(),
+    this.idempotencyKey = const Value.absent(),
+    this.priority = const Value.absent(),
     this.errorMessage = const Value.absent(),
     this.originalRetryCount = const Value.absent(),
+    this.userId = const Value.absent(),
     this.createdAt = const Value.absent(),
   });
   SyncDeadLetterCompanion.insert({
@@ -19568,14 +19885,19 @@ class SyncDeadLetterCompanion extends UpdateCompanion<SyncDeadLetterData> {
     required int recordId,
     required String operation,
     required String payload,
+    required String idempotencyKey,
+    this.priority = const Value.absent(),
     this.errorMessage = const Value.absent(),
     required int originalRetryCount,
+    required String userId,
     required DateTime createdAt,
   }) : syncTable = Value(syncTable),
        recordId = Value(recordId),
        operation = Value(operation),
        payload = Value(payload),
+       idempotencyKey = Value(idempotencyKey),
        originalRetryCount = Value(originalRetryCount),
+       userId = Value(userId),
        createdAt = Value(createdAt);
   static Insertable<SyncDeadLetterData> custom({
     Expression<int>? id,
@@ -19583,8 +19905,11 @@ class SyncDeadLetterCompanion extends UpdateCompanion<SyncDeadLetterData> {
     Expression<int>? recordId,
     Expression<String>? operation,
     Expression<String>? payload,
+    Expression<String>? idempotencyKey,
+    Expression<int>? priority,
     Expression<String>? errorMessage,
     Expression<int>? originalRetryCount,
+    Expression<String>? userId,
     Expression<DateTime>? createdAt,
   }) {
     return RawValuesInsertable({
@@ -19593,9 +19918,12 @@ class SyncDeadLetterCompanion extends UpdateCompanion<SyncDeadLetterData> {
       if (recordId != null) 'record_id': recordId,
       if (operation != null) 'operation': operation,
       if (payload != null) 'payload': payload,
+      if (idempotencyKey != null) 'idempotency_key': idempotencyKey,
+      if (priority != null) 'priority': priority,
       if (errorMessage != null) 'error_message': errorMessage,
       if (originalRetryCount != null)
         'original_retry_count': originalRetryCount,
+      if (userId != null) 'user_id': userId,
       if (createdAt != null) 'created_at': createdAt,
     });
   }
@@ -19606,8 +19934,11 @@ class SyncDeadLetterCompanion extends UpdateCompanion<SyncDeadLetterData> {
     Value<int>? recordId,
     Value<String>? operation,
     Value<String>? payload,
+    Value<String>? idempotencyKey,
+    Value<int>? priority,
     Value<String?>? errorMessage,
     Value<int>? originalRetryCount,
+    Value<String>? userId,
     Value<DateTime>? createdAt,
   }) {
     return SyncDeadLetterCompanion(
@@ -19616,8 +19947,11 @@ class SyncDeadLetterCompanion extends UpdateCompanion<SyncDeadLetterData> {
       recordId: recordId ?? this.recordId,
       operation: operation ?? this.operation,
       payload: payload ?? this.payload,
+      idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+      priority: priority ?? this.priority,
       errorMessage: errorMessage ?? this.errorMessage,
       originalRetryCount: originalRetryCount ?? this.originalRetryCount,
+      userId: userId ?? this.userId,
       createdAt: createdAt ?? this.createdAt,
     );
   }
@@ -19640,11 +19974,20 @@ class SyncDeadLetterCompanion extends UpdateCompanion<SyncDeadLetterData> {
     if (payload.present) {
       map['payload'] = Variable<String>(payload.value);
     }
+    if (idempotencyKey.present) {
+      map['idempotency_key'] = Variable<String>(idempotencyKey.value);
+    }
+    if (priority.present) {
+      map['priority'] = Variable<int>(priority.value);
+    }
     if (errorMessage.present) {
       map['error_message'] = Variable<String>(errorMessage.value);
     }
     if (originalRetryCount.present) {
       map['original_retry_count'] = Variable<int>(originalRetryCount.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<String>(userId.value);
     }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
@@ -19660,8 +20003,11 @@ class SyncDeadLetterCompanion extends UpdateCompanion<SyncDeadLetterData> {
           ..write('recordId: $recordId, ')
           ..write('operation: $operation, ')
           ..write('payload: $payload, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('priority: $priority, ')
           ..write('errorMessage: $errorMessage, ')
           ..write('originalRetryCount: $originalRetryCount, ')
+          ..write('userId: $userId, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
@@ -28624,6 +28970,10 @@ typedef $$SyncQueueTableCreateCompanionBuilder =
       required String payload,
       Value<String> status,
       Value<int> retryCount,
+      required String idempotencyKey,
+      Value<int> priority,
+      Value<String?> versionVector,
+      required String userId,
       required DateTime createdAt,
       Value<DateTime?> lastAttemptAt,
     });
@@ -28636,6 +28986,10 @@ typedef $$SyncQueueTableUpdateCompanionBuilder =
       Value<String> payload,
       Value<String> status,
       Value<int> retryCount,
+      Value<String> idempotencyKey,
+      Value<int> priority,
+      Value<String?> versionVector,
+      Value<String> userId,
       Value<DateTime> createdAt,
       Value<DateTime?> lastAttemptAt,
     });
@@ -28681,6 +29035,26 @@ class $$SyncQueueTableFilterComposer
 
   ColumnFilters<int> get retryCount => $composableBuilder(
     column: $table.retryCount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get priority => $composableBuilder(
+    column: $table.priority,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get versionVector => $composableBuilder(
+    column: $table.versionVector,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get userId => $composableBuilder(
+    column: $table.userId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -28739,6 +29113,26 @@ class $$SyncQueueTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get priority => $composableBuilder(
+    column: $table.priority,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get versionVector => $composableBuilder(
+    column: $table.versionVector,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -28781,6 +29175,22 @@ class $$SyncQueueTableAnnotationComposer
     column: $table.retryCount,
     builder: (column) => column,
   );
+
+  GeneratedColumn<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get priority =>
+      $composableBuilder(column: $table.priority, builder: (column) => column);
+
+  GeneratedColumn<String> get versionVector => $composableBuilder(
+    column: $table.versionVector,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get userId =>
+      $composableBuilder(column: $table.userId, builder: (column) => column);
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
@@ -28829,6 +29239,10 @@ class $$SyncQueueTableTableManager
                 Value<String> payload = const Value.absent(),
                 Value<String> status = const Value.absent(),
                 Value<int> retryCount = const Value.absent(),
+                Value<String> idempotencyKey = const Value.absent(),
+                Value<int> priority = const Value.absent(),
+                Value<String?> versionVector = const Value.absent(),
+                Value<String> userId = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime?> lastAttemptAt = const Value.absent(),
               }) => SyncQueueCompanion(
@@ -28839,6 +29253,10 @@ class $$SyncQueueTableTableManager
                 payload: payload,
                 status: status,
                 retryCount: retryCount,
+                idempotencyKey: idempotencyKey,
+                priority: priority,
+                versionVector: versionVector,
+                userId: userId,
                 createdAt: createdAt,
                 lastAttemptAt: lastAttemptAt,
               ),
@@ -28851,6 +29269,10 @@ class $$SyncQueueTableTableManager
                 required String payload,
                 Value<String> status = const Value.absent(),
                 Value<int> retryCount = const Value.absent(),
+                required String idempotencyKey,
+                Value<int> priority = const Value.absent(),
+                Value<String?> versionVector = const Value.absent(),
+                required String userId,
                 required DateTime createdAt,
                 Value<DateTime?> lastAttemptAt = const Value.absent(),
               }) => SyncQueueCompanion.insert(
@@ -28861,6 +29283,10 @@ class $$SyncQueueTableTableManager
                 payload: payload,
                 status: status,
                 retryCount: retryCount,
+                idempotencyKey: idempotencyKey,
+                priority: priority,
+                versionVector: versionVector,
+                userId: userId,
                 createdAt: createdAt,
                 lastAttemptAt: lastAttemptAt,
               ),
@@ -28896,8 +29322,11 @@ typedef $$SyncDeadLetterTableCreateCompanionBuilder =
       required int recordId,
       required String operation,
       required String payload,
+      required String idempotencyKey,
+      Value<int> priority,
       Value<String?> errorMessage,
       required int originalRetryCount,
+      required String userId,
       required DateTime createdAt,
     });
 typedef $$SyncDeadLetterTableUpdateCompanionBuilder =
@@ -28907,8 +29336,11 @@ typedef $$SyncDeadLetterTableUpdateCompanionBuilder =
       Value<int> recordId,
       Value<String> operation,
       Value<String> payload,
+      Value<String> idempotencyKey,
+      Value<int> priority,
       Value<String?> errorMessage,
       Value<int> originalRetryCount,
+      Value<String> userId,
       Value<DateTime> createdAt,
     });
 
@@ -28946,6 +29378,16 @@ class $$SyncDeadLetterTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get priority => $composableBuilder(
+    column: $table.priority,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<String> get errorMessage => $composableBuilder(
     column: $table.errorMessage,
     builder: (column) => ColumnFilters(column),
@@ -28953,6 +29395,11 @@ class $$SyncDeadLetterTableFilterComposer
 
   ColumnFilters<int> get originalRetryCount => $composableBuilder(
     column: $table.originalRetryCount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get userId => $composableBuilder(
+    column: $table.userId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -28996,6 +29443,16 @@ class $$SyncDeadLetterTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get priority => $composableBuilder(
+    column: $table.priority,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get errorMessage => $composableBuilder(
     column: $table.errorMessage,
     builder: (column) => ColumnOrderings(column),
@@ -29003,6 +29460,11 @@ class $$SyncDeadLetterTableOrderingComposer
 
   ColumnOrderings<int> get originalRetryCount => $composableBuilder(
     column: $table.originalRetryCount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get userId => $composableBuilder(
+    column: $table.userId,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -29036,6 +29498,14 @@ class $$SyncDeadLetterTableAnnotationComposer
   GeneratedColumn<String> get payload =>
       $composableBuilder(column: $table.payload, builder: (column) => column);
 
+  GeneratedColumn<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get priority =>
+      $composableBuilder(column: $table.priority, builder: (column) => column);
+
   GeneratedColumn<String> get errorMessage => $composableBuilder(
     column: $table.errorMessage,
     builder: (column) => column,
@@ -29045,6 +29515,9 @@ class $$SyncDeadLetterTableAnnotationComposer
     column: $table.originalRetryCount,
     builder: (column) => column,
   );
+
+  GeneratedColumn<String> get userId =>
+      $composableBuilder(column: $table.userId, builder: (column) => column);
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
@@ -29092,8 +29565,11 @@ class $$SyncDeadLetterTableTableManager
                 Value<int> recordId = const Value.absent(),
                 Value<String> operation = const Value.absent(),
                 Value<String> payload = const Value.absent(),
+                Value<String> idempotencyKey = const Value.absent(),
+                Value<int> priority = const Value.absent(),
                 Value<String?> errorMessage = const Value.absent(),
                 Value<int> originalRetryCount = const Value.absent(),
+                Value<String> userId = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
               }) => SyncDeadLetterCompanion(
                 id: id,
@@ -29101,8 +29577,11 @@ class $$SyncDeadLetterTableTableManager
                 recordId: recordId,
                 operation: operation,
                 payload: payload,
+                idempotencyKey: idempotencyKey,
+                priority: priority,
                 errorMessage: errorMessage,
                 originalRetryCount: originalRetryCount,
+                userId: userId,
                 createdAt: createdAt,
               ),
           createCompanionCallback:
@@ -29112,8 +29591,11 @@ class $$SyncDeadLetterTableTableManager
                 required int recordId,
                 required String operation,
                 required String payload,
+                required String idempotencyKey,
+                Value<int> priority = const Value.absent(),
                 Value<String?> errorMessage = const Value.absent(),
                 required int originalRetryCount,
+                required String userId,
                 required DateTime createdAt,
               }) => SyncDeadLetterCompanion.insert(
                 id: id,
@@ -29121,8 +29603,11 @@ class $$SyncDeadLetterTableTableManager
                 recordId: recordId,
                 operation: operation,
                 payload: payload,
+                idempotencyKey: idempotencyKey,
+                priority: priority,
                 errorMessage: errorMessage,
                 originalRetryCount: originalRetryCount,
+                userId: userId,
                 createdAt: createdAt,
               ),
           withReferenceMapper: (p0) => p0
