@@ -1,0 +1,268 @@
+import 'dart:async';
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:fitkarma/features/home/home_screen.dart';
+import 'package:fitkarma/features/food/food_screen.dart';
+import 'package:fitkarma/features/workout/workout_screen.dart';
+import 'package:fitkarma/features/steps/steps_screen.dart';
+import 'package:fitkarma/features/profile/profile_screen.dart';
+import 'package:fitkarma/features/wearables/wearables_screen.dart'
+    deferred as wearables;
+import 'package:fitkarma/features/social/social_feed_screen.dart'
+    deferred as social;
+import 'package:fitkarma/features/gps/gps_workout_screen.dart'
+    deferred as gps_workout;
+import 'package:fitkarma/features/mental/mental_health_screen.dart'
+    deferred as mental_health;
+import 'package:fitkarma/features/meditation/meditation_screen.dart'
+    deferred as meditation;
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// DEFERRED LOADING HELPER
+// ═══════════════════════════════════════════════════════════════════════════════
+
+/// Loads a deferred library then builds [child].
+class DeferredWidget extends StatefulWidget {
+  final Future<void> Function() loader;
+  final Widget Function() builder;
+
+  const DeferredWidget({
+    super.key,
+    required this.loader,
+    required this.builder,
+  });
+
+  @override
+  State<DeferredWidget> createState() => _DeferredWidgetState();
+}
+
+class _DeferredWidgetState extends State<DeferredWidget> {
+  Widget? _loaded;
+  Object? _error;
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    try {
+      await widget.loader();
+      if (mounted) {
+        setState(() => _loaded = widget.builder());
+      }
+    } catch (e) {
+      if (mounted) setState(() => _error = e);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_error != null) {
+      return Center(child: Text('Failed to load module: $_error'));
+    }
+    return _loaded ?? const Center(child: CircularProgressIndicator());
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// APP SHELL — 5-tab BottomNav
+// ═══════════════════════════════════════════════════════════════════════════════
+
+class AppShell extends StatelessWidget {
+  final StatefulNavigationShell navigationShell;
+
+  const AppShell({super.key, required this.navigationShell});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: navigationShell,
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: navigationShell.currentIndex,
+        onDestinationSelected: (i) => navigationShell.goBranch(
+          i,
+          initialLocation: i == navigationShell.currentIndex,
+        ),
+        destinations: const [
+          NavigationDestination(
+            icon: Icon(Icons.home_outlined),
+            selectedIcon: Icon(Icons.home),
+            label: 'Home',
+            tooltip: 'होम',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.restaurant_outlined),
+            selectedIcon: Icon(Icons.restaurant),
+            label: 'Food',
+            tooltip: 'खाना',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.fitness_center_outlined),
+            selectedIcon: Icon(Icons.fitness_center),
+            label: 'Workout',
+            tooltip: 'कसरत',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.directions_walk_outlined),
+            selectedIcon: Icon(Icons.directions_walk),
+            label: 'Steps',
+            tooltip: 'कदम',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.person_outline),
+            selectedIcon: Icon(Icons.person),
+            label: 'Me',
+            tooltip: 'मैं',
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// ROUTER
+// ═══════════════════════════════════════════════════════════════════════════════
+
+final _rootNavigatorKey = GlobalKey<NavigatorState>();
+
+final GoRouter appRouter = GoRouter(
+  navigatorKey: _rootNavigatorKey,
+  initialLocation: '/',
+  routes: [
+    // ─── Shell route (5 tabs) ──────────────────────────────────────────────
+    StatefulShellRoute.indexedStack(
+      builder: (context, state, navigationShell) =>
+          AppShell(navigationShell: navigationShell),
+      branches: [
+        // Home tab
+        StatefulShellBranch(routes: [
+          GoRoute(
+            path: '/',
+            builder: (context, state) => const HomeScreen(),
+          ),
+        ]),
+        // Food tab
+        StatefulShellBranch(routes: [
+          GoRoute(
+            path: '/food',
+            builder: (context, state) => const FoodScreen(),
+          ),
+        ]),
+        // Workout tab
+        StatefulShellBranch(routes: [
+          GoRoute(
+            path: '/workout',
+            builder: (context, state) => const WorkoutScreen(),
+          ),
+        ]),
+        // Steps tab
+        StatefulShellBranch(routes: [
+          GoRoute(
+            path: '/steps',
+            builder: (context, state) => const StepsScreen(),
+          ),
+        ]),
+        // Me tab
+        StatefulShellBranch(routes: [
+          GoRoute(
+            path: '/profile',
+            builder: (context, state) => const ProfileScreen(),
+          ),
+        ]),
+      ],
+    ),
+
+    // ─── Full-screen routes (push over shell) ─────────────────────────────
+
+    // Wearables (deferred)
+    GoRoute(
+      parentNavigatorKey: _rootNavigatorKey,
+      path: '/wearables',
+      builder: (context, state) => DeferredWidget(
+        loader: wearables.loadLibrary,
+        builder: () => wearables.WearablesScreen(),
+      ),
+    ),
+
+    // Community / Social feed (deferred)
+    GoRoute(
+      parentNavigatorKey: _rootNavigatorKey,
+      path: '/social',
+      builder: (context, state) => DeferredWidget(
+        loader: social.loadLibrary,
+        builder: () => social.SocialFeedScreen(),
+      ),
+    ),
+
+    // GPS workout map (deferred)
+    GoRoute(
+      parentNavigatorKey: _rootNavigatorKey,
+      path: '/gps-workout',
+      builder: (context, state) => DeferredWidget(
+        loader: gps_workout.loadLibrary,
+        builder: () => gps_workout.GpsWorkoutScreen(),
+      ),
+    ),
+
+    // Mental health (deferred)
+    GoRoute(
+      parentNavigatorKey: _rootNavigatorKey,
+      path: '/mental-health',
+      builder: (context, state) => DeferredWidget(
+        loader: mental_health.loadLibrary,
+        builder: () => mental_health.MentalHealthScreen(),
+      ),
+    ),
+
+    // Meditation audio player (deferred)
+    GoRoute(
+      parentNavigatorKey: _rootNavigatorKey,
+      path: '/meditation',
+      builder: (context, state) => DeferredWidget(
+        loader: meditation.loadLibrary,
+        builder: () => meditation.MeditationScreen(),
+      ),
+    ),
+
+    // Health reports
+    GoRoute(
+      parentNavigatorKey: _rootNavigatorKey,
+      path: '/health-reports',
+      builder: (context, state) => const _PlaceholderScreen('Health Reports'),
+    ),
+
+    // Lab reports
+    GoRoute(
+      parentNavigatorKey: _rootNavigatorKey,
+      path: '/lab-reports',
+      builder: (context, state) => const _PlaceholderScreen('Lab Reports'),
+    ),
+
+    // Settings
+    GoRoute(
+      parentNavigatorKey: _rootNavigatorKey,
+      path: '/settings',
+      builder: (context, state) => const _PlaceholderScreen('Settings'),
+    ),
+  ],
+);
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// PLACEHOLDER (for routes without a screen yet)
+// ═══════════════════════════════════════════════════════════════════════════════
+
+class _PlaceholderScreen extends StatelessWidget {
+  final String title;
+  const _PlaceholderScreen(this.title);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text(title)),
+      body: Center(child: Text(title)),
+    );
+  }
+}
