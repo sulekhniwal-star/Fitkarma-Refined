@@ -1,7 +1,35 @@
+import 'dart:convert';
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
+import 'package:fitkarma/core/constants/app_config.dart';
 
 part 'app_database.g.dart';
+
+String _encryptField(String plaintext) {
+  if (plaintext.isEmpty) return '';
+  final keyBytes = utf8.encode(AppConfig.appwriteProjectId);
+  final dataBytes = utf8.encode(plaintext);
+  final encrypted = <int>[];
+  for (var i = 0; i < dataBytes.length; i++) {
+    encrypted.add(dataBytes[i] ^ keyBytes[i % keyBytes.length]);
+  }
+  return base64Encode(encrypted);
+}
+
+String _decryptField(String ciphertext) {
+  if (ciphertext.isEmpty) return '';
+  try {
+    final keyBytes = utf8.encode(AppConfig.appwriteProjectId);
+    final dataBytes = base64Decode(ciphertext);
+    final decrypted = <int>[];
+    for (var i = 0; i < dataBytes.length; i++) {
+      decrypted.add(dataBytes[i] ^ keyBytes[i % keyBytes.length]);
+    }
+    return utf8.decode(decrypted);
+  } catch (_) {
+    return ciphertext;
+  }
+}
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // TABLE DEFINITIONS
@@ -637,6 +665,29 @@ class BloodPressureLogsDao extends DatabaseAccessor<AppDatabase>
 
   Future<int> insertLog(BloodPressureLogsCompanion entry) =>
       into(bloodPressureLogs).insert(entry);
+
+  Future<int> insertLogEncrypted(BloodPressureLogsCompanion entry) {
+    final encryptedCompanion = BloodPressureLogsCompanion(
+      id: entry.id,
+      userId: entry.userId,
+      systolic: Value(_encryptField(entry.systolic.value)),
+      diastolic: Value(_encryptField(entry.diastolic.value)),
+      loggedAt: entry.loggedAt,
+    );
+    return into(bloodPressureLogs).insert(encryptedCompanion);
+  }
+
+  Future<List<BloodPressureLog>> getLogsForUserDecrypted(String userId,
+      {DateTime? from, DateTime? to}) async {
+    final logs = await getLogsForUser(userId, from: from, to: to);
+    return logs.map((log) => BloodPressureLog(
+      id: log.id,
+      userId: log.userId,
+      systolic: _decryptField(log.systolic),
+      diastolic: _decryptField(log.diastolic),
+      loggedAt: log.loggedAt,
+    )).toList();
+  }
 }
 
 @DriftAccessor(tables: [GlucoseLogs])
@@ -662,6 +713,27 @@ class GlucoseLogsDao extends DatabaseAccessor<AppDatabase>
 
   Future<int> insertLog(GlucoseLogsCompanion entry) =>
       into(glucoseLogs).insert(entry);
+
+  Future<int> insertLogEncrypted(GlucoseLogsCompanion entry) {
+    final encryptedCompanion = GlucoseLogsCompanion(
+      id: entry.id,
+      userId: entry.userId,
+      glucoseMgdl: Value(_encryptField(entry.glucoseMgdl.value)),
+      loggedAt: entry.loggedAt,
+    );
+    return into(glucoseLogs).insert(encryptedCompanion);
+  }
+
+  Future<List<GlucoseLog>> getLogsForUserDecrypted(String userId,
+      {DateTime? from, DateTime? to}) async {
+    final logs = await getLogsForUser(userId, from: from, to: to);
+    return logs.map((log) => GlucoseLog(
+      id: log.id,
+      userId: log.userId,
+      glucoseMgdl: _decryptField(log.glucoseMgdl),
+      loggedAt: log.loggedAt,
+    )).toList();
+  }
 }
 
 @DriftAccessor(tables: [Spo2Logs])
@@ -731,6 +803,27 @@ class JournalEntriesDao extends DatabaseAccessor<AppDatabase>
 
   Future<int> deleteEntry(int id) =>
       (delete(journalEntries)..where((t) => t.id.equals(id))).go();
+
+  Future<int> insertEntryEncrypted(JournalEntriesCompanion entry) {
+    final encryptedCompanion = JournalEntriesCompanion(
+      id: entry.id,
+      userId: entry.userId,
+      content: Value(_encryptField(entry.content.value)),
+      createdAt: entry.createdAt,
+    );
+    return into(journalEntries).insert(encryptedCompanion);
+  }
+
+  Future<List<JournalEntry>> getEntriesForUserDecrypted(String userId,
+      {DateTime? from, DateTime? to}) async {
+    final entries = await getEntriesForUser(userId, from: from, to: to);
+    return entries.map((entry) => JournalEntry(
+      id: entry.id,
+      userId: entry.userId,
+      content: _decryptField(entry.content),
+      createdAt: entry.createdAt,
+    )).toList();
+  }
 }
 
 @DriftAccessor(tables: [DoctorAppointments])
@@ -813,6 +906,41 @@ class EmergencyCardDao extends DatabaseAccessor<AppDatabase>
 
   Future<bool> updateCard(EmergencyCardCompanion entry) =>
       update(emergencyCard).replace(entry);
+
+  Future<int> insertCardEncrypted(EmergencyCardCompanion entry) {
+    final encryptedCompanion = EmergencyCardCompanion(
+      id: entry.id,
+      userId: entry.userId,
+      bloodGroup: entry.bloodGroup.present
+          ? Value(_encryptField(entry.bloodGroup.value ?? ''))
+          : const Value.absent(),
+      allergies: entry.allergies.present
+          ? Value(_encryptField(entry.allergies.value ?? ''))
+          : const Value.absent(),
+      emergencyContact: entry.emergencyContact.present
+          ? Value(_encryptField(entry.emergencyContact.value ?? ''))
+          : const Value.absent(),
+      conditions: entry.conditions.present
+          ? Value(_encryptField(entry.conditions.value ?? ''))
+          : const Value.absent(),
+      updatedAt: entry.updatedAt,
+    );
+    return into(emergencyCard).insert(encryptedCompanion);
+  }
+
+  Future<EmergencyCardData?> getCardForUserDecrypted(String userId) async {
+    final card = await getCardForUser(userId);
+    if (card == null) return null;
+    return EmergencyCardData(
+      id: card.id,
+      userId: card.userId,
+      bloodGroup: _decryptField(card.bloodGroup ?? ''),
+      allergies: _decryptField(card.allergies ?? ''),
+      emergencyContact: _decryptField(card.emergencyContact ?? ''),
+      conditions: _decryptField(card.conditions ?? ''),
+      updatedAt: card.updatedAt,
+    );
+  }
 }
 
 @DriftAccessor(tables: [FestivalCalendar])
