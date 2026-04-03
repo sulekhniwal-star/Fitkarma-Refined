@@ -6,6 +6,7 @@ import 'package:fitkarma/features/food/food_screen.dart';
 import 'package:fitkarma/features/food/presentation/community_food_submit_screen.dart';
 import 'package:fitkarma/features/food/presentation/food_log_screen.dart';
 import 'package:fitkarma/features/workout/workout_screen.dart';
+import 'package:fitkarma/features/karma/karma_screen.dart';
 import 'package:fitkarma/features/steps/steps_screen.dart';
 import 'package:fitkarma/features/profile/profile_screen.dart';
 import 'package:fitkarma/features/wearables/wearables_screen.dart'
@@ -208,7 +209,7 @@ final GoRouter appRouter = GoRouter(
         StatefulShellBranch(routes: [
           GoRoute(
             path: '/workout',
-            builder: (context, state) => const WorkoutScreen(),
+            builder: (context, state) => const WorkoutHomeScreen(),
           ),
         ]),
         // Steps tab
@@ -292,6 +293,13 @@ final GoRouter appRouter = GoRouter(
       parentNavigatorKey: _rootNavigatorKey,
       path: '/lab-reports',
       builder: (context, state) => const _PlaceholderScreen('Lab Reports'),
+    ),
+
+    // Karma hub
+    GoRoute(
+      parentNavigatorKey: _rootNavigatorKey,
+      path: '/karma',
+      builder: (context, state) => const KarmaHubScreen(),
     ),
 
     // Settings

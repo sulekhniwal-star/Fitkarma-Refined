@@ -2166,6 +2166,37 @@ class $WorkoutLogsTable extends WorkoutLogs
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _rpeMeta = const VerificationMeta('rpe');
+  @override
+  late final GeneratedColumn<int> rpe = GeneratedColumn<int>(
+    'rpe',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _routeJsonMeta = const VerificationMeta(
+    'routeJson',
+  );
+  @override
+  late final GeneratedColumn<String> routeJson = GeneratedColumn<String>(
+    'route_json',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _distanceKmMeta = const VerificationMeta(
+    'distanceKm',
+  );
+  @override
+  late final GeneratedColumn<double> distanceKm = GeneratedColumn<double>(
+    'distance_km',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _loggedAtMeta = const VerificationMeta(
     'loggedAt',
   );
@@ -2185,6 +2216,9 @@ class $WorkoutLogsTable extends WorkoutLogs
     durationMin,
     caloriesBurned,
     workoutType,
+    rpe,
+    routeJson,
+    distanceKm,
     loggedAt,
   ];
   @override
@@ -2251,6 +2285,24 @@ class $WorkoutLogsTable extends WorkoutLogs
     } else if (isInserting) {
       context.missing(_workoutTypeMeta);
     }
+    if (data.containsKey('rpe')) {
+      context.handle(
+        _rpeMeta,
+        rpe.isAcceptableOrUnknown(data['rpe']!, _rpeMeta),
+      );
+    }
+    if (data.containsKey('route_json')) {
+      context.handle(
+        _routeJsonMeta,
+        routeJson.isAcceptableOrUnknown(data['route_json']!, _routeJsonMeta),
+      );
+    }
+    if (data.containsKey('distance_km')) {
+      context.handle(
+        _distanceKmMeta,
+        distanceKm.isAcceptableOrUnknown(data['distance_km']!, _distanceKmMeta),
+      );
+    }
     if (data.containsKey('logged_at')) {
       context.handle(
         _loggedAtMeta,
@@ -2292,6 +2344,18 @@ class $WorkoutLogsTable extends WorkoutLogs
         DriftSqlType.string,
         data['${effectivePrefix}workout_type'],
       )!,
+      rpe: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}rpe'],
+      ),
+      routeJson: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}route_json'],
+      ),
+      distanceKm: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}distance_km'],
+      ),
       loggedAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}logged_at'],
@@ -2312,6 +2376,9 @@ class WorkoutLog extends DataClass implements Insertable<WorkoutLog> {
   final int durationMin;
   final double caloriesBurned;
   final String workoutType;
+  final int? rpe;
+  final String? routeJson;
+  final double? distanceKm;
   final DateTime loggedAt;
   const WorkoutLog({
     required this.id,
@@ -2320,6 +2387,9 @@ class WorkoutLog extends DataClass implements Insertable<WorkoutLog> {
     required this.durationMin,
     required this.caloriesBurned,
     required this.workoutType,
+    this.rpe,
+    this.routeJson,
+    this.distanceKm,
     required this.loggedAt,
   });
   @override
@@ -2331,6 +2401,15 @@ class WorkoutLog extends DataClass implements Insertable<WorkoutLog> {
     map['duration_min'] = Variable<int>(durationMin);
     map['calories_burned'] = Variable<double>(caloriesBurned);
     map['workout_type'] = Variable<String>(workoutType);
+    if (!nullToAbsent || rpe != null) {
+      map['rpe'] = Variable<int>(rpe);
+    }
+    if (!nullToAbsent || routeJson != null) {
+      map['route_json'] = Variable<String>(routeJson);
+    }
+    if (!nullToAbsent || distanceKm != null) {
+      map['distance_km'] = Variable<double>(distanceKm);
+    }
     map['logged_at'] = Variable<DateTime>(loggedAt);
     return map;
   }
@@ -2343,6 +2422,13 @@ class WorkoutLog extends DataClass implements Insertable<WorkoutLog> {
       durationMin: Value(durationMin),
       caloriesBurned: Value(caloriesBurned),
       workoutType: Value(workoutType),
+      rpe: rpe == null && nullToAbsent ? const Value.absent() : Value(rpe),
+      routeJson: routeJson == null && nullToAbsent
+          ? const Value.absent()
+          : Value(routeJson),
+      distanceKm: distanceKm == null && nullToAbsent
+          ? const Value.absent()
+          : Value(distanceKm),
       loggedAt: Value(loggedAt),
     );
   }
@@ -2359,6 +2445,9 @@ class WorkoutLog extends DataClass implements Insertable<WorkoutLog> {
       durationMin: serializer.fromJson<int>(json['durationMin']),
       caloriesBurned: serializer.fromJson<double>(json['caloriesBurned']),
       workoutType: serializer.fromJson<String>(json['workoutType']),
+      rpe: serializer.fromJson<int?>(json['rpe']),
+      routeJson: serializer.fromJson<String?>(json['routeJson']),
+      distanceKm: serializer.fromJson<double?>(json['distanceKm']),
       loggedAt: serializer.fromJson<DateTime>(json['loggedAt']),
     );
   }
@@ -2372,6 +2461,9 @@ class WorkoutLog extends DataClass implements Insertable<WorkoutLog> {
       'durationMin': serializer.toJson<int>(durationMin),
       'caloriesBurned': serializer.toJson<double>(caloriesBurned),
       'workoutType': serializer.toJson<String>(workoutType),
+      'rpe': serializer.toJson<int?>(rpe),
+      'routeJson': serializer.toJson<String?>(routeJson),
+      'distanceKm': serializer.toJson<double?>(distanceKm),
       'loggedAt': serializer.toJson<DateTime>(loggedAt),
     };
   }
@@ -2383,6 +2475,9 @@ class WorkoutLog extends DataClass implements Insertable<WorkoutLog> {
     int? durationMin,
     double? caloriesBurned,
     String? workoutType,
+    Value<int?> rpe = const Value.absent(),
+    Value<String?> routeJson = const Value.absent(),
+    Value<double?> distanceKm = const Value.absent(),
     DateTime? loggedAt,
   }) => WorkoutLog(
     id: id ?? this.id,
@@ -2391,6 +2486,9 @@ class WorkoutLog extends DataClass implements Insertable<WorkoutLog> {
     durationMin: durationMin ?? this.durationMin,
     caloriesBurned: caloriesBurned ?? this.caloriesBurned,
     workoutType: workoutType ?? this.workoutType,
+    rpe: rpe.present ? rpe.value : this.rpe,
+    routeJson: routeJson.present ? routeJson.value : this.routeJson,
+    distanceKm: distanceKm.present ? distanceKm.value : this.distanceKm,
     loggedAt: loggedAt ?? this.loggedAt,
   );
   WorkoutLog copyWithCompanion(WorkoutLogsCompanion data) {
@@ -2407,6 +2505,11 @@ class WorkoutLog extends DataClass implements Insertable<WorkoutLog> {
       workoutType: data.workoutType.present
           ? data.workoutType.value
           : this.workoutType,
+      rpe: data.rpe.present ? data.rpe.value : this.rpe,
+      routeJson: data.routeJson.present ? data.routeJson.value : this.routeJson,
+      distanceKm: data.distanceKm.present
+          ? data.distanceKm.value
+          : this.distanceKm,
       loggedAt: data.loggedAt.present ? data.loggedAt.value : this.loggedAt,
     );
   }
@@ -2420,6 +2523,9 @@ class WorkoutLog extends DataClass implements Insertable<WorkoutLog> {
           ..write('durationMin: $durationMin, ')
           ..write('caloriesBurned: $caloriesBurned, ')
           ..write('workoutType: $workoutType, ')
+          ..write('rpe: $rpe, ')
+          ..write('routeJson: $routeJson, ')
+          ..write('distanceKm: $distanceKm, ')
           ..write('loggedAt: $loggedAt')
           ..write(')'))
         .toString();
@@ -2433,6 +2539,9 @@ class WorkoutLog extends DataClass implements Insertable<WorkoutLog> {
     durationMin,
     caloriesBurned,
     workoutType,
+    rpe,
+    routeJson,
+    distanceKm,
     loggedAt,
   );
   @override
@@ -2445,6 +2554,9 @@ class WorkoutLog extends DataClass implements Insertable<WorkoutLog> {
           other.durationMin == this.durationMin &&
           other.caloriesBurned == this.caloriesBurned &&
           other.workoutType == this.workoutType &&
+          other.rpe == this.rpe &&
+          other.routeJson == this.routeJson &&
+          other.distanceKm == this.distanceKm &&
           other.loggedAt == this.loggedAt);
 }
 
@@ -2455,6 +2567,9 @@ class WorkoutLogsCompanion extends UpdateCompanion<WorkoutLog> {
   final Value<int> durationMin;
   final Value<double> caloriesBurned;
   final Value<String> workoutType;
+  final Value<int?> rpe;
+  final Value<String?> routeJson;
+  final Value<double?> distanceKm;
   final Value<DateTime> loggedAt;
   const WorkoutLogsCompanion({
     this.id = const Value.absent(),
@@ -2463,6 +2578,9 @@ class WorkoutLogsCompanion extends UpdateCompanion<WorkoutLog> {
     this.durationMin = const Value.absent(),
     this.caloriesBurned = const Value.absent(),
     this.workoutType = const Value.absent(),
+    this.rpe = const Value.absent(),
+    this.routeJson = const Value.absent(),
+    this.distanceKm = const Value.absent(),
     this.loggedAt = const Value.absent(),
   });
   WorkoutLogsCompanion.insert({
@@ -2472,6 +2590,9 @@ class WorkoutLogsCompanion extends UpdateCompanion<WorkoutLog> {
     required int durationMin,
     required double caloriesBurned,
     required String workoutType,
+    this.rpe = const Value.absent(),
+    this.routeJson = const Value.absent(),
+    this.distanceKm = const Value.absent(),
     required DateTime loggedAt,
   }) : userId = Value(userId),
        title = Value(title),
@@ -2486,6 +2607,9 @@ class WorkoutLogsCompanion extends UpdateCompanion<WorkoutLog> {
     Expression<int>? durationMin,
     Expression<double>? caloriesBurned,
     Expression<String>? workoutType,
+    Expression<int>? rpe,
+    Expression<String>? routeJson,
+    Expression<double>? distanceKm,
     Expression<DateTime>? loggedAt,
   }) {
     return RawValuesInsertable({
@@ -2495,6 +2619,9 @@ class WorkoutLogsCompanion extends UpdateCompanion<WorkoutLog> {
       if (durationMin != null) 'duration_min': durationMin,
       if (caloriesBurned != null) 'calories_burned': caloriesBurned,
       if (workoutType != null) 'workout_type': workoutType,
+      if (rpe != null) 'rpe': rpe,
+      if (routeJson != null) 'route_json': routeJson,
+      if (distanceKm != null) 'distance_km': distanceKm,
       if (loggedAt != null) 'logged_at': loggedAt,
     });
   }
@@ -2506,6 +2633,9 @@ class WorkoutLogsCompanion extends UpdateCompanion<WorkoutLog> {
     Value<int>? durationMin,
     Value<double>? caloriesBurned,
     Value<String>? workoutType,
+    Value<int?>? rpe,
+    Value<String?>? routeJson,
+    Value<double?>? distanceKm,
     Value<DateTime>? loggedAt,
   }) {
     return WorkoutLogsCompanion(
@@ -2515,6 +2645,9 @@ class WorkoutLogsCompanion extends UpdateCompanion<WorkoutLog> {
       durationMin: durationMin ?? this.durationMin,
       caloriesBurned: caloriesBurned ?? this.caloriesBurned,
       workoutType: workoutType ?? this.workoutType,
+      rpe: rpe ?? this.rpe,
+      routeJson: routeJson ?? this.routeJson,
+      distanceKm: distanceKm ?? this.distanceKm,
       loggedAt: loggedAt ?? this.loggedAt,
     );
   }
@@ -2540,6 +2673,15 @@ class WorkoutLogsCompanion extends UpdateCompanion<WorkoutLog> {
     if (workoutType.present) {
       map['workout_type'] = Variable<String>(workoutType.value);
     }
+    if (rpe.present) {
+      map['rpe'] = Variable<int>(rpe.value);
+    }
+    if (routeJson.present) {
+      map['route_json'] = Variable<String>(routeJson.value);
+    }
+    if (distanceKm.present) {
+      map['distance_km'] = Variable<double>(distanceKm.value);
+    }
     if (loggedAt.present) {
       map['logged_at'] = Variable<DateTime>(loggedAt.value);
     }
@@ -2555,6 +2697,9 @@ class WorkoutLogsCompanion extends UpdateCompanion<WorkoutLog> {
           ..write('durationMin: $durationMin, ')
           ..write('caloriesBurned: $caloriesBurned, ')
           ..write('workoutType: $workoutType, ')
+          ..write('rpe: $rpe, ')
+          ..write('routeJson: $routeJson, ')
+          ..write('distanceKm: $distanceKm, ')
           ..write('loggedAt: $loggedAt')
           ..write(')'))
         .toString();
@@ -7978,8 +8123,151 @@ class $NutritionGoalsTable extends NutritionGoals
     type: DriftSqlType.double,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _carbsPercentMeta = const VerificationMeta(
+    'carbsPercent',
+  );
   @override
-  List<GeneratedColumn> get $columns => [id, userId, calorieGoal];
+  late final GeneratedColumn<double> carbsPercent = GeneratedColumn<double>(
+    'carbs_percent',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(55),
+  );
+  static const VerificationMeta _proteinPercentMeta = const VerificationMeta(
+    'proteinPercent',
+  );
+  @override
+  late final GeneratedColumn<double> proteinPercent = GeneratedColumn<double>(
+    'protein_percent',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(20),
+  );
+  static const VerificationMeta _fatPercentMeta = const VerificationMeta(
+    'fatPercent',
+  );
+  @override
+  late final GeneratedColumn<double> fatPercent = GeneratedColumn<double>(
+    'fat_percent',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(25),
+  );
+  static const VerificationMeta _carbsGramsMeta = const VerificationMeta(
+    'carbsGrams',
+  );
+  @override
+  late final GeneratedColumn<double> carbsGrams = GeneratedColumn<double>(
+    'carbs_grams',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _proteinGramsMeta = const VerificationMeta(
+    'proteinGrams',
+  );
+  @override
+  late final GeneratedColumn<double> proteinGrams = GeneratedColumn<double>(
+    'protein_grams',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _fatGramsMeta = const VerificationMeta(
+    'fatGrams',
+  );
+  @override
+  late final GeneratedColumn<double> fatGrams = GeneratedColumn<double>(
+    'fat_grams',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _ironMgRdaMeta = const VerificationMeta(
+    'ironMgRda',
+  );
+  @override
+  late final GeneratedColumn<double> ironMgRda = GeneratedColumn<double>(
+    'iron_mg_rda',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(18),
+  );
+  static const VerificationMeta _vitaminDMcgRdaMeta = const VerificationMeta(
+    'vitaminDMcgRda',
+  );
+  @override
+  late final GeneratedColumn<double> vitaminDMcgRda = GeneratedColumn<double>(
+    'vitamin_d_mcg_rda',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(15),
+  );
+  static const VerificationMeta _vitaminB12McgRdaMeta = const VerificationMeta(
+    'vitaminB12McgRda',
+  );
+  @override
+  late final GeneratedColumn<double> vitaminB12McgRda = GeneratedColumn<double>(
+    'vitamin_b12_mcg_rda',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(2.4),
+  );
+  static const VerificationMeta _calciumMgRdaMeta = const VerificationMeta(
+    'calciumMgRda',
+  );
+  @override
+  late final GeneratedColumn<double> calciumMgRda = GeneratedColumn<double>(
+    'calcium_mg_rda',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(1000),
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    userId,
+    calorieGoal,
+    carbsPercent,
+    proteinPercent,
+    fatPercent,
+    carbsGrams,
+    proteinGrams,
+    fatGrams,
+    ironMgRda,
+    vitaminDMcgRda,
+    vitaminB12McgRda,
+    calciumMgRda,
+    updatedAt,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -8014,6 +8302,92 @@ class $NutritionGoalsTable extends NutritionGoals
     } else if (isInserting) {
       context.missing(_calorieGoalMeta);
     }
+    if (data.containsKey('carbs_percent')) {
+      context.handle(
+        _carbsPercentMeta,
+        carbsPercent.isAcceptableOrUnknown(
+          data['carbs_percent']!,
+          _carbsPercentMeta,
+        ),
+      );
+    }
+    if (data.containsKey('protein_percent')) {
+      context.handle(
+        _proteinPercentMeta,
+        proteinPercent.isAcceptableOrUnknown(
+          data['protein_percent']!,
+          _proteinPercentMeta,
+        ),
+      );
+    }
+    if (data.containsKey('fat_percent')) {
+      context.handle(
+        _fatPercentMeta,
+        fatPercent.isAcceptableOrUnknown(data['fat_percent']!, _fatPercentMeta),
+      );
+    }
+    if (data.containsKey('carbs_grams')) {
+      context.handle(
+        _carbsGramsMeta,
+        carbsGrams.isAcceptableOrUnknown(data['carbs_grams']!, _carbsGramsMeta),
+      );
+    }
+    if (data.containsKey('protein_grams')) {
+      context.handle(
+        _proteinGramsMeta,
+        proteinGrams.isAcceptableOrUnknown(
+          data['protein_grams']!,
+          _proteinGramsMeta,
+        ),
+      );
+    }
+    if (data.containsKey('fat_grams')) {
+      context.handle(
+        _fatGramsMeta,
+        fatGrams.isAcceptableOrUnknown(data['fat_grams']!, _fatGramsMeta),
+      );
+    }
+    if (data.containsKey('iron_mg_rda')) {
+      context.handle(
+        _ironMgRdaMeta,
+        ironMgRda.isAcceptableOrUnknown(data['iron_mg_rda']!, _ironMgRdaMeta),
+      );
+    }
+    if (data.containsKey('vitamin_d_mcg_rda')) {
+      context.handle(
+        _vitaminDMcgRdaMeta,
+        vitaminDMcgRda.isAcceptableOrUnknown(
+          data['vitamin_d_mcg_rda']!,
+          _vitaminDMcgRdaMeta,
+        ),
+      );
+    }
+    if (data.containsKey('vitamin_b12_mcg_rda')) {
+      context.handle(
+        _vitaminB12McgRdaMeta,
+        vitaminB12McgRda.isAcceptableOrUnknown(
+          data['vitamin_b12_mcg_rda']!,
+          _vitaminB12McgRdaMeta,
+        ),
+      );
+    }
+    if (data.containsKey('calcium_mg_rda')) {
+      context.handle(
+        _calciumMgRdaMeta,
+        calciumMgRda.isAcceptableOrUnknown(
+          data['calcium_mg_rda']!,
+          _calciumMgRdaMeta,
+        ),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
     return context;
   }
 
@@ -8035,6 +8409,50 @@ class $NutritionGoalsTable extends NutritionGoals
         DriftSqlType.double,
         data['${effectivePrefix}calorie_goal'],
       )!,
+      carbsPercent: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}carbs_percent'],
+      )!,
+      proteinPercent: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}protein_percent'],
+      )!,
+      fatPercent: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}fat_percent'],
+      )!,
+      carbsGrams: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}carbs_grams'],
+      ),
+      proteinGrams: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}protein_grams'],
+      ),
+      fatGrams: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}fat_grams'],
+      ),
+      ironMgRda: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}iron_mg_rda'],
+      )!,
+      vitaminDMcgRda: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}vitamin_d_mcg_rda'],
+      )!,
+      vitaminB12McgRda: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}vitamin_b12_mcg_rda'],
+      )!,
+      calciumMgRda: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}calcium_mg_rda'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
     );
   }
 
@@ -8048,10 +8466,32 @@ class NutritionGoal extends DataClass implements Insertable<NutritionGoal> {
   final int id;
   final String userId;
   final double calorieGoal;
+  final double carbsPercent;
+  final double proteinPercent;
+  final double fatPercent;
+  final double? carbsGrams;
+  final double? proteinGrams;
+  final double? fatGrams;
+  final double ironMgRda;
+  final double vitaminDMcgRda;
+  final double vitaminB12McgRda;
+  final double calciumMgRda;
+  final DateTime updatedAt;
   const NutritionGoal({
     required this.id,
     required this.userId,
     required this.calorieGoal,
+    required this.carbsPercent,
+    required this.proteinPercent,
+    required this.fatPercent,
+    this.carbsGrams,
+    this.proteinGrams,
+    this.fatGrams,
+    required this.ironMgRda,
+    required this.vitaminDMcgRda,
+    required this.vitaminB12McgRda,
+    required this.calciumMgRda,
+    required this.updatedAt,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -8059,6 +8499,23 @@ class NutritionGoal extends DataClass implements Insertable<NutritionGoal> {
     map['id'] = Variable<int>(id);
     map['user_id'] = Variable<String>(userId);
     map['calorie_goal'] = Variable<double>(calorieGoal);
+    map['carbs_percent'] = Variable<double>(carbsPercent);
+    map['protein_percent'] = Variable<double>(proteinPercent);
+    map['fat_percent'] = Variable<double>(fatPercent);
+    if (!nullToAbsent || carbsGrams != null) {
+      map['carbs_grams'] = Variable<double>(carbsGrams);
+    }
+    if (!nullToAbsent || proteinGrams != null) {
+      map['protein_grams'] = Variable<double>(proteinGrams);
+    }
+    if (!nullToAbsent || fatGrams != null) {
+      map['fat_grams'] = Variable<double>(fatGrams);
+    }
+    map['iron_mg_rda'] = Variable<double>(ironMgRda);
+    map['vitamin_d_mcg_rda'] = Variable<double>(vitaminDMcgRda);
+    map['vitamin_b12_mcg_rda'] = Variable<double>(vitaminB12McgRda);
+    map['calcium_mg_rda'] = Variable<double>(calciumMgRda);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
     return map;
   }
 
@@ -8067,6 +8524,23 @@ class NutritionGoal extends DataClass implements Insertable<NutritionGoal> {
       id: Value(id),
       userId: Value(userId),
       calorieGoal: Value(calorieGoal),
+      carbsPercent: Value(carbsPercent),
+      proteinPercent: Value(proteinPercent),
+      fatPercent: Value(fatPercent),
+      carbsGrams: carbsGrams == null && nullToAbsent
+          ? const Value.absent()
+          : Value(carbsGrams),
+      proteinGrams: proteinGrams == null && nullToAbsent
+          ? const Value.absent()
+          : Value(proteinGrams),
+      fatGrams: fatGrams == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fatGrams),
+      ironMgRda: Value(ironMgRda),
+      vitaminDMcgRda: Value(vitaminDMcgRda),
+      vitaminB12McgRda: Value(vitaminB12McgRda),
+      calciumMgRda: Value(calciumMgRda),
+      updatedAt: Value(updatedAt),
     );
   }
 
@@ -8079,6 +8553,17 @@ class NutritionGoal extends DataClass implements Insertable<NutritionGoal> {
       id: serializer.fromJson<int>(json['id']),
       userId: serializer.fromJson<String>(json['userId']),
       calorieGoal: serializer.fromJson<double>(json['calorieGoal']),
+      carbsPercent: serializer.fromJson<double>(json['carbsPercent']),
+      proteinPercent: serializer.fromJson<double>(json['proteinPercent']),
+      fatPercent: serializer.fromJson<double>(json['fatPercent']),
+      carbsGrams: serializer.fromJson<double?>(json['carbsGrams']),
+      proteinGrams: serializer.fromJson<double?>(json['proteinGrams']),
+      fatGrams: serializer.fromJson<double?>(json['fatGrams']),
+      ironMgRda: serializer.fromJson<double>(json['ironMgRda']),
+      vitaminDMcgRda: serializer.fromJson<double>(json['vitaminDMcgRda']),
+      vitaminB12McgRda: serializer.fromJson<double>(json['vitaminB12McgRda']),
+      calciumMgRda: serializer.fromJson<double>(json['calciumMgRda']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
     );
   }
   @override
@@ -8088,15 +8573,51 @@ class NutritionGoal extends DataClass implements Insertable<NutritionGoal> {
       'id': serializer.toJson<int>(id),
       'userId': serializer.toJson<String>(userId),
       'calorieGoal': serializer.toJson<double>(calorieGoal),
+      'carbsPercent': serializer.toJson<double>(carbsPercent),
+      'proteinPercent': serializer.toJson<double>(proteinPercent),
+      'fatPercent': serializer.toJson<double>(fatPercent),
+      'carbsGrams': serializer.toJson<double?>(carbsGrams),
+      'proteinGrams': serializer.toJson<double?>(proteinGrams),
+      'fatGrams': serializer.toJson<double?>(fatGrams),
+      'ironMgRda': serializer.toJson<double>(ironMgRda),
+      'vitaminDMcgRda': serializer.toJson<double>(vitaminDMcgRda),
+      'vitaminB12McgRda': serializer.toJson<double>(vitaminB12McgRda),
+      'calciumMgRda': serializer.toJson<double>(calciumMgRda),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
     };
   }
 
-  NutritionGoal copyWith({int? id, String? userId, double? calorieGoal}) =>
-      NutritionGoal(
-        id: id ?? this.id,
-        userId: userId ?? this.userId,
-        calorieGoal: calorieGoal ?? this.calorieGoal,
-      );
+  NutritionGoal copyWith({
+    int? id,
+    String? userId,
+    double? calorieGoal,
+    double? carbsPercent,
+    double? proteinPercent,
+    double? fatPercent,
+    Value<double?> carbsGrams = const Value.absent(),
+    Value<double?> proteinGrams = const Value.absent(),
+    Value<double?> fatGrams = const Value.absent(),
+    double? ironMgRda,
+    double? vitaminDMcgRda,
+    double? vitaminB12McgRda,
+    double? calciumMgRda,
+    DateTime? updatedAt,
+  }) => NutritionGoal(
+    id: id ?? this.id,
+    userId: userId ?? this.userId,
+    calorieGoal: calorieGoal ?? this.calorieGoal,
+    carbsPercent: carbsPercent ?? this.carbsPercent,
+    proteinPercent: proteinPercent ?? this.proteinPercent,
+    fatPercent: fatPercent ?? this.fatPercent,
+    carbsGrams: carbsGrams.present ? carbsGrams.value : this.carbsGrams,
+    proteinGrams: proteinGrams.present ? proteinGrams.value : this.proteinGrams,
+    fatGrams: fatGrams.present ? fatGrams.value : this.fatGrams,
+    ironMgRda: ironMgRda ?? this.ironMgRda,
+    vitaminDMcgRda: vitaminDMcgRda ?? this.vitaminDMcgRda,
+    vitaminB12McgRda: vitaminB12McgRda ?? this.vitaminB12McgRda,
+    calciumMgRda: calciumMgRda ?? this.calciumMgRda,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
   NutritionGoal copyWithCompanion(NutritionGoalsCompanion data) {
     return NutritionGoal(
       id: data.id.present ? data.id.value : this.id,
@@ -8104,6 +8625,33 @@ class NutritionGoal extends DataClass implements Insertable<NutritionGoal> {
       calorieGoal: data.calorieGoal.present
           ? data.calorieGoal.value
           : this.calorieGoal,
+      carbsPercent: data.carbsPercent.present
+          ? data.carbsPercent.value
+          : this.carbsPercent,
+      proteinPercent: data.proteinPercent.present
+          ? data.proteinPercent.value
+          : this.proteinPercent,
+      fatPercent: data.fatPercent.present
+          ? data.fatPercent.value
+          : this.fatPercent,
+      carbsGrams: data.carbsGrams.present
+          ? data.carbsGrams.value
+          : this.carbsGrams,
+      proteinGrams: data.proteinGrams.present
+          ? data.proteinGrams.value
+          : this.proteinGrams,
+      fatGrams: data.fatGrams.present ? data.fatGrams.value : this.fatGrams,
+      ironMgRda: data.ironMgRda.present ? data.ironMgRda.value : this.ironMgRda,
+      vitaminDMcgRda: data.vitaminDMcgRda.present
+          ? data.vitaminDMcgRda.value
+          : this.vitaminDMcgRda,
+      vitaminB12McgRda: data.vitaminB12McgRda.present
+          ? data.vitaminB12McgRda.value
+          : this.vitaminB12McgRda,
+      calciumMgRda: data.calciumMgRda.present
+          ? data.calciumMgRda.value
+          : this.calciumMgRda,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
   }
 
@@ -8112,46 +8660,139 @@ class NutritionGoal extends DataClass implements Insertable<NutritionGoal> {
     return (StringBuffer('NutritionGoal(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
-          ..write('calorieGoal: $calorieGoal')
+          ..write('calorieGoal: $calorieGoal, ')
+          ..write('carbsPercent: $carbsPercent, ')
+          ..write('proteinPercent: $proteinPercent, ')
+          ..write('fatPercent: $fatPercent, ')
+          ..write('carbsGrams: $carbsGrams, ')
+          ..write('proteinGrams: $proteinGrams, ')
+          ..write('fatGrams: $fatGrams, ')
+          ..write('ironMgRda: $ironMgRda, ')
+          ..write('vitaminDMcgRda: $vitaminDMcgRda, ')
+          ..write('vitaminB12McgRda: $vitaminB12McgRda, ')
+          ..write('calciumMgRda: $calciumMgRda, ')
+          ..write('updatedAt: $updatedAt')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, userId, calorieGoal);
+  int get hashCode => Object.hash(
+    id,
+    userId,
+    calorieGoal,
+    carbsPercent,
+    proteinPercent,
+    fatPercent,
+    carbsGrams,
+    proteinGrams,
+    fatGrams,
+    ironMgRda,
+    vitaminDMcgRda,
+    vitaminB12McgRda,
+    calciumMgRda,
+    updatedAt,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is NutritionGoal &&
           other.id == this.id &&
           other.userId == this.userId &&
-          other.calorieGoal == this.calorieGoal);
+          other.calorieGoal == this.calorieGoal &&
+          other.carbsPercent == this.carbsPercent &&
+          other.proteinPercent == this.proteinPercent &&
+          other.fatPercent == this.fatPercent &&
+          other.carbsGrams == this.carbsGrams &&
+          other.proteinGrams == this.proteinGrams &&
+          other.fatGrams == this.fatGrams &&
+          other.ironMgRda == this.ironMgRda &&
+          other.vitaminDMcgRda == this.vitaminDMcgRda &&
+          other.vitaminB12McgRda == this.vitaminB12McgRda &&
+          other.calciumMgRda == this.calciumMgRda &&
+          other.updatedAt == this.updatedAt);
 }
 
 class NutritionGoalsCompanion extends UpdateCompanion<NutritionGoal> {
   final Value<int> id;
   final Value<String> userId;
   final Value<double> calorieGoal;
+  final Value<double> carbsPercent;
+  final Value<double> proteinPercent;
+  final Value<double> fatPercent;
+  final Value<double?> carbsGrams;
+  final Value<double?> proteinGrams;
+  final Value<double?> fatGrams;
+  final Value<double> ironMgRda;
+  final Value<double> vitaminDMcgRda;
+  final Value<double> vitaminB12McgRda;
+  final Value<double> calciumMgRda;
+  final Value<DateTime> updatedAt;
   const NutritionGoalsCompanion({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
     this.calorieGoal = const Value.absent(),
+    this.carbsPercent = const Value.absent(),
+    this.proteinPercent = const Value.absent(),
+    this.fatPercent = const Value.absent(),
+    this.carbsGrams = const Value.absent(),
+    this.proteinGrams = const Value.absent(),
+    this.fatGrams = const Value.absent(),
+    this.ironMgRda = const Value.absent(),
+    this.vitaminDMcgRda = const Value.absent(),
+    this.vitaminB12McgRda = const Value.absent(),
+    this.calciumMgRda = const Value.absent(),
+    this.updatedAt = const Value.absent(),
   });
   NutritionGoalsCompanion.insert({
     this.id = const Value.absent(),
     required String userId,
     required double calorieGoal,
+    this.carbsPercent = const Value.absent(),
+    this.proteinPercent = const Value.absent(),
+    this.fatPercent = const Value.absent(),
+    this.carbsGrams = const Value.absent(),
+    this.proteinGrams = const Value.absent(),
+    this.fatGrams = const Value.absent(),
+    this.ironMgRda = const Value.absent(),
+    this.vitaminDMcgRda = const Value.absent(),
+    this.vitaminB12McgRda = const Value.absent(),
+    this.calciumMgRda = const Value.absent(),
+    required DateTime updatedAt,
   }) : userId = Value(userId),
-       calorieGoal = Value(calorieGoal);
+       calorieGoal = Value(calorieGoal),
+       updatedAt = Value(updatedAt);
   static Insertable<NutritionGoal> custom({
     Expression<int>? id,
     Expression<String>? userId,
     Expression<double>? calorieGoal,
+    Expression<double>? carbsPercent,
+    Expression<double>? proteinPercent,
+    Expression<double>? fatPercent,
+    Expression<double>? carbsGrams,
+    Expression<double>? proteinGrams,
+    Expression<double>? fatGrams,
+    Expression<double>? ironMgRda,
+    Expression<double>? vitaminDMcgRda,
+    Expression<double>? vitaminB12McgRda,
+    Expression<double>? calciumMgRda,
+    Expression<DateTime>? updatedAt,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (userId != null) 'user_id': userId,
       if (calorieGoal != null) 'calorie_goal': calorieGoal,
+      if (carbsPercent != null) 'carbs_percent': carbsPercent,
+      if (proteinPercent != null) 'protein_percent': proteinPercent,
+      if (fatPercent != null) 'fat_percent': fatPercent,
+      if (carbsGrams != null) 'carbs_grams': carbsGrams,
+      if (proteinGrams != null) 'protein_grams': proteinGrams,
+      if (fatGrams != null) 'fat_grams': fatGrams,
+      if (ironMgRda != null) 'iron_mg_rda': ironMgRda,
+      if (vitaminDMcgRda != null) 'vitamin_d_mcg_rda': vitaminDMcgRda,
+      if (vitaminB12McgRda != null) 'vitamin_b12_mcg_rda': vitaminB12McgRda,
+      if (calciumMgRda != null) 'calcium_mg_rda': calciumMgRda,
+      if (updatedAt != null) 'updated_at': updatedAt,
     });
   }
 
@@ -8159,11 +8800,33 @@ class NutritionGoalsCompanion extends UpdateCompanion<NutritionGoal> {
     Value<int>? id,
     Value<String>? userId,
     Value<double>? calorieGoal,
+    Value<double>? carbsPercent,
+    Value<double>? proteinPercent,
+    Value<double>? fatPercent,
+    Value<double?>? carbsGrams,
+    Value<double?>? proteinGrams,
+    Value<double?>? fatGrams,
+    Value<double>? ironMgRda,
+    Value<double>? vitaminDMcgRda,
+    Value<double>? vitaminB12McgRda,
+    Value<double>? calciumMgRda,
+    Value<DateTime>? updatedAt,
   }) {
     return NutritionGoalsCompanion(
       id: id ?? this.id,
       userId: userId ?? this.userId,
       calorieGoal: calorieGoal ?? this.calorieGoal,
+      carbsPercent: carbsPercent ?? this.carbsPercent,
+      proteinPercent: proteinPercent ?? this.proteinPercent,
+      fatPercent: fatPercent ?? this.fatPercent,
+      carbsGrams: carbsGrams ?? this.carbsGrams,
+      proteinGrams: proteinGrams ?? this.proteinGrams,
+      fatGrams: fatGrams ?? this.fatGrams,
+      ironMgRda: ironMgRda ?? this.ironMgRda,
+      vitaminDMcgRda: vitaminDMcgRda ?? this.vitaminDMcgRda,
+      vitaminB12McgRda: vitaminB12McgRda ?? this.vitaminB12McgRda,
+      calciumMgRda: calciumMgRda ?? this.calciumMgRda,
+      updatedAt: updatedAt ?? this.updatedAt,
     );
   }
 
@@ -8179,6 +8842,39 @@ class NutritionGoalsCompanion extends UpdateCompanion<NutritionGoal> {
     if (calorieGoal.present) {
       map['calorie_goal'] = Variable<double>(calorieGoal.value);
     }
+    if (carbsPercent.present) {
+      map['carbs_percent'] = Variable<double>(carbsPercent.value);
+    }
+    if (proteinPercent.present) {
+      map['protein_percent'] = Variable<double>(proteinPercent.value);
+    }
+    if (fatPercent.present) {
+      map['fat_percent'] = Variable<double>(fatPercent.value);
+    }
+    if (carbsGrams.present) {
+      map['carbs_grams'] = Variable<double>(carbsGrams.value);
+    }
+    if (proteinGrams.present) {
+      map['protein_grams'] = Variable<double>(proteinGrams.value);
+    }
+    if (fatGrams.present) {
+      map['fat_grams'] = Variable<double>(fatGrams.value);
+    }
+    if (ironMgRda.present) {
+      map['iron_mg_rda'] = Variable<double>(ironMgRda.value);
+    }
+    if (vitaminDMcgRda.present) {
+      map['vitamin_d_mcg_rda'] = Variable<double>(vitaminDMcgRda.value);
+    }
+    if (vitaminB12McgRda.present) {
+      map['vitamin_b12_mcg_rda'] = Variable<double>(vitaminB12McgRda.value);
+    }
+    if (calciumMgRda.present) {
+      map['calcium_mg_rda'] = Variable<double>(calciumMgRda.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
     return map;
   }
 
@@ -8187,7 +8883,18 @@ class NutritionGoalsCompanion extends UpdateCompanion<NutritionGoal> {
     return (StringBuffer('NutritionGoalsCompanion(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
-          ..write('calorieGoal: $calorieGoal')
+          ..write('calorieGoal: $calorieGoal, ')
+          ..write('carbsPercent: $carbsPercent, ')
+          ..write('proteinPercent: $proteinPercent, ')
+          ..write('fatPercent: $fatPercent, ')
+          ..write('carbsGrams: $carbsGrams, ')
+          ..write('proteinGrams: $proteinGrams, ')
+          ..write('fatGrams: $fatGrams, ')
+          ..write('ironMgRda: $ironMgRda, ')
+          ..write('vitaminDMcgRda: $vitaminDMcgRda, ')
+          ..write('vitaminB12McgRda: $vitaminB12McgRda, ')
+          ..write('calciumMgRda: $calciumMgRda, ')
+          ..write('updatedAt: $updatedAt')
           ..write(')'))
         .toString();
   }
@@ -13426,6 +14133,422 @@ class FoodItemsFtsCompanion extends UpdateCompanion<FoodItemsFt> {
   }
 }
 
+class $InsightFeedbackTable extends InsightFeedback
+    with TableInfo<$InsightFeedbackTable, InsightFeedbackData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $InsightFeedbackTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _odUserIdMeta = const VerificationMeta(
+    'odUserId',
+  );
+  @override
+  late final GeneratedColumn<String> odUserId = GeneratedColumn<String>(
+    'od_user_id',
+    aliasedName,
+    false,
+    additionalChecks: GeneratedColumn.checkTextLength(
+      minTextLength: 1,
+      maxTextLength: 64,
+    ),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _ruleIdMeta = const VerificationMeta('ruleId');
+  @override
+  late final GeneratedColumn<String> ruleId = GeneratedColumn<String>(
+    'rule_id',
+    aliasedName,
+    false,
+    additionalChecks: GeneratedColumn.checkTextLength(
+      minTextLength: 1,
+      maxTextLength: 64,
+    ),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _thumbsUpMeta = const VerificationMeta(
+    'thumbsUp',
+  );
+  @override
+  late final GeneratedColumn<bool> thumbsUp = GeneratedColumn<bool>(
+    'thumbs_up',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("thumbs_up" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _thumbsDownMeta = const VerificationMeta(
+    'thumbsDown',
+  );
+  @override
+  late final GeneratedColumn<bool> thumbsDown = GeneratedColumn<bool>(
+    'thumbs_down',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("thumbs_down" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _generatedAtMeta = const VerificationMeta(
+    'generatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> generatedAt = GeneratedColumn<DateTime>(
+    'generated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    odUserId,
+    ruleId,
+    thumbsUp,
+    thumbsDown,
+    generatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'insight_feedback';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<InsightFeedbackData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('od_user_id')) {
+      context.handle(
+        _odUserIdMeta,
+        odUserId.isAcceptableOrUnknown(data['od_user_id']!, _odUserIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_odUserIdMeta);
+    }
+    if (data.containsKey('rule_id')) {
+      context.handle(
+        _ruleIdMeta,
+        ruleId.isAcceptableOrUnknown(data['rule_id']!, _ruleIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_ruleIdMeta);
+    }
+    if (data.containsKey('thumbs_up')) {
+      context.handle(
+        _thumbsUpMeta,
+        thumbsUp.isAcceptableOrUnknown(data['thumbs_up']!, _thumbsUpMeta),
+      );
+    }
+    if (data.containsKey('thumbs_down')) {
+      context.handle(
+        _thumbsDownMeta,
+        thumbsDown.isAcceptableOrUnknown(data['thumbs_down']!, _thumbsDownMeta),
+      );
+    }
+    if (data.containsKey('generated_at')) {
+      context.handle(
+        _generatedAtMeta,
+        generatedAt.isAcceptableOrUnknown(
+          data['generated_at']!,
+          _generatedAtMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_generatedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  InsightFeedbackData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return InsightFeedbackData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      odUserId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}od_user_id'],
+      )!,
+      ruleId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}rule_id'],
+      )!,
+      thumbsUp: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}thumbs_up'],
+      )!,
+      thumbsDown: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}thumbs_down'],
+      )!,
+      generatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}generated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $InsightFeedbackTable createAlias(String alias) {
+    return $InsightFeedbackTable(attachedDatabase, alias);
+  }
+}
+
+class InsightFeedbackData extends DataClass
+    implements Insertable<InsightFeedbackData> {
+  final int id;
+  final String odUserId;
+  final String ruleId;
+  final bool thumbsUp;
+  final bool thumbsDown;
+  final DateTime generatedAt;
+  const InsightFeedbackData({
+    required this.id,
+    required this.odUserId,
+    required this.ruleId,
+    required this.thumbsUp,
+    required this.thumbsDown,
+    required this.generatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['od_user_id'] = Variable<String>(odUserId);
+    map['rule_id'] = Variable<String>(ruleId);
+    map['thumbs_up'] = Variable<bool>(thumbsUp);
+    map['thumbs_down'] = Variable<bool>(thumbsDown);
+    map['generated_at'] = Variable<DateTime>(generatedAt);
+    return map;
+  }
+
+  InsightFeedbackCompanion toCompanion(bool nullToAbsent) {
+    return InsightFeedbackCompanion(
+      id: Value(id),
+      odUserId: Value(odUserId),
+      ruleId: Value(ruleId),
+      thumbsUp: Value(thumbsUp),
+      thumbsDown: Value(thumbsDown),
+      generatedAt: Value(generatedAt),
+    );
+  }
+
+  factory InsightFeedbackData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return InsightFeedbackData(
+      id: serializer.fromJson<int>(json['id']),
+      odUserId: serializer.fromJson<String>(json['odUserId']),
+      ruleId: serializer.fromJson<String>(json['ruleId']),
+      thumbsUp: serializer.fromJson<bool>(json['thumbsUp']),
+      thumbsDown: serializer.fromJson<bool>(json['thumbsDown']),
+      generatedAt: serializer.fromJson<DateTime>(json['generatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'odUserId': serializer.toJson<String>(odUserId),
+      'ruleId': serializer.toJson<String>(ruleId),
+      'thumbsUp': serializer.toJson<bool>(thumbsUp),
+      'thumbsDown': serializer.toJson<bool>(thumbsDown),
+      'generatedAt': serializer.toJson<DateTime>(generatedAt),
+    };
+  }
+
+  InsightFeedbackData copyWith({
+    int? id,
+    String? odUserId,
+    String? ruleId,
+    bool? thumbsUp,
+    bool? thumbsDown,
+    DateTime? generatedAt,
+  }) => InsightFeedbackData(
+    id: id ?? this.id,
+    odUserId: odUserId ?? this.odUserId,
+    ruleId: ruleId ?? this.ruleId,
+    thumbsUp: thumbsUp ?? this.thumbsUp,
+    thumbsDown: thumbsDown ?? this.thumbsDown,
+    generatedAt: generatedAt ?? this.generatedAt,
+  );
+  InsightFeedbackData copyWithCompanion(InsightFeedbackCompanion data) {
+    return InsightFeedbackData(
+      id: data.id.present ? data.id.value : this.id,
+      odUserId: data.odUserId.present ? data.odUserId.value : this.odUserId,
+      ruleId: data.ruleId.present ? data.ruleId.value : this.ruleId,
+      thumbsUp: data.thumbsUp.present ? data.thumbsUp.value : this.thumbsUp,
+      thumbsDown: data.thumbsDown.present
+          ? data.thumbsDown.value
+          : this.thumbsDown,
+      generatedAt: data.generatedAt.present
+          ? data.generatedAt.value
+          : this.generatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('InsightFeedbackData(')
+          ..write('id: $id, ')
+          ..write('odUserId: $odUserId, ')
+          ..write('ruleId: $ruleId, ')
+          ..write('thumbsUp: $thumbsUp, ')
+          ..write('thumbsDown: $thumbsDown, ')
+          ..write('generatedAt: $generatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, odUserId, ruleId, thumbsUp, thumbsDown, generatedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is InsightFeedbackData &&
+          other.id == this.id &&
+          other.odUserId == this.odUserId &&
+          other.ruleId == this.ruleId &&
+          other.thumbsUp == this.thumbsUp &&
+          other.thumbsDown == this.thumbsDown &&
+          other.generatedAt == this.generatedAt);
+}
+
+class InsightFeedbackCompanion extends UpdateCompanion<InsightFeedbackData> {
+  final Value<int> id;
+  final Value<String> odUserId;
+  final Value<String> ruleId;
+  final Value<bool> thumbsUp;
+  final Value<bool> thumbsDown;
+  final Value<DateTime> generatedAt;
+  const InsightFeedbackCompanion({
+    this.id = const Value.absent(),
+    this.odUserId = const Value.absent(),
+    this.ruleId = const Value.absent(),
+    this.thumbsUp = const Value.absent(),
+    this.thumbsDown = const Value.absent(),
+    this.generatedAt = const Value.absent(),
+  });
+  InsightFeedbackCompanion.insert({
+    this.id = const Value.absent(),
+    required String odUserId,
+    required String ruleId,
+    this.thumbsUp = const Value.absent(),
+    this.thumbsDown = const Value.absent(),
+    required DateTime generatedAt,
+  }) : odUserId = Value(odUserId),
+       ruleId = Value(ruleId),
+       generatedAt = Value(generatedAt);
+  static Insertable<InsightFeedbackData> custom({
+    Expression<int>? id,
+    Expression<String>? odUserId,
+    Expression<String>? ruleId,
+    Expression<bool>? thumbsUp,
+    Expression<bool>? thumbsDown,
+    Expression<DateTime>? generatedAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (odUserId != null) 'od_user_id': odUserId,
+      if (ruleId != null) 'rule_id': ruleId,
+      if (thumbsUp != null) 'thumbs_up': thumbsUp,
+      if (thumbsDown != null) 'thumbs_down': thumbsDown,
+      if (generatedAt != null) 'generated_at': generatedAt,
+    });
+  }
+
+  InsightFeedbackCompanion copyWith({
+    Value<int>? id,
+    Value<String>? odUserId,
+    Value<String>? ruleId,
+    Value<bool>? thumbsUp,
+    Value<bool>? thumbsDown,
+    Value<DateTime>? generatedAt,
+  }) {
+    return InsightFeedbackCompanion(
+      id: id ?? this.id,
+      odUserId: odUserId ?? this.odUserId,
+      ruleId: ruleId ?? this.ruleId,
+      thumbsUp: thumbsUp ?? this.thumbsUp,
+      thumbsDown: thumbsDown ?? this.thumbsDown,
+      generatedAt: generatedAt ?? this.generatedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (odUserId.present) {
+      map['od_user_id'] = Variable<String>(odUserId.value);
+    }
+    if (ruleId.present) {
+      map['rule_id'] = Variable<String>(ruleId.value);
+    }
+    if (thumbsUp.present) {
+      map['thumbs_up'] = Variable<bool>(thumbsUp.value);
+    }
+    if (thumbsDown.present) {
+      map['thumbs_down'] = Variable<bool>(thumbsDown.value);
+    }
+    if (generatedAt.present) {
+      map['generated_at'] = Variable<DateTime>(generatedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('InsightFeedbackCompanion(')
+          ..write('id: $id, ')
+          ..write('odUserId: $odUserId, ')
+          ..write('ruleId: $ruleId, ')
+          ..write('thumbsUp: $thumbsUp, ')
+          ..write('thumbsDown: $thumbsDown, ')
+          ..write('generatedAt: $generatedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -13472,6 +14595,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $SyncQueueTable syncQueue = $SyncQueueTable(this);
   late final $SyncDeadLetterTable syncDeadLetter = $SyncDeadLetterTable(this);
   late final $FoodItemsFtsTable foodItemsFts = $FoodItemsFtsTable(this);
+  late final $InsightFeedbackTable insightFeedback = $InsightFeedbackTable(
+    this,
+  );
   late final Index idxFoodLogsUser = Index(
     'idx_food_logs_user',
     'CREATE INDEX idx_food_logs_user ON food_logs (user_id, logged_at)',
@@ -13636,6 +14762,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     syncQueue,
     syncDeadLetter,
     foodItemsFts,
+    insightFeedback,
     idxFoodLogsUser,
     idxFoodItemsName,
     idxWorkoutLogsUser,
@@ -14423,6 +15550,9 @@ typedef $$WorkoutLogsTableCreateCompanionBuilder =
       required int durationMin,
       required double caloriesBurned,
       required String workoutType,
+      Value<int?> rpe,
+      Value<String?> routeJson,
+      Value<double?> distanceKm,
       required DateTime loggedAt,
     });
 typedef $$WorkoutLogsTableUpdateCompanionBuilder =
@@ -14433,6 +15563,9 @@ typedef $$WorkoutLogsTableUpdateCompanionBuilder =
       Value<int> durationMin,
       Value<double> caloriesBurned,
       Value<String> workoutType,
+      Value<int?> rpe,
+      Value<String?> routeJson,
+      Value<double?> distanceKm,
       Value<DateTime> loggedAt,
     });
 
@@ -14472,6 +15605,21 @@ class $$WorkoutLogsTableFilterComposer
 
   ColumnFilters<String> get workoutType => $composableBuilder(
     column: $table.workoutType,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get rpe => $composableBuilder(
+    column: $table.rpe,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get routeJson => $composableBuilder(
+    column: $table.routeJson,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get distanceKm => $composableBuilder(
+    column: $table.distanceKm,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -14520,6 +15668,21 @@ class $$WorkoutLogsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get rpe => $composableBuilder(
+    column: $table.rpe,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get routeJson => $composableBuilder(
+    column: $table.routeJson,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get distanceKm => $composableBuilder(
+    column: $table.distanceKm,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get loggedAt => $composableBuilder(
     column: $table.loggedAt,
     builder: (column) => ColumnOrderings(column),
@@ -14556,6 +15719,17 @@ class $$WorkoutLogsTableAnnotationComposer
 
   GeneratedColumn<String> get workoutType => $composableBuilder(
     column: $table.workoutType,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get rpe =>
+      $composableBuilder(column: $table.rpe, builder: (column) => column);
+
+  GeneratedColumn<String> get routeJson =>
+      $composableBuilder(column: $table.routeJson, builder: (column) => column);
+
+  GeneratedColumn<double> get distanceKm => $composableBuilder(
+    column: $table.distanceKm,
     builder: (column) => column,
   );
 
@@ -14600,6 +15774,9 @@ class $$WorkoutLogsTableTableManager
                 Value<int> durationMin = const Value.absent(),
                 Value<double> caloriesBurned = const Value.absent(),
                 Value<String> workoutType = const Value.absent(),
+                Value<int?> rpe = const Value.absent(),
+                Value<String?> routeJson = const Value.absent(),
+                Value<double?> distanceKm = const Value.absent(),
                 Value<DateTime> loggedAt = const Value.absent(),
               }) => WorkoutLogsCompanion(
                 id: id,
@@ -14608,6 +15785,9 @@ class $$WorkoutLogsTableTableManager
                 durationMin: durationMin,
                 caloriesBurned: caloriesBurned,
                 workoutType: workoutType,
+                rpe: rpe,
+                routeJson: routeJson,
+                distanceKm: distanceKm,
                 loggedAt: loggedAt,
               ),
           createCompanionCallback:
@@ -14618,6 +15798,9 @@ class $$WorkoutLogsTableTableManager
                 required int durationMin,
                 required double caloriesBurned,
                 required String workoutType,
+                Value<int?> rpe = const Value.absent(),
+                Value<String?> routeJson = const Value.absent(),
+                Value<double?> distanceKm = const Value.absent(),
                 required DateTime loggedAt,
               }) => WorkoutLogsCompanion.insert(
                 id: id,
@@ -14626,6 +15809,9 @@ class $$WorkoutLogsTableTableManager
                 durationMin: durationMin,
                 caloriesBurned: caloriesBurned,
                 workoutType: workoutType,
+                rpe: rpe,
+                routeJson: routeJson,
+                distanceKm: distanceKm,
                 loggedAt: loggedAt,
               ),
           withReferenceMapper: (p0) => p0
@@ -17942,12 +19128,34 @@ typedef $$NutritionGoalsTableCreateCompanionBuilder =
       Value<int> id,
       required String userId,
       required double calorieGoal,
+      Value<double> carbsPercent,
+      Value<double> proteinPercent,
+      Value<double> fatPercent,
+      Value<double?> carbsGrams,
+      Value<double?> proteinGrams,
+      Value<double?> fatGrams,
+      Value<double> ironMgRda,
+      Value<double> vitaminDMcgRda,
+      Value<double> vitaminB12McgRda,
+      Value<double> calciumMgRda,
+      required DateTime updatedAt,
     });
 typedef $$NutritionGoalsTableUpdateCompanionBuilder =
     NutritionGoalsCompanion Function({
       Value<int> id,
       Value<String> userId,
       Value<double> calorieGoal,
+      Value<double> carbsPercent,
+      Value<double> proteinPercent,
+      Value<double> fatPercent,
+      Value<double?> carbsGrams,
+      Value<double?> proteinGrams,
+      Value<double?> fatGrams,
+      Value<double> ironMgRda,
+      Value<double> vitaminDMcgRda,
+      Value<double> vitaminB12McgRda,
+      Value<double> calciumMgRda,
+      Value<DateTime> updatedAt,
     });
 
 class $$NutritionGoalsTableFilterComposer
@@ -17971,6 +19179,61 @@ class $$NutritionGoalsTableFilterComposer
 
   ColumnFilters<double> get calorieGoal => $composableBuilder(
     column: $table.calorieGoal,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get carbsPercent => $composableBuilder(
+    column: $table.carbsPercent,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get proteinPercent => $composableBuilder(
+    column: $table.proteinPercent,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get fatPercent => $composableBuilder(
+    column: $table.fatPercent,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get carbsGrams => $composableBuilder(
+    column: $table.carbsGrams,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get proteinGrams => $composableBuilder(
+    column: $table.proteinGrams,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get fatGrams => $composableBuilder(
+    column: $table.fatGrams,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get ironMgRda => $composableBuilder(
+    column: $table.ironMgRda,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get vitaminDMcgRda => $composableBuilder(
+    column: $table.vitaminDMcgRda,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get vitaminB12McgRda => $composableBuilder(
+    column: $table.vitaminB12McgRda,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get calciumMgRda => $composableBuilder(
+    column: $table.calciumMgRda,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -17998,6 +19261,61 @@ class $$NutritionGoalsTableOrderingComposer
     column: $table.calorieGoal,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<double> get carbsPercent => $composableBuilder(
+    column: $table.carbsPercent,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get proteinPercent => $composableBuilder(
+    column: $table.proteinPercent,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get fatPercent => $composableBuilder(
+    column: $table.fatPercent,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get carbsGrams => $composableBuilder(
+    column: $table.carbsGrams,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get proteinGrams => $composableBuilder(
+    column: $table.proteinGrams,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get fatGrams => $composableBuilder(
+    column: $table.fatGrams,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get ironMgRda => $composableBuilder(
+    column: $table.ironMgRda,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get vitaminDMcgRda => $composableBuilder(
+    column: $table.vitaminDMcgRda,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get vitaminB12McgRda => $composableBuilder(
+    column: $table.vitaminB12McgRda,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get calciumMgRda => $composableBuilder(
+    column: $table.calciumMgRda,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$NutritionGoalsTableAnnotationComposer
@@ -18019,6 +19337,55 @@ class $$NutritionGoalsTableAnnotationComposer
     column: $table.calorieGoal,
     builder: (column) => column,
   );
+
+  GeneratedColumn<double> get carbsPercent => $composableBuilder(
+    column: $table.carbsPercent,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get proteinPercent => $composableBuilder(
+    column: $table.proteinPercent,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get fatPercent => $composableBuilder(
+    column: $table.fatPercent,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get carbsGrams => $composableBuilder(
+    column: $table.carbsGrams,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get proteinGrams => $composableBuilder(
+    column: $table.proteinGrams,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get fatGrams =>
+      $composableBuilder(column: $table.fatGrams, builder: (column) => column);
+
+  GeneratedColumn<double> get ironMgRda =>
+      $composableBuilder(column: $table.ironMgRda, builder: (column) => column);
+
+  GeneratedColumn<double> get vitaminDMcgRda => $composableBuilder(
+    column: $table.vitaminDMcgRda,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get vitaminB12McgRda => $composableBuilder(
+    column: $table.vitaminB12McgRda,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get calciumMgRda => $composableBuilder(
+    column: $table.calciumMgRda,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
 }
 
 class $$NutritionGoalsTableTableManager
@@ -18057,20 +19424,64 @@ class $$NutritionGoalsTableTableManager
                 Value<int> id = const Value.absent(),
                 Value<String> userId = const Value.absent(),
                 Value<double> calorieGoal = const Value.absent(),
+                Value<double> carbsPercent = const Value.absent(),
+                Value<double> proteinPercent = const Value.absent(),
+                Value<double> fatPercent = const Value.absent(),
+                Value<double?> carbsGrams = const Value.absent(),
+                Value<double?> proteinGrams = const Value.absent(),
+                Value<double?> fatGrams = const Value.absent(),
+                Value<double> ironMgRda = const Value.absent(),
+                Value<double> vitaminDMcgRda = const Value.absent(),
+                Value<double> vitaminB12McgRda = const Value.absent(),
+                Value<double> calciumMgRda = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
               }) => NutritionGoalsCompanion(
                 id: id,
                 userId: userId,
                 calorieGoal: calorieGoal,
+                carbsPercent: carbsPercent,
+                proteinPercent: proteinPercent,
+                fatPercent: fatPercent,
+                carbsGrams: carbsGrams,
+                proteinGrams: proteinGrams,
+                fatGrams: fatGrams,
+                ironMgRda: ironMgRda,
+                vitaminDMcgRda: vitaminDMcgRda,
+                vitaminB12McgRda: vitaminB12McgRda,
+                calciumMgRda: calciumMgRda,
+                updatedAt: updatedAt,
               ),
           createCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
                 required String userId,
                 required double calorieGoal,
+                Value<double> carbsPercent = const Value.absent(),
+                Value<double> proteinPercent = const Value.absent(),
+                Value<double> fatPercent = const Value.absent(),
+                Value<double?> carbsGrams = const Value.absent(),
+                Value<double?> proteinGrams = const Value.absent(),
+                Value<double?> fatGrams = const Value.absent(),
+                Value<double> ironMgRda = const Value.absent(),
+                Value<double> vitaminDMcgRda = const Value.absent(),
+                Value<double> vitaminB12McgRda = const Value.absent(),
+                Value<double> calciumMgRda = const Value.absent(),
+                required DateTime updatedAt,
               }) => NutritionGoalsCompanion.insert(
                 id: id,
                 userId: userId,
                 calorieGoal: calorieGoal,
+                carbsPercent: carbsPercent,
+                proteinPercent: proteinPercent,
+                fatPercent: fatPercent,
+                carbsGrams: carbsGrams,
+                proteinGrams: proteinGrams,
+                fatGrams: fatGrams,
+                ironMgRda: ironMgRda,
+                vitaminDMcgRda: vitaminDMcgRda,
+                vitaminB12McgRda: vitaminB12McgRda,
+                calciumMgRda: calciumMgRda,
+                updatedAt: updatedAt,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
@@ -20707,6 +22118,233 @@ typedef $$FoodItemsFtsTableProcessedTableManager =
       FoodItemsFt,
       PrefetchHooks Function()
     >;
+typedef $$InsightFeedbackTableCreateCompanionBuilder =
+    InsightFeedbackCompanion Function({
+      Value<int> id,
+      required String odUserId,
+      required String ruleId,
+      Value<bool> thumbsUp,
+      Value<bool> thumbsDown,
+      required DateTime generatedAt,
+    });
+typedef $$InsightFeedbackTableUpdateCompanionBuilder =
+    InsightFeedbackCompanion Function({
+      Value<int> id,
+      Value<String> odUserId,
+      Value<String> ruleId,
+      Value<bool> thumbsUp,
+      Value<bool> thumbsDown,
+      Value<DateTime> generatedAt,
+    });
+
+class $$InsightFeedbackTableFilterComposer
+    extends Composer<_$AppDatabase, $InsightFeedbackTable> {
+  $$InsightFeedbackTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get odUserId => $composableBuilder(
+    column: $table.odUserId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get ruleId => $composableBuilder(
+    column: $table.ruleId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get thumbsUp => $composableBuilder(
+    column: $table.thumbsUp,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get thumbsDown => $composableBuilder(
+    column: $table.thumbsDown,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get generatedAt => $composableBuilder(
+    column: $table.generatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$InsightFeedbackTableOrderingComposer
+    extends Composer<_$AppDatabase, $InsightFeedbackTable> {
+  $$InsightFeedbackTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get odUserId => $composableBuilder(
+    column: $table.odUserId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get ruleId => $composableBuilder(
+    column: $table.ruleId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get thumbsUp => $composableBuilder(
+    column: $table.thumbsUp,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get thumbsDown => $composableBuilder(
+    column: $table.thumbsDown,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get generatedAt => $composableBuilder(
+    column: $table.generatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$InsightFeedbackTableAnnotationComposer
+    extends Composer<_$AppDatabase, $InsightFeedbackTable> {
+  $$InsightFeedbackTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get odUserId =>
+      $composableBuilder(column: $table.odUserId, builder: (column) => column);
+
+  GeneratedColumn<String> get ruleId =>
+      $composableBuilder(column: $table.ruleId, builder: (column) => column);
+
+  GeneratedColumn<bool> get thumbsUp =>
+      $composableBuilder(column: $table.thumbsUp, builder: (column) => column);
+
+  GeneratedColumn<bool> get thumbsDown => $composableBuilder(
+    column: $table.thumbsDown,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get generatedAt => $composableBuilder(
+    column: $table.generatedAt,
+    builder: (column) => column,
+  );
+}
+
+class $$InsightFeedbackTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $InsightFeedbackTable,
+          InsightFeedbackData,
+          $$InsightFeedbackTableFilterComposer,
+          $$InsightFeedbackTableOrderingComposer,
+          $$InsightFeedbackTableAnnotationComposer,
+          $$InsightFeedbackTableCreateCompanionBuilder,
+          $$InsightFeedbackTableUpdateCompanionBuilder,
+          (
+            InsightFeedbackData,
+            BaseReferences<
+              _$AppDatabase,
+              $InsightFeedbackTable,
+              InsightFeedbackData
+            >,
+          ),
+          InsightFeedbackData,
+          PrefetchHooks Function()
+        > {
+  $$InsightFeedbackTableTableManager(
+    _$AppDatabase db,
+    $InsightFeedbackTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$InsightFeedbackTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$InsightFeedbackTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$InsightFeedbackTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> odUserId = const Value.absent(),
+                Value<String> ruleId = const Value.absent(),
+                Value<bool> thumbsUp = const Value.absent(),
+                Value<bool> thumbsDown = const Value.absent(),
+                Value<DateTime> generatedAt = const Value.absent(),
+              }) => InsightFeedbackCompanion(
+                id: id,
+                odUserId: odUserId,
+                ruleId: ruleId,
+                thumbsUp: thumbsUp,
+                thumbsDown: thumbsDown,
+                generatedAt: generatedAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String odUserId,
+                required String ruleId,
+                Value<bool> thumbsUp = const Value.absent(),
+                Value<bool> thumbsDown = const Value.absent(),
+                required DateTime generatedAt,
+              }) => InsightFeedbackCompanion.insert(
+                id: id,
+                odUserId: odUserId,
+                ruleId: ruleId,
+                thumbsUp: thumbsUp,
+                thumbsDown: thumbsDown,
+                generatedAt: generatedAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$InsightFeedbackTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $InsightFeedbackTable,
+      InsightFeedbackData,
+      $$InsightFeedbackTableFilterComposer,
+      $$InsightFeedbackTableOrderingComposer,
+      $$InsightFeedbackTableAnnotationComposer,
+      $$InsightFeedbackTableCreateCompanionBuilder,
+      $$InsightFeedbackTableUpdateCompanionBuilder,
+      (
+        InsightFeedbackData,
+        BaseReferences<
+          _$AppDatabase,
+          $InsightFeedbackTable,
+          InsightFeedbackData
+        >,
+      ),
+      InsightFeedbackData,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -20773,4 +22411,6 @@ class $AppDatabaseManager {
       $$SyncDeadLetterTableTableManager(_db, _db.syncDeadLetter);
   $$FoodItemsFtsTableTableManager get foodItemsFts =>
       $$FoodItemsFtsTableTableManager(_db, _db.foodItemsFts);
+  $$InsightFeedbackTableTableManager get insightFeedback =>
+      $$InsightFeedbackTableTableManager(_db, _db.insightFeedback);
 }

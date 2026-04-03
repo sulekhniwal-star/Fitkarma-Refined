@@ -62,6 +62,7 @@ class NutritionService {
       NutritionGoalsCompanion.insert(
         userId: odUserId,
         calorieGoal: calorieGoal,
+        updatedAt: DateTime.now(),
       ),
     );
   }

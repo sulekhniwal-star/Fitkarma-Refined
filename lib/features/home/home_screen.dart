@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fitkarma/features/home/data/dashboard_providers.dart';
+import 'package:fitkarma/features/karma/karma_screen.dart';
 import 'package:fitkarma/shared/theme/app_colors.dart';
 import 'package:fitkarma/shared/widgets/activity_rings.dart';
 import 'package:fitkarma/shared/widgets/insight_card.dart';
@@ -54,7 +55,7 @@ class _DashboardContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomScrollView(
       slivers: [
-        _buildAppBar(),
+        _buildAppBar(() => Navigator.push(context, MaterialPageRoute(builder: (_) => const KarmaHubScreen()))),
         SliverToBoxAdapter(child: _buildActivityRings()),
         SliverToBoxAdapter(child: _buildInsightCard()),
         SliverToBoxAdapter(child: _buildMealsSection()),
@@ -64,7 +65,7 @@ class _DashboardContent extends StatelessWidget {
     );
   }
 
-  Widget _buildAppBar() {
+  Widget _buildAppBar(VoidCallback onKarmaTap) {
     return SliverAppBar(
       expandedHeight: 120,
       floating: false,
@@ -80,25 +81,28 @@ class _DashboardContent extends StatelessWidget {
         ),
       ),
       actions: [
-        Container(
-          margin: const EdgeInsets.only(right: 8),
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          decoration: BoxDecoration(
-            color: AppColors.primary.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Row(
-            children: [
-              const Icon(Icons.star, color: Color(0xFFFFD700), size: 18),
-              const SizedBox(width: 4),
-              Text(
-                '${data.totalKarma} XP',
-                style: const TextStyle(
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.primary,
+        GestureDetector(
+          onTap: onKarmaTap,
+          child: Container(
+            margin: const EdgeInsets.only(right: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: AppColors.primary.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Row(
+              children: [
+                const Icon(Icons.star, color: Color(0xFFFFD700), size: 18),
+                const SizedBox(width: 4),
+                Text(
+                  '${data.totalKarma} XP',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.primary,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ],

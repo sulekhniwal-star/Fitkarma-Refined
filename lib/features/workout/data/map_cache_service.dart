@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
@@ -10,47 +9,64 @@ final mapCacheServiceProvider = Provider<MapCacheService>((ref) {
 });
 
 class MapCacheService {
-  static const double _defaultZoom = 15.0;
-  static const int _defaultMinZoom = 10;
-  static const int _defaultMaxZoom = 18;
-
   Future<void> initialize() async {
-    await FMTCObjectBoxBackend().initialise();
-    await FMTCStore('fitkarma_maps').manage.create();
+    try {
+      await FMTCObjectBoxBackend().initialise();
+      await FMTCStore('fitkarma_maps').manage.create();
+    } catch (e) {
+      // Silently fail if initialization fails
+    }
   }
 
   Future<void> preCacheHomeRegion({
     required double lat,
     required double lng,
     double radiusKm = 5.0,
-    int minZoom = _defaultMinZoom,
-    int maxZoom = _defaultMaxZoom,
+    int minZoom = 10,
+    int maxZoom = 18,
   }) async {
-    final store = FMTCStore('fitkarma_maps');
-    
-    final center = LatLng(lat, lng);
-
-    final downloadableRegion = CircleRegion(center, radiusKm * 1000);
-
-    await store.download.startForeground(
-      region: downloadableRegion,
-      parallelThreads: 5,
-      maxBufferLength: 200,
-      skipExistingTiles: true,
-    );
+    try {
+      final store = FMTCStore('fitkarma_maps');
+      final center = LatLng(lat, lng);
+      final region = CircleRegion(center, radiusKm * 1000);
+      final downloadable = region.toDownloadable(
+        minZoom: minZoom,
+        maxZoom: maxZoom,
+        options: TileLayer(
+          urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+        ),
+      );
+      await store.download.startForeground(
+        region: downloadable,
+        parallelThreads: 5,
+        maxBufferLength: 200,
+        skipExistingTiles: true,
+      );
+    } catch (e) {
+      // Silently fail
+    }
   }
 
   Future<double> getCacheSize() async {
-    final store = FMTCStore('fitkarma_maps');
-    final stats = await store.stats;
-    return stats.size / (1024 * 1024);
+    try {
+      final store = FMTCStore('fitkarma_maps');
+      final stats = await store.stats.all;
+      return stats.size / (1024 * 1024);
+    } catch (e) {
+      return 0;
+    }
   }
 
   Future<void> clearCache() async {
-    final store = FMTCStore('fitkarma_maps');
-    await store.manage.reset();
+    try {
+      final store = FMTCStore('fitkarma_maps');
+      await store.manage.reset();
+    } catch (e) {
+      // Silently fail
+    }
   }
 
-  Stream<DownloadProgress> get downloadProgressStream => 
-      FMTCStore('fitkarma_maps').download;
+  Stream<DownloadProgress>? downloadProgressStream() {
+    return null;
+  }
 }

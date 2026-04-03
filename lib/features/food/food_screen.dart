@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fitkarma/features/food/data/nutrition_service.dart';
 import 'package:fitkarma/shared/theme/app_colors.dart';
 
-final tdeeCalculatorProvider = StateNotifierProvider<TdeeCalculatorNotifier, TdeeCalculatorState>((ref) {
+final tdeeCalculatorProvider = NotifierProvider<TdeeCalculatorNotifier, TdeeCalculatorState>(() {
   return TdeeCalculatorNotifier();
 });
 
@@ -47,8 +47,9 @@ class TdeeCalculatorState {
   }
 }
 
-class TdeeCalculatorNotifier extends StateNotifier<TdeeCalculatorState> {
-  TdeeCalculatorNotifier() : super(TdeeCalculatorState());
+class TdeeCalculatorNotifier extends Notifier<TdeeCalculatorState> {
+  @override
+  TdeeCalculatorState build() => TdeeCalculatorState();
 
   void setWeight(double v) => state = state.copyWith(weight: v);
   void setHeight(double v) => state = state.copyWith(height: v);

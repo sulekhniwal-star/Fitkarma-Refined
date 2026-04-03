@@ -180,14 +180,15 @@ class WorkoutService {
   }
 }
 
-final restTimerProvider = StateNotifierProvider<RestTimerNotifier, RestTimerState>((ref) {
+final restTimerProvider = NotifierProvider<RestTimerNotifier, RestTimerState>(() {
   return RestTimerNotifier();
 });
 
-class RestTimerNotifier extends StateNotifier<RestTimerState> {
+class RestTimerNotifier extends Notifier<RestTimerState> {
   Timer? _timer;
 
-  RestTimerNotifier() : super(RestTimerState.initial());
+  @override
+  RestTimerState build() => RestTimerState.initial();
 
   void startRestTimer({int durationSeconds = 60}) {
     _timer?.cancel();
@@ -195,6 +196,7 @@ class RestTimerNotifier extends StateNotifier<RestTimerState> {
       isRunning: true,
       remainingSeconds: durationSeconds,
       totalSeconds: durationSeconds,
+      isCompleted: false,
     );
 
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
@@ -220,12 +222,6 @@ class RestTimerNotifier extends StateNotifier<RestTimerState> {
 
   void resetForNextSet() {
     state = state.copyWith(isCompleted: false);
-  }
-
-  @override
-  void dispose() {
-    _timer?.cancel();
-    super.dispose();
   }
 }
 
@@ -302,12 +298,13 @@ class CustomExercise {
   }
 }
 
-final customWorkoutProvider = StateNotifierProvider<CustomWorkoutNotifier, CustomWorkoutState>((ref) {
+final customWorkoutProvider = NotifierProvider<CustomWorkoutNotifier, CustomWorkoutState>(() {
   return CustomWorkoutNotifier();
 });
 
-class CustomWorkoutNotifier extends StateNotifier<CustomWorkoutState> {
-  CustomWorkoutNotifier() : super(CustomWorkoutState.initial());
+class CustomWorkoutNotifier extends Notifier<CustomWorkoutState> {
+  @override
+  CustomWorkoutState build() => CustomWorkoutState.initial();
 
   void addExercise(CustomExercise exercise) {
     state = state.copyWith(
