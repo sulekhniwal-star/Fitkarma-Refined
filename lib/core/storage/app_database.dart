@@ -4,6 +4,42 @@ import 'package:drift_flutter/drift_flutter.dart';
 part 'app_database.g.dart';
 
 // ═══════════════════════════════════════════════════════════════════════════════
+// SECURITY REMINDERS — Appwrite Console Configuration
+// ═══════════════════════════════════════════════════════════════════════════════
+//
+// ⚠️ CRITICAL: These settings MUST be configured in Appwrite Console UI:
+//
+// 1. COLLECTION PERMISSIONS:
+//    - Remove `Create: role:users` from ALL collections
+//    - Set permissions ONLY at document creation via API:
+//      ```dart
+//      await tablesDb.createRow(
+//        databaseId: 'fitkarma',
+//        tableId: 'food_logs',
+//        rowId: ID.unique(),
+//        data: {...},
+//        permissions: [
+//          Permission.read(Role.user(uid)),
+//          Permission.write(Role.user(uid)),
+//        ],
+//      );
+//      ```
+//
+// 2. COMPOSITE INDICES (high-frequency queries):
+//    - food_logs:       [userId, loggedAt DESC]
+//    - step_logs:       [userId, date DESC]
+//    - workout_logs:   [userId, loggedAt DESC]
+//    - blood_pressure_logs: [userId, measuredAt DESC]
+//    - glucose_logs:    [userId, measuredAt DESC]
+//    - mood_logs:       [userId, loggedAt DESC]
+//    - sleep_logs:      [userId, date DESC]
+//    - journal_entries: [userId, createdAt DESC]
+//    - habits:         [userId, createdAt DESC]
+//
+// 3. Enable AUTHORS attribute on userId columns for RLS
+//    - Set authors: ["userId"] on collections
+//
+// ═══════════════════════════════════════════════════════════════════════════════
 // TABLE DEFINITIONS
 // ═══════════════════════════════════════════════════════════════════════════════
 
@@ -255,6 +291,10 @@ class SyncQueue extends Table {
   DateTimeColumn get createdAt => dateTime()();
   IntColumn get retryCount => integer().withDefault(const Constant(0))();
   TextColumn get status => text().withLength(min: 1, max: 16)();
+  IntColumn get priority => integer().withDefault(const Constant(2))();
+  TextColumn get idempotencyKey => text().withLength(min: 1, max: 64)();
+  TextColumn get errorMessage => text().nullable().withLength(max: 512)();
+  DateTimeColumn get lastAttemptAt => dateTime().nullable()();
 }
 
 class SyncDeadLetter extends Table {
@@ -958,9 +998,20 @@ class SyncQueueDao extends DatabaseAccessor<AppDatabase>
   Future<List<SyncQueueData>> getPending({int limit = 50}) =>
       (select(syncQueue)
             ..where((t) => t.status.equals('pending'))
-            ..orderBy([(t) => OrderingTerm.asc(t.createdAt)])
+            ..orderBy([
+              (t) => OrderingTerm.asc(t.priority),
+              (t) => OrderingTerm.asc(t.createdAt)
+            ])
             ..limit(limit))
           .get();
+
+  Future<int> getPendingCount() async {
+    final result = await (selectOnly(syncQueue)
+          ..addColumns([syncQueue.id.count()])
+          ..where(syncQueue.status.equals('pending')))
+        .getSingle();
+    return result.read(syncQueue.id.count()) ?? 0;
+  }
 
   Future<int> enqueue(SyncQueueCompanion entry) =>
       into(syncQueue).insert(entry);
@@ -969,12 +1020,25 @@ class SyncQueueDao extends DatabaseAccessor<AppDatabase>
       (update(syncQueue)..where((t) => t.id.equals(id)))
           .write(const SyncQueueCompanion(status: Value('done')));
 
+  Future<void> markFailed(int id, String error, DateTime now) =>
+      (update(syncQueue)..where((t) => t.id.equals(id))).write(
+        SyncQueueCompanion(
+          status: Value('failed'),
+          errorMessage: Value(error),
+          lastAttemptAt: Value(now),
+        ),
+      );
+
   Future<void> incrementRetry(int id) async {
     final current = await (select(syncQueue)
           ..where((t) => t.id.equals(id)))
         .getSingle();
     await (update(syncQueue)..where((t) => t.id.equals(id))).write(
-        SyncQueueCompanion(retryCount: Value(current.retryCount + 1)));
+        SyncQueueCompanion(
+          retryCount: Value(current.retryCount + 1),
+          lastAttemptAt: Value(DateTime.now()),
+        ),
+      );
   }
 }
 

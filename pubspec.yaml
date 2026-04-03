@@ -42,6 +42,10 @@ dependencies:
   # Secure Storage for encryption keys
   flutter_secure_storage: ^9.0.0
 
+  # Connectivity
+  connectivity_plus: ^6.0.0
+  device_info_plus: ^12.4.0
+
   # Home Screen Widgets
   home_widget: ^0.9.0
 
