@@ -246,6 +246,7 @@ class _UnknownException implements AppException {
   const _UnknownException({
     required this.code,
     required this.message,
+    this.details = null,
     this.original,
   });
 }

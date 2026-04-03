@@ -70,6 +70,15 @@ dependencies:
   # HTTP for API calls
   http: ^1.2.0
 
+  # Health Connect / HealthKit
+  health: 13.3.1
+
+  # Pedometer fallback
+  pedometer: ^4.0.1
+
+  # Background tasks
+  workmanager: ^0.5.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

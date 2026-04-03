@@ -1255,6 +1255,10 @@ class AppDatabase extends _$AppDatabase {
               proteinPer100g: row.read<double>('proteinPer100g'),
               carbsPer100g: row.read<double>('carbsPer100g'),
               fatPer100g: row.read<double>('fatPer100g'),
+              vitaminDMcg: row.read<double?>('vitaminDMcg') ?? 0,
+              vitaminB12Mcg: row.read<double?>('vitaminB12Mcg') ?? 0,
+              ironMg: row.read<double?>('ironMg') ?? 0,
+              calciumMg: row.read<double?>('calciumMg') ?? 0,
             ))
         .toList();
   }
