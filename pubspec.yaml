@@ -46,6 +46,9 @@ dependencies:
   connectivity_plus: ^6.0.0
   device_info_plus: ^12.4.0
 
+  # Biometric Authentication
+  local_auth: ^2.3.0
+
   # Home Screen Widgets
   home_widget: ^0.9.0
 

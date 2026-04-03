@@ -16,6 +16,7 @@ import 'package:fitkarma/features/mental/mental_health_screen.dart'
     deferred as mental_health;
 import 'package:fitkarma/features/meditation/meditation_screen.dart'
     deferred as meditation;
+import 'package:fitkarma/features/settings/settings_screen.dart';
 import 'package:fitkarma/features/onboarding/presentation/onboarding_screen1.dart';
 import 'package:fitkarma/features/onboarding/presentation/onboarding_screen2.dart';
 import 'package:fitkarma/features/onboarding/presentation/onboarding_screen3.dart';
@@ -287,7 +288,7 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       parentNavigatorKey: _rootNavigatorKey,
       path: '/settings',
-      builder: (context, state) => const _PlaceholderScreen('Settings'),
+      builder: (context, state) => const SettingsScreen(),
     ),
   ],
 );
