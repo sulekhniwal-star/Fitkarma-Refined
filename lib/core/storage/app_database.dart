@@ -91,6 +91,9 @@ class WorkoutLogs extends Table {
   IntColumn get durationMin => integer()();
   RealColumn get caloriesBurned => real()();
   TextColumn get workoutType => text().withLength(min: 1, max: 64)();
+  IntColumn get rpe => integer().nullable()();
+  TextColumn get routeJson => text().nullable()();
+  RealColumn get distanceKm => real().nullable()();
   DateTimeColumn get loggedAt => dateTime()();
 }
 
@@ -202,6 +205,26 @@ class Recipes extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get userId => text().withLength(min: 1, max: 64)();
   TextColumn get title => text().withLength(min: 1, max: 255)();
+}
+
+class CustomWorkouts extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get userId => text().withLength(min: 1, max: 64)();
+  TextColumn get name => text().withLength(min: 1, max: 128)();
+  TextColumn get category => text().withLength(min: 1, max: 64)();
+  IntColumn get estimatedDurationMin => integer()();
+  TextColumn get exercisesJson => text()();
+  DateTimeColumn get createdAt => dateTime()();
+}
+
+class ScheduledWorkouts extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get userId => text().withLength(min: 1, max: 64)();
+  TextColumn get title => text().withLength(min: 1, max: 255)();
+  TextColumn get workoutType => text().withLength(min: 1, max: 64)();
+  DateTimeColumn get scheduledDate => dateTime()();
+  BoolColumn get isCompleted => boolean().withDefault(const Constant(false))();
+  BoolColumn get isRestDay => boolean().withDefault(const Constant(false))();
 }
 
 @TableIndex(name: 'idx_journal_user', columns: {#userId, #createdAt})

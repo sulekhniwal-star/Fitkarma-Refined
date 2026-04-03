@@ -79,6 +79,17 @@ dependencies:
   # Background tasks
   workmanager: ^0.5.2
 
+  # Maps & GPS
+  flutter_map: ^7.0.2
+  latlong2: ^0.9.1
+  geolocator: ^13.0.2
+
+  # YouTube Player
+  youtube_player_flutter: ^8.1.2
+
+  # Audio for rest timer chime
+  audioplayers: ^6.1.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
