@@ -254,6 +254,17 @@ class NutritionGoals extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get userId => text().withLength(min: 1, max: 64)();
   RealColumn get calorieGoal => real()();
+  RealColumn get carbsPercent => real().withDefault(const Constant(55))();
+  RealColumn get proteinPercent => real().withDefault(const Constant(20))();
+  RealColumn get fatPercent => real().withDefault(const Constant(25))();
+  RealColumn get carbsGrams => real().nullable()();
+  RealColumn get proteinGrams => real().nullable()();
+  RealColumn get fatGrams => real().nullable()();
+  RealColumn get ironMgRda => real().withDefault(const Constant(18))();
+  RealColumn get vitaminDMcgRda => real().withDefault(const Constant(15))();
+  RealColumn get vitaminB12McgRda => real().withDefault(const Constant(2.4))();
+  RealColumn get calciumMgRda => real().withDefault(const Constant(1000))();
+  DateTimeColumn get updatedAt => dateTime()();
 }
 
 @TableIndex(name: 'idx_pr_user_type', columns: {#userId, #recordType})
