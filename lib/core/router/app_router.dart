@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:fitkarma/features/home/home_screen.dart';
 import 'package:fitkarma/features/food/food_screen.dart';
 import 'package:fitkarma/features/food/presentation/community_food_submit_screen.dart';
+import 'package:fitkarma/features/food/presentation/food_log_screen.dart';
 import 'package:fitkarma/features/workout/workout_screen.dart';
 import 'package:fitkarma/features/steps/steps_screen.dart';
 import 'package:fitkarma/features/profile/profile_screen.dart';
@@ -193,6 +194,10 @@ final GoRouter appRouter = GoRouter(
           GoRoute(
             path: '/food',
             builder: (context, state) => const FoodScreen(),
+          ),
+          GoRoute(
+            path: '/food/log',
+            builder: (context, state) => const FoodLogScreen(),
           ),
           GoRoute(
             path: '/food/submit',
