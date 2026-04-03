@@ -286,6 +286,15 @@ class RemoteConfigCache extends Table {
   List<Set<Column>> get uniqueKeys => [{key}];
 }
 
+class InsightFeedback extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get odUserId => text().withLength(min: 1, max: 64)();
+  TextColumn get ruleId => text().withLength(min: 1, max: 64)();
+  BoolColumn get thumbsUp => boolean().withDefault(const Constant(false))();
+  BoolColumn get thumbsDown => boolean().withDefault(const Constant(false))();
+  DateTimeColumn get generatedAt => dateTime()();
+}
+
 class LabReports extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get userId => text().withLength(min: 1, max: 64)();
@@ -1172,6 +1181,7 @@ class SyncDeadLetterDao extends DatabaseAccessor<AppDatabase>
     SyncQueue,
     SyncDeadLetter,
     FoodItemsFts,
+    InsightFeedback,
   ],
   daos: [
     FoodLogsDao,
