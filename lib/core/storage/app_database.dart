@@ -54,6 +54,10 @@ class FoodLogs extends Table {
   RealColumn get proteinG => real()();
   RealColumn get carbsG => real()();
   RealColumn get fatG => real()();
+  RealColumn get vitaminDMcg => real().withDefault(const Constant(0))();
+  RealColumn get vitaminB12Mcg => real().withDefault(const Constant(0))();
+  RealColumn get ironMg => real().withDefault(const Constant(0))();
+  RealColumn get calciumMg => real().withDefault(const Constant(0))();
   DateTimeColumn get loggedAt => dateTime()();
   TextColumn get syncStatus => text().withLength(min: 1, max: 16)();
   TextColumn get idempotencyKey => text().withLength(min: 1, max: 64)();
@@ -66,10 +70,17 @@ class FoodLogs extends Table {
 class FoodItems extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get name => text().withLength(min: 1, max: 255)();
+  TextColumn get nameLocal => text().nullable().withLength(max: 255)();
+  TextColumn get region => text().nullable().withLength(max: 32)();
   RealColumn get caloriesPer100g => real()();
   RealColumn get proteinPer100g => real()();
   RealColumn get carbsPer100g => real()();
   RealColumn get fatPer100g => real()();
+  RealColumn get vitaminDMcg => real().withDefault(const Constant(0))();
+  RealColumn get vitaminB12Mcg => real().withDefault(const Constant(0))();
+  RealColumn get ironMg => real().withDefault(const Constant(0))();
+  RealColumn get calciumMg => real().withDefault(const Constant(0))();
+  TextColumn get servingSizesJson => text().nullable().withLength(max: 512)();
 }
 
 @TableIndex(name: 'idx_workout_logs_user', columns: {#userId, #loggedAt})
