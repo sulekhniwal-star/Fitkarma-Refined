@@ -89,7 +89,7 @@ class FoodDriftService {
           _db.foodLogs.loggedAt.isSmallerThanValue(dayEnd)))
         .getSingle();
 
-    return result?.read(_db.foodLogs.calories.sum()) ?? 0.0;
+    return result.read(_db.foodLogs.calories.sum()) ?? 0.0;
   }
 
   Future<Map<String, double>> getDailyMacros(String userId, DateTime date) async {

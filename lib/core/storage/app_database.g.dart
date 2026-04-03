@@ -514,6 +514,52 @@ class $FoodLogsTable extends FoodLogs with TableInfo<$FoodLogsTable, FoodLog> {
     type: DriftSqlType.double,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _vitaminDMcgMeta = const VerificationMeta(
+    'vitaminDMcg',
+  );
+  @override
+  late final GeneratedColumn<double> vitaminDMcg = GeneratedColumn<double>(
+    'vitamin_d_mcg',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _vitaminB12McgMeta = const VerificationMeta(
+    'vitaminB12Mcg',
+  );
+  @override
+  late final GeneratedColumn<double> vitaminB12Mcg = GeneratedColumn<double>(
+    'vitamin_b12_mcg',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _ironMgMeta = const VerificationMeta('ironMg');
+  @override
+  late final GeneratedColumn<double> ironMg = GeneratedColumn<double>(
+    'iron_mg',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _calciumMgMeta = const VerificationMeta(
+    'calciumMg',
+  );
+  @override
+  late final GeneratedColumn<double> calciumMg = GeneratedColumn<double>(
+    'calcium_mg',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
   static const VerificationMeta _loggedAtMeta = const VerificationMeta(
     'loggedAt',
   );
@@ -566,6 +612,10 @@ class $FoodLogsTable extends FoodLogs with TableInfo<$FoodLogsTable, FoodLog> {
     proteinG,
     carbsG,
     fatG,
+    vitaminDMcg,
+    vitaminB12Mcg,
+    ironMg,
+    calciumMg,
     loggedAt,
     syncStatus,
     idempotencyKey,
@@ -649,6 +699,36 @@ class $FoodLogsTable extends FoodLogs with TableInfo<$FoodLogsTable, FoodLog> {
     } else if (isInserting) {
       context.missing(_fatGMeta);
     }
+    if (data.containsKey('vitamin_d_mcg')) {
+      context.handle(
+        _vitaminDMcgMeta,
+        vitaminDMcg.isAcceptableOrUnknown(
+          data['vitamin_d_mcg']!,
+          _vitaminDMcgMeta,
+        ),
+      );
+    }
+    if (data.containsKey('vitamin_b12_mcg')) {
+      context.handle(
+        _vitaminB12McgMeta,
+        vitaminB12Mcg.isAcceptableOrUnknown(
+          data['vitamin_b12_mcg']!,
+          _vitaminB12McgMeta,
+        ),
+      );
+    }
+    if (data.containsKey('iron_mg')) {
+      context.handle(
+        _ironMgMeta,
+        ironMg.isAcceptableOrUnknown(data['iron_mg']!, _ironMgMeta),
+      );
+    }
+    if (data.containsKey('calcium_mg')) {
+      context.handle(
+        _calciumMgMeta,
+        calciumMg.isAcceptableOrUnknown(data['calcium_mg']!, _calciumMgMeta),
+      );
+    }
     if (data.containsKey('logged_at')) {
       context.handle(
         _loggedAtMeta,
@@ -725,6 +805,22 @@ class $FoodLogsTable extends FoodLogs with TableInfo<$FoodLogsTable, FoodLog> {
         DriftSqlType.double,
         data['${effectivePrefix}fat_g'],
       )!,
+      vitaminDMcg: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}vitamin_d_mcg'],
+      )!,
+      vitaminB12Mcg: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}vitamin_b12_mcg'],
+      )!,
+      ironMg: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}iron_mg'],
+      )!,
+      calciumMg: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}calcium_mg'],
+      )!,
       loggedAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}logged_at'],
@@ -756,6 +852,10 @@ class FoodLog extends DataClass implements Insertable<FoodLog> {
   final double proteinG;
   final double carbsG;
   final double fatG;
+  final double vitaminDMcg;
+  final double vitaminB12Mcg;
+  final double ironMg;
+  final double calciumMg;
   final DateTime loggedAt;
   final String syncStatus;
   final String idempotencyKey;
@@ -769,6 +869,10 @@ class FoodLog extends DataClass implements Insertable<FoodLog> {
     required this.proteinG,
     required this.carbsG,
     required this.fatG,
+    required this.vitaminDMcg,
+    required this.vitaminB12Mcg,
+    required this.ironMg,
+    required this.calciumMg,
     required this.loggedAt,
     required this.syncStatus,
     required this.idempotencyKey,
@@ -785,6 +889,10 @@ class FoodLog extends DataClass implements Insertable<FoodLog> {
     map['protein_g'] = Variable<double>(proteinG);
     map['carbs_g'] = Variable<double>(carbsG);
     map['fat_g'] = Variable<double>(fatG);
+    map['vitamin_d_mcg'] = Variable<double>(vitaminDMcg);
+    map['vitamin_b12_mcg'] = Variable<double>(vitaminB12Mcg);
+    map['iron_mg'] = Variable<double>(ironMg);
+    map['calcium_mg'] = Variable<double>(calciumMg);
     map['logged_at'] = Variable<DateTime>(loggedAt);
     map['sync_status'] = Variable<String>(syncStatus);
     map['idempotency_key'] = Variable<String>(idempotencyKey);
@@ -802,6 +910,10 @@ class FoodLog extends DataClass implements Insertable<FoodLog> {
       proteinG: Value(proteinG),
       carbsG: Value(carbsG),
       fatG: Value(fatG),
+      vitaminDMcg: Value(vitaminDMcg),
+      vitaminB12Mcg: Value(vitaminB12Mcg),
+      ironMg: Value(ironMg),
+      calciumMg: Value(calciumMg),
       loggedAt: Value(loggedAt),
       syncStatus: Value(syncStatus),
       idempotencyKey: Value(idempotencyKey),
@@ -823,6 +935,10 @@ class FoodLog extends DataClass implements Insertable<FoodLog> {
       proteinG: serializer.fromJson<double>(json['proteinG']),
       carbsG: serializer.fromJson<double>(json['carbsG']),
       fatG: serializer.fromJson<double>(json['fatG']),
+      vitaminDMcg: serializer.fromJson<double>(json['vitaminDMcg']),
+      vitaminB12Mcg: serializer.fromJson<double>(json['vitaminB12Mcg']),
+      ironMg: serializer.fromJson<double>(json['ironMg']),
+      calciumMg: serializer.fromJson<double>(json['calciumMg']),
       loggedAt: serializer.fromJson<DateTime>(json['loggedAt']),
       syncStatus: serializer.fromJson<String>(json['syncStatus']),
       idempotencyKey: serializer.fromJson<String>(json['idempotencyKey']),
@@ -841,6 +957,10 @@ class FoodLog extends DataClass implements Insertable<FoodLog> {
       'proteinG': serializer.toJson<double>(proteinG),
       'carbsG': serializer.toJson<double>(carbsG),
       'fatG': serializer.toJson<double>(fatG),
+      'vitaminDMcg': serializer.toJson<double>(vitaminDMcg),
+      'vitaminB12Mcg': serializer.toJson<double>(vitaminB12Mcg),
+      'ironMg': serializer.toJson<double>(ironMg),
+      'calciumMg': serializer.toJson<double>(calciumMg),
       'loggedAt': serializer.toJson<DateTime>(loggedAt),
       'syncStatus': serializer.toJson<String>(syncStatus),
       'idempotencyKey': serializer.toJson<String>(idempotencyKey),
@@ -857,6 +977,10 @@ class FoodLog extends DataClass implements Insertable<FoodLog> {
     double? proteinG,
     double? carbsG,
     double? fatG,
+    double? vitaminDMcg,
+    double? vitaminB12Mcg,
+    double? ironMg,
+    double? calciumMg,
     DateTime? loggedAt,
     String? syncStatus,
     String? idempotencyKey,
@@ -870,6 +994,10 @@ class FoodLog extends DataClass implements Insertable<FoodLog> {
     proteinG: proteinG ?? this.proteinG,
     carbsG: carbsG ?? this.carbsG,
     fatG: fatG ?? this.fatG,
+    vitaminDMcg: vitaminDMcg ?? this.vitaminDMcg,
+    vitaminB12Mcg: vitaminB12Mcg ?? this.vitaminB12Mcg,
+    ironMg: ironMg ?? this.ironMg,
+    calciumMg: calciumMg ?? this.calciumMg,
     loggedAt: loggedAt ?? this.loggedAt,
     syncStatus: syncStatus ?? this.syncStatus,
     idempotencyKey: idempotencyKey ?? this.idempotencyKey,
@@ -885,6 +1013,14 @@ class FoodLog extends DataClass implements Insertable<FoodLog> {
       proteinG: data.proteinG.present ? data.proteinG.value : this.proteinG,
       carbsG: data.carbsG.present ? data.carbsG.value : this.carbsG,
       fatG: data.fatG.present ? data.fatG.value : this.fatG,
+      vitaminDMcg: data.vitaminDMcg.present
+          ? data.vitaminDMcg.value
+          : this.vitaminDMcg,
+      vitaminB12Mcg: data.vitaminB12Mcg.present
+          ? data.vitaminB12Mcg.value
+          : this.vitaminB12Mcg,
+      ironMg: data.ironMg.present ? data.ironMg.value : this.ironMg,
+      calciumMg: data.calciumMg.present ? data.calciumMg.value : this.calciumMg,
       loggedAt: data.loggedAt.present ? data.loggedAt.value : this.loggedAt,
       syncStatus: data.syncStatus.present
           ? data.syncStatus.value
@@ -907,6 +1043,10 @@ class FoodLog extends DataClass implements Insertable<FoodLog> {
           ..write('proteinG: $proteinG, ')
           ..write('carbsG: $carbsG, ')
           ..write('fatG: $fatG, ')
+          ..write('vitaminDMcg: $vitaminDMcg, ')
+          ..write('vitaminB12Mcg: $vitaminB12Mcg, ')
+          ..write('ironMg: $ironMg, ')
+          ..write('calciumMg: $calciumMg, ')
           ..write('loggedAt: $loggedAt, ')
           ..write('syncStatus: $syncStatus, ')
           ..write('idempotencyKey: $idempotencyKey')
@@ -925,6 +1065,10 @@ class FoodLog extends DataClass implements Insertable<FoodLog> {
     proteinG,
     carbsG,
     fatG,
+    vitaminDMcg,
+    vitaminB12Mcg,
+    ironMg,
+    calciumMg,
     loggedAt,
     syncStatus,
     idempotencyKey,
@@ -942,6 +1086,10 @@ class FoodLog extends DataClass implements Insertable<FoodLog> {
           other.proteinG == this.proteinG &&
           other.carbsG == this.carbsG &&
           other.fatG == this.fatG &&
+          other.vitaminDMcg == this.vitaminDMcg &&
+          other.vitaminB12Mcg == this.vitaminB12Mcg &&
+          other.ironMg == this.ironMg &&
+          other.calciumMg == this.calciumMg &&
           other.loggedAt == this.loggedAt &&
           other.syncStatus == this.syncStatus &&
           other.idempotencyKey == this.idempotencyKey);
@@ -957,6 +1105,10 @@ class FoodLogsCompanion extends UpdateCompanion<FoodLog> {
   final Value<double> proteinG;
   final Value<double> carbsG;
   final Value<double> fatG;
+  final Value<double> vitaminDMcg;
+  final Value<double> vitaminB12Mcg;
+  final Value<double> ironMg;
+  final Value<double> calciumMg;
   final Value<DateTime> loggedAt;
   final Value<String> syncStatus;
   final Value<String> idempotencyKey;
@@ -970,6 +1122,10 @@ class FoodLogsCompanion extends UpdateCompanion<FoodLog> {
     this.proteinG = const Value.absent(),
     this.carbsG = const Value.absent(),
     this.fatG = const Value.absent(),
+    this.vitaminDMcg = const Value.absent(),
+    this.vitaminB12Mcg = const Value.absent(),
+    this.ironMg = const Value.absent(),
+    this.calciumMg = const Value.absent(),
     this.loggedAt = const Value.absent(),
     this.syncStatus = const Value.absent(),
     this.idempotencyKey = const Value.absent(),
@@ -984,6 +1140,10 @@ class FoodLogsCompanion extends UpdateCompanion<FoodLog> {
     required double proteinG,
     required double carbsG,
     required double fatG,
+    this.vitaminDMcg = const Value.absent(),
+    this.vitaminB12Mcg = const Value.absent(),
+    this.ironMg = const Value.absent(),
+    this.calciumMg = const Value.absent(),
     required DateTime loggedAt,
     required String syncStatus,
     required String idempotencyKey,
@@ -1008,6 +1168,10 @@ class FoodLogsCompanion extends UpdateCompanion<FoodLog> {
     Expression<double>? proteinG,
     Expression<double>? carbsG,
     Expression<double>? fatG,
+    Expression<double>? vitaminDMcg,
+    Expression<double>? vitaminB12Mcg,
+    Expression<double>? ironMg,
+    Expression<double>? calciumMg,
     Expression<DateTime>? loggedAt,
     Expression<String>? syncStatus,
     Expression<String>? idempotencyKey,
@@ -1022,6 +1186,10 @@ class FoodLogsCompanion extends UpdateCompanion<FoodLog> {
       if (proteinG != null) 'protein_g': proteinG,
       if (carbsG != null) 'carbs_g': carbsG,
       if (fatG != null) 'fat_g': fatG,
+      if (vitaminDMcg != null) 'vitamin_d_mcg': vitaminDMcg,
+      if (vitaminB12Mcg != null) 'vitamin_b12_mcg': vitaminB12Mcg,
+      if (ironMg != null) 'iron_mg': ironMg,
+      if (calciumMg != null) 'calcium_mg': calciumMg,
       if (loggedAt != null) 'logged_at': loggedAt,
       if (syncStatus != null) 'sync_status': syncStatus,
       if (idempotencyKey != null) 'idempotency_key': idempotencyKey,
@@ -1038,6 +1206,10 @@ class FoodLogsCompanion extends UpdateCompanion<FoodLog> {
     Value<double>? proteinG,
     Value<double>? carbsG,
     Value<double>? fatG,
+    Value<double>? vitaminDMcg,
+    Value<double>? vitaminB12Mcg,
+    Value<double>? ironMg,
+    Value<double>? calciumMg,
     Value<DateTime>? loggedAt,
     Value<String>? syncStatus,
     Value<String>? idempotencyKey,
@@ -1052,6 +1224,10 @@ class FoodLogsCompanion extends UpdateCompanion<FoodLog> {
       proteinG: proteinG ?? this.proteinG,
       carbsG: carbsG ?? this.carbsG,
       fatG: fatG ?? this.fatG,
+      vitaminDMcg: vitaminDMcg ?? this.vitaminDMcg,
+      vitaminB12Mcg: vitaminB12Mcg ?? this.vitaminB12Mcg,
+      ironMg: ironMg ?? this.ironMg,
+      calciumMg: calciumMg ?? this.calciumMg,
       loggedAt: loggedAt ?? this.loggedAt,
       syncStatus: syncStatus ?? this.syncStatus,
       idempotencyKey: idempotencyKey ?? this.idempotencyKey,
@@ -1088,6 +1264,18 @@ class FoodLogsCompanion extends UpdateCompanion<FoodLog> {
     if (fatG.present) {
       map['fat_g'] = Variable<double>(fatG.value);
     }
+    if (vitaminDMcg.present) {
+      map['vitamin_d_mcg'] = Variable<double>(vitaminDMcg.value);
+    }
+    if (vitaminB12Mcg.present) {
+      map['vitamin_b12_mcg'] = Variable<double>(vitaminB12Mcg.value);
+    }
+    if (ironMg.present) {
+      map['iron_mg'] = Variable<double>(ironMg.value);
+    }
+    if (calciumMg.present) {
+      map['calcium_mg'] = Variable<double>(calciumMg.value);
+    }
     if (loggedAt.present) {
       map['logged_at'] = Variable<DateTime>(loggedAt.value);
     }
@@ -1112,6 +1300,10 @@ class FoodLogsCompanion extends UpdateCompanion<FoodLog> {
           ..write('proteinG: $proteinG, ')
           ..write('carbsG: $carbsG, ')
           ..write('fatG: $fatG, ')
+          ..write('vitaminDMcg: $vitaminDMcg, ')
+          ..write('vitaminB12Mcg: $vitaminB12Mcg, ')
+          ..write('ironMg: $ironMg, ')
+          ..write('calciumMg: $calciumMg, ')
           ..write('loggedAt: $loggedAt, ')
           ..write('syncStatus: $syncStatus, ')
           ..write('idempotencyKey: $idempotencyKey')
@@ -1151,6 +1343,28 @@ class $FoodItemsTable extends FoodItems
     ),
     type: DriftSqlType.string,
     requiredDuringInsert: true,
+  );
+  static const VerificationMeta _nameLocalMeta = const VerificationMeta(
+    'nameLocal',
+  );
+  @override
+  late final GeneratedColumn<String> nameLocal = GeneratedColumn<String>(
+    'name_local',
+    aliasedName,
+    true,
+    additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 255),
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _regionMeta = const VerificationMeta('region');
+  @override
+  late final GeneratedColumn<String> region = GeneratedColumn<String>(
+    'region',
+    aliasedName,
+    true,
+    additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 32),
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
   );
   static const VerificationMeta _caloriesPer100gMeta = const VerificationMeta(
     'caloriesPer100g',
@@ -1196,14 +1410,79 @@ class $FoodItemsTable extends FoodItems
     type: DriftSqlType.double,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _vitaminDMcgMeta = const VerificationMeta(
+    'vitaminDMcg',
+  );
+  @override
+  late final GeneratedColumn<double> vitaminDMcg = GeneratedColumn<double>(
+    'vitamin_d_mcg',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _vitaminB12McgMeta = const VerificationMeta(
+    'vitaminB12Mcg',
+  );
+  @override
+  late final GeneratedColumn<double> vitaminB12Mcg = GeneratedColumn<double>(
+    'vitamin_b12_mcg',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _ironMgMeta = const VerificationMeta('ironMg');
+  @override
+  late final GeneratedColumn<double> ironMg = GeneratedColumn<double>(
+    'iron_mg',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _calciumMgMeta = const VerificationMeta(
+    'calciumMg',
+  );
+  @override
+  late final GeneratedColumn<double> calciumMg = GeneratedColumn<double>(
+    'calcium_mg',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _servingSizesJsonMeta = const VerificationMeta(
+    'servingSizesJson',
+  );
+  @override
+  late final GeneratedColumn<String> servingSizesJson = GeneratedColumn<String>(
+    'serving_sizes_json',
+    aliasedName,
+    true,
+    additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 512),
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
     name,
+    nameLocal,
+    region,
     caloriesPer100g,
     proteinPer100g,
     carbsPer100g,
     fatPer100g,
+    vitaminDMcg,
+    vitaminB12Mcg,
+    ironMg,
+    calciumMg,
+    servingSizesJson,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -1227,6 +1506,18 @@ class $FoodItemsTable extends FoodItems
       );
     } else if (isInserting) {
       context.missing(_nameMeta);
+    }
+    if (data.containsKey('name_local')) {
+      context.handle(
+        _nameLocalMeta,
+        nameLocal.isAcceptableOrUnknown(data['name_local']!, _nameLocalMeta),
+      );
+    }
+    if (data.containsKey('region')) {
+      context.handle(
+        _regionMeta,
+        region.isAcceptableOrUnknown(data['region']!, _regionMeta),
+      );
     }
     if (data.containsKey('calories_per100g')) {
       context.handle(
@@ -1269,6 +1560,45 @@ class $FoodItemsTable extends FoodItems
     } else if (isInserting) {
       context.missing(_fatPer100gMeta);
     }
+    if (data.containsKey('vitamin_d_mcg')) {
+      context.handle(
+        _vitaminDMcgMeta,
+        vitaminDMcg.isAcceptableOrUnknown(
+          data['vitamin_d_mcg']!,
+          _vitaminDMcgMeta,
+        ),
+      );
+    }
+    if (data.containsKey('vitamin_b12_mcg')) {
+      context.handle(
+        _vitaminB12McgMeta,
+        vitaminB12Mcg.isAcceptableOrUnknown(
+          data['vitamin_b12_mcg']!,
+          _vitaminB12McgMeta,
+        ),
+      );
+    }
+    if (data.containsKey('iron_mg')) {
+      context.handle(
+        _ironMgMeta,
+        ironMg.isAcceptableOrUnknown(data['iron_mg']!, _ironMgMeta),
+      );
+    }
+    if (data.containsKey('calcium_mg')) {
+      context.handle(
+        _calciumMgMeta,
+        calciumMg.isAcceptableOrUnknown(data['calcium_mg']!, _calciumMgMeta),
+      );
+    }
+    if (data.containsKey('serving_sizes_json')) {
+      context.handle(
+        _servingSizesJsonMeta,
+        servingSizesJson.isAcceptableOrUnknown(
+          data['serving_sizes_json']!,
+          _servingSizesJsonMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -1286,6 +1616,14 @@ class $FoodItemsTable extends FoodItems
         DriftSqlType.string,
         data['${effectivePrefix}name'],
       )!,
+      nameLocal: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name_local'],
+      ),
+      region: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}region'],
+      ),
       caloriesPer100g: attachedDatabase.typeMapping.read(
         DriftSqlType.double,
         data['${effectivePrefix}calories_per100g'],
@@ -1302,6 +1640,26 @@ class $FoodItemsTable extends FoodItems
         DriftSqlType.double,
         data['${effectivePrefix}fat_per100g'],
       )!,
+      vitaminDMcg: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}vitamin_d_mcg'],
+      )!,
+      vitaminB12Mcg: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}vitamin_b12_mcg'],
+      )!,
+      ironMg: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}iron_mg'],
+      )!,
+      calciumMg: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}calcium_mg'],
+      )!,
+      servingSizesJson: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}serving_sizes_json'],
+      ),
     );
   }
 
@@ -1314,27 +1672,54 @@ class $FoodItemsTable extends FoodItems
 class FoodItem extends DataClass implements Insertable<FoodItem> {
   final int id;
   final String name;
+  final String? nameLocal;
+  final String? region;
   final double caloriesPer100g;
   final double proteinPer100g;
   final double carbsPer100g;
   final double fatPer100g;
+  final double vitaminDMcg;
+  final double vitaminB12Mcg;
+  final double ironMg;
+  final double calciumMg;
+  final String? servingSizesJson;
   const FoodItem({
     required this.id,
     required this.name,
+    this.nameLocal,
+    this.region,
     required this.caloriesPer100g,
     required this.proteinPer100g,
     required this.carbsPer100g,
     required this.fatPer100g,
+    required this.vitaminDMcg,
+    required this.vitaminB12Mcg,
+    required this.ironMg,
+    required this.calciumMg,
+    this.servingSizesJson,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
     map['name'] = Variable<String>(name);
+    if (!nullToAbsent || nameLocal != null) {
+      map['name_local'] = Variable<String>(nameLocal);
+    }
+    if (!nullToAbsent || region != null) {
+      map['region'] = Variable<String>(region);
+    }
     map['calories_per100g'] = Variable<double>(caloriesPer100g);
     map['protein_per100g'] = Variable<double>(proteinPer100g);
     map['carbs_per100g'] = Variable<double>(carbsPer100g);
     map['fat_per100g'] = Variable<double>(fatPer100g);
+    map['vitamin_d_mcg'] = Variable<double>(vitaminDMcg);
+    map['vitamin_b12_mcg'] = Variable<double>(vitaminB12Mcg);
+    map['iron_mg'] = Variable<double>(ironMg);
+    map['calcium_mg'] = Variable<double>(calciumMg);
+    if (!nullToAbsent || servingSizesJson != null) {
+      map['serving_sizes_json'] = Variable<String>(servingSizesJson);
+    }
     return map;
   }
 
@@ -1342,10 +1727,23 @@ class FoodItem extends DataClass implements Insertable<FoodItem> {
     return FoodItemsCompanion(
       id: Value(id),
       name: Value(name),
+      nameLocal: nameLocal == null && nullToAbsent
+          ? const Value.absent()
+          : Value(nameLocal),
+      region: region == null && nullToAbsent
+          ? const Value.absent()
+          : Value(region),
       caloriesPer100g: Value(caloriesPer100g),
       proteinPer100g: Value(proteinPer100g),
       carbsPer100g: Value(carbsPer100g),
       fatPer100g: Value(fatPer100g),
+      vitaminDMcg: Value(vitaminDMcg),
+      vitaminB12Mcg: Value(vitaminB12Mcg),
+      ironMg: Value(ironMg),
+      calciumMg: Value(calciumMg),
+      servingSizesJson: servingSizesJson == null && nullToAbsent
+          ? const Value.absent()
+          : Value(servingSizesJson),
     );
   }
 
@@ -1357,10 +1755,17 @@ class FoodItem extends DataClass implements Insertable<FoodItem> {
     return FoodItem(
       id: serializer.fromJson<int>(json['id']),
       name: serializer.fromJson<String>(json['name']),
+      nameLocal: serializer.fromJson<String?>(json['nameLocal']),
+      region: serializer.fromJson<String?>(json['region']),
       caloriesPer100g: serializer.fromJson<double>(json['caloriesPer100g']),
       proteinPer100g: serializer.fromJson<double>(json['proteinPer100g']),
       carbsPer100g: serializer.fromJson<double>(json['carbsPer100g']),
       fatPer100g: serializer.fromJson<double>(json['fatPer100g']),
+      vitaminDMcg: serializer.fromJson<double>(json['vitaminDMcg']),
+      vitaminB12Mcg: serializer.fromJson<double>(json['vitaminB12Mcg']),
+      ironMg: serializer.fromJson<double>(json['ironMg']),
+      calciumMg: serializer.fromJson<double>(json['calciumMg']),
+      servingSizesJson: serializer.fromJson<String?>(json['servingSizesJson']),
     );
   }
   @override
@@ -1369,32 +1774,57 @@ class FoodItem extends DataClass implements Insertable<FoodItem> {
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
       'name': serializer.toJson<String>(name),
+      'nameLocal': serializer.toJson<String?>(nameLocal),
+      'region': serializer.toJson<String?>(region),
       'caloriesPer100g': serializer.toJson<double>(caloriesPer100g),
       'proteinPer100g': serializer.toJson<double>(proteinPer100g),
       'carbsPer100g': serializer.toJson<double>(carbsPer100g),
       'fatPer100g': serializer.toJson<double>(fatPer100g),
+      'vitaminDMcg': serializer.toJson<double>(vitaminDMcg),
+      'vitaminB12Mcg': serializer.toJson<double>(vitaminB12Mcg),
+      'ironMg': serializer.toJson<double>(ironMg),
+      'calciumMg': serializer.toJson<double>(calciumMg),
+      'servingSizesJson': serializer.toJson<String?>(servingSizesJson),
     };
   }
 
   FoodItem copyWith({
     int? id,
     String? name,
+    Value<String?> nameLocal = const Value.absent(),
+    Value<String?> region = const Value.absent(),
     double? caloriesPer100g,
     double? proteinPer100g,
     double? carbsPer100g,
     double? fatPer100g,
+    double? vitaminDMcg,
+    double? vitaminB12Mcg,
+    double? ironMg,
+    double? calciumMg,
+    Value<String?> servingSizesJson = const Value.absent(),
   }) => FoodItem(
     id: id ?? this.id,
     name: name ?? this.name,
+    nameLocal: nameLocal.present ? nameLocal.value : this.nameLocal,
+    region: region.present ? region.value : this.region,
     caloriesPer100g: caloriesPer100g ?? this.caloriesPer100g,
     proteinPer100g: proteinPer100g ?? this.proteinPer100g,
     carbsPer100g: carbsPer100g ?? this.carbsPer100g,
     fatPer100g: fatPer100g ?? this.fatPer100g,
+    vitaminDMcg: vitaminDMcg ?? this.vitaminDMcg,
+    vitaminB12Mcg: vitaminB12Mcg ?? this.vitaminB12Mcg,
+    ironMg: ironMg ?? this.ironMg,
+    calciumMg: calciumMg ?? this.calciumMg,
+    servingSizesJson: servingSizesJson.present
+        ? servingSizesJson.value
+        : this.servingSizesJson,
   );
   FoodItem copyWithCompanion(FoodItemsCompanion data) {
     return FoodItem(
       id: data.id.present ? data.id.value : this.id,
       name: data.name.present ? data.name.value : this.name,
+      nameLocal: data.nameLocal.present ? data.nameLocal.value : this.nameLocal,
+      region: data.region.present ? data.region.value : this.region,
       caloriesPer100g: data.caloriesPer100g.present
           ? data.caloriesPer100g.value
           : this.caloriesPer100g,
@@ -1407,6 +1837,17 @@ class FoodItem extends DataClass implements Insertable<FoodItem> {
       fatPer100g: data.fatPer100g.present
           ? data.fatPer100g.value
           : this.fatPer100g,
+      vitaminDMcg: data.vitaminDMcg.present
+          ? data.vitaminDMcg.value
+          : this.vitaminDMcg,
+      vitaminB12Mcg: data.vitaminB12Mcg.present
+          ? data.vitaminB12Mcg.value
+          : this.vitaminB12Mcg,
+      ironMg: data.ironMg.present ? data.ironMg.value : this.ironMg,
+      calciumMg: data.calciumMg.present ? data.calciumMg.value : this.calciumMg,
+      servingSizesJson: data.servingSizesJson.present
+          ? data.servingSizesJson.value
+          : this.servingSizesJson,
     );
   }
 
@@ -1415,10 +1856,17 @@ class FoodItem extends DataClass implements Insertable<FoodItem> {
     return (StringBuffer('FoodItem(')
           ..write('id: $id, ')
           ..write('name: $name, ')
+          ..write('nameLocal: $nameLocal, ')
+          ..write('region: $region, ')
           ..write('caloriesPer100g: $caloriesPer100g, ')
           ..write('proteinPer100g: $proteinPer100g, ')
           ..write('carbsPer100g: $carbsPer100g, ')
-          ..write('fatPer100g: $fatPer100g')
+          ..write('fatPer100g: $fatPer100g, ')
+          ..write('vitaminDMcg: $vitaminDMcg, ')
+          ..write('vitaminB12Mcg: $vitaminB12Mcg, ')
+          ..write('ironMg: $ironMg, ')
+          ..write('calciumMg: $calciumMg, ')
+          ..write('servingSizesJson: $servingSizesJson')
           ..write(')'))
         .toString();
   }
@@ -1427,10 +1875,17 @@ class FoodItem extends DataClass implements Insertable<FoodItem> {
   int get hashCode => Object.hash(
     id,
     name,
+    nameLocal,
+    region,
     caloriesPer100g,
     proteinPer100g,
     carbsPer100g,
     fatPer100g,
+    vitaminDMcg,
+    vitaminB12Mcg,
+    ironMg,
+    calciumMg,
+    servingSizesJson,
   );
   @override
   bool operator ==(Object other) =>
@@ -1438,34 +1893,62 @@ class FoodItem extends DataClass implements Insertable<FoodItem> {
       (other is FoodItem &&
           other.id == this.id &&
           other.name == this.name &&
+          other.nameLocal == this.nameLocal &&
+          other.region == this.region &&
           other.caloriesPer100g == this.caloriesPer100g &&
           other.proteinPer100g == this.proteinPer100g &&
           other.carbsPer100g == this.carbsPer100g &&
-          other.fatPer100g == this.fatPer100g);
+          other.fatPer100g == this.fatPer100g &&
+          other.vitaminDMcg == this.vitaminDMcg &&
+          other.vitaminB12Mcg == this.vitaminB12Mcg &&
+          other.ironMg == this.ironMg &&
+          other.calciumMg == this.calciumMg &&
+          other.servingSizesJson == this.servingSizesJson);
 }
 
 class FoodItemsCompanion extends UpdateCompanion<FoodItem> {
   final Value<int> id;
   final Value<String> name;
+  final Value<String?> nameLocal;
+  final Value<String?> region;
   final Value<double> caloriesPer100g;
   final Value<double> proteinPer100g;
   final Value<double> carbsPer100g;
   final Value<double> fatPer100g;
+  final Value<double> vitaminDMcg;
+  final Value<double> vitaminB12Mcg;
+  final Value<double> ironMg;
+  final Value<double> calciumMg;
+  final Value<String?> servingSizesJson;
   const FoodItemsCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
+    this.nameLocal = const Value.absent(),
+    this.region = const Value.absent(),
     this.caloriesPer100g = const Value.absent(),
     this.proteinPer100g = const Value.absent(),
     this.carbsPer100g = const Value.absent(),
     this.fatPer100g = const Value.absent(),
+    this.vitaminDMcg = const Value.absent(),
+    this.vitaminB12Mcg = const Value.absent(),
+    this.ironMg = const Value.absent(),
+    this.calciumMg = const Value.absent(),
+    this.servingSizesJson = const Value.absent(),
   });
   FoodItemsCompanion.insert({
     this.id = const Value.absent(),
     required String name,
+    this.nameLocal = const Value.absent(),
+    this.region = const Value.absent(),
     required double caloriesPer100g,
     required double proteinPer100g,
     required double carbsPer100g,
     required double fatPer100g,
+    this.vitaminDMcg = const Value.absent(),
+    this.vitaminB12Mcg = const Value.absent(),
+    this.ironMg = const Value.absent(),
+    this.calciumMg = const Value.absent(),
+    this.servingSizesJson = const Value.absent(),
   }) : name = Value(name),
        caloriesPer100g = Value(caloriesPer100g),
        proteinPer100g = Value(proteinPer100g),
@@ -1474,36 +1957,64 @@ class FoodItemsCompanion extends UpdateCompanion<FoodItem> {
   static Insertable<FoodItem> custom({
     Expression<int>? id,
     Expression<String>? name,
+    Expression<String>? nameLocal,
+    Expression<String>? region,
     Expression<double>? caloriesPer100g,
     Expression<double>? proteinPer100g,
     Expression<double>? carbsPer100g,
     Expression<double>? fatPer100g,
+    Expression<double>? vitaminDMcg,
+    Expression<double>? vitaminB12Mcg,
+    Expression<double>? ironMg,
+    Expression<double>? calciumMg,
+    Expression<String>? servingSizesJson,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (name != null) 'name': name,
+      if (nameLocal != null) 'name_local': nameLocal,
+      if (region != null) 'region': region,
       if (caloriesPer100g != null) 'calories_per100g': caloriesPer100g,
       if (proteinPer100g != null) 'protein_per100g': proteinPer100g,
       if (carbsPer100g != null) 'carbs_per100g': carbsPer100g,
       if (fatPer100g != null) 'fat_per100g': fatPer100g,
+      if (vitaminDMcg != null) 'vitamin_d_mcg': vitaminDMcg,
+      if (vitaminB12Mcg != null) 'vitamin_b12_mcg': vitaminB12Mcg,
+      if (ironMg != null) 'iron_mg': ironMg,
+      if (calciumMg != null) 'calcium_mg': calciumMg,
+      if (servingSizesJson != null) 'serving_sizes_json': servingSizesJson,
     });
   }
 
   FoodItemsCompanion copyWith({
     Value<int>? id,
     Value<String>? name,
+    Value<String?>? nameLocal,
+    Value<String?>? region,
     Value<double>? caloriesPer100g,
     Value<double>? proteinPer100g,
     Value<double>? carbsPer100g,
     Value<double>? fatPer100g,
+    Value<double>? vitaminDMcg,
+    Value<double>? vitaminB12Mcg,
+    Value<double>? ironMg,
+    Value<double>? calciumMg,
+    Value<String?>? servingSizesJson,
   }) {
     return FoodItemsCompanion(
       id: id ?? this.id,
       name: name ?? this.name,
+      nameLocal: nameLocal ?? this.nameLocal,
+      region: region ?? this.region,
       caloriesPer100g: caloriesPer100g ?? this.caloriesPer100g,
       proteinPer100g: proteinPer100g ?? this.proteinPer100g,
       carbsPer100g: carbsPer100g ?? this.carbsPer100g,
       fatPer100g: fatPer100g ?? this.fatPer100g,
+      vitaminDMcg: vitaminDMcg ?? this.vitaminDMcg,
+      vitaminB12Mcg: vitaminB12Mcg ?? this.vitaminB12Mcg,
+      ironMg: ironMg ?? this.ironMg,
+      calciumMg: calciumMg ?? this.calciumMg,
+      servingSizesJson: servingSizesJson ?? this.servingSizesJson,
     );
   }
 
@@ -1515,6 +2026,12 @@ class FoodItemsCompanion extends UpdateCompanion<FoodItem> {
     }
     if (name.present) {
       map['name'] = Variable<String>(name.value);
+    }
+    if (nameLocal.present) {
+      map['name_local'] = Variable<String>(nameLocal.value);
+    }
+    if (region.present) {
+      map['region'] = Variable<String>(region.value);
     }
     if (caloriesPer100g.present) {
       map['calories_per100g'] = Variable<double>(caloriesPer100g.value);
@@ -1528,6 +2045,21 @@ class FoodItemsCompanion extends UpdateCompanion<FoodItem> {
     if (fatPer100g.present) {
       map['fat_per100g'] = Variable<double>(fatPer100g.value);
     }
+    if (vitaminDMcg.present) {
+      map['vitamin_d_mcg'] = Variable<double>(vitaminDMcg.value);
+    }
+    if (vitaminB12Mcg.present) {
+      map['vitamin_b12_mcg'] = Variable<double>(vitaminB12Mcg.value);
+    }
+    if (ironMg.present) {
+      map['iron_mg'] = Variable<double>(ironMg.value);
+    }
+    if (calciumMg.present) {
+      map['calcium_mg'] = Variable<double>(calciumMg.value);
+    }
+    if (servingSizesJson.present) {
+      map['serving_sizes_json'] = Variable<String>(servingSizesJson.value);
+    }
     return map;
   }
 
@@ -1536,10 +2068,17 @@ class FoodItemsCompanion extends UpdateCompanion<FoodItem> {
     return (StringBuffer('FoodItemsCompanion(')
           ..write('id: $id, ')
           ..write('name: $name, ')
+          ..write('nameLocal: $nameLocal, ')
+          ..write('region: $region, ')
           ..write('caloriesPer100g: $caloriesPer100g, ')
           ..write('proteinPer100g: $proteinPer100g, ')
           ..write('carbsPer100g: $carbsPer100g, ')
-          ..write('fatPer100g: $fatPer100g')
+          ..write('fatPer100g: $fatPer100g, ')
+          ..write('vitaminDMcg: $vitaminDMcg, ')
+          ..write('vitaminB12Mcg: $vitaminB12Mcg, ')
+          ..write('ironMg: $ironMg, ')
+          ..write('calciumMg: $calciumMg, ')
+          ..write('servingSizesJson: $servingSizesJson')
           ..write(')'))
         .toString();
   }
@@ -13128,6 +13667,10 @@ typedef $$FoodLogsTableCreateCompanionBuilder =
       required double proteinG,
       required double carbsG,
       required double fatG,
+      Value<double> vitaminDMcg,
+      Value<double> vitaminB12Mcg,
+      Value<double> ironMg,
+      Value<double> calciumMg,
       required DateTime loggedAt,
       required String syncStatus,
       required String idempotencyKey,
@@ -13143,6 +13686,10 @@ typedef $$FoodLogsTableUpdateCompanionBuilder =
       Value<double> proteinG,
       Value<double> carbsG,
       Value<double> fatG,
+      Value<double> vitaminDMcg,
+      Value<double> vitaminB12Mcg,
+      Value<double> ironMg,
+      Value<double> calciumMg,
       Value<DateTime> loggedAt,
       Value<String> syncStatus,
       Value<String> idempotencyKey,
@@ -13199,6 +13746,26 @@ class $$FoodLogsTableFilterComposer
 
   ColumnFilters<double> get fatG => $composableBuilder(
     column: $table.fatG,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get vitaminDMcg => $composableBuilder(
+    column: $table.vitaminDMcg,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get vitaminB12Mcg => $composableBuilder(
+    column: $table.vitaminB12Mcg,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get ironMg => $composableBuilder(
+    column: $table.ironMg,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get calciumMg => $composableBuilder(
+    column: $table.calciumMg,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -13272,6 +13839,26 @@ class $$FoodLogsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<double> get vitaminDMcg => $composableBuilder(
+    column: $table.vitaminDMcg,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get vitaminB12Mcg => $composableBuilder(
+    column: $table.vitaminB12Mcg,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get ironMg => $composableBuilder(
+    column: $table.ironMg,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get calciumMg => $composableBuilder(
+    column: $table.calciumMg,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get loggedAt => $composableBuilder(
     column: $table.loggedAt,
     builder: (column) => ColumnOrderings(column),
@@ -13324,6 +13911,22 @@ class $$FoodLogsTableAnnotationComposer
   GeneratedColumn<double> get fatG =>
       $composableBuilder(column: $table.fatG, builder: (column) => column);
 
+  GeneratedColumn<double> get vitaminDMcg => $composableBuilder(
+    column: $table.vitaminDMcg,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get vitaminB12Mcg => $composableBuilder(
+    column: $table.vitaminB12Mcg,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get ironMg =>
+      $composableBuilder(column: $table.ironMg, builder: (column) => column);
+
+  GeneratedColumn<double> get calciumMg =>
+      $composableBuilder(column: $table.calciumMg, builder: (column) => column);
+
   GeneratedColumn<DateTime> get loggedAt =>
       $composableBuilder(column: $table.loggedAt, builder: (column) => column);
 
@@ -13375,6 +13978,10 @@ class $$FoodLogsTableTableManager
                 Value<double> proteinG = const Value.absent(),
                 Value<double> carbsG = const Value.absent(),
                 Value<double> fatG = const Value.absent(),
+                Value<double> vitaminDMcg = const Value.absent(),
+                Value<double> vitaminB12Mcg = const Value.absent(),
+                Value<double> ironMg = const Value.absent(),
+                Value<double> calciumMg = const Value.absent(),
                 Value<DateTime> loggedAt = const Value.absent(),
                 Value<String> syncStatus = const Value.absent(),
                 Value<String> idempotencyKey = const Value.absent(),
@@ -13388,6 +13995,10 @@ class $$FoodLogsTableTableManager
                 proteinG: proteinG,
                 carbsG: carbsG,
                 fatG: fatG,
+                vitaminDMcg: vitaminDMcg,
+                vitaminB12Mcg: vitaminB12Mcg,
+                ironMg: ironMg,
+                calciumMg: calciumMg,
                 loggedAt: loggedAt,
                 syncStatus: syncStatus,
                 idempotencyKey: idempotencyKey,
@@ -13403,6 +14014,10 @@ class $$FoodLogsTableTableManager
                 required double proteinG,
                 required double carbsG,
                 required double fatG,
+                Value<double> vitaminDMcg = const Value.absent(),
+                Value<double> vitaminB12Mcg = const Value.absent(),
+                Value<double> ironMg = const Value.absent(),
+                Value<double> calciumMg = const Value.absent(),
                 required DateTime loggedAt,
                 required String syncStatus,
                 required String idempotencyKey,
@@ -13416,6 +14031,10 @@ class $$FoodLogsTableTableManager
                 proteinG: proteinG,
                 carbsG: carbsG,
                 fatG: fatG,
+                vitaminDMcg: vitaminDMcg,
+                vitaminB12Mcg: vitaminB12Mcg,
+                ironMg: ironMg,
+                calciumMg: calciumMg,
                 loggedAt: loggedAt,
                 syncStatus: syncStatus,
                 idempotencyKey: idempotencyKey,
@@ -13446,19 +14065,33 @@ typedef $$FoodItemsTableCreateCompanionBuilder =
     FoodItemsCompanion Function({
       Value<int> id,
       required String name,
+      Value<String?> nameLocal,
+      Value<String?> region,
       required double caloriesPer100g,
       required double proteinPer100g,
       required double carbsPer100g,
       required double fatPer100g,
+      Value<double> vitaminDMcg,
+      Value<double> vitaminB12Mcg,
+      Value<double> ironMg,
+      Value<double> calciumMg,
+      Value<String?> servingSizesJson,
     });
 typedef $$FoodItemsTableUpdateCompanionBuilder =
     FoodItemsCompanion Function({
       Value<int> id,
       Value<String> name,
+      Value<String?> nameLocal,
+      Value<String?> region,
       Value<double> caloriesPer100g,
       Value<double> proteinPer100g,
       Value<double> carbsPer100g,
       Value<double> fatPer100g,
+      Value<double> vitaminDMcg,
+      Value<double> vitaminB12Mcg,
+      Value<double> ironMg,
+      Value<double> calciumMg,
+      Value<String?> servingSizesJson,
     });
 
 class $$FoodItemsTableFilterComposer
@@ -13480,6 +14113,16 @@ class $$FoodItemsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<String> get nameLocal => $composableBuilder(
+    column: $table.nameLocal,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get region => $composableBuilder(
+    column: $table.region,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<double> get caloriesPer100g => $composableBuilder(
     column: $table.caloriesPer100g,
     builder: (column) => ColumnFilters(column),
@@ -13497,6 +14140,31 @@ class $$FoodItemsTableFilterComposer
 
   ColumnFilters<double> get fatPer100g => $composableBuilder(
     column: $table.fatPer100g,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get vitaminDMcg => $composableBuilder(
+    column: $table.vitaminDMcg,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get vitaminB12Mcg => $composableBuilder(
+    column: $table.vitaminB12Mcg,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get ironMg => $composableBuilder(
+    column: $table.ironMg,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get calciumMg => $composableBuilder(
+    column: $table.calciumMg,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get servingSizesJson => $composableBuilder(
+    column: $table.servingSizesJson,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -13520,6 +14188,16 @@ class $$FoodItemsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get nameLocal => $composableBuilder(
+    column: $table.nameLocal,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get region => $composableBuilder(
+    column: $table.region,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<double> get caloriesPer100g => $composableBuilder(
     column: $table.caloriesPer100g,
     builder: (column) => ColumnOrderings(column),
@@ -13539,6 +14217,31 @@ class $$FoodItemsTableOrderingComposer
     column: $table.fatPer100g,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<double> get vitaminDMcg => $composableBuilder(
+    column: $table.vitaminDMcg,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get vitaminB12Mcg => $composableBuilder(
+    column: $table.vitaminB12Mcg,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get ironMg => $composableBuilder(
+    column: $table.ironMg,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get calciumMg => $composableBuilder(
+    column: $table.calciumMg,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get servingSizesJson => $composableBuilder(
+    column: $table.servingSizesJson,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$FoodItemsTableAnnotationComposer
@@ -13555,6 +14258,12 @@ class $$FoodItemsTableAnnotationComposer
 
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get nameLocal =>
+      $composableBuilder(column: $table.nameLocal, builder: (column) => column);
+
+  GeneratedColumn<String> get region =>
+      $composableBuilder(column: $table.region, builder: (column) => column);
 
   GeneratedColumn<double> get caloriesPer100g => $composableBuilder(
     column: $table.caloriesPer100g,
@@ -13573,6 +14282,27 @@ class $$FoodItemsTableAnnotationComposer
 
   GeneratedColumn<double> get fatPer100g => $composableBuilder(
     column: $table.fatPer100g,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get vitaminDMcg => $composableBuilder(
+    column: $table.vitaminDMcg,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get vitaminB12Mcg => $composableBuilder(
+    column: $table.vitaminB12Mcg,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get ironMg =>
+      $composableBuilder(column: $table.ironMg, builder: (column) => column);
+
+  GeneratedColumn<double> get calciumMg =>
+      $composableBuilder(column: $table.calciumMg, builder: (column) => column);
+
+  GeneratedColumn<String> get servingSizesJson => $composableBuilder(
+    column: $table.servingSizesJson,
     builder: (column) => column,
   );
 }
@@ -13607,33 +14337,61 @@ class $$FoodItemsTableTableManager
               ({
                 Value<int> id = const Value.absent(),
                 Value<String> name = const Value.absent(),
+                Value<String?> nameLocal = const Value.absent(),
+                Value<String?> region = const Value.absent(),
                 Value<double> caloriesPer100g = const Value.absent(),
                 Value<double> proteinPer100g = const Value.absent(),
                 Value<double> carbsPer100g = const Value.absent(),
                 Value<double> fatPer100g = const Value.absent(),
+                Value<double> vitaminDMcg = const Value.absent(),
+                Value<double> vitaminB12Mcg = const Value.absent(),
+                Value<double> ironMg = const Value.absent(),
+                Value<double> calciumMg = const Value.absent(),
+                Value<String?> servingSizesJson = const Value.absent(),
               }) => FoodItemsCompanion(
                 id: id,
                 name: name,
+                nameLocal: nameLocal,
+                region: region,
                 caloriesPer100g: caloriesPer100g,
                 proteinPer100g: proteinPer100g,
                 carbsPer100g: carbsPer100g,
                 fatPer100g: fatPer100g,
+                vitaminDMcg: vitaminDMcg,
+                vitaminB12Mcg: vitaminB12Mcg,
+                ironMg: ironMg,
+                calciumMg: calciumMg,
+                servingSizesJson: servingSizesJson,
               ),
           createCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
                 required String name,
+                Value<String?> nameLocal = const Value.absent(),
+                Value<String?> region = const Value.absent(),
                 required double caloriesPer100g,
                 required double proteinPer100g,
                 required double carbsPer100g,
                 required double fatPer100g,
+                Value<double> vitaminDMcg = const Value.absent(),
+                Value<double> vitaminB12Mcg = const Value.absent(),
+                Value<double> ironMg = const Value.absent(),
+                Value<double> calciumMg = const Value.absent(),
+                Value<String?> servingSizesJson = const Value.absent(),
               }) => FoodItemsCompanion.insert(
                 id: id,
                 name: name,
+                nameLocal: nameLocal,
+                region: region,
                 caloriesPer100g: caloriesPer100g,
                 proteinPer100g: proteinPer100g,
                 carbsPer100g: carbsPer100g,
                 fatPer100g: fatPer100g,
+                vitaminDMcg: vitaminDMcg,
+                vitaminB12Mcg: vitaminB12Mcg,
+                ironMg: ironMg,
+                calciumMg: calciumMg,
+                servingSizesJson: servingSizesJson,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
