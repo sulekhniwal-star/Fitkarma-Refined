@@ -13,6 +13,8 @@ abstract final class AppConfig {
   static const String usersCollectionId = 'users';
   static const String profilesCollectionId = 'profiles';
   static const String abhaLinksCollectionId = 'abha_links';
+  static const String foodItemsCollectionId = 'food_items';
+  static const String foodLogsCollectionId = 'food_logs';
 
   // Database
   static const String dbFilename = 'fitkarma.db';
