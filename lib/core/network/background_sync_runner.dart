@@ -149,7 +149,9 @@ class BackgroundSyncRunner {
         if (keyEnd > index + 1) {
           final key = source.substring(index + 1, keyEnd);
           index = keyEnd + 1;
-          while (index < source.length && (source[index] == ':' || source[index] == ' ')) index++;
+          while (index < source.length && (source[index] == ':' || source[index] == ' ')) {
+            index++;
+          }
           if (source[index] == '"') {
             final valueEnd = source.indexOf('"', index + 1);
             if (valueEnd > index + 1) {

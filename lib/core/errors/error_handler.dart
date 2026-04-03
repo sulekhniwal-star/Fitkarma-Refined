@@ -247,7 +247,6 @@ class _UnknownException implements AppException {
     required this.code,
     required this.message,
     this.original,
-    this.details,
   });
 }
 

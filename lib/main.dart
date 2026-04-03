@@ -9,8 +9,8 @@ void main() {
   
   runApp(
     ProviderScope(
-      child: const FitKarmaApp(),
       overrides: [],
+      child: const FitKarmaApp(),
     ),
   );
 

@@ -16,6 +16,12 @@ import 'package:fitkarma/features/mental/mental_health_screen.dart'
     deferred as mental_health;
 import 'package:fitkarma/features/meditation/meditation_screen.dart'
     deferred as meditation;
+import 'package:fitkarma/features/onboarding/presentation/onboarding_screen1.dart';
+import 'package:fitkarma/features/onboarding/presentation/onboarding_screen2.dart';
+import 'package:fitkarma/features/onboarding/presentation/onboarding_screen3.dart';
+import 'package:fitkarma/features/onboarding/presentation/onboarding_screen4.dart';
+import 'package:fitkarma/features/onboarding/presentation/onboarding_screen5.dart';
+import 'package:fitkarma/features/onboarding/presentation/onboarding_screen6.dart';
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // DEFERRED LOADING HELPER
@@ -132,6 +138,42 @@ final GoRouter appRouter = GoRouter(
   navigatorKey: _rootNavigatorKey,
   initialLocation: '/',
   routes: [
+    // ─── Onboarding routes ──────────────────────────────────────────────────────
+    GoRoute(
+      path: '/onboarding/1',
+      builder: (context, state) => const OnboardingScreen1(),
+    ),
+    GoRoute(
+      path: '/onboarding/2',
+      builder: (context, state) => const OnboardingScreen2(),
+    ),
+    GoRoute(
+      path: '/onboarding/3',
+      builder: (context, state) => const OnboardingScreen3(),
+    ),
+    GoRoute(
+      path: '/onboarding/4',
+      builder: (context, state) => const OnboardingScreen4(),
+    ),
+    GoRoute(
+      path: '/onboarding/5',
+      builder: (context, state) => const OnboardingScreen5(),
+    ),
+    GoRoute(
+      path: '/onboarding/6',
+      builder: (context, state) => const OnboardingScreen6(),
+    ),
+
+    // ─── Auth routes ────────────────────────────────────────────────────────────
+    GoRoute(
+      path: '/login',
+      builder: (context, state) => const _PlaceholderScreen('Login'),
+    ),
+    GoRoute(
+      path: '/register',
+      builder: (context, state) => const _PlaceholderScreen('Register'),
+    ),
+
     // ─── Shell route (5 tabs) ──────────────────────────────────────────────
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) =>

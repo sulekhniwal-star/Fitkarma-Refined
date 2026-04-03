@@ -259,6 +259,34 @@ class AbhaLinks extends Table {
   DateTimeColumn get linkedAt => dateTime()();
 }
 
+class UserProfiles extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get odUserId => text().withLength(min: 1, max: 64)();
+  TextColumn get name => text().withLength(min: 1, max: 128)();
+  TextColumn get gender => text().withLength(min: 1, max: 16)();
+  DateTimeColumn get dateOfBirth => dateTime()();
+  RealColumn get heightCm => real()();
+  RealColumn get weightKg => real()();
+  TextColumn get fitnessGoal => text().withLength(min: 1, max: 32)();
+  TextColumn get activityLevel => text().withLength(min: 1, max: 32)();
+  TextColumn get chronicConditions => text().withLength(max: 512)();
+  IntColumn get vataPercent => integer()();
+  IntColumn get pittaPercent => integer()();
+  IntColumn get kaphaPercent => integer()();
+  TextColumn get language => text().withLength(min: 2, max: 10)();
+  BoolColumn get stepCounterPermission => boolean().withDefault(const Constant(false))();
+  BoolColumn get heartRatePermission => boolean().withDefault(const Constant(false))();
+  BoolColumn get sleepPermission => boolean().withDefault(const Constant(false))();
+  TextColumn get abhaNumber => text().nullable().withLength(max: 20)();
+  BoolColumn get wearableConnected => boolean().withDefault(const Constant(false))();
+  IntColumn get karmaXp => integer().withDefault(const Constant(0))();
+  DateTimeColumn get createdAt => dateTime()();
+  DateTimeColumn get updatedAt => dateTime()();
+
+  @override
+  List<Set<Column>> get uniqueKeys => [{odUserId}];
+}
+
 class EmergencyCard extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get userId => text().withLength(min: 1, max: 64)();
@@ -860,6 +888,9 @@ class AbhaLinksDao extends DatabaseAccessor<AppDatabase>
       update(abhaLinks).replace(entry);
 }
 
+// UserProfiles table is defined above (line ~262)
+// TODO: Add DAO when Drift generates the mixin properly
+
 // --- Platform DAOs ---
 
 @DriftAccessor(tables: [EmergencyCard])
@@ -1090,6 +1121,7 @@ class SyncDeadLetterDao extends DatabaseAccessor<AppDatabase>
     RemoteConfigCache,
     LabReports,
     AbhaLinks,
+    UserProfiles,
     EmergencyCard,
     FestivalCalendar,
     SyncQueue,

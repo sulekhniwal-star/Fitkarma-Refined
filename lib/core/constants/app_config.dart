@@ -8,6 +8,12 @@ abstract final class AppConfig {
   static const String appVersion = '1.0.0';
   static const int appBuildNumber = 1;
 
+  // Appwrite
+  static const String appwriteDatabaseId = 'fitkarma';
+  static const String usersCollectionId = 'users';
+  static const String profilesCollectionId = 'profiles';
+  static const String abhaLinksCollectionId = 'abha_links';
+
   // Database
   static const String dbFilename = 'fitkarma.db';
   static const int dbSchemaVersion = 5;
