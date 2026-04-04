@@ -19,6 +19,17 @@ class WearableConnectivityService {
     }
   }
 
+  Future<void> pushStats({required int steps, required int calories}) async {
+    try {
+      await _channel.invokeMethod('pushStatsToWatch', {
+        'steps': steps,
+        'calories': calories,
+      });
+    } on PlatformException catch (e) {
+      print("Failed to push stats to watch: ${e.message}");
+    }
+  }
+
   Future<void> _addWaterToDrift(int amount) async {
     // In a real app, this would use ref.read(driftDatabaseProvider)
     // to update the daily water log or corresponding table.
