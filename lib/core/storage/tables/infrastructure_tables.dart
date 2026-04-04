@@ -25,6 +25,7 @@ class SyncQueue extends Table {
   TextColumn get fieldVersions => text().nullable()(); // JSON
   DateTimeColumn get createdAt => dateTime()();
   IntColumn get retryCount => integer().withDefault(const Constant(0))();
+  IntColumn get priority => integer().withDefault(const Constant(2))(); // SyncPriority.normal.value
   TextColumn get lastError => text().nullable()();
 
   @override

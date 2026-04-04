@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'app.dart';
 import 'core/storage/drift_service.dart';
+import 'core/network/sync_background_worker.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,6 +21,14 @@ void main() async {
     await DriftService.init();
   } catch (e) {
     debugPrint('Drift Initialization Error: $e');
+  }
+
+  // 3. Initialize background sync worker
+  try {
+    await SyncBackgroundWorker.init();
+    await SyncBackgroundWorker.scheduleSync();
+  } catch (e) {
+    debugPrint('Worker Initialization Error: $e');
   }
   
   runApp(

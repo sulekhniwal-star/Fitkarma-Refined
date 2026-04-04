@@ -9676,6 +9676,18 @@ class $SyncQueueTable extends SyncQueue
     requiredDuringInsert: false,
     defaultValue: const Constant(0),
   );
+  static const VerificationMeta _priorityMeta = const VerificationMeta(
+    'priority',
+  );
+  @override
+  late final GeneratedColumn<int> priority = GeneratedColumn<int>(
+    'priority',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(2),
+  );
   static const VerificationMeta _lastErrorMeta = const VerificationMeta(
     'lastError',
   );
@@ -9699,6 +9711,7 @@ class $SyncQueueTable extends SyncQueue
     fieldVersions,
     createdAt,
     retryCount,
+    priority,
     lastError,
   ];
   @override
@@ -9793,6 +9806,12 @@ class $SyncQueueTable extends SyncQueue
         retryCount.isAcceptableOrUnknown(data['retry_count']!, _retryCountMeta),
       );
     }
+    if (data.containsKey('priority')) {
+      context.handle(
+        _priorityMeta,
+        priority.isAcceptableOrUnknown(data['priority']!, _priorityMeta),
+      );
+    }
     if (data.containsKey('last_error')) {
       context.handle(
         _lastErrorMeta,
@@ -9848,6 +9867,10 @@ class $SyncQueueTable extends SyncQueue
         DriftSqlType.int,
         data['${effectivePrefix}retry_count'],
       )!,
+      priority: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}priority'],
+      )!,
       lastError: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}last_error'],
@@ -9872,6 +9895,7 @@ class SyncQueueEntry extends DataClass implements Insertable<SyncQueueEntry> {
   final String? fieldVersions;
   final DateTime createdAt;
   final int retryCount;
+  final int priority;
   final String? lastError;
   const SyncQueueEntry({
     required this.id,
@@ -9884,6 +9908,7 @@ class SyncQueueEntry extends DataClass implements Insertable<SyncQueueEntry> {
     this.fieldVersions,
     required this.createdAt,
     required this.retryCount,
+    required this.priority,
     this.lastError,
   });
   @override
@@ -9903,6 +9928,7 @@ class SyncQueueEntry extends DataClass implements Insertable<SyncQueueEntry> {
     }
     map['created_at'] = Variable<DateTime>(createdAt);
     map['retry_count'] = Variable<int>(retryCount);
+    map['priority'] = Variable<int>(priority);
     if (!nullToAbsent || lastError != null) {
       map['last_error'] = Variable<String>(lastError);
     }
@@ -9925,6 +9951,7 @@ class SyncQueueEntry extends DataClass implements Insertable<SyncQueueEntry> {
           : Value(fieldVersions),
       createdAt: Value(createdAt),
       retryCount: Value(retryCount),
+      priority: Value(priority),
       lastError: lastError == null && nullToAbsent
           ? const Value.absent()
           : Value(lastError),
@@ -9947,6 +9974,7 @@ class SyncQueueEntry extends DataClass implements Insertable<SyncQueueEntry> {
       fieldVersions: serializer.fromJson<String?>(json['fieldVersions']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       retryCount: serializer.fromJson<int>(json['retryCount']),
+      priority: serializer.fromJson<int>(json['priority']),
       lastError: serializer.fromJson<String?>(json['lastError']),
     );
   }
@@ -9964,6 +9992,7 @@ class SyncQueueEntry extends DataClass implements Insertable<SyncQueueEntry> {
       'fieldVersions': serializer.toJson<String?>(fieldVersions),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'retryCount': serializer.toJson<int>(retryCount),
+      'priority': serializer.toJson<int>(priority),
       'lastError': serializer.toJson<String?>(lastError),
     };
   }
@@ -9979,6 +10008,7 @@ class SyncQueueEntry extends DataClass implements Insertable<SyncQueueEntry> {
     Value<String?> fieldVersions = const Value.absent(),
     DateTime? createdAt,
     int? retryCount,
+    int? priority,
     Value<String?> lastError = const Value.absent(),
   }) => SyncQueueEntry(
     id: id ?? this.id,
@@ -9995,6 +10025,7 @@ class SyncQueueEntry extends DataClass implements Insertable<SyncQueueEntry> {
         : this.fieldVersions,
     createdAt: createdAt ?? this.createdAt,
     retryCount: retryCount ?? this.retryCount,
+    priority: priority ?? this.priority,
     lastError: lastError.present ? lastError.value : this.lastError,
   );
   SyncQueueEntry copyWithCompanion(SyncQueueCompanion data) {
@@ -10019,6 +10050,7 @@ class SyncQueueEntry extends DataClass implements Insertable<SyncQueueEntry> {
       retryCount: data.retryCount.present
           ? data.retryCount.value
           : this.retryCount,
+      priority: data.priority.present ? data.priority.value : this.priority,
       lastError: data.lastError.present ? data.lastError.value : this.lastError,
     );
   }
@@ -10036,6 +10068,7 @@ class SyncQueueEntry extends DataClass implements Insertable<SyncQueueEntry> {
           ..write('fieldVersions: $fieldVersions, ')
           ..write('createdAt: $createdAt, ')
           ..write('retryCount: $retryCount, ')
+          ..write('priority: $priority, ')
           ..write('lastError: $lastError')
           ..write(')'))
         .toString();
@@ -10053,6 +10086,7 @@ class SyncQueueEntry extends DataClass implements Insertable<SyncQueueEntry> {
     fieldVersions,
     createdAt,
     retryCount,
+    priority,
     lastError,
   );
   @override
@@ -10069,6 +10103,7 @@ class SyncQueueEntry extends DataClass implements Insertable<SyncQueueEntry> {
           other.fieldVersions == this.fieldVersions &&
           other.createdAt == this.createdAt &&
           other.retryCount == this.retryCount &&
+          other.priority == this.priority &&
           other.lastError == this.lastError);
 }
 
@@ -10083,6 +10118,7 @@ class SyncQueueCompanion extends UpdateCompanion<SyncQueueEntry> {
   final Value<String?> fieldVersions;
   final Value<DateTime> createdAt;
   final Value<int> retryCount;
+  final Value<int> priority;
   final Value<String?> lastError;
   final Value<int> rowid;
   const SyncQueueCompanion({
@@ -10096,6 +10132,7 @@ class SyncQueueCompanion extends UpdateCompanion<SyncQueueEntry> {
     this.fieldVersions = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.retryCount = const Value.absent(),
+    this.priority = const Value.absent(),
     this.lastError = const Value.absent(),
     this.rowid = const Value.absent(),
   });
@@ -10110,6 +10147,7 @@ class SyncQueueCompanion extends UpdateCompanion<SyncQueueEntry> {
     this.fieldVersions = const Value.absent(),
     required DateTime createdAt,
     this.retryCount = const Value.absent(),
+    this.priority = const Value.absent(),
     this.lastError = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
@@ -10130,6 +10168,7 @@ class SyncQueueCompanion extends UpdateCompanion<SyncQueueEntry> {
     Expression<String>? fieldVersions,
     Expression<DateTime>? createdAt,
     Expression<int>? retryCount,
+    Expression<int>? priority,
     Expression<String>? lastError,
     Expression<int>? rowid,
   }) {
@@ -10144,6 +10183,7 @@ class SyncQueueCompanion extends UpdateCompanion<SyncQueueEntry> {
       if (fieldVersions != null) 'field_versions': fieldVersions,
       if (createdAt != null) 'created_at': createdAt,
       if (retryCount != null) 'retry_count': retryCount,
+      if (priority != null) 'priority': priority,
       if (lastError != null) 'last_error': lastError,
       if (rowid != null) 'rowid': rowid,
     });
@@ -10160,6 +10200,7 @@ class SyncQueueCompanion extends UpdateCompanion<SyncQueueEntry> {
     Value<String?>? fieldVersions,
     Value<DateTime>? createdAt,
     Value<int>? retryCount,
+    Value<int>? priority,
     Value<String?>? lastError,
     Value<int>? rowid,
   }) {
@@ -10174,6 +10215,7 @@ class SyncQueueCompanion extends UpdateCompanion<SyncQueueEntry> {
       fieldVersions: fieldVersions ?? this.fieldVersions,
       createdAt: createdAt ?? this.createdAt,
       retryCount: retryCount ?? this.retryCount,
+      priority: priority ?? this.priority,
       lastError: lastError ?? this.lastError,
       rowid: rowid ?? this.rowid,
     );
@@ -10212,6 +10254,9 @@ class SyncQueueCompanion extends UpdateCompanion<SyncQueueEntry> {
     if (retryCount.present) {
       map['retry_count'] = Variable<int>(retryCount.value);
     }
+    if (priority.present) {
+      map['priority'] = Variable<int>(priority.value);
+    }
     if (lastError.present) {
       map['last_error'] = Variable<String>(lastError.value);
     }
@@ -10234,6 +10279,7 @@ class SyncQueueCompanion extends UpdateCompanion<SyncQueueEntry> {
           ..write('fieldVersions: $fieldVersions, ')
           ..write('createdAt: $createdAt, ')
           ..write('retryCount: $retryCount, ')
+          ..write('priority: $priority, ')
           ..write('lastError: $lastError, ')
           ..write('rowid: $rowid')
           ..write(')'))
@@ -20711,6 +20757,7 @@ typedef $$SyncQueueTableCreateCompanionBuilder =
       Value<String?> fieldVersions,
       required DateTime createdAt,
       Value<int> retryCount,
+      Value<int> priority,
       Value<String?> lastError,
       Value<int> rowid,
     });
@@ -20726,6 +20773,7 @@ typedef $$SyncQueueTableUpdateCompanionBuilder =
       Value<String?> fieldVersions,
       Value<DateTime> createdAt,
       Value<int> retryCount,
+      Value<int> priority,
       Value<String?> lastError,
       Value<int> rowid,
     });
@@ -20786,6 +20834,11 @@ class $$SyncQueueTableFilterComposer
 
   ColumnFilters<int> get retryCount => $composableBuilder(
     column: $table.retryCount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get priority => $composableBuilder(
+    column: $table.priority,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -20854,6 +20907,11 @@ class $$SyncQueueTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get priority => $composableBuilder(
+    column: $table.priority,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get lastError => $composableBuilder(
     column: $table.lastError,
     builder: (column) => ColumnOrderings(column),
@@ -20909,6 +20967,9 @@ class $$SyncQueueTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumn<int> get priority =>
+      $composableBuilder(column: $table.priority, builder: (column) => column);
+
   GeneratedColumn<String> get lastError =>
       $composableBuilder(column: $table.lastError, builder: (column) => column);
 }
@@ -20954,6 +21015,7 @@ class $$SyncQueueTableTableManager
                 Value<String?> fieldVersions = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<int> retryCount = const Value.absent(),
+                Value<int> priority = const Value.absent(),
                 Value<String?> lastError = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => SyncQueueCompanion(
@@ -20967,6 +21029,7 @@ class $$SyncQueueTableTableManager
                 fieldVersions: fieldVersions,
                 createdAt: createdAt,
                 retryCount: retryCount,
+                priority: priority,
                 lastError: lastError,
                 rowid: rowid,
               ),
@@ -20982,6 +21045,7 @@ class $$SyncQueueTableTableManager
                 Value<String?> fieldVersions = const Value.absent(),
                 required DateTime createdAt,
                 Value<int> retryCount = const Value.absent(),
+                Value<int> priority = const Value.absent(),
                 Value<String?> lastError = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => SyncQueueCompanion.insert(
@@ -20995,6 +21059,7 @@ class $$SyncQueueTableTableManager
                 fieldVersions: fieldVersions,
                 createdAt: createdAt,
                 retryCount: retryCount,
+                priority: priority,
                 lastError: lastError,
                 rowid: rowid,
               ),

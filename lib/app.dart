@@ -18,7 +18,7 @@ class FitKarmaApp extends ConsumerWidget {
     final router = GoRouter(
       initialLocation: '/',
       redirect: (context, state) {
-        final user = authState.valueOrNull;
+        final user = authState.asData?.value;
         final isAuthPath = state.matchedLocation == '/login' || state.matchedLocation == '/register';
         final isOnboardingPath = state.matchedLocation == '/onboarding';
 
