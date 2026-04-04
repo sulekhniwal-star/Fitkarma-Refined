@@ -7414,6 +7414,145 @@ class $BodyMeasurementsTable extends BodyMeasurements
     type: DriftSqlType.double,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _heightCmMeta = const VerificationMeta(
+    'heightCm',
+  );
+  @override
+  late final GeneratedColumn<double> heightCm = GeneratedColumn<double>(
+    'height_cm',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _chestCmMeta = const VerificationMeta(
+    'chestCm',
+  );
+  @override
+  late final GeneratedColumn<double> chestCm = GeneratedColumn<double>(
+    'chest_cm',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _waistCmMeta = const VerificationMeta(
+    'waistCm',
+  );
+  @override
+  late final GeneratedColumn<double> waistCm = GeneratedColumn<double>(
+    'waist_cm',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _hipsCmMeta = const VerificationMeta('hipsCm');
+  @override
+  late final GeneratedColumn<double> hipsCm = GeneratedColumn<double>(
+    'hips_cm',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _leftArmCmMeta = const VerificationMeta(
+    'leftArmCm',
+  );
+  @override
+  late final GeneratedColumn<double> leftArmCm = GeneratedColumn<double>(
+    'left_arm_cm',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _rightArmCmMeta = const VerificationMeta(
+    'rightArmCm',
+  );
+  @override
+  late final GeneratedColumn<double> rightArmCm = GeneratedColumn<double>(
+    'right_arm_cm',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _leftThighCmMeta = const VerificationMeta(
+    'leftThighCm',
+  );
+  @override
+  late final GeneratedColumn<double> leftThighCm = GeneratedColumn<double>(
+    'left_thigh_cm',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _rightThighCmMeta = const VerificationMeta(
+    'rightThighCm',
+  );
+  @override
+  late final GeneratedColumn<double> rightThighCm = GeneratedColumn<double>(
+    'right_thigh_cm',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _bodyFatPercentMeta = const VerificationMeta(
+    'bodyFatPercent',
+  );
+  @override
+  late final GeneratedColumn<double> bodyFatPercent = GeneratedColumn<double>(
+    'body_fat_percent',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _photoPathMeta = const VerificationMeta(
+    'photoPath',
+  );
+  @override
+  late final GeneratedColumn<String> photoPath = GeneratedColumn<String>(
+    'photo_path',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _bmiMeta = const VerificationMeta('bmi');
+  @override
+  late final GeneratedColumn<double> bmi = GeneratedColumn<double>(
+    'bmi',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _waistToHipRatioMeta = const VerificationMeta(
+    'waistToHipRatio',
+  );
+  @override
+  late final GeneratedColumn<double> waistToHipRatio = GeneratedColumn<double>(
+    'waist_to_hip_ratio',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _waistToHeightRatioMeta =
+      const VerificationMeta('waistToHeightRatio');
+  @override
+  late final GeneratedColumn<double> waistToHeightRatio =
+      GeneratedColumn<double>(
+        'waist_to_height_ratio',
+        aliasedName,
+        true,
+        type: DriftSqlType.double,
+        requiredDuringInsert: false,
+      );
   static const VerificationMeta _measuredAtMeta = const VerificationMeta(
     'measuredAt',
   );
@@ -7426,7 +7565,25 @@ class $BodyMeasurementsTable extends BodyMeasurements
     requiredDuringInsert: true,
   );
   @override
-  List<GeneratedColumn> get $columns => [id, userId, weightKg, measuredAt];
+  List<GeneratedColumn> get $columns => [
+    id,
+    userId,
+    weightKg,
+    heightCm,
+    chestCm,
+    waistCm,
+    hipsCm,
+    leftArmCm,
+    rightArmCm,
+    leftThighCm,
+    rightThighCm,
+    bodyFatPercent,
+    photoPath,
+    bmi,
+    waistToHipRatio,
+    waistToHeightRatio,
+    measuredAt,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -7454,6 +7611,102 @@ class $BodyMeasurementsTable extends BodyMeasurements
       context.handle(
         _weightKgMeta,
         weightKg.isAcceptableOrUnknown(data['weight_kg']!, _weightKgMeta),
+      );
+    }
+    if (data.containsKey('height_cm')) {
+      context.handle(
+        _heightCmMeta,
+        heightCm.isAcceptableOrUnknown(data['height_cm']!, _heightCmMeta),
+      );
+    }
+    if (data.containsKey('chest_cm')) {
+      context.handle(
+        _chestCmMeta,
+        chestCm.isAcceptableOrUnknown(data['chest_cm']!, _chestCmMeta),
+      );
+    }
+    if (data.containsKey('waist_cm')) {
+      context.handle(
+        _waistCmMeta,
+        waistCm.isAcceptableOrUnknown(data['waist_cm']!, _waistCmMeta),
+      );
+    }
+    if (data.containsKey('hips_cm')) {
+      context.handle(
+        _hipsCmMeta,
+        hipsCm.isAcceptableOrUnknown(data['hips_cm']!, _hipsCmMeta),
+      );
+    }
+    if (data.containsKey('left_arm_cm')) {
+      context.handle(
+        _leftArmCmMeta,
+        leftArmCm.isAcceptableOrUnknown(data['left_arm_cm']!, _leftArmCmMeta),
+      );
+    }
+    if (data.containsKey('right_arm_cm')) {
+      context.handle(
+        _rightArmCmMeta,
+        rightArmCm.isAcceptableOrUnknown(
+          data['right_arm_cm']!,
+          _rightArmCmMeta,
+        ),
+      );
+    }
+    if (data.containsKey('left_thigh_cm')) {
+      context.handle(
+        _leftThighCmMeta,
+        leftThighCm.isAcceptableOrUnknown(
+          data['left_thigh_cm']!,
+          _leftThighCmMeta,
+        ),
+      );
+    }
+    if (data.containsKey('right_thigh_cm')) {
+      context.handle(
+        _rightThighCmMeta,
+        rightThighCm.isAcceptableOrUnknown(
+          data['right_thigh_cm']!,
+          _rightThighCmMeta,
+        ),
+      );
+    }
+    if (data.containsKey('body_fat_percent')) {
+      context.handle(
+        _bodyFatPercentMeta,
+        bodyFatPercent.isAcceptableOrUnknown(
+          data['body_fat_percent']!,
+          _bodyFatPercentMeta,
+        ),
+      );
+    }
+    if (data.containsKey('photo_path')) {
+      context.handle(
+        _photoPathMeta,
+        photoPath.isAcceptableOrUnknown(data['photo_path']!, _photoPathMeta),
+      );
+    }
+    if (data.containsKey('bmi')) {
+      context.handle(
+        _bmiMeta,
+        bmi.isAcceptableOrUnknown(data['bmi']!, _bmiMeta),
+      );
+    }
+    if (data.containsKey('waist_to_hip_ratio')) {
+      context.handle(
+        _waistToHipRatioMeta,
+        waistToHipRatio.isAcceptableOrUnknown(
+          data['waist_to_hip_ratio']!,
+          _waistToHipRatioMeta,
+        ),
+      );
+    }
+    if (data.containsKey('waist_to_height_ratio')) {
+      context.handle(
+        _waistToHeightRatioMeta,
+        waistToHeightRatio.isAcceptableOrUnknown(
+          data['waist_to_height_ratio']!,
+          _waistToHeightRatioMeta,
+        ),
       );
     }
     if (data.containsKey('measured_at')) {
@@ -7485,6 +7738,58 @@ class $BodyMeasurementsTable extends BodyMeasurements
         DriftSqlType.double,
         data['${effectivePrefix}weight_kg'],
       ),
+      heightCm: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}height_cm'],
+      ),
+      chestCm: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}chest_cm'],
+      ),
+      waistCm: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}waist_cm'],
+      ),
+      hipsCm: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}hips_cm'],
+      ),
+      leftArmCm: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}left_arm_cm'],
+      ),
+      rightArmCm: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}right_arm_cm'],
+      ),
+      leftThighCm: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}left_thigh_cm'],
+      ),
+      rightThighCm: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}right_thigh_cm'],
+      ),
+      bodyFatPercent: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}body_fat_percent'],
+      ),
+      photoPath: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}photo_path'],
+      ),
+      bmi: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}bmi'],
+      ),
+      waistToHipRatio: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}waist_to_hip_ratio'],
+      ),
+      waistToHeightRatio: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}waist_to_height_ratio'],
+      ),
       measuredAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}measured_at'],
@@ -7502,11 +7807,37 @@ class BodyMeasurement extends DataClass implements Insertable<BodyMeasurement> {
   final int id;
   final String userId;
   final double? weightKg;
+  final double? heightCm;
+  final double? chestCm;
+  final double? waistCm;
+  final double? hipsCm;
+  final double? leftArmCm;
+  final double? rightArmCm;
+  final double? leftThighCm;
+  final double? rightThighCm;
+  final double? bodyFatPercent;
+  final String? photoPath;
+  final double? bmi;
+  final double? waistToHipRatio;
+  final double? waistToHeightRatio;
   final DateTime measuredAt;
   const BodyMeasurement({
     required this.id,
     required this.userId,
     this.weightKg,
+    this.heightCm,
+    this.chestCm,
+    this.waistCm,
+    this.hipsCm,
+    this.leftArmCm,
+    this.rightArmCm,
+    this.leftThighCm,
+    this.rightThighCm,
+    this.bodyFatPercent,
+    this.photoPath,
+    this.bmi,
+    this.waistToHipRatio,
+    this.waistToHeightRatio,
     required this.measuredAt,
   });
   @override
@@ -7516,6 +7847,45 @@ class BodyMeasurement extends DataClass implements Insertable<BodyMeasurement> {
     map['user_id'] = Variable<String>(userId);
     if (!nullToAbsent || weightKg != null) {
       map['weight_kg'] = Variable<double>(weightKg);
+    }
+    if (!nullToAbsent || heightCm != null) {
+      map['height_cm'] = Variable<double>(heightCm);
+    }
+    if (!nullToAbsent || chestCm != null) {
+      map['chest_cm'] = Variable<double>(chestCm);
+    }
+    if (!nullToAbsent || waistCm != null) {
+      map['waist_cm'] = Variable<double>(waistCm);
+    }
+    if (!nullToAbsent || hipsCm != null) {
+      map['hips_cm'] = Variable<double>(hipsCm);
+    }
+    if (!nullToAbsent || leftArmCm != null) {
+      map['left_arm_cm'] = Variable<double>(leftArmCm);
+    }
+    if (!nullToAbsent || rightArmCm != null) {
+      map['right_arm_cm'] = Variable<double>(rightArmCm);
+    }
+    if (!nullToAbsent || leftThighCm != null) {
+      map['left_thigh_cm'] = Variable<double>(leftThighCm);
+    }
+    if (!nullToAbsent || rightThighCm != null) {
+      map['right_thigh_cm'] = Variable<double>(rightThighCm);
+    }
+    if (!nullToAbsent || bodyFatPercent != null) {
+      map['body_fat_percent'] = Variable<double>(bodyFatPercent);
+    }
+    if (!nullToAbsent || photoPath != null) {
+      map['photo_path'] = Variable<String>(photoPath);
+    }
+    if (!nullToAbsent || bmi != null) {
+      map['bmi'] = Variable<double>(bmi);
+    }
+    if (!nullToAbsent || waistToHipRatio != null) {
+      map['waist_to_hip_ratio'] = Variable<double>(waistToHipRatio);
+    }
+    if (!nullToAbsent || waistToHeightRatio != null) {
+      map['waist_to_height_ratio'] = Variable<double>(waistToHeightRatio);
     }
     map['measured_at'] = Variable<DateTime>(measuredAt);
     return map;
@@ -7528,6 +7898,43 @@ class BodyMeasurement extends DataClass implements Insertable<BodyMeasurement> {
       weightKg: weightKg == null && nullToAbsent
           ? const Value.absent()
           : Value(weightKg),
+      heightCm: heightCm == null && nullToAbsent
+          ? const Value.absent()
+          : Value(heightCm),
+      chestCm: chestCm == null && nullToAbsent
+          ? const Value.absent()
+          : Value(chestCm),
+      waistCm: waistCm == null && nullToAbsent
+          ? const Value.absent()
+          : Value(waistCm),
+      hipsCm: hipsCm == null && nullToAbsent
+          ? const Value.absent()
+          : Value(hipsCm),
+      leftArmCm: leftArmCm == null && nullToAbsent
+          ? const Value.absent()
+          : Value(leftArmCm),
+      rightArmCm: rightArmCm == null && nullToAbsent
+          ? const Value.absent()
+          : Value(rightArmCm),
+      leftThighCm: leftThighCm == null && nullToAbsent
+          ? const Value.absent()
+          : Value(leftThighCm),
+      rightThighCm: rightThighCm == null && nullToAbsent
+          ? const Value.absent()
+          : Value(rightThighCm),
+      bodyFatPercent: bodyFatPercent == null && nullToAbsent
+          ? const Value.absent()
+          : Value(bodyFatPercent),
+      photoPath: photoPath == null && nullToAbsent
+          ? const Value.absent()
+          : Value(photoPath),
+      bmi: bmi == null && nullToAbsent ? const Value.absent() : Value(bmi),
+      waistToHipRatio: waistToHipRatio == null && nullToAbsent
+          ? const Value.absent()
+          : Value(waistToHipRatio),
+      waistToHeightRatio: waistToHeightRatio == null && nullToAbsent
+          ? const Value.absent()
+          : Value(waistToHeightRatio),
       measuredAt: Value(measuredAt),
     );
   }
@@ -7541,6 +7948,21 @@ class BodyMeasurement extends DataClass implements Insertable<BodyMeasurement> {
       id: serializer.fromJson<int>(json['id']),
       userId: serializer.fromJson<String>(json['userId']),
       weightKg: serializer.fromJson<double?>(json['weightKg']),
+      heightCm: serializer.fromJson<double?>(json['heightCm']),
+      chestCm: serializer.fromJson<double?>(json['chestCm']),
+      waistCm: serializer.fromJson<double?>(json['waistCm']),
+      hipsCm: serializer.fromJson<double?>(json['hipsCm']),
+      leftArmCm: serializer.fromJson<double?>(json['leftArmCm']),
+      rightArmCm: serializer.fromJson<double?>(json['rightArmCm']),
+      leftThighCm: serializer.fromJson<double?>(json['leftThighCm']),
+      rightThighCm: serializer.fromJson<double?>(json['rightThighCm']),
+      bodyFatPercent: serializer.fromJson<double?>(json['bodyFatPercent']),
+      photoPath: serializer.fromJson<String?>(json['photoPath']),
+      bmi: serializer.fromJson<double?>(json['bmi']),
+      waistToHipRatio: serializer.fromJson<double?>(json['waistToHipRatio']),
+      waistToHeightRatio: serializer.fromJson<double?>(
+        json['waistToHeightRatio'],
+      ),
       measuredAt: serializer.fromJson<DateTime>(json['measuredAt']),
     );
   }
@@ -7551,6 +7973,19 @@ class BodyMeasurement extends DataClass implements Insertable<BodyMeasurement> {
       'id': serializer.toJson<int>(id),
       'userId': serializer.toJson<String>(userId),
       'weightKg': serializer.toJson<double?>(weightKg),
+      'heightCm': serializer.toJson<double?>(heightCm),
+      'chestCm': serializer.toJson<double?>(chestCm),
+      'waistCm': serializer.toJson<double?>(waistCm),
+      'hipsCm': serializer.toJson<double?>(hipsCm),
+      'leftArmCm': serializer.toJson<double?>(leftArmCm),
+      'rightArmCm': serializer.toJson<double?>(rightArmCm),
+      'leftThighCm': serializer.toJson<double?>(leftThighCm),
+      'rightThighCm': serializer.toJson<double?>(rightThighCm),
+      'bodyFatPercent': serializer.toJson<double?>(bodyFatPercent),
+      'photoPath': serializer.toJson<String?>(photoPath),
+      'bmi': serializer.toJson<double?>(bmi),
+      'waistToHipRatio': serializer.toJson<double?>(waistToHipRatio),
+      'waistToHeightRatio': serializer.toJson<double?>(waistToHeightRatio),
       'measuredAt': serializer.toJson<DateTime>(measuredAt),
     };
   }
@@ -7559,11 +7994,43 @@ class BodyMeasurement extends DataClass implements Insertable<BodyMeasurement> {
     int? id,
     String? userId,
     Value<double?> weightKg = const Value.absent(),
+    Value<double?> heightCm = const Value.absent(),
+    Value<double?> chestCm = const Value.absent(),
+    Value<double?> waistCm = const Value.absent(),
+    Value<double?> hipsCm = const Value.absent(),
+    Value<double?> leftArmCm = const Value.absent(),
+    Value<double?> rightArmCm = const Value.absent(),
+    Value<double?> leftThighCm = const Value.absent(),
+    Value<double?> rightThighCm = const Value.absent(),
+    Value<double?> bodyFatPercent = const Value.absent(),
+    Value<String?> photoPath = const Value.absent(),
+    Value<double?> bmi = const Value.absent(),
+    Value<double?> waistToHipRatio = const Value.absent(),
+    Value<double?> waistToHeightRatio = const Value.absent(),
     DateTime? measuredAt,
   }) => BodyMeasurement(
     id: id ?? this.id,
     userId: userId ?? this.userId,
     weightKg: weightKg.present ? weightKg.value : this.weightKg,
+    heightCm: heightCm.present ? heightCm.value : this.heightCm,
+    chestCm: chestCm.present ? chestCm.value : this.chestCm,
+    waistCm: waistCm.present ? waistCm.value : this.waistCm,
+    hipsCm: hipsCm.present ? hipsCm.value : this.hipsCm,
+    leftArmCm: leftArmCm.present ? leftArmCm.value : this.leftArmCm,
+    rightArmCm: rightArmCm.present ? rightArmCm.value : this.rightArmCm,
+    leftThighCm: leftThighCm.present ? leftThighCm.value : this.leftThighCm,
+    rightThighCm: rightThighCm.present ? rightThighCm.value : this.rightThighCm,
+    bodyFatPercent: bodyFatPercent.present
+        ? bodyFatPercent.value
+        : this.bodyFatPercent,
+    photoPath: photoPath.present ? photoPath.value : this.photoPath,
+    bmi: bmi.present ? bmi.value : this.bmi,
+    waistToHipRatio: waistToHipRatio.present
+        ? waistToHipRatio.value
+        : this.waistToHipRatio,
+    waistToHeightRatio: waistToHeightRatio.present
+        ? waistToHeightRatio.value
+        : this.waistToHeightRatio,
     measuredAt: measuredAt ?? this.measuredAt,
   );
   BodyMeasurement copyWithCompanion(BodyMeasurementsCompanion data) {
@@ -7571,6 +8038,31 @@ class BodyMeasurement extends DataClass implements Insertable<BodyMeasurement> {
       id: data.id.present ? data.id.value : this.id,
       userId: data.userId.present ? data.userId.value : this.userId,
       weightKg: data.weightKg.present ? data.weightKg.value : this.weightKg,
+      heightCm: data.heightCm.present ? data.heightCm.value : this.heightCm,
+      chestCm: data.chestCm.present ? data.chestCm.value : this.chestCm,
+      waistCm: data.waistCm.present ? data.waistCm.value : this.waistCm,
+      hipsCm: data.hipsCm.present ? data.hipsCm.value : this.hipsCm,
+      leftArmCm: data.leftArmCm.present ? data.leftArmCm.value : this.leftArmCm,
+      rightArmCm: data.rightArmCm.present
+          ? data.rightArmCm.value
+          : this.rightArmCm,
+      leftThighCm: data.leftThighCm.present
+          ? data.leftThighCm.value
+          : this.leftThighCm,
+      rightThighCm: data.rightThighCm.present
+          ? data.rightThighCm.value
+          : this.rightThighCm,
+      bodyFatPercent: data.bodyFatPercent.present
+          ? data.bodyFatPercent.value
+          : this.bodyFatPercent,
+      photoPath: data.photoPath.present ? data.photoPath.value : this.photoPath,
+      bmi: data.bmi.present ? data.bmi.value : this.bmi,
+      waistToHipRatio: data.waistToHipRatio.present
+          ? data.waistToHipRatio.value
+          : this.waistToHipRatio,
+      waistToHeightRatio: data.waistToHeightRatio.present
+          ? data.waistToHeightRatio.value
+          : this.waistToHeightRatio,
       measuredAt: data.measuredAt.present
           ? data.measuredAt.value
           : this.measuredAt,
@@ -7583,13 +8075,44 @@ class BodyMeasurement extends DataClass implements Insertable<BodyMeasurement> {
           ..write('id: $id, ')
           ..write('userId: $userId, ')
           ..write('weightKg: $weightKg, ')
+          ..write('heightCm: $heightCm, ')
+          ..write('chestCm: $chestCm, ')
+          ..write('waistCm: $waistCm, ')
+          ..write('hipsCm: $hipsCm, ')
+          ..write('leftArmCm: $leftArmCm, ')
+          ..write('rightArmCm: $rightArmCm, ')
+          ..write('leftThighCm: $leftThighCm, ')
+          ..write('rightThighCm: $rightThighCm, ')
+          ..write('bodyFatPercent: $bodyFatPercent, ')
+          ..write('photoPath: $photoPath, ')
+          ..write('bmi: $bmi, ')
+          ..write('waistToHipRatio: $waistToHipRatio, ')
+          ..write('waistToHeightRatio: $waistToHeightRatio, ')
           ..write('measuredAt: $measuredAt')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, userId, weightKg, measuredAt);
+  int get hashCode => Object.hash(
+    id,
+    userId,
+    weightKg,
+    heightCm,
+    chestCm,
+    waistCm,
+    hipsCm,
+    leftArmCm,
+    rightArmCm,
+    leftThighCm,
+    rightThighCm,
+    bodyFatPercent,
+    photoPath,
+    bmi,
+    waistToHipRatio,
+    waistToHeightRatio,
+    measuredAt,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -7597,6 +8120,19 @@ class BodyMeasurement extends DataClass implements Insertable<BodyMeasurement> {
           other.id == this.id &&
           other.userId == this.userId &&
           other.weightKg == this.weightKg &&
+          other.heightCm == this.heightCm &&
+          other.chestCm == this.chestCm &&
+          other.waistCm == this.waistCm &&
+          other.hipsCm == this.hipsCm &&
+          other.leftArmCm == this.leftArmCm &&
+          other.rightArmCm == this.rightArmCm &&
+          other.leftThighCm == this.leftThighCm &&
+          other.rightThighCm == this.rightThighCm &&
+          other.bodyFatPercent == this.bodyFatPercent &&
+          other.photoPath == this.photoPath &&
+          other.bmi == this.bmi &&
+          other.waistToHipRatio == this.waistToHipRatio &&
+          other.waistToHeightRatio == this.waistToHeightRatio &&
           other.measuredAt == this.measuredAt);
 }
 
@@ -7604,17 +8140,56 @@ class BodyMeasurementsCompanion extends UpdateCompanion<BodyMeasurement> {
   final Value<int> id;
   final Value<String> userId;
   final Value<double?> weightKg;
+  final Value<double?> heightCm;
+  final Value<double?> chestCm;
+  final Value<double?> waistCm;
+  final Value<double?> hipsCm;
+  final Value<double?> leftArmCm;
+  final Value<double?> rightArmCm;
+  final Value<double?> leftThighCm;
+  final Value<double?> rightThighCm;
+  final Value<double?> bodyFatPercent;
+  final Value<String?> photoPath;
+  final Value<double?> bmi;
+  final Value<double?> waistToHipRatio;
+  final Value<double?> waistToHeightRatio;
   final Value<DateTime> measuredAt;
   const BodyMeasurementsCompanion({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
     this.weightKg = const Value.absent(),
+    this.heightCm = const Value.absent(),
+    this.chestCm = const Value.absent(),
+    this.waistCm = const Value.absent(),
+    this.hipsCm = const Value.absent(),
+    this.leftArmCm = const Value.absent(),
+    this.rightArmCm = const Value.absent(),
+    this.leftThighCm = const Value.absent(),
+    this.rightThighCm = const Value.absent(),
+    this.bodyFatPercent = const Value.absent(),
+    this.photoPath = const Value.absent(),
+    this.bmi = const Value.absent(),
+    this.waistToHipRatio = const Value.absent(),
+    this.waistToHeightRatio = const Value.absent(),
     this.measuredAt = const Value.absent(),
   });
   BodyMeasurementsCompanion.insert({
     this.id = const Value.absent(),
     required String userId,
     this.weightKg = const Value.absent(),
+    this.heightCm = const Value.absent(),
+    this.chestCm = const Value.absent(),
+    this.waistCm = const Value.absent(),
+    this.hipsCm = const Value.absent(),
+    this.leftArmCm = const Value.absent(),
+    this.rightArmCm = const Value.absent(),
+    this.leftThighCm = const Value.absent(),
+    this.rightThighCm = const Value.absent(),
+    this.bodyFatPercent = const Value.absent(),
+    this.photoPath = const Value.absent(),
+    this.bmi = const Value.absent(),
+    this.waistToHipRatio = const Value.absent(),
+    this.waistToHeightRatio = const Value.absent(),
     required DateTime measuredAt,
   }) : userId = Value(userId),
        measuredAt = Value(measuredAt);
@@ -7622,12 +8197,39 @@ class BodyMeasurementsCompanion extends UpdateCompanion<BodyMeasurement> {
     Expression<int>? id,
     Expression<String>? userId,
     Expression<double>? weightKg,
+    Expression<double>? heightCm,
+    Expression<double>? chestCm,
+    Expression<double>? waistCm,
+    Expression<double>? hipsCm,
+    Expression<double>? leftArmCm,
+    Expression<double>? rightArmCm,
+    Expression<double>? leftThighCm,
+    Expression<double>? rightThighCm,
+    Expression<double>? bodyFatPercent,
+    Expression<String>? photoPath,
+    Expression<double>? bmi,
+    Expression<double>? waistToHipRatio,
+    Expression<double>? waistToHeightRatio,
     Expression<DateTime>? measuredAt,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (userId != null) 'user_id': userId,
       if (weightKg != null) 'weight_kg': weightKg,
+      if (heightCm != null) 'height_cm': heightCm,
+      if (chestCm != null) 'chest_cm': chestCm,
+      if (waistCm != null) 'waist_cm': waistCm,
+      if (hipsCm != null) 'hips_cm': hipsCm,
+      if (leftArmCm != null) 'left_arm_cm': leftArmCm,
+      if (rightArmCm != null) 'right_arm_cm': rightArmCm,
+      if (leftThighCm != null) 'left_thigh_cm': leftThighCm,
+      if (rightThighCm != null) 'right_thigh_cm': rightThighCm,
+      if (bodyFatPercent != null) 'body_fat_percent': bodyFatPercent,
+      if (photoPath != null) 'photo_path': photoPath,
+      if (bmi != null) 'bmi': bmi,
+      if (waistToHipRatio != null) 'waist_to_hip_ratio': waistToHipRatio,
+      if (waistToHeightRatio != null)
+        'waist_to_height_ratio': waistToHeightRatio,
       if (measuredAt != null) 'measured_at': measuredAt,
     });
   }
@@ -7636,12 +8238,38 @@ class BodyMeasurementsCompanion extends UpdateCompanion<BodyMeasurement> {
     Value<int>? id,
     Value<String>? userId,
     Value<double?>? weightKg,
+    Value<double?>? heightCm,
+    Value<double?>? chestCm,
+    Value<double?>? waistCm,
+    Value<double?>? hipsCm,
+    Value<double?>? leftArmCm,
+    Value<double?>? rightArmCm,
+    Value<double?>? leftThighCm,
+    Value<double?>? rightThighCm,
+    Value<double?>? bodyFatPercent,
+    Value<String?>? photoPath,
+    Value<double?>? bmi,
+    Value<double?>? waistToHipRatio,
+    Value<double?>? waistToHeightRatio,
     Value<DateTime>? measuredAt,
   }) {
     return BodyMeasurementsCompanion(
       id: id ?? this.id,
       userId: userId ?? this.userId,
       weightKg: weightKg ?? this.weightKg,
+      heightCm: heightCm ?? this.heightCm,
+      chestCm: chestCm ?? this.chestCm,
+      waistCm: waistCm ?? this.waistCm,
+      hipsCm: hipsCm ?? this.hipsCm,
+      leftArmCm: leftArmCm ?? this.leftArmCm,
+      rightArmCm: rightArmCm ?? this.rightArmCm,
+      leftThighCm: leftThighCm ?? this.leftThighCm,
+      rightThighCm: rightThighCm ?? this.rightThighCm,
+      bodyFatPercent: bodyFatPercent ?? this.bodyFatPercent,
+      photoPath: photoPath ?? this.photoPath,
+      bmi: bmi ?? this.bmi,
+      waistToHipRatio: waistToHipRatio ?? this.waistToHipRatio,
+      waistToHeightRatio: waistToHeightRatio ?? this.waistToHeightRatio,
       measuredAt: measuredAt ?? this.measuredAt,
     );
   }
@@ -7658,6 +8286,45 @@ class BodyMeasurementsCompanion extends UpdateCompanion<BodyMeasurement> {
     if (weightKg.present) {
       map['weight_kg'] = Variable<double>(weightKg.value);
     }
+    if (heightCm.present) {
+      map['height_cm'] = Variable<double>(heightCm.value);
+    }
+    if (chestCm.present) {
+      map['chest_cm'] = Variable<double>(chestCm.value);
+    }
+    if (waistCm.present) {
+      map['waist_cm'] = Variable<double>(waistCm.value);
+    }
+    if (hipsCm.present) {
+      map['hips_cm'] = Variable<double>(hipsCm.value);
+    }
+    if (leftArmCm.present) {
+      map['left_arm_cm'] = Variable<double>(leftArmCm.value);
+    }
+    if (rightArmCm.present) {
+      map['right_arm_cm'] = Variable<double>(rightArmCm.value);
+    }
+    if (leftThighCm.present) {
+      map['left_thigh_cm'] = Variable<double>(leftThighCm.value);
+    }
+    if (rightThighCm.present) {
+      map['right_thigh_cm'] = Variable<double>(rightThighCm.value);
+    }
+    if (bodyFatPercent.present) {
+      map['body_fat_percent'] = Variable<double>(bodyFatPercent.value);
+    }
+    if (photoPath.present) {
+      map['photo_path'] = Variable<String>(photoPath.value);
+    }
+    if (bmi.present) {
+      map['bmi'] = Variable<double>(bmi.value);
+    }
+    if (waistToHipRatio.present) {
+      map['waist_to_hip_ratio'] = Variable<double>(waistToHipRatio.value);
+    }
+    if (waistToHeightRatio.present) {
+      map['waist_to_height_ratio'] = Variable<double>(waistToHeightRatio.value);
+    }
     if (measuredAt.present) {
       map['measured_at'] = Variable<DateTime>(measuredAt.value);
     }
@@ -7670,6 +8337,19 @@ class BodyMeasurementsCompanion extends UpdateCompanion<BodyMeasurement> {
           ..write('id: $id, ')
           ..write('userId: $userId, ')
           ..write('weightKg: $weightKg, ')
+          ..write('heightCm: $heightCm, ')
+          ..write('chestCm: $chestCm, ')
+          ..write('waistCm: $waistCm, ')
+          ..write('hipsCm: $hipsCm, ')
+          ..write('leftArmCm: $leftArmCm, ')
+          ..write('rightArmCm: $rightArmCm, ')
+          ..write('leftThighCm: $leftThighCm, ')
+          ..write('rightThighCm: $rightThighCm, ')
+          ..write('bodyFatPercent: $bodyFatPercent, ')
+          ..write('photoPath: $photoPath, ')
+          ..write('bmi: $bmi, ')
+          ..write('waistToHipRatio: $waistToHipRatio, ')
+          ..write('waistToHeightRatio: $waistToHeightRatio, ')
           ..write('measuredAt: $measuredAt')
           ..write(')'))
         .toString();
@@ -21410,6 +22090,19 @@ typedef $$BodyMeasurementsTableCreateCompanionBuilder =
       Value<int> id,
       required String userId,
       Value<double?> weightKg,
+      Value<double?> heightCm,
+      Value<double?> chestCm,
+      Value<double?> waistCm,
+      Value<double?> hipsCm,
+      Value<double?> leftArmCm,
+      Value<double?> rightArmCm,
+      Value<double?> leftThighCm,
+      Value<double?> rightThighCm,
+      Value<double?> bodyFatPercent,
+      Value<String?> photoPath,
+      Value<double?> bmi,
+      Value<double?> waistToHipRatio,
+      Value<double?> waistToHeightRatio,
       required DateTime measuredAt,
     });
 typedef $$BodyMeasurementsTableUpdateCompanionBuilder =
@@ -21417,6 +22110,19 @@ typedef $$BodyMeasurementsTableUpdateCompanionBuilder =
       Value<int> id,
       Value<String> userId,
       Value<double?> weightKg,
+      Value<double?> heightCm,
+      Value<double?> chestCm,
+      Value<double?> waistCm,
+      Value<double?> hipsCm,
+      Value<double?> leftArmCm,
+      Value<double?> rightArmCm,
+      Value<double?> leftThighCm,
+      Value<double?> rightThighCm,
+      Value<double?> bodyFatPercent,
+      Value<String?> photoPath,
+      Value<double?> bmi,
+      Value<double?> waistToHipRatio,
+      Value<double?> waistToHeightRatio,
       Value<DateTime> measuredAt,
     });
 
@@ -21441,6 +22147,71 @@ class $$BodyMeasurementsTableFilterComposer
 
   ColumnFilters<double> get weightKg => $composableBuilder(
     column: $table.weightKg,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get heightCm => $composableBuilder(
+    column: $table.heightCm,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get chestCm => $composableBuilder(
+    column: $table.chestCm,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get waistCm => $composableBuilder(
+    column: $table.waistCm,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get hipsCm => $composableBuilder(
+    column: $table.hipsCm,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get leftArmCm => $composableBuilder(
+    column: $table.leftArmCm,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get rightArmCm => $composableBuilder(
+    column: $table.rightArmCm,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get leftThighCm => $composableBuilder(
+    column: $table.leftThighCm,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get rightThighCm => $composableBuilder(
+    column: $table.rightThighCm,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get bodyFatPercent => $composableBuilder(
+    column: $table.bodyFatPercent,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get photoPath => $composableBuilder(
+    column: $table.photoPath,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get bmi => $composableBuilder(
+    column: $table.bmi,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get waistToHipRatio => $composableBuilder(
+    column: $table.waistToHipRatio,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get waistToHeightRatio => $composableBuilder(
+    column: $table.waistToHeightRatio,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -21474,6 +22245,71 @@ class $$BodyMeasurementsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<double> get heightCm => $composableBuilder(
+    column: $table.heightCm,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get chestCm => $composableBuilder(
+    column: $table.chestCm,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get waistCm => $composableBuilder(
+    column: $table.waistCm,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get hipsCm => $composableBuilder(
+    column: $table.hipsCm,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get leftArmCm => $composableBuilder(
+    column: $table.leftArmCm,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get rightArmCm => $composableBuilder(
+    column: $table.rightArmCm,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get leftThighCm => $composableBuilder(
+    column: $table.leftThighCm,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get rightThighCm => $composableBuilder(
+    column: $table.rightThighCm,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get bodyFatPercent => $composableBuilder(
+    column: $table.bodyFatPercent,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get photoPath => $composableBuilder(
+    column: $table.photoPath,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get bmi => $composableBuilder(
+    column: $table.bmi,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get waistToHipRatio => $composableBuilder(
+    column: $table.waistToHipRatio,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get waistToHeightRatio => $composableBuilder(
+    column: $table.waistToHeightRatio,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get measuredAt => $composableBuilder(
     column: $table.measuredAt,
     builder: (column) => ColumnOrderings(column),
@@ -21497,6 +22333,57 @@ class $$BodyMeasurementsTableAnnotationComposer
 
   GeneratedColumn<double> get weightKg =>
       $composableBuilder(column: $table.weightKg, builder: (column) => column);
+
+  GeneratedColumn<double> get heightCm =>
+      $composableBuilder(column: $table.heightCm, builder: (column) => column);
+
+  GeneratedColumn<double> get chestCm =>
+      $composableBuilder(column: $table.chestCm, builder: (column) => column);
+
+  GeneratedColumn<double> get waistCm =>
+      $composableBuilder(column: $table.waistCm, builder: (column) => column);
+
+  GeneratedColumn<double> get hipsCm =>
+      $composableBuilder(column: $table.hipsCm, builder: (column) => column);
+
+  GeneratedColumn<double> get leftArmCm =>
+      $composableBuilder(column: $table.leftArmCm, builder: (column) => column);
+
+  GeneratedColumn<double> get rightArmCm => $composableBuilder(
+    column: $table.rightArmCm,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get leftThighCm => $composableBuilder(
+    column: $table.leftThighCm,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get rightThighCm => $composableBuilder(
+    column: $table.rightThighCm,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get bodyFatPercent => $composableBuilder(
+    column: $table.bodyFatPercent,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get photoPath =>
+      $composableBuilder(column: $table.photoPath, builder: (column) => column);
+
+  GeneratedColumn<double> get bmi =>
+      $composableBuilder(column: $table.bmi, builder: (column) => column);
+
+  GeneratedColumn<double> get waistToHipRatio => $composableBuilder(
+    column: $table.waistToHipRatio,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get waistToHeightRatio => $composableBuilder(
+    column: $table.waistToHeightRatio,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<DateTime> get measuredAt => $composableBuilder(
     column: $table.measuredAt,
@@ -21544,11 +22431,37 @@ class $$BodyMeasurementsTableTableManager
                 Value<int> id = const Value.absent(),
                 Value<String> userId = const Value.absent(),
                 Value<double?> weightKg = const Value.absent(),
+                Value<double?> heightCm = const Value.absent(),
+                Value<double?> chestCm = const Value.absent(),
+                Value<double?> waistCm = const Value.absent(),
+                Value<double?> hipsCm = const Value.absent(),
+                Value<double?> leftArmCm = const Value.absent(),
+                Value<double?> rightArmCm = const Value.absent(),
+                Value<double?> leftThighCm = const Value.absent(),
+                Value<double?> rightThighCm = const Value.absent(),
+                Value<double?> bodyFatPercent = const Value.absent(),
+                Value<String?> photoPath = const Value.absent(),
+                Value<double?> bmi = const Value.absent(),
+                Value<double?> waistToHipRatio = const Value.absent(),
+                Value<double?> waistToHeightRatio = const Value.absent(),
                 Value<DateTime> measuredAt = const Value.absent(),
               }) => BodyMeasurementsCompanion(
                 id: id,
                 userId: userId,
                 weightKg: weightKg,
+                heightCm: heightCm,
+                chestCm: chestCm,
+                waistCm: waistCm,
+                hipsCm: hipsCm,
+                leftArmCm: leftArmCm,
+                rightArmCm: rightArmCm,
+                leftThighCm: leftThighCm,
+                rightThighCm: rightThighCm,
+                bodyFatPercent: bodyFatPercent,
+                photoPath: photoPath,
+                bmi: bmi,
+                waistToHipRatio: waistToHipRatio,
+                waistToHeightRatio: waistToHeightRatio,
                 measuredAt: measuredAt,
               ),
           createCompanionCallback:
@@ -21556,11 +22469,37 @@ class $$BodyMeasurementsTableTableManager
                 Value<int> id = const Value.absent(),
                 required String userId,
                 Value<double?> weightKg = const Value.absent(),
+                Value<double?> heightCm = const Value.absent(),
+                Value<double?> chestCm = const Value.absent(),
+                Value<double?> waistCm = const Value.absent(),
+                Value<double?> hipsCm = const Value.absent(),
+                Value<double?> leftArmCm = const Value.absent(),
+                Value<double?> rightArmCm = const Value.absent(),
+                Value<double?> leftThighCm = const Value.absent(),
+                Value<double?> rightThighCm = const Value.absent(),
+                Value<double?> bodyFatPercent = const Value.absent(),
+                Value<String?> photoPath = const Value.absent(),
+                Value<double?> bmi = const Value.absent(),
+                Value<double?> waistToHipRatio = const Value.absent(),
+                Value<double?> waistToHeightRatio = const Value.absent(),
                 required DateTime measuredAt,
               }) => BodyMeasurementsCompanion.insert(
                 id: id,
                 userId: userId,
                 weightKg: weightKg,
+                heightCm: heightCm,
+                chestCm: chestCm,
+                waistCm: waistCm,
+                hipsCm: hipsCm,
+                leftArmCm: leftArmCm,
+                rightArmCm: rightArmCm,
+                leftThighCm: leftThighCm,
+                rightThighCm: rightThighCm,
+                bodyFatPercent: bodyFatPercent,
+                photoPath: photoPath,
+                bmi: bmi,
+                waistToHipRatio: waistToHipRatio,
+                waistToHeightRatio: waistToHeightRatio,
                 measuredAt: measuredAt,
               ),
           withReferenceMapper: (p0) => p0

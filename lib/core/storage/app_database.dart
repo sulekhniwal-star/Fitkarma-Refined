@@ -215,6 +215,19 @@ class BodyMeasurements extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get userId => text().withLength(min: 1, max: 64)();
   RealColumn get weightKg => real().nullable()();
+  RealColumn get heightCm => real().nullable()();
+  RealColumn get chestCm => real().nullable()();
+  RealColumn get waistCm => real().nullable()();
+  RealColumn get hipsCm => real().nullable()();
+  RealColumn get leftArmCm => real().nullable()();
+  RealColumn get rightArmCm => real().nullable()();
+  RealColumn get leftThighCm => real().nullable()();
+  RealColumn get rightThighCm => real().nullable()();
+  RealColumn get bodyFatPercent => real().nullable()();
+  TextColumn get photoPath => text().nullable()();
+  RealColumn get bmi => real().nullable()();
+  RealColumn get waistToHipRatio => real().nullable()();
+  RealColumn get waistToHeightRatio => real().nullable()();
   DateTimeColumn get measuredAt => dateTime()();
 }
 
@@ -1181,8 +1194,116 @@ class BodyMeasurementsDao extends DatabaseAccessor<AppDatabase>
             ..orderBy([(t) => OrderingTerm.desc(t.measuredAt)]))
           .get();
 
+  Stream<List<BodyMeasurement>> watchMeasurementsForUser(String userId) =>
+      (select(bodyMeasurements)
+            ..where((t) => t.userId.equals(userId))
+            ..orderBy([(t) => OrderingTerm.desc(t.measuredAt)]))
+          .watch();
+
+  Future<List<BodyMeasurement>> getMeasurementsInRange(String userId, DateTime from, DateTime to) =>
+      (select(bodyMeasurements)
+            ..where((t) =>
+                t.userId.equals(userId) &
+                t.measuredAt.isBiggerOrEqualValue(from) &
+                t.measuredAt.isSmallerOrEqualValue(to)))
+          .get();
+
   Future<int> insertMeasurement(BodyMeasurementsCompanion entry) =>
       into(bodyMeasurements).insert(entry);
+
+  Future<int> insertWithCalculations({
+    required String userId,
+    required double weightKg,
+    double? heightCm,
+    double? chestCm,
+    double? waistCm,
+    double? hipsCm,
+    double? leftArmCm,
+    double? rightArmCm,
+    double? leftThighCm,
+    double? rightThighCm,
+    double? bodyFatPercent,
+    String? photoPath,
+  }) async {
+    double? bmi;
+    double? waistToHipRatio;
+    double? waistToHeightRatio;
+    
+    if (weightKg != null && heightCm != null && heightCm > 0) {
+      bmi = weightKg / ((heightCm / 100) * (heightCm / 100));
+    }
+    
+    if (waistCm != null && hipsCm != null && hipsCm > 0) {
+      waistToHipRatio = waistCm / hipsCm;
+    }
+    
+    if (waistCm != null && heightCm != null && heightCm > 0) {
+      waistToHeightRatio = waistCm / heightCm;
+    }
+    
+    return into(bodyMeasurements).insert(
+      BodyMeasurementsCompanion.insert(
+        userId: userId,
+        weightKg: Value(weightKg),
+        heightCm: Value(heightCm),
+        chestCm: Value(chestCm),
+        waistCm: Value(waistCm),
+        hipsCm: Value(hipsCm),
+        leftArmCm: Value(leftArmCm),
+        rightArmCm: Value(rightArmCm),
+        leftThighCm: Value(leftThighCm),
+        rightThighCm: Value(rightThighCm),
+        bodyFatPercent: Value(bodyFatPercent),
+        photoPath: Value(photoPath),
+        bmi: Value(bmi),
+        waistToHipRatio: Value(waistToHipRatio),
+        waistToHeightRatio: Value(waistToHeightRatio),
+        measuredAt: DateTime.now(),
+      ),
+    );
+  }
+
+  Future<List<MeasurementTrend>> getTrends(String userId, {int days = 30}) async {
+    final now = DateTime.now();
+    final start = now.subtract(Duration(days: days));
+    final measurements = await getMeasurementsInRange(userId, start, now);
+    
+    return measurements.map((m) => MeasurementTrend(
+      date: m.measuredAt,
+      weight: m.weightKg,
+      bmi: m.bmi,
+      waistToHipRatio: m.waistToHipRatio,
+      waistToHeightRatio: m.waistToHeightRatio,
+      bodyFatPercent: m.bodyFatPercent,
+    )).toList();
+  }
+
+  Future<BodyMeasurement?> getLatest(String userId) async {
+    final results = await (select(bodyMeasurements)
+          ..where((t) => t.userId.equals(userId))
+          ..orderBy([(t) => OrderingTerm.desc(t.measuredAt)])
+          ..limit(1))
+        .get();
+    return results.isEmpty ? null : results.first;
+  }
+}
+
+class MeasurementTrend {
+  final DateTime date;
+  final double? weight;
+  final double? bmi;
+  final double? waistToHipRatio;
+  final double? waistToHeightRatio;
+  final double? bodyFatPercent;
+
+  MeasurementTrend({
+    required this.date,
+    this.weight,
+    this.bmi,
+    this.waistToHipRatio,
+    this.waistToHeightRatio,
+    this.bodyFatPercent,
+  });
 }
 
 @DriftAccessor(tables: [Medications])
