@@ -1,8 +1,11 @@
 import 'dart:convert';
+import 'dart:math';
+import 'dart:typed_data';
 
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
 
 import '../security/encryption_service.dart';
 import '../security/key_manager.dart';
@@ -332,8 +335,16 @@ class AbhaLinks extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get userId => text().withLength(min: 1, max: 64)();
   TextColumn get abhaNumber => text().withLength(min: 1, max: 20)();
+  TextColumn get abhaAddress => text().nullable()();
+  TextColumn get firstName => text().nullable()();
+  TextColumn get lastName => text().nullable()();
+  TextColumn get gender => text().nullable()();
+  DateTimeColumn get dateOfBirth => dateTime().nullable()();
+  TextColumn get stateCode => text().nullable()();
+  TextColumn get districtCode => text().nullable()();
   BoolColumn get isVerified => boolean().withDefault(const Constant(false))();
   DateTimeColumn get linkedAt => dateTime()();
+  DateTimeColumn get lastSyncedAt => dateTime().nullable()();
 }
 
 class UserProfiles extends Table {
@@ -1676,11 +1687,144 @@ class AbhaLinksDao extends DatabaseAccessor<AppDatabase>
     return results.isEmpty ? null : results.first;
   }
 
-  Future<int> insertLink(AbhaLinksCompanion entry) =>
+  Future<List<AbhaLink>> getAllLinksForUser(String userId) =>
+      (select(abhaLinks)
+            ..where((t) => t.userId.equals(userId))
+            ..orderBy([(t) => OrderingTerm.desc(t.linkedAt)]))
+          .get();
+
+  Future<int> linkAbha(AbhaLinksCompanion entry) =>
       into(abhaLinks).insert(entry);
 
-  Future<bool> updateLink(AbhaLinksCompanion entry) =>
-      update(abhaLinks).replace(entry);
+  Future<int> linkAbhaOrUpdate(AbhaLinksCompanion entry) =>
+      into(abhaLinks).insertOnConflictUpdate(entry);
+
+  Future<int> unlinkAbha(String userId) =>
+      (delete(abhaLinks)..where((t) => t.userId.equals(userId))).go();
+
+  Future<int> updateLastSynced(String userId) async {
+    final existing = await getLinkForUser(userId);
+    if (existing == null) return 0;
+    
+    return (update(abhaLinks)..where((t) => t.userId.equals(userId)))
+        .write(AbhaLinksCompanion(lastSyncedAt: Value(DateTime.now())));
+  }
+
+  Future<bool> isLinked(String userId) async {
+    final link = await getLinkForUser(userId);
+    return link != null;
+  }
+
+  Future<AbhaProfile?> fetchAndCacheProfile(String userId, String accessToken) async {
+    try {
+      final response = await http.get(
+        Uri.parse('https://api.abdm.gov.in/v1/profile'),
+        headers: {'Authorization': 'Bearer $accessToken'},
+      ).timeout(const Duration(seconds: 15));
+      
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final profile = AbhaProfile(
+          abhaNumber: data['healthIdNumber'] ?? '',
+          firstName: data['firstName'] ?? '',
+          lastName: data['lastName'] ?? '',
+          gender: data['gender'] ?? '',
+          dateOfBirth: data['dateOfBirth'] != null 
+              ? DateTime.tryParse(data['dateOfBirth']) 
+              : null,
+          stateCode: data['stateCode'] ?? '',
+          districtCode: data['districtCode'] ?? '',
+        );
+        
+        await linkAbhaOrUpdate(AbhaLinksCompanion.insert(
+          userId: userId,
+          abhaNumber: profile.abhaNumber,
+          firstName: Value(profile.firstName),
+          lastName: Value(profile.lastName),
+          gender: Value(profile.gender),
+          dateOfBirth: Value(profile.dateOfBirth),
+          stateCode: Value(profile.stateCode),
+          districtCode: Value(profile.districtCode),
+          isVerified: const Value(true),
+          linkedAt: DateTime.now(),
+        ));
+        
+        return profile;
+      }
+    } catch (e) {
+      debugPrint('ABHA profile fetch failed: $e');
+    }
+    return null;
+  }
+
+  Future<List<PrescriptionRecord>> fetchPrescriptions(String userId, String accessToken) async {
+    final prescriptions = <PrescriptionRecord>[];
+    
+    try {
+      final response = await http.get(
+        Uri.parse('https://api.abdm.gov.in/v1/prescriptions'),
+        headers: {'Authorization': 'Bearer $accessToken'},
+      ).timeout(const Duration(seconds: 30));
+      
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final records = data['prescriptions'] as List<dynamic>? ?? [];
+        
+        for (final r in records) {
+          prescriptions.add(PrescriptionRecord(
+            id: r['prescriptionId'] ?? '',
+            date: DateTime.tryParse(r['prescriptionDate'] ?? ''),
+            doctorName: r['consultation']['doctorName'] ?? '',
+            facilityName: r['consultation']['facility']['name'] ?? '',
+            diagnosis: r['consultation']['diagnosis'] ?? '',
+          ));
+        }
+      }
+    } catch (e) {
+      debugPrint('ABHA prescriptions fetch failed: $e');
+    }
+    
+    return prescriptions;
+  }
+}
+
+class AbhaProfile {
+  final String abhaNumber;
+  final String firstName;
+  final String lastName;
+  final String gender;
+  final DateTime? dateOfBirth;
+  final String stateCode;
+  final String districtCode;
+
+  AbhaProfile({
+    required this.abhaNumber,
+    required this.firstName,
+    required this.lastName,
+    required this.gender,
+    this.dateOfBirth,
+    required this.stateCode,
+    required this.districtCode,
+  });
+
+  String get fullName => '$firstName $lastName'.trim();
+  String get displayId => 'ABHA-${abhaNumber.substring(abhaNumber.length - 4)}';
+}
+
+class PrescriptionRecord {
+  final String id;
+  final DateTime? date;
+  final String doctorName;
+  final String facilityName;
+  final String diagnosis;
+
+  PrescriptionRecord({
+    required this.id,
+    this.date,
+    required this.doctorName,
+    required this.facilityName,
+    required this.diagnosis,
+  });
 }
 
 // UserProfiles table is defined above (line ~262)

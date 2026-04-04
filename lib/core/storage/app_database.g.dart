@@ -11034,6 +11034,81 @@ class $AbhaLinksTable extends AbhaLinks
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _abhaAddressMeta = const VerificationMeta(
+    'abhaAddress',
+  );
+  @override
+  late final GeneratedColumn<String> abhaAddress = GeneratedColumn<String>(
+    'abha_address',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _firstNameMeta = const VerificationMeta(
+    'firstName',
+  );
+  @override
+  late final GeneratedColumn<String> firstName = GeneratedColumn<String>(
+    'first_name',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _lastNameMeta = const VerificationMeta(
+    'lastName',
+  );
+  @override
+  late final GeneratedColumn<String> lastName = GeneratedColumn<String>(
+    'last_name',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _genderMeta = const VerificationMeta('gender');
+  @override
+  late final GeneratedColumn<String> gender = GeneratedColumn<String>(
+    'gender',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _dateOfBirthMeta = const VerificationMeta(
+    'dateOfBirth',
+  );
+  @override
+  late final GeneratedColumn<DateTime> dateOfBirth = GeneratedColumn<DateTime>(
+    'date_of_birth',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _stateCodeMeta = const VerificationMeta(
+    'stateCode',
+  );
+  @override
+  late final GeneratedColumn<String> stateCode = GeneratedColumn<String>(
+    'state_code',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _districtCodeMeta = const VerificationMeta(
+    'districtCode',
+  );
+  @override
+  late final GeneratedColumn<String> districtCode = GeneratedColumn<String>(
+    'district_code',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _isVerifiedMeta = const VerificationMeta(
     'isVerified',
   );
@@ -11060,13 +11135,32 @@ class $AbhaLinksTable extends AbhaLinks
     type: DriftSqlType.dateTime,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _lastSyncedAtMeta = const VerificationMeta(
+    'lastSyncedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> lastSyncedAt = GeneratedColumn<DateTime>(
+    'last_synced_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
     userId,
     abhaNumber,
+    abhaAddress,
+    firstName,
+    lastName,
+    gender,
+    dateOfBirth,
+    stateCode,
+    districtCode,
     isVerified,
     linkedAt,
+    lastSyncedAt,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -11099,6 +11193,57 @@ class $AbhaLinksTable extends AbhaLinks
     } else if (isInserting) {
       context.missing(_abhaNumberMeta);
     }
+    if (data.containsKey('abha_address')) {
+      context.handle(
+        _abhaAddressMeta,
+        abhaAddress.isAcceptableOrUnknown(
+          data['abha_address']!,
+          _abhaAddressMeta,
+        ),
+      );
+    }
+    if (data.containsKey('first_name')) {
+      context.handle(
+        _firstNameMeta,
+        firstName.isAcceptableOrUnknown(data['first_name']!, _firstNameMeta),
+      );
+    }
+    if (data.containsKey('last_name')) {
+      context.handle(
+        _lastNameMeta,
+        lastName.isAcceptableOrUnknown(data['last_name']!, _lastNameMeta),
+      );
+    }
+    if (data.containsKey('gender')) {
+      context.handle(
+        _genderMeta,
+        gender.isAcceptableOrUnknown(data['gender']!, _genderMeta),
+      );
+    }
+    if (data.containsKey('date_of_birth')) {
+      context.handle(
+        _dateOfBirthMeta,
+        dateOfBirth.isAcceptableOrUnknown(
+          data['date_of_birth']!,
+          _dateOfBirthMeta,
+        ),
+      );
+    }
+    if (data.containsKey('state_code')) {
+      context.handle(
+        _stateCodeMeta,
+        stateCode.isAcceptableOrUnknown(data['state_code']!, _stateCodeMeta),
+      );
+    }
+    if (data.containsKey('district_code')) {
+      context.handle(
+        _districtCodeMeta,
+        districtCode.isAcceptableOrUnknown(
+          data['district_code']!,
+          _districtCodeMeta,
+        ),
+      );
+    }
     if (data.containsKey('is_verified')) {
       context.handle(
         _isVerifiedMeta,
@@ -11112,6 +11257,15 @@ class $AbhaLinksTable extends AbhaLinks
       );
     } else if (isInserting) {
       context.missing(_linkedAtMeta);
+    }
+    if (data.containsKey('last_synced_at')) {
+      context.handle(
+        _lastSyncedAtMeta,
+        lastSyncedAt.isAcceptableOrUnknown(
+          data['last_synced_at']!,
+          _lastSyncedAtMeta,
+        ),
+      );
     }
     return context;
   }
@@ -11134,6 +11288,34 @@ class $AbhaLinksTable extends AbhaLinks
         DriftSqlType.string,
         data['${effectivePrefix}abha_number'],
       )!,
+      abhaAddress: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}abha_address'],
+      ),
+      firstName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}first_name'],
+      ),
+      lastName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}last_name'],
+      ),
+      gender: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}gender'],
+      ),
+      dateOfBirth: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}date_of_birth'],
+      ),
+      stateCode: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}state_code'],
+      ),
+      districtCode: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}district_code'],
+      ),
       isVerified: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
         data['${effectivePrefix}is_verified'],
@@ -11142,6 +11324,10 @@ class $AbhaLinksTable extends AbhaLinks
         DriftSqlType.dateTime,
         data['${effectivePrefix}linked_at'],
       )!,
+      lastSyncedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}last_synced_at'],
+      ),
     );
   }
 
@@ -11155,14 +11341,30 @@ class AbhaLink extends DataClass implements Insertable<AbhaLink> {
   final int id;
   final String userId;
   final String abhaNumber;
+  final String? abhaAddress;
+  final String? firstName;
+  final String? lastName;
+  final String? gender;
+  final DateTime? dateOfBirth;
+  final String? stateCode;
+  final String? districtCode;
   final bool isVerified;
   final DateTime linkedAt;
+  final DateTime? lastSyncedAt;
   const AbhaLink({
     required this.id,
     required this.userId,
     required this.abhaNumber,
+    this.abhaAddress,
+    this.firstName,
+    this.lastName,
+    this.gender,
+    this.dateOfBirth,
+    this.stateCode,
+    this.districtCode,
     required this.isVerified,
     required this.linkedAt,
+    this.lastSyncedAt,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -11170,8 +11372,32 @@ class AbhaLink extends DataClass implements Insertable<AbhaLink> {
     map['id'] = Variable<int>(id);
     map['user_id'] = Variable<String>(userId);
     map['abha_number'] = Variable<String>(abhaNumber);
+    if (!nullToAbsent || abhaAddress != null) {
+      map['abha_address'] = Variable<String>(abhaAddress);
+    }
+    if (!nullToAbsent || firstName != null) {
+      map['first_name'] = Variable<String>(firstName);
+    }
+    if (!nullToAbsent || lastName != null) {
+      map['last_name'] = Variable<String>(lastName);
+    }
+    if (!nullToAbsent || gender != null) {
+      map['gender'] = Variable<String>(gender);
+    }
+    if (!nullToAbsent || dateOfBirth != null) {
+      map['date_of_birth'] = Variable<DateTime>(dateOfBirth);
+    }
+    if (!nullToAbsent || stateCode != null) {
+      map['state_code'] = Variable<String>(stateCode);
+    }
+    if (!nullToAbsent || districtCode != null) {
+      map['district_code'] = Variable<String>(districtCode);
+    }
     map['is_verified'] = Variable<bool>(isVerified);
     map['linked_at'] = Variable<DateTime>(linkedAt);
+    if (!nullToAbsent || lastSyncedAt != null) {
+      map['last_synced_at'] = Variable<DateTime>(lastSyncedAt);
+    }
     return map;
   }
 
@@ -11180,8 +11406,32 @@ class AbhaLink extends DataClass implements Insertable<AbhaLink> {
       id: Value(id),
       userId: Value(userId),
       abhaNumber: Value(abhaNumber),
+      abhaAddress: abhaAddress == null && nullToAbsent
+          ? const Value.absent()
+          : Value(abhaAddress),
+      firstName: firstName == null && nullToAbsent
+          ? const Value.absent()
+          : Value(firstName),
+      lastName: lastName == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastName),
+      gender: gender == null && nullToAbsent
+          ? const Value.absent()
+          : Value(gender),
+      dateOfBirth: dateOfBirth == null && nullToAbsent
+          ? const Value.absent()
+          : Value(dateOfBirth),
+      stateCode: stateCode == null && nullToAbsent
+          ? const Value.absent()
+          : Value(stateCode),
+      districtCode: districtCode == null && nullToAbsent
+          ? const Value.absent()
+          : Value(districtCode),
       isVerified: Value(isVerified),
       linkedAt: Value(linkedAt),
+      lastSyncedAt: lastSyncedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastSyncedAt),
     );
   }
 
@@ -11194,8 +11444,16 @@ class AbhaLink extends DataClass implements Insertable<AbhaLink> {
       id: serializer.fromJson<int>(json['id']),
       userId: serializer.fromJson<String>(json['userId']),
       abhaNumber: serializer.fromJson<String>(json['abhaNumber']),
+      abhaAddress: serializer.fromJson<String?>(json['abhaAddress']),
+      firstName: serializer.fromJson<String?>(json['firstName']),
+      lastName: serializer.fromJson<String?>(json['lastName']),
+      gender: serializer.fromJson<String?>(json['gender']),
+      dateOfBirth: serializer.fromJson<DateTime?>(json['dateOfBirth']),
+      stateCode: serializer.fromJson<String?>(json['stateCode']),
+      districtCode: serializer.fromJson<String?>(json['districtCode']),
       isVerified: serializer.fromJson<bool>(json['isVerified']),
       linkedAt: serializer.fromJson<DateTime>(json['linkedAt']),
+      lastSyncedAt: serializer.fromJson<DateTime?>(json['lastSyncedAt']),
     );
   }
   @override
@@ -11205,8 +11463,16 @@ class AbhaLink extends DataClass implements Insertable<AbhaLink> {
       'id': serializer.toJson<int>(id),
       'userId': serializer.toJson<String>(userId),
       'abhaNumber': serializer.toJson<String>(abhaNumber),
+      'abhaAddress': serializer.toJson<String?>(abhaAddress),
+      'firstName': serializer.toJson<String?>(firstName),
+      'lastName': serializer.toJson<String?>(lastName),
+      'gender': serializer.toJson<String?>(gender),
+      'dateOfBirth': serializer.toJson<DateTime?>(dateOfBirth),
+      'stateCode': serializer.toJson<String?>(stateCode),
+      'districtCode': serializer.toJson<String?>(districtCode),
       'isVerified': serializer.toJson<bool>(isVerified),
       'linkedAt': serializer.toJson<DateTime>(linkedAt),
+      'lastSyncedAt': serializer.toJson<DateTime?>(lastSyncedAt),
     };
   }
 
@@ -11214,14 +11480,30 @@ class AbhaLink extends DataClass implements Insertable<AbhaLink> {
     int? id,
     String? userId,
     String? abhaNumber,
+    Value<String?> abhaAddress = const Value.absent(),
+    Value<String?> firstName = const Value.absent(),
+    Value<String?> lastName = const Value.absent(),
+    Value<String?> gender = const Value.absent(),
+    Value<DateTime?> dateOfBirth = const Value.absent(),
+    Value<String?> stateCode = const Value.absent(),
+    Value<String?> districtCode = const Value.absent(),
     bool? isVerified,
     DateTime? linkedAt,
+    Value<DateTime?> lastSyncedAt = const Value.absent(),
   }) => AbhaLink(
     id: id ?? this.id,
     userId: userId ?? this.userId,
     abhaNumber: abhaNumber ?? this.abhaNumber,
+    abhaAddress: abhaAddress.present ? abhaAddress.value : this.abhaAddress,
+    firstName: firstName.present ? firstName.value : this.firstName,
+    lastName: lastName.present ? lastName.value : this.lastName,
+    gender: gender.present ? gender.value : this.gender,
+    dateOfBirth: dateOfBirth.present ? dateOfBirth.value : this.dateOfBirth,
+    stateCode: stateCode.present ? stateCode.value : this.stateCode,
+    districtCode: districtCode.present ? districtCode.value : this.districtCode,
     isVerified: isVerified ?? this.isVerified,
     linkedAt: linkedAt ?? this.linkedAt,
+    lastSyncedAt: lastSyncedAt.present ? lastSyncedAt.value : this.lastSyncedAt,
   );
   AbhaLink copyWithCompanion(AbhaLinksCompanion data) {
     return AbhaLink(
@@ -11230,10 +11512,26 @@ class AbhaLink extends DataClass implements Insertable<AbhaLink> {
       abhaNumber: data.abhaNumber.present
           ? data.abhaNumber.value
           : this.abhaNumber,
+      abhaAddress: data.abhaAddress.present
+          ? data.abhaAddress.value
+          : this.abhaAddress,
+      firstName: data.firstName.present ? data.firstName.value : this.firstName,
+      lastName: data.lastName.present ? data.lastName.value : this.lastName,
+      gender: data.gender.present ? data.gender.value : this.gender,
+      dateOfBirth: data.dateOfBirth.present
+          ? data.dateOfBirth.value
+          : this.dateOfBirth,
+      stateCode: data.stateCode.present ? data.stateCode.value : this.stateCode,
+      districtCode: data.districtCode.present
+          ? data.districtCode.value
+          : this.districtCode,
       isVerified: data.isVerified.present
           ? data.isVerified.value
           : this.isVerified,
       linkedAt: data.linkedAt.present ? data.linkedAt.value : this.linkedAt,
+      lastSyncedAt: data.lastSyncedAt.present
+          ? data.lastSyncedAt.value
+          : this.lastSyncedAt,
     );
   }
 
@@ -11243,14 +11541,36 @@ class AbhaLink extends DataClass implements Insertable<AbhaLink> {
           ..write('id: $id, ')
           ..write('userId: $userId, ')
           ..write('abhaNumber: $abhaNumber, ')
+          ..write('abhaAddress: $abhaAddress, ')
+          ..write('firstName: $firstName, ')
+          ..write('lastName: $lastName, ')
+          ..write('gender: $gender, ')
+          ..write('dateOfBirth: $dateOfBirth, ')
+          ..write('stateCode: $stateCode, ')
+          ..write('districtCode: $districtCode, ')
           ..write('isVerified: $isVerified, ')
-          ..write('linkedAt: $linkedAt')
+          ..write('linkedAt: $linkedAt, ')
+          ..write('lastSyncedAt: $lastSyncedAt')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, userId, abhaNumber, isVerified, linkedAt);
+  int get hashCode => Object.hash(
+    id,
+    userId,
+    abhaNumber,
+    abhaAddress,
+    firstName,
+    lastName,
+    gender,
+    dateOfBirth,
+    stateCode,
+    districtCode,
+    isVerified,
+    linkedAt,
+    lastSyncedAt,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -11258,29 +11578,61 @@ class AbhaLink extends DataClass implements Insertable<AbhaLink> {
           other.id == this.id &&
           other.userId == this.userId &&
           other.abhaNumber == this.abhaNumber &&
+          other.abhaAddress == this.abhaAddress &&
+          other.firstName == this.firstName &&
+          other.lastName == this.lastName &&
+          other.gender == this.gender &&
+          other.dateOfBirth == this.dateOfBirth &&
+          other.stateCode == this.stateCode &&
+          other.districtCode == this.districtCode &&
           other.isVerified == this.isVerified &&
-          other.linkedAt == this.linkedAt);
+          other.linkedAt == this.linkedAt &&
+          other.lastSyncedAt == this.lastSyncedAt);
 }
 
 class AbhaLinksCompanion extends UpdateCompanion<AbhaLink> {
   final Value<int> id;
   final Value<String> userId;
   final Value<String> abhaNumber;
+  final Value<String?> abhaAddress;
+  final Value<String?> firstName;
+  final Value<String?> lastName;
+  final Value<String?> gender;
+  final Value<DateTime?> dateOfBirth;
+  final Value<String?> stateCode;
+  final Value<String?> districtCode;
   final Value<bool> isVerified;
   final Value<DateTime> linkedAt;
+  final Value<DateTime?> lastSyncedAt;
   const AbhaLinksCompanion({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
     this.abhaNumber = const Value.absent(),
+    this.abhaAddress = const Value.absent(),
+    this.firstName = const Value.absent(),
+    this.lastName = const Value.absent(),
+    this.gender = const Value.absent(),
+    this.dateOfBirth = const Value.absent(),
+    this.stateCode = const Value.absent(),
+    this.districtCode = const Value.absent(),
     this.isVerified = const Value.absent(),
     this.linkedAt = const Value.absent(),
+    this.lastSyncedAt = const Value.absent(),
   });
   AbhaLinksCompanion.insert({
     this.id = const Value.absent(),
     required String userId,
     required String abhaNumber,
+    this.abhaAddress = const Value.absent(),
+    this.firstName = const Value.absent(),
+    this.lastName = const Value.absent(),
+    this.gender = const Value.absent(),
+    this.dateOfBirth = const Value.absent(),
+    this.stateCode = const Value.absent(),
+    this.districtCode = const Value.absent(),
     this.isVerified = const Value.absent(),
     required DateTime linkedAt,
+    this.lastSyncedAt = const Value.absent(),
   }) : userId = Value(userId),
        abhaNumber = Value(abhaNumber),
        linkedAt = Value(linkedAt);
@@ -11288,15 +11640,31 @@ class AbhaLinksCompanion extends UpdateCompanion<AbhaLink> {
     Expression<int>? id,
     Expression<String>? userId,
     Expression<String>? abhaNumber,
+    Expression<String>? abhaAddress,
+    Expression<String>? firstName,
+    Expression<String>? lastName,
+    Expression<String>? gender,
+    Expression<DateTime>? dateOfBirth,
+    Expression<String>? stateCode,
+    Expression<String>? districtCode,
     Expression<bool>? isVerified,
     Expression<DateTime>? linkedAt,
+    Expression<DateTime>? lastSyncedAt,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (userId != null) 'user_id': userId,
       if (abhaNumber != null) 'abha_number': abhaNumber,
+      if (abhaAddress != null) 'abha_address': abhaAddress,
+      if (firstName != null) 'first_name': firstName,
+      if (lastName != null) 'last_name': lastName,
+      if (gender != null) 'gender': gender,
+      if (dateOfBirth != null) 'date_of_birth': dateOfBirth,
+      if (stateCode != null) 'state_code': stateCode,
+      if (districtCode != null) 'district_code': districtCode,
       if (isVerified != null) 'is_verified': isVerified,
       if (linkedAt != null) 'linked_at': linkedAt,
+      if (lastSyncedAt != null) 'last_synced_at': lastSyncedAt,
     });
   }
 
@@ -11304,15 +11672,31 @@ class AbhaLinksCompanion extends UpdateCompanion<AbhaLink> {
     Value<int>? id,
     Value<String>? userId,
     Value<String>? abhaNumber,
+    Value<String?>? abhaAddress,
+    Value<String?>? firstName,
+    Value<String?>? lastName,
+    Value<String?>? gender,
+    Value<DateTime?>? dateOfBirth,
+    Value<String?>? stateCode,
+    Value<String?>? districtCode,
     Value<bool>? isVerified,
     Value<DateTime>? linkedAt,
+    Value<DateTime?>? lastSyncedAt,
   }) {
     return AbhaLinksCompanion(
       id: id ?? this.id,
       userId: userId ?? this.userId,
       abhaNumber: abhaNumber ?? this.abhaNumber,
+      abhaAddress: abhaAddress ?? this.abhaAddress,
+      firstName: firstName ?? this.firstName,
+      lastName: lastName ?? this.lastName,
+      gender: gender ?? this.gender,
+      dateOfBirth: dateOfBirth ?? this.dateOfBirth,
+      stateCode: stateCode ?? this.stateCode,
+      districtCode: districtCode ?? this.districtCode,
       isVerified: isVerified ?? this.isVerified,
       linkedAt: linkedAt ?? this.linkedAt,
+      lastSyncedAt: lastSyncedAt ?? this.lastSyncedAt,
     );
   }
 
@@ -11328,11 +11712,35 @@ class AbhaLinksCompanion extends UpdateCompanion<AbhaLink> {
     if (abhaNumber.present) {
       map['abha_number'] = Variable<String>(abhaNumber.value);
     }
+    if (abhaAddress.present) {
+      map['abha_address'] = Variable<String>(abhaAddress.value);
+    }
+    if (firstName.present) {
+      map['first_name'] = Variable<String>(firstName.value);
+    }
+    if (lastName.present) {
+      map['last_name'] = Variable<String>(lastName.value);
+    }
+    if (gender.present) {
+      map['gender'] = Variable<String>(gender.value);
+    }
+    if (dateOfBirth.present) {
+      map['date_of_birth'] = Variable<DateTime>(dateOfBirth.value);
+    }
+    if (stateCode.present) {
+      map['state_code'] = Variable<String>(stateCode.value);
+    }
+    if (districtCode.present) {
+      map['district_code'] = Variable<String>(districtCode.value);
+    }
     if (isVerified.present) {
       map['is_verified'] = Variable<bool>(isVerified.value);
     }
     if (linkedAt.present) {
       map['linked_at'] = Variable<DateTime>(linkedAt.value);
+    }
+    if (lastSyncedAt.present) {
+      map['last_synced_at'] = Variable<DateTime>(lastSyncedAt.value);
     }
     return map;
   }
@@ -11343,8 +11751,16 @@ class AbhaLinksCompanion extends UpdateCompanion<AbhaLink> {
           ..write('id: $id, ')
           ..write('userId: $userId, ')
           ..write('abhaNumber: $abhaNumber, ')
+          ..write('abhaAddress: $abhaAddress, ')
+          ..write('firstName: $firstName, ')
+          ..write('lastName: $lastName, ')
+          ..write('gender: $gender, ')
+          ..write('dateOfBirth: $dateOfBirth, ')
+          ..write('stateCode: $stateCode, ')
+          ..write('districtCode: $districtCode, ')
           ..write('isVerified: $isVerified, ')
-          ..write('linkedAt: $linkedAt')
+          ..write('linkedAt: $linkedAt, ')
+          ..write('lastSyncedAt: $lastSyncedAt')
           ..write(')'))
         .toString();
   }
@@ -21424,16 +21840,32 @@ typedef $$AbhaLinksTableCreateCompanionBuilder =
       Value<int> id,
       required String userId,
       required String abhaNumber,
+      Value<String?> abhaAddress,
+      Value<String?> firstName,
+      Value<String?> lastName,
+      Value<String?> gender,
+      Value<DateTime?> dateOfBirth,
+      Value<String?> stateCode,
+      Value<String?> districtCode,
       Value<bool> isVerified,
       required DateTime linkedAt,
+      Value<DateTime?> lastSyncedAt,
     });
 typedef $$AbhaLinksTableUpdateCompanionBuilder =
     AbhaLinksCompanion Function({
       Value<int> id,
       Value<String> userId,
       Value<String> abhaNumber,
+      Value<String?> abhaAddress,
+      Value<String?> firstName,
+      Value<String?> lastName,
+      Value<String?> gender,
+      Value<DateTime?> dateOfBirth,
+      Value<String?> stateCode,
+      Value<String?> districtCode,
       Value<bool> isVerified,
       Value<DateTime> linkedAt,
+      Value<DateTime?> lastSyncedAt,
     });
 
 class $$AbhaLinksTableFilterComposer
@@ -21460,6 +21892,41 @@ class $$AbhaLinksTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<String> get abhaAddress => $composableBuilder(
+    column: $table.abhaAddress,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get firstName => $composableBuilder(
+    column: $table.firstName,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get lastName => $composableBuilder(
+    column: $table.lastName,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get gender => $composableBuilder(
+    column: $table.gender,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get dateOfBirth => $composableBuilder(
+    column: $table.dateOfBirth,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get stateCode => $composableBuilder(
+    column: $table.stateCode,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get districtCode => $composableBuilder(
+    column: $table.districtCode,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<bool> get isVerified => $composableBuilder(
     column: $table.isVerified,
     builder: (column) => ColumnFilters(column),
@@ -21467,6 +21934,11 @@ class $$AbhaLinksTableFilterComposer
 
   ColumnFilters<DateTime> get linkedAt => $composableBuilder(
     column: $table.linkedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get lastSyncedAt => $composableBuilder(
+    column: $table.lastSyncedAt,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -21495,6 +21967,41 @@ class $$AbhaLinksTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get abhaAddress => $composableBuilder(
+    column: $table.abhaAddress,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get firstName => $composableBuilder(
+    column: $table.firstName,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get lastName => $composableBuilder(
+    column: $table.lastName,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get gender => $composableBuilder(
+    column: $table.gender,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get dateOfBirth => $composableBuilder(
+    column: $table.dateOfBirth,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get stateCode => $composableBuilder(
+    column: $table.stateCode,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get districtCode => $composableBuilder(
+    column: $table.districtCode,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<bool> get isVerified => $composableBuilder(
     column: $table.isVerified,
     builder: (column) => ColumnOrderings(column),
@@ -21502,6 +22009,11 @@ class $$AbhaLinksTableOrderingComposer
 
   ColumnOrderings<DateTime> get linkedAt => $composableBuilder(
     column: $table.linkedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get lastSyncedAt => $composableBuilder(
+    column: $table.lastSyncedAt,
     builder: (column) => ColumnOrderings(column),
   );
 }
@@ -21526,6 +22038,33 @@ class $$AbhaLinksTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumn<String> get abhaAddress => $composableBuilder(
+    column: $table.abhaAddress,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get firstName =>
+      $composableBuilder(column: $table.firstName, builder: (column) => column);
+
+  GeneratedColumn<String> get lastName =>
+      $composableBuilder(column: $table.lastName, builder: (column) => column);
+
+  GeneratedColumn<String> get gender =>
+      $composableBuilder(column: $table.gender, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get dateOfBirth => $composableBuilder(
+    column: $table.dateOfBirth,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get stateCode =>
+      $composableBuilder(column: $table.stateCode, builder: (column) => column);
+
+  GeneratedColumn<String> get districtCode => $composableBuilder(
+    column: $table.districtCode,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<bool> get isVerified => $composableBuilder(
     column: $table.isVerified,
     builder: (column) => column,
@@ -21533,6 +22072,11 @@ class $$AbhaLinksTableAnnotationComposer
 
   GeneratedColumn<DateTime> get linkedAt =>
       $composableBuilder(column: $table.linkedAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get lastSyncedAt => $composableBuilder(
+    column: $table.lastSyncedAt,
+    builder: (column) => column,
+  );
 }
 
 class $$AbhaLinksTableTableManager
@@ -21566,28 +22110,60 @@ class $$AbhaLinksTableTableManager
                 Value<int> id = const Value.absent(),
                 Value<String> userId = const Value.absent(),
                 Value<String> abhaNumber = const Value.absent(),
+                Value<String?> abhaAddress = const Value.absent(),
+                Value<String?> firstName = const Value.absent(),
+                Value<String?> lastName = const Value.absent(),
+                Value<String?> gender = const Value.absent(),
+                Value<DateTime?> dateOfBirth = const Value.absent(),
+                Value<String?> stateCode = const Value.absent(),
+                Value<String?> districtCode = const Value.absent(),
                 Value<bool> isVerified = const Value.absent(),
                 Value<DateTime> linkedAt = const Value.absent(),
+                Value<DateTime?> lastSyncedAt = const Value.absent(),
               }) => AbhaLinksCompanion(
                 id: id,
                 userId: userId,
                 abhaNumber: abhaNumber,
+                abhaAddress: abhaAddress,
+                firstName: firstName,
+                lastName: lastName,
+                gender: gender,
+                dateOfBirth: dateOfBirth,
+                stateCode: stateCode,
+                districtCode: districtCode,
                 isVerified: isVerified,
                 linkedAt: linkedAt,
+                lastSyncedAt: lastSyncedAt,
               ),
           createCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
                 required String userId,
                 required String abhaNumber,
+                Value<String?> abhaAddress = const Value.absent(),
+                Value<String?> firstName = const Value.absent(),
+                Value<String?> lastName = const Value.absent(),
+                Value<String?> gender = const Value.absent(),
+                Value<DateTime?> dateOfBirth = const Value.absent(),
+                Value<String?> stateCode = const Value.absent(),
+                Value<String?> districtCode = const Value.absent(),
                 Value<bool> isVerified = const Value.absent(),
                 required DateTime linkedAt,
+                Value<DateTime?> lastSyncedAt = const Value.absent(),
               }) => AbhaLinksCompanion.insert(
                 id: id,
                 userId: userId,
                 abhaNumber: abhaNumber,
+                abhaAddress: abhaAddress,
+                firstName: firstName,
+                lastName: lastName,
+                gender: gender,
+                dateOfBirth: dateOfBirth,
+                stateCode: stateCode,
+                districtCode: districtCode,
                 isVerified: isVerified,
                 linkedAt: linkedAt,
+                lastSyncedAt: lastSyncedAt,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))

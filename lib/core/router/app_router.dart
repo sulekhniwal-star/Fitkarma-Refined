@@ -19,6 +19,7 @@ import 'package:fitkarma/features/appointments/presentation/appointment_screen.d
 import 'package:fitkarma/features/appointments/presentation/appointments_list_screen.dart';
 import 'package:fitkarma/features/appointments/presentation/prescription_screen.dart';
 import 'package:fitkarma/features/lab_reports/presentation/lab_report_scan_screen.dart';
+import 'package:fitkarma/features/abha/presentation/link_abha_screen.dart';
 import 'package:fitkarma/features/spo2/presentation/spo2_log_screen.dart';
 import 'package:fitkarma/features/spo2/presentation/spo2_history_screen.dart';
 import 'package:fitkarma/features/wearables/wearables_screen.dart'
@@ -409,6 +410,24 @@ final GoRouter appRouter = GoRouter(
       builder: (context, state) {
         final userId = state.extra as String? ?? '';
         return LabReportScanScreen(userId: userId);
+      },
+    ),
+
+    // ABHA
+    GoRoute(
+      parentNavigatorKey: _rootNavigatorKey,
+      path: '/abha/link',
+      builder: (context, state) {
+        final userId = state.extra as String? ?? '';
+        return LinkAbhaScreen(userId: userId);
+      },
+    ),
+    GoRoute(
+      parentNavigatorKey: _rootNavigatorKey,
+      path: '/abha/prescriptions/:userId',
+      builder: (context, state) {
+        final userId = state.pathParameters['userId'] ?? '';
+        return const _PlaceholderScreen('ABHA Prescriptions');
       },
     ),
   ],
