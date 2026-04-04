@@ -3496,6 +3496,44 @@ class $MoodLogsTable extends MoodLogs with TableInfo<$MoodLogsTable, MoodLog> {
     type: DriftSqlType.int,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _energyMeta = const VerificationMeta('energy');
+  @override
+  late final GeneratedColumn<int> energy = GeneratedColumn<int>(
+    'energy',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _stressMeta = const VerificationMeta('stress');
+  @override
+  late final GeneratedColumn<int> stress = GeneratedColumn<int>(
+    'stress',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _tagsMeta = const VerificationMeta('tags');
+  @override
+  late final GeneratedColumn<String> tags = GeneratedColumn<String>(
+    'tags',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _voiceNotePathMeta = const VerificationMeta(
+    'voiceNotePath',
+  );
+  @override
+  late final GeneratedColumn<String> voiceNotePath = GeneratedColumn<String>(
+    'voice_note_path',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _screenTimeMinMeta = const VerificationMeta(
     'screenTimeMin',
   );
@@ -3534,6 +3572,10 @@ class $MoodLogsTable extends MoodLogs with TableInfo<$MoodLogsTable, MoodLog> {
     id,
     userId,
     moodScore,
+    energy,
+    stress,
+    tags,
+    voiceNotePath,
     screenTimeMin,
     sleepQuality,
     loggedAt,
@@ -3568,6 +3610,33 @@ class $MoodLogsTable extends MoodLogs with TableInfo<$MoodLogsTable, MoodLog> {
       );
     } else if (isInserting) {
       context.missing(_moodScoreMeta);
+    }
+    if (data.containsKey('energy')) {
+      context.handle(
+        _energyMeta,
+        energy.isAcceptableOrUnknown(data['energy']!, _energyMeta),
+      );
+    }
+    if (data.containsKey('stress')) {
+      context.handle(
+        _stressMeta,
+        stress.isAcceptableOrUnknown(data['stress']!, _stressMeta),
+      );
+    }
+    if (data.containsKey('tags')) {
+      context.handle(
+        _tagsMeta,
+        tags.isAcceptableOrUnknown(data['tags']!, _tagsMeta),
+      );
+    }
+    if (data.containsKey('voice_note_path')) {
+      context.handle(
+        _voiceNotePathMeta,
+        voiceNotePath.isAcceptableOrUnknown(
+          data['voice_note_path']!,
+          _voiceNotePathMeta,
+        ),
+      );
     }
     if (data.containsKey('screen_time_min')) {
       context.handle(
@@ -3616,6 +3685,22 @@ class $MoodLogsTable extends MoodLogs with TableInfo<$MoodLogsTable, MoodLog> {
         DriftSqlType.int,
         data['${effectivePrefix}mood_score'],
       )!,
+      energy: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}energy'],
+      ),
+      stress: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}stress'],
+      ),
+      tags: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}tags'],
+      ),
+      voiceNotePath: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}voice_note_path'],
+      ),
       screenTimeMin: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}screen_time_min'],
@@ -3641,6 +3726,10 @@ class MoodLog extends DataClass implements Insertable<MoodLog> {
   final int id;
   final String userId;
   final int moodScore;
+  final int? energy;
+  final int? stress;
+  final String? tags;
+  final String? voiceNotePath;
   final int? screenTimeMin;
   final int? sleepQuality;
   final DateTime loggedAt;
@@ -3648,6 +3737,10 @@ class MoodLog extends DataClass implements Insertable<MoodLog> {
     required this.id,
     required this.userId,
     required this.moodScore,
+    this.energy,
+    this.stress,
+    this.tags,
+    this.voiceNotePath,
     this.screenTimeMin,
     this.sleepQuality,
     required this.loggedAt,
@@ -3658,6 +3751,18 @@ class MoodLog extends DataClass implements Insertable<MoodLog> {
     map['id'] = Variable<int>(id);
     map['user_id'] = Variable<String>(userId);
     map['mood_score'] = Variable<int>(moodScore);
+    if (!nullToAbsent || energy != null) {
+      map['energy'] = Variable<int>(energy);
+    }
+    if (!nullToAbsent || stress != null) {
+      map['stress'] = Variable<int>(stress);
+    }
+    if (!nullToAbsent || tags != null) {
+      map['tags'] = Variable<String>(tags);
+    }
+    if (!nullToAbsent || voiceNotePath != null) {
+      map['voice_note_path'] = Variable<String>(voiceNotePath);
+    }
     if (!nullToAbsent || screenTimeMin != null) {
       map['screen_time_min'] = Variable<int>(screenTimeMin);
     }
@@ -3673,6 +3778,16 @@ class MoodLog extends DataClass implements Insertable<MoodLog> {
       id: Value(id),
       userId: Value(userId),
       moodScore: Value(moodScore),
+      energy: energy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(energy),
+      stress: stress == null && nullToAbsent
+          ? const Value.absent()
+          : Value(stress),
+      tags: tags == null && nullToAbsent ? const Value.absent() : Value(tags),
+      voiceNotePath: voiceNotePath == null && nullToAbsent
+          ? const Value.absent()
+          : Value(voiceNotePath),
       screenTimeMin: screenTimeMin == null && nullToAbsent
           ? const Value.absent()
           : Value(screenTimeMin),
@@ -3692,6 +3807,10 @@ class MoodLog extends DataClass implements Insertable<MoodLog> {
       id: serializer.fromJson<int>(json['id']),
       userId: serializer.fromJson<String>(json['userId']),
       moodScore: serializer.fromJson<int>(json['moodScore']),
+      energy: serializer.fromJson<int?>(json['energy']),
+      stress: serializer.fromJson<int?>(json['stress']),
+      tags: serializer.fromJson<String?>(json['tags']),
+      voiceNotePath: serializer.fromJson<String?>(json['voiceNotePath']),
       screenTimeMin: serializer.fromJson<int?>(json['screenTimeMin']),
       sleepQuality: serializer.fromJson<int?>(json['sleepQuality']),
       loggedAt: serializer.fromJson<DateTime>(json['loggedAt']),
@@ -3704,6 +3823,10 @@ class MoodLog extends DataClass implements Insertable<MoodLog> {
       'id': serializer.toJson<int>(id),
       'userId': serializer.toJson<String>(userId),
       'moodScore': serializer.toJson<int>(moodScore),
+      'energy': serializer.toJson<int?>(energy),
+      'stress': serializer.toJson<int?>(stress),
+      'tags': serializer.toJson<String?>(tags),
+      'voiceNotePath': serializer.toJson<String?>(voiceNotePath),
       'screenTimeMin': serializer.toJson<int?>(screenTimeMin),
       'sleepQuality': serializer.toJson<int?>(sleepQuality),
       'loggedAt': serializer.toJson<DateTime>(loggedAt),
@@ -3714,6 +3837,10 @@ class MoodLog extends DataClass implements Insertable<MoodLog> {
     int? id,
     String? userId,
     int? moodScore,
+    Value<int?> energy = const Value.absent(),
+    Value<int?> stress = const Value.absent(),
+    Value<String?> tags = const Value.absent(),
+    Value<String?> voiceNotePath = const Value.absent(),
     Value<int?> screenTimeMin = const Value.absent(),
     Value<int?> sleepQuality = const Value.absent(),
     DateTime? loggedAt,
@@ -3721,6 +3848,12 @@ class MoodLog extends DataClass implements Insertable<MoodLog> {
     id: id ?? this.id,
     userId: userId ?? this.userId,
     moodScore: moodScore ?? this.moodScore,
+    energy: energy.present ? energy.value : this.energy,
+    stress: stress.present ? stress.value : this.stress,
+    tags: tags.present ? tags.value : this.tags,
+    voiceNotePath: voiceNotePath.present
+        ? voiceNotePath.value
+        : this.voiceNotePath,
     screenTimeMin: screenTimeMin.present
         ? screenTimeMin.value
         : this.screenTimeMin,
@@ -3732,6 +3865,12 @@ class MoodLog extends DataClass implements Insertable<MoodLog> {
       id: data.id.present ? data.id.value : this.id,
       userId: data.userId.present ? data.userId.value : this.userId,
       moodScore: data.moodScore.present ? data.moodScore.value : this.moodScore,
+      energy: data.energy.present ? data.energy.value : this.energy,
+      stress: data.stress.present ? data.stress.value : this.stress,
+      tags: data.tags.present ? data.tags.value : this.tags,
+      voiceNotePath: data.voiceNotePath.present
+          ? data.voiceNotePath.value
+          : this.voiceNotePath,
       screenTimeMin: data.screenTimeMin.present
           ? data.screenTimeMin.value
           : this.screenTimeMin,
@@ -3748,6 +3887,10 @@ class MoodLog extends DataClass implements Insertable<MoodLog> {
           ..write('id: $id, ')
           ..write('userId: $userId, ')
           ..write('moodScore: $moodScore, ')
+          ..write('energy: $energy, ')
+          ..write('stress: $stress, ')
+          ..write('tags: $tags, ')
+          ..write('voiceNotePath: $voiceNotePath, ')
           ..write('screenTimeMin: $screenTimeMin, ')
           ..write('sleepQuality: $sleepQuality, ')
           ..write('loggedAt: $loggedAt')
@@ -3756,8 +3899,18 @@ class MoodLog extends DataClass implements Insertable<MoodLog> {
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, userId, moodScore, screenTimeMin, sleepQuality, loggedAt);
+  int get hashCode => Object.hash(
+    id,
+    userId,
+    moodScore,
+    energy,
+    stress,
+    tags,
+    voiceNotePath,
+    screenTimeMin,
+    sleepQuality,
+    loggedAt,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -3765,6 +3918,10 @@ class MoodLog extends DataClass implements Insertable<MoodLog> {
           other.id == this.id &&
           other.userId == this.userId &&
           other.moodScore == this.moodScore &&
+          other.energy == this.energy &&
+          other.stress == this.stress &&
+          other.tags == this.tags &&
+          other.voiceNotePath == this.voiceNotePath &&
           other.screenTimeMin == this.screenTimeMin &&
           other.sleepQuality == this.sleepQuality &&
           other.loggedAt == this.loggedAt);
@@ -3774,6 +3931,10 @@ class MoodLogsCompanion extends UpdateCompanion<MoodLog> {
   final Value<int> id;
   final Value<String> userId;
   final Value<int> moodScore;
+  final Value<int?> energy;
+  final Value<int?> stress;
+  final Value<String?> tags;
+  final Value<String?> voiceNotePath;
   final Value<int?> screenTimeMin;
   final Value<int?> sleepQuality;
   final Value<DateTime> loggedAt;
@@ -3781,6 +3942,10 @@ class MoodLogsCompanion extends UpdateCompanion<MoodLog> {
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
     this.moodScore = const Value.absent(),
+    this.energy = const Value.absent(),
+    this.stress = const Value.absent(),
+    this.tags = const Value.absent(),
+    this.voiceNotePath = const Value.absent(),
     this.screenTimeMin = const Value.absent(),
     this.sleepQuality = const Value.absent(),
     this.loggedAt = const Value.absent(),
@@ -3789,6 +3954,10 @@ class MoodLogsCompanion extends UpdateCompanion<MoodLog> {
     this.id = const Value.absent(),
     required String userId,
     required int moodScore,
+    this.energy = const Value.absent(),
+    this.stress = const Value.absent(),
+    this.tags = const Value.absent(),
+    this.voiceNotePath = const Value.absent(),
     this.screenTimeMin = const Value.absent(),
     this.sleepQuality = const Value.absent(),
     required DateTime loggedAt,
@@ -3799,6 +3968,10 @@ class MoodLogsCompanion extends UpdateCompanion<MoodLog> {
     Expression<int>? id,
     Expression<String>? userId,
     Expression<int>? moodScore,
+    Expression<int>? energy,
+    Expression<int>? stress,
+    Expression<String>? tags,
+    Expression<String>? voiceNotePath,
     Expression<int>? screenTimeMin,
     Expression<int>? sleepQuality,
     Expression<DateTime>? loggedAt,
@@ -3807,6 +3980,10 @@ class MoodLogsCompanion extends UpdateCompanion<MoodLog> {
       if (id != null) 'id': id,
       if (userId != null) 'user_id': userId,
       if (moodScore != null) 'mood_score': moodScore,
+      if (energy != null) 'energy': energy,
+      if (stress != null) 'stress': stress,
+      if (tags != null) 'tags': tags,
+      if (voiceNotePath != null) 'voice_note_path': voiceNotePath,
       if (screenTimeMin != null) 'screen_time_min': screenTimeMin,
       if (sleepQuality != null) 'sleep_quality': sleepQuality,
       if (loggedAt != null) 'logged_at': loggedAt,
@@ -3817,6 +3994,10 @@ class MoodLogsCompanion extends UpdateCompanion<MoodLog> {
     Value<int>? id,
     Value<String>? userId,
     Value<int>? moodScore,
+    Value<int?>? energy,
+    Value<int?>? stress,
+    Value<String?>? tags,
+    Value<String?>? voiceNotePath,
     Value<int?>? screenTimeMin,
     Value<int?>? sleepQuality,
     Value<DateTime>? loggedAt,
@@ -3825,6 +4006,10 @@ class MoodLogsCompanion extends UpdateCompanion<MoodLog> {
       id: id ?? this.id,
       userId: userId ?? this.userId,
       moodScore: moodScore ?? this.moodScore,
+      energy: energy ?? this.energy,
+      stress: stress ?? this.stress,
+      tags: tags ?? this.tags,
+      voiceNotePath: voiceNotePath ?? this.voiceNotePath,
       screenTimeMin: screenTimeMin ?? this.screenTimeMin,
       sleepQuality: sleepQuality ?? this.sleepQuality,
       loggedAt: loggedAt ?? this.loggedAt,
@@ -3842,6 +4027,18 @@ class MoodLogsCompanion extends UpdateCompanion<MoodLog> {
     }
     if (moodScore.present) {
       map['mood_score'] = Variable<int>(moodScore.value);
+    }
+    if (energy.present) {
+      map['energy'] = Variable<int>(energy.value);
+    }
+    if (stress.present) {
+      map['stress'] = Variable<int>(stress.value);
+    }
+    if (tags.present) {
+      map['tags'] = Variable<String>(tags.value);
+    }
+    if (voiceNotePath.present) {
+      map['voice_note_path'] = Variable<String>(voiceNotePath.value);
     }
     if (screenTimeMin.present) {
       map['screen_time_min'] = Variable<int>(screenTimeMin.value);
@@ -3861,6 +4058,10 @@ class MoodLogsCompanion extends UpdateCompanion<MoodLog> {
           ..write('id: $id, ')
           ..write('userId: $userId, ')
           ..write('moodScore: $moodScore, ')
+          ..write('energy: $energy, ')
+          ..write('stress: $stress, ')
+          ..write('tags: $tags, ')
+          ..write('voiceNotePath: $voiceNotePath, ')
           ..write('screenTimeMin: $screenTimeMin, ')
           ..write('sleepQuality: $sleepQuality, ')
           ..write('loggedAt: $loggedAt')
@@ -5252,6 +5453,139 @@ class $PeriodLogsTable extends PeriodLogs
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _hasCrampsMeta = const VerificationMeta(
+    'hasCramps',
+  );
+  @override
+  late final GeneratedColumn<bool> hasCramps = GeneratedColumn<bool>(
+    'has_cramps',
+    aliasedName,
+    true,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("has_cramps" IN (0, 1))',
+    ),
+  );
+  static const VerificationMeta _hasBloatingMeta = const VerificationMeta(
+    'hasBloating',
+  );
+  @override
+  late final GeneratedColumn<bool> hasBloating = GeneratedColumn<bool>(
+    'has_bloating',
+    aliasedName,
+    true,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("has_bloating" IN (0, 1))',
+    ),
+  );
+  static const VerificationMeta _hasMoodSwingsMeta = const VerificationMeta(
+    'hasMoodSwings',
+  );
+  @override
+  late final GeneratedColumn<bool> hasMoodSwings = GeneratedColumn<bool>(
+    'has_mood_swings',
+    aliasedName,
+    true,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("has_mood_swings" IN (0, 1))',
+    ),
+  );
+  static const VerificationMeta _hasHeadacheMeta = const VerificationMeta(
+    'hasHeadache',
+  );
+  @override
+  late final GeneratedColumn<bool> hasHeadache = GeneratedColumn<bool>(
+    'has_headache',
+    aliasedName,
+    true,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("has_headache" IN (0, 1))',
+    ),
+  );
+  static const VerificationMeta _hasFatigueMeta = const VerificationMeta(
+    'hasFatigue',
+  );
+  @override
+  late final GeneratedColumn<bool> hasFatigue = GeneratedColumn<bool>(
+    'has_fatigue',
+    aliasedName,
+    true,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("has_fatigue" IN (0, 1))',
+    ),
+  );
+  static const VerificationMeta _hasSpottingMeta = const VerificationMeta(
+    'hasSpotting',
+  );
+  @override
+  late final GeneratedColumn<bool> hasSpotting = GeneratedColumn<bool>(
+    'has_spotting',
+    aliasedName,
+    true,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("has_spotting" IN (0, 1))',
+    ),
+  );
+  static const VerificationMeta _hasBreastTendernessMeta =
+      const VerificationMeta('hasBreastTenderness');
+  @override
+  late final GeneratedColumn<bool> hasBreastTenderness = GeneratedColumn<bool>(
+    'has_breast_tenderness',
+    aliasedName,
+    true,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("has_breast_tenderness" IN (0, 1))',
+    ),
+  );
+  static const VerificationMeta _hasAcneMeta = const VerificationMeta(
+    'hasAcne',
+  );
+  @override
+  late final GeneratedColumn<bool> hasAcne = GeneratedColumn<bool>(
+    'has_acne',
+    aliasedName,
+    true,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("has_acne" IN (0, 1))',
+    ),
+  );
+  static const VerificationMeta _energyLevelMeta = const VerificationMeta(
+    'energyLevel',
+  );
+  @override
+  late final GeneratedColumn<String> energyLevel = GeneratedColumn<String>(
+    'energy_level',
+    aliasedName,
+    true,
+    additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 16),
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _notesMeta = const VerificationMeta('notes');
+  @override
+  late final GeneratedColumn<String> notes = GeneratedColumn<String>(
+    'notes',
+    aliasedName,
+    true,
+    additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 1024),
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _isPcodPcosMeta = const VerificationMeta(
     'isPcodPcos',
   );
@@ -5261,10 +5595,26 @@ class $PeriodLogsTable extends PeriodLogs
     aliasedName,
     false,
     type: DriftSqlType.bool,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
       'CHECK ("is_pcod_pcos" IN (0, 1))',
     ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _syncEnabledMeta = const VerificationMeta(
+    'syncEnabled',
+  );
+  @override
+  late final GeneratedColumn<bool> syncEnabled = GeneratedColumn<bool>(
+    'sync_enabled',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("sync_enabled" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
   );
   @override
   List<GeneratedColumn> get $columns => [
@@ -5274,7 +5624,18 @@ class $PeriodLogsTable extends PeriodLogs
     isPeriodDay,
     flowIntensity,
     symptoms,
+    hasCramps,
+    hasBloating,
+    hasMoodSwings,
+    hasHeadache,
+    hasFatigue,
+    hasSpotting,
+    hasBreastTenderness,
+    hasAcne,
+    energyLevel,
+    notes,
     isPcodPcos,
+    syncEnabled,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -5333,6 +5694,84 @@ class $PeriodLogsTable extends PeriodLogs
         symptoms.isAcceptableOrUnknown(data['symptoms']!, _symptomsMeta),
       );
     }
+    if (data.containsKey('has_cramps')) {
+      context.handle(
+        _hasCrampsMeta,
+        hasCramps.isAcceptableOrUnknown(data['has_cramps']!, _hasCrampsMeta),
+      );
+    }
+    if (data.containsKey('has_bloating')) {
+      context.handle(
+        _hasBloatingMeta,
+        hasBloating.isAcceptableOrUnknown(
+          data['has_bloating']!,
+          _hasBloatingMeta,
+        ),
+      );
+    }
+    if (data.containsKey('has_mood_swings')) {
+      context.handle(
+        _hasMoodSwingsMeta,
+        hasMoodSwings.isAcceptableOrUnknown(
+          data['has_mood_swings']!,
+          _hasMoodSwingsMeta,
+        ),
+      );
+    }
+    if (data.containsKey('has_headache')) {
+      context.handle(
+        _hasHeadacheMeta,
+        hasHeadache.isAcceptableOrUnknown(
+          data['has_headache']!,
+          _hasHeadacheMeta,
+        ),
+      );
+    }
+    if (data.containsKey('has_fatigue')) {
+      context.handle(
+        _hasFatigueMeta,
+        hasFatigue.isAcceptableOrUnknown(data['has_fatigue']!, _hasFatigueMeta),
+      );
+    }
+    if (data.containsKey('has_spotting')) {
+      context.handle(
+        _hasSpottingMeta,
+        hasSpotting.isAcceptableOrUnknown(
+          data['has_spotting']!,
+          _hasSpottingMeta,
+        ),
+      );
+    }
+    if (data.containsKey('has_breast_tenderness')) {
+      context.handle(
+        _hasBreastTendernessMeta,
+        hasBreastTenderness.isAcceptableOrUnknown(
+          data['has_breast_tenderness']!,
+          _hasBreastTendernessMeta,
+        ),
+      );
+    }
+    if (data.containsKey('has_acne')) {
+      context.handle(
+        _hasAcneMeta,
+        hasAcne.isAcceptableOrUnknown(data['has_acne']!, _hasAcneMeta),
+      );
+    }
+    if (data.containsKey('energy_level')) {
+      context.handle(
+        _energyLevelMeta,
+        energyLevel.isAcceptableOrUnknown(
+          data['energy_level']!,
+          _energyLevelMeta,
+        ),
+      );
+    }
+    if (data.containsKey('notes')) {
+      context.handle(
+        _notesMeta,
+        notes.isAcceptableOrUnknown(data['notes']!, _notesMeta),
+      );
+    }
     if (data.containsKey('is_pcod_pcos')) {
       context.handle(
         _isPcodPcosMeta,
@@ -5341,8 +5780,15 @@ class $PeriodLogsTable extends PeriodLogs
           _isPcodPcosMeta,
         ),
       );
-    } else if (isInserting) {
-      context.missing(_isPcodPcosMeta);
+    }
+    if (data.containsKey('sync_enabled')) {
+      context.handle(
+        _syncEnabledMeta,
+        syncEnabled.isAcceptableOrUnknown(
+          data['sync_enabled']!,
+          _syncEnabledMeta,
+        ),
+      );
     }
     return context;
   }
@@ -5377,9 +5823,53 @@ class $PeriodLogsTable extends PeriodLogs
         DriftSqlType.string,
         data['${effectivePrefix}symptoms'],
       ),
+      hasCramps: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}has_cramps'],
+      ),
+      hasBloating: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}has_bloating'],
+      ),
+      hasMoodSwings: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}has_mood_swings'],
+      ),
+      hasHeadache: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}has_headache'],
+      ),
+      hasFatigue: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}has_fatigue'],
+      ),
+      hasSpotting: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}has_spotting'],
+      ),
+      hasBreastTenderness: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}has_breast_tenderness'],
+      ),
+      hasAcne: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}has_acne'],
+      ),
+      energyLevel: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}energy_level'],
+      ),
+      notes: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}notes'],
+      ),
       isPcodPcos: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
         data['${effectivePrefix}is_pcod_pcos'],
+      )!,
+      syncEnabled: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}sync_enabled'],
       )!,
     );
   }
@@ -5397,7 +5887,18 @@ class PeriodLog extends DataClass implements Insertable<PeriodLog> {
   final bool isPeriodDay;
   final String? flowIntensity;
   final String? symptoms;
+  final bool? hasCramps;
+  final bool? hasBloating;
+  final bool? hasMoodSwings;
+  final bool? hasHeadache;
+  final bool? hasFatigue;
+  final bool? hasSpotting;
+  final bool? hasBreastTenderness;
+  final bool? hasAcne;
+  final String? energyLevel;
+  final String? notes;
   final bool isPcodPcos;
+  final bool syncEnabled;
   const PeriodLog({
     required this.id,
     required this.userId,
@@ -5405,7 +5906,18 @@ class PeriodLog extends DataClass implements Insertable<PeriodLog> {
     required this.isPeriodDay,
     this.flowIntensity,
     this.symptoms,
+    this.hasCramps,
+    this.hasBloating,
+    this.hasMoodSwings,
+    this.hasHeadache,
+    this.hasFatigue,
+    this.hasSpotting,
+    this.hasBreastTenderness,
+    this.hasAcne,
+    this.energyLevel,
+    this.notes,
     required this.isPcodPcos,
+    required this.syncEnabled,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -5420,7 +5932,38 @@ class PeriodLog extends DataClass implements Insertable<PeriodLog> {
     if (!nullToAbsent || symptoms != null) {
       map['symptoms'] = Variable<String>(symptoms);
     }
+    if (!nullToAbsent || hasCramps != null) {
+      map['has_cramps'] = Variable<bool>(hasCramps);
+    }
+    if (!nullToAbsent || hasBloating != null) {
+      map['has_bloating'] = Variable<bool>(hasBloating);
+    }
+    if (!nullToAbsent || hasMoodSwings != null) {
+      map['has_mood_swings'] = Variable<bool>(hasMoodSwings);
+    }
+    if (!nullToAbsent || hasHeadache != null) {
+      map['has_headache'] = Variable<bool>(hasHeadache);
+    }
+    if (!nullToAbsent || hasFatigue != null) {
+      map['has_fatigue'] = Variable<bool>(hasFatigue);
+    }
+    if (!nullToAbsent || hasSpotting != null) {
+      map['has_spotting'] = Variable<bool>(hasSpotting);
+    }
+    if (!nullToAbsent || hasBreastTenderness != null) {
+      map['has_breast_tenderness'] = Variable<bool>(hasBreastTenderness);
+    }
+    if (!nullToAbsent || hasAcne != null) {
+      map['has_acne'] = Variable<bool>(hasAcne);
+    }
+    if (!nullToAbsent || energyLevel != null) {
+      map['energy_level'] = Variable<String>(energyLevel);
+    }
+    if (!nullToAbsent || notes != null) {
+      map['notes'] = Variable<String>(notes);
+    }
     map['is_pcod_pcos'] = Variable<bool>(isPcodPcos);
+    map['sync_enabled'] = Variable<bool>(syncEnabled);
     return map;
   }
 
@@ -5436,7 +5979,38 @@ class PeriodLog extends DataClass implements Insertable<PeriodLog> {
       symptoms: symptoms == null && nullToAbsent
           ? const Value.absent()
           : Value(symptoms),
+      hasCramps: hasCramps == null && nullToAbsent
+          ? const Value.absent()
+          : Value(hasCramps),
+      hasBloating: hasBloating == null && nullToAbsent
+          ? const Value.absent()
+          : Value(hasBloating),
+      hasMoodSwings: hasMoodSwings == null && nullToAbsent
+          ? const Value.absent()
+          : Value(hasMoodSwings),
+      hasHeadache: hasHeadache == null && nullToAbsent
+          ? const Value.absent()
+          : Value(hasHeadache),
+      hasFatigue: hasFatigue == null && nullToAbsent
+          ? const Value.absent()
+          : Value(hasFatigue),
+      hasSpotting: hasSpotting == null && nullToAbsent
+          ? const Value.absent()
+          : Value(hasSpotting),
+      hasBreastTenderness: hasBreastTenderness == null && nullToAbsent
+          ? const Value.absent()
+          : Value(hasBreastTenderness),
+      hasAcne: hasAcne == null && nullToAbsent
+          ? const Value.absent()
+          : Value(hasAcne),
+      energyLevel: energyLevel == null && nullToAbsent
+          ? const Value.absent()
+          : Value(energyLevel),
+      notes: notes == null && nullToAbsent
+          ? const Value.absent()
+          : Value(notes),
       isPcodPcos: Value(isPcodPcos),
+      syncEnabled: Value(syncEnabled),
     );
   }
 
@@ -5452,7 +6026,20 @@ class PeriodLog extends DataClass implements Insertable<PeriodLog> {
       isPeriodDay: serializer.fromJson<bool>(json['isPeriodDay']),
       flowIntensity: serializer.fromJson<String?>(json['flowIntensity']),
       symptoms: serializer.fromJson<String?>(json['symptoms']),
+      hasCramps: serializer.fromJson<bool?>(json['hasCramps']),
+      hasBloating: serializer.fromJson<bool?>(json['hasBloating']),
+      hasMoodSwings: serializer.fromJson<bool?>(json['hasMoodSwings']),
+      hasHeadache: serializer.fromJson<bool?>(json['hasHeadache']),
+      hasFatigue: serializer.fromJson<bool?>(json['hasFatigue']),
+      hasSpotting: serializer.fromJson<bool?>(json['hasSpotting']),
+      hasBreastTenderness: serializer.fromJson<bool?>(
+        json['hasBreastTenderness'],
+      ),
+      hasAcne: serializer.fromJson<bool?>(json['hasAcne']),
+      energyLevel: serializer.fromJson<String?>(json['energyLevel']),
+      notes: serializer.fromJson<String?>(json['notes']),
       isPcodPcos: serializer.fromJson<bool>(json['isPcodPcos']),
+      syncEnabled: serializer.fromJson<bool>(json['syncEnabled']),
     );
   }
   @override
@@ -5465,7 +6052,18 @@ class PeriodLog extends DataClass implements Insertable<PeriodLog> {
       'isPeriodDay': serializer.toJson<bool>(isPeriodDay),
       'flowIntensity': serializer.toJson<String?>(flowIntensity),
       'symptoms': serializer.toJson<String?>(symptoms),
+      'hasCramps': serializer.toJson<bool?>(hasCramps),
+      'hasBloating': serializer.toJson<bool?>(hasBloating),
+      'hasMoodSwings': serializer.toJson<bool?>(hasMoodSwings),
+      'hasHeadache': serializer.toJson<bool?>(hasHeadache),
+      'hasFatigue': serializer.toJson<bool?>(hasFatigue),
+      'hasSpotting': serializer.toJson<bool?>(hasSpotting),
+      'hasBreastTenderness': serializer.toJson<bool?>(hasBreastTenderness),
+      'hasAcne': serializer.toJson<bool?>(hasAcne),
+      'energyLevel': serializer.toJson<String?>(energyLevel),
+      'notes': serializer.toJson<String?>(notes),
       'isPcodPcos': serializer.toJson<bool>(isPcodPcos),
+      'syncEnabled': serializer.toJson<bool>(syncEnabled),
     };
   }
 
@@ -5476,7 +6074,18 @@ class PeriodLog extends DataClass implements Insertable<PeriodLog> {
     bool? isPeriodDay,
     Value<String?> flowIntensity = const Value.absent(),
     Value<String?> symptoms = const Value.absent(),
+    Value<bool?> hasCramps = const Value.absent(),
+    Value<bool?> hasBloating = const Value.absent(),
+    Value<bool?> hasMoodSwings = const Value.absent(),
+    Value<bool?> hasHeadache = const Value.absent(),
+    Value<bool?> hasFatigue = const Value.absent(),
+    Value<bool?> hasSpotting = const Value.absent(),
+    Value<bool?> hasBreastTenderness = const Value.absent(),
+    Value<bool?> hasAcne = const Value.absent(),
+    Value<String?> energyLevel = const Value.absent(),
+    Value<String?> notes = const Value.absent(),
     bool? isPcodPcos,
+    bool? syncEnabled,
   }) => PeriodLog(
     id: id ?? this.id,
     userId: userId ?? this.userId,
@@ -5486,7 +6095,22 @@ class PeriodLog extends DataClass implements Insertable<PeriodLog> {
         ? flowIntensity.value
         : this.flowIntensity,
     symptoms: symptoms.present ? symptoms.value : this.symptoms,
+    hasCramps: hasCramps.present ? hasCramps.value : this.hasCramps,
+    hasBloating: hasBloating.present ? hasBloating.value : this.hasBloating,
+    hasMoodSwings: hasMoodSwings.present
+        ? hasMoodSwings.value
+        : this.hasMoodSwings,
+    hasHeadache: hasHeadache.present ? hasHeadache.value : this.hasHeadache,
+    hasFatigue: hasFatigue.present ? hasFatigue.value : this.hasFatigue,
+    hasSpotting: hasSpotting.present ? hasSpotting.value : this.hasSpotting,
+    hasBreastTenderness: hasBreastTenderness.present
+        ? hasBreastTenderness.value
+        : this.hasBreastTenderness,
+    hasAcne: hasAcne.present ? hasAcne.value : this.hasAcne,
+    energyLevel: energyLevel.present ? energyLevel.value : this.energyLevel,
+    notes: notes.present ? notes.value : this.notes,
     isPcodPcos: isPcodPcos ?? this.isPcodPcos,
+    syncEnabled: syncEnabled ?? this.syncEnabled,
   );
   PeriodLog copyWithCompanion(PeriodLogsCompanion data) {
     return PeriodLog(
@@ -5500,9 +6124,36 @@ class PeriodLog extends DataClass implements Insertable<PeriodLog> {
           ? data.flowIntensity.value
           : this.flowIntensity,
       symptoms: data.symptoms.present ? data.symptoms.value : this.symptoms,
+      hasCramps: data.hasCramps.present ? data.hasCramps.value : this.hasCramps,
+      hasBloating: data.hasBloating.present
+          ? data.hasBloating.value
+          : this.hasBloating,
+      hasMoodSwings: data.hasMoodSwings.present
+          ? data.hasMoodSwings.value
+          : this.hasMoodSwings,
+      hasHeadache: data.hasHeadache.present
+          ? data.hasHeadache.value
+          : this.hasHeadache,
+      hasFatigue: data.hasFatigue.present
+          ? data.hasFatigue.value
+          : this.hasFatigue,
+      hasSpotting: data.hasSpotting.present
+          ? data.hasSpotting.value
+          : this.hasSpotting,
+      hasBreastTenderness: data.hasBreastTenderness.present
+          ? data.hasBreastTenderness.value
+          : this.hasBreastTenderness,
+      hasAcne: data.hasAcne.present ? data.hasAcne.value : this.hasAcne,
+      energyLevel: data.energyLevel.present
+          ? data.energyLevel.value
+          : this.energyLevel,
+      notes: data.notes.present ? data.notes.value : this.notes,
       isPcodPcos: data.isPcodPcos.present
           ? data.isPcodPcos.value
           : this.isPcodPcos,
+      syncEnabled: data.syncEnabled.present
+          ? data.syncEnabled.value
+          : this.syncEnabled,
     );
   }
 
@@ -5515,7 +6166,18 @@ class PeriodLog extends DataClass implements Insertable<PeriodLog> {
           ..write('isPeriodDay: $isPeriodDay, ')
           ..write('flowIntensity: $flowIntensity, ')
           ..write('symptoms: $symptoms, ')
-          ..write('isPcodPcos: $isPcodPcos')
+          ..write('hasCramps: $hasCramps, ')
+          ..write('hasBloating: $hasBloating, ')
+          ..write('hasMoodSwings: $hasMoodSwings, ')
+          ..write('hasHeadache: $hasHeadache, ')
+          ..write('hasFatigue: $hasFatigue, ')
+          ..write('hasSpotting: $hasSpotting, ')
+          ..write('hasBreastTenderness: $hasBreastTenderness, ')
+          ..write('hasAcne: $hasAcne, ')
+          ..write('energyLevel: $energyLevel, ')
+          ..write('notes: $notes, ')
+          ..write('isPcodPcos: $isPcodPcos, ')
+          ..write('syncEnabled: $syncEnabled')
           ..write(')'))
         .toString();
   }
@@ -5528,7 +6190,18 @@ class PeriodLog extends DataClass implements Insertable<PeriodLog> {
     isPeriodDay,
     flowIntensity,
     symptoms,
+    hasCramps,
+    hasBloating,
+    hasMoodSwings,
+    hasHeadache,
+    hasFatigue,
+    hasSpotting,
+    hasBreastTenderness,
+    hasAcne,
+    energyLevel,
+    notes,
     isPcodPcos,
+    syncEnabled,
   );
   @override
   bool operator ==(Object other) =>
@@ -5540,7 +6213,18 @@ class PeriodLog extends DataClass implements Insertable<PeriodLog> {
           other.isPeriodDay == this.isPeriodDay &&
           other.flowIntensity == this.flowIntensity &&
           other.symptoms == this.symptoms &&
-          other.isPcodPcos == this.isPcodPcos);
+          other.hasCramps == this.hasCramps &&
+          other.hasBloating == this.hasBloating &&
+          other.hasMoodSwings == this.hasMoodSwings &&
+          other.hasHeadache == this.hasHeadache &&
+          other.hasFatigue == this.hasFatigue &&
+          other.hasSpotting == this.hasSpotting &&
+          other.hasBreastTenderness == this.hasBreastTenderness &&
+          other.hasAcne == this.hasAcne &&
+          other.energyLevel == this.energyLevel &&
+          other.notes == this.notes &&
+          other.isPcodPcos == this.isPcodPcos &&
+          other.syncEnabled == this.syncEnabled);
 }
 
 class PeriodLogsCompanion extends UpdateCompanion<PeriodLog> {
@@ -5550,7 +6234,18 @@ class PeriodLogsCompanion extends UpdateCompanion<PeriodLog> {
   final Value<bool> isPeriodDay;
   final Value<String?> flowIntensity;
   final Value<String?> symptoms;
+  final Value<bool?> hasCramps;
+  final Value<bool?> hasBloating;
+  final Value<bool?> hasMoodSwings;
+  final Value<bool?> hasHeadache;
+  final Value<bool?> hasFatigue;
+  final Value<bool?> hasSpotting;
+  final Value<bool?> hasBreastTenderness;
+  final Value<bool?> hasAcne;
+  final Value<String?> energyLevel;
+  final Value<String?> notes;
   final Value<bool> isPcodPcos;
+  final Value<bool> syncEnabled;
   const PeriodLogsCompanion({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
@@ -5558,7 +6253,18 @@ class PeriodLogsCompanion extends UpdateCompanion<PeriodLog> {
     this.isPeriodDay = const Value.absent(),
     this.flowIntensity = const Value.absent(),
     this.symptoms = const Value.absent(),
+    this.hasCramps = const Value.absent(),
+    this.hasBloating = const Value.absent(),
+    this.hasMoodSwings = const Value.absent(),
+    this.hasHeadache = const Value.absent(),
+    this.hasFatigue = const Value.absent(),
+    this.hasSpotting = const Value.absent(),
+    this.hasBreastTenderness = const Value.absent(),
+    this.hasAcne = const Value.absent(),
+    this.energyLevel = const Value.absent(),
+    this.notes = const Value.absent(),
     this.isPcodPcos = const Value.absent(),
+    this.syncEnabled = const Value.absent(),
   });
   PeriodLogsCompanion.insert({
     this.id = const Value.absent(),
@@ -5567,11 +6273,21 @@ class PeriodLogsCompanion extends UpdateCompanion<PeriodLog> {
     required bool isPeriodDay,
     this.flowIntensity = const Value.absent(),
     this.symptoms = const Value.absent(),
-    required bool isPcodPcos,
+    this.hasCramps = const Value.absent(),
+    this.hasBloating = const Value.absent(),
+    this.hasMoodSwings = const Value.absent(),
+    this.hasHeadache = const Value.absent(),
+    this.hasFatigue = const Value.absent(),
+    this.hasSpotting = const Value.absent(),
+    this.hasBreastTenderness = const Value.absent(),
+    this.hasAcne = const Value.absent(),
+    this.energyLevel = const Value.absent(),
+    this.notes = const Value.absent(),
+    this.isPcodPcos = const Value.absent(),
+    this.syncEnabled = const Value.absent(),
   }) : userId = Value(userId),
        date = Value(date),
-       isPeriodDay = Value(isPeriodDay),
-       isPcodPcos = Value(isPcodPcos);
+       isPeriodDay = Value(isPeriodDay);
   static Insertable<PeriodLog> custom({
     Expression<int>? id,
     Expression<String>? userId,
@@ -5579,7 +6295,18 @@ class PeriodLogsCompanion extends UpdateCompanion<PeriodLog> {
     Expression<bool>? isPeriodDay,
     Expression<String>? flowIntensity,
     Expression<String>? symptoms,
+    Expression<bool>? hasCramps,
+    Expression<bool>? hasBloating,
+    Expression<bool>? hasMoodSwings,
+    Expression<bool>? hasHeadache,
+    Expression<bool>? hasFatigue,
+    Expression<bool>? hasSpotting,
+    Expression<bool>? hasBreastTenderness,
+    Expression<bool>? hasAcne,
+    Expression<String>? energyLevel,
+    Expression<String>? notes,
     Expression<bool>? isPcodPcos,
+    Expression<bool>? syncEnabled,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -5588,7 +6315,19 @@ class PeriodLogsCompanion extends UpdateCompanion<PeriodLog> {
       if (isPeriodDay != null) 'is_period_day': isPeriodDay,
       if (flowIntensity != null) 'flow_intensity': flowIntensity,
       if (symptoms != null) 'symptoms': symptoms,
+      if (hasCramps != null) 'has_cramps': hasCramps,
+      if (hasBloating != null) 'has_bloating': hasBloating,
+      if (hasMoodSwings != null) 'has_mood_swings': hasMoodSwings,
+      if (hasHeadache != null) 'has_headache': hasHeadache,
+      if (hasFatigue != null) 'has_fatigue': hasFatigue,
+      if (hasSpotting != null) 'has_spotting': hasSpotting,
+      if (hasBreastTenderness != null)
+        'has_breast_tenderness': hasBreastTenderness,
+      if (hasAcne != null) 'has_acne': hasAcne,
+      if (energyLevel != null) 'energy_level': energyLevel,
+      if (notes != null) 'notes': notes,
       if (isPcodPcos != null) 'is_pcod_pcos': isPcodPcos,
+      if (syncEnabled != null) 'sync_enabled': syncEnabled,
     });
   }
 
@@ -5599,7 +6338,18 @@ class PeriodLogsCompanion extends UpdateCompanion<PeriodLog> {
     Value<bool>? isPeriodDay,
     Value<String?>? flowIntensity,
     Value<String?>? symptoms,
+    Value<bool?>? hasCramps,
+    Value<bool?>? hasBloating,
+    Value<bool?>? hasMoodSwings,
+    Value<bool?>? hasHeadache,
+    Value<bool?>? hasFatigue,
+    Value<bool?>? hasSpotting,
+    Value<bool?>? hasBreastTenderness,
+    Value<bool?>? hasAcne,
+    Value<String?>? energyLevel,
+    Value<String?>? notes,
     Value<bool>? isPcodPcos,
+    Value<bool>? syncEnabled,
   }) {
     return PeriodLogsCompanion(
       id: id ?? this.id,
@@ -5608,7 +6358,18 @@ class PeriodLogsCompanion extends UpdateCompanion<PeriodLog> {
       isPeriodDay: isPeriodDay ?? this.isPeriodDay,
       flowIntensity: flowIntensity ?? this.flowIntensity,
       symptoms: symptoms ?? this.symptoms,
+      hasCramps: hasCramps ?? this.hasCramps,
+      hasBloating: hasBloating ?? this.hasBloating,
+      hasMoodSwings: hasMoodSwings ?? this.hasMoodSwings,
+      hasHeadache: hasHeadache ?? this.hasHeadache,
+      hasFatigue: hasFatigue ?? this.hasFatigue,
+      hasSpotting: hasSpotting ?? this.hasSpotting,
+      hasBreastTenderness: hasBreastTenderness ?? this.hasBreastTenderness,
+      hasAcne: hasAcne ?? this.hasAcne,
+      energyLevel: energyLevel ?? this.energyLevel,
+      notes: notes ?? this.notes,
       isPcodPcos: isPcodPcos ?? this.isPcodPcos,
+      syncEnabled: syncEnabled ?? this.syncEnabled,
     );
   }
 
@@ -5633,8 +6394,41 @@ class PeriodLogsCompanion extends UpdateCompanion<PeriodLog> {
     if (symptoms.present) {
       map['symptoms'] = Variable<String>(symptoms.value);
     }
+    if (hasCramps.present) {
+      map['has_cramps'] = Variable<bool>(hasCramps.value);
+    }
+    if (hasBloating.present) {
+      map['has_bloating'] = Variable<bool>(hasBloating.value);
+    }
+    if (hasMoodSwings.present) {
+      map['has_mood_swings'] = Variable<bool>(hasMoodSwings.value);
+    }
+    if (hasHeadache.present) {
+      map['has_headache'] = Variable<bool>(hasHeadache.value);
+    }
+    if (hasFatigue.present) {
+      map['has_fatigue'] = Variable<bool>(hasFatigue.value);
+    }
+    if (hasSpotting.present) {
+      map['has_spotting'] = Variable<bool>(hasSpotting.value);
+    }
+    if (hasBreastTenderness.present) {
+      map['has_breast_tenderness'] = Variable<bool>(hasBreastTenderness.value);
+    }
+    if (hasAcne.present) {
+      map['has_acne'] = Variable<bool>(hasAcne.value);
+    }
+    if (energyLevel.present) {
+      map['energy_level'] = Variable<String>(energyLevel.value);
+    }
+    if (notes.present) {
+      map['notes'] = Variable<String>(notes.value);
+    }
     if (isPcodPcos.present) {
       map['is_pcod_pcos'] = Variable<bool>(isPcodPcos.value);
+    }
+    if (syncEnabled.present) {
+      map['sync_enabled'] = Variable<bool>(syncEnabled.value);
     }
     return map;
   }
@@ -5648,7 +6442,18 @@ class PeriodLogsCompanion extends UpdateCompanion<PeriodLog> {
           ..write('isPeriodDay: $isPeriodDay, ')
           ..write('flowIntensity: $flowIntensity, ')
           ..write('symptoms: $symptoms, ')
-          ..write('isPcodPcos: $isPcodPcos')
+          ..write('hasCramps: $hasCramps, ')
+          ..write('hasBloating: $hasBloating, ')
+          ..write('hasMoodSwings: $hasMoodSwings, ')
+          ..write('hasHeadache: $hasHeadache, ')
+          ..write('hasFatigue: $hasFatigue, ')
+          ..write('hasSpotting: $hasSpotting, ')
+          ..write('hasBreastTenderness: $hasBreastTenderness, ')
+          ..write('hasAcne: $hasAcne, ')
+          ..write('energyLevel: $energyLevel, ')
+          ..write('notes: $notes, ')
+          ..write('isPcodPcos: $isPcodPcos, ')
+          ..write('syncEnabled: $syncEnabled')
           ..write(')'))
         .toString();
   }
@@ -12130,6 +12935,21 @@ class $UserProfilesTable extends UserProfiles
     requiredDuringInsert: false,
     defaultValue: const Constant(0),
   );
+  static const VerificationMeta _syncEnabledMeta = const VerificationMeta(
+    'syncEnabled',
+  );
+  @override
+  late final GeneratedColumn<bool> syncEnabled = GeneratedColumn<bool>(
+    'sync_enabled',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("sync_enabled" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -12174,6 +12994,7 @@ class $UserProfilesTable extends UserProfiles
     abhaNumber,
     wearableConnected,
     karmaXp,
+    syncEnabled,
     createdAt,
     updatedAt,
   ];
@@ -12365,6 +13186,15 @@ class $UserProfilesTable extends UserProfiles
         karmaXp.isAcceptableOrUnknown(data['karma_xp']!, _karmaXpMeta),
       );
     }
+    if (data.containsKey('sync_enabled')) {
+      context.handle(
+        _syncEnabledMeta,
+        syncEnabled.isAcceptableOrUnknown(
+          data['sync_enabled']!,
+          _syncEnabledMeta,
+        ),
+      );
+    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
@@ -12474,6 +13304,10 @@ class $UserProfilesTable extends UserProfiles
         DriftSqlType.int,
         data['${effectivePrefix}karma_xp'],
       )!,
+      syncEnabled: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}sync_enabled'],
+      )!,
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -12512,6 +13346,7 @@ class UserProfile extends DataClass implements Insertable<UserProfile> {
   final String? abhaNumber;
   final bool wearableConnected;
   final int karmaXp;
+  final bool syncEnabled;
   final DateTime createdAt;
   final DateTime updatedAt;
   const UserProfile({
@@ -12535,6 +13370,7 @@ class UserProfile extends DataClass implements Insertable<UserProfile> {
     this.abhaNumber,
     required this.wearableConnected,
     required this.karmaXp,
+    required this.syncEnabled,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -12563,6 +13399,7 @@ class UserProfile extends DataClass implements Insertable<UserProfile> {
     }
     map['wearable_connected'] = Variable<bool>(wearableConnected);
     map['karma_xp'] = Variable<int>(karmaXp);
+    map['sync_enabled'] = Variable<bool>(syncEnabled);
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
     return map;
@@ -12592,6 +13429,7 @@ class UserProfile extends DataClass implements Insertable<UserProfile> {
           : Value(abhaNumber),
       wearableConnected: Value(wearableConnected),
       karmaXp: Value(karmaXp),
+      syncEnabled: Value(syncEnabled),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
     );
@@ -12627,6 +13465,7 @@ class UserProfile extends DataClass implements Insertable<UserProfile> {
       abhaNumber: serializer.fromJson<String?>(json['abhaNumber']),
       wearableConnected: serializer.fromJson<bool>(json['wearableConnected']),
       karmaXp: serializer.fromJson<int>(json['karmaXp']),
+      syncEnabled: serializer.fromJson<bool>(json['syncEnabled']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
     );
@@ -12655,6 +13494,7 @@ class UserProfile extends DataClass implements Insertable<UserProfile> {
       'abhaNumber': serializer.toJson<String?>(abhaNumber),
       'wearableConnected': serializer.toJson<bool>(wearableConnected),
       'karmaXp': serializer.toJson<int>(karmaXp),
+      'syncEnabled': serializer.toJson<bool>(syncEnabled),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
     };
@@ -12681,6 +13521,7 @@ class UserProfile extends DataClass implements Insertable<UserProfile> {
     Value<String?> abhaNumber = const Value.absent(),
     bool? wearableConnected,
     int? karmaXp,
+    bool? syncEnabled,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) => UserProfile(
@@ -12704,6 +13545,7 @@ class UserProfile extends DataClass implements Insertable<UserProfile> {
     abhaNumber: abhaNumber.present ? abhaNumber.value : this.abhaNumber,
     wearableConnected: wearableConnected ?? this.wearableConnected,
     karmaXp: karmaXp ?? this.karmaXp,
+    syncEnabled: syncEnabled ?? this.syncEnabled,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
   );
@@ -12753,6 +13595,9 @@ class UserProfile extends DataClass implements Insertable<UserProfile> {
           ? data.wearableConnected.value
           : this.wearableConnected,
       karmaXp: data.karmaXp.present ? data.karmaXp.value : this.karmaXp,
+      syncEnabled: data.syncEnabled.present
+          ? data.syncEnabled.value
+          : this.syncEnabled,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
@@ -12781,6 +13626,7 @@ class UserProfile extends DataClass implements Insertable<UserProfile> {
           ..write('abhaNumber: $abhaNumber, ')
           ..write('wearableConnected: $wearableConnected, ')
           ..write('karmaXp: $karmaXp, ')
+          ..write('syncEnabled: $syncEnabled, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -12809,6 +13655,7 @@ class UserProfile extends DataClass implements Insertable<UserProfile> {
     abhaNumber,
     wearableConnected,
     karmaXp,
+    syncEnabled,
     createdAt,
     updatedAt,
   ]);
@@ -12836,6 +13683,7 @@ class UserProfile extends DataClass implements Insertable<UserProfile> {
           other.abhaNumber == this.abhaNumber &&
           other.wearableConnected == this.wearableConnected &&
           other.karmaXp == this.karmaXp &&
+          other.syncEnabled == this.syncEnabled &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt);
 }
@@ -12861,6 +13709,7 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfile> {
   final Value<String?> abhaNumber;
   final Value<bool> wearableConnected;
   final Value<int> karmaXp;
+  final Value<bool> syncEnabled;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   const UserProfilesCompanion({
@@ -12884,6 +13733,7 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfile> {
     this.abhaNumber = const Value.absent(),
     this.wearableConnected = const Value.absent(),
     this.karmaXp = const Value.absent(),
+    this.syncEnabled = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
   });
@@ -12908,6 +13758,7 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfile> {
     this.abhaNumber = const Value.absent(),
     this.wearableConnected = const Value.absent(),
     this.karmaXp = const Value.absent(),
+    this.syncEnabled = const Value.absent(),
     required DateTime createdAt,
     required DateTime updatedAt,
   }) : odUserId = Value(odUserId),
@@ -12946,6 +13797,7 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfile> {
     Expression<String>? abhaNumber,
     Expression<bool>? wearableConnected,
     Expression<int>? karmaXp,
+    Expression<bool>? syncEnabled,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
   }) {
@@ -12972,6 +13824,7 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfile> {
       if (abhaNumber != null) 'abha_number': abhaNumber,
       if (wearableConnected != null) 'wearable_connected': wearableConnected,
       if (karmaXp != null) 'karma_xp': karmaXp,
+      if (syncEnabled != null) 'sync_enabled': syncEnabled,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
     });
@@ -12998,6 +13851,7 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfile> {
     Value<String?>? abhaNumber,
     Value<bool>? wearableConnected,
     Value<int>? karmaXp,
+    Value<bool>? syncEnabled,
     Value<DateTime>? createdAt,
     Value<DateTime>? updatedAt,
   }) {
@@ -13023,6 +13877,7 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfile> {
       abhaNumber: abhaNumber ?? this.abhaNumber,
       wearableConnected: wearableConnected ?? this.wearableConnected,
       karmaXp: karmaXp ?? this.karmaXp,
+      syncEnabled: syncEnabled ?? this.syncEnabled,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -13093,6 +13948,9 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfile> {
     if (karmaXp.present) {
       map['karma_xp'] = Variable<int>(karmaXp.value);
     }
+    if (syncEnabled.present) {
+      map['sync_enabled'] = Variable<bool>(syncEnabled.value);
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -13125,6 +13983,7 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfile> {
           ..write('abhaNumber: $abhaNumber, ')
           ..write('wearableConnected: $wearableConnected, ')
           ..write('karmaXp: $karmaXp, ')
+          ..write('syncEnabled: $syncEnabled, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -17693,6 +18552,10 @@ typedef $$MoodLogsTableCreateCompanionBuilder =
       Value<int> id,
       required String userId,
       required int moodScore,
+      Value<int?> energy,
+      Value<int?> stress,
+      Value<String?> tags,
+      Value<String?> voiceNotePath,
       Value<int?> screenTimeMin,
       Value<int?> sleepQuality,
       required DateTime loggedAt,
@@ -17702,6 +18565,10 @@ typedef $$MoodLogsTableUpdateCompanionBuilder =
       Value<int> id,
       Value<String> userId,
       Value<int> moodScore,
+      Value<int?> energy,
+      Value<int?> stress,
+      Value<String?> tags,
+      Value<String?> voiceNotePath,
       Value<int?> screenTimeMin,
       Value<int?> sleepQuality,
       Value<DateTime> loggedAt,
@@ -17728,6 +18595,26 @@ class $$MoodLogsTableFilterComposer
 
   ColumnFilters<int> get moodScore => $composableBuilder(
     column: $table.moodScore,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get energy => $composableBuilder(
+    column: $table.energy,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get stress => $composableBuilder(
+    column: $table.stress,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get tags => $composableBuilder(
+    column: $table.tags,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get voiceNotePath => $composableBuilder(
+    column: $table.voiceNotePath,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -17771,6 +18658,26 @@ class $$MoodLogsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get energy => $composableBuilder(
+    column: $table.energy,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get stress => $composableBuilder(
+    column: $table.stress,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get tags => $composableBuilder(
+    column: $table.tags,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get voiceNotePath => $composableBuilder(
+    column: $table.voiceNotePath,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<int> get screenTimeMin => $composableBuilder(
     column: $table.screenTimeMin,
     builder: (column) => ColumnOrderings(column),
@@ -17804,6 +18711,20 @@ class $$MoodLogsTableAnnotationComposer
 
   GeneratedColumn<int> get moodScore =>
       $composableBuilder(column: $table.moodScore, builder: (column) => column);
+
+  GeneratedColumn<int> get energy =>
+      $composableBuilder(column: $table.energy, builder: (column) => column);
+
+  GeneratedColumn<int> get stress =>
+      $composableBuilder(column: $table.stress, builder: (column) => column);
+
+  GeneratedColumn<String> get tags =>
+      $composableBuilder(column: $table.tags, builder: (column) => column);
+
+  GeneratedColumn<String> get voiceNotePath => $composableBuilder(
+    column: $table.voiceNotePath,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<int> get screenTimeMin => $composableBuilder(
     column: $table.screenTimeMin,
@@ -17850,6 +18771,10 @@ class $$MoodLogsTableTableManager
                 Value<int> id = const Value.absent(),
                 Value<String> userId = const Value.absent(),
                 Value<int> moodScore = const Value.absent(),
+                Value<int?> energy = const Value.absent(),
+                Value<int?> stress = const Value.absent(),
+                Value<String?> tags = const Value.absent(),
+                Value<String?> voiceNotePath = const Value.absent(),
                 Value<int?> screenTimeMin = const Value.absent(),
                 Value<int?> sleepQuality = const Value.absent(),
                 Value<DateTime> loggedAt = const Value.absent(),
@@ -17857,6 +18782,10 @@ class $$MoodLogsTableTableManager
                 id: id,
                 userId: userId,
                 moodScore: moodScore,
+                energy: energy,
+                stress: stress,
+                tags: tags,
+                voiceNotePath: voiceNotePath,
                 screenTimeMin: screenTimeMin,
                 sleepQuality: sleepQuality,
                 loggedAt: loggedAt,
@@ -17866,6 +18795,10 @@ class $$MoodLogsTableTableManager
                 Value<int> id = const Value.absent(),
                 required String userId,
                 required int moodScore,
+                Value<int?> energy = const Value.absent(),
+                Value<int?> stress = const Value.absent(),
+                Value<String?> tags = const Value.absent(),
+                Value<String?> voiceNotePath = const Value.absent(),
                 Value<int?> screenTimeMin = const Value.absent(),
                 Value<int?> sleepQuality = const Value.absent(),
                 required DateTime loggedAt,
@@ -17873,6 +18806,10 @@ class $$MoodLogsTableTableManager
                 id: id,
                 userId: userId,
                 moodScore: moodScore,
+                energy: energy,
+                stress: stress,
+                tags: tags,
+                voiceNotePath: voiceNotePath,
                 screenTimeMin: screenTimeMin,
                 sleepQuality: sleepQuality,
                 loggedAt: loggedAt,
@@ -18580,7 +19517,18 @@ typedef $$PeriodLogsTableCreateCompanionBuilder =
       required bool isPeriodDay,
       Value<String?> flowIntensity,
       Value<String?> symptoms,
-      required bool isPcodPcos,
+      Value<bool?> hasCramps,
+      Value<bool?> hasBloating,
+      Value<bool?> hasMoodSwings,
+      Value<bool?> hasHeadache,
+      Value<bool?> hasFatigue,
+      Value<bool?> hasSpotting,
+      Value<bool?> hasBreastTenderness,
+      Value<bool?> hasAcne,
+      Value<String?> energyLevel,
+      Value<String?> notes,
+      Value<bool> isPcodPcos,
+      Value<bool> syncEnabled,
     });
 typedef $$PeriodLogsTableUpdateCompanionBuilder =
     PeriodLogsCompanion Function({
@@ -18590,7 +19538,18 @@ typedef $$PeriodLogsTableUpdateCompanionBuilder =
       Value<bool> isPeriodDay,
       Value<String?> flowIntensity,
       Value<String?> symptoms,
+      Value<bool?> hasCramps,
+      Value<bool?> hasBloating,
+      Value<bool?> hasMoodSwings,
+      Value<bool?> hasHeadache,
+      Value<bool?> hasFatigue,
+      Value<bool?> hasSpotting,
+      Value<bool?> hasBreastTenderness,
+      Value<bool?> hasAcne,
+      Value<String?> energyLevel,
+      Value<String?> notes,
       Value<bool> isPcodPcos,
+      Value<bool> syncEnabled,
     });
 
 class $$PeriodLogsTableFilterComposer
@@ -18632,8 +19591,63 @@ class $$PeriodLogsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<bool> get hasCramps => $composableBuilder(
+    column: $table.hasCramps,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get hasBloating => $composableBuilder(
+    column: $table.hasBloating,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get hasMoodSwings => $composableBuilder(
+    column: $table.hasMoodSwings,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get hasHeadache => $composableBuilder(
+    column: $table.hasHeadache,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get hasFatigue => $composableBuilder(
+    column: $table.hasFatigue,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get hasSpotting => $composableBuilder(
+    column: $table.hasSpotting,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get hasBreastTenderness => $composableBuilder(
+    column: $table.hasBreastTenderness,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get hasAcne => $composableBuilder(
+    column: $table.hasAcne,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get energyLevel => $composableBuilder(
+    column: $table.energyLevel,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get notes => $composableBuilder(
+    column: $table.notes,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<bool> get isPcodPcos => $composableBuilder(
     column: $table.isPcodPcos,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get syncEnabled => $composableBuilder(
+    column: $table.syncEnabled,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -18677,8 +19691,63 @@ class $$PeriodLogsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<bool> get hasCramps => $composableBuilder(
+    column: $table.hasCramps,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get hasBloating => $composableBuilder(
+    column: $table.hasBloating,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get hasMoodSwings => $composableBuilder(
+    column: $table.hasMoodSwings,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get hasHeadache => $composableBuilder(
+    column: $table.hasHeadache,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get hasFatigue => $composableBuilder(
+    column: $table.hasFatigue,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get hasSpotting => $composableBuilder(
+    column: $table.hasSpotting,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get hasBreastTenderness => $composableBuilder(
+    column: $table.hasBreastTenderness,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get hasAcne => $composableBuilder(
+    column: $table.hasAcne,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get energyLevel => $composableBuilder(
+    column: $table.energyLevel,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get notes => $composableBuilder(
+    column: $table.notes,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<bool> get isPcodPcos => $composableBuilder(
     column: $table.isPcodPcos,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get syncEnabled => $composableBuilder(
+    column: $table.syncEnabled,
     builder: (column) => ColumnOrderings(column),
   );
 }
@@ -18714,8 +19783,57 @@ class $$PeriodLogsTableAnnotationComposer
   GeneratedColumn<String> get symptoms =>
       $composableBuilder(column: $table.symptoms, builder: (column) => column);
 
+  GeneratedColumn<bool> get hasCramps =>
+      $composableBuilder(column: $table.hasCramps, builder: (column) => column);
+
+  GeneratedColumn<bool> get hasBloating => $composableBuilder(
+    column: $table.hasBloating,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get hasMoodSwings => $composableBuilder(
+    column: $table.hasMoodSwings,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get hasHeadache => $composableBuilder(
+    column: $table.hasHeadache,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get hasFatigue => $composableBuilder(
+    column: $table.hasFatigue,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get hasSpotting => $composableBuilder(
+    column: $table.hasSpotting,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get hasBreastTenderness => $composableBuilder(
+    column: $table.hasBreastTenderness,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get hasAcne =>
+      $composableBuilder(column: $table.hasAcne, builder: (column) => column);
+
+  GeneratedColumn<String> get energyLevel => $composableBuilder(
+    column: $table.energyLevel,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get notes =>
+      $composableBuilder(column: $table.notes, builder: (column) => column);
+
   GeneratedColumn<bool> get isPcodPcos => $composableBuilder(
     column: $table.isPcodPcos,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get syncEnabled => $composableBuilder(
+    column: $table.syncEnabled,
     builder: (column) => column,
   );
 }
@@ -18757,7 +19875,18 @@ class $$PeriodLogsTableTableManager
                 Value<bool> isPeriodDay = const Value.absent(),
                 Value<String?> flowIntensity = const Value.absent(),
                 Value<String?> symptoms = const Value.absent(),
+                Value<bool?> hasCramps = const Value.absent(),
+                Value<bool?> hasBloating = const Value.absent(),
+                Value<bool?> hasMoodSwings = const Value.absent(),
+                Value<bool?> hasHeadache = const Value.absent(),
+                Value<bool?> hasFatigue = const Value.absent(),
+                Value<bool?> hasSpotting = const Value.absent(),
+                Value<bool?> hasBreastTenderness = const Value.absent(),
+                Value<bool?> hasAcne = const Value.absent(),
+                Value<String?> energyLevel = const Value.absent(),
+                Value<String?> notes = const Value.absent(),
                 Value<bool> isPcodPcos = const Value.absent(),
+                Value<bool> syncEnabled = const Value.absent(),
               }) => PeriodLogsCompanion(
                 id: id,
                 userId: userId,
@@ -18765,7 +19894,18 @@ class $$PeriodLogsTableTableManager
                 isPeriodDay: isPeriodDay,
                 flowIntensity: flowIntensity,
                 symptoms: symptoms,
+                hasCramps: hasCramps,
+                hasBloating: hasBloating,
+                hasMoodSwings: hasMoodSwings,
+                hasHeadache: hasHeadache,
+                hasFatigue: hasFatigue,
+                hasSpotting: hasSpotting,
+                hasBreastTenderness: hasBreastTenderness,
+                hasAcne: hasAcne,
+                energyLevel: energyLevel,
+                notes: notes,
                 isPcodPcos: isPcodPcos,
+                syncEnabled: syncEnabled,
               ),
           createCompanionCallback:
               ({
@@ -18775,7 +19915,18 @@ class $$PeriodLogsTableTableManager
                 required bool isPeriodDay,
                 Value<String?> flowIntensity = const Value.absent(),
                 Value<String?> symptoms = const Value.absent(),
-                required bool isPcodPcos,
+                Value<bool?> hasCramps = const Value.absent(),
+                Value<bool?> hasBloating = const Value.absent(),
+                Value<bool?> hasMoodSwings = const Value.absent(),
+                Value<bool?> hasHeadache = const Value.absent(),
+                Value<bool?> hasFatigue = const Value.absent(),
+                Value<bool?> hasSpotting = const Value.absent(),
+                Value<bool?> hasBreastTenderness = const Value.absent(),
+                Value<bool?> hasAcne = const Value.absent(),
+                Value<String?> energyLevel = const Value.absent(),
+                Value<String?> notes = const Value.absent(),
+                Value<bool> isPcodPcos = const Value.absent(),
+                Value<bool> syncEnabled = const Value.absent(),
               }) => PeriodLogsCompanion.insert(
                 id: id,
                 userId: userId,
@@ -18783,7 +19934,18 @@ class $$PeriodLogsTableTableManager
                 isPeriodDay: isPeriodDay,
                 flowIntensity: flowIntensity,
                 symptoms: symptoms,
+                hasCramps: hasCramps,
+                hasBloating: hasBloating,
+                hasMoodSwings: hasMoodSwings,
+                hasHeadache: hasHeadache,
+                hasFatigue: hasFatigue,
+                hasSpotting: hasSpotting,
+                hasBreastTenderness: hasBreastTenderness,
+                hasAcne: hasAcne,
+                energyLevel: energyLevel,
+                notes: notes,
                 isPcodPcos: isPcodPcos,
+                syncEnabled: syncEnabled,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
@@ -22344,6 +23506,7 @@ typedef $$UserProfilesTableCreateCompanionBuilder =
       Value<String?> abhaNumber,
       Value<bool> wearableConnected,
       Value<int> karmaXp,
+      Value<bool> syncEnabled,
       required DateTime createdAt,
       required DateTime updatedAt,
     });
@@ -22369,6 +23532,7 @@ typedef $$UserProfilesTableUpdateCompanionBuilder =
       Value<String?> abhaNumber,
       Value<bool> wearableConnected,
       Value<int> karmaXp,
+      Value<bool> syncEnabled,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
     });
@@ -22479,6 +23643,11 @@ class $$UserProfilesTableFilterComposer
 
   ColumnFilters<int> get karmaXp => $composableBuilder(
     column: $table.karmaXp,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get syncEnabled => $composableBuilder(
+    column: $table.syncEnabled,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -22602,6 +23771,11 @@ class $$UserProfilesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<bool> get syncEnabled => $composableBuilder(
+    column: $table.syncEnabled,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -22706,6 +23880,11 @@ class $$UserProfilesTableAnnotationComposer
   GeneratedColumn<int> get karmaXp =>
       $composableBuilder(column: $table.karmaXp, builder: (column) => column);
 
+  GeneratedColumn<bool> get syncEnabled => $composableBuilder(
+    column: $table.syncEnabled,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
@@ -22764,6 +23943,7 @@ class $$UserProfilesTableTableManager
                 Value<String?> abhaNumber = const Value.absent(),
                 Value<bool> wearableConnected = const Value.absent(),
                 Value<int> karmaXp = const Value.absent(),
+                Value<bool> syncEnabled = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
               }) => UserProfilesCompanion(
@@ -22787,6 +23967,7 @@ class $$UserProfilesTableTableManager
                 abhaNumber: abhaNumber,
                 wearableConnected: wearableConnected,
                 karmaXp: karmaXp,
+                syncEnabled: syncEnabled,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
               ),
@@ -22812,6 +23993,7 @@ class $$UserProfilesTableTableManager
                 Value<String?> abhaNumber = const Value.absent(),
                 Value<bool> wearableConnected = const Value.absent(),
                 Value<int> karmaXp = const Value.absent(),
+                Value<bool> syncEnabled = const Value.absent(),
                 required DateTime createdAt,
                 required DateTime updatedAt,
               }) => UserProfilesCompanion.insert(
@@ -22835,6 +24017,7 @@ class $$UserProfilesTableTableManager
                 abhaNumber: abhaNumber,
                 wearableConnected: wearableConnected,
                 karmaXp: karmaXp,
+                syncEnabled: syncEnabled,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
               ),

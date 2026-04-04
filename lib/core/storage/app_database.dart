@@ -1,10 +1,9 @@
 import 'dart:convert';
 import 'dart:math';
-import 'dart:typed_data';
 
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart' hide Table, Column;
 import 'package:http/http.dart' as http;
 
 import '../security/encryption_service.dart';
@@ -130,6 +129,10 @@ class MoodLogs extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get userId => text().withLength(min: 1, max: 64)();
   IntColumn get moodScore => integer()();
+  IntColumn get energy => integer().nullable()();
+  IntColumn get stress => integer().nullable()();
+  TextColumn get tags => text().nullable()();
+  TextColumn get voiceNotePath => text().nullable()();
   IntColumn get screenTimeMin => integer().nullable()();
   IntColumn get sleepQuality => integer().nullable()();
   DateTimeColumn get loggedAt => dateTime()();
@@ -173,7 +176,18 @@ class PeriodLogs extends Table {
   BoolColumn get isPeriodDay => boolean()();
   TextColumn get flowIntensity => text().nullable().withLength(max: 1024)();
   TextColumn get symptoms => text().nullable().withLength(max: 2048)();
-  BoolColumn get isPcodPcos => boolean()();
+  BoolColumn get hasCramps => boolean().nullable()();
+  BoolColumn get hasBloating => boolean().nullable()();
+  BoolColumn get hasMoodSwings => boolean().nullable()();
+  BoolColumn get hasHeadache => boolean().nullable()();
+  BoolColumn get hasFatigue => boolean().nullable()();
+  BoolColumn get hasSpotting => boolean().nullable()();
+  BoolColumn get hasBreastTenderness => boolean().nullable()();
+  BoolColumn get hasAcne => boolean().nullable()();
+  TextColumn get energyLevel => text().nullable().withLength(max: 16)();
+  TextColumn get notes => text().nullable().withLength(max: 1024)();
+  BoolColumn get isPcodPcos => boolean().withDefault(const Constant(false))();
+  BoolColumn get syncEnabled => boolean().withDefault(const Constant(false))();
 }
 
 class Habits extends Table {
@@ -370,6 +384,7 @@ class UserProfiles extends Table {
   TextColumn get abhaNumber => text().nullable().withLength(max: 20)();
   BoolColumn get wearableConnected => boolean().withDefault(const Constant(false))();
   IntColumn get karmaXp => integer().withDefault(const Constant(0))();
+  BoolColumn get syncEnabled => boolean().withDefault(const Constant(false))();
   DateTimeColumn get createdAt => dateTime()();
   DateTimeColumn get updatedAt => dateTime()();
 
@@ -800,8 +815,8 @@ class MoodLogsDao extends DatabaseAccessor<AppDatabase>
   Future<List<MoodLog>> getLogsForUser(String userId,
       {DateTime? from, DateTime? to}) {
     final query = select(moodLogs)
-      ..where((t) => t.userId.equals(userId))
-      ..orderBy([(t) => OrderingTerm.desc(t.loggedAt)]);
+          ..where((t) => t.userId.equals(userId))
+          ..orderBy([(t) => OrderingTerm.desc(t.loggedAt)]);
     if (from != null) query.where((t) => t.loggedAt.isBiggerOrEqualValue(from));
     if (to != null) query.where((t) => t.loggedAt.isSmallerOrEqualValue(to));
     return query.get();
@@ -811,10 +826,115 @@ class MoodLogsDao extends DatabaseAccessor<AppDatabase>
       (select(moodLogs)
             ..where((t) => t.userId.equals(userId))
             ..orderBy([(t) => OrderingTerm.desc(t.loggedAt)]))
-        .watch();
+          .watch();
 
   Future<int> insertLog(MoodLogsCompanion entry) =>
       into(moodLogs).insert(entry);
+
+  Future<int> insertLogWithKarma({
+    required String userId,
+    required int moodScore,
+    int? energy,
+    int? stress,
+    String? tags,
+    String? voiceNotePath,
+  }) async {
+    final id = await into(moodLogs).insert(
+      MoodLogsCompanion.insert(
+        userId: userId,
+        moodScore: moodScore,
+        energy: Value(energy),
+        stress: Value(stress),
+        tags: Value(tags),
+        voiceNotePath: Value(voiceNotePath),
+        loggedAt: DateTime.now(),
+      ),
+    );
+    
+    await db.karmaTransactionsDao.insertTransaction(
+      KarmaTransactionsCompanion.insert(
+        userId: userId,
+        amount: 3,
+        createdAt: DateTime.now(),
+      ),
+    );
+    
+    return id;
+  }
+
+  Future<List<MoodHeatmapData>> getMoodHeatmap(String userId, int days) async {
+    final now = DateTime.now();
+    final start = now.subtract(Duration(days: days));
+    final logs = await getLogsForUser(userId, from: start);
+    
+    final heatmap = <MoodHeatmapData>[];
+    for (int i = 0; i < days; i++) {
+      final day = start.add(Duration(days: i));
+      final dayLogs = logs.where((l) =>
+          l.loggedAt.year == day.year &&
+          l.loggedAt.month == day.month &&
+          l.loggedAt.day == day.day).toList();
+      
+      final avgMood = dayLogs.isEmpty
+          ? null
+          : dayLogs.map((l) => l.moodScore).reduce((a, b) => a + b) ~/ dayLogs.length;
+      
+      heatmap.add(MoodHeatmapData(date: day, moodScore: avgMood));
+    }
+    
+    return heatmap;
+  }
+
+  Future<Map<String, dynamic>> getMoodStatistics(String userId) async {
+    final now = DateTime.now();
+    final weekStart = now.subtract(const Duration(days: 7));
+    final monthStart = now.subtract(const Duration(days: 30));
+    
+    final weekLogs = await getLogsForUser(userId, from: weekStart);
+    final monthLogs = await getLogsForUser(userId, from: monthStart);
+    
+    double avgMood = 0, avgEnergy = 0, avgStress = 0;
+    
+    if (weekLogs.isNotEmpty) {
+      avgMood = weekLogs.map((l) => l.moodScore).reduce((a, b) => a + b) / weekLogs.length;
+    }
+    
+    final monthWithEnergy = monthLogs.where((l) => l.energy != null).toList();
+    if (monthWithEnergy.isNotEmpty) {
+      avgEnergy = monthWithEnergy.map((l) => l.energy!).reduce((a, b) => a + b) / monthWithEnergy.length;
+    }
+    
+    final monthWithStress = monthLogs.where((l) => l.stress != null).toList();
+    if (monthWithStress.isNotEmpty) {
+      avgStress = monthWithStress.map((l) => l.stress!).reduce((a, b) => a + b) / monthWithStress.length;
+    }
+    
+    return {
+      'avgMood': avgMood,
+      'avgEnergy': avgEnergy,
+      'avgStress': avgStress,
+      'logCount': monthLogs.length,
+    };
+  }
+}
+
+class MoodHeatmapData {
+  final DateTime date;
+  final int? moodScore;
+
+  MoodHeatmapData({required this.date, this.moodScore});
+
+  Color? get color {
+    if (moodScore == null) return null;
+    switch (moodScore!) {
+      case 1: return Colors.red.shade300;
+      case 2: return Colors.orange.shade300;
+      case 3: return Colors.yellow.shade300;
+      case 4: return Colors.lightGreen.shade300;
+      case 5: return Colors.green.shade400;
+      default: return null;
+    }
+  }
 }
 
 // --- Lifestyle DAOs ---
@@ -1499,8 +1619,351 @@ class PeriodLogsDao extends DatabaseAccessor<AppDatabase>
     return query.get();
   }
 
+  Stream<List<PeriodLog>> watchLogsForUser(String userId) =>
+      (select(periodLogs)
+            ..where((t) => t.userId.equals(userId))
+            ..orderBy([(t) => OrderingTerm.desc(t.date)]))
+          .watch();
+
   Future<int> insertLog(PeriodLogsCompanion entry) =>
       into(periodLogs).insert(entry);
+
+  Future<int> insertLogEncrypted({
+    required String userId,
+    required DateTime date,
+    required bool isPeriodDay,
+    String? flowIntensity,
+    String? symptoms,
+    bool? hasCramps,
+    bool? hasBloating,
+    bool? hasMoodSwings,
+    bool? hasHeadache,
+    bool? hasFatigue,
+    bool? hasSpotting,
+    bool? hasBreastTenderness,
+    bool? hasAcne,
+    String? energyLevel,
+    String? notes,
+    bool isPcodPcos = false,
+    bool syncEnabled = false,
+  }) async {
+    final key = await KeyManager.instance.getKeyForDataClass(DataClassKeys.period);
+    
+    String? encryptedNotes;
+    if (notes != null && notes.isNotEmpty) {
+      final encNotes = await EncryptionHelper.encryptField(notes, key);
+      encryptedNotes = base64Encode(encNotes);
+    }
+    
+    String? encryptedSymptoms;
+    if (symptoms != null && symptoms.isNotEmpty) {
+      final encSymptoms = await EncryptionHelper.encryptField(symptoms, key);
+      encryptedSymptoms = base64Encode(encSymptoms);
+    }
+    
+    return into(periodLogs).insert(
+      PeriodLogsCompanion.insert(
+        userId: userId,
+        date: date,
+        isPeriodDay: isPeriodDay,
+        flowIntensity: Value(flowIntensity),
+        symptoms: Value(encryptedSymptoms),
+        hasCramps: Value(hasCramps),
+        hasBloating: Value(hasBloating),
+        hasMoodSwings: Value(hasMoodSwings),
+        hasHeadache: Value(hasHeadache),
+        hasFatigue: Value(hasFatigue),
+        hasSpotting: Value(hasSpotting),
+        hasBreastTenderness: Value(hasBreastTenderness),
+        hasAcne: Value(hasAcne),
+        energyLevel: Value(energyLevel),
+        notes: Value(encryptedNotes),
+        isPcodPcos: Value(isPcodPcos),
+        syncEnabled: Value(syncEnabled),
+      ),
+    );
+  }
+
+  Future<PeriodLog?> getLogForDate(String userId, DateTime date) async {
+    final startOfDay = DateTime(date.year, date.month, date.day);
+    final endOfDay = startOfDay.add(const Duration(days: 1));
+    final logs = await (select(periodLogs)
+          ..where((t) =>
+              t.userId.equals(userId) &
+              t.date.isBiggerOrEqualValue(startOfDay) &
+              t.date.isSmallerThanValue(endOfDay)))
+        .get();
+    return logs.isEmpty ? null : logs.first;
+  }
+
+  Future<CyclePrediction> predictCycle(String userId) async {
+    final allLogs = await getLogsForUser(userId);
+    final periodDays = allLogs.where((l) => l.isPeriodDay).toList();
+    
+    if (periodDays.length < 2) {
+      return CyclePrediction(
+        nextPeriodStart: null,
+        cycleLengthDays: 28,
+        ovulationDate: null,
+        fertileWindowStart: null,
+        fertileWindowEnd: null,
+        confidence: 0,
+      );
+    }
+    
+    final cycles = <int>[];
+    final periodDates = periodDays.map((l) => DateTime(l.date.year, l.date.month, l.date.day)).toList()
+      ..sort();
+    
+    for (int i = 1; i < periodDates.length; i++) {
+      cycles.add(periodDates[i].difference(periodDates[i - 1]).inDays);
+    }
+    
+    final avgCycleLength = cycles.isEmpty
+        ? 28
+        : cycles.reduce((a, b) => a + b) ~/ cycles.length;
+    
+    final lastPeriod = periodDates.last;
+    final nextPeriod = lastPeriod.add(Duration(days: avgCycleLength));
+    final ovulation = nextPeriod.subtract(const Duration(days: 14));
+    final fertileStart = ovulation.subtract(const Duration(days: 5));
+    final fertileEnd = ovulation.add(const Duration(days: 1));
+    
+    return CyclePrediction(
+      nextPeriodStart: nextPeriod,
+      cycleLengthDays: avgCycleLength,
+      ovulationDate: ovulation,
+      fertileWindowStart: fertileStart,
+      fertileWindowEnd: fertileEnd,
+      confidence: cycles.length >= 3 ? 80 : 50,
+    );
+  }
+
+  Future<List<WorkoutSuggestion>> getWorkoutSuggestions(String userId) async {
+    final prediction = await predictCycle(userId);
+    if (prediction.nextPeriodStart == null) {
+      return [
+        const WorkoutSuggestion(
+          phase: CyclePhase.follicular,
+          workouts: ['Light walking', 'Yoga', 'Swimming'],
+          reason: 'Start tracking to get personalized suggestions',
+        ),
+      ];
+    }
+    
+    final today = DateTime.now();
+    final daysUntilNext = prediction.nextPeriodStart!.difference(today).inDays;
+    final dayOfCycle = 28 - daysUntilNext;
+    
+    final suggestions = <WorkoutSuggestion>[];
+    
+    if (dayOfCycle <= 5 || daysUntilNext <= 5) {
+      suggestions.add(const WorkoutSuggestion(
+        phase: CyclePhase.menstruation,
+        workouts: ['Gentle yoga', 'Light stretching', 'Short walks'],
+        reason: 'Menstrual phase - opt for restful activities',
+      ));
+      if (dayOfCycle <= 2) {
+        suggestions.add(const WorkoutSuggestion(
+          phase: CyclePhase.menstruation,
+          workouts: ['Rest', 'Meditation', 'Gentle foam rolling'],
+          reason: 'Heavy flow days - prioritize rest',
+        ));
+      }
+    } else if (dayOfCycle <= 14) {
+      suggestions.add(const WorkoutSuggestion(
+        phase: CyclePhase.follicular,
+        workouts: ['Running', 'Strength training', 'HIIT'],
+        reason: 'Rising estrogen - great for building strength',
+      ));
+    } else if (dayOfCycle <= 21) {
+      suggestions.add(const WorkoutSuggestion(
+        phase: CyclePhase.luteal,
+        workouts: ['Moderate cardio', 'Pilates', 'Cycling'],
+        reason: 'Stable energy - maintain moderate intensity',
+      ));
+    } else {
+      suggestions.add(const WorkoutSuggestion(
+        phase: CyclePhase.preMenstrual,
+        workouts: ['Yoga', 'Low-impact cardio', 'Walking'],
+        reason: 'Energy decline - focus on relaxing exercises',
+      ));
+    }
+    
+    return suggestions;
+  }
+
+  Future<SymptomAnalysis> analyzeSymptoms(String userId, {int days = 90}) async {
+    final start = DateTime.now().subtract(Duration(days: days));
+    final logs = await getLogsForUser(userId, from: start);
+    
+    int crampsCount = 0, bloatingCount = 0, moodSwingsCount = 0;
+    int headacheCount = 0, fatigueCount = 0, spottingCount = 0;
+    int breastTendernessCount = 0, acneCount = 0;
+    
+    for (final log in logs) {
+      if (log.hasCramps == true) crampsCount++;
+      if (log.hasBloating == true) bloatingCount++;
+      if (log.hasMoodSwings == true) moodSwingsCount++;
+      if (log.hasHeadache == true) headacheCount++;
+      if (log.hasFatigue == true) fatigueCount++;
+      if (log.hasSpotting == true) spottingCount++;
+      if (log.hasBreastTenderness == true) breastTendernessCount++;
+      if (log.hasAcne == true) acneCount++;
+    }
+    
+    final totalDays = logs.length;
+    return SymptomAnalysis(
+      crampsFrequency: totalDays > 0 ? (crampsCount / totalDays * 100).round() : 0,
+      bloatingFrequency: totalDays > 0 ? (bloatingCount / totalDays * 100).round() : 0,
+      moodSwingsFrequency: totalDays > 0 ? (moodSwingsCount / totalDays * 100).round() : 0,
+      headacheFrequency: totalDays > 0 ? (headacheCount / totalDays * 100).round() : 0,
+      fatigueFrequency: totalDays > 0 ? (fatigueCount / totalDays * 100).round() : 0,
+      spottingFrequency: totalDays > 0 ? (spottingCount / totalDays * 100).round() : 0,
+      breastTendernessFrequency: totalDays > 0 ? (breastTendernessCount / totalDays * 100).round() : 0,
+      acneFrequency: totalDays > 0 ? (acneCount / totalDays * 100).round() : 0,
+      totalLogs: totalDays,
+    );
+  }
+
+  Future<PcodPcosData> getPcodPcosManagement(String userId) async {
+    final allLogs = await getLogsForUser(userId);
+    final pcodLogs = allLogs.where((l) => l.isPcodPcos).toList();
+    
+    if (pcodLogs.isEmpty) {
+      return PcodPcosData(
+        isActive: false,
+        averageCycleLength: 28,
+        irregularCyclesCount: 0,
+        lastRecordedWeight: null,
+        symptomsList: [],
+      );
+    }
+    
+    final periodDates = pcodLogs
+        .where((l) => l.isPeriodDay)
+        .map((l) => DateTime(l.date.year, l.date.month, l.date.day))
+        .toList()
+      ..sort();
+    
+    final cycles = <int>[];
+    for (int i = 1; i < periodDates.length; i++) {
+      cycles.add(periodDates[i].difference(periodDates[i - 1]).inDays);
+    }
+    
+    final irregularCycles = cycles.where((c) => c < 21 || c > 35).length;
+    final avgCycle = cycles.isEmpty ? 28 : cycles.reduce((a, b) => a + b) ~/ cycles.length;
+    
+    final recentSymptoms = <String>[];
+    for (final log in pcodLogs.take(30)) {
+      if (log.hasCramps == true) recentSymptoms.add('Cramps');
+      if (log.hasBloating == true) recentSymptoms.add('Bloating');
+      if (log.hasMoodSwings == true) recentSymptoms.add('Mood Swings');
+      if (log.hasAcne == true) recentSymptoms.add('Acne');
+    }
+    
+    return PcodPcosData(
+      isActive: true,
+      averageCycleLength: avgCycle,
+      irregularCyclesCount: irregularCycles,
+      lastRecordedWeight: null,
+      symptomsList: recentSymptoms.toSet().toList(),
+    );
+  }
+}
+
+class CyclePrediction {
+  final DateTime? nextPeriodStart;
+  final int cycleLengthDays;
+  final DateTime? ovulationDate;
+  final DateTime? fertileWindowStart;
+  final DateTime? fertileWindowEnd;
+  final int confidence;
+
+  CyclePrediction({
+    this.nextPeriodStart,
+    required this.cycleLengthDays,
+    this.ovulationDate,
+    this.fertileWindowStart,
+    this.fertileWindowEnd,
+    required this.confidence,
+  });
+}
+
+class WorkoutSuggestion {
+  final CyclePhase phase;
+  final List<String> workouts;
+  final String reason;
+
+  const WorkoutSuggestion({
+    required this.phase,
+    required this.workouts,
+    required this.reason,
+  });
+}
+
+enum CyclePhase {
+  menstruation,
+  follicular,
+  ovulation,
+  luteal,
+  preMenstrual,
+}
+
+class SymptomAnalysis {
+  final int crampsFrequency;
+  final int bloatingFrequency;
+  final int moodSwingsFrequency;
+  final int headacheFrequency;
+  final int fatigueFrequency;
+  final int spottingFrequency;
+  final int breastTendernessFrequency;
+  final int acneFrequency;
+  final int totalLogs;
+
+  SymptomAnalysis({
+    required this.crampsFrequency,
+    required this.bloatingFrequency,
+    required this.moodSwingsFrequency,
+    required this.headacheFrequency,
+    required this.fatigueFrequency,
+    required this.spottingFrequency,
+    required this.breastTendernessFrequency,
+    required this.acneFrequency,
+    required this.totalLogs,
+  });
+
+  String get mostCommonSymptom {
+    final frequencies = {
+      'Cramps': crampsFrequency,
+      'Bloating': bloatingFrequency,
+      'Mood Swings': moodSwingsFrequency,
+      'Headache': headacheFrequency,
+      'Fatigue': fatigueFrequency,
+      'Spotting': spottingFrequency,
+      'Breast Tenderness': breastTendernessFrequency,
+      'Acne': acneFrequency,
+    };
+    return frequencies.entries.reduce((a, b) => a.value > b.value ? a : b).key;
+  }
+}
+
+class PcodPcosData {
+  final bool isActive;
+  final int averageCycleLength;
+  final int irregularCyclesCount;
+  final double? lastRecordedWeight;
+  final List<String> symptomsList;
+
+  PcodPcosData({
+    required this.isActive,
+    required this.averageCycleLength,
+    required this.irregularCyclesCount,
+    this.lastRecordedWeight,
+    required this.symptomsList,
+  });
+
+  bool get needsMedicalAttention => irregularCyclesCount > 2 || averageCycleLength > 35;
 }
 
 @DriftAccessor(tables: [JournalEntries])
