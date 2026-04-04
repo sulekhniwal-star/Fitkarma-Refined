@@ -3834,6 +3834,30 @@ class $BloodPressureLogsTable extends BloodPressureLogs
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _pulseMeta = const VerificationMeta('pulse');
+  @override
+  late final GeneratedColumn<int> pulse = GeneratedColumn<int>(
+    'pulse',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _isEncryptedMeta = const VerificationMeta(
+    'isEncrypted',
+  );
+  @override
+  late final GeneratedColumn<bool> isEncrypted = GeneratedColumn<bool>(
+    'is_encrypted',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_encrypted" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
   static const VerificationMeta _loggedAtMeta = const VerificationMeta(
     'loggedAt',
   );
@@ -3851,6 +3875,8 @@ class $BloodPressureLogsTable extends BloodPressureLogs
     userId,
     systolic,
     diastolic,
+    pulse,
+    isEncrypted,
     loggedAt,
   ];
   @override
@@ -3892,6 +3918,21 @@ class $BloodPressureLogsTable extends BloodPressureLogs
     } else if (isInserting) {
       context.missing(_diastolicMeta);
     }
+    if (data.containsKey('pulse')) {
+      context.handle(
+        _pulseMeta,
+        pulse.isAcceptableOrUnknown(data['pulse']!, _pulseMeta),
+      );
+    }
+    if (data.containsKey('is_encrypted')) {
+      context.handle(
+        _isEncryptedMeta,
+        isEncrypted.isAcceptableOrUnknown(
+          data['is_encrypted']!,
+          _isEncryptedMeta,
+        ),
+      );
+    }
     if (data.containsKey('logged_at')) {
       context.handle(
         _loggedAtMeta,
@@ -3925,6 +3966,14 @@ class $BloodPressureLogsTable extends BloodPressureLogs
         DriftSqlType.string,
         data['${effectivePrefix}diastolic'],
       )!,
+      pulse: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}pulse'],
+      ),
+      isEncrypted: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_encrypted'],
+      )!,
       loggedAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}logged_at'],
@@ -3944,12 +3993,16 @@ class BloodPressureLog extends DataClass
   final String userId;
   final String systolic;
   final String diastolic;
+  final int? pulse;
+  final bool isEncrypted;
   final DateTime loggedAt;
   const BloodPressureLog({
     required this.id,
     required this.userId,
     required this.systolic,
     required this.diastolic,
+    this.pulse,
+    required this.isEncrypted,
     required this.loggedAt,
   });
   @override
@@ -3959,6 +4012,10 @@ class BloodPressureLog extends DataClass
     map['user_id'] = Variable<String>(userId);
     map['systolic'] = Variable<String>(systolic);
     map['diastolic'] = Variable<String>(diastolic);
+    if (!nullToAbsent || pulse != null) {
+      map['pulse'] = Variable<int>(pulse);
+    }
+    map['is_encrypted'] = Variable<bool>(isEncrypted);
     map['logged_at'] = Variable<DateTime>(loggedAt);
     return map;
   }
@@ -3969,6 +4026,10 @@ class BloodPressureLog extends DataClass
       userId: Value(userId),
       systolic: Value(systolic),
       diastolic: Value(diastolic),
+      pulse: pulse == null && nullToAbsent
+          ? const Value.absent()
+          : Value(pulse),
+      isEncrypted: Value(isEncrypted),
       loggedAt: Value(loggedAt),
     );
   }
@@ -3983,6 +4044,8 @@ class BloodPressureLog extends DataClass
       userId: serializer.fromJson<String>(json['userId']),
       systolic: serializer.fromJson<String>(json['systolic']),
       diastolic: serializer.fromJson<String>(json['diastolic']),
+      pulse: serializer.fromJson<int?>(json['pulse']),
+      isEncrypted: serializer.fromJson<bool>(json['isEncrypted']),
       loggedAt: serializer.fromJson<DateTime>(json['loggedAt']),
     );
   }
@@ -3994,6 +4057,8 @@ class BloodPressureLog extends DataClass
       'userId': serializer.toJson<String>(userId),
       'systolic': serializer.toJson<String>(systolic),
       'diastolic': serializer.toJson<String>(diastolic),
+      'pulse': serializer.toJson<int?>(pulse),
+      'isEncrypted': serializer.toJson<bool>(isEncrypted),
       'loggedAt': serializer.toJson<DateTime>(loggedAt),
     };
   }
@@ -4003,12 +4068,16 @@ class BloodPressureLog extends DataClass
     String? userId,
     String? systolic,
     String? diastolic,
+    Value<int?> pulse = const Value.absent(),
+    bool? isEncrypted,
     DateTime? loggedAt,
   }) => BloodPressureLog(
     id: id ?? this.id,
     userId: userId ?? this.userId,
     systolic: systolic ?? this.systolic,
     diastolic: diastolic ?? this.diastolic,
+    pulse: pulse.present ? pulse.value : this.pulse,
+    isEncrypted: isEncrypted ?? this.isEncrypted,
     loggedAt: loggedAt ?? this.loggedAt,
   );
   BloodPressureLog copyWithCompanion(BloodPressureLogsCompanion data) {
@@ -4017,6 +4086,10 @@ class BloodPressureLog extends DataClass
       userId: data.userId.present ? data.userId.value : this.userId,
       systolic: data.systolic.present ? data.systolic.value : this.systolic,
       diastolic: data.diastolic.present ? data.diastolic.value : this.diastolic,
+      pulse: data.pulse.present ? data.pulse.value : this.pulse,
+      isEncrypted: data.isEncrypted.present
+          ? data.isEncrypted.value
+          : this.isEncrypted,
       loggedAt: data.loggedAt.present ? data.loggedAt.value : this.loggedAt,
     );
   }
@@ -4028,13 +4101,23 @@ class BloodPressureLog extends DataClass
           ..write('userId: $userId, ')
           ..write('systolic: $systolic, ')
           ..write('diastolic: $diastolic, ')
+          ..write('pulse: $pulse, ')
+          ..write('isEncrypted: $isEncrypted, ')
           ..write('loggedAt: $loggedAt')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, userId, systolic, diastolic, loggedAt);
+  int get hashCode => Object.hash(
+    id,
+    userId,
+    systolic,
+    diastolic,
+    pulse,
+    isEncrypted,
+    loggedAt,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -4043,6 +4126,8 @@ class BloodPressureLog extends DataClass
           other.userId == this.userId &&
           other.systolic == this.systolic &&
           other.diastolic == this.diastolic &&
+          other.pulse == this.pulse &&
+          other.isEncrypted == this.isEncrypted &&
           other.loggedAt == this.loggedAt);
 }
 
@@ -4051,12 +4136,16 @@ class BloodPressureLogsCompanion extends UpdateCompanion<BloodPressureLog> {
   final Value<String> userId;
   final Value<String> systolic;
   final Value<String> diastolic;
+  final Value<int?> pulse;
+  final Value<bool> isEncrypted;
   final Value<DateTime> loggedAt;
   const BloodPressureLogsCompanion({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
     this.systolic = const Value.absent(),
     this.diastolic = const Value.absent(),
+    this.pulse = const Value.absent(),
+    this.isEncrypted = const Value.absent(),
     this.loggedAt = const Value.absent(),
   });
   BloodPressureLogsCompanion.insert({
@@ -4064,6 +4153,8 @@ class BloodPressureLogsCompanion extends UpdateCompanion<BloodPressureLog> {
     required String userId,
     required String systolic,
     required String diastolic,
+    this.pulse = const Value.absent(),
+    this.isEncrypted = const Value.absent(),
     required DateTime loggedAt,
   }) : userId = Value(userId),
        systolic = Value(systolic),
@@ -4074,6 +4165,8 @@ class BloodPressureLogsCompanion extends UpdateCompanion<BloodPressureLog> {
     Expression<String>? userId,
     Expression<String>? systolic,
     Expression<String>? diastolic,
+    Expression<int>? pulse,
+    Expression<bool>? isEncrypted,
     Expression<DateTime>? loggedAt,
   }) {
     return RawValuesInsertable({
@@ -4081,6 +4174,8 @@ class BloodPressureLogsCompanion extends UpdateCompanion<BloodPressureLog> {
       if (userId != null) 'user_id': userId,
       if (systolic != null) 'systolic': systolic,
       if (diastolic != null) 'diastolic': diastolic,
+      if (pulse != null) 'pulse': pulse,
+      if (isEncrypted != null) 'is_encrypted': isEncrypted,
       if (loggedAt != null) 'logged_at': loggedAt,
     });
   }
@@ -4090,6 +4185,8 @@ class BloodPressureLogsCompanion extends UpdateCompanion<BloodPressureLog> {
     Value<String>? userId,
     Value<String>? systolic,
     Value<String>? diastolic,
+    Value<int?>? pulse,
+    Value<bool>? isEncrypted,
     Value<DateTime>? loggedAt,
   }) {
     return BloodPressureLogsCompanion(
@@ -4097,6 +4194,8 @@ class BloodPressureLogsCompanion extends UpdateCompanion<BloodPressureLog> {
       userId: userId ?? this.userId,
       systolic: systolic ?? this.systolic,
       diastolic: diastolic ?? this.diastolic,
+      pulse: pulse ?? this.pulse,
+      isEncrypted: isEncrypted ?? this.isEncrypted,
       loggedAt: loggedAt ?? this.loggedAt,
     );
   }
@@ -4116,6 +4215,12 @@ class BloodPressureLogsCompanion extends UpdateCompanion<BloodPressureLog> {
     if (diastolic.present) {
       map['diastolic'] = Variable<String>(diastolic.value);
     }
+    if (pulse.present) {
+      map['pulse'] = Variable<int>(pulse.value);
+    }
+    if (isEncrypted.present) {
+      map['is_encrypted'] = Variable<bool>(isEncrypted.value);
+    }
     if (loggedAt.present) {
       map['logged_at'] = Variable<DateTime>(loggedAt.value);
     }
@@ -4129,6 +4234,8 @@ class BloodPressureLogsCompanion extends UpdateCompanion<BloodPressureLog> {
           ..write('userId: $userId, ')
           ..write('systolic: $systolic, ')
           ..write('diastolic: $diastolic, ')
+          ..write('pulse: $pulse, ')
+          ..write('isEncrypted: $isEncrypted, ')
           ..write('loggedAt: $loggedAt')
           ..write(')'))
         .toString();
@@ -16691,6 +16798,8 @@ typedef $$BloodPressureLogsTableCreateCompanionBuilder =
       required String userId,
       required String systolic,
       required String diastolic,
+      Value<int?> pulse,
+      Value<bool> isEncrypted,
       required DateTime loggedAt,
     });
 typedef $$BloodPressureLogsTableUpdateCompanionBuilder =
@@ -16699,6 +16808,8 @@ typedef $$BloodPressureLogsTableUpdateCompanionBuilder =
       Value<String> userId,
       Value<String> systolic,
       Value<String> diastolic,
+      Value<int?> pulse,
+      Value<bool> isEncrypted,
       Value<DateTime> loggedAt,
     });
 
@@ -16728,6 +16839,16 @@ class $$BloodPressureLogsTableFilterComposer
 
   ColumnFilters<String> get diastolic => $composableBuilder(
     column: $table.diastolic,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get pulse => $composableBuilder(
+    column: $table.pulse,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isEncrypted => $composableBuilder(
+    column: $table.isEncrypted,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -16766,6 +16887,16 @@ class $$BloodPressureLogsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get pulse => $composableBuilder(
+    column: $table.pulse,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isEncrypted => $composableBuilder(
+    column: $table.isEncrypted,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get loggedAt => $composableBuilder(
     column: $table.loggedAt,
     builder: (column) => ColumnOrderings(column),
@@ -16792,6 +16923,14 @@ class $$BloodPressureLogsTableAnnotationComposer
 
   GeneratedColumn<String> get diastolic =>
       $composableBuilder(column: $table.diastolic, builder: (column) => column);
+
+  GeneratedColumn<int> get pulse =>
+      $composableBuilder(column: $table.pulse, builder: (column) => column);
+
+  GeneratedColumn<bool> get isEncrypted => $composableBuilder(
+    column: $table.isEncrypted,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<DateTime> get loggedAt =>
       $composableBuilder(column: $table.loggedAt, builder: (column) => column);
@@ -16841,12 +16980,16 @@ class $$BloodPressureLogsTableTableManager
                 Value<String> userId = const Value.absent(),
                 Value<String> systolic = const Value.absent(),
                 Value<String> diastolic = const Value.absent(),
+                Value<int?> pulse = const Value.absent(),
+                Value<bool> isEncrypted = const Value.absent(),
                 Value<DateTime> loggedAt = const Value.absent(),
               }) => BloodPressureLogsCompanion(
                 id: id,
                 userId: userId,
                 systolic: systolic,
                 diastolic: diastolic,
+                pulse: pulse,
+                isEncrypted: isEncrypted,
                 loggedAt: loggedAt,
               ),
           createCompanionCallback:
@@ -16855,12 +16998,16 @@ class $$BloodPressureLogsTableTableManager
                 required String userId,
                 required String systolic,
                 required String diastolic,
+                Value<int?> pulse = const Value.absent(),
+                Value<bool> isEncrypted = const Value.absent(),
                 required DateTime loggedAt,
               }) => BloodPressureLogsCompanion.insert(
                 id: id,
                 userId: userId,
                 systolic: systolic,
                 diastolic: diastolic,
+                pulse: pulse,
+                isEncrypted: isEncrypted,
                 loggedAt: loggedAt,
               ),
           withReferenceMapper: (p0) => p0

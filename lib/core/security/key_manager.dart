@@ -153,6 +153,7 @@ class KeyManager {
 
 class DataClassKeys {
   static const String bpGlucose = 'bp_glucose';
+  static const String bp = 'bp';
   static const String period = 'period';
   static const String journal = 'journal';
   static const String appointments = 'appointments';

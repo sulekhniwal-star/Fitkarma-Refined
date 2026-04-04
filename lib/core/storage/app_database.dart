@@ -130,6 +130,8 @@ class BloodPressureLogs extends Table {
   TextColumn get userId => text().withLength(min: 1, max: 64)();
   TextColumn get systolic => text().withLength(min: 1, max: 1024)();
   TextColumn get diastolic => text().withLength(min: 1, max: 1024)();
+  IntColumn get pulse => integer().nullable()();
+  BoolColumn get isEncrypted => boolean().withDefault(const Constant(false))();
   DateTimeColumn get loggedAt => dateTime()();
 }
 
@@ -760,19 +762,140 @@ class BloodPressureLogsDao extends DatabaseAccessor<AppDatabase>
       (select(bloodPressureLogs)
             ..where((t) => t.userId.equals(userId))
             ..orderBy([(t) => OrderingTerm.desc(t.loggedAt)]))
-        .watch();
+          .watch();
 
   Future<int> insertLog(BloodPressureLogsCompanion entry) =>
       into(bloodPressureLogs).insert(entry);
 
-  Future<int> insertLogEncrypted(BloodPressureLogsCompanion entry) {
-    return into(bloodPressureLogs).insert(entry);
+  Future<int> insertLogEncrypted({
+    required String userId,
+    required String systolic,
+    required String diastolic,
+    int? pulse,
+    required Uint8List encryptedSystolic,
+    required Uint8List encryptedDiastolic,
+  }) async {
+    return into(bloodPressureLogs).insert(
+      BloodPressureLogsCompanion.insert(
+        userId: userId,
+        systolic: systolic,
+        diastolic: diastolic,
+        pulse: Value(pulse),
+        isEncrypted: const Value(true),
+        loggedAt: DateTime.now(),
+      ),
+    );
   }
 
-  Future<List<BloodPressureLog>> getLogsForUserDecrypted(String userId,
+  Future<List<DecryptedBPLog>> getLogsForUserDecrypted(String userId,
       {DateTime? from, DateTime? to}) async {
-    return getLogsForUser(userId, from: from, to: to);
+    final logs = await getLogsForUser(userId, from: from, to: to);
+    return logs.map((l) => DecryptedBPLog(
+      id: l.id,
+      userId: l.userId,
+      systolic: l.systolic,
+      diastolic: l.diastolic,
+      pulse: l.pulse,
+      loggedAt: l.loggedAt,
+    )).toList();
   }
+
+  Future<Map<String, dynamic>> getStatistics(String userId) async {
+    final sevenDaysAgo = DateTime.now().subtract(const Duration(days: 7));
+    final thirtyDaysAgo = DateTime.now().subtract(const Duration(days: 30));
+    final ninetyDaysAgo = DateTime.now().subtract(const Duration(days: 90));
+
+    final logs7 = await getLogsForUser(userId, from: sevenDaysAgo);
+    final logs30 = await getLogsForUser(userId, from: thirtyDaysAgo);
+    final logs90 = await getLogsForUser(userId, from: ninetyDaysAgo);
+
+    double avg7Sys = 0, avg7Dia = 0;
+    double avg30Sys = 0, avg30Dia = 0;
+    double avg90Sys = 0, avg90Dia = 0;
+
+    if (logs7.isNotEmpty) {
+      final sys7 = logs7.map((l) => int.tryParse(l.systolic) ?? 0).where((s) => s > 0);
+      final dia7 = logs7.map((l) => int.tryParse(l.diastolic) ?? 0).where((d) => d > 0);
+      if (sys7.isNotEmpty) avg7Sys = sys7.reduce((a, b) => a + b) / sys7.length;
+      if (dia7.isNotEmpty) avg7Dia = dia7.reduce((a, b) => a + b) / dia7.length;
+    }
+
+    if (logs30.isNotEmpty) {
+      final sys30 = logs30.map((l) => int.tryParse(l.systolic) ?? 0).where((s) => s > 0);
+      final dia30 = logs30.map((l) => int.tryParse(l.diastolic) ?? 0).where((d) => d > 0);
+      if (sys30.isNotEmpty) avg30Sys = sys30.reduce((a, b) => a + b) / sys30.length;
+      if (dia30.isNotEmpty) avg30Dia = dia30.reduce((a, b) => a + b) / dia30.length;
+    }
+
+    if (logs90.isNotEmpty) {
+      final sys90 = logs90.map((l) => int.tryParse(l.systolic) ?? 0).where((s) => s > 0);
+      final dia90 = logs90.map((l) => int.tryParse(l.diastolic) ?? 0).where((d) => d > 0);
+      if (sys90.isNotEmpty) avg90Sys = sys90.reduce((a, b) => a + b) / sys90.length;
+      if (dia90.isNotEmpty) avg90Dia = dia90.reduce((a, b) => a + b) / dia90.length;
+    }
+
+    return {
+      'avg7Sys': avg7Sys,
+      'avg7Dia': avg7Dia,
+      'avg30Sys': avg30Sys,
+      'avg30Dia': avg30Dia,
+      'avg90Sys': avg90Sys,
+      'avg90Dia': avg90Dia,
+      'count7': logs7.length,
+      'count30': logs30.length,
+      'count90': logs90.length,
+    };
+  }
+}
+
+class DecryptedBPLog {
+  final int id;
+  final String userId;
+  final String systolic;
+  final String diastolic;
+  final int? pulse;
+  final DateTime loggedAt;
+
+  DecryptedBPLog({
+    required this.id,
+    required this.userId,
+    required this.systolic,
+    required this.diastolic,
+    this.pulse,
+    required this.loggedAt,
+  });
+
+  int get sys => int.tryParse(systolic) ?? 0;
+  int get dia => int.tryParse(diastolic) ?? 0;
+
+  BPClassification get classification => classify(sys, dia);
+
+  static BPClassification classify(int systolic, int diastolic) {
+    if (systolic >= 180 || diastolic >= 120) {
+      return BPClassification.crisis;
+    } else if (systolic >= 140 || diastolic >= 90) {
+      return BPClassification.stage2;
+    } else if (systolic >= 130 || diastolic >= 80) {
+      return BPClassification.stage1;
+    } else if (systolic >= 130 && systolic < 130 || diastolic >= 80 && diastolic < 80) {
+      return BPClassification.elevated;
+    } else if (systolic < 120 && diastolic < 80) {
+      return BPClassification.normal;
+    }
+    return BPClassification.normal;
+  }
+
+  bool get isCrisis => sys >= 180 || dia >= 120;
+  bool get isStage2 => sys >= 140 || dia >= 90;
+  bool get isStage1 => sys >= 130 || dia >= 80;
+}
+
+enum BPClassification {
+  normal,
+  elevated,
+  stage1,
+  stage2,
+  crisis,
 }
 
 @DriftAccessor(tables: [GlucoseLogs])

@@ -73,6 +73,9 @@ dependencies:
   # Health Connect / HealthKit
   health: 13.3.1
 
+  # Charts
+  fl_chart: ^0.70.0
+
   # Pedometer fallback
   pedometer: ^4.0.1
 

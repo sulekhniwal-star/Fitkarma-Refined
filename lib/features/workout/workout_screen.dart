@@ -5,7 +5,6 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:fitkarma/features/workout/data/workout_aw_service.dart';
 import 'package:fitkarma/features/workout/data/workout_service.dart';
-import 'package:fitkarma/features/workout/data/map_cache_service.dart';
 import 'package:fitkarma/shared/theme/app_colors.dart';
 
 class WorkoutHomeScreen extends ConsumerWidget {
