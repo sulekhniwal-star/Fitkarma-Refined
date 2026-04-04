@@ -115,6 +115,57 @@ class BPReminderService {
     await _notifications.cancel(2);
   }
 
+  Future<void> scheduleAppointmentReminder(int appointmentId, DateTime appointmentDate, String doctorName) async {
+    final reminderTime = appointmentDate.subtract(const Duration(hours: 24));
+    
+    if (reminderTime.isBefore(DateTime.now())) {
+      return;
+    }
+
+    const androidDetails = AndroidNotificationDetails(
+      'appointment_reminder',
+      'Appointment Reminder',
+      channelDescription: '24-hour appointment reminder',
+      importance: Importance.high,
+      priority: Priority.high,
+      icon: '@mipmap/ic_launcher',
+    );
+
+    const iosDetails = DarwinNotificationDetails(
+      presentAlert: true,
+      presentBadge: true,
+      presentSound: true,
+    );
+
+    const details = NotificationDetails(
+      android: androidDetails,
+      iOS: iosDetails,
+    );
+
+    final scheduledTime = tz.TZDateTime(
+      tz.local,
+      reminderTime.year,
+      reminderTime.month,
+      reminderTime.day,
+      reminderTime.hour,
+      reminderTime.minute,
+    );
+
+    await _notifications.zonedSchedule(
+      100 + appointmentId,
+      '🏥 Appointment Tomorrow',
+      'You have an appointment with $doctorName tomorrow',
+      scheduledTime,
+      details,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+    );
+  }
+
+  Future<void> cancelAppointmentReminder(int appointmentId) async {
+    await _notifications.cancel(100 + appointmentId);
+  }
+
   tz.TZDateTime _nextInstanceOf(int hour, int minute) {
     final now = tz.TZDateTime.now(tz.local);
     var scheduledDate = tz.TZDateTime(tz.local, now.year, now.month, now.day, hour, minute);

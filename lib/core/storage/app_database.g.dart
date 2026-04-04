@@ -8061,12 +8061,79 @@ class $DoctorAppointmentsTable extends DoctorAppointments
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _notesMeta = const VerificationMeta('notes');
+  @override
+  late final GeneratedColumn<String> notes = GeneratedColumn<String>(
+    'notes',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _prescriptionPhotoPathMeta =
+      const VerificationMeta('prescriptionPhotoPath');
+  @override
+  late final GeneratedColumn<String> prescriptionPhotoPath =
+      GeneratedColumn<String>(
+        'prescription_photo_path',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _extractedMedsJsonMeta = const VerificationMeta(
+    'extractedMedsJson',
+  );
+  @override
+  late final GeneratedColumn<String> extractedMedsJson =
+      GeneratedColumn<String>(
+        'extracted_meds_json',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _reminderSentMeta = const VerificationMeta(
+    'reminderSent',
+  );
+  @override
+  late final GeneratedColumn<bool> reminderSent = GeneratedColumn<bool>(
+    'reminder_sent',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("reminder_sent" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _isCompletedMeta = const VerificationMeta(
+    'isCompleted',
+  );
+  @override
+  late final GeneratedColumn<bool> isCompleted = GeneratedColumn<bool>(
+    'is_completed',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_completed" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
     userId,
     appointmentDate,
     doctorName,
+    notes,
+    prescriptionPhotoPath,
+    extractedMedsJson,
+    reminderSent,
+    isCompleted,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -8110,6 +8177,48 @@ class $DoctorAppointmentsTable extends DoctorAppointments
     } else if (isInserting) {
       context.missing(_doctorNameMeta);
     }
+    if (data.containsKey('notes')) {
+      context.handle(
+        _notesMeta,
+        notes.isAcceptableOrUnknown(data['notes']!, _notesMeta),
+      );
+    }
+    if (data.containsKey('prescription_photo_path')) {
+      context.handle(
+        _prescriptionPhotoPathMeta,
+        prescriptionPhotoPath.isAcceptableOrUnknown(
+          data['prescription_photo_path']!,
+          _prescriptionPhotoPathMeta,
+        ),
+      );
+    }
+    if (data.containsKey('extracted_meds_json')) {
+      context.handle(
+        _extractedMedsJsonMeta,
+        extractedMedsJson.isAcceptableOrUnknown(
+          data['extracted_meds_json']!,
+          _extractedMedsJsonMeta,
+        ),
+      );
+    }
+    if (data.containsKey('reminder_sent')) {
+      context.handle(
+        _reminderSentMeta,
+        reminderSent.isAcceptableOrUnknown(
+          data['reminder_sent']!,
+          _reminderSentMeta,
+        ),
+      );
+    }
+    if (data.containsKey('is_completed')) {
+      context.handle(
+        _isCompletedMeta,
+        isCompleted.isAcceptableOrUnknown(
+          data['is_completed']!,
+          _isCompletedMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -8135,6 +8244,26 @@ class $DoctorAppointmentsTable extends DoctorAppointments
         DriftSqlType.string,
         data['${effectivePrefix}doctor_name'],
       )!,
+      notes: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}notes'],
+      ),
+      prescriptionPhotoPath: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}prescription_photo_path'],
+      ),
+      extractedMedsJson: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}extracted_meds_json'],
+      ),
+      reminderSent: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}reminder_sent'],
+      )!,
+      isCompleted: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_completed'],
+      )!,
     );
   }
 
@@ -8150,11 +8279,21 @@ class DoctorAppointment extends DataClass
   final String userId;
   final DateTime appointmentDate;
   final String doctorName;
+  final String? notes;
+  final String? prescriptionPhotoPath;
+  final String? extractedMedsJson;
+  final bool reminderSent;
+  final bool isCompleted;
   const DoctorAppointment({
     required this.id,
     required this.userId,
     required this.appointmentDate,
     required this.doctorName,
+    this.notes,
+    this.prescriptionPhotoPath,
+    this.extractedMedsJson,
+    required this.reminderSent,
+    required this.isCompleted,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -8163,6 +8302,17 @@ class DoctorAppointment extends DataClass
     map['user_id'] = Variable<String>(userId);
     map['appointment_date'] = Variable<DateTime>(appointmentDate);
     map['doctor_name'] = Variable<String>(doctorName);
+    if (!nullToAbsent || notes != null) {
+      map['notes'] = Variable<String>(notes);
+    }
+    if (!nullToAbsent || prescriptionPhotoPath != null) {
+      map['prescription_photo_path'] = Variable<String>(prescriptionPhotoPath);
+    }
+    if (!nullToAbsent || extractedMedsJson != null) {
+      map['extracted_meds_json'] = Variable<String>(extractedMedsJson);
+    }
+    map['reminder_sent'] = Variable<bool>(reminderSent);
+    map['is_completed'] = Variable<bool>(isCompleted);
     return map;
   }
 
@@ -8172,6 +8322,17 @@ class DoctorAppointment extends DataClass
       userId: Value(userId),
       appointmentDate: Value(appointmentDate),
       doctorName: Value(doctorName),
+      notes: notes == null && nullToAbsent
+          ? const Value.absent()
+          : Value(notes),
+      prescriptionPhotoPath: prescriptionPhotoPath == null && nullToAbsent
+          ? const Value.absent()
+          : Value(prescriptionPhotoPath),
+      extractedMedsJson: extractedMedsJson == null && nullToAbsent
+          ? const Value.absent()
+          : Value(extractedMedsJson),
+      reminderSent: Value(reminderSent),
+      isCompleted: Value(isCompleted),
     );
   }
 
@@ -8185,6 +8346,15 @@ class DoctorAppointment extends DataClass
       userId: serializer.fromJson<String>(json['userId']),
       appointmentDate: serializer.fromJson<DateTime>(json['appointmentDate']),
       doctorName: serializer.fromJson<String>(json['doctorName']),
+      notes: serializer.fromJson<String?>(json['notes']),
+      prescriptionPhotoPath: serializer.fromJson<String?>(
+        json['prescriptionPhotoPath'],
+      ),
+      extractedMedsJson: serializer.fromJson<String?>(
+        json['extractedMedsJson'],
+      ),
+      reminderSent: serializer.fromJson<bool>(json['reminderSent']),
+      isCompleted: serializer.fromJson<bool>(json['isCompleted']),
     );
   }
   @override
@@ -8195,6 +8365,13 @@ class DoctorAppointment extends DataClass
       'userId': serializer.toJson<String>(userId),
       'appointmentDate': serializer.toJson<DateTime>(appointmentDate),
       'doctorName': serializer.toJson<String>(doctorName),
+      'notes': serializer.toJson<String?>(notes),
+      'prescriptionPhotoPath': serializer.toJson<String?>(
+        prescriptionPhotoPath,
+      ),
+      'extractedMedsJson': serializer.toJson<String?>(extractedMedsJson),
+      'reminderSent': serializer.toJson<bool>(reminderSent),
+      'isCompleted': serializer.toJson<bool>(isCompleted),
     };
   }
 
@@ -8203,11 +8380,25 @@ class DoctorAppointment extends DataClass
     String? userId,
     DateTime? appointmentDate,
     String? doctorName,
+    Value<String?> notes = const Value.absent(),
+    Value<String?> prescriptionPhotoPath = const Value.absent(),
+    Value<String?> extractedMedsJson = const Value.absent(),
+    bool? reminderSent,
+    bool? isCompleted,
   }) => DoctorAppointment(
     id: id ?? this.id,
     userId: userId ?? this.userId,
     appointmentDate: appointmentDate ?? this.appointmentDate,
     doctorName: doctorName ?? this.doctorName,
+    notes: notes.present ? notes.value : this.notes,
+    prescriptionPhotoPath: prescriptionPhotoPath.present
+        ? prescriptionPhotoPath.value
+        : this.prescriptionPhotoPath,
+    extractedMedsJson: extractedMedsJson.present
+        ? extractedMedsJson.value
+        : this.extractedMedsJson,
+    reminderSent: reminderSent ?? this.reminderSent,
+    isCompleted: isCompleted ?? this.isCompleted,
   );
   DoctorAppointment copyWithCompanion(DoctorAppointmentsCompanion data) {
     return DoctorAppointment(
@@ -8219,6 +8410,19 @@ class DoctorAppointment extends DataClass
       doctorName: data.doctorName.present
           ? data.doctorName.value
           : this.doctorName,
+      notes: data.notes.present ? data.notes.value : this.notes,
+      prescriptionPhotoPath: data.prescriptionPhotoPath.present
+          ? data.prescriptionPhotoPath.value
+          : this.prescriptionPhotoPath,
+      extractedMedsJson: data.extractedMedsJson.present
+          ? data.extractedMedsJson.value
+          : this.extractedMedsJson,
+      reminderSent: data.reminderSent.present
+          ? data.reminderSent.value
+          : this.reminderSent,
+      isCompleted: data.isCompleted.present
+          ? data.isCompleted.value
+          : this.isCompleted,
     );
   }
 
@@ -8228,13 +8432,28 @@ class DoctorAppointment extends DataClass
           ..write('id: $id, ')
           ..write('userId: $userId, ')
           ..write('appointmentDate: $appointmentDate, ')
-          ..write('doctorName: $doctorName')
+          ..write('doctorName: $doctorName, ')
+          ..write('notes: $notes, ')
+          ..write('prescriptionPhotoPath: $prescriptionPhotoPath, ')
+          ..write('extractedMedsJson: $extractedMedsJson, ')
+          ..write('reminderSent: $reminderSent, ')
+          ..write('isCompleted: $isCompleted')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, userId, appointmentDate, doctorName);
+  int get hashCode => Object.hash(
+    id,
+    userId,
+    appointmentDate,
+    doctorName,
+    notes,
+    prescriptionPhotoPath,
+    extractedMedsJson,
+    reminderSent,
+    isCompleted,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -8242,7 +8461,12 @@ class DoctorAppointment extends DataClass
           other.id == this.id &&
           other.userId == this.userId &&
           other.appointmentDate == this.appointmentDate &&
-          other.doctorName == this.doctorName);
+          other.doctorName == this.doctorName &&
+          other.notes == this.notes &&
+          other.prescriptionPhotoPath == this.prescriptionPhotoPath &&
+          other.extractedMedsJson == this.extractedMedsJson &&
+          other.reminderSent == this.reminderSent &&
+          other.isCompleted == this.isCompleted);
 }
 
 class DoctorAppointmentsCompanion extends UpdateCompanion<DoctorAppointment> {
@@ -8250,17 +8474,32 @@ class DoctorAppointmentsCompanion extends UpdateCompanion<DoctorAppointment> {
   final Value<String> userId;
   final Value<DateTime> appointmentDate;
   final Value<String> doctorName;
+  final Value<String?> notes;
+  final Value<String?> prescriptionPhotoPath;
+  final Value<String?> extractedMedsJson;
+  final Value<bool> reminderSent;
+  final Value<bool> isCompleted;
   const DoctorAppointmentsCompanion({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
     this.appointmentDate = const Value.absent(),
     this.doctorName = const Value.absent(),
+    this.notes = const Value.absent(),
+    this.prescriptionPhotoPath = const Value.absent(),
+    this.extractedMedsJson = const Value.absent(),
+    this.reminderSent = const Value.absent(),
+    this.isCompleted = const Value.absent(),
   });
   DoctorAppointmentsCompanion.insert({
     this.id = const Value.absent(),
     required String userId,
     required DateTime appointmentDate,
     required String doctorName,
+    this.notes = const Value.absent(),
+    this.prescriptionPhotoPath = const Value.absent(),
+    this.extractedMedsJson = const Value.absent(),
+    this.reminderSent = const Value.absent(),
+    this.isCompleted = const Value.absent(),
   }) : userId = Value(userId),
        appointmentDate = Value(appointmentDate),
        doctorName = Value(doctorName);
@@ -8269,12 +8508,23 @@ class DoctorAppointmentsCompanion extends UpdateCompanion<DoctorAppointment> {
     Expression<String>? userId,
     Expression<DateTime>? appointmentDate,
     Expression<String>? doctorName,
+    Expression<String>? notes,
+    Expression<String>? prescriptionPhotoPath,
+    Expression<String>? extractedMedsJson,
+    Expression<bool>? reminderSent,
+    Expression<bool>? isCompleted,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (userId != null) 'user_id': userId,
       if (appointmentDate != null) 'appointment_date': appointmentDate,
       if (doctorName != null) 'doctor_name': doctorName,
+      if (notes != null) 'notes': notes,
+      if (prescriptionPhotoPath != null)
+        'prescription_photo_path': prescriptionPhotoPath,
+      if (extractedMedsJson != null) 'extracted_meds_json': extractedMedsJson,
+      if (reminderSent != null) 'reminder_sent': reminderSent,
+      if (isCompleted != null) 'is_completed': isCompleted,
     });
   }
 
@@ -8283,12 +8533,23 @@ class DoctorAppointmentsCompanion extends UpdateCompanion<DoctorAppointment> {
     Value<String>? userId,
     Value<DateTime>? appointmentDate,
     Value<String>? doctorName,
+    Value<String?>? notes,
+    Value<String?>? prescriptionPhotoPath,
+    Value<String?>? extractedMedsJson,
+    Value<bool>? reminderSent,
+    Value<bool>? isCompleted,
   }) {
     return DoctorAppointmentsCompanion(
       id: id ?? this.id,
       userId: userId ?? this.userId,
       appointmentDate: appointmentDate ?? this.appointmentDate,
       doctorName: doctorName ?? this.doctorName,
+      notes: notes ?? this.notes,
+      prescriptionPhotoPath:
+          prescriptionPhotoPath ?? this.prescriptionPhotoPath,
+      extractedMedsJson: extractedMedsJson ?? this.extractedMedsJson,
+      reminderSent: reminderSent ?? this.reminderSent,
+      isCompleted: isCompleted ?? this.isCompleted,
     );
   }
 
@@ -8307,6 +8568,23 @@ class DoctorAppointmentsCompanion extends UpdateCompanion<DoctorAppointment> {
     if (doctorName.present) {
       map['doctor_name'] = Variable<String>(doctorName.value);
     }
+    if (notes.present) {
+      map['notes'] = Variable<String>(notes.value);
+    }
+    if (prescriptionPhotoPath.present) {
+      map['prescription_photo_path'] = Variable<String>(
+        prescriptionPhotoPath.value,
+      );
+    }
+    if (extractedMedsJson.present) {
+      map['extracted_meds_json'] = Variable<String>(extractedMedsJson.value);
+    }
+    if (reminderSent.present) {
+      map['reminder_sent'] = Variable<bool>(reminderSent.value);
+    }
+    if (isCompleted.present) {
+      map['is_completed'] = Variable<bool>(isCompleted.value);
+    }
     return map;
   }
 
@@ -8316,7 +8594,12 @@ class DoctorAppointmentsCompanion extends UpdateCompanion<DoctorAppointment> {
           ..write('id: $id, ')
           ..write('userId: $userId, ')
           ..write('appointmentDate: $appointmentDate, ')
-          ..write('doctorName: $doctorName')
+          ..write('doctorName: $doctorName, ')
+          ..write('notes: $notes, ')
+          ..write('prescriptionPhotoPath: $prescriptionPhotoPath, ')
+          ..write('extractedMedsJson: $extractedMedsJson, ')
+          ..write('reminderSent: $reminderSent, ')
+          ..write('isCompleted: $isCompleted')
           ..write(')'))
         .toString();
   }
@@ -19490,6 +19773,11 @@ typedef $$DoctorAppointmentsTableCreateCompanionBuilder =
       required String userId,
       required DateTime appointmentDate,
       required String doctorName,
+      Value<String?> notes,
+      Value<String?> prescriptionPhotoPath,
+      Value<String?> extractedMedsJson,
+      Value<bool> reminderSent,
+      Value<bool> isCompleted,
     });
 typedef $$DoctorAppointmentsTableUpdateCompanionBuilder =
     DoctorAppointmentsCompanion Function({
@@ -19497,6 +19785,11 @@ typedef $$DoctorAppointmentsTableUpdateCompanionBuilder =
       Value<String> userId,
       Value<DateTime> appointmentDate,
       Value<String> doctorName,
+      Value<String?> notes,
+      Value<String?> prescriptionPhotoPath,
+      Value<String?> extractedMedsJson,
+      Value<bool> reminderSent,
+      Value<bool> isCompleted,
     });
 
 class $$DoctorAppointmentsTableFilterComposer
@@ -19525,6 +19818,31 @@ class $$DoctorAppointmentsTableFilterComposer
 
   ColumnFilters<String> get doctorName => $composableBuilder(
     column: $table.doctorName,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get notes => $composableBuilder(
+    column: $table.notes,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get prescriptionPhotoPath => $composableBuilder(
+    column: $table.prescriptionPhotoPath,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get extractedMedsJson => $composableBuilder(
+    column: $table.extractedMedsJson,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get reminderSent => $composableBuilder(
+    column: $table.reminderSent,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isCompleted => $composableBuilder(
+    column: $table.isCompleted,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -19557,6 +19875,31 @@ class $$DoctorAppointmentsTableOrderingComposer
     column: $table.doctorName,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<String> get notes => $composableBuilder(
+    column: $table.notes,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get prescriptionPhotoPath => $composableBuilder(
+    column: $table.prescriptionPhotoPath,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get extractedMedsJson => $composableBuilder(
+    column: $table.extractedMedsJson,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get reminderSent => $composableBuilder(
+    column: $table.reminderSent,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isCompleted => $composableBuilder(
+    column: $table.isCompleted,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$DoctorAppointmentsTableAnnotationComposer
@@ -19581,6 +19924,29 @@ class $$DoctorAppointmentsTableAnnotationComposer
 
   GeneratedColumn<String> get doctorName => $composableBuilder(
     column: $table.doctorName,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get notes =>
+      $composableBuilder(column: $table.notes, builder: (column) => column);
+
+  GeneratedColumn<String> get prescriptionPhotoPath => $composableBuilder(
+    column: $table.prescriptionPhotoPath,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get extractedMedsJson => $composableBuilder(
+    column: $table.extractedMedsJson,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get reminderSent => $composableBuilder(
+    column: $table.reminderSent,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get isCompleted => $composableBuilder(
+    column: $table.isCompleted,
     builder: (column) => column,
   );
 }
@@ -19629,11 +19995,21 @@ class $$DoctorAppointmentsTableTableManager
                 Value<String> userId = const Value.absent(),
                 Value<DateTime> appointmentDate = const Value.absent(),
                 Value<String> doctorName = const Value.absent(),
+                Value<String?> notes = const Value.absent(),
+                Value<String?> prescriptionPhotoPath = const Value.absent(),
+                Value<String?> extractedMedsJson = const Value.absent(),
+                Value<bool> reminderSent = const Value.absent(),
+                Value<bool> isCompleted = const Value.absent(),
               }) => DoctorAppointmentsCompanion(
                 id: id,
                 userId: userId,
                 appointmentDate: appointmentDate,
                 doctorName: doctorName,
+                notes: notes,
+                prescriptionPhotoPath: prescriptionPhotoPath,
+                extractedMedsJson: extractedMedsJson,
+                reminderSent: reminderSent,
+                isCompleted: isCompleted,
               ),
           createCompanionCallback:
               ({
@@ -19641,11 +20017,21 @@ class $$DoctorAppointmentsTableTableManager
                 required String userId,
                 required DateTime appointmentDate,
                 required String doctorName,
+                Value<String?> notes = const Value.absent(),
+                Value<String?> prescriptionPhotoPath = const Value.absent(),
+                Value<String?> extractedMedsJson = const Value.absent(),
+                Value<bool> reminderSent = const Value.absent(),
+                Value<bool> isCompleted = const Value.absent(),
               }) => DoctorAppointmentsCompanion.insert(
                 id: id,
                 userId: userId,
                 appointmentDate: appointmentDate,
                 doctorName: doctorName,
+                notes: notes,
+                prescriptionPhotoPath: prescriptionPhotoPath,
+                extractedMedsJson: extractedMedsJson,
+                reminderSent: reminderSent,
+                isCompleted: isCompleted,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))

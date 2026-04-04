@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
@@ -257,6 +256,11 @@ class DoctorAppointments extends Table {
   TextColumn get userId => text().withLength(min: 1, max: 64)();
   DateTimeColumn get appointmentDate => dateTime()();
   TextColumn get doctorName => text().withLength(min: 1, max: 128)();
+  TextColumn get notes => text().nullable()();
+  TextColumn get prescriptionPhotoPath => text().nullable()();
+  TextColumn get extractedMedsJson => text().nullable()();
+  BoolColumn get reminderSent => boolean().withDefault(const Constant(false))();
+  BoolColumn get isCompleted => boolean().withDefault(const Constant(false))();
 }
 
 @TableIndex(name: 'idx_karma_user', columns: {#userId, #createdAt})
@@ -1337,11 +1341,166 @@ class DoctorAppointmentsDao extends DatabaseAccessor<AppDatabase>
             ..orderBy([(t) => OrderingTerm.asc(t.appointmentDate)]))
           .get();
 
+  Future<List<DoctorAppointment>> getAllForUser(String userId) =>
+      (select(doctorAppointments)
+            ..where((t) => t.userId.equals(userId))
+            ..orderBy([(t) => OrderingTerm.desc(t.appointmentDate)]))
+          .get();
+
+  Stream<List<DoctorAppointment>> watchUpcomingForUser(String userId) =>
+      (select(doctorAppointments)
+            ..where((t) =>
+                t.userId.equals(userId) &
+                t.appointmentDate.isBiggerOrEqualValue(DateTime.now()))
+            ..orderBy([(t) => OrderingTerm.asc(t.appointmentDate)]))
+          .watch();
+
   Future<int> insertAppointment(DoctorAppointmentsCompanion entry) =>
       into(doctorAppointments).insert(entry);
 
+  Future<int> insertWithEncryption({
+    required String userId,
+    required DateTime appointmentDate,
+    required String doctorName,
+    String? notes,
+  }) async {
+    final key = await KeyManager.instance.getKeyForDataClass(DataClassKeys.appointments);
+    
+    String? encryptedNotes;
+    if (notes != null && notes.isNotEmpty) {
+      final encNotes = await EncryptionHelper.encryptField(notes, key);
+      encryptedNotes = base64Encode(encNotes);
+    }
+    
+    return into(doctorAppointments).insert(
+      DoctorAppointmentsCompanion.insert(
+        userId: userId,
+        appointmentDate: appointmentDate,
+        doctorName: doctorName,
+        notes: Value(encryptedNotes),
+      ),
+    );
+  }
+
+  Future<DecryptedAppointment> getAppointmentDecrypted(int id) async {
+    final appointments = await (select(doctorAppointments)
+          ..where((t) => t.id.equals(id)))
+        .get();
+    
+    if (appointments.isEmpty) {
+      throw Exception('Appointment not found');
+    }
+    
+    final apt = appointments.first;
+    final key = await KeyManager.instance.getKeyForDataClass(DataClassKeys.appointments);
+    
+    String notes = apt.notes ?? '';
+    if (apt.notes != null && apt.notes!.isNotEmpty) {
+      try {
+        final notesBytes = base64Decode(apt.notes!);
+        notes = await EncryptionHelper.decryptField(notesBytes, key);
+      } catch (e) {
+        debugPrint('Notes decryption failed: $e');
+      }
+    }
+    
+    return DecryptedAppointment(
+      id: apt.id,
+      userId: apt.userId,
+      appointmentDate: apt.appointmentDate,
+      doctorName: apt.doctorName,
+      notes: notes,
+      prescriptionPhotoPath: apt.prescriptionPhotoPath,
+      extractedMedsJson: apt.extractedMedsJson,
+      reminderSent: apt.reminderSent,
+      isCompleted: apt.isCompleted,
+    );
+  }
+
+  Future<List<DecryptedAppointment>> getUpcomingForUserDecrypted(String userId) async {
+    final appointments = await getUpcomingForUser(userId);
+    final key = await KeyManager.instance.getKeyForDataClass(DataClassKeys.appointments);
+    
+    final decrypted = <DecryptedAppointment>[];
+    for (final apt in appointments) {
+      String notes = apt.notes ?? '';
+      if (apt.notes != null && apt.notes!.isNotEmpty) {
+        try {
+          final notesBytes = base64Decode(apt.notes!);
+          notes = await EncryptionHelper.decryptField(notesBytes, key);
+        } catch (e) {
+          debugPrint('Notes decryption failed: $e');
+        }
+      }
+      
+      decrypted.add(DecryptedAppointment(
+        id: apt.id,
+        userId: apt.userId,
+        appointmentDate: apt.appointmentDate,
+        doctorName: apt.doctorName,
+        notes: notes,
+        prescriptionPhotoPath: apt.prescriptionPhotoPath,
+        extractedMedsJson: apt.extractedMedsJson,
+        reminderSent: apt.reminderSent,
+        isCompleted: apt.isCompleted,
+      ));
+    }
+    
+    return decrypted;
+  }
+
+  Future<int> markCompleted(int id) =>
+      (update(doctorAppointments)..where((t) => t.id.equals(id)))
+          .write(const DoctorAppointmentsCompanion(isCompleted: Value(true)));
+
+  Future<int> markReminderSent(int id) =>
+      (update(doctorAppointments)..where((t) => t.id.equals(id)))
+          .write(const DoctorAppointmentsCompanion(reminderSent: Value(true)));
+
+  Future<int> updateExtractedMeds(int id, String medsJson) =>
+      (update(doctorAppointments)..where((t) => t.id.equals(id)))
+          .write(DoctorAppointmentsCompanion(extractedMedsJson: Value(medsJson)));
+
+  Future<int> savePrescriptionPhoto(int id, String photoPath) =>
+      (update(doctorAppointments)..where((t) => t.id.equals(id)))
+          .write(DoctorAppointmentsCompanion(prescriptionPhotoPath: Value(photoPath)));
+
   Future<int> deleteAppointment(int id) =>
       (delete(doctorAppointments)..where((t) => t.id.equals(id))).go();
+}
+
+class DecryptedAppointment {
+  final int id;
+  final String userId;
+  final DateTime appointmentDate;
+  final String doctorName;
+  final String? notes;
+  final String? prescriptionPhotoPath;
+  final String? extractedMedsJson;
+  final bool reminderSent;
+  final bool isCompleted;
+
+  DecryptedAppointment({
+    required this.id,
+    required this.userId,
+    required this.appointmentDate,
+    required this.doctorName,
+    this.notes,
+    this.prescriptionPhotoPath,
+    this.extractedMedsJson,
+    this.reminderSent = false,
+    this.isCompleted = false,
+  });
+
+  bool get isUpcoming => appointmentDate.isAfter(DateTime.now());
+  bool get isToday {
+    final now = DateTime.now();
+    return appointmentDate.year == now.year &&
+        appointmentDate.month == now.month &&
+        appointmentDate.day == now.day;
+  }
+
+  bool get isPast => appointmentDate.isBefore(DateTime.now()) && !isToday;
 }
 
 // --- India Ecosystem DAOs ---

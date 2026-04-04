@@ -15,6 +15,11 @@ import 'package:fitkarma/features/glucose/presentation/glucose_log_screen.dart';
 import 'package:fitkarma/features/glucose/presentation/glucose_history_screen.dart';
 import 'package:fitkarma/features/spo2/presentation/spo2_log_screen.dart';
 import 'package:fitkarma/features/spo2/presentation/spo2_history_screen.dart';
+import 'package:fitkarma/features/appointments/presentation/appointment_screen.dart';
+import 'package:fitkarma/features/appointments/presentation/appointments_list_screen.dart';
+import 'package:fitkarma/features/appointments/presentation/prescription_screen.dart';
+import 'package:fitkarma/features/spo2/presentation/spo2_log_screen.dart';
+import 'package:fitkarma/features/spo2/presentation/spo2_history_screen.dart';
 import 'package:fitkarma/features/wearables/wearables_screen.dart'
     deferred as wearables;
 import 'package:fitkarma/features/social/social_feed_screen.dart'
@@ -366,6 +371,33 @@ final GoRouter appRouter = GoRouter(
       builder: (context, state) {
         final userId = state.extra as String? ?? '';
         return Spo2HistoryScreen(userId: userId);
+      },
+    ),
+
+    // Appointments
+    GoRoute(
+      parentNavigatorKey: _rootNavigatorKey,
+      path: '/appointments/add',
+      builder: (context, state) {
+        final userId = state.extra as String? ?? '';
+        return AppointmentScreen(userId: userId);
+      },
+    ),
+    GoRoute(
+      parentNavigatorKey: _rootNavigatorKey,
+      path: '/appointments/list',
+      builder: (context, state) {
+        final userId = state.extra as String? ?? '';
+        return AppointmentsListScreen(userId: userId);
+      },
+    ),
+    GoRoute(
+      parentNavigatorKey: _rootNavigatorKey,
+      path: '/appointments/prescription/:id',
+      builder: (context, state) {
+        final userId = state.extra as String? ?? '';
+        final appointmentId = int.tryParse(state.pathParameters['id'] ?? '0') ?? 0;
+        return PrescriptionScreen(userId: userId, appointmentId: appointmentId);
       },
     ),
   ],
