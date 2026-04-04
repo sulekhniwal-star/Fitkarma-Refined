@@ -18,6 +18,7 @@ import 'package:fitkarma/features/spo2/presentation/spo2_history_screen.dart';
 import 'package:fitkarma/features/appointments/presentation/appointment_screen.dart';
 import 'package:fitkarma/features/appointments/presentation/appointments_list_screen.dart';
 import 'package:fitkarma/features/appointments/presentation/prescription_screen.dart';
+import 'package:fitkarma/features/lab_reports/presentation/lab_report_scan_screen.dart';
 import 'package:fitkarma/features/spo2/presentation/spo2_log_screen.dart';
 import 'package:fitkarma/features/spo2/presentation/spo2_history_screen.dart';
 import 'package:fitkarma/features/wearables/wearables_screen.dart'
@@ -398,6 +399,16 @@ final GoRouter appRouter = GoRouter(
         final userId = state.extra as String? ?? '';
         final appointmentId = int.tryParse(state.pathParameters['id'] ?? '0') ?? 0;
         return PrescriptionScreen(userId: userId, appointmentId: appointmentId);
+      },
+    ),
+
+    // Lab Reports
+    GoRoute(
+      parentNavigatorKey: _rootNavigatorKey,
+      path: '/lab-report/scan',
+      builder: (context, state) {
+        final userId = state.extra as String? ?? '';
+        return LabReportScanScreen(userId: userId);
       },
     ),
   ],

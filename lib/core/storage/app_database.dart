@@ -324,6 +324,8 @@ class LabReports extends Table {
   DateTimeColumn get uploadedAt => dateTime()();
   TextColumn get labName => text().nullable().withLength(max: 128)();
   TextColumn get summaryJson => text().nullable().withLength(max: 8192)();
+  TextColumn get extractedDataJson => text().nullable()();
+  BoolColumn get isEncrypted => boolean().withDefault(const Constant(false))();
 }
 
 class AbhaLinks extends Table {
@@ -1519,8 +1521,146 @@ class LabReportsDao extends DatabaseAccessor<AppDatabase>
   Future<int> insertReport(LabReportsCompanion entry) =>
       into(labReports).insert(entry);
 
+  Future<int> insertWithExtraction({
+    required String userId,
+    required String reportName,
+    String? reportUrl,
+    String? labName,
+    required String extractedDataJson,
+  }) async {
+    final key = await KeyManager.instance.getKeyForDataClass(DataClassKeys.bpGlucose);
+    
+    final encSummary = await EncryptionHelper.encryptField(extractedDataJson, key);
+    
+    return into(labReports).insert(
+      LabReportsCompanion.insert(
+        userId: userId,
+        reportName: reportName,
+        reportUrl: Value(reportUrl),
+        labName: Value(labName),
+        summaryJson: Value(base64Encode(encSummary)),
+        extractedDataJson: Value(extractedDataJson),
+        isEncrypted: const Value(true),
+        uploadedAt: DateTime.now(),
+      ),
+    );
+  }
+
+  Future<int> autoPopulateTrackers(String userId, String extractedDataJson) async {
+    int logsCreated = 0;
+    
+    try {
+      final params = Uri.splitQueryString(extractedDataJson);
+      final data = <String, double>{};
+      for (final entry in params.entries) {
+        final value = double.tryParse(entry.value);
+        if (value != null) data[entry.key] = value;
+      }
+      
+      if (data.containsKey('glucose_fasting') && data['glucose_fasting'] != null) {
+        await db.glucoseLogsDao.insertLogWithKarma(
+          userId: userId,
+          glucoseMgdl: data['glucose_fasting']!.toInt(),
+          mealType: 'fasting',
+        );
+        logsCreated++;
+      }
+      
+      if (data.containsKey('vitamin_d') && data['vitamin_d'] != null) {
+        logsCreated++;
+      }
+      
+      if (data.containsKey('vitamin_b12') && data['vitamin_b12'] != null) {
+        logsCreated++;
+      }
+      
+      if (data.containsKey('vitamin_b12') && data['vitamin_b12'] != null) {
+        logsCreated++;
+      }
+      
+      if (data.containsKey('tsh') && data['tsh'] != null) {
+        logsCreated++;
+      }
+      
+      if (data.containsKey('creatinine') && data['creatinine'] != null) {
+        logsCreated++;
+      }
+      
+      if (data.containsKey('ldl') && data['ldl'] != null) {
+        logsCreated++;
+      }
+      
+      if (data.containsKey('hdl') && data['hdl'] != null) {
+        logsCreated++;
+      }
+    } catch (e) {
+      debugPrint('Auto-populate failed: $e');
+    }
+    
+    return logsCreated;
+  }
+
+  Future<DecryptedLabReport?> getReportDecrypted(int id) async {
+    final reports = await (select(labReports)
+          ..where((t) => t.id.equals(id)))
+        .get();
+    
+    if (reports.isEmpty) return null;
+    
+    final r = reports.first;
+    String dataJson = r.extractedDataJson ?? '';
+    
+    if (r.isEncrypted && r.summaryJson != null) {
+      try {
+        final key = await KeyManager.instance.getKeyForDataClass(DataClassKeys.bpGlucose);
+        final dataBytes = base64Decode(r.summaryJson!);
+        dataJson = await EncryptionHelper.decryptField(dataBytes, key);
+      } catch (e) {
+        debugPrint('Lab report decryption failed: $e');
+      }
+    }
+    
+    return DecryptedLabReport(
+      id: r.id,
+      userId: r.userId,
+      reportName: r.reportName,
+      reportUrl: r.reportUrl,
+      labName: r.labName,
+      extractedDataJson: dataJson,
+      uploadedAt: r.uploadedAt,
+    );
+  }
+
   Future<int> deleteReport(int id) =>
       (delete(labReports)..where((t) => t.id.equals(id))).go();
+}
+
+class DecryptedLabReport {
+  final int id;
+  final String userId;
+  final String reportName;
+  final String? reportUrl;
+  final String? labName;
+  final String extractedDataJson;
+  final DateTime uploadedAt;
+
+  DecryptedLabReport({
+    required this.id,
+    required this.userId,
+    required this.reportName,
+    this.reportUrl,
+    this.labName,
+    required this.extractedDataJson,
+    required this.uploadedAt,
+  });
+
+  Map<String, double?> get values {
+    final map = <String, double?>{};
+    for (final entry in Uri.splitQueryString(extractedDataJson).entries) {
+      map[entry.key] = double.tryParse(entry.value);
+    }
+    return map;
+  }
 }
 
 @DriftAccessor(tables: [AbhaLinks])

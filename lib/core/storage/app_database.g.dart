@@ -10493,6 +10493,33 @@ class $LabReportsTable extends LabReports
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _extractedDataJsonMeta = const VerificationMeta(
+    'extractedDataJson',
+  );
+  @override
+  late final GeneratedColumn<String> extractedDataJson =
+      GeneratedColumn<String>(
+        'extracted_data_json',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _isEncryptedMeta = const VerificationMeta(
+    'isEncrypted',
+  );
+  @override
+  late final GeneratedColumn<bool> isEncrypted = GeneratedColumn<bool>(
+    'is_encrypted',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_encrypted" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -10502,6 +10529,8 @@ class $LabReportsTable extends LabReports
     uploadedAt,
     labName,
     summaryJson,
+    extractedDataJson,
+    isEncrypted,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -10563,6 +10592,24 @@ class $LabReportsTable extends LabReports
         ),
       );
     }
+    if (data.containsKey('extracted_data_json')) {
+      context.handle(
+        _extractedDataJsonMeta,
+        extractedDataJson.isAcceptableOrUnknown(
+          data['extracted_data_json']!,
+          _extractedDataJsonMeta,
+        ),
+      );
+    }
+    if (data.containsKey('is_encrypted')) {
+      context.handle(
+        _isEncryptedMeta,
+        isEncrypted.isAcceptableOrUnknown(
+          data['is_encrypted']!,
+          _isEncryptedMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -10600,6 +10647,14 @@ class $LabReportsTable extends LabReports
         DriftSqlType.string,
         data['${effectivePrefix}summary_json'],
       ),
+      extractedDataJson: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}extracted_data_json'],
+      ),
+      isEncrypted: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_encrypted'],
+      )!,
     );
   }
 
@@ -10617,6 +10672,8 @@ class LabReport extends DataClass implements Insertable<LabReport> {
   final DateTime uploadedAt;
   final String? labName;
   final String? summaryJson;
+  final String? extractedDataJson;
+  final bool isEncrypted;
   const LabReport({
     required this.id,
     required this.userId,
@@ -10625,6 +10682,8 @@ class LabReport extends DataClass implements Insertable<LabReport> {
     required this.uploadedAt,
     this.labName,
     this.summaryJson,
+    this.extractedDataJson,
+    required this.isEncrypted,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -10642,6 +10701,10 @@ class LabReport extends DataClass implements Insertable<LabReport> {
     if (!nullToAbsent || summaryJson != null) {
       map['summary_json'] = Variable<String>(summaryJson);
     }
+    if (!nullToAbsent || extractedDataJson != null) {
+      map['extracted_data_json'] = Variable<String>(extractedDataJson);
+    }
+    map['is_encrypted'] = Variable<bool>(isEncrypted);
     return map;
   }
 
@@ -10660,6 +10723,10 @@ class LabReport extends DataClass implements Insertable<LabReport> {
       summaryJson: summaryJson == null && nullToAbsent
           ? const Value.absent()
           : Value(summaryJson),
+      extractedDataJson: extractedDataJson == null && nullToAbsent
+          ? const Value.absent()
+          : Value(extractedDataJson),
+      isEncrypted: Value(isEncrypted),
     );
   }
 
@@ -10676,6 +10743,10 @@ class LabReport extends DataClass implements Insertable<LabReport> {
       uploadedAt: serializer.fromJson<DateTime>(json['uploadedAt']),
       labName: serializer.fromJson<String?>(json['labName']),
       summaryJson: serializer.fromJson<String?>(json['summaryJson']),
+      extractedDataJson: serializer.fromJson<String?>(
+        json['extractedDataJson'],
+      ),
+      isEncrypted: serializer.fromJson<bool>(json['isEncrypted']),
     );
   }
   @override
@@ -10689,6 +10760,8 @@ class LabReport extends DataClass implements Insertable<LabReport> {
       'uploadedAt': serializer.toJson<DateTime>(uploadedAt),
       'labName': serializer.toJson<String?>(labName),
       'summaryJson': serializer.toJson<String?>(summaryJson),
+      'extractedDataJson': serializer.toJson<String?>(extractedDataJson),
+      'isEncrypted': serializer.toJson<bool>(isEncrypted),
     };
   }
 
@@ -10700,6 +10773,8 @@ class LabReport extends DataClass implements Insertable<LabReport> {
     DateTime? uploadedAt,
     Value<String?> labName = const Value.absent(),
     Value<String?> summaryJson = const Value.absent(),
+    Value<String?> extractedDataJson = const Value.absent(),
+    bool? isEncrypted,
   }) => LabReport(
     id: id ?? this.id,
     userId: userId ?? this.userId,
@@ -10708,6 +10783,10 @@ class LabReport extends DataClass implements Insertable<LabReport> {
     uploadedAt: uploadedAt ?? this.uploadedAt,
     labName: labName.present ? labName.value : this.labName,
     summaryJson: summaryJson.present ? summaryJson.value : this.summaryJson,
+    extractedDataJson: extractedDataJson.present
+        ? extractedDataJson.value
+        : this.extractedDataJson,
+    isEncrypted: isEncrypted ?? this.isEncrypted,
   );
   LabReport copyWithCompanion(LabReportsCompanion data) {
     return LabReport(
@@ -10724,6 +10803,12 @@ class LabReport extends DataClass implements Insertable<LabReport> {
       summaryJson: data.summaryJson.present
           ? data.summaryJson.value
           : this.summaryJson,
+      extractedDataJson: data.extractedDataJson.present
+          ? data.extractedDataJson.value
+          : this.extractedDataJson,
+      isEncrypted: data.isEncrypted.present
+          ? data.isEncrypted.value
+          : this.isEncrypted,
     );
   }
 
@@ -10736,7 +10821,9 @@ class LabReport extends DataClass implements Insertable<LabReport> {
           ..write('reportUrl: $reportUrl, ')
           ..write('uploadedAt: $uploadedAt, ')
           ..write('labName: $labName, ')
-          ..write('summaryJson: $summaryJson')
+          ..write('summaryJson: $summaryJson, ')
+          ..write('extractedDataJson: $extractedDataJson, ')
+          ..write('isEncrypted: $isEncrypted')
           ..write(')'))
         .toString();
   }
@@ -10750,6 +10837,8 @@ class LabReport extends DataClass implements Insertable<LabReport> {
     uploadedAt,
     labName,
     summaryJson,
+    extractedDataJson,
+    isEncrypted,
   );
   @override
   bool operator ==(Object other) =>
@@ -10761,7 +10850,9 @@ class LabReport extends DataClass implements Insertable<LabReport> {
           other.reportUrl == this.reportUrl &&
           other.uploadedAt == this.uploadedAt &&
           other.labName == this.labName &&
-          other.summaryJson == this.summaryJson);
+          other.summaryJson == this.summaryJson &&
+          other.extractedDataJson == this.extractedDataJson &&
+          other.isEncrypted == this.isEncrypted);
 }
 
 class LabReportsCompanion extends UpdateCompanion<LabReport> {
@@ -10772,6 +10863,8 @@ class LabReportsCompanion extends UpdateCompanion<LabReport> {
   final Value<DateTime> uploadedAt;
   final Value<String?> labName;
   final Value<String?> summaryJson;
+  final Value<String?> extractedDataJson;
+  final Value<bool> isEncrypted;
   const LabReportsCompanion({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
@@ -10780,6 +10873,8 @@ class LabReportsCompanion extends UpdateCompanion<LabReport> {
     this.uploadedAt = const Value.absent(),
     this.labName = const Value.absent(),
     this.summaryJson = const Value.absent(),
+    this.extractedDataJson = const Value.absent(),
+    this.isEncrypted = const Value.absent(),
   });
   LabReportsCompanion.insert({
     this.id = const Value.absent(),
@@ -10789,6 +10884,8 @@ class LabReportsCompanion extends UpdateCompanion<LabReport> {
     required DateTime uploadedAt,
     this.labName = const Value.absent(),
     this.summaryJson = const Value.absent(),
+    this.extractedDataJson = const Value.absent(),
+    this.isEncrypted = const Value.absent(),
   }) : userId = Value(userId),
        reportName = Value(reportName),
        uploadedAt = Value(uploadedAt);
@@ -10800,6 +10897,8 @@ class LabReportsCompanion extends UpdateCompanion<LabReport> {
     Expression<DateTime>? uploadedAt,
     Expression<String>? labName,
     Expression<String>? summaryJson,
+    Expression<String>? extractedDataJson,
+    Expression<bool>? isEncrypted,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -10809,6 +10908,8 @@ class LabReportsCompanion extends UpdateCompanion<LabReport> {
       if (uploadedAt != null) 'uploaded_at': uploadedAt,
       if (labName != null) 'lab_name': labName,
       if (summaryJson != null) 'summary_json': summaryJson,
+      if (extractedDataJson != null) 'extracted_data_json': extractedDataJson,
+      if (isEncrypted != null) 'is_encrypted': isEncrypted,
     });
   }
 
@@ -10820,6 +10921,8 @@ class LabReportsCompanion extends UpdateCompanion<LabReport> {
     Value<DateTime>? uploadedAt,
     Value<String?>? labName,
     Value<String?>? summaryJson,
+    Value<String?>? extractedDataJson,
+    Value<bool>? isEncrypted,
   }) {
     return LabReportsCompanion(
       id: id ?? this.id,
@@ -10829,6 +10932,8 @@ class LabReportsCompanion extends UpdateCompanion<LabReport> {
       uploadedAt: uploadedAt ?? this.uploadedAt,
       labName: labName ?? this.labName,
       summaryJson: summaryJson ?? this.summaryJson,
+      extractedDataJson: extractedDataJson ?? this.extractedDataJson,
+      isEncrypted: isEncrypted ?? this.isEncrypted,
     );
   }
 
@@ -10856,6 +10961,12 @@ class LabReportsCompanion extends UpdateCompanion<LabReport> {
     if (summaryJson.present) {
       map['summary_json'] = Variable<String>(summaryJson.value);
     }
+    if (extractedDataJson.present) {
+      map['extracted_data_json'] = Variable<String>(extractedDataJson.value);
+    }
+    if (isEncrypted.present) {
+      map['is_encrypted'] = Variable<bool>(isEncrypted.value);
+    }
     return map;
   }
 
@@ -10868,7 +10979,9 @@ class LabReportsCompanion extends UpdateCompanion<LabReport> {
           ..write('reportUrl: $reportUrl, ')
           ..write('uploadedAt: $uploadedAt, ')
           ..write('labName: $labName, ')
-          ..write('summaryJson: $summaryJson')
+          ..write('summaryJson: $summaryJson, ')
+          ..write('extractedDataJson: $extractedDataJson, ')
+          ..write('isEncrypted: $isEncrypted')
           ..write(')'))
         .toString();
   }
@@ -21038,6 +21151,8 @@ typedef $$LabReportsTableCreateCompanionBuilder =
       required DateTime uploadedAt,
       Value<String?> labName,
       Value<String?> summaryJson,
+      Value<String?> extractedDataJson,
+      Value<bool> isEncrypted,
     });
 typedef $$LabReportsTableUpdateCompanionBuilder =
     LabReportsCompanion Function({
@@ -21048,6 +21163,8 @@ typedef $$LabReportsTableUpdateCompanionBuilder =
       Value<DateTime> uploadedAt,
       Value<String?> labName,
       Value<String?> summaryJson,
+      Value<String?> extractedDataJson,
+      Value<bool> isEncrypted,
     });
 
 class $$LabReportsTableFilterComposer
@@ -21091,6 +21208,16 @@ class $$LabReportsTableFilterComposer
 
   ColumnFilters<String> get summaryJson => $composableBuilder(
     column: $table.summaryJson,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get extractedDataJson => $composableBuilder(
+    column: $table.extractedDataJson,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isEncrypted => $composableBuilder(
+    column: $table.isEncrypted,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -21138,6 +21265,16 @@ class $$LabReportsTableOrderingComposer
     column: $table.summaryJson,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<String> get extractedDataJson => $composableBuilder(
+    column: $table.extractedDataJson,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isEncrypted => $composableBuilder(
+    column: $table.isEncrypted,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$LabReportsTableAnnotationComposer
@@ -21173,6 +21310,16 @@ class $$LabReportsTableAnnotationComposer
 
   GeneratedColumn<String> get summaryJson => $composableBuilder(
     column: $table.summaryJson,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get extractedDataJson => $composableBuilder(
+    column: $table.extractedDataJson,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get isEncrypted => $composableBuilder(
+    column: $table.isEncrypted,
     builder: (column) => column,
   );
 }
@@ -21215,6 +21362,8 @@ class $$LabReportsTableTableManager
                 Value<DateTime> uploadedAt = const Value.absent(),
                 Value<String?> labName = const Value.absent(),
                 Value<String?> summaryJson = const Value.absent(),
+                Value<String?> extractedDataJson = const Value.absent(),
+                Value<bool> isEncrypted = const Value.absent(),
               }) => LabReportsCompanion(
                 id: id,
                 userId: userId,
@@ -21223,6 +21372,8 @@ class $$LabReportsTableTableManager
                 uploadedAt: uploadedAt,
                 labName: labName,
                 summaryJson: summaryJson,
+                extractedDataJson: extractedDataJson,
+                isEncrypted: isEncrypted,
               ),
           createCompanionCallback:
               ({
@@ -21233,6 +21384,8 @@ class $$LabReportsTableTableManager
                 required DateTime uploadedAt,
                 Value<String?> labName = const Value.absent(),
                 Value<String?> summaryJson = const Value.absent(),
+                Value<String?> extractedDataJson = const Value.absent(),
+                Value<bool> isEncrypted = const Value.absent(),
               }) => LabReportsCompanion.insert(
                 id: id,
                 userId: userId,
@@ -21241,6 +21394,8 @@ class $$LabReportsTableTableManager
                 uploadedAt: uploadedAt,
                 labName: labName,
                 summaryJson: summaryJson,
+                extractedDataJson: extractedDataJson,
+                isEncrypted: isEncrypted,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
