@@ -156,6 +156,7 @@ class DataClassKeys {
   static const String bp = 'bp';
   static const String period = 'period';
   static const String journal = 'journal';
+  static const String journal = 'journal';
   static const String appointments = 'appointments';
   static const String emergencyCard = 'emergency_card';
 }

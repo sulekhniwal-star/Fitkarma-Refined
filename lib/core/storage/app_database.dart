@@ -330,6 +330,11 @@ class JournalEntries extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get userId => text().withLength(min: 1, max: 64)();
   TextColumn get content => text().withLength(min: 1, max: 10240)();
+  TextColumn get plainText => text().nullable()();
+  RealColumn get sentimentScore => real().nullable()();
+  TextColumn get promptUsed => text().nullable()();
+  TextColumn get moodTag => text().nullable()();
+  BoolColumn get syncEnabled => boolean().withDefault(const Constant(false))();
   DateTimeColumn get createdAt => dateTime()();
 }
 
@@ -2965,15 +2970,164 @@ class JournalEntriesDao extends DatabaseAccessor<AppDatabase>
     with _$JournalEntriesDaoMixin {
   JournalEntriesDao(super.db);
 
+  static const _weeklyPrompts = [
+    'What am I grateful for today?',
+    'What challenged me today?',
+    'What did I learn about myself?',
+    'How did I show kindness?',
+    'What made me happy this week?',
+    'What would I do differently?',
+    'What am I looking forward to?',
+    'How did I grow today?',
+    'What am I proud of?',
+    'What surprised me?',
+    'What should I let go of?',
+    'How am I feeling right now?',
+  ];
+
   Future<List<JournalEntry>> getEntriesForUser(String userId,
       {DateTime? from, DateTime? to}) {
     final query = select(journalEntries)
       ..where((t) => t.userId.equals(userId))
-      ..orderBy([(t) => OrderingTerm.desc(t.createdAt)]);
+      ..orderBy([(t) => OrderingTerm.desc(t.createdAt))]);
     if (from != null) query.where((t) => t.createdAt.isBiggerOrEqualValue(from));
-    if (to != null) query.where((t) => t.createdAt.isSmallerOrEqualValue(to));
+    if (to != null) query.where((t) => t.createdAt.isSmallerOrEqualValue(to)));
     return query.get();
   }
+
+  Stream<List<JournalEntry>> watchEntriesForUser(String userId) =>
+      (select(journalEntries)
+            ..where((t) => t.userId.equals(userId))
+            ..orderBy([(t) => OrderingTerm.desc(t.createdAt))])
+          .watch();
+
+  Future<int> insertEntry(JournalEntriesCompanion entry) =>
+      into(journalEntries).insert(entry);
+
+  Future<bool> updateEntry(JournalEntriesCompanion entry) =>
+      update(journalEntries).replace(entry);
+
+  Future<int> deleteEntry(int id) =>
+      (delete(journalEntries)..where((t) => t.id.equals(id))).go();
+
+  Future<int> insertEntryEncrypted({
+    required String userId,
+    required String content,
+    required String plainText,
+    String? promptUsed,
+    String? moodTag,
+    bool syncEnabled = false,
+  }) async {
+    final key = await KeyManager.instance.getKeyForDataClass(DataClassKeys.journal);
+    final encrypted = await EncryptionHelper.encryptField(content, key);
+    final encryptedContent = base64Encode(encrypted);
+    final sentiment = _analyzeSentiment(plainText);
+    
+    return into(journalEntries).insert(
+      JournalEntriesCompanion.insert(
+        userId: userId,
+        content: encryptedContent,
+        plainText: Value(plainText),
+        sentimentScore: Value(sentiment),
+        promptUsed: Value(promptUsed),
+        moodTag: Value(moodTag),
+        syncEnabled: Value(syncEnabled),
+        createdAt: DateTime.now(),
+      ),
+    );
+  }
+
+  String _analyzeSentiment(String text) {
+    final lowercase = text.toLowerCase();
+    
+    final positiveWords = [
+      'happy', 'joy', 'grateful', 'thankful', 'love', 'wonderful', 'amazing',
+      'great', 'excited', 'blessed', 'excited', 'proud', 'peaceful', 'calm',
+      'content', 'fulfilled', 'hopeful', 'optimistic', 'cheerful', 'delighted',
+    ];
+    final negativeWords = [
+      'sad', 'angry', 'frustrated', 'anxious', 'worried', 'stressed', 'upset',
+      'depressed', 'hopeless', 'disappointed', 'annoyed', 'irritated', 'lonely',
+      'hurt', 'scared', 'afraid', 'overwhelmed', 'tired', 'exhausted',
+    ];
+    final neutralWords = [
+      'okay', 'fine', 'alright', 'normal', 'usual', 'average', 'ordinary',
+    ];
+    
+    double score = 0;
+    int matches = 0;
+    
+    for (final word in positiveWords) {
+      if (lowercase.contains(word)) {
+        score += 1;
+        matches++;
+      }
+    }
+    for (final word in negativeWords) {
+      if (lowercase.contains(word)) {
+        score -= 1;
+        matches++;
+      }
+    }
+    for (final word in neutralWords) {
+      if (lowercase.contains(word)) {
+        score += 0.1;
+        matches++;
+      }
+    }
+    
+    if (matches == 0) return 0.5;
+    return (score / matches + 1) / 2;
+  }
+
+  Future<List<JournalEntry>> getEntriesInRange(
+      String userId, DateTime from, DateTime to) {
+    return getEntriesForUser(userId, from: from, to: to);
+  }
+
+  Future<double> getAverageSentiment(String userId, int days) async {
+    final start = DateTime.now().subtract(Duration(days: days));
+    final entries = await getEntriesForUser(userId, from: start);
+    final sentiments = entries.where((e) => e.sentimentScore != null).toList();
+    
+    if (sentiments.isEmpty) return 0.5;
+    final total = sentiments.map((e) => e.sentimentScore!).reduce((a, b) => a + b);
+    return total / sentiments.length;
+  }
+
+  Future<List<SentimentTrend>> getSentimentTrends(String userId, {int days = 30}) async {
+    final entries = await getEntriesForUser(userId);
+    final trends = <SentimentTrend>[];
+    
+    for (final entry in entries) {
+      if (entry.sentimentScore != null) {
+        trends.add(SentimentTrend(
+          date: entry.createdAt,
+          score: entry.sentimentScore!,
+        ));
+      }
+    }
+    return trends;
+  }
+
+  String getWeeklyPrompt() {
+    final weekNum = DateTime.now().weekOfYear;
+    final promptIndex = weekNum % _weeklyPrompts.length;
+    return _weeklyPrompts[promptIndex];
+  }
+
+  List<String> getRecentMoodTags(String userId, {int days = 7}) {
+    final start = DateTime.now().subtract(Duration(days: days));
+    return [];
+  }
+}
+
+class SentimentTrend {
+  final DateTime date;
+  final double score;
+
+  SentimentTrend({required this.date, required this.score});
+}
 
   Stream<List<JournalEntry>> watchEntriesForUser(String userId) =>
       (select(journalEntries)
