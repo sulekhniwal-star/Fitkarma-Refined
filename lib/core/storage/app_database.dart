@@ -194,6 +194,11 @@ class Habits extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get userId => text().withLength(min: 1, max: 64)();
   TextColumn get name => text().withLength(min: 1, max: 128)();
+  TextColumn get emoji => text().nullable().withLength(max: 4)();
+  IntColumn get targetCount => integer().withDefault(const Constant(1))();
+  TextColumn get unit => text().nullable().withLength(max: 32)();
+  TextColumn get frequency => text().withDefault(const Constant('daily'))();
+  BoolColumn get isPreset => boolean().withDefault(const Constant(false))();
   BoolColumn get isActive => boolean().withDefault(const Constant(true))();
   DateTimeColumn get createdAt => dateTime()();
 }
@@ -968,6 +973,145 @@ class HabitsDao extends DatabaseAccessor<AppDatabase>
 
   Future<int> deleteHabit(int id) =>
       (delete(habits)..where((t) => t.id.equals(id))).go();
+
+  Future<void> seedPresetHabits(String userId) async {
+    final presets = [
+      ('8 Glasses Water', '💧', 8, 'glasses', 'daily'),
+      ('10-min Meditation', '🧘', 10, 'minutes', 'daily'),
+      ('30-min Walk', '🚶', 30, 'minutes', 'daily'),
+      ('Read 10 Pages', '📖', 10, 'pages', 'daily'),
+      ('No Sugar', '🍬', 1, 'times', 'daily'),
+    ];
+    
+    for (final preset in presets) {
+      await insertHabit(HabitsCompanion.insert(
+        userId: userId,
+        name: preset.$1,
+        emoji: Value(preset.$2),
+        targetCount: Value(preset.$3),
+        unit: Value(preset.$4),
+        frequency: Value(preset.$5),
+        isPreset: const Value(true),
+        isActive: const Value(true),
+        createdAt: DateTime.now(),
+      ));
+    }
+  }
+
+  Future<bool> hasPresetHabits(String userId) async {
+    final userHabits = await getActiveHabits(userId);
+    return userHabits.any((h) => h.isPreset);
+  }
+
+  Future<HabitStreakData> getStreakForHabit(int habitId) async {
+    final habit = await (select(habits)..where((t) => t.id.equals(habitId))).getSingle();
+    final completions = await (select(habitCompletions)
+          ..where((t) => t.habitId.equals(habitId))
+          ..orderBy([(t) => OrderingTerm.desc(t.completedAt)]))
+        .get();
+    
+    if (completions.isEmpty) {
+      return HabitStreakData(habitId: habitId, currentStreak: 0, longestStreak: 0, totalCompletions: 0);
+    }
+    
+    int currentStreak = 0;
+    int longestStreak = 0;
+    DateTime? lastDate;
+    
+    for (final completion in completions) {
+      final compDate = DateTime(
+        completion.completedAt.year,
+        completion.completedAt.month,
+        completion.completedAt.day,
+      );
+      
+      if (lastDate == null) {
+        final today = DateTime.now();
+        final todayDate = DateTime(today.year, today.month, today.day);
+        if (compDate == todayDate ||
+            compDate == todayDate.subtract(const Duration(days: 1))) {
+          currentStreak = 1;
+        }
+        lastDate = compDate;
+        continue;
+      }
+      
+      final diff = lastDate.difference(compDate).inDays;
+      if (diff == 1) {
+        currentStreak++;
+        longestStreak = currentStreak > longestStreak ? currentStreak : longestStreak;
+      } else {
+        longestStreak = currentStreak > longestStreak ? currentStreak : longestStreak;
+        currentStreak = 1;
+      }
+      lastDate = compDate;
+    }
+    
+    longestStreak = currentStreak > longestStreak ? currentStreak : longestStreak;
+    
+    return HabitStreakData(
+      habitId: habitId,
+      currentStreak: currentStreak,
+      longestStreak: longestStreak,
+      totalCompletions: completions.length,
+    );
+  }
+
+  Future<List<WeeklyHabitHeatmap>> getWeeklyHeatmap(String userId, {int weeks = 12}) async {
+    final heatmap = <WeeklyHabitHeatmap>[];
+    final now = DateTime.now();
+    final startDate = now.subtract(Duration(days: weeks * 7));
+    
+    final allCompletions = await (select(habitCompletions)
+          ..where((t) =>
+              t.userId.equals(userId) &
+              t.completedAt.isBiggerOrEqualValue(startDate)))
+        .get();
+    
+    for (int i = 0; i < weeks * 7; i++) {
+      final day = startDate.add(Duration(days: i));
+      final dayStart = DateTime(day.year, day.month, day.day);
+      final dayEnd = dayStart.add(const Duration(days: 1));
+      
+      final dayCompletions = allCompletions.where((c) =>
+          c.completedAt.isAfter(dayStart) &
+          c.completedAt.isBefore(dayEnd)).toList();
+      
+      heatmap.add(WeeklyHabitHeatmap(
+        date: dayStart,
+        completionCount: dayCompletions.length,
+        isComplete: dayCompletions.isNotEmpty,
+      ));
+    }
+    
+    return heatmap;
+  }
+}
+
+class HabitStreakData {
+  final int habitId;
+  final int currentStreak;
+  final int longestStreak;
+  final int totalCompletions;
+
+  HabitStreakData({
+    required this.habitId,
+    required this.currentStreak,
+    required this.longestStreak,
+    required this.totalCompletions,
+  });
+}
+
+class WeeklyHabitHeatmap {
+  final DateTime date;
+  final int completionCount;
+  final bool isComplete;
+
+  WeeklyHabitHeatmap({
+    required this.date,
+    required this.completionCount,
+    required this.isComplete,
+  });
 }
 
 @DriftAccessor(tables: [HabitCompletions])
@@ -977,6 +1121,29 @@ class HabitCompletionsDao extends DatabaseAccessor<AppDatabase>
 
   Future<int> markComplete(HabitCompletionsCompanion entry) =>
       into(habitCompletions).insert(entry);
+
+  Future<int> markCompleteWithKarma(String userId, int habitId) async {
+    final id = await into(habitCompletions).insert(
+      HabitCompletionsCompanion.insert(
+        habitId: habitId,
+        userId: userId,
+        completedAt: DateTime.now(),
+      ),
+    );
+    
+    final streak = await db.habitsDao.getStreakForHabit(habitId);
+    final xpReward = streak.currentStreak >= 7 ? 10 : 2;
+    
+    await db.karmaTransactionsDao.insertTransaction(
+      KarmaTransactionsCompanion.insert(
+        userId: userId,
+        amount: xpReward,
+        createdAt: DateTime.now(),
+      ),
+    );
+    
+    return id;
+  }
 
   Future<List<HabitCompletion>> getCompletionsForDate(
       String userId, DateTime date) {

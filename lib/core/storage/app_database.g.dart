@@ -6503,6 +6503,65 @@ class $HabitsTable extends Habits with TableInfo<$HabitsTable, Habit> {
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _emojiMeta = const VerificationMeta('emoji');
+  @override
+  late final GeneratedColumn<String> emoji = GeneratedColumn<String>(
+    'emoji',
+    aliasedName,
+    true,
+    additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 4),
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _targetCountMeta = const VerificationMeta(
+    'targetCount',
+  );
+  @override
+  late final GeneratedColumn<int> targetCount = GeneratedColumn<int>(
+    'target_count',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(1),
+  );
+  static const VerificationMeta _unitMeta = const VerificationMeta('unit');
+  @override
+  late final GeneratedColumn<String> unit = GeneratedColumn<String>(
+    'unit',
+    aliasedName,
+    true,
+    additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 32),
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _frequencyMeta = const VerificationMeta(
+    'frequency',
+  );
+  @override
+  late final GeneratedColumn<String> frequency = GeneratedColumn<String>(
+    'frequency',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('daily'),
+  );
+  static const VerificationMeta _isPresetMeta = const VerificationMeta(
+    'isPreset',
+  );
+  @override
+  late final GeneratedColumn<bool> isPreset = GeneratedColumn<bool>(
+    'is_preset',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_preset" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
   static const VerificationMeta _isActiveMeta = const VerificationMeta(
     'isActive',
   );
@@ -6530,7 +6589,18 @@ class $HabitsTable extends Habits with TableInfo<$HabitsTable, Habit> {
     requiredDuringInsert: true,
   );
   @override
-  List<GeneratedColumn> get $columns => [id, userId, name, isActive, createdAt];
+  List<GeneratedColumn> get $columns => [
+    id,
+    userId,
+    name,
+    emoji,
+    targetCount,
+    unit,
+    frequency,
+    isPreset,
+    isActive,
+    createdAt,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -6561,6 +6631,39 @@ class $HabitsTable extends Habits with TableInfo<$HabitsTable, Habit> {
       );
     } else if (isInserting) {
       context.missing(_nameMeta);
+    }
+    if (data.containsKey('emoji')) {
+      context.handle(
+        _emojiMeta,
+        emoji.isAcceptableOrUnknown(data['emoji']!, _emojiMeta),
+      );
+    }
+    if (data.containsKey('target_count')) {
+      context.handle(
+        _targetCountMeta,
+        targetCount.isAcceptableOrUnknown(
+          data['target_count']!,
+          _targetCountMeta,
+        ),
+      );
+    }
+    if (data.containsKey('unit')) {
+      context.handle(
+        _unitMeta,
+        unit.isAcceptableOrUnknown(data['unit']!, _unitMeta),
+      );
+    }
+    if (data.containsKey('frequency')) {
+      context.handle(
+        _frequencyMeta,
+        frequency.isAcceptableOrUnknown(data['frequency']!, _frequencyMeta),
+      );
+    }
+    if (data.containsKey('is_preset')) {
+      context.handle(
+        _isPresetMeta,
+        isPreset.isAcceptableOrUnknown(data['is_preset']!, _isPresetMeta),
+      );
     }
     if (data.containsKey('is_active')) {
       context.handle(
@@ -6597,6 +6700,26 @@ class $HabitsTable extends Habits with TableInfo<$HabitsTable, Habit> {
         DriftSqlType.string,
         data['${effectivePrefix}name'],
       )!,
+      emoji: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}emoji'],
+      ),
+      targetCount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}target_count'],
+      )!,
+      unit: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}unit'],
+      ),
+      frequency: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}frequency'],
+      )!,
+      isPreset: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_preset'],
+      )!,
       isActive: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
         data['${effectivePrefix}is_active'],
@@ -6618,12 +6741,22 @@ class Habit extends DataClass implements Insertable<Habit> {
   final int id;
   final String userId;
   final String name;
+  final String? emoji;
+  final int targetCount;
+  final String? unit;
+  final String frequency;
+  final bool isPreset;
   final bool isActive;
   final DateTime createdAt;
   const Habit({
     required this.id,
     required this.userId,
     required this.name,
+    this.emoji,
+    required this.targetCount,
+    this.unit,
+    required this.frequency,
+    required this.isPreset,
     required this.isActive,
     required this.createdAt,
   });
@@ -6633,6 +6766,15 @@ class Habit extends DataClass implements Insertable<Habit> {
     map['id'] = Variable<int>(id);
     map['user_id'] = Variable<String>(userId);
     map['name'] = Variable<String>(name);
+    if (!nullToAbsent || emoji != null) {
+      map['emoji'] = Variable<String>(emoji);
+    }
+    map['target_count'] = Variable<int>(targetCount);
+    if (!nullToAbsent || unit != null) {
+      map['unit'] = Variable<String>(unit);
+    }
+    map['frequency'] = Variable<String>(frequency);
+    map['is_preset'] = Variable<bool>(isPreset);
     map['is_active'] = Variable<bool>(isActive);
     map['created_at'] = Variable<DateTime>(createdAt);
     return map;
@@ -6643,6 +6785,13 @@ class Habit extends DataClass implements Insertable<Habit> {
       id: Value(id),
       userId: Value(userId),
       name: Value(name),
+      emoji: emoji == null && nullToAbsent
+          ? const Value.absent()
+          : Value(emoji),
+      targetCount: Value(targetCount),
+      unit: unit == null && nullToAbsent ? const Value.absent() : Value(unit),
+      frequency: Value(frequency),
+      isPreset: Value(isPreset),
       isActive: Value(isActive),
       createdAt: Value(createdAt),
     );
@@ -6657,6 +6806,11 @@ class Habit extends DataClass implements Insertable<Habit> {
       id: serializer.fromJson<int>(json['id']),
       userId: serializer.fromJson<String>(json['userId']),
       name: serializer.fromJson<String>(json['name']),
+      emoji: serializer.fromJson<String?>(json['emoji']),
+      targetCount: serializer.fromJson<int>(json['targetCount']),
+      unit: serializer.fromJson<String?>(json['unit']),
+      frequency: serializer.fromJson<String>(json['frequency']),
+      isPreset: serializer.fromJson<bool>(json['isPreset']),
       isActive: serializer.fromJson<bool>(json['isActive']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
     );
@@ -6668,6 +6822,11 @@ class Habit extends DataClass implements Insertable<Habit> {
       'id': serializer.toJson<int>(id),
       'userId': serializer.toJson<String>(userId),
       'name': serializer.toJson<String>(name),
+      'emoji': serializer.toJson<String?>(emoji),
+      'targetCount': serializer.toJson<int>(targetCount),
+      'unit': serializer.toJson<String?>(unit),
+      'frequency': serializer.toJson<String>(frequency),
+      'isPreset': serializer.toJson<bool>(isPreset),
       'isActive': serializer.toJson<bool>(isActive),
       'createdAt': serializer.toJson<DateTime>(createdAt),
     };
@@ -6677,12 +6836,22 @@ class Habit extends DataClass implements Insertable<Habit> {
     int? id,
     String? userId,
     String? name,
+    Value<String?> emoji = const Value.absent(),
+    int? targetCount,
+    Value<String?> unit = const Value.absent(),
+    String? frequency,
+    bool? isPreset,
     bool? isActive,
     DateTime? createdAt,
   }) => Habit(
     id: id ?? this.id,
     userId: userId ?? this.userId,
     name: name ?? this.name,
+    emoji: emoji.present ? emoji.value : this.emoji,
+    targetCount: targetCount ?? this.targetCount,
+    unit: unit.present ? unit.value : this.unit,
+    frequency: frequency ?? this.frequency,
+    isPreset: isPreset ?? this.isPreset,
     isActive: isActive ?? this.isActive,
     createdAt: createdAt ?? this.createdAt,
   );
@@ -6691,6 +6860,13 @@ class Habit extends DataClass implements Insertable<Habit> {
       id: data.id.present ? data.id.value : this.id,
       userId: data.userId.present ? data.userId.value : this.userId,
       name: data.name.present ? data.name.value : this.name,
+      emoji: data.emoji.present ? data.emoji.value : this.emoji,
+      targetCount: data.targetCount.present
+          ? data.targetCount.value
+          : this.targetCount,
+      unit: data.unit.present ? data.unit.value : this.unit,
+      frequency: data.frequency.present ? data.frequency.value : this.frequency,
+      isPreset: data.isPreset.present ? data.isPreset.value : this.isPreset,
       isActive: data.isActive.present ? data.isActive.value : this.isActive,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
     );
@@ -6702,6 +6878,11 @@ class Habit extends DataClass implements Insertable<Habit> {
           ..write('id: $id, ')
           ..write('userId: $userId, ')
           ..write('name: $name, ')
+          ..write('emoji: $emoji, ')
+          ..write('targetCount: $targetCount, ')
+          ..write('unit: $unit, ')
+          ..write('frequency: $frequency, ')
+          ..write('isPreset: $isPreset, ')
           ..write('isActive: $isActive, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
@@ -6709,7 +6890,18 @@ class Habit extends DataClass implements Insertable<Habit> {
   }
 
   @override
-  int get hashCode => Object.hash(id, userId, name, isActive, createdAt);
+  int get hashCode => Object.hash(
+    id,
+    userId,
+    name,
+    emoji,
+    targetCount,
+    unit,
+    frequency,
+    isPreset,
+    isActive,
+    createdAt,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -6717,6 +6909,11 @@ class Habit extends DataClass implements Insertable<Habit> {
           other.id == this.id &&
           other.userId == this.userId &&
           other.name == this.name &&
+          other.emoji == this.emoji &&
+          other.targetCount == this.targetCount &&
+          other.unit == this.unit &&
+          other.frequency == this.frequency &&
+          other.isPreset == this.isPreset &&
           other.isActive == this.isActive &&
           other.createdAt == this.createdAt);
 }
@@ -6725,12 +6922,22 @@ class HabitsCompanion extends UpdateCompanion<Habit> {
   final Value<int> id;
   final Value<String> userId;
   final Value<String> name;
+  final Value<String?> emoji;
+  final Value<int> targetCount;
+  final Value<String?> unit;
+  final Value<String> frequency;
+  final Value<bool> isPreset;
   final Value<bool> isActive;
   final Value<DateTime> createdAt;
   const HabitsCompanion({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
     this.name = const Value.absent(),
+    this.emoji = const Value.absent(),
+    this.targetCount = const Value.absent(),
+    this.unit = const Value.absent(),
+    this.frequency = const Value.absent(),
+    this.isPreset = const Value.absent(),
     this.isActive = const Value.absent(),
     this.createdAt = const Value.absent(),
   });
@@ -6738,6 +6945,11 @@ class HabitsCompanion extends UpdateCompanion<Habit> {
     this.id = const Value.absent(),
     required String userId,
     required String name,
+    this.emoji = const Value.absent(),
+    this.targetCount = const Value.absent(),
+    this.unit = const Value.absent(),
+    this.frequency = const Value.absent(),
+    this.isPreset = const Value.absent(),
     this.isActive = const Value.absent(),
     required DateTime createdAt,
   }) : userId = Value(userId),
@@ -6747,6 +6959,11 @@ class HabitsCompanion extends UpdateCompanion<Habit> {
     Expression<int>? id,
     Expression<String>? userId,
     Expression<String>? name,
+    Expression<String>? emoji,
+    Expression<int>? targetCount,
+    Expression<String>? unit,
+    Expression<String>? frequency,
+    Expression<bool>? isPreset,
     Expression<bool>? isActive,
     Expression<DateTime>? createdAt,
   }) {
@@ -6754,6 +6971,11 @@ class HabitsCompanion extends UpdateCompanion<Habit> {
       if (id != null) 'id': id,
       if (userId != null) 'user_id': userId,
       if (name != null) 'name': name,
+      if (emoji != null) 'emoji': emoji,
+      if (targetCount != null) 'target_count': targetCount,
+      if (unit != null) 'unit': unit,
+      if (frequency != null) 'frequency': frequency,
+      if (isPreset != null) 'is_preset': isPreset,
       if (isActive != null) 'is_active': isActive,
       if (createdAt != null) 'created_at': createdAt,
     });
@@ -6763,6 +6985,11 @@ class HabitsCompanion extends UpdateCompanion<Habit> {
     Value<int>? id,
     Value<String>? userId,
     Value<String>? name,
+    Value<String?>? emoji,
+    Value<int>? targetCount,
+    Value<String?>? unit,
+    Value<String>? frequency,
+    Value<bool>? isPreset,
     Value<bool>? isActive,
     Value<DateTime>? createdAt,
   }) {
@@ -6770,6 +6997,11 @@ class HabitsCompanion extends UpdateCompanion<Habit> {
       id: id ?? this.id,
       userId: userId ?? this.userId,
       name: name ?? this.name,
+      emoji: emoji ?? this.emoji,
+      targetCount: targetCount ?? this.targetCount,
+      unit: unit ?? this.unit,
+      frequency: frequency ?? this.frequency,
+      isPreset: isPreset ?? this.isPreset,
       isActive: isActive ?? this.isActive,
       createdAt: createdAt ?? this.createdAt,
     );
@@ -6787,6 +7019,21 @@ class HabitsCompanion extends UpdateCompanion<Habit> {
     if (name.present) {
       map['name'] = Variable<String>(name.value);
     }
+    if (emoji.present) {
+      map['emoji'] = Variable<String>(emoji.value);
+    }
+    if (targetCount.present) {
+      map['target_count'] = Variable<int>(targetCount.value);
+    }
+    if (unit.present) {
+      map['unit'] = Variable<String>(unit.value);
+    }
+    if (frequency.present) {
+      map['frequency'] = Variable<String>(frequency.value);
+    }
+    if (isPreset.present) {
+      map['is_preset'] = Variable<bool>(isPreset.value);
+    }
     if (isActive.present) {
       map['is_active'] = Variable<bool>(isActive.value);
     }
@@ -6802,6 +7049,11 @@ class HabitsCompanion extends UpdateCompanion<Habit> {
           ..write('id: $id, ')
           ..write('userId: $userId, ')
           ..write('name: $name, ')
+          ..write('emoji: $emoji, ')
+          ..write('targetCount: $targetCount, ')
+          ..write('unit: $unit, ')
+          ..write('frequency: $frequency, ')
+          ..write('isPreset: $isPreset, ')
           ..write('isActive: $isActive, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
@@ -20461,6 +20713,11 @@ typedef $$HabitsTableCreateCompanionBuilder =
       Value<int> id,
       required String userId,
       required String name,
+      Value<String?> emoji,
+      Value<int> targetCount,
+      Value<String?> unit,
+      Value<String> frequency,
+      Value<bool> isPreset,
       Value<bool> isActive,
       required DateTime createdAt,
     });
@@ -20469,6 +20726,11 @@ typedef $$HabitsTableUpdateCompanionBuilder =
       Value<int> id,
       Value<String> userId,
       Value<String> name,
+      Value<String?> emoji,
+      Value<int> targetCount,
+      Value<String?> unit,
+      Value<String> frequency,
+      Value<bool> isPreset,
       Value<bool> isActive,
       Value<DateTime> createdAt,
     });
@@ -20519,6 +20781,31 @@ class $$HabitsTableFilterComposer
 
   ColumnFilters<String> get name => $composableBuilder(
     column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get emoji => $composableBuilder(
+    column: $table.emoji,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get targetCount => $composableBuilder(
+    column: $table.targetCount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get unit => $composableBuilder(
+    column: $table.unit,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get frequency => $composableBuilder(
+    column: $table.frequency,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isPreset => $composableBuilder(
+    column: $table.isPreset,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -20582,6 +20869,31 @@ class $$HabitsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get emoji => $composableBuilder(
+    column: $table.emoji,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get targetCount => $composableBuilder(
+    column: $table.targetCount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get unit => $composableBuilder(
+    column: $table.unit,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get frequency => $composableBuilder(
+    column: $table.frequency,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isPreset => $composableBuilder(
+    column: $table.isPreset,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<bool> get isActive => $composableBuilder(
     column: $table.isActive,
     builder: (column) => ColumnOrderings(column),
@@ -20610,6 +20922,23 @@ class $$HabitsTableAnnotationComposer
 
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get emoji =>
+      $composableBuilder(column: $table.emoji, builder: (column) => column);
+
+  GeneratedColumn<int> get targetCount => $composableBuilder(
+    column: $table.targetCount,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get unit =>
+      $composableBuilder(column: $table.unit, builder: (column) => column);
+
+  GeneratedColumn<String> get frequency =>
+      $composableBuilder(column: $table.frequency, builder: (column) => column);
+
+  GeneratedColumn<bool> get isPreset =>
+      $composableBuilder(column: $table.isPreset, builder: (column) => column);
 
   GeneratedColumn<bool> get isActive =>
       $composableBuilder(column: $table.isActive, builder: (column) => column);
@@ -20674,12 +21003,22 @@ class $$HabitsTableTableManager
                 Value<int> id = const Value.absent(),
                 Value<String> userId = const Value.absent(),
                 Value<String> name = const Value.absent(),
+                Value<String?> emoji = const Value.absent(),
+                Value<int> targetCount = const Value.absent(),
+                Value<String?> unit = const Value.absent(),
+                Value<String> frequency = const Value.absent(),
+                Value<bool> isPreset = const Value.absent(),
                 Value<bool> isActive = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
               }) => HabitsCompanion(
                 id: id,
                 userId: userId,
                 name: name,
+                emoji: emoji,
+                targetCount: targetCount,
+                unit: unit,
+                frequency: frequency,
+                isPreset: isPreset,
                 isActive: isActive,
                 createdAt: createdAt,
               ),
@@ -20688,12 +21027,22 @@ class $$HabitsTableTableManager
                 Value<int> id = const Value.absent(),
                 required String userId,
                 required String name,
+                Value<String?> emoji = const Value.absent(),
+                Value<int> targetCount = const Value.absent(),
+                Value<String?> unit = const Value.absent(),
+                Value<String> frequency = const Value.absent(),
+                Value<bool> isPreset = const Value.absent(),
                 Value<bool> isActive = const Value.absent(),
                 required DateTime createdAt,
               }) => HabitsCompanion.insert(
                 id: id,
                 userId: userId,
                 name: name,
+                emoji: emoji,
+                targetCount: targetCount,
+                unit: unit,
+                frequency: frequency,
+                isPreset: isPreset,
                 isActive: isActive,
                 createdAt: createdAt,
               ),
