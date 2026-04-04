@@ -110,6 +110,7 @@ class SleepLogs extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get userId => text().withLength(min: 1, max: 64)();
   IntColumn get durationMin => integer()();
+  IntColumn get quality => integer().nullable()();
   DateTimeColumn get date => dateTime()();
 }
 
@@ -118,6 +119,8 @@ class MoodLogs extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get userId => text().withLength(min: 1, max: 64)();
   IntColumn get moodScore => integer()();
+  IntColumn get screenTimeMin => integer().nullable()();
+  IntColumn get sleepQuality => integer().nullable()();
   DateTimeColumn get loggedAt => dateTime()();
 }
 
@@ -135,6 +138,7 @@ class GlucoseLogs extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get userId => text().withLength(min: 1, max: 64)();
   TextColumn get glucoseMgdl => text().withLength(min: 1, max: 1024)();
+  TextColumn get mealType => text().nullable()();
   DateTimeColumn get loggedAt => dateTime()();
 }
 
@@ -191,6 +195,7 @@ class FastingLogs extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get userId => text().withLength(min: 1, max: 64)();
   DateTimeColumn get fastStart => dateTime()();
+  BoolColumn get completed => boolean().nullable()();
   DateTimeColumn get fastEnd => dateTime().nullable()();
 }
 

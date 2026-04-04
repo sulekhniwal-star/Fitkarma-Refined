@@ -1,8 +1,5 @@
 import 'dart:async';
 import 'package:workmanager/workmanager.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fitkarma/core/di/providers.dart';
-import 'package:fitkarma/features/steps/data/step_service.dart';
 
 const dailyMidnightTask = 'dailyMidnightSync';
 const periodicSyncTask = 'periodicHealthSync';

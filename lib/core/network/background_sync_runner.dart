@@ -1,9 +1,6 @@
 import 'dart:async';
-import 'dart:isolate';
 import 'package:appwrite/appwrite.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:drift/drift.dart';
-import 'package:drift/native.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fitkarma/core/constants/app_config.dart';
 import 'package:fitkarma/core/constants/api_endpoints.dart';

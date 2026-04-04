@@ -36,7 +36,7 @@ class MapCacheService {
           urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
         ),
       );
-      await store.download.startForeground(
+      store.download.startForeground(
         region: downloadable,
         parallelThreads: 5,
         maxBufferLength: 200,

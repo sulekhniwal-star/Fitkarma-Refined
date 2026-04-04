@@ -3042,6 +3042,17 @@ class $SleepLogsTable extends SleepLogs
     type: DriftSqlType.int,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _qualityMeta = const VerificationMeta(
+    'quality',
+  );
+  @override
+  late final GeneratedColumn<int> quality = GeneratedColumn<int>(
+    'quality',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _dateMeta = const VerificationMeta('date');
   @override
   late final GeneratedColumn<DateTime> date = GeneratedColumn<DateTime>(
@@ -3052,7 +3063,13 @@ class $SleepLogsTable extends SleepLogs
     requiredDuringInsert: true,
   );
   @override
-  List<GeneratedColumn> get $columns => [id, userId, durationMin, date];
+  List<GeneratedColumn> get $columns => [
+    id,
+    userId,
+    durationMin,
+    quality,
+    date,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -3087,6 +3104,12 @@ class $SleepLogsTable extends SleepLogs
     } else if (isInserting) {
       context.missing(_durationMinMeta);
     }
+    if (data.containsKey('quality')) {
+      context.handle(
+        _qualityMeta,
+        quality.isAcceptableOrUnknown(data['quality']!, _qualityMeta),
+      );
+    }
     if (data.containsKey('date')) {
       context.handle(
         _dateMeta,
@@ -3116,6 +3139,10 @@ class $SleepLogsTable extends SleepLogs
         DriftSqlType.int,
         data['${effectivePrefix}duration_min'],
       )!,
+      quality: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}quality'],
+      ),
       date: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}date'],
@@ -3133,11 +3160,13 @@ class SleepLog extends DataClass implements Insertable<SleepLog> {
   final int id;
   final String userId;
   final int durationMin;
+  final int? quality;
   final DateTime date;
   const SleepLog({
     required this.id,
     required this.userId,
     required this.durationMin,
+    this.quality,
     required this.date,
   });
   @override
@@ -3146,6 +3175,9 @@ class SleepLog extends DataClass implements Insertable<SleepLog> {
     map['id'] = Variable<int>(id);
     map['user_id'] = Variable<String>(userId);
     map['duration_min'] = Variable<int>(durationMin);
+    if (!nullToAbsent || quality != null) {
+      map['quality'] = Variable<int>(quality);
+    }
     map['date'] = Variable<DateTime>(date);
     return map;
   }
@@ -3155,6 +3187,9 @@ class SleepLog extends DataClass implements Insertable<SleepLog> {
       id: Value(id),
       userId: Value(userId),
       durationMin: Value(durationMin),
+      quality: quality == null && nullToAbsent
+          ? const Value.absent()
+          : Value(quality),
       date: Value(date),
     );
   }
@@ -3168,6 +3203,7 @@ class SleepLog extends DataClass implements Insertable<SleepLog> {
       id: serializer.fromJson<int>(json['id']),
       userId: serializer.fromJson<String>(json['userId']),
       durationMin: serializer.fromJson<int>(json['durationMin']),
+      quality: serializer.fromJson<int?>(json['quality']),
       date: serializer.fromJson<DateTime>(json['date']),
     );
   }
@@ -3178,6 +3214,7 @@ class SleepLog extends DataClass implements Insertable<SleepLog> {
       'id': serializer.toJson<int>(id),
       'userId': serializer.toJson<String>(userId),
       'durationMin': serializer.toJson<int>(durationMin),
+      'quality': serializer.toJson<int?>(quality),
       'date': serializer.toJson<DateTime>(date),
     };
   }
@@ -3186,11 +3223,13 @@ class SleepLog extends DataClass implements Insertable<SleepLog> {
     int? id,
     String? userId,
     int? durationMin,
+    Value<int?> quality = const Value.absent(),
     DateTime? date,
   }) => SleepLog(
     id: id ?? this.id,
     userId: userId ?? this.userId,
     durationMin: durationMin ?? this.durationMin,
+    quality: quality.present ? quality.value : this.quality,
     date: date ?? this.date,
   );
   SleepLog copyWithCompanion(SleepLogsCompanion data) {
@@ -3200,6 +3239,7 @@ class SleepLog extends DataClass implements Insertable<SleepLog> {
       durationMin: data.durationMin.present
           ? data.durationMin.value
           : this.durationMin,
+      quality: data.quality.present ? data.quality.value : this.quality,
       date: data.date.present ? data.date.value : this.date,
     );
   }
@@ -3210,13 +3250,14 @@ class SleepLog extends DataClass implements Insertable<SleepLog> {
           ..write('id: $id, ')
           ..write('userId: $userId, ')
           ..write('durationMin: $durationMin, ')
+          ..write('quality: $quality, ')
           ..write('date: $date')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, userId, durationMin, date);
+  int get hashCode => Object.hash(id, userId, durationMin, quality, date);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -3224,6 +3265,7 @@ class SleepLog extends DataClass implements Insertable<SleepLog> {
           other.id == this.id &&
           other.userId == this.userId &&
           other.durationMin == this.durationMin &&
+          other.quality == this.quality &&
           other.date == this.date);
 }
 
@@ -3231,17 +3273,20 @@ class SleepLogsCompanion extends UpdateCompanion<SleepLog> {
   final Value<int> id;
   final Value<String> userId;
   final Value<int> durationMin;
+  final Value<int?> quality;
   final Value<DateTime> date;
   const SleepLogsCompanion({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
     this.durationMin = const Value.absent(),
+    this.quality = const Value.absent(),
     this.date = const Value.absent(),
   });
   SleepLogsCompanion.insert({
     this.id = const Value.absent(),
     required String userId,
     required int durationMin,
+    this.quality = const Value.absent(),
     required DateTime date,
   }) : userId = Value(userId),
        durationMin = Value(durationMin),
@@ -3250,12 +3295,14 @@ class SleepLogsCompanion extends UpdateCompanion<SleepLog> {
     Expression<int>? id,
     Expression<String>? userId,
     Expression<int>? durationMin,
+    Expression<int>? quality,
     Expression<DateTime>? date,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (userId != null) 'user_id': userId,
       if (durationMin != null) 'duration_min': durationMin,
+      if (quality != null) 'quality': quality,
       if (date != null) 'date': date,
     });
   }
@@ -3264,12 +3311,14 @@ class SleepLogsCompanion extends UpdateCompanion<SleepLog> {
     Value<int>? id,
     Value<String>? userId,
     Value<int>? durationMin,
+    Value<int?>? quality,
     Value<DateTime>? date,
   }) {
     return SleepLogsCompanion(
       id: id ?? this.id,
       userId: userId ?? this.userId,
       durationMin: durationMin ?? this.durationMin,
+      quality: quality ?? this.quality,
       date: date ?? this.date,
     );
   }
@@ -3286,6 +3335,9 @@ class SleepLogsCompanion extends UpdateCompanion<SleepLog> {
     if (durationMin.present) {
       map['duration_min'] = Variable<int>(durationMin.value);
     }
+    if (quality.present) {
+      map['quality'] = Variable<int>(quality.value);
+    }
     if (date.present) {
       map['date'] = Variable<DateTime>(date.value);
     }
@@ -3298,6 +3350,7 @@ class SleepLogsCompanion extends UpdateCompanion<SleepLog> {
           ..write('id: $id, ')
           ..write('userId: $userId, ')
           ..write('durationMin: $durationMin, ')
+          ..write('quality: $quality, ')
           ..write('date: $date')
           ..write(')'))
         .toString();
@@ -3346,6 +3399,28 @@ class $MoodLogsTable extends MoodLogs with TableInfo<$MoodLogsTable, MoodLog> {
     type: DriftSqlType.int,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _screenTimeMinMeta = const VerificationMeta(
+    'screenTimeMin',
+  );
+  @override
+  late final GeneratedColumn<int> screenTimeMin = GeneratedColumn<int>(
+    'screen_time_min',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _sleepQualityMeta = const VerificationMeta(
+    'sleepQuality',
+  );
+  @override
+  late final GeneratedColumn<int> sleepQuality = GeneratedColumn<int>(
+    'sleep_quality',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _loggedAtMeta = const VerificationMeta(
     'loggedAt',
   );
@@ -3358,7 +3433,14 @@ class $MoodLogsTable extends MoodLogs with TableInfo<$MoodLogsTable, MoodLog> {
     requiredDuringInsert: true,
   );
   @override
-  List<GeneratedColumn> get $columns => [id, userId, moodScore, loggedAt];
+  List<GeneratedColumn> get $columns => [
+    id,
+    userId,
+    moodScore,
+    screenTimeMin,
+    sleepQuality,
+    loggedAt,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -3390,6 +3472,24 @@ class $MoodLogsTable extends MoodLogs with TableInfo<$MoodLogsTable, MoodLog> {
     } else if (isInserting) {
       context.missing(_moodScoreMeta);
     }
+    if (data.containsKey('screen_time_min')) {
+      context.handle(
+        _screenTimeMinMeta,
+        screenTimeMin.isAcceptableOrUnknown(
+          data['screen_time_min']!,
+          _screenTimeMinMeta,
+        ),
+      );
+    }
+    if (data.containsKey('sleep_quality')) {
+      context.handle(
+        _sleepQualityMeta,
+        sleepQuality.isAcceptableOrUnknown(
+          data['sleep_quality']!,
+          _sleepQualityMeta,
+        ),
+      );
+    }
     if (data.containsKey('logged_at')) {
       context.handle(
         _loggedAtMeta,
@@ -3419,6 +3519,14 @@ class $MoodLogsTable extends MoodLogs with TableInfo<$MoodLogsTable, MoodLog> {
         DriftSqlType.int,
         data['${effectivePrefix}mood_score'],
       )!,
+      screenTimeMin: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}screen_time_min'],
+      ),
+      sleepQuality: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}sleep_quality'],
+      ),
       loggedAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}logged_at'],
@@ -3436,11 +3544,15 @@ class MoodLog extends DataClass implements Insertable<MoodLog> {
   final int id;
   final String userId;
   final int moodScore;
+  final int? screenTimeMin;
+  final int? sleepQuality;
   final DateTime loggedAt;
   const MoodLog({
     required this.id,
     required this.userId,
     required this.moodScore,
+    this.screenTimeMin,
+    this.sleepQuality,
     required this.loggedAt,
   });
   @override
@@ -3449,6 +3561,12 @@ class MoodLog extends DataClass implements Insertable<MoodLog> {
     map['id'] = Variable<int>(id);
     map['user_id'] = Variable<String>(userId);
     map['mood_score'] = Variable<int>(moodScore);
+    if (!nullToAbsent || screenTimeMin != null) {
+      map['screen_time_min'] = Variable<int>(screenTimeMin);
+    }
+    if (!nullToAbsent || sleepQuality != null) {
+      map['sleep_quality'] = Variable<int>(sleepQuality);
+    }
     map['logged_at'] = Variable<DateTime>(loggedAt);
     return map;
   }
@@ -3458,6 +3576,12 @@ class MoodLog extends DataClass implements Insertable<MoodLog> {
       id: Value(id),
       userId: Value(userId),
       moodScore: Value(moodScore),
+      screenTimeMin: screenTimeMin == null && nullToAbsent
+          ? const Value.absent()
+          : Value(screenTimeMin),
+      sleepQuality: sleepQuality == null && nullToAbsent
+          ? const Value.absent()
+          : Value(sleepQuality),
       loggedAt: Value(loggedAt),
     );
   }
@@ -3471,6 +3595,8 @@ class MoodLog extends DataClass implements Insertable<MoodLog> {
       id: serializer.fromJson<int>(json['id']),
       userId: serializer.fromJson<String>(json['userId']),
       moodScore: serializer.fromJson<int>(json['moodScore']),
+      screenTimeMin: serializer.fromJson<int?>(json['screenTimeMin']),
+      sleepQuality: serializer.fromJson<int?>(json['sleepQuality']),
       loggedAt: serializer.fromJson<DateTime>(json['loggedAt']),
     );
   }
@@ -3481,6 +3607,8 @@ class MoodLog extends DataClass implements Insertable<MoodLog> {
       'id': serializer.toJson<int>(id),
       'userId': serializer.toJson<String>(userId),
       'moodScore': serializer.toJson<int>(moodScore),
+      'screenTimeMin': serializer.toJson<int?>(screenTimeMin),
+      'sleepQuality': serializer.toJson<int?>(sleepQuality),
       'loggedAt': serializer.toJson<DateTime>(loggedAt),
     };
   }
@@ -3489,11 +3617,17 @@ class MoodLog extends DataClass implements Insertable<MoodLog> {
     int? id,
     String? userId,
     int? moodScore,
+    Value<int?> screenTimeMin = const Value.absent(),
+    Value<int?> sleepQuality = const Value.absent(),
     DateTime? loggedAt,
   }) => MoodLog(
     id: id ?? this.id,
     userId: userId ?? this.userId,
     moodScore: moodScore ?? this.moodScore,
+    screenTimeMin: screenTimeMin.present
+        ? screenTimeMin.value
+        : this.screenTimeMin,
+    sleepQuality: sleepQuality.present ? sleepQuality.value : this.sleepQuality,
     loggedAt: loggedAt ?? this.loggedAt,
   );
   MoodLog copyWithCompanion(MoodLogsCompanion data) {
@@ -3501,6 +3635,12 @@ class MoodLog extends DataClass implements Insertable<MoodLog> {
       id: data.id.present ? data.id.value : this.id,
       userId: data.userId.present ? data.userId.value : this.userId,
       moodScore: data.moodScore.present ? data.moodScore.value : this.moodScore,
+      screenTimeMin: data.screenTimeMin.present
+          ? data.screenTimeMin.value
+          : this.screenTimeMin,
+      sleepQuality: data.sleepQuality.present
+          ? data.sleepQuality.value
+          : this.sleepQuality,
       loggedAt: data.loggedAt.present ? data.loggedAt.value : this.loggedAt,
     );
   }
@@ -3511,13 +3651,16 @@ class MoodLog extends DataClass implements Insertable<MoodLog> {
           ..write('id: $id, ')
           ..write('userId: $userId, ')
           ..write('moodScore: $moodScore, ')
+          ..write('screenTimeMin: $screenTimeMin, ')
+          ..write('sleepQuality: $sleepQuality, ')
           ..write('loggedAt: $loggedAt')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, userId, moodScore, loggedAt);
+  int get hashCode =>
+      Object.hash(id, userId, moodScore, screenTimeMin, sleepQuality, loggedAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -3525,6 +3668,8 @@ class MoodLog extends DataClass implements Insertable<MoodLog> {
           other.id == this.id &&
           other.userId == this.userId &&
           other.moodScore == this.moodScore &&
+          other.screenTimeMin == this.screenTimeMin &&
+          other.sleepQuality == this.sleepQuality &&
           other.loggedAt == this.loggedAt);
 }
 
@@ -3532,17 +3677,23 @@ class MoodLogsCompanion extends UpdateCompanion<MoodLog> {
   final Value<int> id;
   final Value<String> userId;
   final Value<int> moodScore;
+  final Value<int?> screenTimeMin;
+  final Value<int?> sleepQuality;
   final Value<DateTime> loggedAt;
   const MoodLogsCompanion({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
     this.moodScore = const Value.absent(),
+    this.screenTimeMin = const Value.absent(),
+    this.sleepQuality = const Value.absent(),
     this.loggedAt = const Value.absent(),
   });
   MoodLogsCompanion.insert({
     this.id = const Value.absent(),
     required String userId,
     required int moodScore,
+    this.screenTimeMin = const Value.absent(),
+    this.sleepQuality = const Value.absent(),
     required DateTime loggedAt,
   }) : userId = Value(userId),
        moodScore = Value(moodScore),
@@ -3551,12 +3702,16 @@ class MoodLogsCompanion extends UpdateCompanion<MoodLog> {
     Expression<int>? id,
     Expression<String>? userId,
     Expression<int>? moodScore,
+    Expression<int>? screenTimeMin,
+    Expression<int>? sleepQuality,
     Expression<DateTime>? loggedAt,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (userId != null) 'user_id': userId,
       if (moodScore != null) 'mood_score': moodScore,
+      if (screenTimeMin != null) 'screen_time_min': screenTimeMin,
+      if (sleepQuality != null) 'sleep_quality': sleepQuality,
       if (loggedAt != null) 'logged_at': loggedAt,
     });
   }
@@ -3565,12 +3720,16 @@ class MoodLogsCompanion extends UpdateCompanion<MoodLog> {
     Value<int>? id,
     Value<String>? userId,
     Value<int>? moodScore,
+    Value<int?>? screenTimeMin,
+    Value<int?>? sleepQuality,
     Value<DateTime>? loggedAt,
   }) {
     return MoodLogsCompanion(
       id: id ?? this.id,
       userId: userId ?? this.userId,
       moodScore: moodScore ?? this.moodScore,
+      screenTimeMin: screenTimeMin ?? this.screenTimeMin,
+      sleepQuality: sleepQuality ?? this.sleepQuality,
       loggedAt: loggedAt ?? this.loggedAt,
     );
   }
@@ -3587,6 +3746,12 @@ class MoodLogsCompanion extends UpdateCompanion<MoodLog> {
     if (moodScore.present) {
       map['mood_score'] = Variable<int>(moodScore.value);
     }
+    if (screenTimeMin.present) {
+      map['screen_time_min'] = Variable<int>(screenTimeMin.value);
+    }
+    if (sleepQuality.present) {
+      map['sleep_quality'] = Variable<int>(sleepQuality.value);
+    }
     if (loggedAt.present) {
       map['logged_at'] = Variable<DateTime>(loggedAt.value);
     }
@@ -3599,6 +3764,8 @@ class MoodLogsCompanion extends UpdateCompanion<MoodLog> {
           ..write('id: $id, ')
           ..write('userId: $userId, ')
           ..write('moodScore: $moodScore, ')
+          ..write('screenTimeMin: $screenTimeMin, ')
+          ..write('sleepQuality: $sleepQuality, ')
           ..write('loggedAt: $loggedAt')
           ..write(')'))
         .toString();
@@ -4015,6 +4182,17 @@ class $GlucoseLogsTable extends GlucoseLogs
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _mealTypeMeta = const VerificationMeta(
+    'mealType',
+  );
+  @override
+  late final GeneratedColumn<String> mealType = GeneratedColumn<String>(
+    'meal_type',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _loggedAtMeta = const VerificationMeta(
     'loggedAt',
   );
@@ -4027,7 +4205,13 @@ class $GlucoseLogsTable extends GlucoseLogs
     requiredDuringInsert: true,
   );
   @override
-  List<GeneratedColumn> get $columns => [id, userId, glucoseMgdl, loggedAt];
+  List<GeneratedColumn> get $columns => [
+    id,
+    userId,
+    glucoseMgdl,
+    mealType,
+    loggedAt,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -4062,6 +4246,12 @@ class $GlucoseLogsTable extends GlucoseLogs
     } else if (isInserting) {
       context.missing(_glucoseMgdlMeta);
     }
+    if (data.containsKey('meal_type')) {
+      context.handle(
+        _mealTypeMeta,
+        mealType.isAcceptableOrUnknown(data['meal_type']!, _mealTypeMeta),
+      );
+    }
     if (data.containsKey('logged_at')) {
       context.handle(
         _loggedAtMeta,
@@ -4091,6 +4281,10 @@ class $GlucoseLogsTable extends GlucoseLogs
         DriftSqlType.string,
         data['${effectivePrefix}glucose_mgdl'],
       )!,
+      mealType: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}meal_type'],
+      ),
       loggedAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}logged_at'],
@@ -4108,11 +4302,13 @@ class GlucoseLog extends DataClass implements Insertable<GlucoseLog> {
   final int id;
   final String userId;
   final String glucoseMgdl;
+  final String? mealType;
   final DateTime loggedAt;
   const GlucoseLog({
     required this.id,
     required this.userId,
     required this.glucoseMgdl,
+    this.mealType,
     required this.loggedAt,
   });
   @override
@@ -4121,6 +4317,9 @@ class GlucoseLog extends DataClass implements Insertable<GlucoseLog> {
     map['id'] = Variable<int>(id);
     map['user_id'] = Variable<String>(userId);
     map['glucose_mgdl'] = Variable<String>(glucoseMgdl);
+    if (!nullToAbsent || mealType != null) {
+      map['meal_type'] = Variable<String>(mealType);
+    }
     map['logged_at'] = Variable<DateTime>(loggedAt);
     return map;
   }
@@ -4130,6 +4329,9 @@ class GlucoseLog extends DataClass implements Insertable<GlucoseLog> {
       id: Value(id),
       userId: Value(userId),
       glucoseMgdl: Value(glucoseMgdl),
+      mealType: mealType == null && nullToAbsent
+          ? const Value.absent()
+          : Value(mealType),
       loggedAt: Value(loggedAt),
     );
   }
@@ -4143,6 +4345,7 @@ class GlucoseLog extends DataClass implements Insertable<GlucoseLog> {
       id: serializer.fromJson<int>(json['id']),
       userId: serializer.fromJson<String>(json['userId']),
       glucoseMgdl: serializer.fromJson<String>(json['glucoseMgdl']),
+      mealType: serializer.fromJson<String?>(json['mealType']),
       loggedAt: serializer.fromJson<DateTime>(json['loggedAt']),
     );
   }
@@ -4153,6 +4356,7 @@ class GlucoseLog extends DataClass implements Insertable<GlucoseLog> {
       'id': serializer.toJson<int>(id),
       'userId': serializer.toJson<String>(userId),
       'glucoseMgdl': serializer.toJson<String>(glucoseMgdl),
+      'mealType': serializer.toJson<String?>(mealType),
       'loggedAt': serializer.toJson<DateTime>(loggedAt),
     };
   }
@@ -4161,11 +4365,13 @@ class GlucoseLog extends DataClass implements Insertable<GlucoseLog> {
     int? id,
     String? userId,
     String? glucoseMgdl,
+    Value<String?> mealType = const Value.absent(),
     DateTime? loggedAt,
   }) => GlucoseLog(
     id: id ?? this.id,
     userId: userId ?? this.userId,
     glucoseMgdl: glucoseMgdl ?? this.glucoseMgdl,
+    mealType: mealType.present ? mealType.value : this.mealType,
     loggedAt: loggedAt ?? this.loggedAt,
   );
   GlucoseLog copyWithCompanion(GlucoseLogsCompanion data) {
@@ -4175,6 +4381,7 @@ class GlucoseLog extends DataClass implements Insertable<GlucoseLog> {
       glucoseMgdl: data.glucoseMgdl.present
           ? data.glucoseMgdl.value
           : this.glucoseMgdl,
+      mealType: data.mealType.present ? data.mealType.value : this.mealType,
       loggedAt: data.loggedAt.present ? data.loggedAt.value : this.loggedAt,
     );
   }
@@ -4185,13 +4392,14 @@ class GlucoseLog extends DataClass implements Insertable<GlucoseLog> {
           ..write('id: $id, ')
           ..write('userId: $userId, ')
           ..write('glucoseMgdl: $glucoseMgdl, ')
+          ..write('mealType: $mealType, ')
           ..write('loggedAt: $loggedAt')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, userId, glucoseMgdl, loggedAt);
+  int get hashCode => Object.hash(id, userId, glucoseMgdl, mealType, loggedAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -4199,6 +4407,7 @@ class GlucoseLog extends DataClass implements Insertable<GlucoseLog> {
           other.id == this.id &&
           other.userId == this.userId &&
           other.glucoseMgdl == this.glucoseMgdl &&
+          other.mealType == this.mealType &&
           other.loggedAt == this.loggedAt);
 }
 
@@ -4206,17 +4415,20 @@ class GlucoseLogsCompanion extends UpdateCompanion<GlucoseLog> {
   final Value<int> id;
   final Value<String> userId;
   final Value<String> glucoseMgdl;
+  final Value<String?> mealType;
   final Value<DateTime> loggedAt;
   const GlucoseLogsCompanion({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
     this.glucoseMgdl = const Value.absent(),
+    this.mealType = const Value.absent(),
     this.loggedAt = const Value.absent(),
   });
   GlucoseLogsCompanion.insert({
     this.id = const Value.absent(),
     required String userId,
     required String glucoseMgdl,
+    this.mealType = const Value.absent(),
     required DateTime loggedAt,
   }) : userId = Value(userId),
        glucoseMgdl = Value(glucoseMgdl),
@@ -4225,12 +4437,14 @@ class GlucoseLogsCompanion extends UpdateCompanion<GlucoseLog> {
     Expression<int>? id,
     Expression<String>? userId,
     Expression<String>? glucoseMgdl,
+    Expression<String>? mealType,
     Expression<DateTime>? loggedAt,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (userId != null) 'user_id': userId,
       if (glucoseMgdl != null) 'glucose_mgdl': glucoseMgdl,
+      if (mealType != null) 'meal_type': mealType,
       if (loggedAt != null) 'logged_at': loggedAt,
     });
   }
@@ -4239,12 +4453,14 @@ class GlucoseLogsCompanion extends UpdateCompanion<GlucoseLog> {
     Value<int>? id,
     Value<String>? userId,
     Value<String>? glucoseMgdl,
+    Value<String?>? mealType,
     Value<DateTime>? loggedAt,
   }) {
     return GlucoseLogsCompanion(
       id: id ?? this.id,
       userId: userId ?? this.userId,
       glucoseMgdl: glucoseMgdl ?? this.glucoseMgdl,
+      mealType: mealType ?? this.mealType,
       loggedAt: loggedAt ?? this.loggedAt,
     );
   }
@@ -4261,6 +4477,9 @@ class GlucoseLogsCompanion extends UpdateCompanion<GlucoseLog> {
     if (glucoseMgdl.present) {
       map['glucose_mgdl'] = Variable<String>(glucoseMgdl.value);
     }
+    if (mealType.present) {
+      map['meal_type'] = Variable<String>(mealType.value);
+    }
     if (loggedAt.present) {
       map['logged_at'] = Variable<DateTime>(loggedAt.value);
     }
@@ -4273,6 +4492,7 @@ class GlucoseLogsCompanion extends UpdateCompanion<GlucoseLog> {
           ..write('id: $id, ')
           ..write('userId: $userId, ')
           ..write('glucoseMgdl: $glucoseMgdl, ')
+          ..write('mealType: $mealType, ')
           ..write('loggedAt: $loggedAt')
           ..write(')'))
         .toString();
@@ -6385,6 +6605,20 @@ class $FastingLogsTable extends FastingLogs
     type: DriftSqlType.dateTime,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _completedMeta = const VerificationMeta(
+    'completed',
+  );
+  @override
+  late final GeneratedColumn<bool> completed = GeneratedColumn<bool>(
+    'completed',
+    aliasedName,
+    true,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("completed" IN (0, 1))',
+    ),
+  );
   static const VerificationMeta _fastEndMeta = const VerificationMeta(
     'fastEnd',
   );
@@ -6397,7 +6631,13 @@ class $FastingLogsTable extends FastingLogs
     requiredDuringInsert: false,
   );
   @override
-  List<GeneratedColumn> get $columns => [id, userId, fastStart, fastEnd];
+  List<GeneratedColumn> get $columns => [
+    id,
+    userId,
+    fastStart,
+    completed,
+    fastEnd,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -6429,6 +6669,12 @@ class $FastingLogsTable extends FastingLogs
     } else if (isInserting) {
       context.missing(_fastStartMeta);
     }
+    if (data.containsKey('completed')) {
+      context.handle(
+        _completedMeta,
+        completed.isAcceptableOrUnknown(data['completed']!, _completedMeta),
+      );
+    }
     if (data.containsKey('fast_end')) {
       context.handle(
         _fastEndMeta,
@@ -6456,6 +6702,10 @@ class $FastingLogsTable extends FastingLogs
         DriftSqlType.dateTime,
         data['${effectivePrefix}fast_start'],
       )!,
+      completed: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}completed'],
+      ),
       fastEnd: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}fast_end'],
@@ -6473,11 +6723,13 @@ class FastingLog extends DataClass implements Insertable<FastingLog> {
   final int id;
   final String userId;
   final DateTime fastStart;
+  final bool? completed;
   final DateTime? fastEnd;
   const FastingLog({
     required this.id,
     required this.userId,
     required this.fastStart,
+    this.completed,
     this.fastEnd,
   });
   @override
@@ -6486,6 +6738,9 @@ class FastingLog extends DataClass implements Insertable<FastingLog> {
     map['id'] = Variable<int>(id);
     map['user_id'] = Variable<String>(userId);
     map['fast_start'] = Variable<DateTime>(fastStart);
+    if (!nullToAbsent || completed != null) {
+      map['completed'] = Variable<bool>(completed);
+    }
     if (!nullToAbsent || fastEnd != null) {
       map['fast_end'] = Variable<DateTime>(fastEnd);
     }
@@ -6497,6 +6752,9 @@ class FastingLog extends DataClass implements Insertable<FastingLog> {
       id: Value(id),
       userId: Value(userId),
       fastStart: Value(fastStart),
+      completed: completed == null && nullToAbsent
+          ? const Value.absent()
+          : Value(completed),
       fastEnd: fastEnd == null && nullToAbsent
           ? const Value.absent()
           : Value(fastEnd),
@@ -6512,6 +6770,7 @@ class FastingLog extends DataClass implements Insertable<FastingLog> {
       id: serializer.fromJson<int>(json['id']),
       userId: serializer.fromJson<String>(json['userId']),
       fastStart: serializer.fromJson<DateTime>(json['fastStart']),
+      completed: serializer.fromJson<bool?>(json['completed']),
       fastEnd: serializer.fromJson<DateTime?>(json['fastEnd']),
     );
   }
@@ -6522,6 +6781,7 @@ class FastingLog extends DataClass implements Insertable<FastingLog> {
       'id': serializer.toJson<int>(id),
       'userId': serializer.toJson<String>(userId),
       'fastStart': serializer.toJson<DateTime>(fastStart),
+      'completed': serializer.toJson<bool?>(completed),
       'fastEnd': serializer.toJson<DateTime?>(fastEnd),
     };
   }
@@ -6530,11 +6790,13 @@ class FastingLog extends DataClass implements Insertable<FastingLog> {
     int? id,
     String? userId,
     DateTime? fastStart,
+    Value<bool?> completed = const Value.absent(),
     Value<DateTime?> fastEnd = const Value.absent(),
   }) => FastingLog(
     id: id ?? this.id,
     userId: userId ?? this.userId,
     fastStart: fastStart ?? this.fastStart,
+    completed: completed.present ? completed.value : this.completed,
     fastEnd: fastEnd.present ? fastEnd.value : this.fastEnd,
   );
   FastingLog copyWithCompanion(FastingLogsCompanion data) {
@@ -6542,6 +6804,7 @@ class FastingLog extends DataClass implements Insertable<FastingLog> {
       id: data.id.present ? data.id.value : this.id,
       userId: data.userId.present ? data.userId.value : this.userId,
       fastStart: data.fastStart.present ? data.fastStart.value : this.fastStart,
+      completed: data.completed.present ? data.completed.value : this.completed,
       fastEnd: data.fastEnd.present ? data.fastEnd.value : this.fastEnd,
     );
   }
@@ -6552,13 +6815,14 @@ class FastingLog extends DataClass implements Insertable<FastingLog> {
           ..write('id: $id, ')
           ..write('userId: $userId, ')
           ..write('fastStart: $fastStart, ')
+          ..write('completed: $completed, ')
           ..write('fastEnd: $fastEnd')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, userId, fastStart, fastEnd);
+  int get hashCode => Object.hash(id, userId, fastStart, completed, fastEnd);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -6566,6 +6830,7 @@ class FastingLog extends DataClass implements Insertable<FastingLog> {
           other.id == this.id &&
           other.userId == this.userId &&
           other.fastStart == this.fastStart &&
+          other.completed == this.completed &&
           other.fastEnd == this.fastEnd);
 }
 
@@ -6573,17 +6838,20 @@ class FastingLogsCompanion extends UpdateCompanion<FastingLog> {
   final Value<int> id;
   final Value<String> userId;
   final Value<DateTime> fastStart;
+  final Value<bool?> completed;
   final Value<DateTime?> fastEnd;
   const FastingLogsCompanion({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
     this.fastStart = const Value.absent(),
+    this.completed = const Value.absent(),
     this.fastEnd = const Value.absent(),
   });
   FastingLogsCompanion.insert({
     this.id = const Value.absent(),
     required String userId,
     required DateTime fastStart,
+    this.completed = const Value.absent(),
     this.fastEnd = const Value.absent(),
   }) : userId = Value(userId),
        fastStart = Value(fastStart);
@@ -6591,12 +6859,14 @@ class FastingLogsCompanion extends UpdateCompanion<FastingLog> {
     Expression<int>? id,
     Expression<String>? userId,
     Expression<DateTime>? fastStart,
+    Expression<bool>? completed,
     Expression<DateTime>? fastEnd,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (userId != null) 'user_id': userId,
       if (fastStart != null) 'fast_start': fastStart,
+      if (completed != null) 'completed': completed,
       if (fastEnd != null) 'fast_end': fastEnd,
     });
   }
@@ -6605,12 +6875,14 @@ class FastingLogsCompanion extends UpdateCompanion<FastingLog> {
     Value<int>? id,
     Value<String>? userId,
     Value<DateTime>? fastStart,
+    Value<bool?>? completed,
     Value<DateTime?>? fastEnd,
   }) {
     return FastingLogsCompanion(
       id: id ?? this.id,
       userId: userId ?? this.userId,
       fastStart: fastStart ?? this.fastStart,
+      completed: completed ?? this.completed,
       fastEnd: fastEnd ?? this.fastEnd,
     );
   }
@@ -6627,6 +6899,9 @@ class FastingLogsCompanion extends UpdateCompanion<FastingLog> {
     if (fastStart.present) {
       map['fast_start'] = Variable<DateTime>(fastStart.value);
     }
+    if (completed.present) {
+      map['completed'] = Variable<bool>(completed.value);
+    }
     if (fastEnd.present) {
       map['fast_end'] = Variable<DateTime>(fastEnd.value);
     }
@@ -6639,6 +6914,7 @@ class FastingLogsCompanion extends UpdateCompanion<FastingLog> {
           ..write('id: $id, ')
           ..write('userId: $userId, ')
           ..write('fastStart: $fastStart, ')
+          ..write('completed: $completed, ')
           ..write('fastEnd: $fastEnd')
           ..write(')'))
         .toString();
@@ -16013,6 +16289,7 @@ typedef $$SleepLogsTableCreateCompanionBuilder =
       Value<int> id,
       required String userId,
       required int durationMin,
+      Value<int?> quality,
       required DateTime date,
     });
 typedef $$SleepLogsTableUpdateCompanionBuilder =
@@ -16020,6 +16297,7 @@ typedef $$SleepLogsTableUpdateCompanionBuilder =
       Value<int> id,
       Value<String> userId,
       Value<int> durationMin,
+      Value<int?> quality,
       Value<DateTime> date,
     });
 
@@ -16044,6 +16322,11 @@ class $$SleepLogsTableFilterComposer
 
   ColumnFilters<int> get durationMin => $composableBuilder(
     column: $table.durationMin,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get quality => $composableBuilder(
+    column: $table.quality,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -16077,6 +16360,11 @@ class $$SleepLogsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get quality => $composableBuilder(
+    column: $table.quality,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get date => $composableBuilder(
     column: $table.date,
     builder: (column) => ColumnOrderings(column),
@@ -16102,6 +16390,9 @@ class $$SleepLogsTableAnnotationComposer
     column: $table.durationMin,
     builder: (column) => column,
   );
+
+  GeneratedColumn<int> get quality =>
+      $composableBuilder(column: $table.quality, builder: (column) => column);
 
   GeneratedColumn<DateTime> get date =>
       $composableBuilder(column: $table.date, builder: (column) => column);
@@ -16138,11 +16429,13 @@ class $$SleepLogsTableTableManager
                 Value<int> id = const Value.absent(),
                 Value<String> userId = const Value.absent(),
                 Value<int> durationMin = const Value.absent(),
+                Value<int?> quality = const Value.absent(),
                 Value<DateTime> date = const Value.absent(),
               }) => SleepLogsCompanion(
                 id: id,
                 userId: userId,
                 durationMin: durationMin,
+                quality: quality,
                 date: date,
               ),
           createCompanionCallback:
@@ -16150,11 +16443,13 @@ class $$SleepLogsTableTableManager
                 Value<int> id = const Value.absent(),
                 required String userId,
                 required int durationMin,
+                Value<int?> quality = const Value.absent(),
                 required DateTime date,
               }) => SleepLogsCompanion.insert(
                 id: id,
                 userId: userId,
                 durationMin: durationMin,
+                quality: quality,
                 date: date,
               ),
           withReferenceMapper: (p0) => p0
@@ -16184,6 +16479,8 @@ typedef $$MoodLogsTableCreateCompanionBuilder =
       Value<int> id,
       required String userId,
       required int moodScore,
+      Value<int?> screenTimeMin,
+      Value<int?> sleepQuality,
       required DateTime loggedAt,
     });
 typedef $$MoodLogsTableUpdateCompanionBuilder =
@@ -16191,6 +16488,8 @@ typedef $$MoodLogsTableUpdateCompanionBuilder =
       Value<int> id,
       Value<String> userId,
       Value<int> moodScore,
+      Value<int?> screenTimeMin,
+      Value<int?> sleepQuality,
       Value<DateTime> loggedAt,
     });
 
@@ -16215,6 +16514,16 @@ class $$MoodLogsTableFilterComposer
 
   ColumnFilters<int> get moodScore => $composableBuilder(
     column: $table.moodScore,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get screenTimeMin => $composableBuilder(
+    column: $table.screenTimeMin,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get sleepQuality => $composableBuilder(
+    column: $table.sleepQuality,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -16248,6 +16557,16 @@ class $$MoodLogsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get screenTimeMin => $composableBuilder(
+    column: $table.screenTimeMin,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get sleepQuality => $composableBuilder(
+    column: $table.sleepQuality,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get loggedAt => $composableBuilder(
     column: $table.loggedAt,
     builder: (column) => ColumnOrderings(column),
@@ -16271,6 +16590,16 @@ class $$MoodLogsTableAnnotationComposer
 
   GeneratedColumn<int> get moodScore =>
       $composableBuilder(column: $table.moodScore, builder: (column) => column);
+
+  GeneratedColumn<int> get screenTimeMin => $composableBuilder(
+    column: $table.screenTimeMin,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get sleepQuality => $composableBuilder(
+    column: $table.sleepQuality,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<DateTime> get loggedAt =>
       $composableBuilder(column: $table.loggedAt, builder: (column) => column);
@@ -16307,11 +16636,15 @@ class $$MoodLogsTableTableManager
                 Value<int> id = const Value.absent(),
                 Value<String> userId = const Value.absent(),
                 Value<int> moodScore = const Value.absent(),
+                Value<int?> screenTimeMin = const Value.absent(),
+                Value<int?> sleepQuality = const Value.absent(),
                 Value<DateTime> loggedAt = const Value.absent(),
               }) => MoodLogsCompanion(
                 id: id,
                 userId: userId,
                 moodScore: moodScore,
+                screenTimeMin: screenTimeMin,
+                sleepQuality: sleepQuality,
                 loggedAt: loggedAt,
               ),
           createCompanionCallback:
@@ -16319,11 +16652,15 @@ class $$MoodLogsTableTableManager
                 Value<int> id = const Value.absent(),
                 required String userId,
                 required int moodScore,
+                Value<int?> screenTimeMin = const Value.absent(),
+                Value<int?> sleepQuality = const Value.absent(),
                 required DateTime loggedAt,
               }) => MoodLogsCompanion.insert(
                 id: id,
                 userId: userId,
                 moodScore: moodScore,
+                screenTimeMin: screenTimeMin,
+                sleepQuality: sleepQuality,
                 loggedAt: loggedAt,
               ),
           withReferenceMapper: (p0) => p0
@@ -16560,6 +16897,7 @@ typedef $$GlucoseLogsTableCreateCompanionBuilder =
       Value<int> id,
       required String userId,
       required String glucoseMgdl,
+      Value<String?> mealType,
       required DateTime loggedAt,
     });
 typedef $$GlucoseLogsTableUpdateCompanionBuilder =
@@ -16567,6 +16905,7 @@ typedef $$GlucoseLogsTableUpdateCompanionBuilder =
       Value<int> id,
       Value<String> userId,
       Value<String> glucoseMgdl,
+      Value<String?> mealType,
       Value<DateTime> loggedAt,
     });
 
@@ -16591,6 +16930,11 @@ class $$GlucoseLogsTableFilterComposer
 
   ColumnFilters<String> get glucoseMgdl => $composableBuilder(
     column: $table.glucoseMgdl,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get mealType => $composableBuilder(
+    column: $table.mealType,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -16624,6 +16968,11 @@ class $$GlucoseLogsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get mealType => $composableBuilder(
+    column: $table.mealType,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get loggedAt => $composableBuilder(
     column: $table.loggedAt,
     builder: (column) => ColumnOrderings(column),
@@ -16649,6 +16998,9 @@ class $$GlucoseLogsTableAnnotationComposer
     column: $table.glucoseMgdl,
     builder: (column) => column,
   );
+
+  GeneratedColumn<String> get mealType =>
+      $composableBuilder(column: $table.mealType, builder: (column) => column);
 
   GeneratedColumn<DateTime> get loggedAt =>
       $composableBuilder(column: $table.loggedAt, builder: (column) => column);
@@ -16688,11 +17040,13 @@ class $$GlucoseLogsTableTableManager
                 Value<int> id = const Value.absent(),
                 Value<String> userId = const Value.absent(),
                 Value<String> glucoseMgdl = const Value.absent(),
+                Value<String?> mealType = const Value.absent(),
                 Value<DateTime> loggedAt = const Value.absent(),
               }) => GlucoseLogsCompanion(
                 id: id,
                 userId: userId,
                 glucoseMgdl: glucoseMgdl,
+                mealType: mealType,
                 loggedAt: loggedAt,
               ),
           createCompanionCallback:
@@ -16700,11 +17054,13 @@ class $$GlucoseLogsTableTableManager
                 Value<int> id = const Value.absent(),
                 required String userId,
                 required String glucoseMgdl,
+                Value<String?> mealType = const Value.absent(),
                 required DateTime loggedAt,
               }) => GlucoseLogsCompanion.insert(
                 id: id,
                 userId: userId,
                 glucoseMgdl: glucoseMgdl,
+                mealType: mealType,
                 loggedAt: loggedAt,
               ),
           withReferenceMapper: (p0) => p0
@@ -18101,6 +18457,7 @@ typedef $$FastingLogsTableCreateCompanionBuilder =
       Value<int> id,
       required String userId,
       required DateTime fastStart,
+      Value<bool?> completed,
       Value<DateTime?> fastEnd,
     });
 typedef $$FastingLogsTableUpdateCompanionBuilder =
@@ -18108,6 +18465,7 @@ typedef $$FastingLogsTableUpdateCompanionBuilder =
       Value<int> id,
       Value<String> userId,
       Value<DateTime> fastStart,
+      Value<bool?> completed,
       Value<DateTime?> fastEnd,
     });
 
@@ -18132,6 +18490,11 @@ class $$FastingLogsTableFilterComposer
 
   ColumnFilters<DateTime> get fastStart => $composableBuilder(
     column: $table.fastStart,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get completed => $composableBuilder(
+    column: $table.completed,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -18165,6 +18528,11 @@ class $$FastingLogsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<bool> get completed => $composableBuilder(
+    column: $table.completed,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get fastEnd => $composableBuilder(
     column: $table.fastEnd,
     builder: (column) => ColumnOrderings(column),
@@ -18188,6 +18556,9 @@ class $$FastingLogsTableAnnotationComposer
 
   GeneratedColumn<DateTime> get fastStart =>
       $composableBuilder(column: $table.fastStart, builder: (column) => column);
+
+  GeneratedColumn<bool> get completed =>
+      $composableBuilder(column: $table.completed, builder: (column) => column);
 
   GeneratedColumn<DateTime> get fastEnd =>
       $composableBuilder(column: $table.fastEnd, builder: (column) => column);
@@ -18227,11 +18598,13 @@ class $$FastingLogsTableTableManager
                 Value<int> id = const Value.absent(),
                 Value<String> userId = const Value.absent(),
                 Value<DateTime> fastStart = const Value.absent(),
+                Value<bool?> completed = const Value.absent(),
                 Value<DateTime?> fastEnd = const Value.absent(),
               }) => FastingLogsCompanion(
                 id: id,
                 userId: userId,
                 fastStart: fastStart,
+                completed: completed,
                 fastEnd: fastEnd,
               ),
           createCompanionCallback:
@@ -18239,11 +18612,13 @@ class $$FastingLogsTableTableManager
                 Value<int> id = const Value.absent(),
                 required String userId,
                 required DateTime fastStart,
+                Value<bool?> completed = const Value.absent(),
                 Value<DateTime?> fastEnd = const Value.absent(),
               }) => FastingLogsCompanion.insert(
                 id: id,
                 userId: userId,
                 fastStart: fastStart,
+                completed: completed,
                 fastEnd: fastEnd,
               ),
           withReferenceMapper: (p0) => p0

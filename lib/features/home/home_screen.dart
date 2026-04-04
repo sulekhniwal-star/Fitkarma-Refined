@@ -235,7 +235,7 @@ class _DashboardContent extends StatelessWidget {
           Expanded(
             child: _StatCard(
               title: 'Sleep',
-              value: '${(data.todaySleepMin / 60).toStringAsFixed(1)}',
+              value: (data.todaySleepMin / 60).toStringAsFixed(1),
               unit: 'hrs',
               icon: Icons.bedtime,
               color: const Color(0xFF9B59B6),

@@ -34,7 +34,7 @@ class KarmaDriftService {
       ..where(_db.karmaTransactions.userId.equals(odUserId)))
         .getSingle();
 
-    return result?.read(_db.karmaTransactions.amount.sum()) ?? 0;
+    return result.read(_db.karmaTransactions.amount.sum()) ?? 0;
   }
 
   Future<List<KarmaTransaction>> getKarmaHistory(String odUserId, {int limit = 20}) {
@@ -132,7 +132,7 @@ class KarmaDriftService {
           _db.karmaTransactions.createdAt.isBiggerOrEqualValue(sevenDaysAgo) &
           _db.karmaTransactions.amount.isBiggerThanValue(0)))
         .getSingle();
-    return result?.read(_db.karmaTransactions.amount.sum()) ?? 0;
+    return result.read(_db.karmaTransactions.amount.sum()) ?? 0;
   }
 
   Future<void> applyXPMultiplier(String odUserId, int baseXP) async {

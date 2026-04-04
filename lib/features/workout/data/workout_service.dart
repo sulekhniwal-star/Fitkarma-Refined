@@ -1,13 +1,10 @@
 import 'dart:async';
-import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:drift/drift.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:fitkarma/core/di/providers.dart';
 import 'package:fitkarma/core/storage/app_database.dart';
-import 'package:fitkarma/features/karma/data/karma_notifier.dart';
 
 final workoutServiceProvider = Provider<WorkoutService>((ref) {
   final db = ref.watch(driftDatabaseProvider);

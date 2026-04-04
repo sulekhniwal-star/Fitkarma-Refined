@@ -1,4 +1,4 @@
-import 'dart:convert';
+import 'package:fitkarma/features/insight_engine/rules/cross_module_rules.dart';
 
 abstract class InsightRule {
   String get id;
@@ -28,6 +28,7 @@ class InsightInput {
   final int? streakDays;
   final double? bmi;
   final int? fastingHours;
+  final CorrelationService? correlationService;
 
   InsightInput({
     required this.odUserId,
@@ -44,6 +45,7 @@ class InsightInput {
     this.streakDays,
     this.bmi,
     this.fastingHours,
+    this.correlationService,
   });
 
   factory InsightInput.fromJson(Map<String, dynamic> json) {
@@ -88,6 +90,7 @@ class InsightInput {
     'streakDays': streakDays,
     'bmi': bmi,
     'fastingHours': fastingHours,
+    'correlationService': correlationService,
   };
 }
 

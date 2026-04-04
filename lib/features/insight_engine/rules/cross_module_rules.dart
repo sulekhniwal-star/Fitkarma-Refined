@@ -14,7 +14,7 @@ class CorrelationService {
 
   CorrelationService(this._db);
 
-  Future<int> countSleepMoodPattern(String odUserId) async {
+  Future<SleepMoodCorrelationResult> getSleepMoodCorrelation(String odUserId) async {
     final thirtyDaysAgo = DateTime.now().subtract(const Duration(days: 30));
     
     final sleepLogs = await (_db.select(_db.sleepLogs)
@@ -25,10 +25,10 @@ class CorrelationService {
       ..where((t) => t.userId.equals(odUserId) & t.loggedAt.isBiggerOrEqualValue(thirtyDaysAgo)))
       .get();
 
-    final sleepByDate = <String, double>{};
+    final sleepByDate = <String, int>{};
     for (final log in sleepLogs) {
       final key = '${log.date.year}-${log.date.month}-${log.date.day}';
-      sleepByDate[key] = log.durationMin.toDouble() / 60;
+      sleepByDate[key] = log.durationMin;
     }
 
     final moodByDate = <String, int>{};
@@ -42,7 +42,7 @@ class CorrelationService {
     
     for (int i = 0; i < sortedSleepKeys.length - 1; i++) {
       final sleepKey = sortedSleepKeys[i];
-      if ((sleepByDate[sleepKey] ?? 8) < 6) {
+      if ((sleepByDate[sleepKey] ?? 480) < 360) {
         final nextDate = DateTime.parse(sleepKey).add(const Duration(days: 1));
         final nextKey = '${nextDate.year}-${nextDate.month}-${nextDate.day}';
         if ((moodByDate[nextKey] ?? 5) <= 2) {
@@ -51,23 +51,30 @@ class CorrelationService {
       }
     }
 
-    return patternCount;
+    return SleepMoodCorrelationResult(
+      patternCount: patternCount,
+      hasPattern: patternCount >= 5,
+    );
   }
 
-  Future<bool> hasLowProteinOnWorkoutDays(String odUserId) async {
-    final recentDays = DateTime.now().subtract(const Duration(days: 7));
+  Future<WorkoutProteinResult> getWorkoutProteinCorrelation(String odUserId) async {
+    final sevenDaysAgo = DateTime.now().subtract(const Duration(days: 7));
+    const goalProtein = 100.0;
     
     final workouts = await (_db.select(_db.workoutLogs)
-      ..where((t) => t.userId.equals(odUserId) & t.loggedAt.isBiggerOrEqualValue(recentDays)))
+      ..where((t) => t.userId.equals(odUserId) & t.loggedAt.isBiggerOrEqualValue(sevenDaysAgo)))
       .get();
 
-    if (workouts.isEmpty) return false;
+    if (workouts.isEmpty) {
+      return WorkoutProteinResult(hasLowProtein: false, workoutDaysWithLowProtein: 0);
+    }
 
-    final workoutDates = workouts.map((w) => '${w.loggedAt.year}-${w.loggedAt.month}-${w.loggedAt.day}').toSet();
-    const goalProtein = 100.0;
+    final workoutDates = workouts.map((w) {
+      return '${w.loggedAt.year}-${w.loggedAt.month}-${w.loggedAt.day}';
+    }).toSet();
 
     final foodLogs = await (_db.select(_db.foodLogs)
-      ..where((t) => t.userId.equals(odUserId) & t.loggedAt.isBiggerOrEqualValue(recentDays)))
+      ..where((t) => t.userId.equals(odUserId) & t.loggedAt.isBiggerOrEqualValue(sevenDaysAgo)))
       .get();
 
     final proteinByDate = <String, double>{};
@@ -76,24 +83,30 @@ class CorrelationService {
       proteinByDate[key] = (proteinByDate[key] ?? 0) + log.proteinG;
     }
 
+    int lowProteinDays = 0;
     for (final date in workoutDates) {
       final protein = proteinByDate[date] ?? 0;
       if (protein < goalProtein * 0.7) {
-        return true;
+        lowProteinDays++;
       }
     }
 
-    return false;
+    return WorkoutProteinResult(
+      hasLowProtein: lowProteinDays > 0,
+      workoutDaysWithLowProtein: lowProteinDays,
+    );
   }
 
-  Future<double> getBpImprovementFromFasting(String odUserId) async {
+  Future<FastingBpResult> getFastingBpCorrelation(String odUserId) async {
     final thirtyDaysAgo = DateTime.now().subtract(const Duration(days: 30));
     
     final fastingLogs = await (_db.select(_db.fastingLogs)
-      ..where((t) => t.userId.equals(odUserId) & t.fastEnd.isNotNull() & t.fastStart.isBiggerOrEqualValue(thirtyDaysAgo)))
+      ..where((t) => t.userId.equals(odUserId) & t.completed.equals(true) & t.fastStart.isBiggerOrEqualValue(thirtyDaysAgo)))
       .get();
 
-    if (fastingLogs.isEmpty) return 0;
+    if (fastingLogs.isEmpty) {
+      return FastingBpResult(averageImprovementMmhg: 0, hasImprovement: false);
+    }
 
     final fastingDates = <String>{};
     for (final fast in fastingLogs) {
@@ -125,15 +138,21 @@ class CorrelationService {
       }
     }
 
-    if (fastingDayCount == 0 || nonFastingDayCount == 0) return 0;
+    if (fastingDayCount == 0 || nonFastingDayCount == 0) {
+      return FastingBpResult(averageImprovementMmhg: 0, hasImprovement: false);
+    }
 
     final avgFasting = fastingDaySystolic / fastingDayCount;
     final avgNonFasting = nonFastingDaySystolic / nonFastingDayCount;
+    final improvement = avgNonFasting - avgFasting;
 
-    return avgNonFasting - avgFasting;
+    return FastingBpResult(
+      averageImprovementMmhg: improvement,
+      hasImprovement: improvement >= 5,
+    );
   }
 
-  Future<bool> hasStepsGlucoseCorrelation(String odUserId) async {
+  Future<StepsGlucoseResult> getStepsGlucoseCorrelation(String odUserId) async {
     final sevenDaysAgo = DateTime.now().subtract(const Duration(days: 7));
     
     final stepLogs = await (_db.select(_db.stepLogs)
@@ -177,23 +196,43 @@ class CorrelationService {
       }
     }
 
-    if (walkingDayCount == 0 || nonWalkingDayCount == 0) return false;
+    if (walkingDayCount == 0 || nonWalkingDayCount == 0) {
+      return StepsGlucoseResult(averageReductionMgdl: 0, hasCorrelation: false);
+    }
 
-    return (walkingDayGlucose / walkingDayCount) < (nonWalkingDayGlucose / nonWalkingDayCount);
+    final avgWalking = walkingDayGlucose / walkingDayCount;
+    final avgNonWalking = nonWalkingDayGlucose / nonWalkingDayCount;
+    final reduction = avgNonWalking - avgWalking;
+
+    return StepsGlucoseResult(
+      averageReductionMgdl: reduction,
+      hasCorrelation: reduction > 0,
+    );
   }
 
-  Future<DateTime?> getUpcomingFestival(String odUserId) async {
+  Future<FestivalResult> getUpcomingFestival(String odUserId) async {
     final now = DateTime.now();
-    final threeDaysLater = now.add(const Duration(days: 3));
+    final threeDaysBefore = now.subtract(const Duration(days: 3));
 
-    final festivals = await (_db.select(_db.festivalCalendar)
-      ..where((t) => t.date.isBiggerOrEqualValue(now) & t.date.isSmallerOrEqualValue(threeDaysLater)))
-      .get();
+    final query = _db.select(_db.festivalCalendar)
+      ..where((t) => t.date.isBiggerOrEqualValue(threeDaysBefore) & t.date.isSmallerOrEqualValue(now.add(const Duration(days: 14))));
+    final festivals = await query.get();
 
-    return festivals.isNotEmpty ? festivals.first.date : null;
+    if (festivals.isEmpty) {
+      return FestivalResult(hasUpcomingFestival: false, daysUntil: null, festivalName: null);
+    }
+
+    final festival = festivals.first;
+    final daysUntil = festival.date.difference(now).inDays;
+
+    return FestivalResult(
+      hasUpcomingFestival: daysUntil >= -3 && daysUntil <= 3,
+      daysUntil: daysUntil,
+      festivalName: festival.name,
+    );
   }
 
-  Future<bool> hasRpeSleepBurnoutRisk(String odUserId) async {
+  Future<RpeSleepBurnoutResult> getRpeSleepBurnoutRisk(String odUserId) async {
     final fiveDaysAgo = DateTime.now().subtract(const Duration(days: 5));
     
     final workouts = await (_db.select(_db.workoutLogs)
@@ -204,6 +243,18 @@ class CorrelationService {
       ..where((t) => t.userId.equals(odUserId) & t.date.isBiggerOrEqualValue(fiveDaysAgo)))
       .get();
 
+    final workoutByDate = <String, int>{};
+    for (final w in workouts) {
+      final key = '${w.loggedAt.year}-${w.loggedAt.month}-${w.loggedAt.day}';
+      workoutByDate[key] = w.rpe ?? w.durationMin ~/ 10;
+    }
+
+    final sleepByDate = <String, int>{};
+    for (final s in sleepLogs) {
+      final key = '${s.date.year}-${s.date.month}-${s.date.day}';
+      sleepByDate[key] = s.durationMin;
+    }
+
     int consecutiveDays = 0;
     final now = DateTime.now();
 
@@ -211,42 +262,102 @@ class CorrelationService {
       final checkDate = now.subtract(Duration(days: i));
       final dateKey = '${checkDate.year}-${checkDate.month}-${checkDate.day}';
       
-      bool hasHighRpe = false;
-      bool hasLowSleep = false;
+      final rpe = workoutByDate[dateKey] ?? 0;
+      final sleepHours = (sleepByDate[dateKey] ?? 480) / 60;
 
-      for (final w in workouts) {
-        final wKey = '${w.loggedAt.year}-${w.loggedAt.month}-${w.loggedAt.day}';
-        if (wKey == dateKey) {
-          hasHighRpe = w.durationMin >= 45;
-        }
-      }
-
-      for (final s in sleepLogs) {
-        final sKey = '${s.date.year}-${s.date.month}-${s.date.day}';
-        if (sKey == dateKey) {
-          hasLowSleep = s.durationMin < 360;
-        }
-      }
-
-      if (hasHighRpe && hasLowSleep) {
+      if (rpe >= 8 && sleepHours <= 6) {
         consecutiveDays++;
-      } else {
-        consecutiveDays = 0;
       }
     }
 
-    return consecutiveDays >= 2;
+    return RpeSleepBurnoutResult(
+      hasBurnoutRisk: consecutiveDays >= 2,
+      consecutiveDays: consecutiveDays,
+    );
   }
 
-  Future<bool> hasScreenTimeMoodCorrelation(String odUserId) async {
+  Future<ScreenTimeMoodResult> getScreenTimeMoodCorrelation(String odUserId) async {
     final sevenDaysAgo = DateTime.now().subtract(const Duration(days: 7));
     
-    final moodLogs = await (_db.select(_db.moodLogs)
-      ..where((t) => t.userId.equals(odUserId) & t.loggedAt.isBiggerOrEqualValue(sevenDaysAgo)))
-      .get();
+    final query = _db.select(_db.moodLogs)
+      ..where((t) => t.userId.equals(odUserId) & t.loggedAt.isBiggerOrEqualValue(sevenDaysAgo));
+    final moodLogs = await query.get();
 
-    return moodLogs.where((l) => l.moodScore <= 4).length >= 5;
+    final moodByDate = <String, int>{};
+    final screenTimeByDate = <String, int>{};
+    
+    for (final log in moodLogs) {
+      final key = '${log.loggedAt.year}-${log.loggedAt.month}-${log.loggedAt.day}';
+      moodByDate[key] = log.moodScore;
+      screenTimeByDate[key] = log.screenTimeMin ?? 0;
+    }
+
+    int lowMoodHighScreenDays = 0;
+    int totalDays = 0;
+
+    for (final entry in moodByDate.entries) {
+      totalDays++;
+      final screenTime = screenTimeByDate[entry.key] ?? 0;
+      if (screenTime > 240 && entry.value <= 4) {
+        lowMoodHighScreenDays++;
+      }
+    }
+
+    return ScreenTimeMoodResult(
+      hasCorrelation: totalDays >= 7 && lowMoodHighScreenDays >= 5,
+      daysWithCorrelation: lowMoodHighScreenDays,
+    );
   }
+}
+
+class SleepMoodCorrelationResult {
+  final int patternCount;
+  final bool hasPattern;
+
+  SleepMoodCorrelationResult({required this.patternCount, required this.hasPattern});
+}
+
+class WorkoutProteinResult {
+  final bool hasLowProtein;
+  final int workoutDaysWithLowProtein;
+
+  WorkoutProteinResult({required this.hasLowProtein, required this.workoutDaysWithLowProtein});
+}
+
+class FastingBpResult {
+  final double averageImprovementMmhg;
+  final bool hasImprovement;
+
+  FastingBpResult({required this.averageImprovementMmhg, required this.hasImprovement});
+}
+
+class StepsGlucoseResult {
+  final double averageReductionMgdl;
+  final bool hasCorrelation;
+
+  StepsGlucoseResult({required this.averageReductionMgdl, required this.hasCorrelation});
+}
+
+class FestivalResult {
+  final bool hasUpcomingFestival;
+  final int? daysUntil;
+  final String? festivalName;
+
+  FestivalResult({required this.hasUpcomingFestival, this.daysUntil, this.festivalName});
+}
+
+class RpeSleepBurnoutResult {
+  final bool hasBurnoutRisk;
+  final int consecutiveDays;
+
+  RpeSleepBurnoutResult({required this.hasBurnoutRisk, required this.consecutiveDays});
+}
+
+class ScreenTimeMoodResult {
+  final bool hasCorrelation;
+  final int daysWithCorrelation;
+
+  ScreenTimeMoodResult({required this.hasCorrelation, required this.daysWithCorrelation});
 }
 
 class SleepMoodCorrelationRule extends InsightRule {
@@ -267,13 +378,13 @@ class SleepMoodCorrelationRule extends InsightRule {
 
   @override
   bool condition(InsightInput input) {
-    return input.mood?['consecutiveLowMoodDays'] != null && 
-           (input.mood!['consecutiveLowMoodDays'] as int) >= 5;
+    if (input.mood == null) return false;
+    return (input.mood!['consecutiveLowMoodDays'] as int? ?? 0) >= 5;
   }
 
   @override
   String message(InsightInput input) {
-    return 'Low sleep often leads to poor mood next day. Prioritize rest.';
+    return 'Low sleep often leads to poor mood next day. Prioritize 7+ hours of rest.';
   }
 
   @override
@@ -298,14 +409,15 @@ class WorkoutProteinCorrelationRule extends InsightRule {
 
   @override
   bool condition(InsightInput input) {
-    final workoutCount = input.workout?['count'] ?? 0;
-    final protein = input.nutrition?['protein'] ?? 0;
-    return workoutCount >= 1 && protein < 70;
+    if (input.workout == null || input.nutrition == null) return false;
+    final hasWorkout = (input.workout!['count'] as int? ?? 0) > 0;
+    final protein = input.nutrition!['protein'] ?? 0;
+    return hasWorkout && protein < 70;
   }
 
   @override
   String message(InsightInput input) {
-    return 'You under-eat protein on workout days. Add eggs or paneer.';
+    return 'You under-eat protein on workout days. Add eggs, paneer, or dal for recovery.';
   }
 
   @override
@@ -330,14 +442,15 @@ class FastingBpCorrelationRule extends InsightRule {
 
   @override
   bool condition(InsightInput input) {
+    if (input.bp == null) return false;
     final fasting = input.fastingHours ?? 0;
-    final bp = input.bp?['systolic'] ?? 0;
+    final bp = input.bp!['systolic'] as double? ?? 0;
     return fasting >= 16 && bp > 0 && bp < 120;
   }
 
   @override
   String message(InsightInput input) {
-    return 'Your blood pressure is lower on fasting days. Keep it up!';
+    return 'Your blood pressure is 5+ mmHg lower on fasting days. Keep it up!';
   }
 
   @override
@@ -362,14 +475,15 @@ class StepsGlucoseCorrelationRule extends InsightRule {
 
   @override
   bool condition(InsightInput input) {
-    final steps = input.steps?['total'] ?? 0;
-    final glucose = input.glucose?['mgdl'] ?? 0;
+    if (input.steps == null || input.glucose == null) return false;
+    final steps = input.steps!['total'] ?? 0;
+    final glucose = input.glucose!['mgdl'] ?? 0;
     return steps >= 8000 && glucose > 0 && glucose < 140;
   }
 
   @override
   String message(InsightInput input) {
-    return 'Your blood sugar is lower on active days. Keep walking!';
+    return 'Your blood sugar is lower on days with 8K+ steps. Keep moving!';
   }
 
   @override
@@ -394,13 +508,13 @@ class FestivalCalorieSpikeRule extends InsightRule {
 
   @override
   bool condition(InsightInput input) {
-    final calories = input.nutrition?['calories'] ?? 0;
-    return calories > 2500;
+    if (input.nutrition == null) return false;
+    return (input.nutrition!['calories'] ?? 0) > 2500;
   }
 
   @override
   String message(InsightInput input) {
-    return 'High calorie day detected. Plan lighter meals tomorrow to balance.';
+    return 'Festival in 3 days! Plan lighter meals to balance the celebrations.';
   }
 
   @override
@@ -425,14 +539,15 @@ class RpeSleepBurnoutRule extends InsightRule {
 
   @override
   bool condition(InsightInput input) {
-    final rpe = input.workout?['rpe'] ?? 5;
-    final sleep = input.sleep?['hours'] ?? 0;
-    return rpe >= 8 && sleep < 6;
+    if (input.workout == null || input.sleep == null) return false;
+    final rpe = input.workout!['rpe'] as int? ?? 5;
+    final sleepHours = input.sleep!['hours'] ?? 0;
+    return rpe >= 8 && sleepHours < 6;
   }
 
   @override
   String message(InsightInput input) {
-    return 'High intensity + poor sleep = burnout risk. Take a rest day.';
+    return 'High intensity + poor sleep for 2+ days = burnout risk. Take a rest day.';
   }
 
   @override
@@ -457,137 +572,19 @@ class ScreenTimeMoodRule extends InsightRule {
 
   @override
   bool condition(InsightInput input) {
-    final mood = input.mood?['score'] ?? 5;
-    return mood <= 4;
+    if (input.mood == null) return false;
+    final mood = input.mood!['score'] as int? ?? 5;
+    final screenTime = input.mood!['screenTimeMin'] as int? ?? 0;
+    return screenTime > 240 && mood <= 4;
   }
 
   @override
   String message(InsightInput input) {
-    return 'Mood low lately. Try reducing screen time and going outside.';
+    return 'High screen time (>4 hrs) correlates with low mood. Try a digital detox.';
   }
 
   @override
   String? get icon => '📱';
-}
-
-class SleepNutritionCorrelationRule extends InsightRule {
-  @override
-  String get id => 'cross_sleep_nutrition';
-
-  @override
-  String get category => 'cross_module';
-
-  @override
-  int get priority => 65;
-
-  @override
-  String get title => 'Sleep & Nutrition Connection';
-
-  @override
-  bool get isCrossModule => true;
-
-  @override
-  bool condition(InsightInput input) {
-    final sleepHours = input.sleep?['hours'] ?? 0;
-    final calories = input.nutrition?['calories'] ?? 0;
-    return sleepHours < 6 && calories > 2000;
-  }
-
-  @override
-  String message(InsightInput input) => 'Poor sleep + high calories. Better sleep may reduce cravings.';
-
-  @override
-  String? get icon => '🌙';
-}
-
-class ExerciseMoodCorrelationRule extends InsightRule {
-  @override
-  String get id => 'cross_exercise_mood';
-
-  @override
-  String get category => 'cross_module';
-
-  @override
-  int get priority => 60;
-
-  @override
-  String get title => 'Exercise Boost';
-
-  @override
-  bool get isCrossModule => true;
-
-  @override
-  bool condition(InsightInput input) {
-    final workoutCount = input.workout?['count'] ?? 0;
-    final mood = input.mood?['score'] ?? 0;
-    return workoutCount >= 1 && mood >= 7;
-  }
-
-  @override
-  String message(InsightInput input) => 'Workout days = better mood! Keep moving.';
-
-  @override
-  String? get icon => '🏃';
-}
-
-class HydrationBpCorrelationRule extends InsightRule {
-  @override
-  String get id => 'cross_hydration_bp';
-
-  @override
-  String get category => 'cross_module';
-
-  @override
-  int get priority => 70;
-
-  @override
-  String get title => 'Hydration & BP';
-
-  @override
-  bool get isCrossModule => true;
-
-  @override
-  bool condition(InsightInput input) {
-    final water = input.water?['ml'] ?? 0;
-    final bp = input.bp?['systolic'] ?? 0;
-    return water < 1500 && bp > 130;
-  }
-
-  @override
-  String message(InsightInput input) => 'Low water + high BP. Try increasing hydration.';
-
-  @override
-  String? get icon => '💧';
-}
-
-class StepsSleepCorrelationRule extends InsightRule {
-  @override
-  String get id => 'cross_steps_sleep';
-
-  @override
-  String get category => 'cross_module';
-
-  @override
-  int get priority => 55;
-
-  @override
-  String get title => 'Active Days, Better Sleep';
-
-  @override
-  bool get isCrossModule => true;
-
-  @override
-  bool condition(InsightInput input) {
-    final steps = input.steps?['total'] ?? 0;
-    final sleep = input.sleep?['hours'] ?? 0;
-    return steps > 8000 && sleep < 6;
-  }
-
-  @override
-  String message(InsightInput input) => 'High steps but poor sleep. Rest is as important as activity.';
-
-  @override
-  String? get icon => '👟';
 }
 
 List<InsightRule> get crossModuleRules => [
@@ -598,8 +595,4 @@ List<InsightRule> get crossModuleRules => [
   FestivalCalorieSpikeRule(),
   RpeSleepBurnoutRule(),
   ScreenTimeMoodRule(),
-  SleepNutritionCorrelationRule(),
-  ExerciseMoodCorrelationRule(),
-  HydrationBpCorrelationRule(),
-  StepsSleepCorrelationRule(),
 ];

@@ -266,7 +266,7 @@ class WorkoutDetailScreen extends StatefulWidget {
 }
 
 class _WorkoutDetailScreenState extends State<WorkoutDetailScreen> {
-  bool _isPlayerReady = true;
+  final bool _isPlayerReady = true;
 
   @override
   Widget build(BuildContext context) {
@@ -779,7 +779,7 @@ class CustomWorkoutBuilderScreen extends ConsumerWidget {
                 ),
                 const SizedBox(height: 12),
                 DropdownButtonFormField<String>(
-                  value: workoutState.category,
+                  initialValue: workoutState.category,
                   decoration: const InputDecoration(
                     labelText: 'Category',
                     border: OutlineInputBorder(),
