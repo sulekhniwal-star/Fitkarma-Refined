@@ -218,7 +218,15 @@ class Medications extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get userId => text().withLength(min: 1, max: 64)();
   TextColumn get name => text().withLength(min: 1, max: 128)();
+  TextColumn get dosage => text().nullable().withLength(max: 64)();
+  TextColumn get frequency => text().nullable().withLength(max: 32)();
+  TextColumn get category => text().nullable().withLength(max: 64)();
+  IntColumn get pillsRemaining => integer().nullable()();
+  DateTimeColumn get estimatedRefillDate => dateTime().nullable()();
+  TextColumn get reminderTime => text().nullable().withLength(max: 8)();
+  BoolColumn get reminderEnabled => boolean().withDefault(const Constant(false))();
   BoolColumn get isActive => boolean()();
+  DateTimeColumn get createdAt => dateTime()();
 }
 
 class FastingLogs extends Table {
@@ -399,6 +407,7 @@ class EmergencyCard extends Table {
   TextColumn get allergies => text().nullable().withLength(max: 1024)();
   TextColumn get emergencyContact => text().nullable().withLength(max: 20)();
   TextColumn get conditions => text().nullable().withLength(max: 1024)();
+  TextColumn get medications => text().nullable().withLength(max: 2048)();
   DateTimeColumn get updatedAt => dateTime()();
 
   @override
@@ -1019,11 +1028,88 @@ class MedicationsDao extends DatabaseAccessor<AppDatabase>
             ..where((t) => t.userId.equals(userId) & t.isActive.equals(true)))
           .get();
 
+  Stream<List<Medication>> watchActiveMedications(String userId) =>
+      (select(medications)
+            ..where((t) => t.userId.equals(userId) & t.isActive.equals(true)))
+          .watch();
+
+  Future<List<Medication>> getAllMedications(String userId) =>
+      (select(medications)
+            ..where((t) => t.userId.equals(userId))
+            ..orderBy([(t) => OrderingTerm.desc(t.createdAt)]))
+          .get();
+
   Future<int> insertMedication(MedicationsCompanion entry) =>
       into(medications).insert(entry);
 
   Future<bool> updateMedication(MedicationsCompanion entry) =>
       update(medications).replace(entry);
+
+  Future<int> updatePillsRemaining(int id, int remaining) =>
+      (update(medications)..where((t) => t.id.equals(id)))
+          .write(MedicationsCompanion(pillsRemaining: Value(remaining)));
+
+  Future<int> setEstimatedRefillDate(int id, DateTime date) =>
+      (update(medications)..where((t) => t.id.equals(id)))
+          .write(MedicationsCompanion(estimatedRefillDate: Value(date)));
+
+  Future<List<MedicationWithRefillAlert>> getMedicationsNeedingRefill(String userId) async {
+    final meds = await getActiveMedications(userId);
+    final now = DateTime.now();
+    final threeDaysFromNow = now.add(const Duration(days: 3));
+    return meds.where((m) {
+      if (m.estimatedRefillDate == null) return false;
+      if (m.estimatedRefillDate!.isBefore(threeDaysFromNow)) return true;
+      return false;
+    }).map((m) => MedicationWithRefillAlert(
+      medication: m,
+      daysUntilRefill: m.estimatedRefillDate!.difference(now).inDays,
+    )).toList();
+  }
+
+  Future<List<MedicationReminder>> getPendingReminders(String userId) async {
+    final meds = await getActiveMedications(userId);
+    return meds.where((m) => m.reminderEnabled == true && m.reminderTime != null)
+        .map((m) => MedicationReminder(
+              id: m.id,
+              name: m.name,
+              dosage: m.dosage,
+              frequency: m.frequency,
+              reminderTime: m.reminderTime!,
+            ))
+        .toList();
+  }
+
+  Future<List<String>> getActiveMedicationNames(String userId) async {
+    final meds = await getActiveMedications(userId);
+    return meds.map((m) => '${m.name}${m.dosage != null ? ' ${m.dosage}' : ''}').toList();
+  }
+}
+
+class MedicationWithRefillAlert {
+  final Medication medication;
+  final int daysUntilRefill;
+
+  MedicationWithRefillAlert({
+    required this.medication,
+    required this.daysUntilRefill,
+  });
+}
+
+class MedicationReminder {
+  final int id;
+  final String name;
+  final String? dosage;
+  final String? frequency;
+  final String reminderTime;
+
+  MedicationReminder({
+    required this.id,
+    required this.name,
+    this.dosage,
+    this.frequency,
+    required this.reminderTime,
+  });
 }
 
 @DriftAccessor(tables: [FastingLogs])
@@ -2522,6 +2608,33 @@ class EmergencyCardDao extends DatabaseAccessor<AppDatabase>
 
   Future<EmergencyCardData?> getCardForUserDecrypted(String userId) async {
     return getCardForUser(userId);
+  }
+
+  Future<int> autoPopulateMedications(String userId) async {
+    final activeMeds = await db.medicationsDao.getActiveMedicationNames(userId);
+    final medsString = activeMeds.join(', ');
+    
+    final existingCard = await getCardForUser(userId);
+    final now = DateTime.now();
+    
+    if (existingCard != null) {
+      return (update(emergencyCard)..where((t) => t.userId.equals(userId)))
+          .write(EmergencyCardCompanion(
+            medications: Value(medsString),
+            updatedAt: Value(now),
+          ));
+    } else {
+      return into(emergencyCard).insert(EmergencyCardCompanion.insert(
+        userId: userId,
+        medications: Value(medsString),
+        updatedAt: now,
+      ));
+    }
+  }
+
+  Future<String?> getActiveMedicationsList(String userId) async {
+    final activeMeds = await db.medicationsDao.getActiveMedicationNames(userId);
+    return activeMeds.isEmpty ? null : activeMeds.join(', ');
   }
 }
 

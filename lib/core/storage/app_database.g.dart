@@ -7469,6 +7469,89 @@ class $MedicationsTable extends Medications
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _dosageMeta = const VerificationMeta('dosage');
+  @override
+  late final GeneratedColumn<String> dosage = GeneratedColumn<String>(
+    'dosage',
+    aliasedName,
+    true,
+    additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 64),
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _frequencyMeta = const VerificationMeta(
+    'frequency',
+  );
+  @override
+  late final GeneratedColumn<String> frequency = GeneratedColumn<String>(
+    'frequency',
+    aliasedName,
+    true,
+    additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 32),
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _categoryMeta = const VerificationMeta(
+    'category',
+  );
+  @override
+  late final GeneratedColumn<String> category = GeneratedColumn<String>(
+    'category',
+    aliasedName,
+    true,
+    additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 64),
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _pillsRemainingMeta = const VerificationMeta(
+    'pillsRemaining',
+  );
+  @override
+  late final GeneratedColumn<int> pillsRemaining = GeneratedColumn<int>(
+    'pills_remaining',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _estimatedRefillDateMeta =
+      const VerificationMeta('estimatedRefillDate');
+  @override
+  late final GeneratedColumn<DateTime> estimatedRefillDate =
+      GeneratedColumn<DateTime>(
+        'estimated_refill_date',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _reminderTimeMeta = const VerificationMeta(
+    'reminderTime',
+  );
+  @override
+  late final GeneratedColumn<String> reminderTime = GeneratedColumn<String>(
+    'reminder_time',
+    aliasedName,
+    true,
+    additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 8),
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _reminderEnabledMeta = const VerificationMeta(
+    'reminderEnabled',
+  );
+  @override
+  late final GeneratedColumn<bool> reminderEnabled = GeneratedColumn<bool>(
+    'reminder_enabled',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("reminder_enabled" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
   static const VerificationMeta _isActiveMeta = const VerificationMeta(
     'isActive',
   );
@@ -7483,8 +7566,32 @@ class $MedicationsTable extends Medications
       'CHECK ("is_active" IN (0, 1))',
     ),
   );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
   @override
-  List<GeneratedColumn> get $columns => [id, userId, name, isActive];
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    userId,
+    name,
+    dosage,
+    frequency,
+    category,
+    pillsRemaining,
+    estimatedRefillDate,
+    reminderTime,
+    reminderEnabled,
+    isActive,
+    createdAt,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -7516,6 +7623,60 @@ class $MedicationsTable extends Medications
     } else if (isInserting) {
       context.missing(_nameMeta);
     }
+    if (data.containsKey('dosage')) {
+      context.handle(
+        _dosageMeta,
+        dosage.isAcceptableOrUnknown(data['dosage']!, _dosageMeta),
+      );
+    }
+    if (data.containsKey('frequency')) {
+      context.handle(
+        _frequencyMeta,
+        frequency.isAcceptableOrUnknown(data['frequency']!, _frequencyMeta),
+      );
+    }
+    if (data.containsKey('category')) {
+      context.handle(
+        _categoryMeta,
+        category.isAcceptableOrUnknown(data['category']!, _categoryMeta),
+      );
+    }
+    if (data.containsKey('pills_remaining')) {
+      context.handle(
+        _pillsRemainingMeta,
+        pillsRemaining.isAcceptableOrUnknown(
+          data['pills_remaining']!,
+          _pillsRemainingMeta,
+        ),
+      );
+    }
+    if (data.containsKey('estimated_refill_date')) {
+      context.handle(
+        _estimatedRefillDateMeta,
+        estimatedRefillDate.isAcceptableOrUnknown(
+          data['estimated_refill_date']!,
+          _estimatedRefillDateMeta,
+        ),
+      );
+    }
+    if (data.containsKey('reminder_time')) {
+      context.handle(
+        _reminderTimeMeta,
+        reminderTime.isAcceptableOrUnknown(
+          data['reminder_time']!,
+          _reminderTimeMeta,
+        ),
+      );
+    }
+    if (data.containsKey('reminder_enabled')) {
+      context.handle(
+        _reminderEnabledMeta,
+        reminderEnabled.isAcceptableOrUnknown(
+          data['reminder_enabled']!,
+          _reminderEnabledMeta,
+        ),
+      );
+    }
     if (data.containsKey('is_active')) {
       context.handle(
         _isActiveMeta,
@@ -7523,6 +7684,14 @@ class $MedicationsTable extends Medications
       );
     } else if (isInserting) {
       context.missing(_isActiveMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
     }
     return context;
   }
@@ -7545,9 +7714,41 @@ class $MedicationsTable extends Medications
         DriftSqlType.string,
         data['${effectivePrefix}name'],
       )!,
+      dosage: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}dosage'],
+      ),
+      frequency: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}frequency'],
+      ),
+      category: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}category'],
+      ),
+      pillsRemaining: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}pills_remaining'],
+      ),
+      estimatedRefillDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}estimated_refill_date'],
+      ),
+      reminderTime: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}reminder_time'],
+      ),
+      reminderEnabled: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}reminder_enabled'],
+      )!,
       isActive: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
         data['${effectivePrefix}is_active'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
       )!,
     );
   }
@@ -7562,12 +7763,28 @@ class Medication extends DataClass implements Insertable<Medication> {
   final int id;
   final String userId;
   final String name;
+  final String? dosage;
+  final String? frequency;
+  final String? category;
+  final int? pillsRemaining;
+  final DateTime? estimatedRefillDate;
+  final String? reminderTime;
+  final bool reminderEnabled;
   final bool isActive;
+  final DateTime createdAt;
   const Medication({
     required this.id,
     required this.userId,
     required this.name,
+    this.dosage,
+    this.frequency,
+    this.category,
+    this.pillsRemaining,
+    this.estimatedRefillDate,
+    this.reminderTime,
+    required this.reminderEnabled,
     required this.isActive,
+    required this.createdAt,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -7575,7 +7792,27 @@ class Medication extends DataClass implements Insertable<Medication> {
     map['id'] = Variable<int>(id);
     map['user_id'] = Variable<String>(userId);
     map['name'] = Variable<String>(name);
+    if (!nullToAbsent || dosage != null) {
+      map['dosage'] = Variable<String>(dosage);
+    }
+    if (!nullToAbsent || frequency != null) {
+      map['frequency'] = Variable<String>(frequency);
+    }
+    if (!nullToAbsent || category != null) {
+      map['category'] = Variable<String>(category);
+    }
+    if (!nullToAbsent || pillsRemaining != null) {
+      map['pills_remaining'] = Variable<int>(pillsRemaining);
+    }
+    if (!nullToAbsent || estimatedRefillDate != null) {
+      map['estimated_refill_date'] = Variable<DateTime>(estimatedRefillDate);
+    }
+    if (!nullToAbsent || reminderTime != null) {
+      map['reminder_time'] = Variable<String>(reminderTime);
+    }
+    map['reminder_enabled'] = Variable<bool>(reminderEnabled);
     map['is_active'] = Variable<bool>(isActive);
+    map['created_at'] = Variable<DateTime>(createdAt);
     return map;
   }
 
@@ -7584,7 +7821,27 @@ class Medication extends DataClass implements Insertable<Medication> {
       id: Value(id),
       userId: Value(userId),
       name: Value(name),
+      dosage: dosage == null && nullToAbsent
+          ? const Value.absent()
+          : Value(dosage),
+      frequency: frequency == null && nullToAbsent
+          ? const Value.absent()
+          : Value(frequency),
+      category: category == null && nullToAbsent
+          ? const Value.absent()
+          : Value(category),
+      pillsRemaining: pillsRemaining == null && nullToAbsent
+          ? const Value.absent()
+          : Value(pillsRemaining),
+      estimatedRefillDate: estimatedRefillDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(estimatedRefillDate),
+      reminderTime: reminderTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(reminderTime),
+      reminderEnabled: Value(reminderEnabled),
       isActive: Value(isActive),
+      createdAt: Value(createdAt),
     );
   }
 
@@ -7597,7 +7854,17 @@ class Medication extends DataClass implements Insertable<Medication> {
       id: serializer.fromJson<int>(json['id']),
       userId: serializer.fromJson<String>(json['userId']),
       name: serializer.fromJson<String>(json['name']),
+      dosage: serializer.fromJson<String?>(json['dosage']),
+      frequency: serializer.fromJson<String?>(json['frequency']),
+      category: serializer.fromJson<String?>(json['category']),
+      pillsRemaining: serializer.fromJson<int?>(json['pillsRemaining']),
+      estimatedRefillDate: serializer.fromJson<DateTime?>(
+        json['estimatedRefillDate'],
+      ),
+      reminderTime: serializer.fromJson<String?>(json['reminderTime']),
+      reminderEnabled: serializer.fromJson<bool>(json['reminderEnabled']),
       isActive: serializer.fromJson<bool>(json['isActive']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
     );
   }
   @override
@@ -7607,7 +7874,15 @@ class Medication extends DataClass implements Insertable<Medication> {
       'id': serializer.toJson<int>(id),
       'userId': serializer.toJson<String>(userId),
       'name': serializer.toJson<String>(name),
+      'dosage': serializer.toJson<String?>(dosage),
+      'frequency': serializer.toJson<String?>(frequency),
+      'category': serializer.toJson<String?>(category),
+      'pillsRemaining': serializer.toJson<int?>(pillsRemaining),
+      'estimatedRefillDate': serializer.toJson<DateTime?>(estimatedRefillDate),
+      'reminderTime': serializer.toJson<String?>(reminderTime),
+      'reminderEnabled': serializer.toJson<bool>(reminderEnabled),
       'isActive': serializer.toJson<bool>(isActive),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
     };
   }
 
@@ -7615,19 +7890,55 @@ class Medication extends DataClass implements Insertable<Medication> {
     int? id,
     String? userId,
     String? name,
+    Value<String?> dosage = const Value.absent(),
+    Value<String?> frequency = const Value.absent(),
+    Value<String?> category = const Value.absent(),
+    Value<int?> pillsRemaining = const Value.absent(),
+    Value<DateTime?> estimatedRefillDate = const Value.absent(),
+    Value<String?> reminderTime = const Value.absent(),
+    bool? reminderEnabled,
     bool? isActive,
+    DateTime? createdAt,
   }) => Medication(
     id: id ?? this.id,
     userId: userId ?? this.userId,
     name: name ?? this.name,
+    dosage: dosage.present ? dosage.value : this.dosage,
+    frequency: frequency.present ? frequency.value : this.frequency,
+    category: category.present ? category.value : this.category,
+    pillsRemaining: pillsRemaining.present
+        ? pillsRemaining.value
+        : this.pillsRemaining,
+    estimatedRefillDate: estimatedRefillDate.present
+        ? estimatedRefillDate.value
+        : this.estimatedRefillDate,
+    reminderTime: reminderTime.present ? reminderTime.value : this.reminderTime,
+    reminderEnabled: reminderEnabled ?? this.reminderEnabled,
     isActive: isActive ?? this.isActive,
+    createdAt: createdAt ?? this.createdAt,
   );
   Medication copyWithCompanion(MedicationsCompanion data) {
     return Medication(
       id: data.id.present ? data.id.value : this.id,
       userId: data.userId.present ? data.userId.value : this.userId,
       name: data.name.present ? data.name.value : this.name,
+      dosage: data.dosage.present ? data.dosage.value : this.dosage,
+      frequency: data.frequency.present ? data.frequency.value : this.frequency,
+      category: data.category.present ? data.category.value : this.category,
+      pillsRemaining: data.pillsRemaining.present
+          ? data.pillsRemaining.value
+          : this.pillsRemaining,
+      estimatedRefillDate: data.estimatedRefillDate.present
+          ? data.estimatedRefillDate.value
+          : this.estimatedRefillDate,
+      reminderTime: data.reminderTime.present
+          ? data.reminderTime.value
+          : this.reminderTime,
+      reminderEnabled: data.reminderEnabled.present
+          ? data.reminderEnabled.value
+          : this.reminderEnabled,
       isActive: data.isActive.present ? data.isActive.value : this.isActive,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
     );
   }
 
@@ -7637,13 +7948,34 @@ class Medication extends DataClass implements Insertable<Medication> {
           ..write('id: $id, ')
           ..write('userId: $userId, ')
           ..write('name: $name, ')
-          ..write('isActive: $isActive')
+          ..write('dosage: $dosage, ')
+          ..write('frequency: $frequency, ')
+          ..write('category: $category, ')
+          ..write('pillsRemaining: $pillsRemaining, ')
+          ..write('estimatedRefillDate: $estimatedRefillDate, ')
+          ..write('reminderTime: $reminderTime, ')
+          ..write('reminderEnabled: $reminderEnabled, ')
+          ..write('isActive: $isActive, ')
+          ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, userId, name, isActive);
+  int get hashCode => Object.hash(
+    id,
+    userId,
+    name,
+    dosage,
+    frequency,
+    category,
+    pillsRemaining,
+    estimatedRefillDate,
+    reminderTime,
+    reminderEnabled,
+    isActive,
+    createdAt,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -7651,39 +7983,89 @@ class Medication extends DataClass implements Insertable<Medication> {
           other.id == this.id &&
           other.userId == this.userId &&
           other.name == this.name &&
-          other.isActive == this.isActive);
+          other.dosage == this.dosage &&
+          other.frequency == this.frequency &&
+          other.category == this.category &&
+          other.pillsRemaining == this.pillsRemaining &&
+          other.estimatedRefillDate == this.estimatedRefillDate &&
+          other.reminderTime == this.reminderTime &&
+          other.reminderEnabled == this.reminderEnabled &&
+          other.isActive == this.isActive &&
+          other.createdAt == this.createdAt);
 }
 
 class MedicationsCompanion extends UpdateCompanion<Medication> {
   final Value<int> id;
   final Value<String> userId;
   final Value<String> name;
+  final Value<String?> dosage;
+  final Value<String?> frequency;
+  final Value<String?> category;
+  final Value<int?> pillsRemaining;
+  final Value<DateTime?> estimatedRefillDate;
+  final Value<String?> reminderTime;
+  final Value<bool> reminderEnabled;
   final Value<bool> isActive;
+  final Value<DateTime> createdAt;
   const MedicationsCompanion({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
     this.name = const Value.absent(),
+    this.dosage = const Value.absent(),
+    this.frequency = const Value.absent(),
+    this.category = const Value.absent(),
+    this.pillsRemaining = const Value.absent(),
+    this.estimatedRefillDate = const Value.absent(),
+    this.reminderTime = const Value.absent(),
+    this.reminderEnabled = const Value.absent(),
     this.isActive = const Value.absent(),
+    this.createdAt = const Value.absent(),
   });
   MedicationsCompanion.insert({
     this.id = const Value.absent(),
     required String userId,
     required String name,
+    this.dosage = const Value.absent(),
+    this.frequency = const Value.absent(),
+    this.category = const Value.absent(),
+    this.pillsRemaining = const Value.absent(),
+    this.estimatedRefillDate = const Value.absent(),
+    this.reminderTime = const Value.absent(),
+    this.reminderEnabled = const Value.absent(),
     required bool isActive,
+    required DateTime createdAt,
   }) : userId = Value(userId),
        name = Value(name),
-       isActive = Value(isActive);
+       isActive = Value(isActive),
+       createdAt = Value(createdAt);
   static Insertable<Medication> custom({
     Expression<int>? id,
     Expression<String>? userId,
     Expression<String>? name,
+    Expression<String>? dosage,
+    Expression<String>? frequency,
+    Expression<String>? category,
+    Expression<int>? pillsRemaining,
+    Expression<DateTime>? estimatedRefillDate,
+    Expression<String>? reminderTime,
+    Expression<bool>? reminderEnabled,
     Expression<bool>? isActive,
+    Expression<DateTime>? createdAt,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (userId != null) 'user_id': userId,
       if (name != null) 'name': name,
+      if (dosage != null) 'dosage': dosage,
+      if (frequency != null) 'frequency': frequency,
+      if (category != null) 'category': category,
+      if (pillsRemaining != null) 'pills_remaining': pillsRemaining,
+      if (estimatedRefillDate != null)
+        'estimated_refill_date': estimatedRefillDate,
+      if (reminderTime != null) 'reminder_time': reminderTime,
+      if (reminderEnabled != null) 'reminder_enabled': reminderEnabled,
       if (isActive != null) 'is_active': isActive,
+      if (createdAt != null) 'created_at': createdAt,
     });
   }
 
@@ -7691,13 +8073,29 @@ class MedicationsCompanion extends UpdateCompanion<Medication> {
     Value<int>? id,
     Value<String>? userId,
     Value<String>? name,
+    Value<String?>? dosage,
+    Value<String?>? frequency,
+    Value<String?>? category,
+    Value<int?>? pillsRemaining,
+    Value<DateTime?>? estimatedRefillDate,
+    Value<String?>? reminderTime,
+    Value<bool>? reminderEnabled,
     Value<bool>? isActive,
+    Value<DateTime>? createdAt,
   }) {
     return MedicationsCompanion(
       id: id ?? this.id,
       userId: userId ?? this.userId,
       name: name ?? this.name,
+      dosage: dosage ?? this.dosage,
+      frequency: frequency ?? this.frequency,
+      category: category ?? this.category,
+      pillsRemaining: pillsRemaining ?? this.pillsRemaining,
+      estimatedRefillDate: estimatedRefillDate ?? this.estimatedRefillDate,
+      reminderTime: reminderTime ?? this.reminderTime,
+      reminderEnabled: reminderEnabled ?? this.reminderEnabled,
       isActive: isActive ?? this.isActive,
+      createdAt: createdAt ?? this.createdAt,
     );
   }
 
@@ -7713,8 +8111,34 @@ class MedicationsCompanion extends UpdateCompanion<Medication> {
     if (name.present) {
       map['name'] = Variable<String>(name.value);
     }
+    if (dosage.present) {
+      map['dosage'] = Variable<String>(dosage.value);
+    }
+    if (frequency.present) {
+      map['frequency'] = Variable<String>(frequency.value);
+    }
+    if (category.present) {
+      map['category'] = Variable<String>(category.value);
+    }
+    if (pillsRemaining.present) {
+      map['pills_remaining'] = Variable<int>(pillsRemaining.value);
+    }
+    if (estimatedRefillDate.present) {
+      map['estimated_refill_date'] = Variable<DateTime>(
+        estimatedRefillDate.value,
+      );
+    }
+    if (reminderTime.present) {
+      map['reminder_time'] = Variable<String>(reminderTime.value);
+    }
+    if (reminderEnabled.present) {
+      map['reminder_enabled'] = Variable<bool>(reminderEnabled.value);
+    }
     if (isActive.present) {
       map['is_active'] = Variable<bool>(isActive.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
     }
     return map;
   }
@@ -7725,7 +8149,15 @@ class MedicationsCompanion extends UpdateCompanion<Medication> {
           ..write('id: $id, ')
           ..write('userId: $userId, ')
           ..write('name: $name, ')
-          ..write('isActive: $isActive')
+          ..write('dosage: $dosage, ')
+          ..write('frequency: $frequency, ')
+          ..write('category: $category, ')
+          ..write('pillsRemaining: $pillsRemaining, ')
+          ..write('estimatedRefillDate: $estimatedRefillDate, ')
+          ..write('reminderTime: $reminderTime, ')
+          ..write('reminderEnabled: $reminderEnabled, ')
+          ..write('isActive: $isActive, ')
+          ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
   }
@@ -14071,6 +14503,18 @@ class $EmergencyCardTable extends EmergencyCard
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _medicationsMeta = const VerificationMeta(
+    'medications',
+  );
+  @override
+  late final GeneratedColumn<String> medications = GeneratedColumn<String>(
+    'medications',
+    aliasedName,
+    true,
+    additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 2048),
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _updatedAtMeta = const VerificationMeta(
     'updatedAt',
   );
@@ -14090,6 +14534,7 @@ class $EmergencyCardTable extends EmergencyCard
     allergies,
     emergencyContact,
     conditions,
+    medications,
     updatedAt,
   ];
   @override
@@ -14142,6 +14587,15 @@ class $EmergencyCardTable extends EmergencyCard
         conditions.isAcceptableOrUnknown(data['conditions']!, _conditionsMeta),
       );
     }
+    if (data.containsKey('medications')) {
+      context.handle(
+        _medicationsMeta,
+        medications.isAcceptableOrUnknown(
+          data['medications']!,
+          _medicationsMeta,
+        ),
+      );
+    }
     if (data.containsKey('updated_at')) {
       context.handle(
         _updatedAtMeta,
@@ -14187,6 +14641,10 @@ class $EmergencyCardTable extends EmergencyCard
         DriftSqlType.string,
         data['${effectivePrefix}conditions'],
       ),
+      medications: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}medications'],
+      ),
       updatedAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}updated_at'],
@@ -14208,6 +14666,7 @@ class EmergencyCardData extends DataClass
   final String? allergies;
   final String? emergencyContact;
   final String? conditions;
+  final String? medications;
   final DateTime updatedAt;
   const EmergencyCardData({
     required this.id,
@@ -14216,6 +14675,7 @@ class EmergencyCardData extends DataClass
     this.allergies,
     this.emergencyContact,
     this.conditions,
+    this.medications,
     required this.updatedAt,
   });
   @override
@@ -14234,6 +14694,9 @@ class EmergencyCardData extends DataClass
     }
     if (!nullToAbsent || conditions != null) {
       map['conditions'] = Variable<String>(conditions);
+    }
+    if (!nullToAbsent || medications != null) {
+      map['medications'] = Variable<String>(medications);
     }
     map['updated_at'] = Variable<DateTime>(updatedAt);
     return map;
@@ -14255,6 +14718,9 @@ class EmergencyCardData extends DataClass
       conditions: conditions == null && nullToAbsent
           ? const Value.absent()
           : Value(conditions),
+      medications: medications == null && nullToAbsent
+          ? const Value.absent()
+          : Value(medications),
       updatedAt: Value(updatedAt),
     );
   }
@@ -14271,6 +14737,7 @@ class EmergencyCardData extends DataClass
       allergies: serializer.fromJson<String?>(json['allergies']),
       emergencyContact: serializer.fromJson<String?>(json['emergencyContact']),
       conditions: serializer.fromJson<String?>(json['conditions']),
+      medications: serializer.fromJson<String?>(json['medications']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
     );
   }
@@ -14284,6 +14751,7 @@ class EmergencyCardData extends DataClass
       'allergies': serializer.toJson<String?>(allergies),
       'emergencyContact': serializer.toJson<String?>(emergencyContact),
       'conditions': serializer.toJson<String?>(conditions),
+      'medications': serializer.toJson<String?>(medications),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
     };
   }
@@ -14295,6 +14763,7 @@ class EmergencyCardData extends DataClass
     Value<String?> allergies = const Value.absent(),
     Value<String?> emergencyContact = const Value.absent(),
     Value<String?> conditions = const Value.absent(),
+    Value<String?> medications = const Value.absent(),
     DateTime? updatedAt,
   }) => EmergencyCardData(
     id: id ?? this.id,
@@ -14305,6 +14774,7 @@ class EmergencyCardData extends DataClass
         ? emergencyContact.value
         : this.emergencyContact,
     conditions: conditions.present ? conditions.value : this.conditions,
+    medications: medications.present ? medications.value : this.medications,
     updatedAt: updatedAt ?? this.updatedAt,
   );
   EmergencyCardData copyWithCompanion(EmergencyCardCompanion data) {
@@ -14321,6 +14791,9 @@ class EmergencyCardData extends DataClass
       conditions: data.conditions.present
           ? data.conditions.value
           : this.conditions,
+      medications: data.medications.present
+          ? data.medications.value
+          : this.medications,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
   }
@@ -14334,6 +14807,7 @@ class EmergencyCardData extends DataClass
           ..write('allergies: $allergies, ')
           ..write('emergencyContact: $emergencyContact, ')
           ..write('conditions: $conditions, ')
+          ..write('medications: $medications, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
         .toString();
@@ -14347,6 +14821,7 @@ class EmergencyCardData extends DataClass
     allergies,
     emergencyContact,
     conditions,
+    medications,
     updatedAt,
   );
   @override
@@ -14359,6 +14834,7 @@ class EmergencyCardData extends DataClass
           other.allergies == this.allergies &&
           other.emergencyContact == this.emergencyContact &&
           other.conditions == this.conditions &&
+          other.medications == this.medications &&
           other.updatedAt == this.updatedAt);
 }
 
@@ -14369,6 +14845,7 @@ class EmergencyCardCompanion extends UpdateCompanion<EmergencyCardData> {
   final Value<String?> allergies;
   final Value<String?> emergencyContact;
   final Value<String?> conditions;
+  final Value<String?> medications;
   final Value<DateTime> updatedAt;
   const EmergencyCardCompanion({
     this.id = const Value.absent(),
@@ -14377,6 +14854,7 @@ class EmergencyCardCompanion extends UpdateCompanion<EmergencyCardData> {
     this.allergies = const Value.absent(),
     this.emergencyContact = const Value.absent(),
     this.conditions = const Value.absent(),
+    this.medications = const Value.absent(),
     this.updatedAt = const Value.absent(),
   });
   EmergencyCardCompanion.insert({
@@ -14386,6 +14864,7 @@ class EmergencyCardCompanion extends UpdateCompanion<EmergencyCardData> {
     this.allergies = const Value.absent(),
     this.emergencyContact = const Value.absent(),
     this.conditions = const Value.absent(),
+    this.medications = const Value.absent(),
     required DateTime updatedAt,
   }) : userId = Value(userId),
        updatedAt = Value(updatedAt);
@@ -14396,6 +14875,7 @@ class EmergencyCardCompanion extends UpdateCompanion<EmergencyCardData> {
     Expression<String>? allergies,
     Expression<String>? emergencyContact,
     Expression<String>? conditions,
+    Expression<String>? medications,
     Expression<DateTime>? updatedAt,
   }) {
     return RawValuesInsertable({
@@ -14405,6 +14885,7 @@ class EmergencyCardCompanion extends UpdateCompanion<EmergencyCardData> {
       if (allergies != null) 'allergies': allergies,
       if (emergencyContact != null) 'emergency_contact': emergencyContact,
       if (conditions != null) 'conditions': conditions,
+      if (medications != null) 'medications': medications,
       if (updatedAt != null) 'updated_at': updatedAt,
     });
   }
@@ -14416,6 +14897,7 @@ class EmergencyCardCompanion extends UpdateCompanion<EmergencyCardData> {
     Value<String?>? allergies,
     Value<String?>? emergencyContact,
     Value<String?>? conditions,
+    Value<String?>? medications,
     Value<DateTime>? updatedAt,
   }) {
     return EmergencyCardCompanion(
@@ -14425,6 +14907,7 @@ class EmergencyCardCompanion extends UpdateCompanion<EmergencyCardData> {
       allergies: allergies ?? this.allergies,
       emergencyContact: emergencyContact ?? this.emergencyContact,
       conditions: conditions ?? this.conditions,
+      medications: medications ?? this.medications,
       updatedAt: updatedAt ?? this.updatedAt,
     );
   }
@@ -14450,6 +14933,9 @@ class EmergencyCardCompanion extends UpdateCompanion<EmergencyCardData> {
     if (conditions.present) {
       map['conditions'] = Variable<String>(conditions.value);
     }
+    if (medications.present) {
+      map['medications'] = Variable<String>(medications.value);
+    }
     if (updatedAt.present) {
       map['updated_at'] = Variable<DateTime>(updatedAt.value);
     }
@@ -14465,6 +14951,7 @@ class EmergencyCardCompanion extends UpdateCompanion<EmergencyCardData> {
           ..write('allergies: $allergies, ')
           ..write('emergencyContact: $emergencyContact, ')
           ..write('conditions: $conditions, ')
+          ..write('medications: $medications, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
         .toString();
@@ -20757,14 +21244,30 @@ typedef $$MedicationsTableCreateCompanionBuilder =
       Value<int> id,
       required String userId,
       required String name,
+      Value<String?> dosage,
+      Value<String?> frequency,
+      Value<String?> category,
+      Value<int?> pillsRemaining,
+      Value<DateTime?> estimatedRefillDate,
+      Value<String?> reminderTime,
+      Value<bool> reminderEnabled,
       required bool isActive,
+      required DateTime createdAt,
     });
 typedef $$MedicationsTableUpdateCompanionBuilder =
     MedicationsCompanion Function({
       Value<int> id,
       Value<String> userId,
       Value<String> name,
+      Value<String?> dosage,
+      Value<String?> frequency,
+      Value<String?> category,
+      Value<int?> pillsRemaining,
+      Value<DateTime?> estimatedRefillDate,
+      Value<String?> reminderTime,
+      Value<bool> reminderEnabled,
       Value<bool> isActive,
+      Value<DateTime> createdAt,
     });
 
 class $$MedicationsTableFilterComposer
@@ -20791,8 +21294,48 @@ class $$MedicationsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<String> get dosage => $composableBuilder(
+    column: $table.dosage,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get frequency => $composableBuilder(
+    column: $table.frequency,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get category => $composableBuilder(
+    column: $table.category,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get pillsRemaining => $composableBuilder(
+    column: $table.pillsRemaining,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get estimatedRefillDate => $composableBuilder(
+    column: $table.estimatedRefillDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get reminderTime => $composableBuilder(
+    column: $table.reminderTime,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get reminderEnabled => $composableBuilder(
+    column: $table.reminderEnabled,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<bool> get isActive => $composableBuilder(
     column: $table.isActive,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -20821,8 +21364,48 @@ class $$MedicationsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get dosage => $composableBuilder(
+    column: $table.dosage,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get frequency => $composableBuilder(
+    column: $table.frequency,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get category => $composableBuilder(
+    column: $table.category,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get pillsRemaining => $composableBuilder(
+    column: $table.pillsRemaining,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get estimatedRefillDate => $composableBuilder(
+    column: $table.estimatedRefillDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get reminderTime => $composableBuilder(
+    column: $table.reminderTime,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get reminderEnabled => $composableBuilder(
+    column: $table.reminderEnabled,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<bool> get isActive => $composableBuilder(
     column: $table.isActive,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
   );
 }
@@ -20845,8 +21428,40 @@ class $$MedicationsTableAnnotationComposer
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
 
+  GeneratedColumn<String> get dosage =>
+      $composableBuilder(column: $table.dosage, builder: (column) => column);
+
+  GeneratedColumn<String> get frequency =>
+      $composableBuilder(column: $table.frequency, builder: (column) => column);
+
+  GeneratedColumn<String> get category =>
+      $composableBuilder(column: $table.category, builder: (column) => column);
+
+  GeneratedColumn<int> get pillsRemaining => $composableBuilder(
+    column: $table.pillsRemaining,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get estimatedRefillDate => $composableBuilder(
+    column: $table.estimatedRefillDate,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get reminderTime => $composableBuilder(
+    column: $table.reminderTime,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get reminderEnabled => $composableBuilder(
+    column: $table.reminderEnabled,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<bool> get isActive =>
       $composableBuilder(column: $table.isActive, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
 }
 
 class $$MedicationsTableTableManager
@@ -20883,24 +21498,56 @@ class $$MedicationsTableTableManager
                 Value<int> id = const Value.absent(),
                 Value<String> userId = const Value.absent(),
                 Value<String> name = const Value.absent(),
+                Value<String?> dosage = const Value.absent(),
+                Value<String?> frequency = const Value.absent(),
+                Value<String?> category = const Value.absent(),
+                Value<int?> pillsRemaining = const Value.absent(),
+                Value<DateTime?> estimatedRefillDate = const Value.absent(),
+                Value<String?> reminderTime = const Value.absent(),
+                Value<bool> reminderEnabled = const Value.absent(),
                 Value<bool> isActive = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
               }) => MedicationsCompanion(
                 id: id,
                 userId: userId,
                 name: name,
+                dosage: dosage,
+                frequency: frequency,
+                category: category,
+                pillsRemaining: pillsRemaining,
+                estimatedRefillDate: estimatedRefillDate,
+                reminderTime: reminderTime,
+                reminderEnabled: reminderEnabled,
                 isActive: isActive,
+                createdAt: createdAt,
               ),
           createCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
                 required String userId,
                 required String name,
+                Value<String?> dosage = const Value.absent(),
+                Value<String?> frequency = const Value.absent(),
+                Value<String?> category = const Value.absent(),
+                Value<int?> pillsRemaining = const Value.absent(),
+                Value<DateTime?> estimatedRefillDate = const Value.absent(),
+                Value<String?> reminderTime = const Value.absent(),
+                Value<bool> reminderEnabled = const Value.absent(),
                 required bool isActive,
+                required DateTime createdAt,
               }) => MedicationsCompanion.insert(
                 id: id,
                 userId: userId,
                 name: name,
+                dosage: dosage,
+                frequency: frequency,
+                category: category,
+                pillsRemaining: pillsRemaining,
+                estimatedRefillDate: estimatedRefillDate,
+                reminderTime: reminderTime,
+                reminderEnabled: reminderEnabled,
                 isActive: isActive,
+                createdAt: createdAt,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
@@ -24054,6 +24701,7 @@ typedef $$EmergencyCardTableCreateCompanionBuilder =
       Value<String?> allergies,
       Value<String?> emergencyContact,
       Value<String?> conditions,
+      Value<String?> medications,
       required DateTime updatedAt,
     });
 typedef $$EmergencyCardTableUpdateCompanionBuilder =
@@ -24064,6 +24712,7 @@ typedef $$EmergencyCardTableUpdateCompanionBuilder =
       Value<String?> allergies,
       Value<String?> emergencyContact,
       Value<String?> conditions,
+      Value<String?> medications,
       Value<DateTime> updatedAt,
     });
 
@@ -24103,6 +24752,11 @@ class $$EmergencyCardTableFilterComposer
 
   ColumnFilters<String> get conditions => $composableBuilder(
     column: $table.conditions,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get medications => $composableBuilder(
+    column: $table.medications,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -24151,6 +24805,11 @@ class $$EmergencyCardTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get medications => $composableBuilder(
+    column: $table.medications,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
     column: $table.updatedAt,
     builder: (column) => ColumnOrderings(column),
@@ -24187,6 +24846,11 @@ class $$EmergencyCardTableAnnotationComposer
 
   GeneratedColumn<String> get conditions => $composableBuilder(
     column: $table.conditions,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get medications => $composableBuilder(
+    column: $table.medications,
     builder: (column) => column,
   );
 
@@ -24235,6 +24899,7 @@ class $$EmergencyCardTableTableManager
                 Value<String?> allergies = const Value.absent(),
                 Value<String?> emergencyContact = const Value.absent(),
                 Value<String?> conditions = const Value.absent(),
+                Value<String?> medications = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
               }) => EmergencyCardCompanion(
                 id: id,
@@ -24243,6 +24908,7 @@ class $$EmergencyCardTableTableManager
                 allergies: allergies,
                 emergencyContact: emergencyContact,
                 conditions: conditions,
+                medications: medications,
                 updatedAt: updatedAt,
               ),
           createCompanionCallback:
@@ -24253,6 +24919,7 @@ class $$EmergencyCardTableTableManager
                 Value<String?> allergies = const Value.absent(),
                 Value<String?> emergencyContact = const Value.absent(),
                 Value<String?> conditions = const Value.absent(),
+                Value<String?> medications = const Value.absent(),
                 required DateTime updatedAt,
               }) => EmergencyCardCompanion.insert(
                 id: id,
@@ -24261,6 +24928,7 @@ class $$EmergencyCardTableTableManager
                 allergies: allergies,
                 emergencyContact: emergencyContact,
                 conditions: conditions,
+                medications: medications,
                 updatedAt: updatedAt,
               ),
           withReferenceMapper: (p0) => p0
