@@ -9,6 +9,8 @@ import 'package:fitkarma/features/workout/workout_screen.dart';
 import 'package:fitkarma/features/karma/karma_screen.dart';
 import 'package:fitkarma/features/steps/steps_screen.dart';
 import 'package:fitkarma/features/profile/profile_screen.dart';
+import 'package:fitkarma/features/bp/presentation/bp_log_screen.dart';
+import 'package:fitkarma/features/bp/presentation/bp_history_screen.dart';
 import 'package:fitkarma/features/wearables/wearables_screen.dart'
     deferred as wearables;
 import 'package:fitkarma/features/social/social_feed_screen.dart'
@@ -307,6 +309,24 @@ final GoRouter appRouter = GoRouter(
       parentNavigatorKey: _rootNavigatorKey,
       path: '/settings',
       builder: (context, state) => const SettingsScreen(),
+    ),
+
+    // Blood Pressure
+    GoRoute(
+      parentNavigatorKey: _rootNavigatorKey,
+      path: '/bp/log',
+      builder: (context, state) {
+        final userId = state.extra as String? ?? '';
+        return BPLogScreen(userId: userId);
+      },
+    ),
+    GoRoute(
+      parentNavigatorKey: _rootNavigatorKey,
+      path: '/bp/history',
+      builder: (context, state) {
+        final userId = state.extra as String? ?? '';
+        return BpHistoryScreen(userId: userId);
+      },
     ),
   ],
 );

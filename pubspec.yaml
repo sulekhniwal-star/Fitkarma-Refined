@@ -82,6 +82,10 @@ dependencies:
   # Background tasks
   workmanager: ^0.5.2
 
+  # Notifications
+  flutter_local_notifications: ^18.0.1
+  timezone: ^0.10.0
+
   # Maps & GPS
   flutter_map: ^7.0.2
   latlong2: ^0.9.1

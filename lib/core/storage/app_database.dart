@@ -1,5 +1,12 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
+import 'package:flutter/foundation.dart';
+
+import '../security/encryption_service.dart';
+import '../security/key_manager.dart';
 
 part 'app_database.g.dart';
 
@@ -769,17 +776,20 @@ class BloodPressureLogsDao extends DatabaseAccessor<AppDatabase>
 
   Future<int> insertLogEncrypted({
     required String userId,
-    required String systolic,
-    required String diastolic,
+    required int systolic,
+    required int diastolic,
     int? pulse,
-    required Uint8List encryptedSystolic,
-    required Uint8List encryptedDiastolic,
   }) async {
+    final key = await KeyManager.instance.getKeyForDataClass(DataClassKeys.bp);
+    
+    final encSys = await EncryptionHelper.encryptField(systolic.toString(), key);
+    final encDia = await EncryptionHelper.encryptField(diastolic.toString(), key);
+    
     return into(bloodPressureLogs).insert(
       BloodPressureLogsCompanion.insert(
         userId: userId,
-        systolic: systolic,
-        diastolic: diastolic,
+        systolic: base64Encode(encSys),
+        diastolic: base64Encode(encDia),
         pulse: Value(pulse),
         isEncrypted: const Value(true),
         loggedAt: DateTime.now(),
@@ -787,17 +797,63 @@ class BloodPressureLogsDao extends DatabaseAccessor<AppDatabase>
     );
   }
 
+  Future<int> insertLogWithKarma({
+    required String userId,
+    required int systolic,
+    required int diastolic,
+    int? pulse,
+  }) async {
+    final id = await insertLogEncrypted(
+      userId: userId,
+      systolic: systolic,
+      diastolic: diastolic,
+      pulse: pulse,
+    );
+    
+    await db.karmaTransactionsDao.insertTransaction(
+      KarmaTransactionsCompanion.insert(
+        userId: userId,
+        amount: 5,
+        createdAt: DateTime.now(),
+      ),
+    );
+    
+    return id;
+  }
+
   Future<List<DecryptedBPLog>> getLogsForUserDecrypted(String userId,
       {DateTime? from, DateTime? to}) async {
     final logs = await getLogsForUser(userId, from: from, to: to);
-    return logs.map((l) => DecryptedBPLog(
-      id: l.id,
-      userId: l.userId,
-      systolic: l.systolic,
-      diastolic: l.diastolic,
-      pulse: l.pulse,
-      loggedAt: l.loggedAt,
-    )).toList();
+    final key = await KeyManager.instance.getKeyForDataClass(DataClassKeys.bp);
+    
+    final decryptedLogs = <DecryptedBPLog>[];
+    for (final l in logs) {
+      String sys = l.systolic;
+      String dia = l.diastolic;
+      
+      if (l.isEncrypted) {
+        try {
+          final sysBytes = base64Decode(l.systolic);
+          final diaBytes = base64Decode(l.diastolic);
+          sys = await EncryptionHelper.decryptField(sysBytes, key);
+          dia = await EncryptionHelper.decryptField(diaBytes, key);
+        } catch (e) {
+          debugPrint('BP decryption failed: $e');
+        }
+      }
+      
+      decryptedLogs.add(DecryptedBPLog(
+        id: l.id,
+        userId: l.userId,
+        systolic: sys,
+        diastolic: dia,
+        pulse: l.pulse,
+        isEncrypted: l.isEncrypted,
+        loggedAt: l.loggedAt,
+      ));
+    }
+    
+    return decryptedLogs;
   }
 
   Future<Map<String, dynamic>> getStatistics(String userId) async {
@@ -854,6 +910,7 @@ class DecryptedBPLog {
   final String systolic;
   final String diastolic;
   final int? pulse;
+  final bool isEncrypted;
   final DateTime loggedAt;
 
   DecryptedBPLog({
@@ -862,6 +919,7 @@ class DecryptedBPLog {
     required this.systolic,
     required this.diastolic,
     this.pulse,
+    this.isEncrypted = false,
     required this.loggedAt,
   });
 
@@ -877,7 +935,7 @@ class DecryptedBPLog {
       return BPClassification.stage2;
     } else if (systolic >= 130 || diastolic >= 80) {
       return BPClassification.stage1;
-    } else if (systolic >= 130 && systolic < 130 || diastolic >= 80 && diastolic < 80) {
+    } else if (systolic >= 120 && systolic < 130 || diastolic >= 80 && diastolic < 90) {
       return BPClassification.elevated;
     } else if (systolic < 120 && diastolic < 80) {
       return BPClassification.normal;
