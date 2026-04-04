@@ -20,6 +20,8 @@ import 'package:fitkarma/features/appointments/presentation/appointments_list_sc
 import 'package:fitkarma/features/appointments/presentation/prescription_screen.dart';
 import 'package:fitkarma/features/lab_reports/presentation/lab_report_scan_screen.dart';
 import 'package:fitkarma/features/abha/presentation/link_abha_screen.dart';
+import 'package:fitkarma/features/sleep/presentation/sleep_log_screen.dart';
+import 'package:fitkarma/features/sleep/presentation/sleep_history_screen.dart';
 import 'package:fitkarma/features/spo2/presentation/spo2_log_screen.dart';
 import 'package:fitkarma/features/spo2/presentation/spo2_history_screen.dart';
 import 'package:fitkarma/features/wearables/wearables_screen.dart'
@@ -413,21 +415,28 @@ final GoRouter appRouter = GoRouter(
       },
     ),
 
-    // ABHA
+// ABHA
     GoRoute(
       parentNavigatorKey: _rootNavigatorKey,
-      path: '/abha/link',
+      path: '/abha/prescriptions/:userId',
+      builder: (context, state) => const _PlaceholderScreen('ABHA Prescriptions'),
+    ),
+
+    // Sleep
+    GoRoute(
+      parentNavigatorKey: _rootNavigatorKey,
+      path: '/sleep/log',
       builder: (context, state) {
         final userId = state.extra as String? ?? '';
-        return LinkAbhaScreen(userId: userId);
+        return SleepLogScreen(userId: userId);
       },
     ),
     GoRoute(
       parentNavigatorKey: _rootNavigatorKey,
-      path: '/abha/prescriptions/:userId',
+      path: '/sleep/history',
       builder: (context, state) {
-        final userId = state.pathParameters['userId'] ?? '';
-        return const _PlaceholderScreen('ABHA Prescriptions');
+        final userId = state.extra as String? ?? '';
+        return SleepHistoryScreen(userId: userId);
       },
     ),
   ],

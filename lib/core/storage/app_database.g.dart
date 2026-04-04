@@ -3053,6 +3053,28 @@ class $SleepLogsTable extends SleepLogs
     type: DriftSqlType.int,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _bedTimeMeta = const VerificationMeta(
+    'bedTime',
+  );
+  @override
+  late final GeneratedColumn<DateTime> bedTime = GeneratedColumn<DateTime>(
+    'bed_time',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _wakeTimeMeta = const VerificationMeta(
+    'wakeTime',
+  );
+  @override
+  late final GeneratedColumn<DateTime> wakeTime = GeneratedColumn<DateTime>(
+    'wake_time',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _dateMeta = const VerificationMeta('date');
   @override
   late final GeneratedColumn<DateTime> date = GeneratedColumn<DateTime>(
@@ -3068,6 +3090,8 @@ class $SleepLogsTable extends SleepLogs
     userId,
     durationMin,
     quality,
+    bedTime,
+    wakeTime,
     date,
   ];
   @override
@@ -3110,6 +3134,18 @@ class $SleepLogsTable extends SleepLogs
         quality.isAcceptableOrUnknown(data['quality']!, _qualityMeta),
       );
     }
+    if (data.containsKey('bed_time')) {
+      context.handle(
+        _bedTimeMeta,
+        bedTime.isAcceptableOrUnknown(data['bed_time']!, _bedTimeMeta),
+      );
+    }
+    if (data.containsKey('wake_time')) {
+      context.handle(
+        _wakeTimeMeta,
+        wakeTime.isAcceptableOrUnknown(data['wake_time']!, _wakeTimeMeta),
+      );
+    }
     if (data.containsKey('date')) {
       context.handle(
         _dateMeta,
@@ -3143,6 +3179,14 @@ class $SleepLogsTable extends SleepLogs
         DriftSqlType.int,
         data['${effectivePrefix}quality'],
       ),
+      bedTime: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}bed_time'],
+      ),
+      wakeTime: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}wake_time'],
+      ),
       date: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}date'],
@@ -3161,12 +3205,16 @@ class SleepLog extends DataClass implements Insertable<SleepLog> {
   final String userId;
   final int durationMin;
   final int? quality;
+  final DateTime? bedTime;
+  final DateTime? wakeTime;
   final DateTime date;
   const SleepLog({
     required this.id,
     required this.userId,
     required this.durationMin,
     this.quality,
+    this.bedTime,
+    this.wakeTime,
     required this.date,
   });
   @override
@@ -3177,6 +3225,12 @@ class SleepLog extends DataClass implements Insertable<SleepLog> {
     map['duration_min'] = Variable<int>(durationMin);
     if (!nullToAbsent || quality != null) {
       map['quality'] = Variable<int>(quality);
+    }
+    if (!nullToAbsent || bedTime != null) {
+      map['bed_time'] = Variable<DateTime>(bedTime);
+    }
+    if (!nullToAbsent || wakeTime != null) {
+      map['wake_time'] = Variable<DateTime>(wakeTime);
     }
     map['date'] = Variable<DateTime>(date);
     return map;
@@ -3190,6 +3244,12 @@ class SleepLog extends DataClass implements Insertable<SleepLog> {
       quality: quality == null && nullToAbsent
           ? const Value.absent()
           : Value(quality),
+      bedTime: bedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(bedTime),
+      wakeTime: wakeTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(wakeTime),
       date: Value(date),
     );
   }
@@ -3204,6 +3264,8 @@ class SleepLog extends DataClass implements Insertable<SleepLog> {
       userId: serializer.fromJson<String>(json['userId']),
       durationMin: serializer.fromJson<int>(json['durationMin']),
       quality: serializer.fromJson<int?>(json['quality']),
+      bedTime: serializer.fromJson<DateTime?>(json['bedTime']),
+      wakeTime: serializer.fromJson<DateTime?>(json['wakeTime']),
       date: serializer.fromJson<DateTime>(json['date']),
     );
   }
@@ -3215,6 +3277,8 @@ class SleepLog extends DataClass implements Insertable<SleepLog> {
       'userId': serializer.toJson<String>(userId),
       'durationMin': serializer.toJson<int>(durationMin),
       'quality': serializer.toJson<int?>(quality),
+      'bedTime': serializer.toJson<DateTime?>(bedTime),
+      'wakeTime': serializer.toJson<DateTime?>(wakeTime),
       'date': serializer.toJson<DateTime>(date),
     };
   }
@@ -3224,12 +3288,16 @@ class SleepLog extends DataClass implements Insertable<SleepLog> {
     String? userId,
     int? durationMin,
     Value<int?> quality = const Value.absent(),
+    Value<DateTime?> bedTime = const Value.absent(),
+    Value<DateTime?> wakeTime = const Value.absent(),
     DateTime? date,
   }) => SleepLog(
     id: id ?? this.id,
     userId: userId ?? this.userId,
     durationMin: durationMin ?? this.durationMin,
     quality: quality.present ? quality.value : this.quality,
+    bedTime: bedTime.present ? bedTime.value : this.bedTime,
+    wakeTime: wakeTime.present ? wakeTime.value : this.wakeTime,
     date: date ?? this.date,
   );
   SleepLog copyWithCompanion(SleepLogsCompanion data) {
@@ -3240,6 +3308,8 @@ class SleepLog extends DataClass implements Insertable<SleepLog> {
           ? data.durationMin.value
           : this.durationMin,
       quality: data.quality.present ? data.quality.value : this.quality,
+      bedTime: data.bedTime.present ? data.bedTime.value : this.bedTime,
+      wakeTime: data.wakeTime.present ? data.wakeTime.value : this.wakeTime,
       date: data.date.present ? data.date.value : this.date,
     );
   }
@@ -3251,13 +3321,16 @@ class SleepLog extends DataClass implements Insertable<SleepLog> {
           ..write('userId: $userId, ')
           ..write('durationMin: $durationMin, ')
           ..write('quality: $quality, ')
+          ..write('bedTime: $bedTime, ')
+          ..write('wakeTime: $wakeTime, ')
           ..write('date: $date')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, userId, durationMin, quality, date);
+  int get hashCode =>
+      Object.hash(id, userId, durationMin, quality, bedTime, wakeTime, date);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -3266,6 +3339,8 @@ class SleepLog extends DataClass implements Insertable<SleepLog> {
           other.userId == this.userId &&
           other.durationMin == this.durationMin &&
           other.quality == this.quality &&
+          other.bedTime == this.bedTime &&
+          other.wakeTime == this.wakeTime &&
           other.date == this.date);
 }
 
@@ -3274,12 +3349,16 @@ class SleepLogsCompanion extends UpdateCompanion<SleepLog> {
   final Value<String> userId;
   final Value<int> durationMin;
   final Value<int?> quality;
+  final Value<DateTime?> bedTime;
+  final Value<DateTime?> wakeTime;
   final Value<DateTime> date;
   const SleepLogsCompanion({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
     this.durationMin = const Value.absent(),
     this.quality = const Value.absent(),
+    this.bedTime = const Value.absent(),
+    this.wakeTime = const Value.absent(),
     this.date = const Value.absent(),
   });
   SleepLogsCompanion.insert({
@@ -3287,6 +3366,8 @@ class SleepLogsCompanion extends UpdateCompanion<SleepLog> {
     required String userId,
     required int durationMin,
     this.quality = const Value.absent(),
+    this.bedTime = const Value.absent(),
+    this.wakeTime = const Value.absent(),
     required DateTime date,
   }) : userId = Value(userId),
        durationMin = Value(durationMin),
@@ -3296,6 +3377,8 @@ class SleepLogsCompanion extends UpdateCompanion<SleepLog> {
     Expression<String>? userId,
     Expression<int>? durationMin,
     Expression<int>? quality,
+    Expression<DateTime>? bedTime,
+    Expression<DateTime>? wakeTime,
     Expression<DateTime>? date,
   }) {
     return RawValuesInsertable({
@@ -3303,6 +3386,8 @@ class SleepLogsCompanion extends UpdateCompanion<SleepLog> {
       if (userId != null) 'user_id': userId,
       if (durationMin != null) 'duration_min': durationMin,
       if (quality != null) 'quality': quality,
+      if (bedTime != null) 'bed_time': bedTime,
+      if (wakeTime != null) 'wake_time': wakeTime,
       if (date != null) 'date': date,
     });
   }
@@ -3312,6 +3397,8 @@ class SleepLogsCompanion extends UpdateCompanion<SleepLog> {
     Value<String>? userId,
     Value<int>? durationMin,
     Value<int?>? quality,
+    Value<DateTime?>? bedTime,
+    Value<DateTime?>? wakeTime,
     Value<DateTime>? date,
   }) {
     return SleepLogsCompanion(
@@ -3319,6 +3406,8 @@ class SleepLogsCompanion extends UpdateCompanion<SleepLog> {
       userId: userId ?? this.userId,
       durationMin: durationMin ?? this.durationMin,
       quality: quality ?? this.quality,
+      bedTime: bedTime ?? this.bedTime,
+      wakeTime: wakeTime ?? this.wakeTime,
       date: date ?? this.date,
     );
   }
@@ -3338,6 +3427,12 @@ class SleepLogsCompanion extends UpdateCompanion<SleepLog> {
     if (quality.present) {
       map['quality'] = Variable<int>(quality.value);
     }
+    if (bedTime.present) {
+      map['bed_time'] = Variable<DateTime>(bedTime.value);
+    }
+    if (wakeTime.present) {
+      map['wake_time'] = Variable<DateTime>(wakeTime.value);
+    }
     if (date.present) {
       map['date'] = Variable<DateTime>(date.value);
     }
@@ -3351,6 +3446,8 @@ class SleepLogsCompanion extends UpdateCompanion<SleepLog> {
           ..write('userId: $userId, ')
           ..write('durationMin: $durationMin, ')
           ..write('quality: $quality, ')
+          ..write('bedTime: $bedTime, ')
+          ..write('wakeTime: $wakeTime, ')
           ..write('date: $date')
           ..write(')'))
         .toString();
@@ -17369,6 +17466,8 @@ typedef $$SleepLogsTableCreateCompanionBuilder =
       required String userId,
       required int durationMin,
       Value<int?> quality,
+      Value<DateTime?> bedTime,
+      Value<DateTime?> wakeTime,
       required DateTime date,
     });
 typedef $$SleepLogsTableUpdateCompanionBuilder =
@@ -17377,6 +17476,8 @@ typedef $$SleepLogsTableUpdateCompanionBuilder =
       Value<String> userId,
       Value<int> durationMin,
       Value<int?> quality,
+      Value<DateTime?> bedTime,
+      Value<DateTime?> wakeTime,
       Value<DateTime> date,
     });
 
@@ -17406,6 +17507,16 @@ class $$SleepLogsTableFilterComposer
 
   ColumnFilters<int> get quality => $composableBuilder(
     column: $table.quality,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get bedTime => $composableBuilder(
+    column: $table.bedTime,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get wakeTime => $composableBuilder(
+    column: $table.wakeTime,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -17444,6 +17555,16 @@ class $$SleepLogsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<DateTime> get bedTime => $composableBuilder(
+    column: $table.bedTime,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get wakeTime => $composableBuilder(
+    column: $table.wakeTime,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get date => $composableBuilder(
     column: $table.date,
     builder: (column) => ColumnOrderings(column),
@@ -17472,6 +17593,12 @@ class $$SleepLogsTableAnnotationComposer
 
   GeneratedColumn<int> get quality =>
       $composableBuilder(column: $table.quality, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get bedTime =>
+      $composableBuilder(column: $table.bedTime, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get wakeTime =>
+      $composableBuilder(column: $table.wakeTime, builder: (column) => column);
 
   GeneratedColumn<DateTime> get date =>
       $composableBuilder(column: $table.date, builder: (column) => column);
@@ -17509,12 +17636,16 @@ class $$SleepLogsTableTableManager
                 Value<String> userId = const Value.absent(),
                 Value<int> durationMin = const Value.absent(),
                 Value<int?> quality = const Value.absent(),
+                Value<DateTime?> bedTime = const Value.absent(),
+                Value<DateTime?> wakeTime = const Value.absent(),
                 Value<DateTime> date = const Value.absent(),
               }) => SleepLogsCompanion(
                 id: id,
                 userId: userId,
                 durationMin: durationMin,
                 quality: quality,
+                bedTime: bedTime,
+                wakeTime: wakeTime,
                 date: date,
               ),
           createCompanionCallback:
@@ -17523,12 +17654,16 @@ class $$SleepLogsTableTableManager
                 required String userId,
                 required int durationMin,
                 Value<int?> quality = const Value.absent(),
+                Value<DateTime?> bedTime = const Value.absent(),
+                Value<DateTime?> wakeTime = const Value.absent(),
                 required DateTime date,
               }) => SleepLogsCompanion.insert(
                 id: id,
                 userId: userId,
                 durationMin: durationMin,
                 quality: quality,
+                bedTime: bedTime,
+                wakeTime: wakeTime,
                 date: date,
               ),
           withReferenceMapper: (p0) => p0

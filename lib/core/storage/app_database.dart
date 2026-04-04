@@ -120,6 +120,8 @@ class SleepLogs extends Table {
   TextColumn get userId => text().withLength(min: 1, max: 64)();
   IntColumn get durationMin => integer()();
   IntColumn get quality => integer().nullable()();
+  DateTimeColumn get bedTime => dateTime().nullable()();
+  DateTimeColumn get wakeTime => dateTime().nullable()();
   DateTimeColumn get date => dateTime()();
 }
 
@@ -570,6 +572,9 @@ class SleepLogsDao extends DatabaseAccessor<AppDatabase>
     with _$SleepLogsDaoMixin {
   SleepLogsDao(super.db);
 
+  static const _sleepTargetMin = 480;
+  static const _weekTargetHours = 56;
+
   Future<List<SleepLog>> getLogsForUser(String userId,
       {DateTime? from, DateTime? to}) {
     final query = select(sleepLogs)
@@ -584,10 +589,207 @@ class SleepLogsDao extends DatabaseAccessor<AppDatabase>
       (select(sleepLogs)
             ..where((t) => t.userId.equals(userId))
             ..orderBy([(t) => OrderingTerm.desc(t.date)]))
-        .watch();
+          .watch();
 
   Future<int> insertLog(SleepLogsCompanion entry) =>
       into(sleepLogs).insert(entry);
+
+  Future<int> insertLogWithKarma({
+    required String userId,
+    required int durationMin,
+    int? quality,
+    DateTime? bedTime,
+    DateTime? wakeTime,
+    required DateTime date,
+  }) async {
+    final id = await into(sleepLogs).insert(
+      SleepLogsCompanion.insert(
+        userId: userId,
+        durationMin: durationMin,
+        quality: Value(quality),
+        bedTime: Value(bedTime),
+        wakeTime: Value(wakeTime),
+        date: date,
+      ),
+    );
+    
+    await db.karmaTransactionsDao.insertTransaction(
+      KarmaTransactionsCompanion.insert(
+        userId: userId,
+        amount: 5,
+        createdAt: DateTime.now(),
+      ),
+    );
+    
+    return id;
+  }
+
+  Future<SleepDebtData> calculateSleepDebt(String userId) async {
+    final now = DateTime.now();
+    final weekStart = DateTime(now.year, now.month, now.day).subtract(const Duration(days: 7));
+    
+    final logs = await getLogsForUser(userId, from: weekStart);
+    
+    int totalSleepMin = 0;
+    int debtMin = _weekTargetHours * 60;
+    
+    for (final log in logs) {
+      totalSleepMin += log.durationMin;
+    }
+    
+    debtMin = debtMin - totalSleepMin;
+    
+    final hours = debtMin ~/ 60;
+    final mins = debtMin % 60;
+    
+    return SleepDebtData(
+      totalSleepMin: totalSleepMin,
+      targetMin: _weekTargetHours * 60,
+      debtMin: debtMin > 0 ? debtMin : 0,
+      displayString: debtMin > 0 
+          ? 'You owe ${hours}h ${mins}m sleep this week'
+          : 'On track! You\'ve met your sleep target',
+    );
+  }
+
+  Future<ChronotypeData> detectChronotype(String userId) async {
+    final thirtyDaysAgo = DateTime.now().subtract(const Duration(days: 30));
+    final logs = await getLogsForUser(userId, from: thirtyDaysAgo);
+    
+    if (logs.length < 14) {
+      return ChronotypeData(
+        type: Chronotype.insufficient,
+        medianBedtime: null,
+        confidence: 0,
+      );
+    }
+    
+    final bedtimes = logs
+        .where((l) => l.bedTime != null)
+        .map((l) => l.bedTime!)
+        .toList()
+      ..sort((a, b) => a.compareTo(b));
+    
+    if (bedtimes.isEmpty) {
+      return ChronotypeData(
+        type: Chronotype.insufficient,
+        medianBedtime: null,
+        confidence: logs.length / 30,
+      );
+    }
+    
+    final medianIndex = bedtimes.length ~/ 2;
+    final medianBedtime = bedtimes[medianIndex];
+    
+    int hour = medianBedtime.hour;
+    if (hour >= 0 && hour < 4) {
+      hour += 24;
+    }
+    
+    Chronotype type;
+    if (hour < 22) {
+      type = Chronotype.earlyBird;
+    } else if (hour >= 23 || hour < 1) {
+      type = Chronotype.nightOwl;
+    } else {
+      type = Chronotype.intermediate;
+    }
+    
+    return ChronotypeData(
+      type: type,
+      medianBedtime: medianBedtime,
+      confidence: logs.length / 30,
+    );
+  }
+
+  Future<List<WeeklySleepData>> getWeeklyData(String userId) async {
+    final now = DateTime.now();
+    final data = <WeeklySleepData>[];
+    
+    for (int i = 6; i >= 0; i--) {
+      final day = DateTime(now.year, now.month, now.day).subtract(Duration(days: i));
+      final dayStart = day;
+      final dayEnd = day.add(const Duration(days: 1));
+      
+      final logs = await getLogsForUser(userId, from: dayStart, to: dayEnd);
+      final duration = logs.isEmpty ? 0 : logs.first.durationMin;
+      final quality = logs.isEmpty ? null : logs.first.quality;
+      
+      data.add(WeeklySleepData(
+        date: day,
+        durationMin: duration,
+        quality: quality,
+        targetMet: duration >= _sleepTargetMin,
+      ));
+    }
+    
+    return data;
+  }
+}
+
+class SleepDebtData {
+  final int totalSleepMin;
+  final int targetMin;
+  final int debtMin;
+  final String displayString;
+
+  SleepDebtData({
+    required this.totalSleepMin,
+    required this.targetMin,
+    required this.debtMin,
+    required this.displayString,
+  });
+
+  double get targetPercentage => (totalSleepMin / targetMin * 100).clamp(0, 200);
+}
+
+class ChronotypeData {
+  final Chronotype type;
+  final DateTime? medianBedtime;
+  final double confidence;
+
+  ChronotypeData({
+    required this.type,
+    this.medianBedtime,
+    required this.confidence,
+  });
+
+  String get displayName {
+    switch (type) {
+      case Chronotype.earlyBird:
+        return 'Early Bird 🌅';
+      case Chronotype.nightOwl:
+        return 'Night Owl 🦉';
+      case Chronotype.intermediate:
+        return 'Intermediate ⚖️';
+      case Chronotype.insufficient:
+        return 'Collecting data...';
+    }
+  }
+}
+
+enum Chronotype {
+  earlyBird,
+  nightOwl,
+  intermediate,
+  insufficient,
+}
+
+class WeeklySleepData {
+  final DateTime date;
+  final int durationMin;
+  final int? quality;
+  final bool targetMet;
+
+  WeeklySleepData({
+    required this.date,
+    required this.durationMin,
+    this.quality,
+    required this.targetMet,
+  });
+
+  int get hours => durationMin ~/ 60;
+  int get minutes => durationMin % 60;
 }
 
 @DriftAccessor(tables: [MoodLogs])
