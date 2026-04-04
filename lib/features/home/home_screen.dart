@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fitkarma/features/home/data/dashboard_providers.dart';
 import 'package:fitkarma/features/karma/karma_screen.dart';
+import 'package:fitkarma/features/wearables/data/wearable_repository.dart';
 import 'package:fitkarma/shared/theme/app_colors.dart';
 import 'package:fitkarma/shared/widgets/activity_rings.dart';
 import 'package:fitkarma/shared/widgets/insight_card.dart';
@@ -14,21 +15,35 @@ class DashboardScreen extends ConsumerStatefulWidget {
   ConsumerState<DashboardScreen> createState() => _DashboardScreenState();
 }
 
-class _DashboardScreenState extends ConsumerState<DashboardScreen> {
-  bool _synced = false;
+class _DashboardScreenState extends ConsumerState<DashboardScreen> with WidgetsBindingObserver {
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) => _triggerBackgroundSync());
   }
 
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _triggerBackgroundSync();
+    }
+  }
+
   Future<void> _triggerBackgroundSync() async {
-    if (_synced) return;
-    _synced = true;
-    Future.delayed(const Duration(seconds: 1), () {
-      ref.invalidate(dashboardDataProvider);
-    });
+    // Delta sync logic is encapsulated in wearableRepository
+    final wearableRepo = ref.read(wearableRepositoryProvider.notifier);
+    await wearableRepo.syncData();
+    
+    // Refresh dashboard data
+    ref.invalidate(dashboardDataProvider);
   }
 
   @override
