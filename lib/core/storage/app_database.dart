@@ -250,9 +250,15 @@ class Medications extends Table {
 class FastingLogs extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get userId => text().withLength(min: 1, max: 64)();
+  TextColumn get protocol => text().withLength(min: 1, max: 16)();
+  IntColumn get targetHours => integer()();
   DateTimeColumn get fastStart => dateTime()();
-  BoolColumn get completed => boolean().nullable()();
   DateTimeColumn get fastEnd => dateTime().nullable()();
+  BoolColumn get completed => boolean().nullable()();
+  BoolColumn get isRamadan => boolean().withDefault(const Constant(false))();
+  DateTimeColumn get sehriTime => dateTime().nullable()();
+  DateTimeColumn get iftarTime => dateTime().nullable()();
+  BoolColumn get hydrationAlertSent => boolean().withDefault(const Constant(false))();
 }
 
 @TableIndex(name: 'idx_meal_plans_user', columns: {#userId, #weekStartDate})
@@ -1411,6 +1417,12 @@ class FastingLogsDao extends DatabaseAccessor<AppDatabase>
             ..orderBy([(t) => OrderingTerm.desc(t.fastStart)]))
           .get();
 
+  Stream<List<FastingLog>> watchLogsForUser(String userId) =>
+      (select(fastingLogs)
+            ..where((t) => t.userId.equals(userId))
+            ..orderBy([(t) => OrderingTerm.desc(t.fastStart)]))
+          .watch();
+
   Future<int> insertLog(FastingLogsCompanion entry) =>
       into(fastingLogs).insert(entry);
 
@@ -1424,6 +1436,151 @@ class FastingLogsDao extends DatabaseAccessor<AppDatabase>
         .get();
     return results.isEmpty ? null : results.first;
   }
+
+  Future<int> startFast({
+    required String userId,
+    required String protocol,
+    required int targetHours,
+    bool isRamadan = false,
+    DateTime? sehriTime,
+    DateTime? iftarTime,
+  }) async {
+    return into(fastingLogs).insert(
+      FastingLogsCompanion.insert(
+        userId: userId,
+        protocol: protocol,
+        targetHours: targetHours,
+        fastStart: DateTime.now(),
+        isRamadan: Value(isRamadan),
+        sehriTime: Value(sehriTime),
+        iftarTime: Value(iftarTime),
+      ),
+    );
+  }
+
+  Future<int> endFastWithKarma(String userId) async {
+    final activeFast = await getActiveFast(userId);
+    if (activeFast == null) return -1;
+    
+    final now = DateTime.now();
+    final duration = now.difference(activeFast.fastStart).inHours;
+    
+    final completed = duration >= activeFast.targetHours;
+    
+    await (update(fastingLogs)..where((t) => t.id.equals(activeFast.id)))
+        .write(FastingLogsCompanion(
+          fastEnd: Value(now),
+          completed: Value(completed),
+        ));
+    
+    if (completed) {
+      await db.karmaTransactionsDao.insertTransaction(
+        KarmaTransactionsCompanion.insert(
+          userId: userId,
+          amount: 15,
+          createdAt: now,
+        ),
+      );
+    }
+    
+    return activeFast.id;
+  }
+
+  Future<FastingState> getFastingState(String userId) async {
+    final activeFast = await getActiveFast(userId);
+    if (activeFast == null) {
+      return FastingState(isActive: false, elapsedMinutes: 0, targetMinutes: 0, stage: FastingStage.idle);
+    }
+    
+    final now = DateTime.now();
+    final elapsed = now.difference(activeFast.fastStart);
+    final elapsedMinutes = elapsed.inMinutes;
+    final targetMinutes = activeFast.targetHours * 60;
+    final stage = _getStage(elapsedMinutes, activeFast.targetHours, activeFast.isRamadan);
+    final progress = elapsedMinutes / targetMinutes;
+    
+    return FastingState(
+      isActive: true,
+      elapsedMinutes: elapsedMinutes,
+      targetMinutes: targetMinutes,
+      stage: stage,
+      progress: progress.clamp(0.0, 1.0),
+      protocol: activeFast.protocol,
+    );
+  }
+
+  FastingStage _getStage(int minutes, int targetHours, bool isRamadan) {
+    final targetMinutes = targetHours * 60;
+    
+    if (minutes < 60) return FastingStage.eatingWindow;
+    if (minutes < targetMinutes * 0.25) return FastingStage.fatBurning;
+    if (minutes < targetMinutes * 0.5) return FastingStage.ketosis;
+    if (minutes < targetMinutes * 0.75) return FastingStage.autophagy;
+    return FastingStage.deepAutophagy;
+  }
+
+  Future<List<FastingProtocol>> getProtocols() async {
+    return [
+      const FastingProtocol(name: '16:8', hours: 16, description: '16 hours fasting, 8 hours eating'),
+      const FastingProtocol(name: '18:6', hours: 18, description: '18 hours fasting, 6 hours eating'),
+      const FastingProtocol(name: '5:2', hours: 24, description: '24 hours fasting, 2 days per week'),
+      const FastingProtocol(name: 'OMAD', hours: 23, description: 'One meal a day (23 hours)'),
+      const FastingProtocol(name: 'Custom', hours: 16, description: 'Custom duration'),
+    ];
+  }
+}
+
+class FastingState {
+  final bool isActive;
+  final int elapsedMinutes;
+  final int targetMinutes;
+  final FastingStage stage;
+  final double progress;
+  final String? protocol;
+
+  FastingState({
+    required this.isActive,
+    required this.elapsedMinutes,
+    required this.targetMinutes,
+    required this.stage,
+    this.progress = 0,
+    this.protocol,
+  });
+
+  String get remainingTime {
+    final remaining = targetMinutes - elapsedMinutes;
+    if (remaining <= 0) return 'Complete';
+    final hours = remaining ~/ 60;
+    final mins = remaining % 60;
+    return '${hours}h ${mins}m';
+  }
+
+  String get elapsedTime {
+    final hours = elapsedMinutes ~/ 60;
+    final mins = elapsedMinutes % 60;
+    return '${hours}h ${mins}m';
+  }
+}
+
+enum FastingStage {
+  eatingWindow,
+  fatBurning,
+  ketosis,
+  autophagy,
+  deepAutophagy,
+  idle,
+}
+
+class FastingProtocol {
+  final String name;
+  final int hours;
+  final String description;
+
+  const FastingProtocol({
+    required this.name,
+    required this.hours,
+    required this.description,
+  });
 }
 
 @DriftAccessor(tables: [MealPlans])

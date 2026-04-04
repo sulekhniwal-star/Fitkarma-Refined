@@ -9127,6 +9127,32 @@ class $FastingLogsTable extends FastingLogs
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _protocolMeta = const VerificationMeta(
+    'protocol',
+  );
+  @override
+  late final GeneratedColumn<String> protocol = GeneratedColumn<String>(
+    'protocol',
+    aliasedName,
+    false,
+    additionalChecks: GeneratedColumn.checkTextLength(
+      minTextLength: 1,
+      maxTextLength: 16,
+    ),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _targetHoursMeta = const VerificationMeta(
+    'targetHours',
+  );
+  @override
+  late final GeneratedColumn<int> targetHours = GeneratedColumn<int>(
+    'target_hours',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
   static const VerificationMeta _fastStartMeta = const VerificationMeta(
     'fastStart',
   );
@@ -9137,6 +9163,17 @@ class $FastingLogsTable extends FastingLogs
     false,
     type: DriftSqlType.dateTime,
     requiredDuringInsert: true,
+  );
+  static const VerificationMeta _fastEndMeta = const VerificationMeta(
+    'fastEnd',
+  );
+  @override
+  late final GeneratedColumn<DateTime> fastEnd = GeneratedColumn<DateTime>(
+    'fast_end',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
   );
   static const VerificationMeta _completedMeta = const VerificationMeta(
     'completed',
@@ -9152,24 +9189,70 @@ class $FastingLogsTable extends FastingLogs
       'CHECK ("completed" IN (0, 1))',
     ),
   );
-  static const VerificationMeta _fastEndMeta = const VerificationMeta(
-    'fastEnd',
+  static const VerificationMeta _isRamadanMeta = const VerificationMeta(
+    'isRamadan',
   );
   @override
-  late final GeneratedColumn<DateTime> fastEnd = GeneratedColumn<DateTime>(
-    'fast_end',
+  late final GeneratedColumn<bool> isRamadan = GeneratedColumn<bool>(
+    'is_ramadan',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_ramadan" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _sehriTimeMeta = const VerificationMeta(
+    'sehriTime',
+  );
+  @override
+  late final GeneratedColumn<DateTime> sehriTime = GeneratedColumn<DateTime>(
+    'sehri_time',
     aliasedName,
     true,
     type: DriftSqlType.dateTime,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _iftarTimeMeta = const VerificationMeta(
+    'iftarTime',
+  );
+  @override
+  late final GeneratedColumn<DateTime> iftarTime = GeneratedColumn<DateTime>(
+    'iftar_time',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _hydrationAlertSentMeta =
+      const VerificationMeta('hydrationAlertSent');
+  @override
+  late final GeneratedColumn<bool> hydrationAlertSent = GeneratedColumn<bool>(
+    'hydration_alert_sent',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("hydration_alert_sent" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
     userId,
+    protocol,
+    targetHours,
     fastStart,
-    completed,
     fastEnd,
+    completed,
+    isRamadan,
+    sehriTime,
+    iftarTime,
+    hydrationAlertSent,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -9194,6 +9277,25 @@ class $FastingLogsTable extends FastingLogs
     } else if (isInserting) {
       context.missing(_userIdMeta);
     }
+    if (data.containsKey('protocol')) {
+      context.handle(
+        _protocolMeta,
+        protocol.isAcceptableOrUnknown(data['protocol']!, _protocolMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_protocolMeta);
+    }
+    if (data.containsKey('target_hours')) {
+      context.handle(
+        _targetHoursMeta,
+        targetHours.isAcceptableOrUnknown(
+          data['target_hours']!,
+          _targetHoursMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_targetHoursMeta);
+    }
     if (data.containsKey('fast_start')) {
       context.handle(
         _fastStartMeta,
@@ -9202,16 +9304,43 @@ class $FastingLogsTable extends FastingLogs
     } else if (isInserting) {
       context.missing(_fastStartMeta);
     }
+    if (data.containsKey('fast_end')) {
+      context.handle(
+        _fastEndMeta,
+        fastEnd.isAcceptableOrUnknown(data['fast_end']!, _fastEndMeta),
+      );
+    }
     if (data.containsKey('completed')) {
       context.handle(
         _completedMeta,
         completed.isAcceptableOrUnknown(data['completed']!, _completedMeta),
       );
     }
-    if (data.containsKey('fast_end')) {
+    if (data.containsKey('is_ramadan')) {
       context.handle(
-        _fastEndMeta,
-        fastEnd.isAcceptableOrUnknown(data['fast_end']!, _fastEndMeta),
+        _isRamadanMeta,
+        isRamadan.isAcceptableOrUnknown(data['is_ramadan']!, _isRamadanMeta),
+      );
+    }
+    if (data.containsKey('sehri_time')) {
+      context.handle(
+        _sehriTimeMeta,
+        sehriTime.isAcceptableOrUnknown(data['sehri_time']!, _sehriTimeMeta),
+      );
+    }
+    if (data.containsKey('iftar_time')) {
+      context.handle(
+        _iftarTimeMeta,
+        iftarTime.isAcceptableOrUnknown(data['iftar_time']!, _iftarTimeMeta),
+      );
+    }
+    if (data.containsKey('hydration_alert_sent')) {
+      context.handle(
+        _hydrationAlertSentMeta,
+        hydrationAlertSent.isAcceptableOrUnknown(
+          data['hydration_alert_sent']!,
+          _hydrationAlertSentMeta,
+        ),
       );
     }
     return context;
@@ -9231,18 +9360,42 @@ class $FastingLogsTable extends FastingLogs
         DriftSqlType.string,
         data['${effectivePrefix}user_id'],
       )!,
+      protocol: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}protocol'],
+      )!,
+      targetHours: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}target_hours'],
+      )!,
       fastStart: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}fast_start'],
       )!,
-      completed: attachedDatabase.typeMapping.read(
-        DriftSqlType.bool,
-        data['${effectivePrefix}completed'],
-      ),
       fastEnd: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}fast_end'],
       ),
+      completed: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}completed'],
+      ),
+      isRamadan: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_ramadan'],
+      )!,
+      sehriTime: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}sehri_time'],
+      ),
+      iftarTime: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}iftar_time'],
+      ),
+      hydrationAlertSent: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}hydration_alert_sent'],
+      )!,
     );
   }
 
@@ -9255,28 +9408,50 @@ class $FastingLogsTable extends FastingLogs
 class FastingLog extends DataClass implements Insertable<FastingLog> {
   final int id;
   final String userId;
+  final String protocol;
+  final int targetHours;
   final DateTime fastStart;
-  final bool? completed;
   final DateTime? fastEnd;
+  final bool? completed;
+  final bool isRamadan;
+  final DateTime? sehriTime;
+  final DateTime? iftarTime;
+  final bool hydrationAlertSent;
   const FastingLog({
     required this.id,
     required this.userId,
+    required this.protocol,
+    required this.targetHours,
     required this.fastStart,
-    this.completed,
     this.fastEnd,
+    this.completed,
+    required this.isRamadan,
+    this.sehriTime,
+    this.iftarTime,
+    required this.hydrationAlertSent,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
     map['user_id'] = Variable<String>(userId);
+    map['protocol'] = Variable<String>(protocol);
+    map['target_hours'] = Variable<int>(targetHours);
     map['fast_start'] = Variable<DateTime>(fastStart);
-    if (!nullToAbsent || completed != null) {
-      map['completed'] = Variable<bool>(completed);
-    }
     if (!nullToAbsent || fastEnd != null) {
       map['fast_end'] = Variable<DateTime>(fastEnd);
     }
+    if (!nullToAbsent || completed != null) {
+      map['completed'] = Variable<bool>(completed);
+    }
+    map['is_ramadan'] = Variable<bool>(isRamadan);
+    if (!nullToAbsent || sehriTime != null) {
+      map['sehri_time'] = Variable<DateTime>(sehriTime);
+    }
+    if (!nullToAbsent || iftarTime != null) {
+      map['iftar_time'] = Variable<DateTime>(iftarTime);
+    }
+    map['hydration_alert_sent'] = Variable<bool>(hydrationAlertSent);
     return map;
   }
 
@@ -9284,13 +9459,23 @@ class FastingLog extends DataClass implements Insertable<FastingLog> {
     return FastingLogsCompanion(
       id: Value(id),
       userId: Value(userId),
+      protocol: Value(protocol),
+      targetHours: Value(targetHours),
       fastStart: Value(fastStart),
-      completed: completed == null && nullToAbsent
-          ? const Value.absent()
-          : Value(completed),
       fastEnd: fastEnd == null && nullToAbsent
           ? const Value.absent()
           : Value(fastEnd),
+      completed: completed == null && nullToAbsent
+          ? const Value.absent()
+          : Value(completed),
+      isRamadan: Value(isRamadan),
+      sehriTime: sehriTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(sehriTime),
+      iftarTime: iftarTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(iftarTime),
+      hydrationAlertSent: Value(hydrationAlertSent),
     );
   }
 
@@ -9302,9 +9487,15 @@ class FastingLog extends DataClass implements Insertable<FastingLog> {
     return FastingLog(
       id: serializer.fromJson<int>(json['id']),
       userId: serializer.fromJson<String>(json['userId']),
+      protocol: serializer.fromJson<String>(json['protocol']),
+      targetHours: serializer.fromJson<int>(json['targetHours']),
       fastStart: serializer.fromJson<DateTime>(json['fastStart']),
-      completed: serializer.fromJson<bool?>(json['completed']),
       fastEnd: serializer.fromJson<DateTime?>(json['fastEnd']),
+      completed: serializer.fromJson<bool?>(json['completed']),
+      isRamadan: serializer.fromJson<bool>(json['isRamadan']),
+      sehriTime: serializer.fromJson<DateTime?>(json['sehriTime']),
+      iftarTime: serializer.fromJson<DateTime?>(json['iftarTime']),
+      hydrationAlertSent: serializer.fromJson<bool>(json['hydrationAlertSent']),
     );
   }
   @override
@@ -9313,32 +9504,60 @@ class FastingLog extends DataClass implements Insertable<FastingLog> {
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
       'userId': serializer.toJson<String>(userId),
+      'protocol': serializer.toJson<String>(protocol),
+      'targetHours': serializer.toJson<int>(targetHours),
       'fastStart': serializer.toJson<DateTime>(fastStart),
-      'completed': serializer.toJson<bool?>(completed),
       'fastEnd': serializer.toJson<DateTime?>(fastEnd),
+      'completed': serializer.toJson<bool?>(completed),
+      'isRamadan': serializer.toJson<bool>(isRamadan),
+      'sehriTime': serializer.toJson<DateTime?>(sehriTime),
+      'iftarTime': serializer.toJson<DateTime?>(iftarTime),
+      'hydrationAlertSent': serializer.toJson<bool>(hydrationAlertSent),
     };
   }
 
   FastingLog copyWith({
     int? id,
     String? userId,
+    String? protocol,
+    int? targetHours,
     DateTime? fastStart,
-    Value<bool?> completed = const Value.absent(),
     Value<DateTime?> fastEnd = const Value.absent(),
+    Value<bool?> completed = const Value.absent(),
+    bool? isRamadan,
+    Value<DateTime?> sehriTime = const Value.absent(),
+    Value<DateTime?> iftarTime = const Value.absent(),
+    bool? hydrationAlertSent,
   }) => FastingLog(
     id: id ?? this.id,
     userId: userId ?? this.userId,
+    protocol: protocol ?? this.protocol,
+    targetHours: targetHours ?? this.targetHours,
     fastStart: fastStart ?? this.fastStart,
-    completed: completed.present ? completed.value : this.completed,
     fastEnd: fastEnd.present ? fastEnd.value : this.fastEnd,
+    completed: completed.present ? completed.value : this.completed,
+    isRamadan: isRamadan ?? this.isRamadan,
+    sehriTime: sehriTime.present ? sehriTime.value : this.sehriTime,
+    iftarTime: iftarTime.present ? iftarTime.value : this.iftarTime,
+    hydrationAlertSent: hydrationAlertSent ?? this.hydrationAlertSent,
   );
   FastingLog copyWithCompanion(FastingLogsCompanion data) {
     return FastingLog(
       id: data.id.present ? data.id.value : this.id,
       userId: data.userId.present ? data.userId.value : this.userId,
+      protocol: data.protocol.present ? data.protocol.value : this.protocol,
+      targetHours: data.targetHours.present
+          ? data.targetHours.value
+          : this.targetHours,
       fastStart: data.fastStart.present ? data.fastStart.value : this.fastStart,
-      completed: data.completed.present ? data.completed.value : this.completed,
       fastEnd: data.fastEnd.present ? data.fastEnd.value : this.fastEnd,
+      completed: data.completed.present ? data.completed.value : this.completed,
+      isRamadan: data.isRamadan.present ? data.isRamadan.value : this.isRamadan,
+      sehriTime: data.sehriTime.present ? data.sehriTime.value : this.sehriTime,
+      iftarTime: data.iftarTime.present ? data.iftarTime.value : this.iftarTime,
+      hydrationAlertSent: data.hydrationAlertSent.present
+          ? data.hydrationAlertSent.value
+          : this.hydrationAlertSent,
     );
   }
 
@@ -9347,76 +9566,145 @@ class FastingLog extends DataClass implements Insertable<FastingLog> {
     return (StringBuffer('FastingLog(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
+          ..write('protocol: $protocol, ')
+          ..write('targetHours: $targetHours, ')
           ..write('fastStart: $fastStart, ')
+          ..write('fastEnd: $fastEnd, ')
           ..write('completed: $completed, ')
-          ..write('fastEnd: $fastEnd')
+          ..write('isRamadan: $isRamadan, ')
+          ..write('sehriTime: $sehriTime, ')
+          ..write('iftarTime: $iftarTime, ')
+          ..write('hydrationAlertSent: $hydrationAlertSent')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, userId, fastStart, completed, fastEnd);
+  int get hashCode => Object.hash(
+    id,
+    userId,
+    protocol,
+    targetHours,
+    fastStart,
+    fastEnd,
+    completed,
+    isRamadan,
+    sehriTime,
+    iftarTime,
+    hydrationAlertSent,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is FastingLog &&
           other.id == this.id &&
           other.userId == this.userId &&
+          other.protocol == this.protocol &&
+          other.targetHours == this.targetHours &&
           other.fastStart == this.fastStart &&
+          other.fastEnd == this.fastEnd &&
           other.completed == this.completed &&
-          other.fastEnd == this.fastEnd);
+          other.isRamadan == this.isRamadan &&
+          other.sehriTime == this.sehriTime &&
+          other.iftarTime == this.iftarTime &&
+          other.hydrationAlertSent == this.hydrationAlertSent);
 }
 
 class FastingLogsCompanion extends UpdateCompanion<FastingLog> {
   final Value<int> id;
   final Value<String> userId;
+  final Value<String> protocol;
+  final Value<int> targetHours;
   final Value<DateTime> fastStart;
-  final Value<bool?> completed;
   final Value<DateTime?> fastEnd;
+  final Value<bool?> completed;
+  final Value<bool> isRamadan;
+  final Value<DateTime?> sehriTime;
+  final Value<DateTime?> iftarTime;
+  final Value<bool> hydrationAlertSent;
   const FastingLogsCompanion({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
+    this.protocol = const Value.absent(),
+    this.targetHours = const Value.absent(),
     this.fastStart = const Value.absent(),
-    this.completed = const Value.absent(),
     this.fastEnd = const Value.absent(),
+    this.completed = const Value.absent(),
+    this.isRamadan = const Value.absent(),
+    this.sehriTime = const Value.absent(),
+    this.iftarTime = const Value.absent(),
+    this.hydrationAlertSent = const Value.absent(),
   });
   FastingLogsCompanion.insert({
     this.id = const Value.absent(),
     required String userId,
+    required String protocol,
+    required int targetHours,
     required DateTime fastStart,
-    this.completed = const Value.absent(),
     this.fastEnd = const Value.absent(),
+    this.completed = const Value.absent(),
+    this.isRamadan = const Value.absent(),
+    this.sehriTime = const Value.absent(),
+    this.iftarTime = const Value.absent(),
+    this.hydrationAlertSent = const Value.absent(),
   }) : userId = Value(userId),
+       protocol = Value(protocol),
+       targetHours = Value(targetHours),
        fastStart = Value(fastStart);
   static Insertable<FastingLog> custom({
     Expression<int>? id,
     Expression<String>? userId,
+    Expression<String>? protocol,
+    Expression<int>? targetHours,
     Expression<DateTime>? fastStart,
-    Expression<bool>? completed,
     Expression<DateTime>? fastEnd,
+    Expression<bool>? completed,
+    Expression<bool>? isRamadan,
+    Expression<DateTime>? sehriTime,
+    Expression<DateTime>? iftarTime,
+    Expression<bool>? hydrationAlertSent,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (userId != null) 'user_id': userId,
+      if (protocol != null) 'protocol': protocol,
+      if (targetHours != null) 'target_hours': targetHours,
       if (fastStart != null) 'fast_start': fastStart,
-      if (completed != null) 'completed': completed,
       if (fastEnd != null) 'fast_end': fastEnd,
+      if (completed != null) 'completed': completed,
+      if (isRamadan != null) 'is_ramadan': isRamadan,
+      if (sehriTime != null) 'sehri_time': sehriTime,
+      if (iftarTime != null) 'iftar_time': iftarTime,
+      if (hydrationAlertSent != null)
+        'hydration_alert_sent': hydrationAlertSent,
     });
   }
 
   FastingLogsCompanion copyWith({
     Value<int>? id,
     Value<String>? userId,
+    Value<String>? protocol,
+    Value<int>? targetHours,
     Value<DateTime>? fastStart,
-    Value<bool?>? completed,
     Value<DateTime?>? fastEnd,
+    Value<bool?>? completed,
+    Value<bool>? isRamadan,
+    Value<DateTime?>? sehriTime,
+    Value<DateTime?>? iftarTime,
+    Value<bool>? hydrationAlertSent,
   }) {
     return FastingLogsCompanion(
       id: id ?? this.id,
       userId: userId ?? this.userId,
+      protocol: protocol ?? this.protocol,
+      targetHours: targetHours ?? this.targetHours,
       fastStart: fastStart ?? this.fastStart,
-      completed: completed ?? this.completed,
       fastEnd: fastEnd ?? this.fastEnd,
+      completed: completed ?? this.completed,
+      isRamadan: isRamadan ?? this.isRamadan,
+      sehriTime: sehriTime ?? this.sehriTime,
+      iftarTime: iftarTime ?? this.iftarTime,
+      hydrationAlertSent: hydrationAlertSent ?? this.hydrationAlertSent,
     );
   }
 
@@ -9429,14 +9717,32 @@ class FastingLogsCompanion extends UpdateCompanion<FastingLog> {
     if (userId.present) {
       map['user_id'] = Variable<String>(userId.value);
     }
+    if (protocol.present) {
+      map['protocol'] = Variable<String>(protocol.value);
+    }
+    if (targetHours.present) {
+      map['target_hours'] = Variable<int>(targetHours.value);
+    }
     if (fastStart.present) {
       map['fast_start'] = Variable<DateTime>(fastStart.value);
+    }
+    if (fastEnd.present) {
+      map['fast_end'] = Variable<DateTime>(fastEnd.value);
     }
     if (completed.present) {
       map['completed'] = Variable<bool>(completed.value);
     }
-    if (fastEnd.present) {
-      map['fast_end'] = Variable<DateTime>(fastEnd.value);
+    if (isRamadan.present) {
+      map['is_ramadan'] = Variable<bool>(isRamadan.value);
+    }
+    if (sehriTime.present) {
+      map['sehri_time'] = Variable<DateTime>(sehriTime.value);
+    }
+    if (iftarTime.present) {
+      map['iftar_time'] = Variable<DateTime>(iftarTime.value);
+    }
+    if (hydrationAlertSent.present) {
+      map['hydration_alert_sent'] = Variable<bool>(hydrationAlertSent.value);
     }
     return map;
   }
@@ -9446,9 +9752,15 @@ class FastingLogsCompanion extends UpdateCompanion<FastingLog> {
     return (StringBuffer('FastingLogsCompanion(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
+          ..write('protocol: $protocol, ')
+          ..write('targetHours: $targetHours, ')
           ..write('fastStart: $fastStart, ')
+          ..write('fastEnd: $fastEnd, ')
           ..write('completed: $completed, ')
-          ..write('fastEnd: $fastEnd')
+          ..write('isRamadan: $isRamadan, ')
+          ..write('sehriTime: $sehriTime, ')
+          ..write('iftarTime: $iftarTime, ')
+          ..write('hydrationAlertSent: $hydrationAlertSent')
           ..write(')'))
         .toString();
   }
@@ -22866,17 +23178,29 @@ typedef $$FastingLogsTableCreateCompanionBuilder =
     FastingLogsCompanion Function({
       Value<int> id,
       required String userId,
+      required String protocol,
+      required int targetHours,
       required DateTime fastStart,
-      Value<bool?> completed,
       Value<DateTime?> fastEnd,
+      Value<bool?> completed,
+      Value<bool> isRamadan,
+      Value<DateTime?> sehriTime,
+      Value<DateTime?> iftarTime,
+      Value<bool> hydrationAlertSent,
     });
 typedef $$FastingLogsTableUpdateCompanionBuilder =
     FastingLogsCompanion Function({
       Value<int> id,
       Value<String> userId,
+      Value<String> protocol,
+      Value<int> targetHours,
       Value<DateTime> fastStart,
-      Value<bool?> completed,
       Value<DateTime?> fastEnd,
+      Value<bool?> completed,
+      Value<bool> isRamadan,
+      Value<DateTime?> sehriTime,
+      Value<DateTime?> iftarTime,
+      Value<bool> hydrationAlertSent,
     });
 
 class $$FastingLogsTableFilterComposer
@@ -22898,8 +23222,23 @@ class $$FastingLogsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<String> get protocol => $composableBuilder(
+    column: $table.protocol,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get targetHours => $composableBuilder(
+    column: $table.targetHours,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<DateTime> get fastStart => $composableBuilder(
     column: $table.fastStart,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get fastEnd => $composableBuilder(
+    column: $table.fastEnd,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -22908,8 +23247,23 @@ class $$FastingLogsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<DateTime> get fastEnd => $composableBuilder(
-    column: $table.fastEnd,
+  ColumnFilters<bool> get isRamadan => $composableBuilder(
+    column: $table.isRamadan,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get sehriTime => $composableBuilder(
+    column: $table.sehriTime,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get iftarTime => $composableBuilder(
+    column: $table.iftarTime,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get hydrationAlertSent => $composableBuilder(
+    column: $table.hydrationAlertSent,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -22933,8 +23287,23 @@ class $$FastingLogsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get protocol => $composableBuilder(
+    column: $table.protocol,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get targetHours => $composableBuilder(
+    column: $table.targetHours,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get fastStart => $composableBuilder(
     column: $table.fastStart,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get fastEnd => $composableBuilder(
+    column: $table.fastEnd,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -22943,8 +23312,23 @@ class $$FastingLogsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<DateTime> get fastEnd => $composableBuilder(
-    column: $table.fastEnd,
+  ColumnOrderings<bool> get isRamadan => $composableBuilder(
+    column: $table.isRamadan,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get sehriTime => $composableBuilder(
+    column: $table.sehriTime,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get iftarTime => $composableBuilder(
+    column: $table.iftarTime,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get hydrationAlertSent => $composableBuilder(
+    column: $table.hydrationAlertSent,
     builder: (column) => ColumnOrderings(column),
   );
 }
@@ -22964,14 +23348,36 @@ class $$FastingLogsTableAnnotationComposer
   GeneratedColumn<String> get userId =>
       $composableBuilder(column: $table.userId, builder: (column) => column);
 
+  GeneratedColumn<String> get protocol =>
+      $composableBuilder(column: $table.protocol, builder: (column) => column);
+
+  GeneratedColumn<int> get targetHours => $composableBuilder(
+    column: $table.targetHours,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<DateTime> get fastStart =>
       $composableBuilder(column: $table.fastStart, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get fastEnd =>
+      $composableBuilder(column: $table.fastEnd, builder: (column) => column);
 
   GeneratedColumn<bool> get completed =>
       $composableBuilder(column: $table.completed, builder: (column) => column);
 
-  GeneratedColumn<DateTime> get fastEnd =>
-      $composableBuilder(column: $table.fastEnd, builder: (column) => column);
+  GeneratedColumn<bool> get isRamadan =>
+      $composableBuilder(column: $table.isRamadan, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get sehriTime =>
+      $composableBuilder(column: $table.sehriTime, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get iftarTime =>
+      $composableBuilder(column: $table.iftarTime, builder: (column) => column);
+
+  GeneratedColumn<bool> get hydrationAlertSent => $composableBuilder(
+    column: $table.hydrationAlertSent,
+    builder: (column) => column,
+  );
 }
 
 class $$FastingLogsTableTableManager
@@ -23007,29 +23413,53 @@ class $$FastingLogsTableTableManager
               ({
                 Value<int> id = const Value.absent(),
                 Value<String> userId = const Value.absent(),
+                Value<String> protocol = const Value.absent(),
+                Value<int> targetHours = const Value.absent(),
                 Value<DateTime> fastStart = const Value.absent(),
-                Value<bool?> completed = const Value.absent(),
                 Value<DateTime?> fastEnd = const Value.absent(),
+                Value<bool?> completed = const Value.absent(),
+                Value<bool> isRamadan = const Value.absent(),
+                Value<DateTime?> sehriTime = const Value.absent(),
+                Value<DateTime?> iftarTime = const Value.absent(),
+                Value<bool> hydrationAlertSent = const Value.absent(),
               }) => FastingLogsCompanion(
                 id: id,
                 userId: userId,
+                protocol: protocol,
+                targetHours: targetHours,
                 fastStart: fastStart,
-                completed: completed,
                 fastEnd: fastEnd,
+                completed: completed,
+                isRamadan: isRamadan,
+                sehriTime: sehriTime,
+                iftarTime: iftarTime,
+                hydrationAlertSent: hydrationAlertSent,
               ),
           createCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
                 required String userId,
+                required String protocol,
+                required int targetHours,
                 required DateTime fastStart,
-                Value<bool?> completed = const Value.absent(),
                 Value<DateTime?> fastEnd = const Value.absent(),
+                Value<bool?> completed = const Value.absent(),
+                Value<bool> isRamadan = const Value.absent(),
+                Value<DateTime?> sehriTime = const Value.absent(),
+                Value<DateTime?> iftarTime = const Value.absent(),
+                Value<bool> hydrationAlertSent = const Value.absent(),
               }) => FastingLogsCompanion.insert(
                 id: id,
                 userId: userId,
+                protocol: protocol,
+                targetHours: targetHours,
                 fastStart: fastStart,
-                completed: completed,
                 fastEnd: fastEnd,
+                completed: completed,
+                isRamadan: isRamadan,
+                sehriTime: sehriTime,
+                iftarTime: iftarTime,
+                hydrationAlertSent: hydrationAlertSent,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
