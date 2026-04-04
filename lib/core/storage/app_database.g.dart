@@ -4761,6 +4761,15 @@ class $Spo2LogsTable extends Spo2Logs with TableInfo<$Spo2LogsTable, Spo2Log> {
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _pulseMeta = const VerificationMeta('pulse');
+  @override
+  late final GeneratedColumn<int> pulse = GeneratedColumn<int>(
+    'pulse',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _loggedAtMeta = const VerificationMeta(
     'loggedAt',
   );
@@ -4773,7 +4782,13 @@ class $Spo2LogsTable extends Spo2Logs with TableInfo<$Spo2LogsTable, Spo2Log> {
     requiredDuringInsert: true,
   );
   @override
-  List<GeneratedColumn> get $columns => [id, userId, spo2Percentage, loggedAt];
+  List<GeneratedColumn> get $columns => [
+    id,
+    userId,
+    spo2Percentage,
+    pulse,
+    loggedAt,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -4808,6 +4823,12 @@ class $Spo2LogsTable extends Spo2Logs with TableInfo<$Spo2LogsTable, Spo2Log> {
     } else if (isInserting) {
       context.missing(_spo2PercentageMeta);
     }
+    if (data.containsKey('pulse')) {
+      context.handle(
+        _pulseMeta,
+        pulse.isAcceptableOrUnknown(data['pulse']!, _pulseMeta),
+      );
+    }
     if (data.containsKey('logged_at')) {
       context.handle(
         _loggedAtMeta,
@@ -4837,6 +4858,10 @@ class $Spo2LogsTable extends Spo2Logs with TableInfo<$Spo2LogsTable, Spo2Log> {
         DriftSqlType.string,
         data['${effectivePrefix}spo2_percentage'],
       )!,
+      pulse: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}pulse'],
+      ),
       loggedAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}logged_at'],
@@ -4854,11 +4879,13 @@ class Spo2Log extends DataClass implements Insertable<Spo2Log> {
   final int id;
   final String userId;
   final String spo2Percentage;
+  final int? pulse;
   final DateTime loggedAt;
   const Spo2Log({
     required this.id,
     required this.userId,
     required this.spo2Percentage,
+    this.pulse,
     required this.loggedAt,
   });
   @override
@@ -4867,6 +4894,9 @@ class Spo2Log extends DataClass implements Insertable<Spo2Log> {
     map['id'] = Variable<int>(id);
     map['user_id'] = Variable<String>(userId);
     map['spo2_percentage'] = Variable<String>(spo2Percentage);
+    if (!nullToAbsent || pulse != null) {
+      map['pulse'] = Variable<int>(pulse);
+    }
     map['logged_at'] = Variable<DateTime>(loggedAt);
     return map;
   }
@@ -4876,6 +4906,9 @@ class Spo2Log extends DataClass implements Insertable<Spo2Log> {
       id: Value(id),
       userId: Value(userId),
       spo2Percentage: Value(spo2Percentage),
+      pulse: pulse == null && nullToAbsent
+          ? const Value.absent()
+          : Value(pulse),
       loggedAt: Value(loggedAt),
     );
   }
@@ -4889,6 +4922,7 @@ class Spo2Log extends DataClass implements Insertable<Spo2Log> {
       id: serializer.fromJson<int>(json['id']),
       userId: serializer.fromJson<String>(json['userId']),
       spo2Percentage: serializer.fromJson<String>(json['spo2Percentage']),
+      pulse: serializer.fromJson<int?>(json['pulse']),
       loggedAt: serializer.fromJson<DateTime>(json['loggedAt']),
     );
   }
@@ -4899,6 +4933,7 @@ class Spo2Log extends DataClass implements Insertable<Spo2Log> {
       'id': serializer.toJson<int>(id),
       'userId': serializer.toJson<String>(userId),
       'spo2Percentage': serializer.toJson<String>(spo2Percentage),
+      'pulse': serializer.toJson<int?>(pulse),
       'loggedAt': serializer.toJson<DateTime>(loggedAt),
     };
   }
@@ -4907,11 +4942,13 @@ class Spo2Log extends DataClass implements Insertable<Spo2Log> {
     int? id,
     String? userId,
     String? spo2Percentage,
+    Value<int?> pulse = const Value.absent(),
     DateTime? loggedAt,
   }) => Spo2Log(
     id: id ?? this.id,
     userId: userId ?? this.userId,
     spo2Percentage: spo2Percentage ?? this.spo2Percentage,
+    pulse: pulse.present ? pulse.value : this.pulse,
     loggedAt: loggedAt ?? this.loggedAt,
   );
   Spo2Log copyWithCompanion(Spo2LogsCompanion data) {
@@ -4921,6 +4958,7 @@ class Spo2Log extends DataClass implements Insertable<Spo2Log> {
       spo2Percentage: data.spo2Percentage.present
           ? data.spo2Percentage.value
           : this.spo2Percentage,
+      pulse: data.pulse.present ? data.pulse.value : this.pulse,
       loggedAt: data.loggedAt.present ? data.loggedAt.value : this.loggedAt,
     );
   }
@@ -4931,13 +4969,14 @@ class Spo2Log extends DataClass implements Insertable<Spo2Log> {
           ..write('id: $id, ')
           ..write('userId: $userId, ')
           ..write('spo2Percentage: $spo2Percentage, ')
+          ..write('pulse: $pulse, ')
           ..write('loggedAt: $loggedAt')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, userId, spo2Percentage, loggedAt);
+  int get hashCode => Object.hash(id, userId, spo2Percentage, pulse, loggedAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -4945,6 +4984,7 @@ class Spo2Log extends DataClass implements Insertable<Spo2Log> {
           other.id == this.id &&
           other.userId == this.userId &&
           other.spo2Percentage == this.spo2Percentage &&
+          other.pulse == this.pulse &&
           other.loggedAt == this.loggedAt);
 }
 
@@ -4952,17 +4992,20 @@ class Spo2LogsCompanion extends UpdateCompanion<Spo2Log> {
   final Value<int> id;
   final Value<String> userId;
   final Value<String> spo2Percentage;
+  final Value<int?> pulse;
   final Value<DateTime> loggedAt;
   const Spo2LogsCompanion({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
     this.spo2Percentage = const Value.absent(),
+    this.pulse = const Value.absent(),
     this.loggedAt = const Value.absent(),
   });
   Spo2LogsCompanion.insert({
     this.id = const Value.absent(),
     required String userId,
     required String spo2Percentage,
+    this.pulse = const Value.absent(),
     required DateTime loggedAt,
   }) : userId = Value(userId),
        spo2Percentage = Value(spo2Percentage),
@@ -4971,12 +5014,14 @@ class Spo2LogsCompanion extends UpdateCompanion<Spo2Log> {
     Expression<int>? id,
     Expression<String>? userId,
     Expression<String>? spo2Percentage,
+    Expression<int>? pulse,
     Expression<DateTime>? loggedAt,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (userId != null) 'user_id': userId,
       if (spo2Percentage != null) 'spo2_percentage': spo2Percentage,
+      if (pulse != null) 'pulse': pulse,
       if (loggedAt != null) 'logged_at': loggedAt,
     });
   }
@@ -4985,12 +5030,14 @@ class Spo2LogsCompanion extends UpdateCompanion<Spo2Log> {
     Value<int>? id,
     Value<String>? userId,
     Value<String>? spo2Percentage,
+    Value<int?>? pulse,
     Value<DateTime>? loggedAt,
   }) {
     return Spo2LogsCompanion(
       id: id ?? this.id,
       userId: userId ?? this.userId,
       spo2Percentage: spo2Percentage ?? this.spo2Percentage,
+      pulse: pulse ?? this.pulse,
       loggedAt: loggedAt ?? this.loggedAt,
     );
   }
@@ -5007,6 +5054,9 @@ class Spo2LogsCompanion extends UpdateCompanion<Spo2Log> {
     if (spo2Percentage.present) {
       map['spo2_percentage'] = Variable<String>(spo2Percentage.value);
     }
+    if (pulse.present) {
+      map['pulse'] = Variable<int>(pulse.value);
+    }
     if (loggedAt.present) {
       map['logged_at'] = Variable<DateTime>(loggedAt.value);
     }
@@ -5019,6 +5069,7 @@ class Spo2LogsCompanion extends UpdateCompanion<Spo2Log> {
           ..write('id: $id, ')
           ..write('userId: $userId, ')
           ..write('spo2Percentage: $spo2Percentage, ')
+          ..write('pulse: $pulse, ')
           ..write('loggedAt: $loggedAt')
           ..write(')'))
         .toString();
@@ -17389,6 +17440,7 @@ typedef $$Spo2LogsTableCreateCompanionBuilder =
       Value<int> id,
       required String userId,
       required String spo2Percentage,
+      Value<int?> pulse,
       required DateTime loggedAt,
     });
 typedef $$Spo2LogsTableUpdateCompanionBuilder =
@@ -17396,6 +17448,7 @@ typedef $$Spo2LogsTableUpdateCompanionBuilder =
       Value<int> id,
       Value<String> userId,
       Value<String> spo2Percentage,
+      Value<int?> pulse,
       Value<DateTime> loggedAt,
     });
 
@@ -17420,6 +17473,11 @@ class $$Spo2LogsTableFilterComposer
 
   ColumnFilters<String> get spo2Percentage => $composableBuilder(
     column: $table.spo2Percentage,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get pulse => $composableBuilder(
+    column: $table.pulse,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -17453,6 +17511,11 @@ class $$Spo2LogsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get pulse => $composableBuilder(
+    column: $table.pulse,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get loggedAt => $composableBuilder(
     column: $table.loggedAt,
     builder: (column) => ColumnOrderings(column),
@@ -17478,6 +17541,9 @@ class $$Spo2LogsTableAnnotationComposer
     column: $table.spo2Percentage,
     builder: (column) => column,
   );
+
+  GeneratedColumn<int> get pulse =>
+      $composableBuilder(column: $table.pulse, builder: (column) => column);
 
   GeneratedColumn<DateTime> get loggedAt =>
       $composableBuilder(column: $table.loggedAt, builder: (column) => column);
@@ -17514,11 +17580,13 @@ class $$Spo2LogsTableTableManager
                 Value<int> id = const Value.absent(),
                 Value<String> userId = const Value.absent(),
                 Value<String> spo2Percentage = const Value.absent(),
+                Value<int?> pulse = const Value.absent(),
                 Value<DateTime> loggedAt = const Value.absent(),
               }) => Spo2LogsCompanion(
                 id: id,
                 userId: userId,
                 spo2Percentage: spo2Percentage,
+                pulse: pulse,
                 loggedAt: loggedAt,
               ),
           createCompanionCallback:
@@ -17526,11 +17594,13 @@ class $$Spo2LogsTableTableManager
                 Value<int> id = const Value.absent(),
                 required String userId,
                 required String spo2Percentage,
+                Value<int?> pulse = const Value.absent(),
                 required DateTime loggedAt,
               }) => Spo2LogsCompanion.insert(
                 id: id,
                 userId: userId,
                 spo2Percentage: spo2Percentage,
+                pulse: pulse,
                 loggedAt: loggedAt,
               ),
           withReferenceMapper: (p0) => p0

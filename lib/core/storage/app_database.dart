@@ -157,6 +157,7 @@ class Spo2Logs extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get userId => text().withLength(min: 1, max: 64)();
   TextColumn get spo2Percentage => text().withLength(min: 1, max: 1024)();
+  IntColumn get pulse => integer().nullable()();
   DateTimeColumn get loggedAt => dateTime()();
 }
 
@@ -1184,8 +1185,84 @@ class Spo2LogsDao extends DatabaseAccessor<AppDatabase>
     return query.get();
   }
 
+  Stream<List<Spo2Log>> watchLogsForUser(String userId) =>
+      (select(spo2Logs)
+            ..where((t) => t.userId.equals(userId))
+            ..orderBy([(t) => OrderingTerm.desc(t.loggedAt)]))
+          .watch();
+
   Future<int> insertLog(Spo2LogsCompanion entry) =>
       into(spo2Logs).insert(entry);
+
+  Future<int> insertLogWithKarma({
+    required String userId,
+    required int spo2Percentage,
+    int? pulse,
+  }) async {
+    final id = await into(spo2Logs).insert(
+      Spo2LogsCompanion.insert(
+        userId: userId,
+        spo2Percentage: spo2Percentage.toString(),
+        pulse: Value(pulse),
+        loggedAt: DateTime.now(),
+      ),
+    );
+    
+    await db.karmaTransactionsDao.insertTransaction(
+      KarmaTransactionsCompanion.insert(
+        userId: userId,
+        amount: 5,
+        createdAt: DateTime.now(),
+      ),
+    );
+    
+    return id;
+  }
+
+  Future<List<DecryptedSpo2Log>> getLogsForUserDecrypted(String userId,
+      {DateTime? from, DateTime? to}) async {
+    final logs = await getLogsForUser(userId, from: from, to: to);
+    return logs.map((l) => DecryptedSpo2Log(
+      id: l.id,
+      userId: l.userId,
+      spo2Percentage: l.spo2Percentage,
+      pulse: l.pulse,
+      loggedAt: l.loggedAt,
+    )).toList();
+  }
+}
+
+class DecryptedSpo2Log {
+  final int id;
+  final String userId;
+  final String spo2Percentage;
+  final int? pulse;
+  final DateTime loggedAt;
+
+  DecryptedSpo2Log({
+    required this.id,
+    required this.userId,
+    required this.spo2Percentage,
+    this.pulse,
+    required this.loggedAt,
+  });
+
+  int get spo2 => int.tryParse(spo2Percentage) ?? 0;
+
+  Spo2Classification get classification {
+    if (spo2 < 90) return Spo2Classification.critical;
+    if (spo2 < 95) return Spo2Classification.low;
+    return Spo2Classification.normal;
+  }
+
+  bool get isLow => spo2 < 95;
+  bool get isCritical => spo2 < 90;
+}
+
+enum Spo2Classification {
+  normal,
+  low,
+  critical,
 }
 
 @DriftAccessor(tables: [PeriodLogs])
