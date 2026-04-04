@@ -42,6 +42,7 @@ import 'package:fitkarma/features/onboarding/presentation/onboarding_screen4.dar
 import 'package:fitkarma/features/onboarding/presentation/onboarding_screen5.dart';
 import 'package:fitkarma/features/onboarding/presentation/onboarding_screen6.dart';
 import 'package:fitkarma/features/family/presentation/family_screen.dart';
+import 'package:fitkarma/features/profile/presentation/emergency_card_screen.dart';
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // DEFERRED LOADING HELPER
@@ -467,6 +468,10 @@ final GoRouter appRouter = GoRouter(
       parentNavigatorKey: _rootNavigatorKey,
       path: '/family',
       builder: (context, state) => const FamilyScreen(),
+    ),
+    GoRoute(
+      path: '/emergency',
+      builder: (context, state) => const EmergencyCardScreen(),
     ),
   ],
 );

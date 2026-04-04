@@ -100,6 +100,11 @@ dependencies:
   # Audio for rest timer chime
   audioplayers: ^6.1.0
 
+  # Export & QR
+  qr_flutter: ^4.1.0
+  pdf: ^3.11.0
+  printing: ^5.11.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

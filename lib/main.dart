@@ -5,10 +5,12 @@ import 'package:fitkarma/core/network/connectivity_service.dart';
 import 'package:fitkarma/core/network/background_sync_runner.dart';
 import 'package:fitkarma/core/security/biometric_service.dart';
 import 'package:fitkarma/core/connectivity/wearable_connectivity.dart';
+import 'package:fitkarma/core/widgets/widget_controller.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
+  await WidgetController.initialize();
   await BiometricService.instance.initialize();
   final isFirstLaunch = await BiometricService.instance.isFirstLaunch();
   
