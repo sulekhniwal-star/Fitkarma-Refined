@@ -25,6 +25,9 @@ import 'package:fitkarma/features/wearables/wearables_screen.dart'
     deferred as wearables;
 import 'package:fitkarma/features/social/social_feed_screen.dart'
     deferred as social;
+import 'package:fitkarma/features/social/community_groups_screen.dart';
+import 'package:fitkarma/features/social/direct_messages_screen.dart';
+import 'package:fitkarma/features/social/festival_leaderboard_screen.dart';
 import 'package:fitkarma/features/gps/gps_workout_screen.dart'
     deferred as gps_workout;
 import 'package:fitkarma/features/mental/mental_health_screen.dart'
@@ -261,6 +264,27 @@ final GoRouter appRouter = GoRouter(
         loader: social.loadLibrary,
         builder: () => social.SocialFeedScreen(),
       ),
+    ),
+
+    // Community Groups
+    GoRoute(
+      parentNavigatorKey: _rootNavigatorKey,
+      path: '/community/groups',
+      builder: (context, state) => const CommunityGroupsScreen(),
+    ),
+
+    // Direct Messages
+    GoRoute(
+      parentNavigatorKey: _rootNavigatorKey,
+      path: '/social/messages',
+      builder: (context, state) => const DirectMessagesScreen(),
+    ),
+
+    // Festival Leaderboard
+    GoRoute(
+      parentNavigatorKey: _rootNavigatorKey,
+      path: '/social/festival-leaderboard',
+      builder: (context, state) => const FestivalLeaderboardScreen(),
     ),
 
     // GPS workout map (deferred)

@@ -535,6 +535,169 @@ class FestivalCalendar extends Table {
   DateTimeColumn get date => dateTime()();
   TextColumn get region => text().nullable().withLength(max: 64)();
   TextColumn get type => text().nullable().withLength(max: 32)();
+  BoolColumn get isWellnessChallenge => boolean().withDefault(const Constant(false))();
+}
+
+class SocialPosts extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get odUserId => text().withLength(min: 1, max: 64)();
+  TextColumn get postType => text().withLength(min: 1, max: 32)();
+  TextColumn get content => text().withLength(min: 1, max: 5000)();
+  TextColumn get mediaUrl => text().nullable()();
+  IntColumn get workoutLogId => integer().nullable()();
+  IntColumn get mealLogId => integer().nullable()();
+  BoolColumn get isMilestone => boolean().withDefault(const Constant(false))();
+  IntColumn get likesCount => integer().withDefault(const Constant(0))();
+  IntColumn get commentsCount => integer().withDefault(const Constant(0))();
+  DateTimeColumn get createdAt => dateTime()();
+}
+
+class SocialLikes extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get postId => integer().references(SocialPosts, #id)();
+  TextColumn get odUserId => text().withLength(min: 1, max: 64)();
+  DateTimeColumn get createdAt => dateTime()();
+
+  @override
+  List<Set<Column>> get uniqueKeys => [{postId, odUserId}];
+}
+
+class SocialComments extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get postId => integer().references(SocialPosts, #id)();
+  TextColumn get odUserId => text().withLength(min: 1, max: 64)();
+  TextColumn get content => text().withLength(min: 1, max: 1000)();
+  DateTimeColumn get createdAt => dateTime()();
+}
+
+class UserFollows extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get followerId => text().withLength(min: 1, max: 64)();
+  TextColumn get followingId => text().withLength(min: 1, max: 64)();
+  DateTimeColumn get createdAt => dateTime()();
+
+  @override
+  List<Set<Column>> get uniqueKeys => [{followerId, followingId}];
+}
+
+class UserProfilesPublic extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get odUserId => text().withLength(min: 1, max: 64)();
+  TextColumn get username => text().withLength(min: 1, max: 64)();
+  TextColumn get displayName => text().withLength(min: 1, max: 128)();
+  TextColumn get bio => text().nullable().withLength(max: 500)();
+  TextColumn get avatarUrl => text().nullable()();
+  TextColumn get profession => text().nullable()();
+  TextColumn get isVerified => text().withDefault(const Constant('none'))();
+  IntColumn get followersCount => integer().withDefault(const Constant(0))();
+  IntColumn get followingCount => integer().withDefault(const Constant(0))();
+  IntColumn get postsCount => integer().withDefault(const Constant(0))();
+  DateTimeColumn get createdAt => dateTime()();
+
+  @override
+  List<Set<Column>> get uniqueKeys => [{odUserId}];
+}
+
+class CommunityGroups extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get name => text().withLength(min: 1, max: 128)();
+  TextColumn get description => text().nullable().withLength(max: 500)();
+  TextColumn get groupType => text().withLength(min: 1, max: 32)();
+  TextColumn get imageUrl => text().nullable()();
+  TextColumn get createdBy => text().withLength(min: 1, max: 64)();
+  IntColumn get membersCount => integer().withDefault(const Constant(0))();
+  BoolColumn get isPrivate => boolean().withDefault(const Constant(false))();
+  DateTimeColumn get createdAt => dateTime()();
+}
+
+class GroupMembers extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get groupId => integer().references(CommunityGroups, #id)();
+  TextColumn get odUserId => text().withLength(min: 1, max: 64)();
+  TextColumn get role => text().withDefault(const Constant('member'))();
+  DateTimeColumn get joinedAt => dateTime()();
+
+  @override
+  List<Set<Column>> get uniqueKeys => [{groupId, odUserId}];
+}
+
+class GroupPosts extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get groupId => integer().references(CommunityGroups, #id)();
+  TextColumn get odUserId => text().withLength(min: 1, max: 64)();
+  TextColumn get content => text().withLength(min: 1, max: 3000)();
+  TextColumn get mediaUrl => text().nullable()();
+  IntColumn get likesCount => integer().withDefault(const Constant(0))();
+  IntColumn get commentsCount => integer().withDefault(const Constant(0))();
+  DateTimeColumn get createdAt => dateTime()();
+}
+
+class GroupChallenges extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get groupId => integer().references(CommunityGroups, #id)();
+  TextColumn get title => text().withLength(min: 1, max: 128)();
+  TextColumn get description => text().nullable()();
+  TextColumn get challengeType => text().withLength(min: 1, max: 32)();
+  IntColumn get targetValue => integer()();
+  DateTimeColumn get startDate => dateTime()();
+  DateTimeColumn get endDate => dateTime()();
+  IntColumn get participantsCount => integer().withDefault(const Constant(0))();
+  BoolColumn get isActive => boolean().withDefault(const Constant(true))();
+}
+
+class ChallengeParticipants extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get challengeId => integer().references(GroupChallenges, #id)();
+  TextColumn get odUserId => text().withLength(min: 1, max: 64)();
+  IntColumn get currentValue => integer().withDefault(const Constant(0))();
+  IntColumn get rank => integer().nullable()();
+  DateTimeColumn get joinedAt => dateTime()();
+
+  @override
+  List<Set<Column>> get uniqueKeys => [{challengeId, odUserId}];
+}
+
+class DirectMessages extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get odUserId => text().withLength(min: 1, max: 64)();
+  TextColumn get recipientId => text().withLength(min: 1, max: 64)();
+  TextColumn get content => text().withLength(min: 1, max: 2000)();
+  BoolColumn get isRead => boolean().withDefault(const Constant(false))();
+  DateTimeColumn get createdAt => dateTime()();
+}
+
+class MessageConversations extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get odUserId => text().withLength(min: 1, max: 64)();
+  TextColumn get participantId => text().withLength(min: 1, max: 64)();
+  TextColumn get lastMessage => text().nullable()();
+  DateTimeColumn get lastMessageAt => dateTime().nullable()();
+  IntColumn get unreadCount => integer().withDefault(const Constant(0))();
+}
+
+class FestivalChallenges extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get festivalId => integer().references(FestivalCalendar, #id)();
+  TextColumn get title => text().withLength(min: 1, max: 128)();
+  TextColumn get description => text().nullable()();
+  TextColumn get metricType => text().withLength(min: 1, max: 32)();
+  IntColumn get targetValue => integer()();
+  DateTimeColumn get startDate => dateTime()();
+  DateTimeColumn get endDate => dateTime()();
+  BoolColumn get isActive => boolean().withDefault(const Constant(true))();
+  BoolColumn get isAutoCreated => boolean().withDefault(const Constant(false))();
+}
+
+class FestivalLeaderboard extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get challengeId => integer().references(FestivalChallenges, #id)();
+  TextColumn get odUserId => text().withLength(min: 1, max: 64)();
+  IntColumn get value => integer()();
+  IntColumn get rank => integer()();
+  DateTimeColumn get updatedAt => dateTime()();
+
+  @override
+  List<Set<Column>> get uniqueKeys => [{challengeId, odUserId}];
 }
 
 @TableIndex(name: 'idx_sync_queue_status', columns: {#status})
@@ -3864,6 +4027,498 @@ class SyncDeadLetterDao extends DatabaseAccessor<AppDatabase>
       (delete(syncDeadLetter)..where((t) => t.id.equals(id))).go();
 }
 
+@DriftAccessor(tables: [SocialPosts])
+class SocialPostsDao extends DatabaseAccessor<AppDatabase>
+    with _$SocialPostsDaoMixin {
+  SocialPostsDao(super.db);
+
+  Future<List<SocialPost>> getFeed({int limit = 50, int offset = 0}) =>
+      (select(socialPosts)
+            ..orderBy([(t) => OrderingTerm.desc(t.createdAt)])
+            ..limit(limit, offset: offset))
+          .get();
+
+  Future<List<SocialPost>> getFeedForFollowing(String odUserId,
+      {int limit = 50, int offset = 0}) {
+    final followingQuery = select(userFollows)
+      ..where((t) => t.followerId.equals(odUserId))
+      ..limit(1000);
+    return followingQuery.then((following) async {
+      final followingIds = following.map((f) => f.followingId).toList();
+      if (followingIds.isEmpty) return [];
+      return (select(socialPosts)
+            ..where((t) => t.odUserId.isIn(followingIds))
+            ..orderBy([(t) => OrderingTerm.desc(t.createdAt)])
+            ..limit(limit, offset: offset))
+          .get();
+    });
+  }
+
+  Future<int> createPost(SocialPostsCompanion entry) =>
+      into(socialPosts).insert(entry);
+
+  Future<int> deletePost(int id) =>
+      (delete(socialPosts)..where((t) => t.id.equals(id))).go();
+
+  Future<int> incrementLikes(int postId) async {
+    final post = await (select(socialPosts)..where((t) => t.id.equals(postId)))
+        .getSingle();
+    return (update(socialPosts)..where((t) => t.id.equals(postId)))
+        .write(SocialPostsCompanion(likesCount: Value(post.likesCount + 1)));
+  }
+
+  Future<int> decrementLikes(int postId) async {
+    final post = await (select(socialPosts)..where((t) => t.id.equals(postId)))
+        .getSingle();
+    return (update(socialPosts)..where((t) => t.id.equals(postId)))
+        .write(SocialPostsCompanion(
+            likesCount: Value(post.likesCount > 0 ? post.likesCount - 1 : 0)));
+  }
+
+  Future<int> incrementComments(int postId) async {
+    final post = await (select(socialPosts)..where((t) => t.id.equals(postId)))
+        .getSingle();
+    return (update(socialPosts)..where((t) => t.id.equals(postId)))
+        .write(
+            SocialPostsCompanion(commentsCount: Value(post.commentsCount + 1)));
+  }
+}
+
+@DriftAccessor(tables: [SocialLikes])
+class SocialLikesDao extends DatabaseAccessor<AppDatabase>
+    with _$SocialLikesDaoMixin {
+  SocialLikesDao(super.db);
+
+  Future<bool> isLiked(int postId, String odUserId) async {
+    final result = await (select(socialLikes)
+          ..where(
+              (t) => t.postId.equals(postId) & t.odUserId.equals(odUserId)))
+        .get();
+    return result.isNotEmpty;
+  }
+
+  Future<int> like(SocialLikesCompanion entry) =>
+      into(socialLikes).insert(entry);
+
+  Future<int> unlike(int postId, String odUserId) =>
+      (delete(socialLikes)
+            ..where(
+                (t) => t.postId.equals(postId) & t.odUserId.equals(odUserId)))
+          .go();
+}
+
+@DriftAccessor(tables: [SocialComments])
+class SocialCommentsDao extends DatabaseAccessor<AppDatabase>
+    with _$SocialCommentsDaoMixin {
+  SocialCommentsDao(super.db);
+
+  Future<List<SocialComment>> getComments(int postId) =>
+      (select(socialComments)
+            ..where((t) => t.postId.equals(postId))
+            ..orderBy([(t) => OrderingTerm.asc(t.createdAt)]))
+          .get();
+
+  Future<int> addComment(SocialCommentsCompanion entry) =>
+      into(socialComments).insert(entry);
+
+  Future<int> deleteComment(int id) =>
+      (delete(socialComments)..where((t) => t.id.equals(id))).go();
+}
+
+@DriftAccessor(tables: [UserFollows])
+class UserFollowsDao extends DatabaseAccessor<AppDatabase>
+    with _$UserFollowsDaoMixin {
+  UserFollowsDao(super.db);
+
+  Future<List<UserFollow>> getFollowers(String odUserId) =>
+      (select(userFollows)..where((t) => t.followingId.equals(odUserId)))
+          .get();
+
+  Future<List<UserFollow>> getFollowing(String odUserId) =>
+      (select(userFollows)..where((t) => t.followerId.equals(odUserId)))
+          .get();
+
+  Future<bool> isFollowing(String followerId, String followingId) async {
+    final result = await (select(userFollows)
+          ..where((t) =>
+              t.followerId.equals(followerId) &
+              t.followingId.equals(followingId)))
+        .get();
+    return result.isNotEmpty;
+  }
+
+  Future<int> follow(UserFollowsCompanion entry) =>
+      into(userFollows).insert(entry);
+
+  Future<int> unfollow(String followerId, String followingId) =>
+      (delete(userFollows)
+            ..where((t) =>
+                t.followerId.equals(followerId) &
+                t.followingId.equals(followingId)))
+          .go();
+
+  Future<int> getFollowersCount(String odUserId) async {
+    final result = await (selectOnly(userFollows)
+          ..addColumns([userFollows.id.count()])
+          ..where(userFollows.followingId.equals(odUserId)))
+        .getSingle();
+    return result.read(userFollows.id.count()) ?? 0;
+  }
+
+  Future<int> getFollowingCount(String odUserId) async {
+    final result = await (selectOnly(userFollows)
+          ..addColumns([userFollows.id.count()])
+          ..where(userFollows.followerId.equals(odUserId)))
+        .getSingle();
+    return result.read(userFollows.id.count()) ?? 0;
+  }
+}
+
+@DriftAccessor(tables: [UserProfilesPublic])
+class UserProfilesPublicDao extends DatabaseAccessor<AppDatabase>
+    with _$UserProfilesPublicDaoMixin {
+  UserProfilesPublicDao(super.db);
+
+  Future<UserProfilesPublicData?> getProfile(String odUserId) async {
+    final results =
+        await (select(userProfilesPublic)..where((t) => t.odUserId.equals(odUserId)))
+            .get();
+    return results.isEmpty ? null : results.first;
+  }
+
+  Future<List<UserProfilesPublicData>> searchUsers(String query) =>
+      (select(userProfilesPublic)
+            ..where((t) => t.username.like('%$query%') | t.displayName.like('%$query%'))
+            ..limit(20))
+          .get();
+
+  Future<int> upsertProfile(UserProfilesPublicCompanion entry) =>
+      into(userProfilesPublic).insertOnConflictUpdate(entry);
+
+  Future<int> incrementPostsCount(String odUserId) async {
+    final profile = await getProfile(odUserId);
+    if (profile == null) return 0;
+    return (update(userProfilesPublic)..where((t) => t.odUserId.equals(odUserId)))
+        .write(UserProfilesPublicCompanion(
+            postsCount: Value(profile.postsCount + 1)));
+  }
+}
+
+@DriftAccessor(tables: [CommunityGroups])
+class CommunityGroupsDao extends DatabaseAccessor<AppDatabase>
+    with _$CommunityGroupsDaoMixin {
+  CommunityGroupsDao(super.db);
+
+  Future<List<CommunityGroup>> getGroupsByType(String groupType) =>
+      (select(communityGroups)..where((t) => t.groupType.equals(groupType)))
+          .get();
+
+  Future<List<CommunityGroup>> getAllGroups({int limit = 50}) =>
+      (select(communityGroups)
+            ..orderBy([(t) => OrderingTerm.desc(t.membersCount)])
+            ..limit(limit))
+          .get();
+
+  Future<CommunityGroup?> getGroup(int id) async {
+    final results = await (select(communityGroups)..where((t) => t.id.equals(id)))
+        .get();
+    return results.isEmpty ? null : results.first;
+  }
+
+  Future<int> createGroup(CommunityGroupsCompanion entry) =>
+      into(communityGroups).insert(entry);
+
+  Future<int> incrementMembers(int groupId) async {
+    final group = await getGroup(groupId);
+    if (group == null) return 0;
+    return (update(communityGroups)..where((t) => t.id.equals(groupId)))
+        .write(CommunityGroupsCompanion(
+            membersCount: Value(group.membersCount + 1)));
+  }
+}
+
+@DriftAccessor(tables: [GroupMembers])
+class GroupMembersDao extends DatabaseAccessor<AppDatabase>
+    with _$GroupMembersDaoMixin {
+  GroupMembersDao(super.db);
+
+  Future<List<GroupMember>> getMembers(int groupId) =>
+      (select(groupMembers)..where((t) => t.groupId.equals(groupId))).get();
+
+  Future<bool> isMember(int groupId, String odUserId) async {
+    final result = await (select(groupMembers)
+          ..where(
+              (t) => t.groupId.equals(groupId) & t.odUserId.equals(odUserId)))
+        .get();
+    return result.isNotEmpty;
+  }
+
+  Future<int> join(GroupMembersCompanion entry) =>
+      into(groupMembers).insert(entry);
+
+  Future<int> leave(int groupId, String odUserId) =>
+      (delete(groupMembers)
+            ..where(
+                (t) => t.groupId.equals(groupId) & t.odUserId.equals(odUserId)))
+          .go();
+
+  Future<List<CommunityGroup>> getGroupsForUser(String odUserId) async {
+    final memberships = await (select(groupMembers)
+          ..where((t) => t.odUserId.equals(odUserId)))
+        .get();
+    final groupIds = memberships.map((m) => m.groupId).toList();
+    if (groupIds.isEmpty) return [];
+    return (select(communityGroups)..where((t) => t.id.isIn(groupIds))).get();
+  }
+}
+
+@DriftAccessor(tables: [GroupPosts])
+class GroupPostsDao extends DatabaseAccessor<AppDatabase>
+    with _$GroupPostsDaoMixin {
+  GroupPostsDao(super.db);
+
+  Future<List<GroupPost>> getGroupFeed(int groupId,
+      {int limit = 50, int offset = 0}) =>
+      (select(groupPosts)
+            ..where((t) => t.groupId.equals(groupId))
+            ..orderBy([(t) => OrderingTerm.desc(t.createdAt)])
+            ..limit(limit, offset: offset))
+          .get();
+
+  Future<int> createPost(GroupPostsCompanion entry) =>
+      into(groupPosts).insert(entry);
+
+  Future<int> deletePost(int id) =>
+      (delete(groupPosts)..where((t) => t.id.equals(id))).go();
+}
+
+@DriftAccessor(tables: [GroupChallenges])
+class GroupChallengesDao extends DatabaseAccessor<AppDatabase>
+    with _$GroupChallengesDaoMixin {
+  GroupChallengesDao(super.db);
+
+  Future<List<GroupChallenge>> getActiveChallenges(int groupId) =>
+      (select(groupChallenges)
+            ..where(
+                (t) => t.groupId.equals(groupId) & t.isActive.equals(true))
+            ..orderBy([(t) => OrderingTerm.desc(t.startDate)]))
+          .get();
+
+  Future<GroupChallenge?> getChallenge(int id) async {
+    final results =
+        await (select(groupChallenges)..where((t) => t.id.equals(id))).get();
+    return results.isEmpty ? null : results.first;
+  }
+
+  Future<int> createChallenge(GroupChallengesCompanion entry) =>
+      into(groupChallenges).insert(entry);
+
+  Future<int> incrementParticipants(int challengeId) async {
+    final challenge = await getChallenge(challengeId);
+    if (challenge == null) return 0;
+    return (update(groupChallenges)..where((t) => t.id.equals(challengeId)))
+        .write(GroupChallengesCompanion(
+            participantsCount: Value(challenge.participantsCount + 1)));
+  }
+}
+
+@DriftAccessor(tables: [ChallengeParticipants])
+class ChallengeParticipantsDao extends DatabaseAccessor<AppDatabase>
+    with _$ChallengeParticipantsDaoMixin {
+  ChallengeParticipantsDao(super.db);
+
+  Future<List<ChallengeParticipant>> getLeaderboard(int challengeId) =>
+      (select(challengeParticipants)
+            ..where((t) => t.challengeId.equals(challengeId))
+            ..orderBy([(t) => OrderingTerm.desc(t.currentValue)]))
+          .get();
+
+  Future<bool> isParticipant(int challengeId, String odUserId) async {
+    final result = await (select(challengeParticipants)
+          ..where((t) =>
+              t.challengeId.equals(challengeId) &
+              t.odUserId.equals(odUserId)))
+        .get();
+    return result.isNotEmpty;
+  }
+
+  Future<int> join(ChallengeParticipantsCompanion entry) =>
+      into(challengeParticipants).insert(entry);
+
+  Future<int> updateProgress(
+      int challengeId, String odUserId, int newValue) async {
+    return (update(challengeParticipants)
+          ..where((t) =>
+              t.challengeId.equals(challengeId) &
+              t.odUserId.equals(odUserId)))
+        .write(ChallengeParticipantsCompanion(currentValue: Value(newValue)));
+  }
+}
+
+@DriftAccessor(tables: [DirectMessages])
+class DirectMessagesDao extends DatabaseAccessor<AppDatabase>
+    with _$DirectMessagesDaoMixin {
+  DirectMessagesDao(super.db);
+
+  Future<List<DirectMessage>> getMessages(String odUserId, String recipientId,
+      {int limit = 50, int offset = 0}) {
+    final q = select(directMessages)
+      ..where((t) =>
+          ((t.odUserId.equals(odUserId) & t.recipientId.equals(recipientId)) |
+              (t.odUserId.equals(recipientId) & t.recipientId.equals(odUserId))))
+      ..orderBy([(t) => OrderingTerm.desc(t.createdAt)])
+      ..limit(limit, offset: offset);
+    return q.get();
+  }
+
+  Future<int> sendMessage(DirectMessagesCompanion entry) async {
+    final id = await into(directMessages).insert(entry);
+    await _updateConversation(odUserId: entry.odUserId.value,
+        recipientId: entry.recipientId.value,
+        lastMessage: entry.content.value);
+    return id;
+  }
+
+  Future<void> _updateConversation({
+    required String odUserId,
+    required String recipientId,
+    required String lastMessage,
+  }) async {
+    final existing = await (select(messageConversations)
+          ..where((t) =>
+              (t.odUserId.equals(odUserId) & t.participantId.equals(recipientId)) |
+              (t.odUserId.equals(recipientId) & t.participantId.equals(odUserId))))
+        .get();
+    if (existing.isEmpty) {
+      await into(messageConversations).insert(
+        MessageConversationsCompanion.insert(
+          odUserId: odUserId,
+          participantId: recipientId,
+          lastMessage: Value(lastMessage),
+          lastMessageAt: Value(DateTime.now()),
+        ),
+      );
+    } else {
+      await (update(messageConversations)..where((t) => t.id.equals(existing.first.id)))
+          .write(MessageConversationsCompanion(
+        lastMessage: Value(lastMessage),
+        lastMessageAt: Value(DateTime.now()),
+      ));
+    }
+  }
+
+  Future<int> markRead(String odUserId, String senderId) =>
+      (update(directMessages)
+            ..where((t) =>
+                t.odUserId.equals(senderId) & t.recipientId.equals(odUserId)))
+          .write(const DirectMessagesCompanion(isRead: Value(true)));
+}
+
+@DriftAccessor(tables: [MessageConversations])
+class MessageConversationsDao extends DatabaseAccessor<AppDatabase>
+    with _$MessageConversationsDaoMixin {
+  MessageConversationsDao(super.db);
+
+  Future<List<MessageConversation>> getConversations(String odUserId) =>
+      (select(messageConversations)
+            ..where((t) =>
+                t.odUserId.equals(odUserId) | t.participantId.equals(odUserId))
+            ..orderBy([(t) => OrderingTerm.desc(t.lastMessageAt)]))
+          .get();
+
+  Future<int> getUnreadCount(String odUserId) async {
+    final result = await (selectOnly(messageConversations)
+          ..addColumns([messageConversations.unreadCount.sum()])
+          ..where(messageConversations.participantId.equals(odUserId)))
+        .getSingle();
+    return result.read(messageConversations.unreadCount.sum()) ?? 0;
+  }
+}
+
+@DriftAccessor(tables: [FestivalChallenges])
+class FestivalChallengesDao extends DatabaseAccessor<AppDatabase>
+    with _$FestivalChallengesDaoMixin {
+  FestivalChallengesDao(super.db);
+
+  Future<List<FestivalChallenge>> getActiveChallenges() =>
+      (select(festivalChallenges)
+            ..where((t) => t.isActive.equals(true))
+            ..orderBy([(t) => OrderingTerm.asc(t.startDate)]))
+          .get();
+
+  Future<FestivalChallenge?> getChallengeForFestival(int festivalId) async {
+    final results = await (select(festivalChallenges)
+          ..where((t) => t.festivalId.equals(festivalId)))
+        .get();
+    return results.isEmpty ? null : results.first;
+  }
+
+  Future<int> createChallenge(FestivalChallengesCompanion entry) =>
+      into(festivalChallenges).insert(entry);
+
+  Future<List<FestivalChallenge>> getCurrentChallenges() async {
+    final now = DateTime.now();
+    return (select(festivalChallenges)
+          ..where((t) =>
+              t.isActive.equals(true) &
+              t.startDate.isSmallerOrEqualValue(now) &
+              t.endDate.isBiggerOrEqualValue(now)))
+          .get();
+  }
+}
+
+@DriftAccessor(tables: [FestivalLeaderboard])
+class FestivalLeaderboardDao extends DatabaseAccessor<AppDatabase>
+    with _$FestivalLeaderboardDaoMixin {
+  FestivalLeaderboardDao(super.db);
+
+  Future<List<FestivalLeaderboardData>> getLeaderboard(int challengeId) =>
+      (select(festivalLeaderboard)
+            ..where((t) => t.challengeId.equals(challengeId))
+            ..orderBy([(t) => OrderingTerm.asc(t.rank)]))
+          .get();
+
+  Future<int> upsertEntry(FestivalLeaderboardCompanion entry) =>
+      into(festivalLeaderboard).insertOnConflictUpdate(entry);
+
+  Future<void> updateRank(int challengeId, String odUserId, int value) async {
+    final existing = await (select(festivalLeaderboard)
+          ..where((t) =>
+              t.challengeId.equals(challengeId) & t.odUserId.equals(odUserId)))
+        .get();
+    final rank = await _calculateRank(challengeId, value);
+    if (existing.isEmpty) {
+      await into(festivalLeaderboard).insert(
+        FestivalLeaderboardCompanion.insert(
+          challengeId: challengeId,
+          odUserId: odUserId,
+          value: value,
+          rank: rank,
+          updatedAt: DateTime.now(),
+        ),
+      );
+    } else {
+      await (update(festivalLeaderboard)
+            ..where((t) =>
+                t.challengeId.equals(challengeId) &
+                t.odUserId.equals(odUserId)))
+          .write(FestivalLeaderboardCompanion(
+        value: Value(value),
+        rank: Value(rank),
+        updatedAt: Value(DateTime.now()),
+      ));
+    }
+  }
+
+  Future<int> _calculateRank(int challengeId, int value) async {
+    final higher = await (select(festivalLeaderboard)
+          ..where((t) =>
+              t.challengeId.equals(challengeId) & t.value.isBiggerThanValue(value)))
+        .get();
+    return higher.length + 1;
+  }
+}
+
 // ═══════════════════════════════════════════════════════════════════════════════
 // MAIN DATABASE
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -3903,6 +4558,20 @@ class SyncDeadLetterDao extends DatabaseAccessor<AppDatabase>
     FoodItemsFts,
     InsightFeedback,
     HerbalRemedies,
+    SocialPosts,
+    SocialLikes,
+    SocialComments,
+    UserFollows,
+    UserProfilesPublic,
+    CommunityGroups,
+    GroupMembers,
+    GroupPosts,
+    GroupChallenges,
+    ChallengeParticipants,
+    DirectMessages,
+    MessageConversations,
+    FestivalChallenges,
+    FestivalLeaderboard,
   ],
   daos: [
     FoodLogsDao,
@@ -3936,13 +4605,25 @@ class SyncDeadLetterDao extends DatabaseAccessor<AppDatabase>
     SyncDeadLetterDao,
     HerbalRemediesDao,
     UserProfilesDao,
+    SocialPostsDao,
+    UserFollowsDao,
+    UserProfilesPublicDao,
+    CommunityGroupsDao,
+    GroupMembersDao,
+    GroupPostsDao,
+    GroupChallengesDao,
+    ChallengeParticipantsDao,
+    DirectMessagesDao,
+    MessageConversationsDao,
+    FestivalChallengesDao,
+    FestivalLeaderboardDao,
   ],
 )
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
   @override
-  int get schemaVersion => 5;
+  int get schemaVersion => 6;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -3969,6 +4650,22 @@ class AppDatabase extends _$AppDatabase {
           if (from < 5) {
             await m.createTable(syncQueue);
             await m.createTable(syncDeadLetter);
+          }
+          if (from < 6) {
+            await m.createTable(socialPosts);
+            await m.createTable(socialLikes);
+            await m.createTable(socialComments);
+            await m.createTable(userFollows);
+            await m.createTable(userProfilesPublic);
+            await m.createTable(communityGroups);
+            await m.createTable(groupMembers);
+            await m.createTable(groupPosts);
+            await m.createTable(groupChallenges);
+            await m.createTable(challengeParticipants);
+            await m.createTable(directMessages);
+            await m.createTable(messageConversations);
+            await m.createTable(festivalChallenges);
+            await m.createTable(festivalLeaderboard);
           }
         },
       );
