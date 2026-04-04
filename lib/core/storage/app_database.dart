@@ -426,6 +426,56 @@ class AbhaLinks extends Table {
   DateTimeColumn get lastSyncedAt => dateTime().nullable()();
 }
 
+@TableIndex(name: 'idx_herbal_remedies', columns: {#name})
+class HerbalRemedies extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get name => text().withLength(min: 1, max: 128)();
+  TextColumn get sanskritName => text().nullable()();
+  TextColumn get benefitsJson => text().nullable()();
+  TextColumn get dosage => text().nullable()();
+  TextColumn get evidence => text().nullable()();
+  TextColumn get precautions => text().nullable()();
+  TextColumn get category => text().nullable()();
+}
+
+@DriftAccessor(tables: [HerbalRemedies])
+class HerbalRemediesDao extends DatabaseAccessor<AppDatabase>
+    with _$HerbalRemediesDaoMixin {
+  HerbalRemediesDao(super.db);
+
+  Future<List<HerbalRemedy>> getAllRemedies() => select(herbalRemedies).get();
+
+  Future<List<HerbalRemedy>> getRemediesByCategory(String category) =>
+      (select(herbalRemedies)..where((t) => t.category.equals(category))).get();
+
+  Future<int> insertRemedy(HerbalRemediesCompanion entry) =>
+      into(herbalRemedies).insert(entry);
+
+  Future<void> seedDefaultRemedies() async {
+    final defaults = [
+      ('Ashwagandha', 'Withania somnifera', '["stress relief","energy","sleep"]', '1-2g daily', 'Multiple RCTs show adaptogenic effects', 'Avoid in pregnancy', 'Adaptogen'),
+      ('Triphala', 'Terminalia chebula', '["digestion","detox","immunity"]', '500mg-1g', 'Evidence for GI benefits', 'May interact with meds', 'Digestive'),
+      ('Brahmi', 'Bacopa monnieri', '["memory","focus","anxiety"]', '300-500mg', 'Cognitive enhancement studies', 'May cause GI upset', 'Nootropic'),
+      ('Turmeric', 'Curcuma longa', '["inflammation","antioxidant"]', '500mg-2g', 'Strong anti-inflammatory', 'May thin blood', 'Anti-inflammatory'),
+      ('Tulsi', 'Ocimum sanctum', '["stress","immune","respiratory"]', '300-600mg', 'Immune modulating', 'May affect fertility', 'Adaptogen'),
+      ('Shatavari', 'Asparagus racemosus', '["hormones","lactation","digestion"]', '500mg-1g', 'Ayurvedic classic', 'Avoid in fibroids', 'Reproductive'),
+      ('Ginger', 'Zingiber officinale', '["nausea","digestion","pain"]', '500mg-1g', 'Anti-nausea evidence', 'May thin blood', 'Digestive'),
+      ('Ginkgo', 'Ginkgo biloba', '["memory","circulation"]', '120-240mg', 'Mixed evidence', 'May interact with meds', 'Nootropic'),
+    ];
+    for (final r in defaults) {
+      await insertRemedy(HerbalRemediesCompanion.insert(
+        name: r.$1,
+        sanskritName: Value(r.$2),
+        benefitsJson: Value(r.$3),
+        dosage: Value(r.$4),
+        evidence: Value(r.$5),
+        precautions: Value(r.$6),
+        category: Value(r.$7),
+      ));
+    }
+  }
+}
+
 class UserProfiles extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get odUserId => text().withLength(min: 1, max: 64)();
@@ -440,6 +490,9 @@ class UserProfiles extends Table {
   IntColumn get vataPercent => integer()();
   IntColumn get pittaPercent => integer()();
   IntColumn get kaphaPercent => integer()();
+  TextColumn get dominantDosha => text().nullable()();
+  TextColumn get seasonType => text().nullable()();
+  DateTimeColumn get doshaQuizDate => dateTime().nullable()();
   TextColumn get language => text().withLength(min: 2, max: 10)();
   BoolColumn get stepCounterPermission => boolean().withDefault(const Constant(false))();
   BoolColumn get heartRatePermission => boolean().withDefault(const Constant(false))();

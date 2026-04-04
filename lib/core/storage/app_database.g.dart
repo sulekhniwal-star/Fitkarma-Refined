@@ -3,6 +3,21 @@
 part of 'app_database.dart';
 
 // ignore_for_file: type=lint
+mixin _$HerbalRemediesDaoMixin on DatabaseAccessor<AppDatabase> {
+  $HerbalRemediesTable get herbalRemedies => attachedDatabase.herbalRemedies;
+  HerbalRemediesDaoManager get managers => HerbalRemediesDaoManager(this);
+}
+
+class HerbalRemediesDaoManager {
+  final _$HerbalRemediesDaoMixin _db;
+  HerbalRemediesDaoManager(this._db);
+  $$HerbalRemediesTableTableManager get herbalRemedies =>
+      $$HerbalRemediesTableTableManager(
+        _db.attachedDatabase,
+        _db.herbalRemedies,
+      );
+}
+
 mixin _$FoodLogsDaoMixin on DatabaseAccessor<AppDatabase> {
   $FoodLogsTable get foodLogs => attachedDatabase.foodLogs;
   FoodLogsDaoManager get managers => FoodLogsDaoManager(this);
@@ -16098,6 +16113,40 @@ class $UserProfilesTable extends UserProfiles
     type: DriftSqlType.int,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _dominantDoshaMeta = const VerificationMeta(
+    'dominantDosha',
+  );
+  @override
+  late final GeneratedColumn<String> dominantDosha = GeneratedColumn<String>(
+    'dominant_dosha',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _seasonTypeMeta = const VerificationMeta(
+    'seasonType',
+  );
+  @override
+  late final GeneratedColumn<String> seasonType = GeneratedColumn<String>(
+    'season_type',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _doshaQuizDateMeta = const VerificationMeta(
+    'doshaQuizDate',
+  );
+  @override
+  late final GeneratedColumn<DateTime> doshaQuizDate =
+      GeneratedColumn<DateTime>(
+        'dosha_quiz_date',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
   static const VerificationMeta _languageMeta = const VerificationMeta(
     'language',
   );
@@ -16248,6 +16297,9 @@ class $UserProfilesTable extends UserProfiles
     vataPercent,
     pittaPercent,
     kaphaPercent,
+    dominantDosha,
+    seasonType,
+    doshaQuizDate,
     language,
     stepCounterPermission,
     heartRatePermission,
@@ -16390,6 +16442,30 @@ class $UserProfilesTable extends UserProfiles
       );
     } else if (isInserting) {
       context.missing(_kaphaPercentMeta);
+    }
+    if (data.containsKey('dominant_dosha')) {
+      context.handle(
+        _dominantDoshaMeta,
+        dominantDosha.isAcceptableOrUnknown(
+          data['dominant_dosha']!,
+          _dominantDoshaMeta,
+        ),
+      );
+    }
+    if (data.containsKey('season_type')) {
+      context.handle(
+        _seasonTypeMeta,
+        seasonType.isAcceptableOrUnknown(data['season_type']!, _seasonTypeMeta),
+      );
+    }
+    if (data.containsKey('dosha_quiz_date')) {
+      context.handle(
+        _doshaQuizDateMeta,
+        doshaQuizDate.isAcceptableOrUnknown(
+          data['dosha_quiz_date']!,
+          _doshaQuizDateMeta,
+        ),
+      );
     }
     if (data.containsKey('language')) {
       context.handle(
@@ -16537,6 +16613,18 @@ class $UserProfilesTable extends UserProfiles
         DriftSqlType.int,
         data['${effectivePrefix}kapha_percent'],
       )!,
+      dominantDosha: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}dominant_dosha'],
+      ),
+      seasonType: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}season_type'],
+      ),
+      doshaQuizDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}dosha_quiz_date'],
+      ),
       language: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}language'],
@@ -16600,6 +16688,9 @@ class UserProfile extends DataClass implements Insertable<UserProfile> {
   final int vataPercent;
   final int pittaPercent;
   final int kaphaPercent;
+  final String? dominantDosha;
+  final String? seasonType;
+  final DateTime? doshaQuizDate;
   final String language;
   final bool stepCounterPermission;
   final bool heartRatePermission;
@@ -16624,6 +16715,9 @@ class UserProfile extends DataClass implements Insertable<UserProfile> {
     required this.vataPercent,
     required this.pittaPercent,
     required this.kaphaPercent,
+    this.dominantDosha,
+    this.seasonType,
+    this.doshaQuizDate,
     required this.language,
     required this.stepCounterPermission,
     required this.heartRatePermission,
@@ -16651,6 +16745,15 @@ class UserProfile extends DataClass implements Insertable<UserProfile> {
     map['vata_percent'] = Variable<int>(vataPercent);
     map['pitta_percent'] = Variable<int>(pittaPercent);
     map['kapha_percent'] = Variable<int>(kaphaPercent);
+    if (!nullToAbsent || dominantDosha != null) {
+      map['dominant_dosha'] = Variable<String>(dominantDosha);
+    }
+    if (!nullToAbsent || seasonType != null) {
+      map['season_type'] = Variable<String>(seasonType);
+    }
+    if (!nullToAbsent || doshaQuizDate != null) {
+      map['dosha_quiz_date'] = Variable<DateTime>(doshaQuizDate);
+    }
     map['language'] = Variable<String>(language);
     map['step_counter_permission'] = Variable<bool>(stepCounterPermission);
     map['heart_rate_permission'] = Variable<bool>(heartRatePermission);
@@ -16681,6 +16784,15 @@ class UserProfile extends DataClass implements Insertable<UserProfile> {
       vataPercent: Value(vataPercent),
       pittaPercent: Value(pittaPercent),
       kaphaPercent: Value(kaphaPercent),
+      dominantDosha: dominantDosha == null && nullToAbsent
+          ? const Value.absent()
+          : Value(dominantDosha),
+      seasonType: seasonType == null && nullToAbsent
+          ? const Value.absent()
+          : Value(seasonType),
+      doshaQuizDate: doshaQuizDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(doshaQuizDate),
       language: Value(language),
       stepCounterPermission: Value(stepCounterPermission),
       heartRatePermission: Value(heartRatePermission),
@@ -16715,6 +16827,9 @@ class UserProfile extends DataClass implements Insertable<UserProfile> {
       vataPercent: serializer.fromJson<int>(json['vataPercent']),
       pittaPercent: serializer.fromJson<int>(json['pittaPercent']),
       kaphaPercent: serializer.fromJson<int>(json['kaphaPercent']),
+      dominantDosha: serializer.fromJson<String?>(json['dominantDosha']),
+      seasonType: serializer.fromJson<String?>(json['seasonType']),
+      doshaQuizDate: serializer.fromJson<DateTime?>(json['doshaQuizDate']),
       language: serializer.fromJson<String>(json['language']),
       stepCounterPermission: serializer.fromJson<bool>(
         json['stepCounterPermission'],
@@ -16748,6 +16863,9 @@ class UserProfile extends DataClass implements Insertable<UserProfile> {
       'vataPercent': serializer.toJson<int>(vataPercent),
       'pittaPercent': serializer.toJson<int>(pittaPercent),
       'kaphaPercent': serializer.toJson<int>(kaphaPercent),
+      'dominantDosha': serializer.toJson<String?>(dominantDosha),
+      'seasonType': serializer.toJson<String?>(seasonType),
+      'doshaQuizDate': serializer.toJson<DateTime?>(doshaQuizDate),
       'language': serializer.toJson<String>(language),
       'stepCounterPermission': serializer.toJson<bool>(stepCounterPermission),
       'heartRatePermission': serializer.toJson<bool>(heartRatePermission),
@@ -16775,6 +16893,9 @@ class UserProfile extends DataClass implements Insertable<UserProfile> {
     int? vataPercent,
     int? pittaPercent,
     int? kaphaPercent,
+    Value<String?> dominantDosha = const Value.absent(),
+    Value<String?> seasonType = const Value.absent(),
+    Value<DateTime?> doshaQuizDate = const Value.absent(),
     String? language,
     bool? stepCounterPermission,
     bool? heartRatePermission,
@@ -16799,6 +16920,13 @@ class UserProfile extends DataClass implements Insertable<UserProfile> {
     vataPercent: vataPercent ?? this.vataPercent,
     pittaPercent: pittaPercent ?? this.pittaPercent,
     kaphaPercent: kaphaPercent ?? this.kaphaPercent,
+    dominantDosha: dominantDosha.present
+        ? dominantDosha.value
+        : this.dominantDosha,
+    seasonType: seasonType.present ? seasonType.value : this.seasonType,
+    doshaQuizDate: doshaQuizDate.present
+        ? doshaQuizDate.value
+        : this.doshaQuizDate,
     language: language ?? this.language,
     stepCounterPermission: stepCounterPermission ?? this.stepCounterPermission,
     heartRatePermission: heartRatePermission ?? this.heartRatePermission,
@@ -16839,6 +16967,15 @@ class UserProfile extends DataClass implements Insertable<UserProfile> {
       kaphaPercent: data.kaphaPercent.present
           ? data.kaphaPercent.value
           : this.kaphaPercent,
+      dominantDosha: data.dominantDosha.present
+          ? data.dominantDosha.value
+          : this.dominantDosha,
+      seasonType: data.seasonType.present
+          ? data.seasonType.value
+          : this.seasonType,
+      doshaQuizDate: data.doshaQuizDate.present
+          ? data.doshaQuizDate.value
+          : this.doshaQuizDate,
       language: data.language.present ? data.language.value : this.language,
       stepCounterPermission: data.stepCounterPermission.present
           ? data.stepCounterPermission.value
@@ -16880,6 +17017,9 @@ class UserProfile extends DataClass implements Insertable<UserProfile> {
           ..write('vataPercent: $vataPercent, ')
           ..write('pittaPercent: $pittaPercent, ')
           ..write('kaphaPercent: $kaphaPercent, ')
+          ..write('dominantDosha: $dominantDosha, ')
+          ..write('seasonType: $seasonType, ')
+          ..write('doshaQuizDate: $doshaQuizDate, ')
           ..write('language: $language, ')
           ..write('stepCounterPermission: $stepCounterPermission, ')
           ..write('heartRatePermission: $heartRatePermission, ')
@@ -16909,6 +17049,9 @@ class UserProfile extends DataClass implements Insertable<UserProfile> {
     vataPercent,
     pittaPercent,
     kaphaPercent,
+    dominantDosha,
+    seasonType,
+    doshaQuizDate,
     language,
     stepCounterPermission,
     heartRatePermission,
@@ -16937,6 +17080,9 @@ class UserProfile extends DataClass implements Insertable<UserProfile> {
           other.vataPercent == this.vataPercent &&
           other.pittaPercent == this.pittaPercent &&
           other.kaphaPercent == this.kaphaPercent &&
+          other.dominantDosha == this.dominantDosha &&
+          other.seasonType == this.seasonType &&
+          other.doshaQuizDate == this.doshaQuizDate &&
           other.language == this.language &&
           other.stepCounterPermission == this.stepCounterPermission &&
           other.heartRatePermission == this.heartRatePermission &&
@@ -16963,6 +17109,9 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfile> {
   final Value<int> vataPercent;
   final Value<int> pittaPercent;
   final Value<int> kaphaPercent;
+  final Value<String?> dominantDosha;
+  final Value<String?> seasonType;
+  final Value<DateTime?> doshaQuizDate;
   final Value<String> language;
   final Value<bool> stepCounterPermission;
   final Value<bool> heartRatePermission;
@@ -16987,6 +17136,9 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfile> {
     this.vataPercent = const Value.absent(),
     this.pittaPercent = const Value.absent(),
     this.kaphaPercent = const Value.absent(),
+    this.dominantDosha = const Value.absent(),
+    this.seasonType = const Value.absent(),
+    this.doshaQuizDate = const Value.absent(),
     this.language = const Value.absent(),
     this.stepCounterPermission = const Value.absent(),
     this.heartRatePermission = const Value.absent(),
@@ -17012,6 +17164,9 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfile> {
     required int vataPercent,
     required int pittaPercent,
     required int kaphaPercent,
+    this.dominantDosha = const Value.absent(),
+    this.seasonType = const Value.absent(),
+    this.doshaQuizDate = const Value.absent(),
     required String language,
     this.stepCounterPermission = const Value.absent(),
     this.heartRatePermission = const Value.absent(),
@@ -17051,6 +17206,9 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfile> {
     Expression<int>? vataPercent,
     Expression<int>? pittaPercent,
     Expression<int>? kaphaPercent,
+    Expression<String>? dominantDosha,
+    Expression<String>? seasonType,
+    Expression<DateTime>? doshaQuizDate,
     Expression<String>? language,
     Expression<bool>? stepCounterPermission,
     Expression<bool>? heartRatePermission,
@@ -17076,6 +17234,9 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfile> {
       if (vataPercent != null) 'vata_percent': vataPercent,
       if (pittaPercent != null) 'pitta_percent': pittaPercent,
       if (kaphaPercent != null) 'kapha_percent': kaphaPercent,
+      if (dominantDosha != null) 'dominant_dosha': dominantDosha,
+      if (seasonType != null) 'season_type': seasonType,
+      if (doshaQuizDate != null) 'dosha_quiz_date': doshaQuizDate,
       if (language != null) 'language': language,
       if (stepCounterPermission != null)
         'step_counter_permission': stepCounterPermission,
@@ -17105,6 +17266,9 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfile> {
     Value<int>? vataPercent,
     Value<int>? pittaPercent,
     Value<int>? kaphaPercent,
+    Value<String?>? dominantDosha,
+    Value<String?>? seasonType,
+    Value<DateTime?>? doshaQuizDate,
     Value<String>? language,
     Value<bool>? stepCounterPermission,
     Value<bool>? heartRatePermission,
@@ -17130,6 +17294,9 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfile> {
       vataPercent: vataPercent ?? this.vataPercent,
       pittaPercent: pittaPercent ?? this.pittaPercent,
       kaphaPercent: kaphaPercent ?? this.kaphaPercent,
+      dominantDosha: dominantDosha ?? this.dominantDosha,
+      seasonType: seasonType ?? this.seasonType,
+      doshaQuizDate: doshaQuizDate ?? this.doshaQuizDate,
       language: language ?? this.language,
       stepCounterPermission:
           stepCounterPermission ?? this.stepCounterPermission,
@@ -17186,6 +17353,15 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfile> {
     if (kaphaPercent.present) {
       map['kapha_percent'] = Variable<int>(kaphaPercent.value);
     }
+    if (dominantDosha.present) {
+      map['dominant_dosha'] = Variable<String>(dominantDosha.value);
+    }
+    if (seasonType.present) {
+      map['season_type'] = Variable<String>(seasonType.value);
+    }
+    if (doshaQuizDate.present) {
+      map['dosha_quiz_date'] = Variable<DateTime>(doshaQuizDate.value);
+    }
     if (language.present) {
       map['language'] = Variable<String>(language.value);
     }
@@ -17237,6 +17413,9 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfile> {
           ..write('vataPercent: $vataPercent, ')
           ..write('pittaPercent: $pittaPercent, ')
           ..write('kaphaPercent: $kaphaPercent, ')
+          ..write('dominantDosha: $dominantDosha, ')
+          ..write('seasonType: $seasonType, ')
+          ..write('doshaQuizDate: $doshaQuizDate, ')
           ..write('language: $language, ')
           ..write('stepCounterPermission: $stepCounterPermission, ')
           ..write('heartRatePermission: $heartRatePermission, ')
@@ -28075,6 +28254,9 @@ typedef $$UserProfilesTableCreateCompanionBuilder =
       required int vataPercent,
       required int pittaPercent,
       required int kaphaPercent,
+      Value<String?> dominantDosha,
+      Value<String?> seasonType,
+      Value<DateTime?> doshaQuizDate,
       required String language,
       Value<bool> stepCounterPermission,
       Value<bool> heartRatePermission,
@@ -28101,6 +28283,9 @@ typedef $$UserProfilesTableUpdateCompanionBuilder =
       Value<int> vataPercent,
       Value<int> pittaPercent,
       Value<int> kaphaPercent,
+      Value<String?> dominantDosha,
+      Value<String?> seasonType,
+      Value<DateTime?> doshaQuizDate,
       Value<String> language,
       Value<bool> stepCounterPermission,
       Value<bool> heartRatePermission,
@@ -28184,6 +28369,21 @@ class $$UserProfilesTableFilterComposer
 
   ColumnFilters<int> get kaphaPercent => $composableBuilder(
     column: $table.kaphaPercent,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get dominantDosha => $composableBuilder(
+    column: $table.dominantDosha,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get seasonType => $composableBuilder(
+    column: $table.seasonType,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get doshaQuizDate => $composableBuilder(
+    column: $table.doshaQuizDate,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -28312,6 +28512,21 @@ class $$UserProfilesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get dominantDosha => $composableBuilder(
+    column: $table.dominantDosha,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get seasonType => $composableBuilder(
+    column: $table.seasonType,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get doshaQuizDate => $composableBuilder(
+    column: $table.doshaQuizDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get language => $composableBuilder(
     column: $table.language,
     builder: (column) => ColumnOrderings(column),
@@ -28425,6 +28640,21 @@ class $$UserProfilesTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumn<String> get dominantDosha => $composableBuilder(
+    column: $table.dominantDosha,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get seasonType => $composableBuilder(
+    column: $table.seasonType,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get doshaQuizDate => $composableBuilder(
+    column: $table.doshaQuizDate,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<String> get language =>
       $composableBuilder(column: $table.language, builder: (column) => column);
 
@@ -28512,6 +28742,9 @@ class $$UserProfilesTableTableManager
                 Value<int> vataPercent = const Value.absent(),
                 Value<int> pittaPercent = const Value.absent(),
                 Value<int> kaphaPercent = const Value.absent(),
+                Value<String?> dominantDosha = const Value.absent(),
+                Value<String?> seasonType = const Value.absent(),
+                Value<DateTime?> doshaQuizDate = const Value.absent(),
                 Value<String> language = const Value.absent(),
                 Value<bool> stepCounterPermission = const Value.absent(),
                 Value<bool> heartRatePermission = const Value.absent(),
@@ -28536,6 +28769,9 @@ class $$UserProfilesTableTableManager
                 vataPercent: vataPercent,
                 pittaPercent: pittaPercent,
                 kaphaPercent: kaphaPercent,
+                dominantDosha: dominantDosha,
+                seasonType: seasonType,
+                doshaQuizDate: doshaQuizDate,
                 language: language,
                 stepCounterPermission: stepCounterPermission,
                 heartRatePermission: heartRatePermission,
@@ -28562,6 +28798,9 @@ class $$UserProfilesTableTableManager
                 required int vataPercent,
                 required int pittaPercent,
                 required int kaphaPercent,
+                Value<String?> dominantDosha = const Value.absent(),
+                Value<String?> seasonType = const Value.absent(),
+                Value<DateTime?> doshaQuizDate = const Value.absent(),
                 required String language,
                 Value<bool> stepCounterPermission = const Value.absent(),
                 Value<bool> heartRatePermission = const Value.absent(),
@@ -28586,6 +28825,9 @@ class $$UserProfilesTableTableManager
                 vataPercent: vataPercent,
                 pittaPercent: pittaPercent,
                 kaphaPercent: kaphaPercent,
+                dominantDosha: dominantDosha,
+                seasonType: seasonType,
+                doshaQuizDate: doshaQuizDate,
                 language: language,
                 stepCounterPermission: stepCounterPermission,
                 heartRatePermission: heartRatePermission,
