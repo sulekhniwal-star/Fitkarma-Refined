@@ -11,6 +11,8 @@ import 'package:fitkarma/features/steps/steps_screen.dart';
 import 'package:fitkarma/features/profile/profile_screen.dart';
 import 'package:fitkarma/features/bp/presentation/bp_log_screen.dart';
 import 'package:fitkarma/features/bp/presentation/bp_history_screen.dart';
+import 'package:fitkarma/features/glucose/presentation/glucose_log_screen.dart';
+import 'package:fitkarma/features/glucose/presentation/glucose_history_screen.dart';
 import 'package:fitkarma/features/wearables/wearables_screen.dart'
     deferred as wearables;
 import 'package:fitkarma/features/social/social_feed_screen.dart'
@@ -326,6 +328,24 @@ final GoRouter appRouter = GoRouter(
       builder: (context, state) {
         final userId = state.extra as String? ?? '';
         return BpHistoryScreen(userId: userId);
+      },
+    ),
+
+    // Glucose
+    GoRoute(
+      parentNavigatorKey: _rootNavigatorKey,
+      path: '/glucose/log',
+      builder: (context, state) {
+        final userId = state.extra as String? ?? '';
+        return GlucoseLogScreen(userId: userId);
+      },
+    ),
+    GoRoute(
+      parentNavigatorKey: _rootNavigatorKey,
+      path: '/glucose/history',
+      builder: (context, state) {
+        final userId = state.extra as String? ?? '';
+        return GlucoseHistoryScreen(userId: userId);
       },
     ),
   ],

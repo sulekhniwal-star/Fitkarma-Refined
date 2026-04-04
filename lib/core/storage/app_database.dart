@@ -148,6 +148,8 @@ class GlucoseLogs extends Table {
   TextColumn get userId => text().withLength(min: 1, max: 64)();
   TextColumn get glucoseMgdl => text().withLength(min: 1, max: 1024)();
   TextColumn get mealType => text().nullable()();
+  IntColumn get foodLogId => integer().nullable()();
+  BoolColumn get isEncrypted => boolean().withDefault(const Constant(false))();
   DateTimeColumn get loggedAt => dateTime()();
 }
 
@@ -975,19 +977,196 @@ class GlucoseLogsDao extends DatabaseAccessor<AppDatabase>
       (select(glucoseLogs)
             ..where((t) => t.userId.equals(userId))
             ..orderBy([(t) => OrderingTerm.desc(t.loggedAt)]))
-        .watch();
+          .watch();
 
   Future<int> insertLog(GlucoseLogsCompanion entry) =>
       into(glucoseLogs).insert(entry);
 
-  Future<int> insertLogEncrypted(GlucoseLogsCompanion entry) {
-    return into(glucoseLogs).insert(entry);
+  Future<int> insertLogEncrypted({
+    required String userId,
+    required int glucoseMgdl,
+    String? mealType,
+    int? foodLogId,
+  }) async {
+    final key = await KeyManager.instance.getKeyForDataClass(DataClassKeys.bpGlucose);
+    
+    final encGlucose = await EncryptionHelper.encryptField(glucoseMgdl.toString(), key);
+    
+    return into(glucoseLogs).insert(
+      GlucoseLogsCompanion.insert(
+        userId: userId,
+        glucoseMgdl: base64Encode(encGlucose),
+        mealType: Value(mealType),
+        foodLogId: Value(foodLogId),
+        isEncrypted: const Value(true),
+        loggedAt: DateTime.now(),
+      ),
+    );
   }
 
-  Future<List<GlucoseLog>> getLogsForUserDecrypted(String userId,
-      {DateTime? from, DateTime? to}) async {
-    return getLogsForUser(userId, from: from, to: to);
+  Future<int> insertLogWithKarma({
+    required String userId,
+    required int glucoseMgdl,
+    String? mealType,
+    int? foodLogId,
+  }) async {
+    final id = await insertLogEncrypted(
+      userId: userId,
+      glucoseMgdl: glucoseMgdl,
+      mealType: mealType,
+      foodLogId: foodLogId,
+    );
+    
+    await db.karmaTransactionsDao.insertTransaction(
+      KarmaTransactionsCompanion.insert(
+        userId: userId,
+        amount: 5,
+        createdAt: DateTime.now(),
+      ),
+    );
+    
+    return id;
   }
+
+  Future<List<DecryptedGlucoseLog>> getLogsForUserDecrypted(String userId,
+      {DateTime? from, DateTime? to}) async {
+    final logs = await getLogsForUser(userId, from: from, to: to);
+    final key = await KeyManager.instance.getKeyForDataClass(DataClassKeys.bpGlucose);
+    
+    final decryptedLogs = <DecryptedGlucoseLog>[];
+    for (final l in logs) {
+      String glucose = l.glucoseMgdl;
+      
+      if (l.isEncrypted) {
+        try {
+          final glucoseBytes = base64Decode(l.glucoseMgdl);
+          glucose = await EncryptionHelper.decryptField(glucoseBytes, key);
+        } catch (e) {
+          debugPrint('Glucose decryption failed: $e');
+        }
+      }
+      
+      decryptedLogs.add(DecryptedGlucoseLog(
+        id: l.id,
+        userId: l.userId,
+        glucoseMgdl: glucose,
+        mealType: l.mealType,
+        foodLogId: l.foodLogId,
+        isEncrypted: l.isEncrypted,
+        loggedAt: l.loggedAt,
+      ));
+    }
+    
+    return decryptedLogs;
+  }
+
+  Future<Map<String, dynamic>> getStatistics(String userId) async {
+    final ninetyDaysAgo = DateTime.now().subtract(const Duration(days: 90));
+    final logs = await getLogsForUser(userId, from: ninetyDaysAgo);
+    
+    double avgGlucose = 0;
+    double avgFasting = 0;
+    double avgPostMeal = 0;
+    double estimatedHbA1c = 0;
+    
+    final fastingLogs = <int>[];
+    final postMealLogs = <int>[];
+    final allLogs = <int>[];
+    
+    for (final log in logs) {
+      final g = int.tryParse(log.glucoseMgdl) ?? 0;
+      if (g > 0) {
+        allLogs.add(g);
+        if (log.mealType == 'fasting') {
+          fastingLogs.add(g);
+        } else if (log.mealType == 'post_meal') {
+          postMealLogs.add(g);
+        }
+      }
+    }
+    
+    if (allLogs.isNotEmpty) {
+      avgGlucose = allLogs.reduce((a, b) => a + b) / allLogs.length;
+      estimatedHbA1c = (avgGlucose + 46.7) / 28.7;
+    }
+    if (fastingLogs.isNotEmpty) {
+      avgFasting = fastingLogs.reduce((a, b) => a + b) / fastingLogs.length;
+    }
+    if (postMealLogs.isNotEmpty) {
+      avgPostMeal = postMealLogs.reduce((a, b) => a + b) / postMealLogs.length;
+    }
+    
+    return {
+      'avgGlucose': avgGlucose,
+      'avgFasting': avgFasting,
+      'avgPostMeal': avgPostMeal,
+      'estimatedHbA1c': estimatedHbA1c,
+      'count': logs.length,
+    };
+  }
+}
+
+class DecryptedGlucoseLog {
+  final int id;
+  final String userId;
+  final String glucoseMgdl;
+  final String? mealType;
+  final int? foodLogId;
+  final bool isEncrypted;
+  final DateTime loggedAt;
+
+  DecryptedGlucoseLog({
+    required this.id,
+    required this.userId,
+    required this.glucoseMgdl,
+    this.mealType,
+    this.foodLogId,
+    this.isEncrypted = false,
+    required this.loggedAt,
+  });
+
+  int get glucose => int.tryParse(glucoseMgdl) ?? 0;
+
+  GlucoseClassification get classification {
+    if (mealType == 'fasting') {
+      return classifyFasting(glucose);
+    } else if (mealType == 'post_meal') {
+      return classifyPostMeal2h(glucose);
+    }
+    return classifyRandom(glucose);
+  }
+
+  static GlucoseClassification classifyFasting(int glucose) {
+    if (glucose < 70) return GlucoseClassification.low;
+    if (glucose <= 99) return GlucoseClassification.normal;
+    if (glucose <= 125) return GlucoseClassification.prediabetes;
+    return GlucoseClassification.diabetes;
+  }
+
+  static GlucoseClassification classifyPostMeal2h(int glucose) {
+    if (glucose < 70) return GlucoseClassification.low;
+    if (glucose <= 139) return GlucoseClassification.normal;
+    if (glucose <= 199) return GlucoseClassification.prediabetes;
+    return GlucoseClassification.diabetes;
+  }
+
+  static GlucoseClassification classifyRandom(int glucose) {
+    if (glucose < 70) return GlucoseClassification.low;
+    if (glucose <= 139) return GlucoseClassification.normal;
+    if (glucose <= 199) return GlucoseClassification.prediabetes;
+    return GlucoseClassification.diabetes;
+  }
+
+  static double estimateHbA1c(int avgGlucose) {
+    return (avgGlucose + 46.7) / 28.7;
+  }
+}
+
+enum GlucoseClassification {
+  low,
+  normal,
+  prediabetes,
+  diabetes,
 }
 
 @DriftAccessor(tables: [Spo2Logs])

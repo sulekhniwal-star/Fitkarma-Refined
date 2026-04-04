@@ -4300,6 +4300,32 @@ class $GlucoseLogsTable extends GlucoseLogs
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _foodLogIdMeta = const VerificationMeta(
+    'foodLogId',
+  );
+  @override
+  late final GeneratedColumn<int> foodLogId = GeneratedColumn<int>(
+    'food_log_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _isEncryptedMeta = const VerificationMeta(
+    'isEncrypted',
+  );
+  @override
+  late final GeneratedColumn<bool> isEncrypted = GeneratedColumn<bool>(
+    'is_encrypted',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_encrypted" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
   static const VerificationMeta _loggedAtMeta = const VerificationMeta(
     'loggedAt',
   );
@@ -4317,6 +4343,8 @@ class $GlucoseLogsTable extends GlucoseLogs
     userId,
     glucoseMgdl,
     mealType,
+    foodLogId,
+    isEncrypted,
     loggedAt,
   ];
   @override
@@ -4359,6 +4387,21 @@ class $GlucoseLogsTable extends GlucoseLogs
         mealType.isAcceptableOrUnknown(data['meal_type']!, _mealTypeMeta),
       );
     }
+    if (data.containsKey('food_log_id')) {
+      context.handle(
+        _foodLogIdMeta,
+        foodLogId.isAcceptableOrUnknown(data['food_log_id']!, _foodLogIdMeta),
+      );
+    }
+    if (data.containsKey('is_encrypted')) {
+      context.handle(
+        _isEncryptedMeta,
+        isEncrypted.isAcceptableOrUnknown(
+          data['is_encrypted']!,
+          _isEncryptedMeta,
+        ),
+      );
+    }
     if (data.containsKey('logged_at')) {
       context.handle(
         _loggedAtMeta,
@@ -4392,6 +4435,14 @@ class $GlucoseLogsTable extends GlucoseLogs
         DriftSqlType.string,
         data['${effectivePrefix}meal_type'],
       ),
+      foodLogId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}food_log_id'],
+      ),
+      isEncrypted: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_encrypted'],
+      )!,
       loggedAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}logged_at'],
@@ -4410,12 +4461,16 @@ class GlucoseLog extends DataClass implements Insertable<GlucoseLog> {
   final String userId;
   final String glucoseMgdl;
   final String? mealType;
+  final int? foodLogId;
+  final bool isEncrypted;
   final DateTime loggedAt;
   const GlucoseLog({
     required this.id,
     required this.userId,
     required this.glucoseMgdl,
     this.mealType,
+    this.foodLogId,
+    required this.isEncrypted,
     required this.loggedAt,
   });
   @override
@@ -4427,6 +4482,10 @@ class GlucoseLog extends DataClass implements Insertable<GlucoseLog> {
     if (!nullToAbsent || mealType != null) {
       map['meal_type'] = Variable<String>(mealType);
     }
+    if (!nullToAbsent || foodLogId != null) {
+      map['food_log_id'] = Variable<int>(foodLogId);
+    }
+    map['is_encrypted'] = Variable<bool>(isEncrypted);
     map['logged_at'] = Variable<DateTime>(loggedAt);
     return map;
   }
@@ -4439,6 +4498,10 @@ class GlucoseLog extends DataClass implements Insertable<GlucoseLog> {
       mealType: mealType == null && nullToAbsent
           ? const Value.absent()
           : Value(mealType),
+      foodLogId: foodLogId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(foodLogId),
+      isEncrypted: Value(isEncrypted),
       loggedAt: Value(loggedAt),
     );
   }
@@ -4453,6 +4516,8 @@ class GlucoseLog extends DataClass implements Insertable<GlucoseLog> {
       userId: serializer.fromJson<String>(json['userId']),
       glucoseMgdl: serializer.fromJson<String>(json['glucoseMgdl']),
       mealType: serializer.fromJson<String?>(json['mealType']),
+      foodLogId: serializer.fromJson<int?>(json['foodLogId']),
+      isEncrypted: serializer.fromJson<bool>(json['isEncrypted']),
       loggedAt: serializer.fromJson<DateTime>(json['loggedAt']),
     );
   }
@@ -4464,6 +4529,8 @@ class GlucoseLog extends DataClass implements Insertable<GlucoseLog> {
       'userId': serializer.toJson<String>(userId),
       'glucoseMgdl': serializer.toJson<String>(glucoseMgdl),
       'mealType': serializer.toJson<String?>(mealType),
+      'foodLogId': serializer.toJson<int?>(foodLogId),
+      'isEncrypted': serializer.toJson<bool>(isEncrypted),
       'loggedAt': serializer.toJson<DateTime>(loggedAt),
     };
   }
@@ -4473,12 +4540,16 @@ class GlucoseLog extends DataClass implements Insertable<GlucoseLog> {
     String? userId,
     String? glucoseMgdl,
     Value<String?> mealType = const Value.absent(),
+    Value<int?> foodLogId = const Value.absent(),
+    bool? isEncrypted,
     DateTime? loggedAt,
   }) => GlucoseLog(
     id: id ?? this.id,
     userId: userId ?? this.userId,
     glucoseMgdl: glucoseMgdl ?? this.glucoseMgdl,
     mealType: mealType.present ? mealType.value : this.mealType,
+    foodLogId: foodLogId.present ? foodLogId.value : this.foodLogId,
+    isEncrypted: isEncrypted ?? this.isEncrypted,
     loggedAt: loggedAt ?? this.loggedAt,
   );
   GlucoseLog copyWithCompanion(GlucoseLogsCompanion data) {
@@ -4489,6 +4560,10 @@ class GlucoseLog extends DataClass implements Insertable<GlucoseLog> {
           ? data.glucoseMgdl.value
           : this.glucoseMgdl,
       mealType: data.mealType.present ? data.mealType.value : this.mealType,
+      foodLogId: data.foodLogId.present ? data.foodLogId.value : this.foodLogId,
+      isEncrypted: data.isEncrypted.present
+          ? data.isEncrypted.value
+          : this.isEncrypted,
       loggedAt: data.loggedAt.present ? data.loggedAt.value : this.loggedAt,
     );
   }
@@ -4500,13 +4575,23 @@ class GlucoseLog extends DataClass implements Insertable<GlucoseLog> {
           ..write('userId: $userId, ')
           ..write('glucoseMgdl: $glucoseMgdl, ')
           ..write('mealType: $mealType, ')
+          ..write('foodLogId: $foodLogId, ')
+          ..write('isEncrypted: $isEncrypted, ')
           ..write('loggedAt: $loggedAt')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, userId, glucoseMgdl, mealType, loggedAt);
+  int get hashCode => Object.hash(
+    id,
+    userId,
+    glucoseMgdl,
+    mealType,
+    foodLogId,
+    isEncrypted,
+    loggedAt,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -4515,6 +4600,8 @@ class GlucoseLog extends DataClass implements Insertable<GlucoseLog> {
           other.userId == this.userId &&
           other.glucoseMgdl == this.glucoseMgdl &&
           other.mealType == this.mealType &&
+          other.foodLogId == this.foodLogId &&
+          other.isEncrypted == this.isEncrypted &&
           other.loggedAt == this.loggedAt);
 }
 
@@ -4523,12 +4610,16 @@ class GlucoseLogsCompanion extends UpdateCompanion<GlucoseLog> {
   final Value<String> userId;
   final Value<String> glucoseMgdl;
   final Value<String?> mealType;
+  final Value<int?> foodLogId;
+  final Value<bool> isEncrypted;
   final Value<DateTime> loggedAt;
   const GlucoseLogsCompanion({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
     this.glucoseMgdl = const Value.absent(),
     this.mealType = const Value.absent(),
+    this.foodLogId = const Value.absent(),
+    this.isEncrypted = const Value.absent(),
     this.loggedAt = const Value.absent(),
   });
   GlucoseLogsCompanion.insert({
@@ -4536,6 +4627,8 @@ class GlucoseLogsCompanion extends UpdateCompanion<GlucoseLog> {
     required String userId,
     required String glucoseMgdl,
     this.mealType = const Value.absent(),
+    this.foodLogId = const Value.absent(),
+    this.isEncrypted = const Value.absent(),
     required DateTime loggedAt,
   }) : userId = Value(userId),
        glucoseMgdl = Value(glucoseMgdl),
@@ -4545,6 +4638,8 @@ class GlucoseLogsCompanion extends UpdateCompanion<GlucoseLog> {
     Expression<String>? userId,
     Expression<String>? glucoseMgdl,
     Expression<String>? mealType,
+    Expression<int>? foodLogId,
+    Expression<bool>? isEncrypted,
     Expression<DateTime>? loggedAt,
   }) {
     return RawValuesInsertable({
@@ -4552,6 +4647,8 @@ class GlucoseLogsCompanion extends UpdateCompanion<GlucoseLog> {
       if (userId != null) 'user_id': userId,
       if (glucoseMgdl != null) 'glucose_mgdl': glucoseMgdl,
       if (mealType != null) 'meal_type': mealType,
+      if (foodLogId != null) 'food_log_id': foodLogId,
+      if (isEncrypted != null) 'is_encrypted': isEncrypted,
       if (loggedAt != null) 'logged_at': loggedAt,
     });
   }
@@ -4561,6 +4658,8 @@ class GlucoseLogsCompanion extends UpdateCompanion<GlucoseLog> {
     Value<String>? userId,
     Value<String>? glucoseMgdl,
     Value<String?>? mealType,
+    Value<int?>? foodLogId,
+    Value<bool>? isEncrypted,
     Value<DateTime>? loggedAt,
   }) {
     return GlucoseLogsCompanion(
@@ -4568,6 +4667,8 @@ class GlucoseLogsCompanion extends UpdateCompanion<GlucoseLog> {
       userId: userId ?? this.userId,
       glucoseMgdl: glucoseMgdl ?? this.glucoseMgdl,
       mealType: mealType ?? this.mealType,
+      foodLogId: foodLogId ?? this.foodLogId,
+      isEncrypted: isEncrypted ?? this.isEncrypted,
       loggedAt: loggedAt ?? this.loggedAt,
     );
   }
@@ -4587,6 +4688,12 @@ class GlucoseLogsCompanion extends UpdateCompanion<GlucoseLog> {
     if (mealType.present) {
       map['meal_type'] = Variable<String>(mealType.value);
     }
+    if (foodLogId.present) {
+      map['food_log_id'] = Variable<int>(foodLogId.value);
+    }
+    if (isEncrypted.present) {
+      map['is_encrypted'] = Variable<bool>(isEncrypted.value);
+    }
     if (loggedAt.present) {
       map['logged_at'] = Variable<DateTime>(loggedAt.value);
     }
@@ -4600,6 +4707,8 @@ class GlucoseLogsCompanion extends UpdateCompanion<GlucoseLog> {
           ..write('userId: $userId, ')
           ..write('glucoseMgdl: $glucoseMgdl, ')
           ..write('mealType: $mealType, ')
+          ..write('foodLogId: $foodLogId, ')
+          ..write('isEncrypted: $isEncrypted, ')
           ..write('loggedAt: $loggedAt')
           ..write(')'))
         .toString();
@@ -17045,6 +17154,8 @@ typedef $$GlucoseLogsTableCreateCompanionBuilder =
       required String userId,
       required String glucoseMgdl,
       Value<String?> mealType,
+      Value<int?> foodLogId,
+      Value<bool> isEncrypted,
       required DateTime loggedAt,
     });
 typedef $$GlucoseLogsTableUpdateCompanionBuilder =
@@ -17053,6 +17164,8 @@ typedef $$GlucoseLogsTableUpdateCompanionBuilder =
       Value<String> userId,
       Value<String> glucoseMgdl,
       Value<String?> mealType,
+      Value<int?> foodLogId,
+      Value<bool> isEncrypted,
       Value<DateTime> loggedAt,
     });
 
@@ -17082,6 +17195,16 @@ class $$GlucoseLogsTableFilterComposer
 
   ColumnFilters<String> get mealType => $composableBuilder(
     column: $table.mealType,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get foodLogId => $composableBuilder(
+    column: $table.foodLogId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isEncrypted => $composableBuilder(
+    column: $table.isEncrypted,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -17120,6 +17243,16 @@ class $$GlucoseLogsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get foodLogId => $composableBuilder(
+    column: $table.foodLogId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isEncrypted => $composableBuilder(
+    column: $table.isEncrypted,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get loggedAt => $composableBuilder(
     column: $table.loggedAt,
     builder: (column) => ColumnOrderings(column),
@@ -17148,6 +17281,14 @@ class $$GlucoseLogsTableAnnotationComposer
 
   GeneratedColumn<String> get mealType =>
       $composableBuilder(column: $table.mealType, builder: (column) => column);
+
+  GeneratedColumn<int> get foodLogId =>
+      $composableBuilder(column: $table.foodLogId, builder: (column) => column);
+
+  GeneratedColumn<bool> get isEncrypted => $composableBuilder(
+    column: $table.isEncrypted,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<DateTime> get loggedAt =>
       $composableBuilder(column: $table.loggedAt, builder: (column) => column);
@@ -17188,12 +17329,16 @@ class $$GlucoseLogsTableTableManager
                 Value<String> userId = const Value.absent(),
                 Value<String> glucoseMgdl = const Value.absent(),
                 Value<String?> mealType = const Value.absent(),
+                Value<int?> foodLogId = const Value.absent(),
+                Value<bool> isEncrypted = const Value.absent(),
                 Value<DateTime> loggedAt = const Value.absent(),
               }) => GlucoseLogsCompanion(
                 id: id,
                 userId: userId,
                 glucoseMgdl: glucoseMgdl,
                 mealType: mealType,
+                foodLogId: foodLogId,
+                isEncrypted: isEncrypted,
                 loggedAt: loggedAt,
               ),
           createCompanionCallback:
@@ -17202,12 +17347,16 @@ class $$GlucoseLogsTableTableManager
                 required String userId,
                 required String glucoseMgdl,
                 Value<String?> mealType = const Value.absent(),
+                Value<int?> foodLogId = const Value.absent(),
+                Value<bool> isEncrypted = const Value.absent(),
                 required DateTime loggedAt,
               }) => GlucoseLogsCompanion.insert(
                 id: id,
                 userId: userId,
                 glucoseMgdl: glucoseMgdl,
                 mealType: mealType,
+                foodLogId: foodLogId,
+                isEncrypted: isEncrypted,
                 loggedAt: loggedAt,
               ),
           withReferenceMapper: (p0) => p0
