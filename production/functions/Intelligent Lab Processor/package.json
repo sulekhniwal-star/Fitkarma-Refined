@@ -1,8 +1,0 @@
-{
-    "name": "lab-processor",
-    "version": "1.0.0",
-    "main": "src/index.js",
-    "dependencies": {
-        "node-appwrite": "^8.0.0"
-    }
-}

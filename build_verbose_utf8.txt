@@ -1,6 +1,0 @@
-﻿Running build hooks...Running build hooks...  0s drift_dev on 532 inputs; lib/app.dart
-  0s drift_dev on 532 inputs: 1 skipped; lib/core/config/remote_config.dart
-  0s drift_dev on 532 inputs: 532 skipped
-  0s source_gen:combining_builder on 266 inputs; lib/app.dart
-  0s source_gen:combining_builder on 266 inputs: 266 skipped
-  Built with build_runner/jit in 2s; wrote 0 outputs.

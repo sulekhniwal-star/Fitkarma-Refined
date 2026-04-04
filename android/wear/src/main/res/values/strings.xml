@@ -1,7 +1,0 @@
-<resources>
-    <string name="app_name">FitKarma</string>
-    <string name="tile_activity_label">Activity</string>
-    <string name="tile_workout_label">Workout</string>
-    <string name="complication_steps_label">Steps Progress</string>
-    <string name="complication_water_label">Water +1</string>
-</resources>
