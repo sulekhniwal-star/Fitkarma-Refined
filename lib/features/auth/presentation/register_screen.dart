@@ -3,7 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../shared/widgets/primary_button.dart';
 import '../../../shared/widgets/bilingual_text.dart';
-import '../data/auth_repository.dart';
+import '../../../shared/widgets/social_login_button.dart';
+import '../../../shared/theme/app_colors.dart';
+import '../application/auth_service.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({super.key});
@@ -23,23 +25,20 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     
     setState(() => _isLoading = true);
     try {
-      await ref.read(authRepositoryProvider).register(
-        name: _nameController.text.trim(),
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
+      await ref.read(authServiceProvider.notifier).register(
+        _emailController.text.trim(),
+        _passwordController.text.trim(),
+        _nameController.text.trim(),
       );
-      
-      if (mounted) {
-        // After registration, redirect to Login
-        context.pushReplacement('/login');
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Account created! Please log in to continue.')),
-        );
-      }
+      // Registration + Auto-login handled, redirect will trigger
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Registration Error: ${e.toString()}')),
+          SnackBar(
+            content: Text('Registration Error: ${e.toString()}'),
+            behavior: SnackBarBehavior.floating,
+            backgroundColor: AppColors.error,
+          ),
         );
       }
     } finally {
@@ -50,90 +49,136 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
+      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.background,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          onPressed: () => context.pop(),
+          icon: Icon(Icons.arrow_back_ios_new_rounded, color: isDark ? Colors.white : Colors.black, size: 20),
+        ),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24.0),
+          padding: const EdgeInsets.symmetric(horizontal: 28.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 10),
-              IconButton(
-                onPressed: () => context.pop(),
-                icon: const Icon(Icons.arrow_back_ios_new, size: 20),
+              const SizedBox(height: 12),
+              const BilingualText(
+                english: 'Create Account',
+                hindi: 'खाता बनाएं',
+                englishStyle: TextStyle(fontSize: 28, fontWeight: FontWeight.w800, letterSpacing: -0.5),
               ),
-              const SizedBox(height: 20),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8.0),
-                child: BilingualText(
-                  english: 'Create Account',
-                  hindi: 'खाता बनाएं',
-                  englishStyle: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+              const SizedBox(height: 12),
+              Text(
+                'Join FitKarma to unlock your Ayurvedic potential. Start your 6-step entry journey today.',
+                style: TextStyle(
+                  color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+                  fontSize: 15,
+                  height: 1.5,
                 ),
               ),
-              const SizedBox(height: 4),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: Text(
-                  'Join the FitKarma community for a personalized Ayurvedic fitness experience.',
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: theme.colorScheme.onSurface.withOpacity(0.6),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 40),
+              const SizedBox(height: 32),
               TextField(
                 controller: _nameController,
                 textCapitalization: TextCapitalization.words,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Full Name',
-                  prefixIcon: Icon(Icons.person_outline),
+                  hintText: 'Enter your name',
+                  prefixIcon: const Icon(Icons.person_outline_rounded, size: 22),
+                  filled: true,
+                  fillColor: isDark ? AppColors.surfaceVariantDark : Colors.white,
                 ),
               ),
               const SizedBox(height: 20),
               TextField(
                 controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Email Address',
-                  prefixIcon: Icon(Icons.email_outlined),
+                  hintText: 'Enter your email',
+                  prefixIcon: const Icon(Icons.email_outlined, size: 22),
+                  filled: true,
+                  fillColor: isDark ? AppColors.surfaceVariantDark : Colors.white,
                 ),
               ),
               const SizedBox(height: 20),
               TextField(
                 controller: _passwordController,
                 obscureText: true,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Password',
-                  prefixIcon: Icon(Icons.lock_outline),
+                  hintText: 'Create a password',
+                  prefixIcon: const Icon(Icons.lock_outline_rounded, size: 22),
+                  filled: true,
+                  fillColor: isDark ? AppColors.surfaceVariantDark : Colors.white,
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 20, horizontal: 8),
-                child: Text(
-                  'By registering, you agree to our Terms of Service and Privacy Policy.',
-                  style: TextStyle(fontSize: 12, color: Colors.grey),
-                ),
+              const SizedBox(height: 24),
+              Row(
+                children: [
+                   Icon(Icons.verified_user_outlined, size: 14, color: AppColors.textMuted),
+                   const SizedBox(width: 8),
+                   Expanded(
+                     child: Text(
+                      'By registering, you agree to our Terms and Privacy Policy.',
+                      style: TextStyle(fontSize: 12, color: isDark ? AppColors.textMutedDark : AppColors.textMuted),
+                     ),
+                   ),
+                ],
               ),
+              const SizedBox(height: 32),
               PrimaryButton(
-                text: 'Register',
+                text: 'Create Account',
                 isLoading: _isLoading,
                 onPressed: _register,
               ),
-              const SizedBox(height: 40),
+              const SizedBox(height: 32),
+              Row(
+                children: [
+                  Expanded(child: Divider(color: isDark ? AppColors.dividerDark : AppColors.divider)),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(
+                      'OR SIGN UP WITH',
+                      style: TextStyle(
+                        color: isDark ? AppColors.textMutedDark : AppColors.textMuted,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 1.2,
+                      ),
+                    ),
+                  ),
+                  Expanded(child: Divider(color: isDark ? AppColors.dividerDark : AppColors.divider)),
+                ],
+              ),
+              const SizedBox(height: 28),
+              SocialLoginButton(
+                text: 'Sign up with Google',
+                icon: const Icon(Icons.g_mobiledata_rounded, color: Colors.blue, size: 32),
+                onPressed: () => ref.read(authServiceProvider.notifier).loginWithGoogle(),
+              ),
+              const SizedBox(height: 48),
               Center(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text("Already have an account? "),
+                    Text(
+                      "Already have an account? ",
+                      style: TextStyle(color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary),
+                    ),
                     TextButton(
                       onPressed: () => context.pop(),
-                      child: const Text('Login'),
+                      child: const Text('Login', style: TextStyle(fontWeight: FontWeight.w800)),
                     ),
                   ],
                 ),
               ),
+              const SizedBox(height: 24),
             ],
           ),
         ),
@@ -141,3 +186,4 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     );
   }
 }
+

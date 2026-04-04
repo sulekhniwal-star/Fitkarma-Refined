@@ -55,9 +55,12 @@ class KeyManager {
       outputLength: 32,
     );
 
+    // Standardized context strings for FitKarma domains
+    final info = 'fitkarma:enc:$dataClass';
+
     final output = await hkdf.deriveKey(
       secretKey: SecretKey(masterKey),
-      info: utf8.encode(dataClass),
+      info: utf8.encode(info),
     );
 
     return Uint8List.fromList(await output.extractBytes());

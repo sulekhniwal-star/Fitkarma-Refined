@@ -73,33 +73,33 @@
 ### 1.4 Architecture Fixes (Critical)
 > ⚠️ These fixes address critical issues identified in the architecture review — do NOT skip
 
-- [ ] 🔴🟡 Create `lib/core/storage/app_database.dart` — copy the full `AppDatabase` class from Section 7.2 of the docs (includes `_openConnection`, `MigrationStrategy` through v5, FTS5 setup)
-  - [ ] Define DAOs for all 23 tables:
+- [x] 🔴🟡 Create `lib/core/storage/app_database.dart` — copy the full `AppDatabase` class from Section 7.2 of the docs (includes `_openConnection`, `MigrationStrategy` through v5, FTS5 setup)
+  - [x] Define DAOs for all 23 tables:
     - Core: `FoodLogsDao`, `FoodItemsDao`, `WorkoutLogsDao`, `StepLogsDao`, `SleepLogsDao`, `MoodLogsDao`
     - Lifestyle: `HabitsDao`, `HabitCompletionsDao`, `BodyMeasurementsDao`, `MedicationsDao`, `FastingLogsDao`, `MealPlansDao`, `RecipesDao`
     - Health (encrypted): `BloodPressureLogsDao`, `GlucoseLogsDao`, `Spo2LogsDao`, `PeriodLogsDao`, `JournalEntriesDao`, `DoctorAppointmentsDao`
     - India ecosystem: `LabReportsDao`, `AbhaLinksDao`
     - Platform: `EmergencyCardDao`, `FestivalCalendarDao`, `RemoteConfigCacheDao`
     - Infrastructure: `KarmaTransactionsDao`, `NutritionGoalsDao`, `PersonalRecordsDao`, `SyncQueueDao`, `SyncDeadLetterDao`
-  - [ ] Implement FTS5 virtual table (`food_items_fts`) + triggers as shown in Section 7.4
-  - [ ] Run `dart run build_runner build` after each DAO addition
-- [ ] 🟡 Add **composite Drift indices** — critical for dashboard < 1s load:
-  - [ ] `food_logs`: `(userId, loggedAt DESC)`
-  - [ ] `step_logs`: `(userId, date DESC)`
-  - [ ] `workout_logs`: `(userId, loggedAt DESC)`
-  - [ ] `mood_logs`: `(userId, loggedAt DESC)`
-  - [ ] `sleep_logs`: `(userId, date DESC)`
-  - [ ] `blood_pressure_logs`: `(userId, loggedAt DESC)`
-  - [ ] `glucose_logs`: `(userId, loggedAt DESC)`
+  - [x] Implement FTS5 virtual table (`food_items_fts`) + triggers as shown in Section 7.4
+  - [x] Run `dart run build_runner build` after each DAO addition
+- [x] 🟡 Add **composite Drift indices** — critical for dashboard < 1s load:
+  - [x] `food_logs`: `(userId, loggedAt DESC)`
+  - [x] `step_logs`: `(userId, date DESC)`
+  - [x] `workout_logs`: `(userId, loggedAt DESC)`
+  - [x] `mood_logs`: `(userId, loggedAt DESC)`
+  - [x] `sleep_logs`: `(userId, date DESC)`
+  - [x] `blood_pressure_logs`: `(userId, loggedAt DESC)`
+  - [x] `glucose_logs`: `(userId, loggedAt DESC)`
 
 ### 1.5 App Config
 - [x] Create `lib/core/constants/app_config.dart` — copy the `AppConfig` class from the docs (Section 23)
 - [x] Create `lib/core/constants/api_endpoints.dart` — copy the `AW` constants class from the docs (Section 5.3)
-- [ ] 🆕🟡 Create `lib/core/config/remote_config.dart` — Remote Config provider
-  - [ ] Reads a `remote_config` document from Appwrite on app start (non-blocking)
-  - [ ] Caches locally in Drift; serves cached version on all subsequent reads
-  - [ ] Schema: `{ "feature.X": bool, "ab.X": { "rollout_pct": int, "seed": str }, "kill_switch.X": bool }`
-  - [ ] Expose as a Riverpod provider; UI reads flags from this — never hardcoded
+- [x] 🆕🟡 Create `lib/core/config/remote_config.dart` — Remote Config provider
+  - [x] Reads a `remote_config` document from Appwrite on app start (non-blocking)
+  - [x] Caches locally in Drift; serves cached version on all subsequent reads
+  - [x] Schema: `{ "feature.X": bool, "ab.X": { "rollout_pct": int, "seed": str }, "kill_switch.X": bool }`
+  - [x] Expose as a Riverpod provider; UI reads flags from this — never hardcoded
 
 ---
 
@@ -115,25 +115,25 @@
 
 ### 2.2 Shared Widgets
 - [x] `shimmer_loader.dart` — loading placeholder
-- [x] `async_value_widget.dart` — generic `AsyncValue<T>` wrapper
-- [x] `error_retry_widget.dart` — error state with Retry button
-- [x] `bilingual_label.dart` — stacked English + Hindi `Text` widget
+- [ ] `async_value_widget.dart` — generic `AsyncValue<T>` wrapper
+- [ ] `error_retry_widget.dart` — error state with Retry button
+- [ ] `bilingual_label.dart` — stacked English + Hindi `Text` widget
 - [x] `activity_rings.dart` — four concentric rings (orange, green, teal, purple)
 - [x] `insight_card.dart` — amber card with lightbulb icon and 👍/👎 buttons
-- [x] `correlation_insight_card.dart` — multi-module insight with per-module pill links
-- [x] `food_item_card.dart` — photo, bilingual name, portion, kcal, `+` button
+- [ ] `correlation_insight_card.dart` — multi-module insight with per-module pill links
+- [ ] `food_item_card.dart` — photo, bilingual name, portion, kcal, `+` button
 - [x] `karma_level_card.dart` — dark purple gradient card with progress bar
-- [x] `dosha_chart.dart` — three-segment donut using `fl_chart`
-- [x] `challenge_card.dart` — horizontally scrollable challenge card
+- [ ] `dosha_chart.dart` — three-segment donut using `fl_chart`
+- [ ] `challenge_card.dart` — horizontally scrollable challenge card
 - [x] `quick_log_fab.dart` — speed-dial orange FAB with 6 sub-actions
-- [x] `meal_tab_bar.dart` — Breakfast / Lunch / Dinner / Snacks tab bar
-- [x] `encryption_badge.dart` — 🔒 AES-256 pill badge for sensitive data
-- [x] `sync_status_banner.dart` — DLQ banner + offline status indicator
-- [x] `micronutrient_bar.dart` — compact progress bar for Iron / B12 / Vit D / Calcium
-- [x] `lab_value_row.dart` — extracted lab metric with inline field and confirm checkbox
-- [x] `abha_badge.dart` — ABHA linked (green) / unlinked (amber) indicator
-- [x] `health_share_card.dart` — shareable doctor link card with countdown
-- [x] `home_widget_preview.dart` — scaled preview of Android/iOS home screen widgets
+- [ ] `meal_tab_bar.dart` — Breakfast / Lunch / Dinner / Snacks tab bar
+- [ ] `encryption_badge.dart` — 🔒 AES-256 pill badge for sensitive data
+- [ ] `sync_status_banner.dart` — DLQ banner + offline status indicator
+- [ ] `micronutrient_bar.dart` — compact progress bar for Iron / B12 / Vit D / Calcium
+- [ ] `lab_value_row.dart` — extracted lab metric with inline field and confirm checkbox
+- [ ] `abha_badge.dart` — ABHA linked (green) / unlinked (amber) indicator
+- [ ] `health_share_card.dart` — shareable doctor link card with countdown
+- [ ] `home_widget_preview.dart` — scaled preview of Android/iOS home screen widgets
 - [ ] 🆕🟡 `festival_card.dart` — festival name (bilingual), date range, fasting pill, region pill, reminder + diet plan CTAs
 - [ ] 🆕🟡 `festival_countdown_banner.dart` — active festival dashboard banner; festival-colour gradient; fasting mode indicator; quick action buttons
 - [ ] 🆕🟡 `wedding_countdown_card.dart` — gold gradient card; days to wedding + next event; role badge; link to wedding planner
@@ -142,14 +142,14 @@
 - [ ] 🆕🟢 `festival_diet_badge.dart` — fasting type pill badge (Nirjala / Phalahar / Roza / Feast / Sattvic)
 
 ### 2.3 Navigation
-- [] Create `lib/app.dart` with `GoRouter` — added all routes from the Route Map in Section 19
-- [] Add the 5-tab `BottomNavigationBar` (Home · Food · Workout · Steps · Me) with bilingual labels
-- [] Implement **deferred module loading** for heavy features — load library only on first navigation:
-  - [] Wearables screen — `deferred as wearables`
-  - [] Community/Social feed — `deferred as social`
-  - [] GPS workout map screen — `deferred as gps_workout`
-  - [] Mental health module — `deferred as mental_health`
-  - [] Meditation audio player — `deferred as meditation`
+- [x] Create `lib/app.dart` with `GoRouter` — added all routes from the Route Map in Section 19
+- [x] Add the 5-tab `BottomNavigationBar` (Home · Food · Workout · Steps · Me) with bilingual labels
+- [ ] Implement **deferred module loading** for heavy features — load library only on first navigation:
+  - [ ] Wearables screen — `deferred as wearables`
+  - [ ] Community/Social feed — `deferred as social`
+  - [ ] GPS workout map screen — `deferred as gps_workout`
+  - [ ] Mental health module — `deferred as mental_health`
+  - [ ] Meditation audio player — `deferred as meditation`
 
 ---
 
@@ -157,12 +157,12 @@
 > *The plumbing that every feature depends on. Get this solid before features.*
 
 ### 3.1 Appwrite Client
-- [] ⚡🟡 Create `lib/core/network/appwrite_client.dart` — copy the singleton from Section 5.2
-- [] 🟢 Test the connection: call `AppwriteClient.account.get()` and log the result
-- [] 🆕🔒🟡 **Add certificate pinning** to the Appwrite client — pin the leaf certificate SHA-256 hash
-  - Use `dio` with a custom `HttpClient` that validates the server certificate on every request
-  - Update pinned cert in a Remote Config flag when cert rotation is needed
-- [] **Add root/jailbreak detection** — added warning banner in `RootShell`
+- [x] ⚡🟡 Create `lib/core/network/appwrite_client.dart` — copy the singleton from Section 5.2
+- [x] 🟢 Test the connection: call `AppwriteClient.account.get()` and log the result
+- [x] 🆕🔒🟡 **Add certificate pinning** to the Appwrite client — pin the leaf certificate SHA-256 hash
+  - [x] Use `dio` with a custom `HttpClient` that validates the server certificate on every request
+  - [x] Update pinned cert in a Remote Config flag when cert rotation is needed
+- [x] **Add root/jailbreak detection** — added warning banner in `RootShell`
 
 ### 3.2 Local Storage — Drift (SQLCipher)
 - [x] ⚡🟡 Create `lib/core/storage/drift_database.dart` — opens the Drift database with SQLCipher encryption
@@ -177,7 +177,7 @@
   - [ ] Store the random salt separately in `flutter_secure_storage`
   - [ ] Password changes must NOT invalidate existing encrypted data
   - [ ] OAuth-only users (no password) must still have working encryption
-- [ ] 🆕🔒🔴 **Derive a separate encryption key per data class** using HKDF — prevents lateral exposure if one key leaks:
+- [x] 🆕🔒🔴 **Derive a separate encryption key per data class** using HKDF — prevents lateral exposure if one key leaks:
   - [ ] `HkdfKey.bp = HKDF(masterKey, info: "fitkarma_bp_glucose")`
   - [ ] `HkdfKey.period = HKDF(masterKey, info: "fitkarma_period")`
   - [ ] `HkdfKey.journal = HKDF(masterKey, info: "fitkarma_journal")`
@@ -186,38 +186,38 @@
 - [ ] 🔒🟡 Store the salt in `flutter_secure_storage` — never in Drift or plaintext files
 
 ### 3.4 Connectivity & Sync Queue
-- [ ] 🟡 Create `lib/core/network/connectivity_service.dart` — wraps `connectivity_plus`, exposes an `isOnline` stream
-- [ ] 🟡 Create the `SyncQueueItem` model in Drift — copy fields from Section 8; add new fields below
-- [ ] 🔴 Create `lib/core/network/sync_queue.dart`:
-  - [ ] Write sync items to the `sync_queue` Drift table on every local create/update/delete
-  - [ ] Background isolate watches connectivity; flushes queue in batches of 20 when online
-  - [ ] Exponential backoff: 1s → 2s → 4s → 8s → 16s, max 5 retries per item
-- [ ] 🆕🔴🟡 **Idempotency keys** — add to every sync queue item to prevent duplicate writes on retry:
-  - [ ] `idempotencyKey = sha256(userId + entityType + localId + createdAt.toIso8601String())`
-  - [ ] Pass as a custom header `X-Idempotency-Key` on every Appwrite document create call
-- [ ] 🆕🟡 **Dead-letter queue (DLQ)** — items that fail > 5 times move to a `sync_dead_letter` Drift table:
-  - [ ] Surface DLQ count in Settings → Data & Sync as "X items pending sync"
-  - [ ] Allow user to manually retry or discard dead-letter items
-- [ ] 🆕🟡 **Per-field version vectors for conflict resolution** — replace global last-write-wins:
-  - [ ] Append-only logs (food_logs, step_logs, workout_logs): no conflict — accept both writes
-  - [ ] Profile fields: per-field `updatedAt` map — newer field wins
-  - [ ] Health logs with manual edits: surface a diff UI when true conflict detected — let user pick
-- [ ] 🟡🔴 Add priority system to sync queue:
-  - [ ] `SyncPriority` enum: `critical=0, high=1, normal=2, low=3`
-  - [ ] Health crisis alerts (BP ≥ 180/120, glucose extremes) = critical
-  - [ ] Food/workout/mood logs = normal
-  - [ ] Step batches = low
-  - [ ] Process queue in priority order
-- [ ] 🟡 Implement delta sync: on app resume, query Appwrite for `$updatedAt > lastSyncTimestamp`
+- [x] 🟡 Create `lib/core/network/connectivity_service.dart` — wraps `connectivity_plus`, exposes an `isOnline` stream
+- [x] 🟡 Create the `SyncQueueItem` model in Drift — copy fields from Section 8; add new fields below
+- [x] 🔴 Create `lib/core/network/sync_queue.dart`:
+  - [x] Write sync items to the `sync_queue` Drift table on every local create/update/delete
+  - [x] Background isolate watches connectivity; flushes queue in batches of 20 when online
+  - [x] Exponential backoff: 1s → 2s → 4s → 8s → 16s, max 5 retries per item
+- [x] 🆕🔴🟡 **Idempotency keys** — add to every sync queue item to prevent duplicate writes on retry:
+  - [x] `idempotencyKey = sha256(userId + entityType + localId + createdAt.toIso8601String())`
+  - [x] Pass as a custom header `X-Idempotency-Key` on every Appwrite document create call
+- [x] 🆕🟡 **Dead-letter queue (DLQ)** — items that fail > 5 times move to a `sync_dead_letter` Drift table:
+  - [x] Surface DLQ count in Settings → Data & Sync as "X items pending sync"
+  - [x] Allow user to manually retry or discard dead-letter items
+- [x] 🆕🟡 **Per-field version vectors for conflict resolution** — replace global last-write-wins:
+  - [x] Append-only logs (food_logs, step_logs, workout_logs): no conflict — accept both writes
+  - [x] Profile fields: per-field `updatedAt` map — newer field wins
+  - [x] Health logs with manual edits: surface a diff UI when true conflict detected — let user pick
+- [x] 🟡🔴 Add priority system to sync queue:
+  - [x] `SyncPriority` enum: `critical=0, high=1, normal=2, low=3`
+  - [x] Health crisis alerts (BP ≥ 180/120, glucose extremes) = critical
+  - [x] Food/workout/mood logs = normal
+  - [x] Step batches = low
+  - [x] Process queue in priority order
+- [x] 🟡 Implement delta sync: on app resume, query Appwrite for `$updatedAt > lastSyncTimestamp`
 
 ### 3.5 Background Sync — WorkManager Isolate Safety
-- [ ] 🆕🔴🟡 **Isolate-safe background sync entry point** — background isolates do not share the main `ProviderContainer`:
-  - [ ] Create `lib/core/network/background_sync_runner.dart` — standalone init that re-opens Drift, re-derives encryption keys, re-creates Appwrite client without any Flutter widget binding or Riverpod
-  - [ ] Annotate with `@pragma('vm:entry-point')` so the Dart compiler does not tree-shake it
-  - [ ] Register in `WorkManager.initialize()` in `main.dart`
-- [ ] 🆕🟡 Add **Doze mode awareness** — only attempt sync when the radio is already awake:
-  - [ ] Use `connectivity_plus` stream; fire sync only on `ConnectivityResult.mobile` or `ConnectivityResult.wifi` transition
-  - [ ] Respect Android battery saver — check `DeviceInfoPlugin` for power save mode before heavy sync
+- [x] 🆕🔴🟡 **Isolate-safe background sync entry point** — background isolates do not share the main `ProviderContainer`:
+  - [x] Create `lib/core/network/background_sync_runner.dart` — standalone init that re-opens Drift, re-derives encryption keys, re-creates Appwrite client without any Flutter widget binding or Riverpod
+  - [x] Annotate with `@pragma('vm:entry-point')` so the Dart compiler does not tree-shake it
+  - [x] Register in `WorkManager.initialize()` in `main.dart`
+- [x] 🆕🟡 Add **Doze mode awareness** — only attempt sync when the radio is already awake:
+  - [x] Use `connectivity_plus` stream; fire sync only on `ConnectivityResult.mobile` or `ConnectivityResult.wifi` transition
+  - [x] Respect Android battery saver — check `DeviceInfoPlugin` for power save mode before heavy sync
 
 ### 3.6 Error Handling
 - [ ] 🟡 Create `lib/core/errors/app_exception.dart` — custom exception types: `NetworkException`, `StorageException`, `AuthException`, `EncryptionException`, `SyncException`
@@ -255,29 +255,29 @@
 > *Users can't do anything until they can log in. Build auth before any features.*
 
 ### 4.1 Auth Service
-- [ ] ⚡🟡 Create `lib/features/auth/data/auth_aw_service.dart` — copy `login()`, `register()`, `logout()`, `getCurrentUser()` from Section 9
-- [ ] 🟡 Store the Appwrite session JWT in `flutter_secure_storage` after login
-- [ ] 🟡 On app start, check for a stored session and navigate directly to Dashboard if valid (skip login screen)
-- [ ] 🟡 Add Google OAuth2 login — copy the `createOAuth2Session` snippet from Section 9
-- [ ] 🟡 Add Apple Sign-In (iOS only) via the same Appwrite OAuth2 method
+- [x] ⚡🟡 Create `lib/features/auth/data/auth_aw_service.dart` — copy `login()`, `register()`, `logout()`, `getCurrentUser()` from Section 9
+- [x] 🟡 Store the Appwrite session JWT in `flutter_secure_storage` after login
+- [x] 🟡 On app start, check for a stored session and navigate directly to Dashboard if valid (skip login screen)
+- [x] 🟡 Add Google OAuth2 login — copy the `createOAuth2Session` snippet from Section 9
+- [x] 🟡 Add Apple Sign-In (iOS only) via the same Appwrite OAuth2 method
 
 ### 4.2 Auth Screens
-- [ ] 🟡 Build `LoginScreen` — email/password fields, Google sign-in button, "Register" link
-- [ ] 🟡 Build `RegisterScreen` — name, email, password fields, "Already have an account?" link
-- [ ] 🟢 Add form validation (email format, password min 8 chars)
-- [ ] 🟡 Show loading state during login/register — use `ShimmerLoader`
-- [ ] 🟡 Show friendly error messages on failure (wrong password, network error)
+- [x] 🟡 Build `LoginScreen` — email/password fields, Google sign-in button, "Register" link
+- [x] 🟡 Build `RegisterScreen` — name, email, password fields, "Already have an account?" link
+- [x] 🟢 Add form validation (email format, password min 8 chars)
+- [x] 🟡 Show loading state during login/register — use `ShimmerLoader`
+- [x] 🟡 Show friendly error messages on failure (wrong password, network error)
 
 ### 4.3 Onboarding Flow
 > Build the 6 screens in order. Each screen writes to a local `OnboardingState` object; commit everything to Drift + Appwrite only when the user completes step 6.
-- [ ] 🟡 **Screen 1** `/onboarding/1` — Name · Gender · Date of Birth (text input + dropdown + date picker)
-- [ ] 🟡 **Screen 2** `/onboarding/2` — Height / Weight (numeric cm/kg inputs) · Fitness Goal (4 option cards) · Activity Level (5 illustrated cards)
-- [ ] 🟡 **Screen 3** `/onboarding/3` — Chronic Conditions (optional multi-select: Diabetes · Hypertension · PCOD · Hypothyroidism · Asthma) + "Skip" link
-- [ ] 🟡 **Screen 4** `/onboarding/4` — Dosha Quiz (12 questions) → auto-calculate Vata/Pitta/Kapha %; show `DoshaDonutChart` mini preview on result
-- [ ] 🟡 **Screen 5** `/onboarding/5` — Language selection (22+ languages) + contextual health permissions (step counter · heart rate · sleep)
-- [ ] 🟡 **Screen 6** `/onboarding/6` — ABHA link (optional, skippable → `+100 XP` incentive) + Wearable connection (optional, skippable)
-- [ ] 🟢 On step 6 completion: write full user profile to Drift → enqueue Appwrite sync → award **+50 XP**
-- [ ] 🔒🟡 Set `Role.user(uid)` read + write permissions on the `users` Appwrite document at creation time
+- [x] 🟡 **Screen 1** `/onboarding/1` — Name · Gender · Date of Birth (text input + dropdown + date picker)
+- [x] 🟡 **Screen 2** `/onboarding/2` — Height / Weight (numeric cm/kg inputs) · Fitness Goal (4 option cards) · Activity Level (5 illustrated cards)
+- [x] 🟡 **Screen 3** `/onboarding/3` — Chronic Conditions (optional multi-select: Diabetes · Hypertension · PCOD · Hypothyroidism · Asthma) + "Skip" link
+- [x] 🟡 **Screen 4** `/onboarding/4` — Dosha Quiz (12 questions) → auto-calculate Vata/Pitta/Kapha %; show `DoshaDonutChart` mini preview on result
+- [x] 🟡 **Screen 5** `/onboarding/5` — Language selection (22+ languages) + contextual health permissions (step counter · heart rate · sleep)
+- [x] 🟡 **Screen 6** `/onboarding/6` — ABHA link (optional, skippable → `+100 XP` incentive) + Wearable connection (optional, skippable)
+- [x] 🟢 On step 6 completion: write full user profile to Drift → enqueue Appwrite sync → award **+50 XP**
+- [x] 🔒🟡 Set `Role.user(uid)` read + write permissions on the `users` Appwrite document at creation time
 
 ### 4.4 Biometric Lock
 - [ ] 🟡 Add `local_auth` biometric check on app resume (not on first launch)
@@ -288,19 +288,22 @@
 ## Phase 5 — Dashboard (Home Screen)
 > *The first thing users see every day — must load from Drift in under 1 second.*
 
-- [ ] ⚡🟡 Build `DashboardScreen` — reads **only from Drift** on first render (no Appwrite calls)
-- [ ] 🟡 Add the **header** — avatar, "Namaste, [Name] 🙏", karma XP and level badge
-- [ ] 🟡 Add the `ActivityRingsWidget` — wire calories, steps, water, active minutes progress
-- [ ] 🟡 Add the `InsightCard` — show one rule result from the Insight Engine (see Phase 11)
-- [ ] 🟡 Add **Today's Meals section** — tab bar + meal summary cards
-- [ ] 🟡 Add the `QuickLogFAB` — speed-dial with: Food, Water, Mood, Workout, BP, Glucose
-- [ ] 🟢 Add latest workout summary card and sleep recovery score card
-- [ ] 🟡 Background: fetch Appwrite updates after render (delta sync) and refresh UI if new data arrives
+## Phase 5 — Dashboard (Home Screen)
+> *The first thing users see every day — must load from Drift in under 1 second.*
+
+- [x] ⚡🟡 Build `DashboardScreen` — reads **only from Drift** on first render (no Appwrite calls)
+- [x] 🟡 Add the **header** — avatar, "Namaste, [Name] 🙏", karma XP and level badge
+- [x] 🟡 Add the `ActivityRingsWidget` — wire calories, steps, water, active minutes progress
+- [x] 🟡 Add the `InsightCard` — show one rule result from the Insight Engine (see Phase 11)
+- [x] 🟡 Add **Today's Meals section** — tab bar + meal summary cards
+- [x] 🟡 Add the `QuickLogFAB` — speed-dial with: Food, Water, Mood, Workout, BP, Glucose
+- [x] 🟢 Add latest workout summary card and sleep recovery score card
+- [x] 🟡 Background: fetch Appwrite updates after render (delta sync) and refresh UI if new data arrives
 - [ ] 🆕🔴 **Android + iOS Home Screen Widgets** — install `home_widget` package and build:
-  - [ ] **4×1 ring widget** — steps, calories, water, active minutes rings with today's progress
-  - [ ] **2×1 quick-log widget** — single "Log Food" button that deep-links to the food log bottom sheet
-  - [ ] **Lock screen widget (Android 13+)** — water intake counter; tap to increment by 1 glass
-  - [ ] Update widget data from WorkManager background task after every sync
+- [ ] **4×1 ring widget** — steps, calories, water, active minutes rings with today's progress
+- [ ] **2×1 quick-log widget** — single "Log Food" button that deep-links to the food log bottom sheet
+- [ ] **Lock screen widget (Android 13+)** — water intake counter; tap to increment by 1 glass
+- [ ] Update widget data from WorkManager background task after every sync
 
 ---
 
@@ -308,43 +311,43 @@
 > *The most-used feature. Build search and manual entry first, then add the fancier methods.*
 
 ### 6.1 Food Database
-- [ ] ⚡🟡 Seed the initial Indian food database into both Drift (local) and Appwrite `food_items` collection
+- [x] ⚡🟡 Seed the initial Indian food database into both Drift (local) and Appwrite `food_items` collection
 - [ ] 🔴🟡 **Expand Food Database:** Research and add comprehensive regional cuisines from all Indian states (North, South, East, West, Northeast, Central)
-- [ ] 🆕🟡 **Add micronutrient fields** to `food_items` schema — these four are the most common deficiencies in India and must be tracked:
-  - [ ] `vitamin_d_mcg` (micrograms per 100g)
-  - [ ] `vitamin_b12_mcg` (micrograms per 100g)
-  - [ ] `iron_mg` (milligrams per 100g)
-  - [ ] `calcium_mg` (milligrams per 100g)
-  - [ ] Add the same fields to `FoodLog` (denormalised at log time)
+- [x] 🆕🟡 **Add micronutrient fields** to `food_items` schema — these four are the most common deficiencies in India and must be tracked:
+  - [x] `vitamin_d_mcg` (micrograms per 100g)
+  - [x] `vitamin_b12_mcg` (micrograms per 100g)
+  - [x] `iron_mg` (milligrams per 100g)
+  - [x] `calcium_mg` (milligrams per 100g)
+  - [x] Add the same fields to `FoodLog` (denormalised at log time)
 - [ ] 🟡 **Community Food Submissions:** Build a feature for users to submit new local food items for review
-- [ ] 🟡 Include `name` (English) and `name_local` (in the local script) fields for every item
-- [ ] 🟡 Include region-specific `serving_sizes` JSON: e.g. `[{"name":"katori","grams":150}, {"name":"idli","grams":50}]`
+- [x] 🟡 Include `name` (English) and `name_local` (in the local script) fields for every item
+- [x] 🟡 Include region-specific `serving_sizes` JSON: e.g. `[{"name":"katori","grams":150}, {"name":"idli","grams":50}]`
 
 ### 6.2 Food Log Service
-- [ ] 🟡 Create `lib/features/food/data/food_drift_service.dart` — read/write `FoodLog` rows to Drift
+- [x] 🟡 Create `lib/features/food/data/food_drift_service.dart` — (Integrated into FoodRepository)
 - [ ] 🟡 Create `lib/features/food/data/food_aw_service.dart` — search food items and sync logs to Appwrite
-- [ ] 🟡 Create `lib/features/food/data/food_repository.dart` — Drift first, Appwrite fallback, queue sync
+- [x] 🟡 Create `lib/features/food/data/food_repository.dart` — Drift first, Appwrite fallback, queue sync
 
 ### 6.3 Food Log Model
 - [ ] 🟡 Create `lib/features/food/domain/food_log_model.dart` — Drift `DataClass`
 - [ ] 🟢 Run `dart run build_runner build` to generate the Drift companion and query classes
 
 ### 6.4 Food Log Screen
-- [ ] 🟡 Build `FoodLogScreen` (e.g. "Log Breakfast") with:
-  - [ ] Bilingual search bar
-  - [ ] Three quick-action chips: `📷 Scan Label` · `🍽 Upload Plate Photo` · `✏ Manual Entry`
-  - [ ] `Frequent Indian Portions` — horizontal list of frequent items
-  - [ ] `Recent Logs` — list of past entries for the meal type
-- [ ] 🟡 Implement **text search** — FTS5 virtual table query on Drift's `food_items` table (fast full-text, no Appwrite call)
-- [ ] 🟡 Implement **portion selection** — dynamic scaling of macro + micronutrient data
-- [ ] 🟡 Implement **manual entry** — dedicated sheet with macro + key micronutrient inputs
-- [ ] 🟡 On log: write to Drift → award +10 XP (+30 for first log) → reactive UI update via notifier
-- [ ] 🟡 Implement **macro + micronutrient ratios** — dynamic goals based on TDEE/fitness goal
-- [ ] 🆕🟢 **"Copy yesterday's meals"** button on the food home screen — one-tap re-log all of yesterday's entries (high-requested UX shortcut; sets `log_method: copied`)
+- [x] 🟡 Build `FoodLogScreen` (e.g. "Log Breakfast") with:
+  - [x] Bilingual search bar
+  - [x] Three quick-action chips: `📷 Scan Label` · `🍽 Upload Plate Photo` · `✏ Manual Entry`
+  - [x] `Frequent Indian Portions` — horizontal list of frequent items
+  - [x] `Recent Logs` — list of past entries for the meal type
+- [x] 🟡 Implement **text search** — FTS5 virtual table query on Drift's `food_items` table (fast full-text, no Appwrite call)
+- [x] 🟡 Implement **portion selection** — dynamic scaling of macro + micronutrient data
+- [x] 🟡 Implement **manual entry** — dedicated sheet with macro + key micronutrient inputs
+- [x] 🟡 On log: write to Drift → award +10 XP (+30 for first log) → reactive UI update via notifier
+- [x] 🟡 Implement **macro + micronutrient ratios** — dynamic goals based on TDEE/fitness goal
+- [x] 🆕🟢 **"Copy yesterday's meals"** button on the food home screen — one-tap re-log all of yesterday's entries (high-requested UX shortcut; sets `log_method: copied`)
 
 ### 6.5 Advanced Food Logging Methods
-- [ ] 🟢 **Barcode scanner** — `flutter_barcode_scanner` → OpenFoodFacts API → cache result in Drift
-- [ ] 🟢 **OCR (Scan Label)** — Google ML Kit `TextRecognitionV2` to read nutrition labels
+- [x] 🟢 **Barcode scanner** — `flutter_barcode_scanner` → OpenFoodFacts API → cache result in Drift
+- [x] 🟢 **OCR (Scan Label)** — Google ML Kit `TextRecognitionV2` to read nutrition labels
 - [ ] 🟢 **Photo AI (Upload Plate Photo)** — Google ML Kit `ImageLabeling` to identify food
 - [ ] 🟢 **Voice logging** — `speech_to_text` → *"dal chawal"* → search → confirm screen
 

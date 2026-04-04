@@ -16,28 +16,104 @@ class SyncService extends _$SyncService {
 
   Databases get _dbAppwrite => ref.read(appwriteDatabasesProvider);
 
+  /// Main entry point for syncing pending items.
   Future<void> processQueue({AppDatabase? database, Databases? databases}) async {
     final AppDatabase db = database ?? ref.read(driftDbProvider);
     final remoteDb = databases ?? _dbAppwrite;
     
     final pendingItems = await (db.select(db.syncQueue)
           ..where((t) => t.retryCount.isSmallerThan(const Constant(5)))
+          ..orderBy([(t) => OrderingTerm(expression: t.priority, mode: OrderingMode.asc)])
           ..limit(20))
         .get();
         
     if (pendingItems.isEmpty) return;
 
     for (final item in pendingItems) {
-      try {
-        final payload = jsonDecode(item.payload) as Map<String, dynamic>;
-        
-        // Remove Drift-specific fields that shouldn't go to Appwrite
-        payload.remove('syncStatus');
-        payload.remove('id');
+      await _syncItem(db, remoteDb, item);
+    }
+  }
 
-        // Deterministic document ID for 'create' provides idempotency
-        final documentId = item.appwriteDocId ?? item.idempotencyKey.replaceAll(':', '_');
+  /// Static method for background isolates.
+  static Future<void> processManual(AppDatabase db, Databases databases) async {
+    final items = await (db.select(db.syncQueue)
+          ..where((t) => t.retryCount.isSmallerThan(const Constant(5)))
+          ..orderBy([(t) => OrderingTerm(expression: t.priority, mode: OrderingMode.asc)])
+          ..limit(20))
+        .get();
 
+    for (final item in items) {
+      // Create a minimal implementation or delegate to a pure function
+      await _syncItemStatic(db, databases, item);
+    }
+  }
+
+  static Future<void> _syncItemStatic(AppDatabase db, Databases remoteDb, SyncQueueEntry item) async {
+    try {
+      final payload = jsonDecode(item.payload) as Map<String, dynamic>;
+      // Remove Drift-specific fields
+      payload.remove('syncStatus');
+      payload.remove('id');
+
+      final documentId = item.appwriteDocId ?? item.idempotencyKey.replaceAll(':', '_');
+
+      // Section 8: Conflict Resolution Strategies
+      if (item.collection == AW.stepLogs) {
+        // Strategy: max(client, server)
+        try {
+          final serverDoc = await remoteDb.getDocument(
+            databaseId: AW.dbId,
+            collectionId: AW.stepLogs,
+            documentId: documentId,
+          );
+          final int serverCount = serverDoc.data['count'] ?? 0;
+          final int clientCount = payload['count'] ?? 0;
+          
+          if (clientCount > serverCount) {
+            await remoteDb.updateDocument(
+              databaseId: AW.dbId,
+              collectionId: AW.stepLogs,
+              documentId: documentId,
+              data: payload,
+            );
+          }
+        } catch (e) {
+          if (e is AppwriteException && e.code == 404) {
+            await remoteDb.createDocument(
+              databaseId: AW.dbId,
+              collectionId: AW.stepLogs,
+              documentId: documentId,
+              data: payload,
+            );
+          } else {
+            rethrow;
+          }
+        }
+      } 
+      else if (_isClientWinsCollection(item.collection)) {
+        // Strategy: Client Wins (Encrypted data)
+        try {
+          await remoteDb.createDocument(
+            databaseId: AW.dbId,
+            collectionId: item.collection,
+            documentId: documentId,
+            data: payload,
+          );
+        } catch (e) {
+          if (e is AppwriteException && e.code == 409) {
+            await remoteDb.updateDocument(
+              databaseId: AW.dbId,
+              collectionId: item.collection,
+              documentId: documentId,
+              data: payload,
+            );
+          } else {
+            rethrow;
+          }
+        }
+      }
+      else {
+        // Default Strategy: Append-only or Idempotent Create
         if (item.operation == 'create') {
           await remoteDb.createDocument(
             databaseId: AW.dbId,
@@ -59,76 +135,39 @@ class SyncService extends _$SyncService {
             documentId: item.appwriteDocId!,
           );
         }
+      }
 
+      // Success: Remove from queue
+      await (db.delete(db.syncQueue)..where((t) => t.id.equals(item.id))).go();
+    } catch (e) {
+      if (e is AppwriteException && e.code == 409 && item.operation == 'create') {
+        // Idempotency: already exists on server, treat as success
         await (db.delete(db.syncQueue)..where((t) => t.id.equals(item.id))).go();
-      } catch (e) {
-        // Handle Appwrite exceptions (e.g. 409 conflict means it was already created)
-        if (e is AppwriteException && e.code == 409) {
-          await (db.delete(db.syncQueue)..where((t) => t.id.equals(item.id))).go();
-        } else {
-          final newRetryCount = item.retryCount + 1;
-          await (db.update(db.syncQueue)..where((t) => t.id.equals(item.id))).write(
-            SyncQueueCompanion(
-              retryCount: Value(newRetryCount),
-              lastError: Value(e.toString()),
-            ),
-          );
-        }
+      } else {
+        final newRetryCount = item.retryCount + 1;
+        await (db.update(db.syncQueue)..where((t) => t.id.equals(item.id))).write(
+          SyncQueueCompanion(
+            retryCount: Value(newRetryCount),
+            lastError: Value(e.toString()),
+          ),
+        );
       }
     }
   }
 
-  /// A static method that can be called from a background isolate.
-  static Future<void> processManual(AppDatabase db, Databases databases) async {
-    final items = await (db.select(db.syncQueue)
-          ..where((t) => t.retryCount.isSmallerThan(const Constant(5)))
-          ..limit(20))
-        .get();
+  Future<void> _syncItem(AppDatabase db, Databases remoteDb, SyncQueueEntry item) async {
+    await _syncItemStatic(db, remoteDb, item);
+  }
 
-    for (final item in items) {
-      try {
-        final payload = jsonDecode(item.payload) as Map<String, dynamic>;
-        payload.remove('syncStatus');
-        payload.remove('id');
-        
-        final documentId = item.appwriteDocId ?? item.idempotencyKey.replaceAll(':', '_');
-
-        if (item.operation == 'create') {
-          await databases.createDocument(
-            databaseId: AW.dbId,
-            collectionId: item.collection,
-            documentId: documentId,
-            data: payload,
-          );
-        } else if (item.operation == 'update' && item.appwriteDocId != null) {
-          await databases.updateDocument(
-            databaseId: AW.dbId,
-            collectionId: item.collection,
-            documentId: item.appwriteDocId!,
-            data: payload,
-          );
-        } else if (item.operation == 'delete' && item.appwriteDocId != null) {
-          await databases.deleteDocument(
-            databaseId: AW.dbId,
-            collectionId: item.collection,
-            documentId: item.appwriteDocId!,
-          );
-        }
-
-        await (db.delete(db.syncQueue)..where((t) => t.id.equals(item.id))).go();
-      } catch (e) {
-        if (e is AppwriteException && e.code == 409) {
-          await (db.delete(db.syncQueue)..where((t) => t.id.equals(item.id))).go();
-        } else {
-          final newRetryCount = item.retryCount + 1;
-          await (db.update(db.syncQueue)..where((t) => t.id.equals(item.id))).write(
-            SyncQueueCompanion(
-              retryCount: Value(newRetryCount),
-              lastError: Value(e.toString()),
-            ),
-          );
-        }
-      }
-    }
+  static bool _isClientWinsCollection(String collection) {
+    return [
+      AW.periodLogs,
+      AW.journalEntries,
+      AW.bloodPressureLogs,
+      AW.glucoseLogs,
+      AW.doctorAppointments,
+      AW.spo2Logs,
+    ].contains(collection);
   }
 }
+

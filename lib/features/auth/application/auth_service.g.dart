@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'sync_service.dart';
+part of 'auth_service.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -9,27 +9,27 @@ part of 'sync_service.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(SyncService)
-final syncServiceProvider = SyncServiceProvider._();
+@ProviderFor(AuthService)
+final authServiceProvider = AuthServiceProvider._();
 
-final class SyncServiceProvider extends $NotifierProvider<SyncService, void> {
-  SyncServiceProvider._()
+final class AuthServiceProvider extends $NotifierProvider<AuthService, void> {
+  AuthServiceProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'syncServiceProvider',
+        name: r'authServiceProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$syncServiceHash();
+  String debugGetCreateSourceHash() => _$authServiceHash();
 
   @$internal
   @override
-  SyncService create() => SyncService();
+  AuthService create() => AuthService();
 
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(void value) {
@@ -40,9 +40,9 @@ final class SyncServiceProvider extends $NotifierProvider<SyncService, void> {
   }
 }
 
-String _$syncServiceHash() => r'73af9e5dbd45e52717a9b4d587358ec0e5daaeb5';
+String _$authServiceHash() => r'224b441310074efc92a90cd161a2833addd52952';
 
-abstract class _$SyncService extends $Notifier<void> {
+abstract class _$AuthService extends $Notifier<void> {
   void build();
   @$mustCallSuper
   @override

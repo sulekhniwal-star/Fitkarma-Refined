@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'core/storage/drift_service.dart';
 import 'features/auth/data/auth_repository.dart';
 import 'features/auth/presentation/login_screen.dart';
 import 'features/auth/presentation/register_screen.dart';
+import 'features/auth/presentation/forgot_password_screen.dart';
 import 'features/onboarding/presentation/onboarding_screens.dart';
 import 'shared/theme/app_theme.dart';
+import 'shared/widgets/main_scaffold.dart';
+import 'features/dashboard/presentation/dashboard_screen.dart';
+import 'features/food/presentation/food_log_screen.dart';
+import 'features/food/presentation/food_search_screen.dart';
+import 'features/food/presentation/food_detail_screen.dart';
+import 'core/storage/app_database.dart';
 
 class FitKarmaApp extends ConsumerWidget {
   const FitKarmaApp({super.key});
@@ -17,24 +23,28 @@ class FitKarmaApp extends ConsumerWidget {
 
     final router = GoRouter(
       initialLocation: '/',
+      debugLogDiagnostics: true,
       redirect: (context, state) {
         final user = authState.asData?.value;
-        final isAuthPath = state.matchedLocation == '/login' || state.matchedLocation == '/register';
-        final isOnboardingPath = state.matchedLocation == '/onboarding';
+        final isAuthPath = state.matchedLocation.startsWith('/login') || state.matchedLocation.startsWith('/register');
+        final isOnboardingPath = state.matchedLocation.startsWith('/onboarding');
 
-        // 1. Not logged in -> Go to Login/Register
+        // 1. Not logged in -> Go to Login
         if (user == null) {
           return isAuthPath ? null : '/login';
         }
 
-        // 2. Logged in and on Auth path -> Go to Home
+        // 2. Logged in but not onboarded -> Go to Onboarding
+        // Assuming we have a flag for completion. For now, check if still in onboarding.
+        if (user.name == 'New User' && !isOnboardingPath) {
+           return '/onboarding/1';
+        }
+
+        // 3. Logged in and on Auth path -> Go to Home
         if (isAuthPath) {
           return '/';
         }
 
-        // 3. Logged in but profile incomplete -> Go to Onboarding
-        // (This will be expanded when we have a profile check)
-        
         return null;
       },
       routes: [
@@ -43,36 +53,83 @@ class FitKarmaApp extends ConsumerWidget {
           builder: (context, state) => const LoginScreen(),
         ),
         GoRoute(
+          path: '/forgot-password',
+          builder: (context, state) => const ForgotPasswordScreen(),
+        ),
+        GoRoute(
           path: '/register',
           builder: (context, state) => const RegisterScreen(),
         ),
         GoRoute(
-          path: '/onboarding',
-          builder: (context, state) => const OnboardingScreen(),
+          path: '/onboarding/:step',
+          builder: (context, state) {
+            final step = int.tryParse(state.pathParameters['step'] ?? '1') ?? 1;
+            return OnboardingScreen(step: step);
+          },
         ),
-        GoRoute(
-          path: '/',
-          builder: (context, state) => Scaffold(
-            appBar: AppBar(title: const Text('FitKarma Dashboard')),
-            body: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text('Welcome to FitKarma Dashboard'),
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () => context.push('/onboarding'),
-                    child: const Text('Go to Onboarding'),
-                  ),
-                  const SizedBox(height: 20),
-                  TextButton(
-                    onPressed: () => ref.read(authRepositoryProvider).logout(),
-                    child: const Text('Logout', style: TextStyle(color: Colors.red)),
-                  ),
-                ],
-              ),
+        ShellRoute(
+          builder: (context, state, child) => MainScaffold(child: child),
+          routes: [
+            GoRoute(
+              path: '/',
+              builder: (context, state) => const DashboardScreen(),
             ),
-          ),
+            GoRoute(
+              path: '/food',
+              builder: (context, state) => const FoodLogScreen(),
+              routes: [
+                GoRoute(
+                  path: 'search',
+                  builder: (context, state) {
+                    final mealType = state.extra as String?;
+                    return FoodSearchScreen(mealType: mealType);
+                  },
+                ),
+                GoRoute(
+                  path: 'detail',
+                  builder: (context, state) {
+                    final extra = state.extra as Map<String, dynamic>;
+                    return FoodDetailScreen(
+                      item: extra['item'] as FoodItem,
+                      mealType: extra['mealType'] as String?,
+                    );
+                  },
+                ),
+                GoRoute(
+                  path: 'recipes',
+                  builder: (context, state) => const _PlaceholderScreen(title: 'Recipes'),
+                ),
+              ],
+            ),
+            GoRoute(
+              path: '/workout',
+              builder: (context, state) => const _PlaceholderScreen(title: 'Workout Home · व्यायाम'),
+              routes: [
+                GoRoute(
+                  path: ':id',
+                  builder: (context, state) => _PlaceholderScreen(title: 'Workout ${state.pathParameters['id']}'),
+                ),
+              ],
+            ),
+            GoRoute(
+              path: '/steps',
+              builder: (context, state) => const _PlaceholderScreen(title: 'Steps · कदम'),
+            ),
+            GoRoute(
+              path: '/profile',
+              builder: (context, state) => const _PlaceholderScreen(title: 'Profile · प्रोफाइल'),
+              routes: [
+                GoRoute(
+                  path: 'settings',
+                  builder: (context, state) => const _PlaceholderScreen(title: 'Settings'),
+                ),
+                GoRoute(
+                  path: 'emergency',
+                  builder: (context, state) => const _PlaceholderScreen(title: 'Emergency Card'),
+                ),
+              ],
+            ),
+          ],
         ),
       ],
     );
@@ -84,6 +141,19 @@ class FitKarmaApp extends ConsumerWidget {
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
       themeMode: ThemeMode.system,
+    );
+  }
+}
+
+class _PlaceholderScreen extends StatelessWidget {
+  final String title;
+  const _PlaceholderScreen({required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text(title)),
+      body: Center(child: Text(title)),
     );
   }
 }

@@ -10701,6 +10701,780 @@ class SyncDeadLetterCompanion extends UpdateCompanion<SyncDeadLetterEntry> {
   }
 }
 
+class $UserProfilesTable extends UserProfiles
+    with TableInfo<$UserProfilesTable, UserProfile> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $UserProfilesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _genderMeta = const VerificationMeta('gender');
+  @override
+  late final GeneratedColumn<String> gender = GeneratedColumn<String>(
+    'gender',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _dobMeta = const VerificationMeta('dob');
+  @override
+  late final GeneratedColumn<DateTime> dob = GeneratedColumn<DateTime>(
+    'dob',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _heightMeta = const VerificationMeta('height');
+  @override
+  late final GeneratedColumn<double> height = GeneratedColumn<double>(
+    'height',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _weightMeta = const VerificationMeta('weight');
+  @override
+  late final GeneratedColumn<double> weight = GeneratedColumn<double>(
+    'weight',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _fitnessGoalMeta = const VerificationMeta(
+    'fitnessGoal',
+  );
+  @override
+  late final GeneratedColumn<String> fitnessGoal = GeneratedColumn<String>(
+    'fitness_goal',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _activityLevelMeta = const VerificationMeta(
+    'activityLevel',
+  );
+  @override
+  late final GeneratedColumn<String> activityLevel = GeneratedColumn<String>(
+    'activity_level',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _doshaScoresMeta = const VerificationMeta(
+    'doshaScores',
+  );
+  @override
+  late final GeneratedColumn<String> doshaScores = GeneratedColumn<String>(
+    'dosha_scores',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _preferredLanguageMeta = const VerificationMeta(
+    'preferredLanguage',
+  );
+  @override
+  late final GeneratedColumn<String> preferredLanguage =
+      GeneratedColumn<String>(
+        'preferred_language',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+        defaultValue: const Constant('en'),
+      );
+  static const VerificationMeta _onboardingCompleteMeta =
+      const VerificationMeta('onboardingComplete');
+  @override
+  late final GeneratedColumn<bool> onboardingComplete = GeneratedColumn<bool>(
+    'onboarding_complete',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("onboarding_complete" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _syncStatusMeta = const VerificationMeta(
+    'syncStatus',
+  );
+  @override
+  late final GeneratedColumn<String> syncStatus = GeneratedColumn<String>(
+    'sync_status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('pending'),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    name,
+    gender,
+    dob,
+    height,
+    weight,
+    fitnessGoal,
+    activityLevel,
+    doshaScores,
+    preferredLanguage,
+    onboardingComplete,
+    updatedAt,
+    syncStatus,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'user_profiles';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<UserProfile> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('gender')) {
+      context.handle(
+        _genderMeta,
+        gender.isAcceptableOrUnknown(data['gender']!, _genderMeta),
+      );
+    }
+    if (data.containsKey('dob')) {
+      context.handle(
+        _dobMeta,
+        dob.isAcceptableOrUnknown(data['dob']!, _dobMeta),
+      );
+    }
+    if (data.containsKey('height')) {
+      context.handle(
+        _heightMeta,
+        height.isAcceptableOrUnknown(data['height']!, _heightMeta),
+      );
+    }
+    if (data.containsKey('weight')) {
+      context.handle(
+        _weightMeta,
+        weight.isAcceptableOrUnknown(data['weight']!, _weightMeta),
+      );
+    }
+    if (data.containsKey('fitness_goal')) {
+      context.handle(
+        _fitnessGoalMeta,
+        fitnessGoal.isAcceptableOrUnknown(
+          data['fitness_goal']!,
+          _fitnessGoalMeta,
+        ),
+      );
+    }
+    if (data.containsKey('activity_level')) {
+      context.handle(
+        _activityLevelMeta,
+        activityLevel.isAcceptableOrUnknown(
+          data['activity_level']!,
+          _activityLevelMeta,
+        ),
+      );
+    }
+    if (data.containsKey('dosha_scores')) {
+      context.handle(
+        _doshaScoresMeta,
+        doshaScores.isAcceptableOrUnknown(
+          data['dosha_scores']!,
+          _doshaScoresMeta,
+        ),
+      );
+    }
+    if (data.containsKey('preferred_language')) {
+      context.handle(
+        _preferredLanguageMeta,
+        preferredLanguage.isAcceptableOrUnknown(
+          data['preferred_language']!,
+          _preferredLanguageMeta,
+        ),
+      );
+    }
+    if (data.containsKey('onboarding_complete')) {
+      context.handle(
+        _onboardingCompleteMeta,
+        onboardingComplete.isAcceptableOrUnknown(
+          data['onboarding_complete']!,
+          _onboardingCompleteMeta,
+        ),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    if (data.containsKey('sync_status')) {
+      context.handle(
+        _syncStatusMeta,
+        syncStatus.isAcceptableOrUnknown(data['sync_status']!, _syncStatusMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  UserProfile map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return UserProfile(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      gender: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}gender'],
+      ),
+      dob: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}dob'],
+      ),
+      height: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}height'],
+      ),
+      weight: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}weight'],
+      ),
+      fitnessGoal: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}fitness_goal'],
+      ),
+      activityLevel: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}activity_level'],
+      ),
+      doshaScores: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}dosha_scores'],
+      ),
+      preferredLanguage: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}preferred_language'],
+      )!,
+      onboardingComplete: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}onboarding_complete'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      ),
+      syncStatus: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sync_status'],
+      )!,
+    );
+  }
+
+  @override
+  $UserProfilesTable createAlias(String alias) {
+    return $UserProfilesTable(attachedDatabase, alias);
+  }
+}
+
+class UserProfile extends DataClass implements Insertable<UserProfile> {
+  final String id;
+  final String name;
+  final String? gender;
+  final DateTime? dob;
+  final double? height;
+  final double? weight;
+  final String? fitnessGoal;
+  final String? activityLevel;
+  final String? doshaScores;
+  final String preferredLanguage;
+  final bool onboardingComplete;
+  final DateTime? updatedAt;
+  final String syncStatus;
+  const UserProfile({
+    required this.id,
+    required this.name,
+    this.gender,
+    this.dob,
+    this.height,
+    this.weight,
+    this.fitnessGoal,
+    this.activityLevel,
+    this.doshaScores,
+    required this.preferredLanguage,
+    required this.onboardingComplete,
+    this.updatedAt,
+    required this.syncStatus,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['name'] = Variable<String>(name);
+    if (!nullToAbsent || gender != null) {
+      map['gender'] = Variable<String>(gender);
+    }
+    if (!nullToAbsent || dob != null) {
+      map['dob'] = Variable<DateTime>(dob);
+    }
+    if (!nullToAbsent || height != null) {
+      map['height'] = Variable<double>(height);
+    }
+    if (!nullToAbsent || weight != null) {
+      map['weight'] = Variable<double>(weight);
+    }
+    if (!nullToAbsent || fitnessGoal != null) {
+      map['fitness_goal'] = Variable<String>(fitnessGoal);
+    }
+    if (!nullToAbsent || activityLevel != null) {
+      map['activity_level'] = Variable<String>(activityLevel);
+    }
+    if (!nullToAbsent || doshaScores != null) {
+      map['dosha_scores'] = Variable<String>(doshaScores);
+    }
+    map['preferred_language'] = Variable<String>(preferredLanguage);
+    map['onboarding_complete'] = Variable<bool>(onboardingComplete);
+    if (!nullToAbsent || updatedAt != null) {
+      map['updated_at'] = Variable<DateTime>(updatedAt);
+    }
+    map['sync_status'] = Variable<String>(syncStatus);
+    return map;
+  }
+
+  UserProfilesCompanion toCompanion(bool nullToAbsent) {
+    return UserProfilesCompanion(
+      id: Value(id),
+      name: Value(name),
+      gender: gender == null && nullToAbsent
+          ? const Value.absent()
+          : Value(gender),
+      dob: dob == null && nullToAbsent ? const Value.absent() : Value(dob),
+      height: height == null && nullToAbsent
+          ? const Value.absent()
+          : Value(height),
+      weight: weight == null && nullToAbsent
+          ? const Value.absent()
+          : Value(weight),
+      fitnessGoal: fitnessGoal == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fitnessGoal),
+      activityLevel: activityLevel == null && nullToAbsent
+          ? const Value.absent()
+          : Value(activityLevel),
+      doshaScores: doshaScores == null && nullToAbsent
+          ? const Value.absent()
+          : Value(doshaScores),
+      preferredLanguage: Value(preferredLanguage),
+      onboardingComplete: Value(onboardingComplete),
+      updatedAt: updatedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(updatedAt),
+      syncStatus: Value(syncStatus),
+    );
+  }
+
+  factory UserProfile.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return UserProfile(
+      id: serializer.fromJson<String>(json['id']),
+      name: serializer.fromJson<String>(json['name']),
+      gender: serializer.fromJson<String?>(json['gender']),
+      dob: serializer.fromJson<DateTime?>(json['dob']),
+      height: serializer.fromJson<double?>(json['height']),
+      weight: serializer.fromJson<double?>(json['weight']),
+      fitnessGoal: serializer.fromJson<String?>(json['fitnessGoal']),
+      activityLevel: serializer.fromJson<String?>(json['activityLevel']),
+      doshaScores: serializer.fromJson<String?>(json['doshaScores']),
+      preferredLanguage: serializer.fromJson<String>(json['preferredLanguage']),
+      onboardingComplete: serializer.fromJson<bool>(json['onboardingComplete']),
+      updatedAt: serializer.fromJson<DateTime?>(json['updatedAt']),
+      syncStatus: serializer.fromJson<String>(json['syncStatus']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'name': serializer.toJson<String>(name),
+      'gender': serializer.toJson<String?>(gender),
+      'dob': serializer.toJson<DateTime?>(dob),
+      'height': serializer.toJson<double?>(height),
+      'weight': serializer.toJson<double?>(weight),
+      'fitnessGoal': serializer.toJson<String?>(fitnessGoal),
+      'activityLevel': serializer.toJson<String?>(activityLevel),
+      'doshaScores': serializer.toJson<String?>(doshaScores),
+      'preferredLanguage': serializer.toJson<String>(preferredLanguage),
+      'onboardingComplete': serializer.toJson<bool>(onboardingComplete),
+      'updatedAt': serializer.toJson<DateTime?>(updatedAt),
+      'syncStatus': serializer.toJson<String>(syncStatus),
+    };
+  }
+
+  UserProfile copyWith({
+    String? id,
+    String? name,
+    Value<String?> gender = const Value.absent(),
+    Value<DateTime?> dob = const Value.absent(),
+    Value<double?> height = const Value.absent(),
+    Value<double?> weight = const Value.absent(),
+    Value<String?> fitnessGoal = const Value.absent(),
+    Value<String?> activityLevel = const Value.absent(),
+    Value<String?> doshaScores = const Value.absent(),
+    String? preferredLanguage,
+    bool? onboardingComplete,
+    Value<DateTime?> updatedAt = const Value.absent(),
+    String? syncStatus,
+  }) => UserProfile(
+    id: id ?? this.id,
+    name: name ?? this.name,
+    gender: gender.present ? gender.value : this.gender,
+    dob: dob.present ? dob.value : this.dob,
+    height: height.present ? height.value : this.height,
+    weight: weight.present ? weight.value : this.weight,
+    fitnessGoal: fitnessGoal.present ? fitnessGoal.value : this.fitnessGoal,
+    activityLevel: activityLevel.present
+        ? activityLevel.value
+        : this.activityLevel,
+    doshaScores: doshaScores.present ? doshaScores.value : this.doshaScores,
+    preferredLanguage: preferredLanguage ?? this.preferredLanguage,
+    onboardingComplete: onboardingComplete ?? this.onboardingComplete,
+    updatedAt: updatedAt.present ? updatedAt.value : this.updatedAt,
+    syncStatus: syncStatus ?? this.syncStatus,
+  );
+  UserProfile copyWithCompanion(UserProfilesCompanion data) {
+    return UserProfile(
+      id: data.id.present ? data.id.value : this.id,
+      name: data.name.present ? data.name.value : this.name,
+      gender: data.gender.present ? data.gender.value : this.gender,
+      dob: data.dob.present ? data.dob.value : this.dob,
+      height: data.height.present ? data.height.value : this.height,
+      weight: data.weight.present ? data.weight.value : this.weight,
+      fitnessGoal: data.fitnessGoal.present
+          ? data.fitnessGoal.value
+          : this.fitnessGoal,
+      activityLevel: data.activityLevel.present
+          ? data.activityLevel.value
+          : this.activityLevel,
+      doshaScores: data.doshaScores.present
+          ? data.doshaScores.value
+          : this.doshaScores,
+      preferredLanguage: data.preferredLanguage.present
+          ? data.preferredLanguage.value
+          : this.preferredLanguage,
+      onboardingComplete: data.onboardingComplete.present
+          ? data.onboardingComplete.value
+          : this.onboardingComplete,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      syncStatus: data.syncStatus.present
+          ? data.syncStatus.value
+          : this.syncStatus,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('UserProfile(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('gender: $gender, ')
+          ..write('dob: $dob, ')
+          ..write('height: $height, ')
+          ..write('weight: $weight, ')
+          ..write('fitnessGoal: $fitnessGoal, ')
+          ..write('activityLevel: $activityLevel, ')
+          ..write('doshaScores: $doshaScores, ')
+          ..write('preferredLanguage: $preferredLanguage, ')
+          ..write('onboardingComplete: $onboardingComplete, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    name,
+    gender,
+    dob,
+    height,
+    weight,
+    fitnessGoal,
+    activityLevel,
+    doshaScores,
+    preferredLanguage,
+    onboardingComplete,
+    updatedAt,
+    syncStatus,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is UserProfile &&
+          other.id == this.id &&
+          other.name == this.name &&
+          other.gender == this.gender &&
+          other.dob == this.dob &&
+          other.height == this.height &&
+          other.weight == this.weight &&
+          other.fitnessGoal == this.fitnessGoal &&
+          other.activityLevel == this.activityLevel &&
+          other.doshaScores == this.doshaScores &&
+          other.preferredLanguage == this.preferredLanguage &&
+          other.onboardingComplete == this.onboardingComplete &&
+          other.updatedAt == this.updatedAt &&
+          other.syncStatus == this.syncStatus);
+}
+
+class UserProfilesCompanion extends UpdateCompanion<UserProfile> {
+  final Value<String> id;
+  final Value<String> name;
+  final Value<String?> gender;
+  final Value<DateTime?> dob;
+  final Value<double?> height;
+  final Value<double?> weight;
+  final Value<String?> fitnessGoal;
+  final Value<String?> activityLevel;
+  final Value<String?> doshaScores;
+  final Value<String> preferredLanguage;
+  final Value<bool> onboardingComplete;
+  final Value<DateTime?> updatedAt;
+  final Value<String> syncStatus;
+  final Value<int> rowid;
+  const UserProfilesCompanion({
+    this.id = const Value.absent(),
+    this.name = const Value.absent(),
+    this.gender = const Value.absent(),
+    this.dob = const Value.absent(),
+    this.height = const Value.absent(),
+    this.weight = const Value.absent(),
+    this.fitnessGoal = const Value.absent(),
+    this.activityLevel = const Value.absent(),
+    this.doshaScores = const Value.absent(),
+    this.preferredLanguage = const Value.absent(),
+    this.onboardingComplete = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  UserProfilesCompanion.insert({
+    required String id,
+    required String name,
+    this.gender = const Value.absent(),
+    this.dob = const Value.absent(),
+    this.height = const Value.absent(),
+    this.weight = const Value.absent(),
+    this.fitnessGoal = const Value.absent(),
+    this.activityLevel = const Value.absent(),
+    this.doshaScores = const Value.absent(),
+    this.preferredLanguage = const Value.absent(),
+    this.onboardingComplete = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       name = Value(name);
+  static Insertable<UserProfile> custom({
+    Expression<String>? id,
+    Expression<String>? name,
+    Expression<String>? gender,
+    Expression<DateTime>? dob,
+    Expression<double>? height,
+    Expression<double>? weight,
+    Expression<String>? fitnessGoal,
+    Expression<String>? activityLevel,
+    Expression<String>? doshaScores,
+    Expression<String>? preferredLanguage,
+    Expression<bool>? onboardingComplete,
+    Expression<DateTime>? updatedAt,
+    Expression<String>? syncStatus,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (name != null) 'name': name,
+      if (gender != null) 'gender': gender,
+      if (dob != null) 'dob': dob,
+      if (height != null) 'height': height,
+      if (weight != null) 'weight': weight,
+      if (fitnessGoal != null) 'fitness_goal': fitnessGoal,
+      if (activityLevel != null) 'activity_level': activityLevel,
+      if (doshaScores != null) 'dosha_scores': doshaScores,
+      if (preferredLanguage != null) 'preferred_language': preferredLanguage,
+      if (onboardingComplete != null) 'onboarding_complete': onboardingComplete,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (syncStatus != null) 'sync_status': syncStatus,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  UserProfilesCompanion copyWith({
+    Value<String>? id,
+    Value<String>? name,
+    Value<String?>? gender,
+    Value<DateTime?>? dob,
+    Value<double?>? height,
+    Value<double?>? weight,
+    Value<String?>? fitnessGoal,
+    Value<String?>? activityLevel,
+    Value<String?>? doshaScores,
+    Value<String>? preferredLanguage,
+    Value<bool>? onboardingComplete,
+    Value<DateTime?>? updatedAt,
+    Value<String>? syncStatus,
+    Value<int>? rowid,
+  }) {
+    return UserProfilesCompanion(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      gender: gender ?? this.gender,
+      dob: dob ?? this.dob,
+      height: height ?? this.height,
+      weight: weight ?? this.weight,
+      fitnessGoal: fitnessGoal ?? this.fitnessGoal,
+      activityLevel: activityLevel ?? this.activityLevel,
+      doshaScores: doshaScores ?? this.doshaScores,
+      preferredLanguage: preferredLanguage ?? this.preferredLanguage,
+      onboardingComplete: onboardingComplete ?? this.onboardingComplete,
+      updatedAt: updatedAt ?? this.updatedAt,
+      syncStatus: syncStatus ?? this.syncStatus,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (gender.present) {
+      map['gender'] = Variable<String>(gender.value);
+    }
+    if (dob.present) {
+      map['dob'] = Variable<DateTime>(dob.value);
+    }
+    if (height.present) {
+      map['height'] = Variable<double>(height.value);
+    }
+    if (weight.present) {
+      map['weight'] = Variable<double>(weight.value);
+    }
+    if (fitnessGoal.present) {
+      map['fitness_goal'] = Variable<String>(fitnessGoal.value);
+    }
+    if (activityLevel.present) {
+      map['activity_level'] = Variable<String>(activityLevel.value);
+    }
+    if (doshaScores.present) {
+      map['dosha_scores'] = Variable<String>(doshaScores.value);
+    }
+    if (preferredLanguage.present) {
+      map['preferred_language'] = Variable<String>(preferredLanguage.value);
+    }
+    if (onboardingComplete.present) {
+      map['onboarding_complete'] = Variable<bool>(onboardingComplete.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (syncStatus.present) {
+      map['sync_status'] = Variable<String>(syncStatus.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('UserProfilesCompanion(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('gender: $gender, ')
+          ..write('dob: $dob, ')
+          ..write('height: $height, ')
+          ..write('weight: $weight, ')
+          ..write('fitnessGoal: $fitnessGoal, ')
+          ..write('activityLevel: $activityLevel, ')
+          ..write('doshaScores: $doshaScores, ')
+          ..write('preferredLanguage: $preferredLanguage, ')
+          ..write('onboardingComplete: $onboardingComplete, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $BloodPressureLogsTable extends BloodPressureLogs
     with TableInfo<$BloodPressureLogsTable, BloodPressureLog> {
   @override
@@ -15995,6 +16769,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       $KarmaTransactionsTable(this);
   late final $SyncQueueTable syncQueue = $SyncQueueTable(this);
   late final $SyncDeadLetterTable syncDeadLetter = $SyncDeadLetterTable(this);
+  late final $UserProfilesTable userProfiles = $UserProfilesTable(this);
   late final $BloodPressureLogsTable bloodPressureLogs =
       $BloodPressureLogsTable(this);
   late final $GlucoseLogsTable glucoseLogs = $GlucoseLogsTable(this);
@@ -16011,6 +16786,69 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   );
   late final $RemoteConfigCachesTable remoteConfigCaches =
       $RemoteConfigCachesTable(this);
+  late final FoodLogsDao foodLogsDao = FoodLogsDao(this as AppDatabase);
+  late final FoodItemsDao foodItemsDao = FoodItemsDao(this as AppDatabase);
+  late final WorkoutLogsDao workoutLogsDao = WorkoutLogsDao(
+    this as AppDatabase,
+  );
+  late final StepLogsDao stepLogsDao = StepLogsDao(this as AppDatabase);
+  late final SleepLogsDao sleepLogsDao = SleepLogsDao(this as AppDatabase);
+  late final MoodLogsDao moodLogsDao = MoodLogsDao(this as AppDatabase);
+  late final HabitsDao habitsDao = HabitsDao(this as AppDatabase);
+  late final HabitCompletionsDao habitCompletionsDao = HabitCompletionsDao(
+    this as AppDatabase,
+  );
+  late final BodyMeasurementsDao bodyMeasurementsDao = BodyMeasurementsDao(
+    this as AppDatabase,
+  );
+  late final MedicationsDao medicationsDao = MedicationsDao(
+    this as AppDatabase,
+  );
+  late final FastingLogsDao fastingLogsDao = FastingLogsDao(
+    this as AppDatabase,
+  );
+  late final MealPlansDao mealPlansDao = MealPlansDao(this as AppDatabase);
+  late final RecipesDao recipesDao = RecipesDao(this as AppDatabase);
+  late final BloodPressureLogsDao bloodPressureLogsDao = BloodPressureLogsDao(
+    this as AppDatabase,
+  );
+  late final GlucoseLogsDao glucoseLogsDao = GlucoseLogsDao(
+    this as AppDatabase,
+  );
+  late final Spo2LogsDao spo2LogsDao = Spo2LogsDao(this as AppDatabase);
+  late final PeriodLogsDao periodLogsDao = PeriodLogsDao(this as AppDatabase);
+  late final JournalEntriesDao journalEntriesDao = JournalEntriesDao(
+    this as AppDatabase,
+  );
+  late final DoctorAppointmentsDao doctorAppointmentsDao =
+      DoctorAppointmentsDao(this as AppDatabase);
+  late final LabReportsDao labReportsDao = LabReportsDao(this as AppDatabase);
+  late final AbhaLinksDao abhaLinksDao = AbhaLinksDao(this as AppDatabase);
+  late final EmergencyCardDao emergencyCardDao = EmergencyCardDao(
+    this as AppDatabase,
+  );
+  late final FestivalCalendarDao festivalCalendarDao = FestivalCalendarDao(
+    this as AppDatabase,
+  );
+  late final RemoteConfigCacheDao remoteConfigCacheDao = RemoteConfigCacheDao(
+    this as AppDatabase,
+  );
+  late final KarmaTransactionsDao karmaTransactionsDao = KarmaTransactionsDao(
+    this as AppDatabase,
+  );
+  late final NutritionGoalsDao nutritionGoalsDao = NutritionGoalsDao(
+    this as AppDatabase,
+  );
+  late final PersonalRecordsDao personalRecordsDao = PersonalRecordsDao(
+    this as AppDatabase,
+  );
+  late final SyncQueueDao syncQueueDao = SyncQueueDao(this as AppDatabase);
+  late final SyncDeadLetterDao syncDeadLetterDao = SyncDeadLetterDao(
+    this as AppDatabase,
+  );
+  late final UserProfilesDao userProfilesDao = UserProfilesDao(
+    this as AppDatabase,
+  );
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -16034,6 +16872,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     karmaTransactions,
     syncQueue,
     syncDeadLetter,
+    userProfiles,
     bloodPressureLogs,
     glucoseLogs,
     spo2Logs,
@@ -21319,6 +22158,370 @@ typedef $$SyncDeadLetterTableProcessedTableManager =
       SyncDeadLetterEntry,
       PrefetchHooks Function()
     >;
+typedef $$UserProfilesTableCreateCompanionBuilder =
+    UserProfilesCompanion Function({
+      required String id,
+      required String name,
+      Value<String?> gender,
+      Value<DateTime?> dob,
+      Value<double?> height,
+      Value<double?> weight,
+      Value<String?> fitnessGoal,
+      Value<String?> activityLevel,
+      Value<String?> doshaScores,
+      Value<String> preferredLanguage,
+      Value<bool> onboardingComplete,
+      Value<DateTime?> updatedAt,
+      Value<String> syncStatus,
+      Value<int> rowid,
+    });
+typedef $$UserProfilesTableUpdateCompanionBuilder =
+    UserProfilesCompanion Function({
+      Value<String> id,
+      Value<String> name,
+      Value<String?> gender,
+      Value<DateTime?> dob,
+      Value<double?> height,
+      Value<double?> weight,
+      Value<String?> fitnessGoal,
+      Value<String?> activityLevel,
+      Value<String?> doshaScores,
+      Value<String> preferredLanguage,
+      Value<bool> onboardingComplete,
+      Value<DateTime?> updatedAt,
+      Value<String> syncStatus,
+      Value<int> rowid,
+    });
+
+class $$UserProfilesTableFilterComposer
+    extends Composer<_$AppDatabase, $UserProfilesTable> {
+  $$UserProfilesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get gender => $composableBuilder(
+    column: $table.gender,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get dob => $composableBuilder(
+    column: $table.dob,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get height => $composableBuilder(
+    column: $table.height,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get weight => $composableBuilder(
+    column: $table.weight,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get fitnessGoal => $composableBuilder(
+    column: $table.fitnessGoal,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get activityLevel => $composableBuilder(
+    column: $table.activityLevel,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get doshaScores => $composableBuilder(
+    column: $table.doshaScores,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get preferredLanguage => $composableBuilder(
+    column: $table.preferredLanguage,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get onboardingComplete => $composableBuilder(
+    column: $table.onboardingComplete,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$UserProfilesTableOrderingComposer
+    extends Composer<_$AppDatabase, $UserProfilesTable> {
+  $$UserProfilesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get gender => $composableBuilder(
+    column: $table.gender,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get dob => $composableBuilder(
+    column: $table.dob,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get height => $composableBuilder(
+    column: $table.height,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get weight => $composableBuilder(
+    column: $table.weight,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get fitnessGoal => $composableBuilder(
+    column: $table.fitnessGoal,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get activityLevel => $composableBuilder(
+    column: $table.activityLevel,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get doshaScores => $composableBuilder(
+    column: $table.doshaScores,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get preferredLanguage => $composableBuilder(
+    column: $table.preferredLanguage,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get onboardingComplete => $composableBuilder(
+    column: $table.onboardingComplete,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$UserProfilesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $UserProfilesTable> {
+  $$UserProfilesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get gender =>
+      $composableBuilder(column: $table.gender, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get dob =>
+      $composableBuilder(column: $table.dob, builder: (column) => column);
+
+  GeneratedColumn<double> get height =>
+      $composableBuilder(column: $table.height, builder: (column) => column);
+
+  GeneratedColumn<double> get weight =>
+      $composableBuilder(column: $table.weight, builder: (column) => column);
+
+  GeneratedColumn<String> get fitnessGoal => $composableBuilder(
+    column: $table.fitnessGoal,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get activityLevel => $composableBuilder(
+    column: $table.activityLevel,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get doshaScores => $composableBuilder(
+    column: $table.doshaScores,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get preferredLanguage => $composableBuilder(
+    column: $table.preferredLanguage,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get onboardingComplete => $composableBuilder(
+    column: $table.onboardingComplete,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => column,
+  );
+}
+
+class $$UserProfilesTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $UserProfilesTable,
+          UserProfile,
+          $$UserProfilesTableFilterComposer,
+          $$UserProfilesTableOrderingComposer,
+          $$UserProfilesTableAnnotationComposer,
+          $$UserProfilesTableCreateCompanionBuilder,
+          $$UserProfilesTableUpdateCompanionBuilder,
+          (
+            UserProfile,
+            BaseReferences<_$AppDatabase, $UserProfilesTable, UserProfile>,
+          ),
+          UserProfile,
+          PrefetchHooks Function()
+        > {
+  $$UserProfilesTableTableManager(_$AppDatabase db, $UserProfilesTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$UserProfilesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$UserProfilesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$UserProfilesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<String?> gender = const Value.absent(),
+                Value<DateTime?> dob = const Value.absent(),
+                Value<double?> height = const Value.absent(),
+                Value<double?> weight = const Value.absent(),
+                Value<String?> fitnessGoal = const Value.absent(),
+                Value<String?> activityLevel = const Value.absent(),
+                Value<String?> doshaScores = const Value.absent(),
+                Value<String> preferredLanguage = const Value.absent(),
+                Value<bool> onboardingComplete = const Value.absent(),
+                Value<DateTime?> updatedAt = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => UserProfilesCompanion(
+                id: id,
+                name: name,
+                gender: gender,
+                dob: dob,
+                height: height,
+                weight: weight,
+                fitnessGoal: fitnessGoal,
+                activityLevel: activityLevel,
+                doshaScores: doshaScores,
+                preferredLanguage: preferredLanguage,
+                onboardingComplete: onboardingComplete,
+                updatedAt: updatedAt,
+                syncStatus: syncStatus,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String name,
+                Value<String?> gender = const Value.absent(),
+                Value<DateTime?> dob = const Value.absent(),
+                Value<double?> height = const Value.absent(),
+                Value<double?> weight = const Value.absent(),
+                Value<String?> fitnessGoal = const Value.absent(),
+                Value<String?> activityLevel = const Value.absent(),
+                Value<String?> doshaScores = const Value.absent(),
+                Value<String> preferredLanguage = const Value.absent(),
+                Value<bool> onboardingComplete = const Value.absent(),
+                Value<DateTime?> updatedAt = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => UserProfilesCompanion.insert(
+                id: id,
+                name: name,
+                gender: gender,
+                dob: dob,
+                height: height,
+                weight: weight,
+                fitnessGoal: fitnessGoal,
+                activityLevel: activityLevel,
+                doshaScores: doshaScores,
+                preferredLanguage: preferredLanguage,
+                onboardingComplete: onboardingComplete,
+                updatedAt: updatedAt,
+                syncStatus: syncStatus,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$UserProfilesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $UserProfilesTable,
+      UserProfile,
+      $$UserProfilesTableFilterComposer,
+      $$UserProfilesTableOrderingComposer,
+      $$UserProfilesTableAnnotationComposer,
+      $$UserProfilesTableCreateCompanionBuilder,
+      $$UserProfilesTableUpdateCompanionBuilder,
+      (
+        UserProfile,
+        BaseReferences<_$AppDatabase, $UserProfilesTable, UserProfile>,
+      ),
+      UserProfile,
+      PrefetchHooks Function()
+    >;
 typedef $$BloodPressureLogsTableCreateCompanionBuilder =
     BloodPressureLogsCompanion Function({
       required String id,
@@ -24104,6 +25307,8 @@ class $AppDatabaseManager {
       $$SyncQueueTableTableManager(_db, _db.syncQueue);
   $$SyncDeadLetterTableTableManager get syncDeadLetter =>
       $$SyncDeadLetterTableTableManager(_db, _db.syncDeadLetter);
+  $$UserProfilesTableTableManager get userProfiles =>
+      $$UserProfilesTableTableManager(_db, _db.userProfiles);
   $$BloodPressureLogsTableTableManager get bloodPressureLogs =>
       $$BloodPressureLogsTableTableManager(_db, _db.bloodPressureLogs);
   $$GlucoseLogsTableTableManager get glucoseLogs =>
@@ -24126,4 +25331,408 @@ class $AppDatabaseManager {
       $$FestivalCalendarTableTableManager(_db, _db.festivalCalendar);
   $$RemoteConfigCachesTableTableManager get remoteConfigCaches =>
       $$RemoteConfigCachesTableTableManager(_db, _db.remoteConfigCaches);
+}
+
+mixin _$FoodLogsDaoMixin on DatabaseAccessor<AppDatabase> {
+  $FoodLogsTable get foodLogs => attachedDatabase.foodLogs;
+  FoodLogsDaoManager get managers => FoodLogsDaoManager(this);
+}
+
+class FoodLogsDaoManager {
+  final _$FoodLogsDaoMixin _db;
+  FoodLogsDaoManager(this._db);
+  $$FoodLogsTableTableManager get foodLogs =>
+      $$FoodLogsTableTableManager(_db.attachedDatabase, _db.foodLogs);
+}
+
+mixin _$FoodItemsDaoMixin on DatabaseAccessor<AppDatabase> {
+  $FoodItemsTable get foodItems => attachedDatabase.foodItems;
+  FoodItemsDaoManager get managers => FoodItemsDaoManager(this);
+}
+
+class FoodItemsDaoManager {
+  final _$FoodItemsDaoMixin _db;
+  FoodItemsDaoManager(this._db);
+  $$FoodItemsTableTableManager get foodItems =>
+      $$FoodItemsTableTableManager(_db.attachedDatabase, _db.foodItems);
+}
+
+mixin _$WorkoutLogsDaoMixin on DatabaseAccessor<AppDatabase> {
+  $WorkoutLogsTable get workoutLogs => attachedDatabase.workoutLogs;
+  WorkoutLogsDaoManager get managers => WorkoutLogsDaoManager(this);
+}
+
+class WorkoutLogsDaoManager {
+  final _$WorkoutLogsDaoMixin _db;
+  WorkoutLogsDaoManager(this._db);
+  $$WorkoutLogsTableTableManager get workoutLogs =>
+      $$WorkoutLogsTableTableManager(_db.attachedDatabase, _db.workoutLogs);
+}
+
+mixin _$StepLogsDaoMixin on DatabaseAccessor<AppDatabase> {
+  $StepLogsTable get stepLogs => attachedDatabase.stepLogs;
+  StepLogsDaoManager get managers => StepLogsDaoManager(this);
+}
+
+class StepLogsDaoManager {
+  final _$StepLogsDaoMixin _db;
+  StepLogsDaoManager(this._db);
+  $$StepLogsTableTableManager get stepLogs =>
+      $$StepLogsTableTableManager(_db.attachedDatabase, _db.stepLogs);
+}
+
+mixin _$SleepLogsDaoMixin on DatabaseAccessor<AppDatabase> {
+  $SleepLogsTable get sleepLogs => attachedDatabase.sleepLogs;
+  SleepLogsDaoManager get managers => SleepLogsDaoManager(this);
+}
+
+class SleepLogsDaoManager {
+  final _$SleepLogsDaoMixin _db;
+  SleepLogsDaoManager(this._db);
+  $$SleepLogsTableTableManager get sleepLogs =>
+      $$SleepLogsTableTableManager(_db.attachedDatabase, _db.sleepLogs);
+}
+
+mixin _$MoodLogsDaoMixin on DatabaseAccessor<AppDatabase> {
+  $MoodLogsTable get moodLogs => attachedDatabase.moodLogs;
+  MoodLogsDaoManager get managers => MoodLogsDaoManager(this);
+}
+
+class MoodLogsDaoManager {
+  final _$MoodLogsDaoMixin _db;
+  MoodLogsDaoManager(this._db);
+  $$MoodLogsTableTableManager get moodLogs =>
+      $$MoodLogsTableTableManager(_db.attachedDatabase, _db.moodLogs);
+}
+
+mixin _$HabitsDaoMixin on DatabaseAccessor<AppDatabase> {
+  $HabitsTable get habits => attachedDatabase.habits;
+  HabitsDaoManager get managers => HabitsDaoManager(this);
+}
+
+class HabitsDaoManager {
+  final _$HabitsDaoMixin _db;
+  HabitsDaoManager(this._db);
+  $$HabitsTableTableManager get habits =>
+      $$HabitsTableTableManager(_db.attachedDatabase, _db.habits);
+}
+
+mixin _$HabitCompletionsDaoMixin on DatabaseAccessor<AppDatabase> {
+  $HabitCompletionsTable get habitCompletions =>
+      attachedDatabase.habitCompletions;
+  HabitCompletionsDaoManager get managers => HabitCompletionsDaoManager(this);
+}
+
+class HabitCompletionsDaoManager {
+  final _$HabitCompletionsDaoMixin _db;
+  HabitCompletionsDaoManager(this._db);
+  $$HabitCompletionsTableTableManager get habitCompletions =>
+      $$HabitCompletionsTableTableManager(
+        _db.attachedDatabase,
+        _db.habitCompletions,
+      );
+}
+
+mixin _$BodyMeasurementsDaoMixin on DatabaseAccessor<AppDatabase> {
+  $BodyMeasurementsTable get bodyMeasurements =>
+      attachedDatabase.bodyMeasurements;
+  BodyMeasurementsDaoManager get managers => BodyMeasurementsDaoManager(this);
+}
+
+class BodyMeasurementsDaoManager {
+  final _$BodyMeasurementsDaoMixin _db;
+  BodyMeasurementsDaoManager(this._db);
+  $$BodyMeasurementsTableTableManager get bodyMeasurements =>
+      $$BodyMeasurementsTableTableManager(
+        _db.attachedDatabase,
+        _db.bodyMeasurements,
+      );
+}
+
+mixin _$MedicationsDaoMixin on DatabaseAccessor<AppDatabase> {
+  $MedicationsTable get medications => attachedDatabase.medications;
+  MedicationsDaoManager get managers => MedicationsDaoManager(this);
+}
+
+class MedicationsDaoManager {
+  final _$MedicationsDaoMixin _db;
+  MedicationsDaoManager(this._db);
+  $$MedicationsTableTableManager get medications =>
+      $$MedicationsTableTableManager(_db.attachedDatabase, _db.medications);
+}
+
+mixin _$FastingLogsDaoMixin on DatabaseAccessor<AppDatabase> {
+  $FastingLogsTable get fastingLogs => attachedDatabase.fastingLogs;
+  FastingLogsDaoManager get managers => FastingLogsDaoManager(this);
+}
+
+class FastingLogsDaoManager {
+  final _$FastingLogsDaoMixin _db;
+  FastingLogsDaoManager(this._db);
+  $$FastingLogsTableTableManager get fastingLogs =>
+      $$FastingLogsTableTableManager(_db.attachedDatabase, _db.fastingLogs);
+}
+
+mixin _$MealPlansDaoMixin on DatabaseAccessor<AppDatabase> {
+  $MealPlansTable get mealPlans => attachedDatabase.mealPlans;
+  MealPlansDaoManager get managers => MealPlansDaoManager(this);
+}
+
+class MealPlansDaoManager {
+  final _$MealPlansDaoMixin _db;
+  MealPlansDaoManager(this._db);
+  $$MealPlansTableTableManager get mealPlans =>
+      $$MealPlansTableTableManager(_db.attachedDatabase, _db.mealPlans);
+}
+
+mixin _$RecipesDaoMixin on DatabaseAccessor<AppDatabase> {
+  $RecipesTable get recipes => attachedDatabase.recipes;
+  RecipesDaoManager get managers => RecipesDaoManager(this);
+}
+
+class RecipesDaoManager {
+  final _$RecipesDaoMixin _db;
+  RecipesDaoManager(this._db);
+  $$RecipesTableTableManager get recipes =>
+      $$RecipesTableTableManager(_db.attachedDatabase, _db.recipes);
+}
+
+mixin _$BloodPressureLogsDaoMixin on DatabaseAccessor<AppDatabase> {
+  $BloodPressureLogsTable get bloodPressureLogs =>
+      attachedDatabase.bloodPressureLogs;
+  BloodPressureLogsDaoManager get managers => BloodPressureLogsDaoManager(this);
+}
+
+class BloodPressureLogsDaoManager {
+  final _$BloodPressureLogsDaoMixin _db;
+  BloodPressureLogsDaoManager(this._db);
+  $$BloodPressureLogsTableTableManager get bloodPressureLogs =>
+      $$BloodPressureLogsTableTableManager(
+        _db.attachedDatabase,
+        _db.bloodPressureLogs,
+      );
+}
+
+mixin _$GlucoseLogsDaoMixin on DatabaseAccessor<AppDatabase> {
+  $GlucoseLogsTable get glucoseLogs => attachedDatabase.glucoseLogs;
+  GlucoseLogsDaoManager get managers => GlucoseLogsDaoManager(this);
+}
+
+class GlucoseLogsDaoManager {
+  final _$GlucoseLogsDaoMixin _db;
+  GlucoseLogsDaoManager(this._db);
+  $$GlucoseLogsTableTableManager get glucoseLogs =>
+      $$GlucoseLogsTableTableManager(_db.attachedDatabase, _db.glucoseLogs);
+}
+
+mixin _$Spo2LogsDaoMixin on DatabaseAccessor<AppDatabase> {
+  $Spo2LogsTable get spo2Logs => attachedDatabase.spo2Logs;
+  Spo2LogsDaoManager get managers => Spo2LogsDaoManager(this);
+}
+
+class Spo2LogsDaoManager {
+  final _$Spo2LogsDaoMixin _db;
+  Spo2LogsDaoManager(this._db);
+  $$Spo2LogsTableTableManager get spo2Logs =>
+      $$Spo2LogsTableTableManager(_db.attachedDatabase, _db.spo2Logs);
+}
+
+mixin _$PeriodLogsDaoMixin on DatabaseAccessor<AppDatabase> {
+  $PeriodLogsTable get periodLogs => attachedDatabase.periodLogs;
+  PeriodLogsDaoManager get managers => PeriodLogsDaoManager(this);
+}
+
+class PeriodLogsDaoManager {
+  final _$PeriodLogsDaoMixin _db;
+  PeriodLogsDaoManager(this._db);
+  $$PeriodLogsTableTableManager get periodLogs =>
+      $$PeriodLogsTableTableManager(_db.attachedDatabase, _db.periodLogs);
+}
+
+mixin _$JournalEntriesDaoMixin on DatabaseAccessor<AppDatabase> {
+  $JournalEntriesTable get journalEntries => attachedDatabase.journalEntries;
+  JournalEntriesDaoManager get managers => JournalEntriesDaoManager(this);
+}
+
+class JournalEntriesDaoManager {
+  final _$JournalEntriesDaoMixin _db;
+  JournalEntriesDaoManager(this._db);
+  $$JournalEntriesTableTableManager get journalEntries =>
+      $$JournalEntriesTableTableManager(
+        _db.attachedDatabase,
+        _db.journalEntries,
+      );
+}
+
+mixin _$DoctorAppointmentsDaoMixin on DatabaseAccessor<AppDatabase> {
+  $DoctorAppointmentsTable get doctorAppointments =>
+      attachedDatabase.doctorAppointments;
+  DoctorAppointmentsDaoManager get managers =>
+      DoctorAppointmentsDaoManager(this);
+}
+
+class DoctorAppointmentsDaoManager {
+  final _$DoctorAppointmentsDaoMixin _db;
+  DoctorAppointmentsDaoManager(this._db);
+  $$DoctorAppointmentsTableTableManager get doctorAppointments =>
+      $$DoctorAppointmentsTableTableManager(
+        _db.attachedDatabase,
+        _db.doctorAppointments,
+      );
+}
+
+mixin _$LabReportsDaoMixin on DatabaseAccessor<AppDatabase> {
+  $LabReportsTable get labReports => attachedDatabase.labReports;
+  LabReportsDaoManager get managers => LabReportsDaoManager(this);
+}
+
+class LabReportsDaoManager {
+  final _$LabReportsDaoMixin _db;
+  LabReportsDaoManager(this._db);
+  $$LabReportsTableTableManager get labReports =>
+      $$LabReportsTableTableManager(_db.attachedDatabase, _db.labReports);
+}
+
+mixin _$AbhaLinksDaoMixin on DatabaseAccessor<AppDatabase> {
+  $AbhaLinksTable get abhaLinks => attachedDatabase.abhaLinks;
+  AbhaLinksDaoManager get managers => AbhaLinksDaoManager(this);
+}
+
+class AbhaLinksDaoManager {
+  final _$AbhaLinksDaoMixin _db;
+  AbhaLinksDaoManager(this._db);
+  $$AbhaLinksTableTableManager get abhaLinks =>
+      $$AbhaLinksTableTableManager(_db.attachedDatabase, _db.abhaLinks);
+}
+
+mixin _$EmergencyCardDaoMixin on DatabaseAccessor<AppDatabase> {
+  $EmergencyCardsTable get emergencyCards => attachedDatabase.emergencyCards;
+  EmergencyCardDaoManager get managers => EmergencyCardDaoManager(this);
+}
+
+class EmergencyCardDaoManager {
+  final _$EmergencyCardDaoMixin _db;
+  EmergencyCardDaoManager(this._db);
+  $$EmergencyCardsTableTableManager get emergencyCards =>
+      $$EmergencyCardsTableTableManager(
+        _db.attachedDatabase,
+        _db.emergencyCards,
+      );
+}
+
+mixin _$FestivalCalendarDaoMixin on DatabaseAccessor<AppDatabase> {
+  $FestivalCalendarTable get festivalCalendar =>
+      attachedDatabase.festivalCalendar;
+  FestivalCalendarDaoManager get managers => FestivalCalendarDaoManager(this);
+}
+
+class FestivalCalendarDaoManager {
+  final _$FestivalCalendarDaoMixin _db;
+  FestivalCalendarDaoManager(this._db);
+  $$FestivalCalendarTableTableManager get festivalCalendar =>
+      $$FestivalCalendarTableTableManager(
+        _db.attachedDatabase,
+        _db.festivalCalendar,
+      );
+}
+
+mixin _$RemoteConfigCacheDaoMixin on DatabaseAccessor<AppDatabase> {
+  $RemoteConfigCachesTable get remoteConfigCaches =>
+      attachedDatabase.remoteConfigCaches;
+  RemoteConfigCacheDaoManager get managers => RemoteConfigCacheDaoManager(this);
+}
+
+class RemoteConfigCacheDaoManager {
+  final _$RemoteConfigCacheDaoMixin _db;
+  RemoteConfigCacheDaoManager(this._db);
+  $$RemoteConfigCachesTableTableManager get remoteConfigCaches =>
+      $$RemoteConfigCachesTableTableManager(
+        _db.attachedDatabase,
+        _db.remoteConfigCaches,
+      );
+}
+
+mixin _$KarmaTransactionsDaoMixin on DatabaseAccessor<AppDatabase> {
+  $KarmaTransactionsTable get karmaTransactions =>
+      attachedDatabase.karmaTransactions;
+  KarmaTransactionsDaoManager get managers => KarmaTransactionsDaoManager(this);
+}
+
+class KarmaTransactionsDaoManager {
+  final _$KarmaTransactionsDaoMixin _db;
+  KarmaTransactionsDaoManager(this._db);
+  $$KarmaTransactionsTableTableManager get karmaTransactions =>
+      $$KarmaTransactionsTableTableManager(
+        _db.attachedDatabase,
+        _db.karmaTransactions,
+      );
+}
+
+mixin _$NutritionGoalsDaoMixin on DatabaseAccessor<AppDatabase> {
+  $NutritionGoalsTable get nutritionGoals => attachedDatabase.nutritionGoals;
+  NutritionGoalsDaoManager get managers => NutritionGoalsDaoManager(this);
+}
+
+class NutritionGoalsDaoManager {
+  final _$NutritionGoalsDaoMixin _db;
+  NutritionGoalsDaoManager(this._db);
+  $$NutritionGoalsTableTableManager get nutritionGoals =>
+      $$NutritionGoalsTableTableManager(
+        _db.attachedDatabase,
+        _db.nutritionGoals,
+      );
+}
+
+mixin _$PersonalRecordsDaoMixin on DatabaseAccessor<AppDatabase> {
+  $PersonalRecordsTable get personalRecords => attachedDatabase.personalRecords;
+  PersonalRecordsDaoManager get managers => PersonalRecordsDaoManager(this);
+}
+
+class PersonalRecordsDaoManager {
+  final _$PersonalRecordsDaoMixin _db;
+  PersonalRecordsDaoManager(this._db);
+  $$PersonalRecordsTableTableManager get personalRecords =>
+      $$PersonalRecordsTableTableManager(
+        _db.attachedDatabase,
+        _db.personalRecords,
+      );
+}
+
+mixin _$SyncQueueDaoMixin on DatabaseAccessor<AppDatabase> {
+  $SyncQueueTable get syncQueue => attachedDatabase.syncQueue;
+  SyncQueueDaoManager get managers => SyncQueueDaoManager(this);
+}
+
+class SyncQueueDaoManager {
+  final _$SyncQueueDaoMixin _db;
+  SyncQueueDaoManager(this._db);
+  $$SyncQueueTableTableManager get syncQueue =>
+      $$SyncQueueTableTableManager(_db.attachedDatabase, _db.syncQueue);
+}
+
+mixin _$SyncDeadLetterDaoMixin on DatabaseAccessor<AppDatabase> {
+  $SyncDeadLetterTable get syncDeadLetter => attachedDatabase.syncDeadLetter;
+  SyncDeadLetterDaoManager get managers => SyncDeadLetterDaoManager(this);
+}
+
+class SyncDeadLetterDaoManager {
+  final _$SyncDeadLetterDaoMixin _db;
+  SyncDeadLetterDaoManager(this._db);
+  $$SyncDeadLetterTableTableManager get syncDeadLetter =>
+      $$SyncDeadLetterTableTableManager(
+        _db.attachedDatabase,
+        _db.syncDeadLetter,
+      );
+}
+
+mixin _$UserProfilesDaoMixin on DatabaseAccessor<AppDatabase> {
+  $UserProfilesTable get userProfiles => attachedDatabase.userProfiles;
+  UserProfilesDaoManager get managers => UserProfilesDaoManager(this);
+}
+
+class UserProfilesDaoManager {
+  final _$UserProfilesDaoMixin _db;
+  UserProfilesDaoManager(this._db);
+  $$UserProfilesTableTableManager get userProfiles =>
+      $$UserProfilesTableTableManager(_db.attachedDatabase, _db.userProfiles);
 }

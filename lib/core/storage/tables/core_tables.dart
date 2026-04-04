@@ -103,6 +103,26 @@ class SleepLogs extends Table {
   Set<Column> get primaryKey => {id};
 }
 
+@DataClassName('UserProfile')
+class UserProfiles extends Table {
+  TextColumn get id => text()(); // Appwrite UID
+  TextColumn get name => text()();
+  TextColumn get gender => text().nullable()();
+  DateTimeColumn get dob => dateTime().nullable()();
+  RealColumn get height => real().nullable()();
+  RealColumn get weight => real().nullable()();
+  TextColumn get fitnessGoal => text().nullable()();
+  TextColumn get activityLevel => text().nullable()();
+  TextColumn get doshaScores => text().nullable()(); // JSON
+  TextColumn get preferredLanguage => text().withDefault(const Constant('en'))();
+  BoolColumn get onboardingComplete => boolean().withDefault(const Constant(false))();
+  DateTimeColumn get updatedAt => dateTime().nullable()();
+  TextColumn get syncStatus => text().withDefault(const Constant('pending'))();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
 @DataClassName('MoodLog')
 class MoodLogs extends Table {
   TextColumn get id => text()();
