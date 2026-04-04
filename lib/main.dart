@@ -4,6 +4,7 @@ import 'package:fitkarma/app.dart';
 import 'package:fitkarma/core/network/connectivity_service.dart';
 import 'package:fitkarma/core/network/background_sync_runner.dart';
 import 'package:fitkarma/core/security/biometric_service.dart';
+import 'package:fitkarma/core/connectivity/wearable_connectivity.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -11,9 +12,13 @@ void main() async {
   await BiometricService.instance.initialize();
   final isFirstLaunch = await BiometricService.instance.isFirstLaunch();
   
+  final container = ProviderContainer();
+  // Initialize Wearable Connectivity
+  container.read(wearableConnectivityProvider);
+  
   runApp(
-    ProviderScope(
-      overrides: [],
+    UncontrolledProviderScope(
+      container: container,
       child: BiometricLockScreen(
         isFirstLaunch: isFirstLaunch,
         child: const FitKarmaApp(),
