@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fitkarma/core/storage/app_database.dart';
 import 'package:fitkarma/features/karma/data/karma_drift_service.dart';
 import 'package:fitkarma/features/karma/data/karma_aw_service.dart';
-import 'package:fitkarma/core/storage/app_database.dart' show KarmaTransaction;
 import 'package:fitkarma/features/auth/data/auth_aw_service.dart';
 
 final karmaNotifierProvider = AsyncNotifierProvider<KarmaNotifier, KarmaState>(() {

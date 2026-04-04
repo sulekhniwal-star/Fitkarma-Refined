@@ -19,11 +19,8 @@ import 'package:fitkarma/features/appointments/presentation/appointment_screen.d
 import 'package:fitkarma/features/appointments/presentation/appointments_list_screen.dart';
 import 'package:fitkarma/features/appointments/presentation/prescription_screen.dart';
 import 'package:fitkarma/features/lab_reports/presentation/lab_report_scan_screen.dart';
-import 'package:fitkarma/features/abha/presentation/link_abha_screen.dart';
 import 'package:fitkarma/features/sleep/presentation/sleep_log_screen.dart';
 import 'package:fitkarma/features/sleep/presentation/sleep_history_screen.dart';
-import 'package:fitkarma/features/spo2/presentation/spo2_log_screen.dart';
-import 'package:fitkarma/features/spo2/presentation/spo2_history_screen.dart';
 import 'package:fitkarma/features/wearables/wearables_screen.dart'
     deferred as wearables;
 import 'package:fitkarma/features/social/social_feed_screen.dart'

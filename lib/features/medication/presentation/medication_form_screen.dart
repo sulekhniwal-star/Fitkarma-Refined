@@ -124,7 +124,7 @@ class _MedicationFormScreenState extends ConsumerState<MedicationFormScreen> {
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<String>(
-                value: _frequency,
+                initialValue: _frequency,
                 decoration: const InputDecoration(
                   labelText: 'Frequency',
                   border: OutlineInputBorder(),
@@ -134,7 +134,7 @@ class _MedicationFormScreenState extends ConsumerState<MedicationFormScreen> {
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<String>(
-                value: _category,
+                initialValue: _category,
                 decoration: const InputDecoration(
                   labelText: 'Category',
                   border: OutlineInputBorder(),
@@ -228,8 +228,7 @@ class _MedicationFormScreenState extends ConsumerState<MedicationFormScreen> {
     try {
       final db = ref.read(appDatabaseProvider);
       final pills = int.tryParse(_pillsController.text);
-      final reminderTimeStr = _reminderTime.hour.toString().padLeft(2, '0') +
-          ':' + _reminderTime.minute.toString().padLeft(2, '0');
+      final reminderTimeStr = '${_reminderTime.hour.toString().padLeft(2, '0')}:${_reminderTime.minute.toString().padLeft(2, '0')}';
       
       if (_isEdit && _existingMedication != null) {
         await db.medicationsDao.updateMedication(

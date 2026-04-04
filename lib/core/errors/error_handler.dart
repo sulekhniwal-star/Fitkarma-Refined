@@ -240,7 +240,7 @@ AppException mapToAppException(dynamic error) {
 class _UnknownException implements AppException {
   @override final String code;
   @override final String message;
-  @override final String? details;
+  @override final String? details = null;
   @override final dynamic original;
 
   const _UnknownException({

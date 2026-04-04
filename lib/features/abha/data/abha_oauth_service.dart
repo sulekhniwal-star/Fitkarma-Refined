@@ -1,13 +1,11 @@
 import 'dart:convert';
 import 'dart:math';
-import 'dart:typed_data';
 
 import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:fitkarma/core/storage/app_database.dart';
-import 'package:fitkarma/shared/theme/app_colors.dart';
 
 class AbhaOAuthService {
   AbhaOAuthService._();

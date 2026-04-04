@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:drift/drift.dart' show Value;
 import 'package:fitkarma/core/storage/app_database.dart';
-import 'package:fitkarma/shared/theme/app_colors.dart';
 
 final appDatabaseProvider = Provider<AppDatabase>((ref) => AppDatabase());
 
@@ -119,8 +118,9 @@ class _DoshaQuizScreenState extends ConsumerState<DoshaQuizScreen> {
     final kaphaPct = ((_kaphaScore / total) * 100).round();
 
     String dominant = 'Vata';
-    if (pittaPct > vataPct && pittaPct > kaphaPct) dominant = 'Pitta';
-    else if (kaphaPct > vataPct && kaphaPct > pittaPct) dominant = 'Kapha';
+    if (pittaPct > vataPct && pittaPct > kaphaPct) {
+      dominant = 'Pitta';
+    } else if (kaphaPct > vataPct && kaphaPct > pittaPct) dominant = 'Kapha';
 
     return Scaffold(
       appBar: AppBar(title: const Text('Your Dosha Profile')),

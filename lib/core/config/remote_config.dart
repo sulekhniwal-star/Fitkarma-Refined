@@ -12,6 +12,23 @@ import 'package:fitkarma/core/storage/app_database.dart';
 // MODEL
 // ═══════════════════════════════════════════════════════════════════════════════
 
+/// In-memory cache entry for remote config.
+class RemoteConfigCacheEntry {
+  final int id;
+  final String key;
+  final String value;
+  final String type;
+  final DateTime lastUpdated;
+
+  const RemoteConfigCacheEntry({
+    required this.id,
+    required this.key,
+    required this.value,
+    required this.type,
+    required this.lastUpdated,
+  });
+}
+
 /// A/B experiment descriptor.
 class AbConfig {
   final int rolloutPct;
@@ -38,7 +55,7 @@ class RemoteConfigService {
 
   /// In-memory mirror of the Drift cache (populated on first [refresh] or
   /// [loadFromCache]).
-  final Map<String, RemoteConfigCacheData> _memCache = {};
+  final Map<String, RemoteConfigCacheEntry> _memCache = {};
 
   RemoteConfigService({
     required TablesDB tablesDb,
@@ -53,7 +70,13 @@ class RemoteConfigService {
   Future<void> loadFromCache() async {
     final rows = await _cacheDao.getAll();
     for (final row in rows) {
-      _memCache[row.key] = row;
+      _memCache[row.key] = RemoteConfigCacheEntry(
+        id: row.id,
+        key: row.key,
+        value: row.value,
+        type: row.type,
+        lastUpdated: row.lastUpdated,
+      );
     }
   }
 
@@ -85,7 +108,7 @@ class RemoteConfigService {
         );
 
         await _cacheDao.upsertConfig(companion);
-        _memCache[key] = RemoteConfigCacheData(
+        _memCache[key] = RemoteConfigCacheEntry(
           id: 0,
           key: key,
           value: encoded,

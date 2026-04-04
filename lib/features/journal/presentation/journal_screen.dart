@@ -152,7 +152,7 @@ class _JournalEntryScreenState extends ConsumerState<JournalEntryScreen> {
         userId: widget.odUserId,
         content: _contentController.text,
         plainText: _contentController.text,
-        promptUsed: _currentPrompt.isEmpty ? null : _currentMood,
+        promptUsed: _currentPrompt.isEmpty ? null : _currentPrompt,
         moodTag: _selectedMood.isEmpty ? null : _selectedMood,
         syncEnabled: _syncEnabled,
       );

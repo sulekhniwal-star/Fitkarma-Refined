@@ -431,6 +431,7 @@ class AbhaLinks extends Table {
   DateTimeColumn get lastSyncedAt => dateTime().nullable()();
 }
 
+@DataClassName('HerbalRemedy')
 @TableIndex(name: 'idx_herbal_remedies', columns: {#name})
 class HerbalRemedies extends Table {
   IntColumn get id => integer().autoIncrement()();
@@ -1324,7 +1325,7 @@ class BodyMeasurementsDao extends DatabaseAccessor<AppDatabase>
     double? waistToHipRatio;
     double? waistToHeightRatio;
     
-    if (weightKg != null && heightCm != null && heightCm > 0) {
+    if (heightCm != null && heightCm > 0) {
       bmi = weightKg / ((heightCm / 100) * (heightCm / 100));
     }
     
@@ -2040,13 +2041,14 @@ class RecipesDao extends DatabaseAccessor<AppDatabase>
         userId: userId,
         foodName: recipe.title,
         quantityG: 100,
-        caloriesPer100g: recipe.calories ?? 0,
+        calories: recipe.calories ?? 0,
         proteinG: recipe.protein ?? 0,
         carbsG: recipe.carbs ?? 0,
         fatG: recipe.fat ?? 0,
         mealType: 'Recipe',
         loggedAt: now,
         syncStatus: 'local',
+        idempotencyKey: '${userId}_recipe_${recipeId}_${now.millisecondsSinceEpoch}',
       ),
     );
   }
@@ -2989,16 +2991,16 @@ class JournalEntriesDao extends DatabaseAccessor<AppDatabase>
       {DateTime? from, DateTime? to}) {
     final query = select(journalEntries)
       ..where((t) => t.userId.equals(userId))
-      ..orderBy([(t) => OrderingTerm.desc(t.createdAt))]);
+      ..orderBy([(t) => OrderingTerm.desc(t.createdAt)]);
     if (from != null) query.where((t) => t.createdAt.isBiggerOrEqualValue(from));
-    if (to != null) query.where((t) => t.createdAt.isSmallerOrEqualValue(to)));
+    if (to != null) query.where((t) => t.createdAt.isSmallerOrEqualValue(to));
     return query.get();
   }
 
   Stream<List<JournalEntry>> watchEntriesForUser(String userId) =>
       (select(journalEntries)
             ..where((t) => t.userId.equals(userId))
-            ..orderBy([(t) => OrderingTerm.desc(t.createdAt))])
+            ..orderBy([(t) => OrderingTerm.desc(t.createdAt)]))
           .watch();
 
   Future<int> insertEntry(JournalEntriesCompanion entry) =>
@@ -3037,7 +3039,7 @@ class JournalEntriesDao extends DatabaseAccessor<AppDatabase>
     );
   }
 
-  String _analyzeSentiment(String text) {
+  double _analyzeSentiment(String text) {
     final lowercase = text.toLowerCase();
     
     final positiveWords = [
@@ -3111,7 +3113,8 @@ class JournalEntriesDao extends DatabaseAccessor<AppDatabase>
   }
 
   String getWeeklyPrompt() {
-    final weekNum = DateTime.now().weekOfYear;
+    final now = DateTime.now();
+    final weekNum = ((now.difference(DateTime(now.year, 1, 1)).inDays) / 7).floor();
     final promptIndex = weekNum % _weeklyPrompts.length;
     return _weeklyPrompts[promptIndex];
   }
@@ -3127,31 +3130,6 @@ class SentimentTrend {
   final double score;
 
   SentimentTrend({required this.date, required this.score});
-}
-
-  Stream<List<JournalEntry>> watchEntriesForUser(String userId) =>
-      (select(journalEntries)
-            ..where((t) => t.userId.equals(userId))
-            ..orderBy([(t) => OrderingTerm.desc(t.createdAt)]))
-        .watch();
-
-  Future<int> insertEntry(JournalEntriesCompanion entry) =>
-      into(journalEntries).insert(entry);
-
-  Future<bool> updateEntry(JournalEntriesCompanion entry) =>
-      update(journalEntries).replace(entry);
-
-  Future<int> deleteEntry(int id) =>
-      (delete(journalEntries)..where((t) => t.id.equals(id))).go();
-
-  Future<int> insertEntryEncrypted(JournalEntriesCompanion entry) {
-    return into(journalEntries).insert(entry);
-  }
-
-  Future<List<JournalEntry>> getEntriesForUserDecrypted(String userId,
-      {DateTime? from, DateTime? to}) async {
-    return getEntriesForUser(userId, from: from, to: to);
-  }
 }
 
 @DriftAccessor(tables: [DoctorAppointments])
@@ -3640,8 +3618,25 @@ class PrescriptionRecord {
   });
 }
 
-// UserProfiles table is defined above (line ~262)
-// TODO: Add DAO when Drift generates the mixin properly
+@DriftAccessor(tables: [UserProfiles])
+class UserProfilesDao extends DatabaseAccessor<AppDatabase>
+    with _$UserProfilesDaoMixin {
+  UserProfilesDao(super.db);
+
+  Future<UserProfile?> getProfile(String userId) async {
+    final results = await (select(userProfiles)
+          ..where((t) => t.odUserId.equals(userId))
+          ..limit(1))
+        .get();
+    return results.isEmpty ? null : results.first;
+  }
+
+  Future<int> insertProfile(UserProfilesCompanion entry) =>
+      into(userProfiles).insertOnConflictUpdate(entry);
+
+  Future<bool> updateProfile(UserProfilesCompanion entry) =>
+      update(userProfiles).replace(entry);
+}
 
 // --- Platform DAOs ---
 
@@ -3907,6 +3902,7 @@ class SyncDeadLetterDao extends DatabaseAccessor<AppDatabase>
     SyncDeadLetter,
     FoodItemsFts,
     InsightFeedback,
+    HerbalRemedies,
   ],
   daos: [
     FoodLogsDao,
@@ -3938,6 +3934,8 @@ class SyncDeadLetterDao extends DatabaseAccessor<AppDatabase>
     PersonalRecordsDao,
     SyncQueueDao,
     SyncDeadLetterDao,
+    HerbalRemediesDao,
+    UserProfilesDao,
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -4024,10 +4022,15 @@ class AppDatabase extends _$AppDatabase {
               proteinPer100g: row.read<double>('proteinPer100g'),
               carbsPer100g: row.read<double>('carbsPer100g'),
               fatPer100g: row.read<double>('fatPer100g'),
+              fiberPer100g: row.read<double?>('fiberPer100g') ?? 0,
+              vitaminAMcg: row.read<double?>('vitaminAMcg') ?? 0,
+              vitaminCMg: row.read<double?>('vitaminCMg') ?? 0,
               vitaminDMcg: row.read<double?>('vitaminDMcg') ?? 0,
               vitaminB12Mcg: row.read<double?>('vitaminB12Mcg') ?? 0,
               ironMg: row.read<double?>('ironMg') ?? 0,
               calciumMg: row.read<double?>('calciumMg') ?? 0,
+              potassiumMg: row.read<double?>('potassiumMg') ?? 0,
+              sodiumMg: row.read<double?>('sodiumMg') ?? 0,
             ))
         .toList();
   }

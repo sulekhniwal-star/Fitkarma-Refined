@@ -326,7 +326,7 @@ class _MeditationScreenState extends ConsumerState<MeditationScreen> {
             ),
             child: Center(
               child: Text(
-                '${_currentCycle}',
+                '$_currentCycle',
                 style: TextStyle(fontSize: 48, fontWeight: FontWeight.bold, color: _getPhaseColor(_phase)),
               ),
             ),
