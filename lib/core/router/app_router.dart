@@ -41,6 +41,7 @@ import 'package:fitkarma/features/onboarding/presentation/onboarding_screen3.dar
 import 'package:fitkarma/features/onboarding/presentation/onboarding_screen4.dart';
 import 'package:fitkarma/features/onboarding/presentation/onboarding_screen5.dart';
 import 'package:fitkarma/features/onboarding/presentation/onboarding_screen6.dart';
+import 'package:fitkarma/features/family/presentation/family_screen.dart';
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // DEFERRED LOADING HELPER
@@ -459,6 +460,13 @@ final GoRouter appRouter = GoRouter(
         final userId = state.extra as String? ?? '';
         return SleepHistoryScreen(userId: userId);
       },
+    ),
+
+    // Family
+    GoRoute(
+      parentNavigatorKey: _rootNavigatorKey,
+      path: '/family',
+      builder: (context, state) => const FamilyScreen(),
     ),
   ],
 );

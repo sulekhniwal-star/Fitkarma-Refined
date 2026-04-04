@@ -431,6 +431,7 @@ class SyncDeadLetterDaoManager {
 
 mixin _$SocialPostsDaoMixin on DatabaseAccessor<AppDatabase> {
   $SocialPostsTable get socialPosts => attachedDatabase.socialPosts;
+  $UserFollowsTable get userFollows => attachedDatabase.userFollows;
   SocialPostsDaoManager get managers => SocialPostsDaoManager(this);
 }
 
@@ -439,6 +440,8 @@ class SocialPostsDaoManager {
   SocialPostsDaoManager(this._db);
   $$SocialPostsTableTableManager get socialPosts =>
       $$SocialPostsTableTableManager(_db.attachedDatabase, _db.socialPosts);
+  $$UserFollowsTableTableManager get userFollows =>
+      $$UserFollowsTableTableManager(_db.attachedDatabase, _db.userFollows);
 }
 
 mixin _$SocialLikesDaoMixin on DatabaseAccessor<AppDatabase> {
@@ -606,6 +609,8 @@ class ChallengeParticipantsDaoManager {
 
 mixin _$DirectMessagesDaoMixin on DatabaseAccessor<AppDatabase> {
   $DirectMessagesTable get directMessages => attachedDatabase.directMessages;
+  $MessageConversationsTable get messageConversations =>
+      attachedDatabase.messageConversations;
   DirectMessagesDaoManager get managers => DirectMessagesDaoManager(this);
 }
 
@@ -616,6 +621,11 @@ class DirectMessagesDaoManager {
       $$DirectMessagesTableTableManager(
         _db.attachedDatabase,
         _db.directMessages,
+      );
+  $$MessageConversationsTableTableManager get messageConversations =>
+      $$MessageConversationsTableTableManager(
+        _db.attachedDatabase,
+        _db.messageConversations,
       );
 }
 

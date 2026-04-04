@@ -4027,7 +4027,7 @@ class SyncDeadLetterDao extends DatabaseAccessor<AppDatabase>
       (delete(syncDeadLetter)..where((t) => t.id.equals(id))).go();
 }
 
-@DriftAccessor(tables: [SocialPosts])
+@DriftAccessor(tables: [SocialPosts, UserFollows])
 class SocialPostsDao extends DatabaseAccessor<AppDatabase>
     with _$SocialPostsDaoMixin {
   SocialPostsDao(super.db);
@@ -4039,19 +4039,18 @@ class SocialPostsDao extends DatabaseAccessor<AppDatabase>
           .get();
 
   Future<List<SocialPost>> getFeedForFollowing(String odUserId,
-      {int limit = 50, int offset = 0}) {
-    final followingQuery = select(userFollows)
-      ..where((t) => t.followerId.equals(odUserId))
-      ..limit(1000);
-    return followingQuery.then((following) async {
-      final followingIds = following.map((f) => f.followingId).toList();
-      if (followingIds.isEmpty) return [];
-      return (select(socialPosts)
-            ..where((t) => t.odUserId.isIn(followingIds))
-            ..orderBy([(t) => OrderingTerm.desc(t.createdAt)])
-            ..limit(limit, offset: offset))
-          .get();
-    });
+      {int limit = 50, int offset = 0}) async {
+    final following = await (select(userFollows)
+          ..where((t) => t.followerId.equals(odUserId))
+          ..limit(1000))
+        .get();
+    final List<String> followingIds = following.map((f) => f.followingId).toList();
+    if (followingIds.isEmpty) return [];
+    return (select(socialPosts)
+          ..where((t) => t.odUserId.isIn(followingIds))
+          ..orderBy([(t) => OrderingTerm.desc(t.createdAt)])
+          ..limit(limit, offset: offset))
+        .get();
   }
 
   Future<int> createPost(SocialPostsCompanion entry) =>
@@ -4355,7 +4354,7 @@ class ChallengeParticipantsDao extends DatabaseAccessor<AppDatabase>
   }
 }
 
-@DriftAccessor(tables: [DirectMessages])
+@DriftAccessor(tables: [DirectMessages, MessageConversations])
 class DirectMessagesDao extends DatabaseAccessor<AppDatabase>
     with _$DirectMessagesDaoMixin {
   DirectMessagesDao(super.db);
