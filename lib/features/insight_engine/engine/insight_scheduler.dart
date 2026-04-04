@@ -10,8 +10,6 @@ class InsightScheduler {
   final Set<String> _suppressedRules = {};
 
   Future<bool> canShowInsightsToday(String odUserId) async {
-    final today = DateTime.now();
-    final dayKey = '${today.year}-${today.month}-${today.day}';
     final shown = _shownInsights[odUserId] ?? [];
     return shown.length < maxInsightsPerDay;
   }
@@ -28,8 +26,6 @@ class InsightScheduler {
   }
 
   Future<void> recordInsightShown(String odUserId, String ruleId) async {
-    final today = DateTime.now();
-    final dayKey = '${today.year}-${today.month}-${today.day}';
     _shownInsights.putIfAbsent(odUserId, () => []);
     _shownInsights[odUserId]!.add(ruleId);
     _lastEvaluation[odUserId] = DateTime.now();

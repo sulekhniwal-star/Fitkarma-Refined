@@ -8,8 +8,14 @@ import 'package:fitkarma/features/insight_engine/rules/bp_rules.dart';
 import 'package:fitkarma/features/insight_engine/rules/glucose_rules.dart';
 import 'package:fitkarma/features/insight_engine/rules/mood_rules.dart';
 import 'package:fitkarma/features/insight_engine/rules/cross_module_rules.dart';
+import 'package:fitkarma/features/insight_engine/engine/server_rules_service.dart';
 
 class RuleEvaluator {
+  final ServerRulesService? _serverRulesService;
+
+  RuleEvaluator({ServerRulesService? serverRulesService})
+      : _serverRulesService = serverRulesService;
+
   List<InsightRule> get allRules => [
     ...nutritionRules,
     ...sleepRules,
@@ -21,6 +27,29 @@ class RuleEvaluator {
     ...moodRules,
     ...crossModuleRules,
   ];
+
+  Future<List<InsightRule>> getMergedRules() async {
+    final local = allRules;
+
+    List<InsightRule> serverRules = [];
+    if (_serverRulesService != null) {
+      try {
+        final serverInsightRules = await _serverRulesService.fetchServerRules();
+        serverRules = serverInsightRules
+            .where((r) => r.isValid)
+            .map((r) => r.toInsightRule())
+            .toList();
+      } catch (_) {
+        // Server rules unavailable, use local only
+      }
+    }
+
+    return [...local, ...serverRules];
+  }
+
+  List<InsightRule> getAllRulesWithServer(List<InsightRule> serverRules) {
+    return [...allRules, ...serverRules];
+  }
 
   InsightResult evaluate(InsightInput input, {int maxInsights = 2}) {
     final now = DateTime.now();

@@ -180,4 +180,36 @@ class ServerInsightRule {
       generatedAt: DateTime.now(),
     );
   }
+
+  InsightRule toInsightRule() => _ServerInsightAdapter(this);
+}
+
+class _ServerInsightAdapter extends InsightRule {
+  final ServerInsightRule _rule;
+
+  _ServerInsightAdapter(this._rule);
+
+  @override
+  String get id => _rule.id;
+
+  @override
+  String get category => _rule.category;
+
+  @override
+  int get priority => _rule.priority;
+
+  @override
+  String get title => _rule.title;
+
+  @override
+  bool get isCrossModule => _rule.category == 'cross_module';
+
+  @override
+  bool condition(InsightInput input) => _rule.evaluate(input);
+
+  @override
+  String message(InsightInput input) => _rule.message;
+
+  @override
+  String? get icon => _rule.icon;
 }
