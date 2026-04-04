@@ -1410,6 +1410,42 @@ class $FoodItemsTable extends FoodItems
     type: DriftSqlType.double,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _fiberPer100gMeta = const VerificationMeta(
+    'fiberPer100g',
+  );
+  @override
+  late final GeneratedColumn<double> fiberPer100g = GeneratedColumn<double>(
+    'fiber_per100g',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _vitaminAMcgMeta = const VerificationMeta(
+    'vitaminAMcg',
+  );
+  @override
+  late final GeneratedColumn<double> vitaminAMcg = GeneratedColumn<double>(
+    'vitamin_a_mcg',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _vitaminCMgMeta = const VerificationMeta(
+    'vitaminCMg',
+  );
+  @override
+  late final GeneratedColumn<double> vitaminCMg = GeneratedColumn<double>(
+    'vitamin_c_mg',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
   static const VerificationMeta _vitaminDMcgMeta = const VerificationMeta(
     'vitaminDMcg',
   );
@@ -1456,6 +1492,30 @@ class $FoodItemsTable extends FoodItems
     requiredDuringInsert: false,
     defaultValue: const Constant(0),
   );
+  static const VerificationMeta _potassiumMgMeta = const VerificationMeta(
+    'potassiumMg',
+  );
+  @override
+  late final GeneratedColumn<double> potassiumMg = GeneratedColumn<double>(
+    'potassium_mg',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _sodiumMgMeta = const VerificationMeta(
+    'sodiumMg',
+  );
+  @override
+  late final GeneratedColumn<double> sodiumMg = GeneratedColumn<double>(
+    'sodium_mg',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
   static const VerificationMeta _servingSizesJsonMeta = const VerificationMeta(
     'servingSizesJson',
   );
@@ -1478,10 +1538,15 @@ class $FoodItemsTable extends FoodItems
     proteinPer100g,
     carbsPer100g,
     fatPer100g,
+    fiberPer100g,
+    vitaminAMcg,
+    vitaminCMg,
     vitaminDMcg,
     vitaminB12Mcg,
     ironMg,
     calciumMg,
+    potassiumMg,
+    sodiumMg,
     servingSizesJson,
   ];
   @override
@@ -1560,6 +1625,33 @@ class $FoodItemsTable extends FoodItems
     } else if (isInserting) {
       context.missing(_fatPer100gMeta);
     }
+    if (data.containsKey('fiber_per100g')) {
+      context.handle(
+        _fiberPer100gMeta,
+        fiberPer100g.isAcceptableOrUnknown(
+          data['fiber_per100g']!,
+          _fiberPer100gMeta,
+        ),
+      );
+    }
+    if (data.containsKey('vitamin_a_mcg')) {
+      context.handle(
+        _vitaminAMcgMeta,
+        vitaminAMcg.isAcceptableOrUnknown(
+          data['vitamin_a_mcg']!,
+          _vitaminAMcgMeta,
+        ),
+      );
+    }
+    if (data.containsKey('vitamin_c_mg')) {
+      context.handle(
+        _vitaminCMgMeta,
+        vitaminCMg.isAcceptableOrUnknown(
+          data['vitamin_c_mg']!,
+          _vitaminCMgMeta,
+        ),
+      );
+    }
     if (data.containsKey('vitamin_d_mcg')) {
       context.handle(
         _vitaminDMcgMeta,
@@ -1588,6 +1680,21 @@ class $FoodItemsTable extends FoodItems
       context.handle(
         _calciumMgMeta,
         calciumMg.isAcceptableOrUnknown(data['calcium_mg']!, _calciumMgMeta),
+      );
+    }
+    if (data.containsKey('potassium_mg')) {
+      context.handle(
+        _potassiumMgMeta,
+        potassiumMg.isAcceptableOrUnknown(
+          data['potassium_mg']!,
+          _potassiumMgMeta,
+        ),
+      );
+    }
+    if (data.containsKey('sodium_mg')) {
+      context.handle(
+        _sodiumMgMeta,
+        sodiumMg.isAcceptableOrUnknown(data['sodium_mg']!, _sodiumMgMeta),
       );
     }
     if (data.containsKey('serving_sizes_json')) {
@@ -1640,6 +1747,18 @@ class $FoodItemsTable extends FoodItems
         DriftSqlType.double,
         data['${effectivePrefix}fat_per100g'],
       )!,
+      fiberPer100g: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}fiber_per100g'],
+      )!,
+      vitaminAMcg: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}vitamin_a_mcg'],
+      )!,
+      vitaminCMg: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}vitamin_c_mg'],
+      )!,
       vitaminDMcg: attachedDatabase.typeMapping.read(
         DriftSqlType.double,
         data['${effectivePrefix}vitamin_d_mcg'],
@@ -1655,6 +1774,14 @@ class $FoodItemsTable extends FoodItems
       calciumMg: attachedDatabase.typeMapping.read(
         DriftSqlType.double,
         data['${effectivePrefix}calcium_mg'],
+      )!,
+      potassiumMg: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}potassium_mg'],
+      )!,
+      sodiumMg: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}sodium_mg'],
       )!,
       servingSizesJson: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
@@ -1678,10 +1805,15 @@ class FoodItem extends DataClass implements Insertable<FoodItem> {
   final double proteinPer100g;
   final double carbsPer100g;
   final double fatPer100g;
+  final double fiberPer100g;
+  final double vitaminAMcg;
+  final double vitaminCMg;
   final double vitaminDMcg;
   final double vitaminB12Mcg;
   final double ironMg;
   final double calciumMg;
+  final double potassiumMg;
+  final double sodiumMg;
   final String? servingSizesJson;
   const FoodItem({
     required this.id,
@@ -1692,10 +1824,15 @@ class FoodItem extends DataClass implements Insertable<FoodItem> {
     required this.proteinPer100g,
     required this.carbsPer100g,
     required this.fatPer100g,
+    required this.fiberPer100g,
+    required this.vitaminAMcg,
+    required this.vitaminCMg,
     required this.vitaminDMcg,
     required this.vitaminB12Mcg,
     required this.ironMg,
     required this.calciumMg,
+    required this.potassiumMg,
+    required this.sodiumMg,
     this.servingSizesJson,
   });
   @override
@@ -1713,10 +1850,15 @@ class FoodItem extends DataClass implements Insertable<FoodItem> {
     map['protein_per100g'] = Variable<double>(proteinPer100g);
     map['carbs_per100g'] = Variable<double>(carbsPer100g);
     map['fat_per100g'] = Variable<double>(fatPer100g);
+    map['fiber_per100g'] = Variable<double>(fiberPer100g);
+    map['vitamin_a_mcg'] = Variable<double>(vitaminAMcg);
+    map['vitamin_c_mg'] = Variable<double>(vitaminCMg);
     map['vitamin_d_mcg'] = Variable<double>(vitaminDMcg);
     map['vitamin_b12_mcg'] = Variable<double>(vitaminB12Mcg);
     map['iron_mg'] = Variable<double>(ironMg);
     map['calcium_mg'] = Variable<double>(calciumMg);
+    map['potassium_mg'] = Variable<double>(potassiumMg);
+    map['sodium_mg'] = Variable<double>(sodiumMg);
     if (!nullToAbsent || servingSizesJson != null) {
       map['serving_sizes_json'] = Variable<String>(servingSizesJson);
     }
@@ -1737,10 +1879,15 @@ class FoodItem extends DataClass implements Insertable<FoodItem> {
       proteinPer100g: Value(proteinPer100g),
       carbsPer100g: Value(carbsPer100g),
       fatPer100g: Value(fatPer100g),
+      fiberPer100g: Value(fiberPer100g),
+      vitaminAMcg: Value(vitaminAMcg),
+      vitaminCMg: Value(vitaminCMg),
       vitaminDMcg: Value(vitaminDMcg),
       vitaminB12Mcg: Value(vitaminB12Mcg),
       ironMg: Value(ironMg),
       calciumMg: Value(calciumMg),
+      potassiumMg: Value(potassiumMg),
+      sodiumMg: Value(sodiumMg),
       servingSizesJson: servingSizesJson == null && nullToAbsent
           ? const Value.absent()
           : Value(servingSizesJson),
@@ -1761,10 +1908,15 @@ class FoodItem extends DataClass implements Insertable<FoodItem> {
       proteinPer100g: serializer.fromJson<double>(json['proteinPer100g']),
       carbsPer100g: serializer.fromJson<double>(json['carbsPer100g']),
       fatPer100g: serializer.fromJson<double>(json['fatPer100g']),
+      fiberPer100g: serializer.fromJson<double>(json['fiberPer100g']),
+      vitaminAMcg: serializer.fromJson<double>(json['vitaminAMcg']),
+      vitaminCMg: serializer.fromJson<double>(json['vitaminCMg']),
       vitaminDMcg: serializer.fromJson<double>(json['vitaminDMcg']),
       vitaminB12Mcg: serializer.fromJson<double>(json['vitaminB12Mcg']),
       ironMg: serializer.fromJson<double>(json['ironMg']),
       calciumMg: serializer.fromJson<double>(json['calciumMg']),
+      potassiumMg: serializer.fromJson<double>(json['potassiumMg']),
+      sodiumMg: serializer.fromJson<double>(json['sodiumMg']),
       servingSizesJson: serializer.fromJson<String?>(json['servingSizesJson']),
     );
   }
@@ -1780,10 +1932,15 @@ class FoodItem extends DataClass implements Insertable<FoodItem> {
       'proteinPer100g': serializer.toJson<double>(proteinPer100g),
       'carbsPer100g': serializer.toJson<double>(carbsPer100g),
       'fatPer100g': serializer.toJson<double>(fatPer100g),
+      'fiberPer100g': serializer.toJson<double>(fiberPer100g),
+      'vitaminAMcg': serializer.toJson<double>(vitaminAMcg),
+      'vitaminCMg': serializer.toJson<double>(vitaminCMg),
       'vitaminDMcg': serializer.toJson<double>(vitaminDMcg),
       'vitaminB12Mcg': serializer.toJson<double>(vitaminB12Mcg),
       'ironMg': serializer.toJson<double>(ironMg),
       'calciumMg': serializer.toJson<double>(calciumMg),
+      'potassiumMg': serializer.toJson<double>(potassiumMg),
+      'sodiumMg': serializer.toJson<double>(sodiumMg),
       'servingSizesJson': serializer.toJson<String?>(servingSizesJson),
     };
   }
@@ -1797,10 +1954,15 @@ class FoodItem extends DataClass implements Insertable<FoodItem> {
     double? proteinPer100g,
     double? carbsPer100g,
     double? fatPer100g,
+    double? fiberPer100g,
+    double? vitaminAMcg,
+    double? vitaminCMg,
     double? vitaminDMcg,
     double? vitaminB12Mcg,
     double? ironMg,
     double? calciumMg,
+    double? potassiumMg,
+    double? sodiumMg,
     Value<String?> servingSizesJson = const Value.absent(),
   }) => FoodItem(
     id: id ?? this.id,
@@ -1811,10 +1973,15 @@ class FoodItem extends DataClass implements Insertable<FoodItem> {
     proteinPer100g: proteinPer100g ?? this.proteinPer100g,
     carbsPer100g: carbsPer100g ?? this.carbsPer100g,
     fatPer100g: fatPer100g ?? this.fatPer100g,
+    fiberPer100g: fiberPer100g ?? this.fiberPer100g,
+    vitaminAMcg: vitaminAMcg ?? this.vitaminAMcg,
+    vitaminCMg: vitaminCMg ?? this.vitaminCMg,
     vitaminDMcg: vitaminDMcg ?? this.vitaminDMcg,
     vitaminB12Mcg: vitaminB12Mcg ?? this.vitaminB12Mcg,
     ironMg: ironMg ?? this.ironMg,
     calciumMg: calciumMg ?? this.calciumMg,
+    potassiumMg: potassiumMg ?? this.potassiumMg,
+    sodiumMg: sodiumMg ?? this.sodiumMg,
     servingSizesJson: servingSizesJson.present
         ? servingSizesJson.value
         : this.servingSizesJson,
@@ -1837,6 +2004,15 @@ class FoodItem extends DataClass implements Insertable<FoodItem> {
       fatPer100g: data.fatPer100g.present
           ? data.fatPer100g.value
           : this.fatPer100g,
+      fiberPer100g: data.fiberPer100g.present
+          ? data.fiberPer100g.value
+          : this.fiberPer100g,
+      vitaminAMcg: data.vitaminAMcg.present
+          ? data.vitaminAMcg.value
+          : this.vitaminAMcg,
+      vitaminCMg: data.vitaminCMg.present
+          ? data.vitaminCMg.value
+          : this.vitaminCMg,
       vitaminDMcg: data.vitaminDMcg.present
           ? data.vitaminDMcg.value
           : this.vitaminDMcg,
@@ -1845,6 +2021,10 @@ class FoodItem extends DataClass implements Insertable<FoodItem> {
           : this.vitaminB12Mcg,
       ironMg: data.ironMg.present ? data.ironMg.value : this.ironMg,
       calciumMg: data.calciumMg.present ? data.calciumMg.value : this.calciumMg,
+      potassiumMg: data.potassiumMg.present
+          ? data.potassiumMg.value
+          : this.potassiumMg,
+      sodiumMg: data.sodiumMg.present ? data.sodiumMg.value : this.sodiumMg,
       servingSizesJson: data.servingSizesJson.present
           ? data.servingSizesJson.value
           : this.servingSizesJson,
@@ -1862,10 +2042,15 @@ class FoodItem extends DataClass implements Insertable<FoodItem> {
           ..write('proteinPer100g: $proteinPer100g, ')
           ..write('carbsPer100g: $carbsPer100g, ')
           ..write('fatPer100g: $fatPer100g, ')
+          ..write('fiberPer100g: $fiberPer100g, ')
+          ..write('vitaminAMcg: $vitaminAMcg, ')
+          ..write('vitaminCMg: $vitaminCMg, ')
           ..write('vitaminDMcg: $vitaminDMcg, ')
           ..write('vitaminB12Mcg: $vitaminB12Mcg, ')
           ..write('ironMg: $ironMg, ')
           ..write('calciumMg: $calciumMg, ')
+          ..write('potassiumMg: $potassiumMg, ')
+          ..write('sodiumMg: $sodiumMg, ')
           ..write('servingSizesJson: $servingSizesJson')
           ..write(')'))
         .toString();
@@ -1881,10 +2066,15 @@ class FoodItem extends DataClass implements Insertable<FoodItem> {
     proteinPer100g,
     carbsPer100g,
     fatPer100g,
+    fiberPer100g,
+    vitaminAMcg,
+    vitaminCMg,
     vitaminDMcg,
     vitaminB12Mcg,
     ironMg,
     calciumMg,
+    potassiumMg,
+    sodiumMg,
     servingSizesJson,
   );
   @override
@@ -1899,10 +2089,15 @@ class FoodItem extends DataClass implements Insertable<FoodItem> {
           other.proteinPer100g == this.proteinPer100g &&
           other.carbsPer100g == this.carbsPer100g &&
           other.fatPer100g == this.fatPer100g &&
+          other.fiberPer100g == this.fiberPer100g &&
+          other.vitaminAMcg == this.vitaminAMcg &&
+          other.vitaminCMg == this.vitaminCMg &&
           other.vitaminDMcg == this.vitaminDMcg &&
           other.vitaminB12Mcg == this.vitaminB12Mcg &&
           other.ironMg == this.ironMg &&
           other.calciumMg == this.calciumMg &&
+          other.potassiumMg == this.potassiumMg &&
+          other.sodiumMg == this.sodiumMg &&
           other.servingSizesJson == this.servingSizesJson);
 }
 
@@ -1915,10 +2110,15 @@ class FoodItemsCompanion extends UpdateCompanion<FoodItem> {
   final Value<double> proteinPer100g;
   final Value<double> carbsPer100g;
   final Value<double> fatPer100g;
+  final Value<double> fiberPer100g;
+  final Value<double> vitaminAMcg;
+  final Value<double> vitaminCMg;
   final Value<double> vitaminDMcg;
   final Value<double> vitaminB12Mcg;
   final Value<double> ironMg;
   final Value<double> calciumMg;
+  final Value<double> potassiumMg;
+  final Value<double> sodiumMg;
   final Value<String?> servingSizesJson;
   const FoodItemsCompanion({
     this.id = const Value.absent(),
@@ -1929,10 +2129,15 @@ class FoodItemsCompanion extends UpdateCompanion<FoodItem> {
     this.proteinPer100g = const Value.absent(),
     this.carbsPer100g = const Value.absent(),
     this.fatPer100g = const Value.absent(),
+    this.fiberPer100g = const Value.absent(),
+    this.vitaminAMcg = const Value.absent(),
+    this.vitaminCMg = const Value.absent(),
     this.vitaminDMcg = const Value.absent(),
     this.vitaminB12Mcg = const Value.absent(),
     this.ironMg = const Value.absent(),
     this.calciumMg = const Value.absent(),
+    this.potassiumMg = const Value.absent(),
+    this.sodiumMg = const Value.absent(),
     this.servingSizesJson = const Value.absent(),
   });
   FoodItemsCompanion.insert({
@@ -1944,10 +2149,15 @@ class FoodItemsCompanion extends UpdateCompanion<FoodItem> {
     required double proteinPer100g,
     required double carbsPer100g,
     required double fatPer100g,
+    this.fiberPer100g = const Value.absent(),
+    this.vitaminAMcg = const Value.absent(),
+    this.vitaminCMg = const Value.absent(),
     this.vitaminDMcg = const Value.absent(),
     this.vitaminB12Mcg = const Value.absent(),
     this.ironMg = const Value.absent(),
     this.calciumMg = const Value.absent(),
+    this.potassiumMg = const Value.absent(),
+    this.sodiumMg = const Value.absent(),
     this.servingSizesJson = const Value.absent(),
   }) : name = Value(name),
        caloriesPer100g = Value(caloriesPer100g),
@@ -1963,10 +2173,15 @@ class FoodItemsCompanion extends UpdateCompanion<FoodItem> {
     Expression<double>? proteinPer100g,
     Expression<double>? carbsPer100g,
     Expression<double>? fatPer100g,
+    Expression<double>? fiberPer100g,
+    Expression<double>? vitaminAMcg,
+    Expression<double>? vitaminCMg,
     Expression<double>? vitaminDMcg,
     Expression<double>? vitaminB12Mcg,
     Expression<double>? ironMg,
     Expression<double>? calciumMg,
+    Expression<double>? potassiumMg,
+    Expression<double>? sodiumMg,
     Expression<String>? servingSizesJson,
   }) {
     return RawValuesInsertable({
@@ -1978,10 +2193,15 @@ class FoodItemsCompanion extends UpdateCompanion<FoodItem> {
       if (proteinPer100g != null) 'protein_per100g': proteinPer100g,
       if (carbsPer100g != null) 'carbs_per100g': carbsPer100g,
       if (fatPer100g != null) 'fat_per100g': fatPer100g,
+      if (fiberPer100g != null) 'fiber_per100g': fiberPer100g,
+      if (vitaminAMcg != null) 'vitamin_a_mcg': vitaminAMcg,
+      if (vitaminCMg != null) 'vitamin_c_mg': vitaminCMg,
       if (vitaminDMcg != null) 'vitamin_d_mcg': vitaminDMcg,
       if (vitaminB12Mcg != null) 'vitamin_b12_mcg': vitaminB12Mcg,
       if (ironMg != null) 'iron_mg': ironMg,
       if (calciumMg != null) 'calcium_mg': calciumMg,
+      if (potassiumMg != null) 'potassium_mg': potassiumMg,
+      if (sodiumMg != null) 'sodium_mg': sodiumMg,
       if (servingSizesJson != null) 'serving_sizes_json': servingSizesJson,
     });
   }
@@ -1995,10 +2215,15 @@ class FoodItemsCompanion extends UpdateCompanion<FoodItem> {
     Value<double>? proteinPer100g,
     Value<double>? carbsPer100g,
     Value<double>? fatPer100g,
+    Value<double>? fiberPer100g,
+    Value<double>? vitaminAMcg,
+    Value<double>? vitaminCMg,
     Value<double>? vitaminDMcg,
     Value<double>? vitaminB12Mcg,
     Value<double>? ironMg,
     Value<double>? calciumMg,
+    Value<double>? potassiumMg,
+    Value<double>? sodiumMg,
     Value<String?>? servingSizesJson,
   }) {
     return FoodItemsCompanion(
@@ -2010,10 +2235,15 @@ class FoodItemsCompanion extends UpdateCompanion<FoodItem> {
       proteinPer100g: proteinPer100g ?? this.proteinPer100g,
       carbsPer100g: carbsPer100g ?? this.carbsPer100g,
       fatPer100g: fatPer100g ?? this.fatPer100g,
+      fiberPer100g: fiberPer100g ?? this.fiberPer100g,
+      vitaminAMcg: vitaminAMcg ?? this.vitaminAMcg,
+      vitaminCMg: vitaminCMg ?? this.vitaminCMg,
       vitaminDMcg: vitaminDMcg ?? this.vitaminDMcg,
       vitaminB12Mcg: vitaminB12Mcg ?? this.vitaminB12Mcg,
       ironMg: ironMg ?? this.ironMg,
       calciumMg: calciumMg ?? this.calciumMg,
+      potassiumMg: potassiumMg ?? this.potassiumMg,
+      sodiumMg: sodiumMg ?? this.sodiumMg,
       servingSizesJson: servingSizesJson ?? this.servingSizesJson,
     );
   }
@@ -2045,6 +2275,15 @@ class FoodItemsCompanion extends UpdateCompanion<FoodItem> {
     if (fatPer100g.present) {
       map['fat_per100g'] = Variable<double>(fatPer100g.value);
     }
+    if (fiberPer100g.present) {
+      map['fiber_per100g'] = Variable<double>(fiberPer100g.value);
+    }
+    if (vitaminAMcg.present) {
+      map['vitamin_a_mcg'] = Variable<double>(vitaminAMcg.value);
+    }
+    if (vitaminCMg.present) {
+      map['vitamin_c_mg'] = Variable<double>(vitaminCMg.value);
+    }
     if (vitaminDMcg.present) {
       map['vitamin_d_mcg'] = Variable<double>(vitaminDMcg.value);
     }
@@ -2056,6 +2295,12 @@ class FoodItemsCompanion extends UpdateCompanion<FoodItem> {
     }
     if (calciumMg.present) {
       map['calcium_mg'] = Variable<double>(calciumMg.value);
+    }
+    if (potassiumMg.present) {
+      map['potassium_mg'] = Variable<double>(potassiumMg.value);
+    }
+    if (sodiumMg.present) {
+      map['sodium_mg'] = Variable<double>(sodiumMg.value);
     }
     if (servingSizesJson.present) {
       map['serving_sizes_json'] = Variable<String>(servingSizesJson.value);
@@ -2074,10 +2319,15 @@ class FoodItemsCompanion extends UpdateCompanion<FoodItem> {
           ..write('proteinPer100g: $proteinPer100g, ')
           ..write('carbsPer100g: $carbsPer100g, ')
           ..write('fatPer100g: $fatPer100g, ')
+          ..write('fiberPer100g: $fiberPer100g, ')
+          ..write('vitaminAMcg: $vitaminAMcg, ')
+          ..write('vitaminCMg: $vitaminCMg, ')
           ..write('vitaminDMcg: $vitaminDMcg, ')
           ..write('vitaminB12Mcg: $vitaminB12Mcg, ')
           ..write('ironMg: $ironMg, ')
           ..write('calciumMg: $calciumMg, ')
+          ..write('potassiumMg: $potassiumMg, ')
+          ..write('sodiumMg: $sodiumMg, ')
           ..write('servingSizesJson: $servingSizesJson')
           ..write(')'))
         .toString();
@@ -10448,8 +10698,235 @@ class $RecipesTable extends Recipes with TableInfo<$RecipesTable, Recipe> {
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _ingredientsJsonMeta = const VerificationMeta(
+    'ingredientsJson',
+  );
   @override
-  List<GeneratedColumn> get $columns => [id, userId, title];
+  late final GeneratedColumn<String> ingredientsJson = GeneratedColumn<String>(
+    'ingredients_json',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _servingsMeta = const VerificationMeta(
+    'servings',
+  );
+  @override
+  late final GeneratedColumn<int> servings = GeneratedColumn<int>(
+    'servings',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(1),
+  );
+  static const VerificationMeta _caloriesMeta = const VerificationMeta(
+    'calories',
+  );
+  @override
+  late final GeneratedColumn<double> calories = GeneratedColumn<double>(
+    'calories',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _proteinMeta = const VerificationMeta(
+    'protein',
+  );
+  @override
+  late final GeneratedColumn<double> protein = GeneratedColumn<double>(
+    'protein',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _carbsMeta = const VerificationMeta('carbs');
+  @override
+  late final GeneratedColumn<double> carbs = GeneratedColumn<double>(
+    'carbs',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _fatMeta = const VerificationMeta('fat');
+  @override
+  late final GeneratedColumn<double> fat = GeneratedColumn<double>(
+    'fat',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _fiberMeta = const VerificationMeta('fiber');
+  @override
+  late final GeneratedColumn<double> fiber = GeneratedColumn<double>(
+    'fiber',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _vitaminAMeta = const VerificationMeta(
+    'vitaminA',
+  );
+  @override
+  late final GeneratedColumn<double> vitaminA = GeneratedColumn<double>(
+    'vitamin_a',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _vitaminCMeta = const VerificationMeta(
+    'vitaminC',
+  );
+  @override
+  late final GeneratedColumn<double> vitaminC = GeneratedColumn<double>(
+    'vitamin_c',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _ironMeta = const VerificationMeta('iron');
+  @override
+  late final GeneratedColumn<double> iron = GeneratedColumn<double>(
+    'iron',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _calciumMeta = const VerificationMeta(
+    'calcium',
+  );
+  @override
+  late final GeneratedColumn<double> calcium = GeneratedColumn<double>(
+    'calcium',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _potassiumMeta = const VerificationMeta(
+    'potassium',
+  );
+  @override
+  late final GeneratedColumn<double> potassium = GeneratedColumn<double>(
+    'potassium',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _sodiumMeta = const VerificationMeta('sodium');
+  @override
+  late final GeneratedColumn<double> sodium = GeneratedColumn<double>(
+    'sodium',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _instructionsMeta = const VerificationMeta(
+    'instructions',
+  );
+  @override
+  late final GeneratedColumn<String> instructions = GeneratedColumn<String>(
+    'instructions',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _isPublicMeta = const VerificationMeta(
+    'isPublic',
+  );
+  @override
+  late final GeneratedColumn<bool> isPublic = GeneratedColumn<bool>(
+    'is_public',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_public" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _prepTimeMinMeta = const VerificationMeta(
+    'prepTimeMin',
+  );
+  @override
+  late final GeneratedColumn<int> prepTimeMin = GeneratedColumn<int>(
+    'prep_time_min',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _cookTimeMinMeta = const VerificationMeta(
+    'cookTimeMin',
+  );
+  @override
+  late final GeneratedColumn<int> cookTimeMin = GeneratedColumn<int>(
+    'cook_time_min',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _cuisineTypeMeta = const VerificationMeta(
+    'cuisineType',
+  );
+  @override
+  late final GeneratedColumn<String> cuisineType = GeneratedColumn<String>(
+    'cuisine_type',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    userId,
+    title,
+    ingredientsJson,
+    servings,
+    calories,
+    protein,
+    carbs,
+    fat,
+    fiber,
+    vitaminA,
+    vitaminC,
+    iron,
+    calcium,
+    potassium,
+    sodium,
+    instructions,
+    isPublic,
+    prepTimeMin,
+    cookTimeMin,
+    cuisineType,
+    createdAt,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -10481,6 +10958,137 @@ class $RecipesTable extends Recipes with TableInfo<$RecipesTable, Recipe> {
     } else if (isInserting) {
       context.missing(_titleMeta);
     }
+    if (data.containsKey('ingredients_json')) {
+      context.handle(
+        _ingredientsJsonMeta,
+        ingredientsJson.isAcceptableOrUnknown(
+          data['ingredients_json']!,
+          _ingredientsJsonMeta,
+        ),
+      );
+    }
+    if (data.containsKey('servings')) {
+      context.handle(
+        _servingsMeta,
+        servings.isAcceptableOrUnknown(data['servings']!, _servingsMeta),
+      );
+    }
+    if (data.containsKey('calories')) {
+      context.handle(
+        _caloriesMeta,
+        calories.isAcceptableOrUnknown(data['calories']!, _caloriesMeta),
+      );
+    }
+    if (data.containsKey('protein')) {
+      context.handle(
+        _proteinMeta,
+        protein.isAcceptableOrUnknown(data['protein']!, _proteinMeta),
+      );
+    }
+    if (data.containsKey('carbs')) {
+      context.handle(
+        _carbsMeta,
+        carbs.isAcceptableOrUnknown(data['carbs']!, _carbsMeta),
+      );
+    }
+    if (data.containsKey('fat')) {
+      context.handle(
+        _fatMeta,
+        fat.isAcceptableOrUnknown(data['fat']!, _fatMeta),
+      );
+    }
+    if (data.containsKey('fiber')) {
+      context.handle(
+        _fiberMeta,
+        fiber.isAcceptableOrUnknown(data['fiber']!, _fiberMeta),
+      );
+    }
+    if (data.containsKey('vitamin_a')) {
+      context.handle(
+        _vitaminAMeta,
+        vitaminA.isAcceptableOrUnknown(data['vitamin_a']!, _vitaminAMeta),
+      );
+    }
+    if (data.containsKey('vitamin_c')) {
+      context.handle(
+        _vitaminCMeta,
+        vitaminC.isAcceptableOrUnknown(data['vitamin_c']!, _vitaminCMeta),
+      );
+    }
+    if (data.containsKey('iron')) {
+      context.handle(
+        _ironMeta,
+        iron.isAcceptableOrUnknown(data['iron']!, _ironMeta),
+      );
+    }
+    if (data.containsKey('calcium')) {
+      context.handle(
+        _calciumMeta,
+        calcium.isAcceptableOrUnknown(data['calcium']!, _calciumMeta),
+      );
+    }
+    if (data.containsKey('potassium')) {
+      context.handle(
+        _potassiumMeta,
+        potassium.isAcceptableOrUnknown(data['potassium']!, _potassiumMeta),
+      );
+    }
+    if (data.containsKey('sodium')) {
+      context.handle(
+        _sodiumMeta,
+        sodium.isAcceptableOrUnknown(data['sodium']!, _sodiumMeta),
+      );
+    }
+    if (data.containsKey('instructions')) {
+      context.handle(
+        _instructionsMeta,
+        instructions.isAcceptableOrUnknown(
+          data['instructions']!,
+          _instructionsMeta,
+        ),
+      );
+    }
+    if (data.containsKey('is_public')) {
+      context.handle(
+        _isPublicMeta,
+        isPublic.isAcceptableOrUnknown(data['is_public']!, _isPublicMeta),
+      );
+    }
+    if (data.containsKey('prep_time_min')) {
+      context.handle(
+        _prepTimeMinMeta,
+        prepTimeMin.isAcceptableOrUnknown(
+          data['prep_time_min']!,
+          _prepTimeMinMeta,
+        ),
+      );
+    }
+    if (data.containsKey('cook_time_min')) {
+      context.handle(
+        _cookTimeMinMeta,
+        cookTimeMin.isAcceptableOrUnknown(
+          data['cook_time_min']!,
+          _cookTimeMinMeta,
+        ),
+      );
+    }
+    if (data.containsKey('cuisine_type')) {
+      context.handle(
+        _cuisineTypeMeta,
+        cuisineType.isAcceptableOrUnknown(
+          data['cuisine_type']!,
+          _cuisineTypeMeta,
+        ),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
     return context;
   }
 
@@ -10502,6 +11110,82 @@ class $RecipesTable extends Recipes with TableInfo<$RecipesTable, Recipe> {
         DriftSqlType.string,
         data['${effectivePrefix}title'],
       )!,
+      ingredientsJson: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}ingredients_json'],
+      ),
+      servings: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}servings'],
+      )!,
+      calories: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}calories'],
+      ),
+      protein: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}protein'],
+      ),
+      carbs: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}carbs'],
+      ),
+      fat: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}fat'],
+      ),
+      fiber: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}fiber'],
+      ),
+      vitaminA: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}vitamin_a'],
+      ),
+      vitaminC: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}vitamin_c'],
+      ),
+      iron: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}iron'],
+      ),
+      calcium: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}calcium'],
+      ),
+      potassium: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}potassium'],
+      ),
+      sodium: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}sodium'],
+      ),
+      instructions: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}instructions'],
+      ),
+      isPublic: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_public'],
+      )!,
+      prepTimeMin: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}prep_time_min'],
+      ),
+      cookTimeMin: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}cook_time_min'],
+      ),
+      cuisineType: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}cuisine_type'],
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
     );
   }
 
@@ -10515,13 +11199,106 @@ class Recipe extends DataClass implements Insertable<Recipe> {
   final int id;
   final String userId;
   final String title;
-  const Recipe({required this.id, required this.userId, required this.title});
+  final String? ingredientsJson;
+  final int servings;
+  final double? calories;
+  final double? protein;
+  final double? carbs;
+  final double? fat;
+  final double? fiber;
+  final double? vitaminA;
+  final double? vitaminC;
+  final double? iron;
+  final double? calcium;
+  final double? potassium;
+  final double? sodium;
+  final String? instructions;
+  final bool isPublic;
+  final int? prepTimeMin;
+  final int? cookTimeMin;
+  final String? cuisineType;
+  final DateTime createdAt;
+  const Recipe({
+    required this.id,
+    required this.userId,
+    required this.title,
+    this.ingredientsJson,
+    required this.servings,
+    this.calories,
+    this.protein,
+    this.carbs,
+    this.fat,
+    this.fiber,
+    this.vitaminA,
+    this.vitaminC,
+    this.iron,
+    this.calcium,
+    this.potassium,
+    this.sodium,
+    this.instructions,
+    required this.isPublic,
+    this.prepTimeMin,
+    this.cookTimeMin,
+    this.cuisineType,
+    required this.createdAt,
+  });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
     map['user_id'] = Variable<String>(userId);
     map['title'] = Variable<String>(title);
+    if (!nullToAbsent || ingredientsJson != null) {
+      map['ingredients_json'] = Variable<String>(ingredientsJson);
+    }
+    map['servings'] = Variable<int>(servings);
+    if (!nullToAbsent || calories != null) {
+      map['calories'] = Variable<double>(calories);
+    }
+    if (!nullToAbsent || protein != null) {
+      map['protein'] = Variable<double>(protein);
+    }
+    if (!nullToAbsent || carbs != null) {
+      map['carbs'] = Variable<double>(carbs);
+    }
+    if (!nullToAbsent || fat != null) {
+      map['fat'] = Variable<double>(fat);
+    }
+    if (!nullToAbsent || fiber != null) {
+      map['fiber'] = Variable<double>(fiber);
+    }
+    if (!nullToAbsent || vitaminA != null) {
+      map['vitamin_a'] = Variable<double>(vitaminA);
+    }
+    if (!nullToAbsent || vitaminC != null) {
+      map['vitamin_c'] = Variable<double>(vitaminC);
+    }
+    if (!nullToAbsent || iron != null) {
+      map['iron'] = Variable<double>(iron);
+    }
+    if (!nullToAbsent || calcium != null) {
+      map['calcium'] = Variable<double>(calcium);
+    }
+    if (!nullToAbsent || potassium != null) {
+      map['potassium'] = Variable<double>(potassium);
+    }
+    if (!nullToAbsent || sodium != null) {
+      map['sodium'] = Variable<double>(sodium);
+    }
+    if (!nullToAbsent || instructions != null) {
+      map['instructions'] = Variable<String>(instructions);
+    }
+    map['is_public'] = Variable<bool>(isPublic);
+    if (!nullToAbsent || prepTimeMin != null) {
+      map['prep_time_min'] = Variable<int>(prepTimeMin);
+    }
+    if (!nullToAbsent || cookTimeMin != null) {
+      map['cook_time_min'] = Variable<int>(cookTimeMin);
+    }
+    if (!nullToAbsent || cuisineType != null) {
+      map['cuisine_type'] = Variable<String>(cuisineType);
+    }
+    map['created_at'] = Variable<DateTime>(createdAt);
     return map;
   }
 
@@ -10530,6 +11307,53 @@ class Recipe extends DataClass implements Insertable<Recipe> {
       id: Value(id),
       userId: Value(userId),
       title: Value(title),
+      ingredientsJson: ingredientsJson == null && nullToAbsent
+          ? const Value.absent()
+          : Value(ingredientsJson),
+      servings: Value(servings),
+      calories: calories == null && nullToAbsent
+          ? const Value.absent()
+          : Value(calories),
+      protein: protein == null && nullToAbsent
+          ? const Value.absent()
+          : Value(protein),
+      carbs: carbs == null && nullToAbsent
+          ? const Value.absent()
+          : Value(carbs),
+      fat: fat == null && nullToAbsent ? const Value.absent() : Value(fat),
+      fiber: fiber == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fiber),
+      vitaminA: vitaminA == null && nullToAbsent
+          ? const Value.absent()
+          : Value(vitaminA),
+      vitaminC: vitaminC == null && nullToAbsent
+          ? const Value.absent()
+          : Value(vitaminC),
+      iron: iron == null && nullToAbsent ? const Value.absent() : Value(iron),
+      calcium: calcium == null && nullToAbsent
+          ? const Value.absent()
+          : Value(calcium),
+      potassium: potassium == null && nullToAbsent
+          ? const Value.absent()
+          : Value(potassium),
+      sodium: sodium == null && nullToAbsent
+          ? const Value.absent()
+          : Value(sodium),
+      instructions: instructions == null && nullToAbsent
+          ? const Value.absent()
+          : Value(instructions),
+      isPublic: Value(isPublic),
+      prepTimeMin: prepTimeMin == null && nullToAbsent
+          ? const Value.absent()
+          : Value(prepTimeMin),
+      cookTimeMin: cookTimeMin == null && nullToAbsent
+          ? const Value.absent()
+          : Value(cookTimeMin),
+      cuisineType: cuisineType == null && nullToAbsent
+          ? const Value.absent()
+          : Value(cuisineType),
+      createdAt: Value(createdAt),
     );
   }
 
@@ -10542,6 +11366,25 @@ class Recipe extends DataClass implements Insertable<Recipe> {
       id: serializer.fromJson<int>(json['id']),
       userId: serializer.fromJson<String>(json['userId']),
       title: serializer.fromJson<String>(json['title']),
+      ingredientsJson: serializer.fromJson<String?>(json['ingredientsJson']),
+      servings: serializer.fromJson<int>(json['servings']),
+      calories: serializer.fromJson<double?>(json['calories']),
+      protein: serializer.fromJson<double?>(json['protein']),
+      carbs: serializer.fromJson<double?>(json['carbs']),
+      fat: serializer.fromJson<double?>(json['fat']),
+      fiber: serializer.fromJson<double?>(json['fiber']),
+      vitaminA: serializer.fromJson<double?>(json['vitaminA']),
+      vitaminC: serializer.fromJson<double?>(json['vitaminC']),
+      iron: serializer.fromJson<double?>(json['iron']),
+      calcium: serializer.fromJson<double?>(json['calcium']),
+      potassium: serializer.fromJson<double?>(json['potassium']),
+      sodium: serializer.fromJson<double?>(json['sodium']),
+      instructions: serializer.fromJson<String?>(json['instructions']),
+      isPublic: serializer.fromJson<bool>(json['isPublic']),
+      prepTimeMin: serializer.fromJson<int?>(json['prepTimeMin']),
+      cookTimeMin: serializer.fromJson<int?>(json['cookTimeMin']),
+      cuisineType: serializer.fromJson<String?>(json['cuisineType']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
     );
   }
   @override
@@ -10551,19 +11394,111 @@ class Recipe extends DataClass implements Insertable<Recipe> {
       'id': serializer.toJson<int>(id),
       'userId': serializer.toJson<String>(userId),
       'title': serializer.toJson<String>(title),
+      'ingredientsJson': serializer.toJson<String?>(ingredientsJson),
+      'servings': serializer.toJson<int>(servings),
+      'calories': serializer.toJson<double?>(calories),
+      'protein': serializer.toJson<double?>(protein),
+      'carbs': serializer.toJson<double?>(carbs),
+      'fat': serializer.toJson<double?>(fat),
+      'fiber': serializer.toJson<double?>(fiber),
+      'vitaminA': serializer.toJson<double?>(vitaminA),
+      'vitaminC': serializer.toJson<double?>(vitaminC),
+      'iron': serializer.toJson<double?>(iron),
+      'calcium': serializer.toJson<double?>(calcium),
+      'potassium': serializer.toJson<double?>(potassium),
+      'sodium': serializer.toJson<double?>(sodium),
+      'instructions': serializer.toJson<String?>(instructions),
+      'isPublic': serializer.toJson<bool>(isPublic),
+      'prepTimeMin': serializer.toJson<int?>(prepTimeMin),
+      'cookTimeMin': serializer.toJson<int?>(cookTimeMin),
+      'cuisineType': serializer.toJson<String?>(cuisineType),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
     };
   }
 
-  Recipe copyWith({int? id, String? userId, String? title}) => Recipe(
+  Recipe copyWith({
+    int? id,
+    String? userId,
+    String? title,
+    Value<String?> ingredientsJson = const Value.absent(),
+    int? servings,
+    Value<double?> calories = const Value.absent(),
+    Value<double?> protein = const Value.absent(),
+    Value<double?> carbs = const Value.absent(),
+    Value<double?> fat = const Value.absent(),
+    Value<double?> fiber = const Value.absent(),
+    Value<double?> vitaminA = const Value.absent(),
+    Value<double?> vitaminC = const Value.absent(),
+    Value<double?> iron = const Value.absent(),
+    Value<double?> calcium = const Value.absent(),
+    Value<double?> potassium = const Value.absent(),
+    Value<double?> sodium = const Value.absent(),
+    Value<String?> instructions = const Value.absent(),
+    bool? isPublic,
+    Value<int?> prepTimeMin = const Value.absent(),
+    Value<int?> cookTimeMin = const Value.absent(),
+    Value<String?> cuisineType = const Value.absent(),
+    DateTime? createdAt,
+  }) => Recipe(
     id: id ?? this.id,
     userId: userId ?? this.userId,
     title: title ?? this.title,
+    ingredientsJson: ingredientsJson.present
+        ? ingredientsJson.value
+        : this.ingredientsJson,
+    servings: servings ?? this.servings,
+    calories: calories.present ? calories.value : this.calories,
+    protein: protein.present ? protein.value : this.protein,
+    carbs: carbs.present ? carbs.value : this.carbs,
+    fat: fat.present ? fat.value : this.fat,
+    fiber: fiber.present ? fiber.value : this.fiber,
+    vitaminA: vitaminA.present ? vitaminA.value : this.vitaminA,
+    vitaminC: vitaminC.present ? vitaminC.value : this.vitaminC,
+    iron: iron.present ? iron.value : this.iron,
+    calcium: calcium.present ? calcium.value : this.calcium,
+    potassium: potassium.present ? potassium.value : this.potassium,
+    sodium: sodium.present ? sodium.value : this.sodium,
+    instructions: instructions.present ? instructions.value : this.instructions,
+    isPublic: isPublic ?? this.isPublic,
+    prepTimeMin: prepTimeMin.present ? prepTimeMin.value : this.prepTimeMin,
+    cookTimeMin: cookTimeMin.present ? cookTimeMin.value : this.cookTimeMin,
+    cuisineType: cuisineType.present ? cuisineType.value : this.cuisineType,
+    createdAt: createdAt ?? this.createdAt,
   );
   Recipe copyWithCompanion(RecipesCompanion data) {
     return Recipe(
       id: data.id.present ? data.id.value : this.id,
       userId: data.userId.present ? data.userId.value : this.userId,
       title: data.title.present ? data.title.value : this.title,
+      ingredientsJson: data.ingredientsJson.present
+          ? data.ingredientsJson.value
+          : this.ingredientsJson,
+      servings: data.servings.present ? data.servings.value : this.servings,
+      calories: data.calories.present ? data.calories.value : this.calories,
+      protein: data.protein.present ? data.protein.value : this.protein,
+      carbs: data.carbs.present ? data.carbs.value : this.carbs,
+      fat: data.fat.present ? data.fat.value : this.fat,
+      fiber: data.fiber.present ? data.fiber.value : this.fiber,
+      vitaminA: data.vitaminA.present ? data.vitaminA.value : this.vitaminA,
+      vitaminC: data.vitaminC.present ? data.vitaminC.value : this.vitaminC,
+      iron: data.iron.present ? data.iron.value : this.iron,
+      calcium: data.calcium.present ? data.calcium.value : this.calcium,
+      potassium: data.potassium.present ? data.potassium.value : this.potassium,
+      sodium: data.sodium.present ? data.sodium.value : this.sodium,
+      instructions: data.instructions.present
+          ? data.instructions.value
+          : this.instructions,
+      isPublic: data.isPublic.present ? data.isPublic.value : this.isPublic,
+      prepTimeMin: data.prepTimeMin.present
+          ? data.prepTimeMin.value
+          : this.prepTimeMin,
+      cookTimeMin: data.cookTimeMin.present
+          ? data.cookTimeMin.value
+          : this.cookTimeMin,
+      cuisineType: data.cuisineType.present
+          ? data.cuisineType.value
+          : this.cuisineType,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
     );
   }
 
@@ -10572,46 +11507,203 @@ class Recipe extends DataClass implements Insertable<Recipe> {
     return (StringBuffer('Recipe(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
-          ..write('title: $title')
+          ..write('title: $title, ')
+          ..write('ingredientsJson: $ingredientsJson, ')
+          ..write('servings: $servings, ')
+          ..write('calories: $calories, ')
+          ..write('protein: $protein, ')
+          ..write('carbs: $carbs, ')
+          ..write('fat: $fat, ')
+          ..write('fiber: $fiber, ')
+          ..write('vitaminA: $vitaminA, ')
+          ..write('vitaminC: $vitaminC, ')
+          ..write('iron: $iron, ')
+          ..write('calcium: $calcium, ')
+          ..write('potassium: $potassium, ')
+          ..write('sodium: $sodium, ')
+          ..write('instructions: $instructions, ')
+          ..write('isPublic: $isPublic, ')
+          ..write('prepTimeMin: $prepTimeMin, ')
+          ..write('cookTimeMin: $cookTimeMin, ')
+          ..write('cuisineType: $cuisineType, ')
+          ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, userId, title);
+  int get hashCode => Object.hashAll([
+    id,
+    userId,
+    title,
+    ingredientsJson,
+    servings,
+    calories,
+    protein,
+    carbs,
+    fat,
+    fiber,
+    vitaminA,
+    vitaminC,
+    iron,
+    calcium,
+    potassium,
+    sodium,
+    instructions,
+    isPublic,
+    prepTimeMin,
+    cookTimeMin,
+    cuisineType,
+    createdAt,
+  ]);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is Recipe &&
           other.id == this.id &&
           other.userId == this.userId &&
-          other.title == this.title);
+          other.title == this.title &&
+          other.ingredientsJson == this.ingredientsJson &&
+          other.servings == this.servings &&
+          other.calories == this.calories &&
+          other.protein == this.protein &&
+          other.carbs == this.carbs &&
+          other.fat == this.fat &&
+          other.fiber == this.fiber &&
+          other.vitaminA == this.vitaminA &&
+          other.vitaminC == this.vitaminC &&
+          other.iron == this.iron &&
+          other.calcium == this.calcium &&
+          other.potassium == this.potassium &&
+          other.sodium == this.sodium &&
+          other.instructions == this.instructions &&
+          other.isPublic == this.isPublic &&
+          other.prepTimeMin == this.prepTimeMin &&
+          other.cookTimeMin == this.cookTimeMin &&
+          other.cuisineType == this.cuisineType &&
+          other.createdAt == this.createdAt);
 }
 
 class RecipesCompanion extends UpdateCompanion<Recipe> {
   final Value<int> id;
   final Value<String> userId;
   final Value<String> title;
+  final Value<String?> ingredientsJson;
+  final Value<int> servings;
+  final Value<double?> calories;
+  final Value<double?> protein;
+  final Value<double?> carbs;
+  final Value<double?> fat;
+  final Value<double?> fiber;
+  final Value<double?> vitaminA;
+  final Value<double?> vitaminC;
+  final Value<double?> iron;
+  final Value<double?> calcium;
+  final Value<double?> potassium;
+  final Value<double?> sodium;
+  final Value<String?> instructions;
+  final Value<bool> isPublic;
+  final Value<int?> prepTimeMin;
+  final Value<int?> cookTimeMin;
+  final Value<String?> cuisineType;
+  final Value<DateTime> createdAt;
   const RecipesCompanion({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
     this.title = const Value.absent(),
+    this.ingredientsJson = const Value.absent(),
+    this.servings = const Value.absent(),
+    this.calories = const Value.absent(),
+    this.protein = const Value.absent(),
+    this.carbs = const Value.absent(),
+    this.fat = const Value.absent(),
+    this.fiber = const Value.absent(),
+    this.vitaminA = const Value.absent(),
+    this.vitaminC = const Value.absent(),
+    this.iron = const Value.absent(),
+    this.calcium = const Value.absent(),
+    this.potassium = const Value.absent(),
+    this.sodium = const Value.absent(),
+    this.instructions = const Value.absent(),
+    this.isPublic = const Value.absent(),
+    this.prepTimeMin = const Value.absent(),
+    this.cookTimeMin = const Value.absent(),
+    this.cuisineType = const Value.absent(),
+    this.createdAt = const Value.absent(),
   });
   RecipesCompanion.insert({
     this.id = const Value.absent(),
     required String userId,
     required String title,
+    this.ingredientsJson = const Value.absent(),
+    this.servings = const Value.absent(),
+    this.calories = const Value.absent(),
+    this.protein = const Value.absent(),
+    this.carbs = const Value.absent(),
+    this.fat = const Value.absent(),
+    this.fiber = const Value.absent(),
+    this.vitaminA = const Value.absent(),
+    this.vitaminC = const Value.absent(),
+    this.iron = const Value.absent(),
+    this.calcium = const Value.absent(),
+    this.potassium = const Value.absent(),
+    this.sodium = const Value.absent(),
+    this.instructions = const Value.absent(),
+    this.isPublic = const Value.absent(),
+    this.prepTimeMin = const Value.absent(),
+    this.cookTimeMin = const Value.absent(),
+    this.cuisineType = const Value.absent(),
+    required DateTime createdAt,
   }) : userId = Value(userId),
-       title = Value(title);
+       title = Value(title),
+       createdAt = Value(createdAt);
   static Insertable<Recipe> custom({
     Expression<int>? id,
     Expression<String>? userId,
     Expression<String>? title,
+    Expression<String>? ingredientsJson,
+    Expression<int>? servings,
+    Expression<double>? calories,
+    Expression<double>? protein,
+    Expression<double>? carbs,
+    Expression<double>? fat,
+    Expression<double>? fiber,
+    Expression<double>? vitaminA,
+    Expression<double>? vitaminC,
+    Expression<double>? iron,
+    Expression<double>? calcium,
+    Expression<double>? potassium,
+    Expression<double>? sodium,
+    Expression<String>? instructions,
+    Expression<bool>? isPublic,
+    Expression<int>? prepTimeMin,
+    Expression<int>? cookTimeMin,
+    Expression<String>? cuisineType,
+    Expression<DateTime>? createdAt,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (userId != null) 'user_id': userId,
       if (title != null) 'title': title,
+      if (ingredientsJson != null) 'ingredients_json': ingredientsJson,
+      if (servings != null) 'servings': servings,
+      if (calories != null) 'calories': calories,
+      if (protein != null) 'protein': protein,
+      if (carbs != null) 'carbs': carbs,
+      if (fat != null) 'fat': fat,
+      if (fiber != null) 'fiber': fiber,
+      if (vitaminA != null) 'vitamin_a': vitaminA,
+      if (vitaminC != null) 'vitamin_c': vitaminC,
+      if (iron != null) 'iron': iron,
+      if (calcium != null) 'calcium': calcium,
+      if (potassium != null) 'potassium': potassium,
+      if (sodium != null) 'sodium': sodium,
+      if (instructions != null) 'instructions': instructions,
+      if (isPublic != null) 'is_public': isPublic,
+      if (prepTimeMin != null) 'prep_time_min': prepTimeMin,
+      if (cookTimeMin != null) 'cook_time_min': cookTimeMin,
+      if (cuisineType != null) 'cuisine_type': cuisineType,
+      if (createdAt != null) 'created_at': createdAt,
     });
   }
 
@@ -10619,11 +11711,49 @@ class RecipesCompanion extends UpdateCompanion<Recipe> {
     Value<int>? id,
     Value<String>? userId,
     Value<String>? title,
+    Value<String?>? ingredientsJson,
+    Value<int>? servings,
+    Value<double?>? calories,
+    Value<double?>? protein,
+    Value<double?>? carbs,
+    Value<double?>? fat,
+    Value<double?>? fiber,
+    Value<double?>? vitaminA,
+    Value<double?>? vitaminC,
+    Value<double?>? iron,
+    Value<double?>? calcium,
+    Value<double?>? potassium,
+    Value<double?>? sodium,
+    Value<String?>? instructions,
+    Value<bool>? isPublic,
+    Value<int?>? prepTimeMin,
+    Value<int?>? cookTimeMin,
+    Value<String?>? cuisineType,
+    Value<DateTime>? createdAt,
   }) {
     return RecipesCompanion(
       id: id ?? this.id,
       userId: userId ?? this.userId,
       title: title ?? this.title,
+      ingredientsJson: ingredientsJson ?? this.ingredientsJson,
+      servings: servings ?? this.servings,
+      calories: calories ?? this.calories,
+      protein: protein ?? this.protein,
+      carbs: carbs ?? this.carbs,
+      fat: fat ?? this.fat,
+      fiber: fiber ?? this.fiber,
+      vitaminA: vitaminA ?? this.vitaminA,
+      vitaminC: vitaminC ?? this.vitaminC,
+      iron: iron ?? this.iron,
+      calcium: calcium ?? this.calcium,
+      potassium: potassium ?? this.potassium,
+      sodium: sodium ?? this.sodium,
+      instructions: instructions ?? this.instructions,
+      isPublic: isPublic ?? this.isPublic,
+      prepTimeMin: prepTimeMin ?? this.prepTimeMin,
+      cookTimeMin: cookTimeMin ?? this.cookTimeMin,
+      cuisineType: cuisineType ?? this.cuisineType,
+      createdAt: createdAt ?? this.createdAt,
     );
   }
 
@@ -10639,6 +11769,63 @@ class RecipesCompanion extends UpdateCompanion<Recipe> {
     if (title.present) {
       map['title'] = Variable<String>(title.value);
     }
+    if (ingredientsJson.present) {
+      map['ingredients_json'] = Variable<String>(ingredientsJson.value);
+    }
+    if (servings.present) {
+      map['servings'] = Variable<int>(servings.value);
+    }
+    if (calories.present) {
+      map['calories'] = Variable<double>(calories.value);
+    }
+    if (protein.present) {
+      map['protein'] = Variable<double>(protein.value);
+    }
+    if (carbs.present) {
+      map['carbs'] = Variable<double>(carbs.value);
+    }
+    if (fat.present) {
+      map['fat'] = Variable<double>(fat.value);
+    }
+    if (fiber.present) {
+      map['fiber'] = Variable<double>(fiber.value);
+    }
+    if (vitaminA.present) {
+      map['vitamin_a'] = Variable<double>(vitaminA.value);
+    }
+    if (vitaminC.present) {
+      map['vitamin_c'] = Variable<double>(vitaminC.value);
+    }
+    if (iron.present) {
+      map['iron'] = Variable<double>(iron.value);
+    }
+    if (calcium.present) {
+      map['calcium'] = Variable<double>(calcium.value);
+    }
+    if (potassium.present) {
+      map['potassium'] = Variable<double>(potassium.value);
+    }
+    if (sodium.present) {
+      map['sodium'] = Variable<double>(sodium.value);
+    }
+    if (instructions.present) {
+      map['instructions'] = Variable<String>(instructions.value);
+    }
+    if (isPublic.present) {
+      map['is_public'] = Variable<bool>(isPublic.value);
+    }
+    if (prepTimeMin.present) {
+      map['prep_time_min'] = Variable<int>(prepTimeMin.value);
+    }
+    if (cookTimeMin.present) {
+      map['cook_time_min'] = Variable<int>(cookTimeMin.value);
+    }
+    if (cuisineType.present) {
+      map['cuisine_type'] = Variable<String>(cuisineType.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
     return map;
   }
 
@@ -10647,7 +11834,26 @@ class RecipesCompanion extends UpdateCompanion<Recipe> {
     return (StringBuffer('RecipesCompanion(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
-          ..write('title: $title')
+          ..write('title: $title, ')
+          ..write('ingredientsJson: $ingredientsJson, ')
+          ..write('servings: $servings, ')
+          ..write('calories: $calories, ')
+          ..write('protein: $protein, ')
+          ..write('carbs: $carbs, ')
+          ..write('fat: $fat, ')
+          ..write('fiber: $fiber, ')
+          ..write('vitaminA: $vitaminA, ')
+          ..write('vitaminC: $vitaminC, ')
+          ..write('iron: $iron, ')
+          ..write('calcium: $calcium, ')
+          ..write('potassium: $potassium, ')
+          ..write('sodium: $sodium, ')
+          ..write('instructions: $instructions, ')
+          ..write('isPublic: $isPublic, ')
+          ..write('prepTimeMin: $prepTimeMin, ')
+          ..write('cookTimeMin: $cookTimeMin, ')
+          ..write('cuisineType: $cuisineType, ')
+          ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
   }
@@ -19619,10 +20825,15 @@ typedef $$FoodItemsTableCreateCompanionBuilder =
       required double proteinPer100g,
       required double carbsPer100g,
       required double fatPer100g,
+      Value<double> fiberPer100g,
+      Value<double> vitaminAMcg,
+      Value<double> vitaminCMg,
       Value<double> vitaminDMcg,
       Value<double> vitaminB12Mcg,
       Value<double> ironMg,
       Value<double> calciumMg,
+      Value<double> potassiumMg,
+      Value<double> sodiumMg,
       Value<String?> servingSizesJson,
     });
 typedef $$FoodItemsTableUpdateCompanionBuilder =
@@ -19635,10 +20846,15 @@ typedef $$FoodItemsTableUpdateCompanionBuilder =
       Value<double> proteinPer100g,
       Value<double> carbsPer100g,
       Value<double> fatPer100g,
+      Value<double> fiberPer100g,
+      Value<double> vitaminAMcg,
+      Value<double> vitaminCMg,
       Value<double> vitaminDMcg,
       Value<double> vitaminB12Mcg,
       Value<double> ironMg,
       Value<double> calciumMg,
+      Value<double> potassiumMg,
+      Value<double> sodiumMg,
       Value<String?> servingSizesJson,
     });
 
@@ -19691,6 +20907,21 @@ class $$FoodItemsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<double> get fiberPer100g => $composableBuilder(
+    column: $table.fiberPer100g,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get vitaminAMcg => $composableBuilder(
+    column: $table.vitaminAMcg,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get vitaminCMg => $composableBuilder(
+    column: $table.vitaminCMg,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<double> get vitaminDMcg => $composableBuilder(
     column: $table.vitaminDMcg,
     builder: (column) => ColumnFilters(column),
@@ -19708,6 +20939,16 @@ class $$FoodItemsTableFilterComposer
 
   ColumnFilters<double> get calciumMg => $composableBuilder(
     column: $table.calciumMg,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get potassiumMg => $composableBuilder(
+    column: $table.potassiumMg,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get sodiumMg => $composableBuilder(
+    column: $table.sodiumMg,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -19766,6 +21007,21 @@ class $$FoodItemsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<double> get fiberPer100g => $composableBuilder(
+    column: $table.fiberPer100g,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get vitaminAMcg => $composableBuilder(
+    column: $table.vitaminAMcg,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get vitaminCMg => $composableBuilder(
+    column: $table.vitaminCMg,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<double> get vitaminDMcg => $composableBuilder(
     column: $table.vitaminDMcg,
     builder: (column) => ColumnOrderings(column),
@@ -19783,6 +21039,16 @@ class $$FoodItemsTableOrderingComposer
 
   ColumnOrderings<double> get calciumMg => $composableBuilder(
     column: $table.calciumMg,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get potassiumMg => $composableBuilder(
+    column: $table.potassiumMg,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get sodiumMg => $composableBuilder(
+    column: $table.sodiumMg,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -19833,6 +21099,21 @@ class $$FoodItemsTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumn<double> get fiberPer100g => $composableBuilder(
+    column: $table.fiberPer100g,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get vitaminAMcg => $composableBuilder(
+    column: $table.vitaminAMcg,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get vitaminCMg => $composableBuilder(
+    column: $table.vitaminCMg,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<double> get vitaminDMcg => $composableBuilder(
     column: $table.vitaminDMcg,
     builder: (column) => column,
@@ -19848,6 +21129,14 @@ class $$FoodItemsTableAnnotationComposer
 
   GeneratedColumn<double> get calciumMg =>
       $composableBuilder(column: $table.calciumMg, builder: (column) => column);
+
+  GeneratedColumn<double> get potassiumMg => $composableBuilder(
+    column: $table.potassiumMg,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get sodiumMg =>
+      $composableBuilder(column: $table.sodiumMg, builder: (column) => column);
 
   GeneratedColumn<String> get servingSizesJson => $composableBuilder(
     column: $table.servingSizesJson,
@@ -19891,10 +21180,15 @@ class $$FoodItemsTableTableManager
                 Value<double> proteinPer100g = const Value.absent(),
                 Value<double> carbsPer100g = const Value.absent(),
                 Value<double> fatPer100g = const Value.absent(),
+                Value<double> fiberPer100g = const Value.absent(),
+                Value<double> vitaminAMcg = const Value.absent(),
+                Value<double> vitaminCMg = const Value.absent(),
                 Value<double> vitaminDMcg = const Value.absent(),
                 Value<double> vitaminB12Mcg = const Value.absent(),
                 Value<double> ironMg = const Value.absent(),
                 Value<double> calciumMg = const Value.absent(),
+                Value<double> potassiumMg = const Value.absent(),
+                Value<double> sodiumMg = const Value.absent(),
                 Value<String?> servingSizesJson = const Value.absent(),
               }) => FoodItemsCompanion(
                 id: id,
@@ -19905,10 +21199,15 @@ class $$FoodItemsTableTableManager
                 proteinPer100g: proteinPer100g,
                 carbsPer100g: carbsPer100g,
                 fatPer100g: fatPer100g,
+                fiberPer100g: fiberPer100g,
+                vitaminAMcg: vitaminAMcg,
+                vitaminCMg: vitaminCMg,
                 vitaminDMcg: vitaminDMcg,
                 vitaminB12Mcg: vitaminB12Mcg,
                 ironMg: ironMg,
                 calciumMg: calciumMg,
+                potassiumMg: potassiumMg,
+                sodiumMg: sodiumMg,
                 servingSizesJson: servingSizesJson,
               ),
           createCompanionCallback:
@@ -19921,10 +21220,15 @@ class $$FoodItemsTableTableManager
                 required double proteinPer100g,
                 required double carbsPer100g,
                 required double fatPer100g,
+                Value<double> fiberPer100g = const Value.absent(),
+                Value<double> vitaminAMcg = const Value.absent(),
+                Value<double> vitaminCMg = const Value.absent(),
                 Value<double> vitaminDMcg = const Value.absent(),
                 Value<double> vitaminB12Mcg = const Value.absent(),
                 Value<double> ironMg = const Value.absent(),
                 Value<double> calciumMg = const Value.absent(),
+                Value<double> potassiumMg = const Value.absent(),
+                Value<double> sodiumMg = const Value.absent(),
                 Value<String?> servingSizesJson = const Value.absent(),
               }) => FoodItemsCompanion.insert(
                 id: id,
@@ -19935,10 +21239,15 @@ class $$FoodItemsTableTableManager
                 proteinPer100g: proteinPer100g,
                 carbsPer100g: carbsPer100g,
                 fatPer100g: fatPer100g,
+                fiberPer100g: fiberPer100g,
+                vitaminAMcg: vitaminAMcg,
+                vitaminCMg: vitaminCMg,
                 vitaminDMcg: vitaminDMcg,
                 vitaminB12Mcg: vitaminB12Mcg,
                 ironMg: ironMg,
                 calciumMg: calciumMg,
+                potassiumMg: potassiumMg,
+                sodiumMg: sodiumMg,
                 servingSizesJson: servingSizesJson,
               ),
           withReferenceMapper: (p0) => p0
@@ -24167,12 +25476,50 @@ typedef $$RecipesTableCreateCompanionBuilder =
       Value<int> id,
       required String userId,
       required String title,
+      Value<String?> ingredientsJson,
+      Value<int> servings,
+      Value<double?> calories,
+      Value<double?> protein,
+      Value<double?> carbs,
+      Value<double?> fat,
+      Value<double?> fiber,
+      Value<double?> vitaminA,
+      Value<double?> vitaminC,
+      Value<double?> iron,
+      Value<double?> calcium,
+      Value<double?> potassium,
+      Value<double?> sodium,
+      Value<String?> instructions,
+      Value<bool> isPublic,
+      Value<int?> prepTimeMin,
+      Value<int?> cookTimeMin,
+      Value<String?> cuisineType,
+      required DateTime createdAt,
     });
 typedef $$RecipesTableUpdateCompanionBuilder =
     RecipesCompanion Function({
       Value<int> id,
       Value<String> userId,
       Value<String> title,
+      Value<String?> ingredientsJson,
+      Value<int> servings,
+      Value<double?> calories,
+      Value<double?> protein,
+      Value<double?> carbs,
+      Value<double?> fat,
+      Value<double?> fiber,
+      Value<double?> vitaminA,
+      Value<double?> vitaminC,
+      Value<double?> iron,
+      Value<double?> calcium,
+      Value<double?> potassium,
+      Value<double?> sodium,
+      Value<String?> instructions,
+      Value<bool> isPublic,
+      Value<int?> prepTimeMin,
+      Value<int?> cookTimeMin,
+      Value<String?> cuisineType,
+      Value<DateTime> createdAt,
     });
 
 class $$RecipesTableFilterComposer
@@ -24196,6 +25543,101 @@ class $$RecipesTableFilterComposer
 
   ColumnFilters<String> get title => $composableBuilder(
     column: $table.title,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get ingredientsJson => $composableBuilder(
+    column: $table.ingredientsJson,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get servings => $composableBuilder(
+    column: $table.servings,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get calories => $composableBuilder(
+    column: $table.calories,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get protein => $composableBuilder(
+    column: $table.protein,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get carbs => $composableBuilder(
+    column: $table.carbs,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get fat => $composableBuilder(
+    column: $table.fat,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get fiber => $composableBuilder(
+    column: $table.fiber,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get vitaminA => $composableBuilder(
+    column: $table.vitaminA,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get vitaminC => $composableBuilder(
+    column: $table.vitaminC,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get iron => $composableBuilder(
+    column: $table.iron,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get calcium => $composableBuilder(
+    column: $table.calcium,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get potassium => $composableBuilder(
+    column: $table.potassium,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get sodium => $composableBuilder(
+    column: $table.sodium,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get instructions => $composableBuilder(
+    column: $table.instructions,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isPublic => $composableBuilder(
+    column: $table.isPublic,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get prepTimeMin => $composableBuilder(
+    column: $table.prepTimeMin,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get cookTimeMin => $composableBuilder(
+    column: $table.cookTimeMin,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get cuisineType => $composableBuilder(
+    column: $table.cuisineType,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -24223,6 +25665,101 @@ class $$RecipesTableOrderingComposer
     column: $table.title,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<String> get ingredientsJson => $composableBuilder(
+    column: $table.ingredientsJson,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get servings => $composableBuilder(
+    column: $table.servings,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get calories => $composableBuilder(
+    column: $table.calories,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get protein => $composableBuilder(
+    column: $table.protein,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get carbs => $composableBuilder(
+    column: $table.carbs,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get fat => $composableBuilder(
+    column: $table.fat,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get fiber => $composableBuilder(
+    column: $table.fiber,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get vitaminA => $composableBuilder(
+    column: $table.vitaminA,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get vitaminC => $composableBuilder(
+    column: $table.vitaminC,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get iron => $composableBuilder(
+    column: $table.iron,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get calcium => $composableBuilder(
+    column: $table.calcium,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get potassium => $composableBuilder(
+    column: $table.potassium,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get sodium => $composableBuilder(
+    column: $table.sodium,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get instructions => $composableBuilder(
+    column: $table.instructions,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isPublic => $composableBuilder(
+    column: $table.isPublic,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get prepTimeMin => $composableBuilder(
+    column: $table.prepTimeMin,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get cookTimeMin => $composableBuilder(
+    column: $table.cookTimeMin,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get cuisineType => $composableBuilder(
+    column: $table.cuisineType,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$RecipesTableAnnotationComposer
@@ -24242,6 +25779,73 @@ class $$RecipesTableAnnotationComposer
 
   GeneratedColumn<String> get title =>
       $composableBuilder(column: $table.title, builder: (column) => column);
+
+  GeneratedColumn<String> get ingredientsJson => $composableBuilder(
+    column: $table.ingredientsJson,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get servings =>
+      $composableBuilder(column: $table.servings, builder: (column) => column);
+
+  GeneratedColumn<double> get calories =>
+      $composableBuilder(column: $table.calories, builder: (column) => column);
+
+  GeneratedColumn<double> get protein =>
+      $composableBuilder(column: $table.protein, builder: (column) => column);
+
+  GeneratedColumn<double> get carbs =>
+      $composableBuilder(column: $table.carbs, builder: (column) => column);
+
+  GeneratedColumn<double> get fat =>
+      $composableBuilder(column: $table.fat, builder: (column) => column);
+
+  GeneratedColumn<double> get fiber =>
+      $composableBuilder(column: $table.fiber, builder: (column) => column);
+
+  GeneratedColumn<double> get vitaminA =>
+      $composableBuilder(column: $table.vitaminA, builder: (column) => column);
+
+  GeneratedColumn<double> get vitaminC =>
+      $composableBuilder(column: $table.vitaminC, builder: (column) => column);
+
+  GeneratedColumn<double> get iron =>
+      $composableBuilder(column: $table.iron, builder: (column) => column);
+
+  GeneratedColumn<double> get calcium =>
+      $composableBuilder(column: $table.calcium, builder: (column) => column);
+
+  GeneratedColumn<double> get potassium =>
+      $composableBuilder(column: $table.potassium, builder: (column) => column);
+
+  GeneratedColumn<double> get sodium =>
+      $composableBuilder(column: $table.sodium, builder: (column) => column);
+
+  GeneratedColumn<String> get instructions => $composableBuilder(
+    column: $table.instructions,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get isPublic =>
+      $composableBuilder(column: $table.isPublic, builder: (column) => column);
+
+  GeneratedColumn<int> get prepTimeMin => $composableBuilder(
+    column: $table.prepTimeMin,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get cookTimeMin => $composableBuilder(
+    column: $table.cookTimeMin,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get cuisineType => $composableBuilder(
+    column: $table.cuisineType,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
 }
 
 class $$RecipesTableTableManager
@@ -24275,14 +25879,97 @@ class $$RecipesTableTableManager
                 Value<int> id = const Value.absent(),
                 Value<String> userId = const Value.absent(),
                 Value<String> title = const Value.absent(),
-              }) => RecipesCompanion(id: id, userId: userId, title: title),
+                Value<String?> ingredientsJson = const Value.absent(),
+                Value<int> servings = const Value.absent(),
+                Value<double?> calories = const Value.absent(),
+                Value<double?> protein = const Value.absent(),
+                Value<double?> carbs = const Value.absent(),
+                Value<double?> fat = const Value.absent(),
+                Value<double?> fiber = const Value.absent(),
+                Value<double?> vitaminA = const Value.absent(),
+                Value<double?> vitaminC = const Value.absent(),
+                Value<double?> iron = const Value.absent(),
+                Value<double?> calcium = const Value.absent(),
+                Value<double?> potassium = const Value.absent(),
+                Value<double?> sodium = const Value.absent(),
+                Value<String?> instructions = const Value.absent(),
+                Value<bool> isPublic = const Value.absent(),
+                Value<int?> prepTimeMin = const Value.absent(),
+                Value<int?> cookTimeMin = const Value.absent(),
+                Value<String?> cuisineType = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+              }) => RecipesCompanion(
+                id: id,
+                userId: userId,
+                title: title,
+                ingredientsJson: ingredientsJson,
+                servings: servings,
+                calories: calories,
+                protein: protein,
+                carbs: carbs,
+                fat: fat,
+                fiber: fiber,
+                vitaminA: vitaminA,
+                vitaminC: vitaminC,
+                iron: iron,
+                calcium: calcium,
+                potassium: potassium,
+                sodium: sodium,
+                instructions: instructions,
+                isPublic: isPublic,
+                prepTimeMin: prepTimeMin,
+                cookTimeMin: cookTimeMin,
+                cuisineType: cuisineType,
+                createdAt: createdAt,
+              ),
           createCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
                 required String userId,
                 required String title,
-              }) =>
-                  RecipesCompanion.insert(id: id, userId: userId, title: title),
+                Value<String?> ingredientsJson = const Value.absent(),
+                Value<int> servings = const Value.absent(),
+                Value<double?> calories = const Value.absent(),
+                Value<double?> protein = const Value.absent(),
+                Value<double?> carbs = const Value.absent(),
+                Value<double?> fat = const Value.absent(),
+                Value<double?> fiber = const Value.absent(),
+                Value<double?> vitaminA = const Value.absent(),
+                Value<double?> vitaminC = const Value.absent(),
+                Value<double?> iron = const Value.absent(),
+                Value<double?> calcium = const Value.absent(),
+                Value<double?> potassium = const Value.absent(),
+                Value<double?> sodium = const Value.absent(),
+                Value<String?> instructions = const Value.absent(),
+                Value<bool> isPublic = const Value.absent(),
+                Value<int?> prepTimeMin = const Value.absent(),
+                Value<int?> cookTimeMin = const Value.absent(),
+                Value<String?> cuisineType = const Value.absent(),
+                required DateTime createdAt,
+              }) => RecipesCompanion.insert(
+                id: id,
+                userId: userId,
+                title: title,
+                ingredientsJson: ingredientsJson,
+                servings: servings,
+                calories: calories,
+                protein: protein,
+                carbs: carbs,
+                fat: fat,
+                fiber: fiber,
+                vitaminA: vitaminA,
+                vitaminC: vitaminC,
+                iron: iron,
+                calcium: calcium,
+                potassium: potassium,
+                sodium: sodium,
+                instructions: instructions,
+                isPublic: isPublic,
+                prepTimeMin: prepTimeMin,
+                cookTimeMin: cookTimeMin,
+                cuisineType: cuisineType,
+                createdAt: createdAt,
+              ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
               .toList(),

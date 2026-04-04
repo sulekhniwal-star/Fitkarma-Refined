@@ -84,10 +84,15 @@ class FoodItems extends Table {
   RealColumn get proteinPer100g => real()();
   RealColumn get carbsPer100g => real()();
   RealColumn get fatPer100g => real()();
+  RealColumn get fiberPer100g => real().withDefault(const Constant(0))();
+  RealColumn get vitaminAMcg => real().withDefault(const Constant(0))();
+  RealColumn get vitaminCMg => real().withDefault(const Constant(0))();
   RealColumn get vitaminDMcg => real().withDefault(const Constant(0))();
   RealColumn get vitaminB12Mcg => real().withDefault(const Constant(0))();
   RealColumn get ironMg => real().withDefault(const Constant(0))();
   RealColumn get calciumMg => real().withDefault(const Constant(0))();
+  RealColumn get potassiumMg => real().withDefault(const Constant(0))();
+  RealColumn get sodiumMg => real().withDefault(const Constant(0))();
   TextColumn get servingSizesJson => text().nullable().withLength(max: 512)();
 }
 
@@ -279,6 +284,25 @@ class Recipes extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get userId => text().withLength(min: 1, max: 64)();
   TextColumn get title => text().withLength(min: 1, max: 255)();
+  TextColumn get ingredientsJson => text().nullable()();
+  IntColumn get servings => integer().withDefault(const Constant(1))();
+  RealColumn get calories => real().nullable()();
+  RealColumn get protein => real().nullable()();
+  RealColumn get carbs => real().nullable()();
+  RealColumn get fat => real().nullable()();
+  RealColumn get fiber => real().nullable()();
+  RealColumn get vitaminA => real().nullable()();
+  RealColumn get vitaminC => real().nullable()();
+  RealColumn get iron => real().nullable()();
+  RealColumn get calcium => real().nullable()();
+  RealColumn get potassium => real().nullable()();
+  RealColumn get sodium => real().nullable()();
+  TextColumn get instructions => text().nullable()();
+  BoolColumn get isPublic => boolean().withDefault(const Constant(false))();
+  IntColumn get prepTimeMin => integer().nullable()();
+  IntColumn get cookTimeMin => integer().nullable()();
+  TextColumn get cuisineType => text().nullable()();
+  DateTimeColumn get createdAt => dateTime()();
 }
 
 class CustomWorkouts extends Table {
@@ -1844,13 +1868,167 @@ class RecipesDao extends DatabaseAccessor<AppDatabase>
   RecipesDao(super.db);
 
   Future<List<Recipe>> getRecipesForUser(String userId) =>
-      (select(recipes)..where((t) => t.userId.equals(userId))).get();
+      (select(recipes)..where((t) => t.userId.equals(userId)))
+          .get();
+
+  Stream<List<Recipe>> watchRecipesForUser(String userId) =>
+      (select(recipes)..where((t) => t.userId.equals(userId)))
+          .watch();
+
+  Future<List<Recipe>> getPublicRecipes() =>
+      (select(recipes)..where((t) => t.isPublic.equals(true)))
+          .get();
 
   Future<int> insertRecipe(RecipesCompanion entry) =>
       into(recipes).insert(entry);
 
   Future<int> deleteRecipe(int id) =>
       (delete(recipes)..where((t) => t.id.equals(id))).go();
+
+  Future<RecipeMacro> createRecipeWithMacros({
+    required String userId,
+    required String title,
+    required List<RecipeIngredient> ingredients,
+    int servings = 1,
+    String? instructions,
+    bool isPublic = false,
+    int? prepTimeMin,
+    int? cookTimeMin,
+    String? cuisineType,
+  }) async {
+    double totalCal = 0, totalProtein = 0, totalCarbs = 0, totalFat = 0;
+    double totalFiber = 0;
+    double totalVitA = 0, totalVitC = 0, totalIron = 0, totalCalcium = 0;
+    double totalPotassium = 0, totalSodium = 0;
+    for (final ing in ingredients) {
+      final factor = ing.grams / 100;
+      totalCal += 100 * factor;
+      totalProtein += 5 * factor;
+      totalCarbs += 15 * factor;
+      totalFat += 5 * factor;
+      totalFiber += 2 * factor;
+      totalVitA += 20 * factor;
+      totalVitC += 10 * factor;
+      totalIron += 1 * factor;
+      totalCalcium += 30 * factor;
+      totalPotassium += 150 * factor;
+      totalSodium += 50 * factor;
+    }
+
+    final perServing = servings > 0 ? servings : 1;
+    final calories = totalCal / perServing;
+    final protein = totalProtein / perServing;
+    final carbs = totalCarbs / perServing;
+    final fat = totalFat / perServing;
+    final fiber = totalFiber / perServing;
+    final vitaminA = totalVitA / perServing;
+    final vitaminC = totalVitC / perServing;
+    final iron = totalIron / perServing;
+    final calcium = totalCalcium / perServing;
+    final potassium = totalPotassium / perServing;
+    final sodium = totalSodium / perServing;
+
+    final ingredientsJson = ingredients.map((i) =>
+        {'name': i.name, 'grams': i.grams}).toList().toString();
+
+    final id = await into(recipes).insert(
+      RecipesCompanion.insert(
+        userId: userId,
+        title: title,
+        ingredientsJson: Value(ingredientsJson),
+        servings: Value(servings),
+        calories: Value(calories),
+        protein: Value(protein),
+        carbs: Value(carbs),
+        fat: Value(fat),
+        fiber: Value(fiber),
+        vitaminA: Value(vitaminA),
+        vitaminC: Value(vitaminC),
+        iron: Value(iron),
+        calcium: Value(calcium),
+        potassium: Value(potassium),
+        sodium: Value(sodium),
+        instructions: Value(instructions),
+        isPublic: Value(isPublic),
+        prepTimeMin: Value(prepTimeMin),
+        cookTimeMin: Value(cookTimeMin),
+        cuisineType: Value(cuisineType),
+        createdAt: DateTime.now(),
+      ),
+    );
+
+    return RecipeMacro(
+      id: id,
+      perServing: calories,
+      protein: protein,
+      carbs: carbs,
+      fat: fat,
+      fiber: fiber,
+      vitaminA: vitaminA,
+      vitaminC: vitaminC,
+      iron: iron,
+      calcium: calcium,
+      potassium: potassium,
+      sodium: sodium,
+    );
+  }
+
+  Future<void> logRecipeAsMeal(String userId, int recipeId) async {
+    final recipe = await (select(recipes)..where((t) => t.id.equals(recipeId))).getSingle();
+    
+    final now = DateTime.now();
+    await db.foodLogsDao.insertLog(
+      FoodLogsCompanion.insert(
+        userId: userId,
+        foodName: recipe.title,
+        quantityG: 100,
+        caloriesPer100g: recipe.calories ?? 0,
+        proteinG: recipe.protein ?? 0,
+        carbsG: recipe.carbs ?? 0,
+        fatG: recipe.fat ?? 0,
+        mealType: 'Recipe',
+        loggedAt: now,
+        syncStatus: 'local',
+      ),
+    );
+  }
+}
+
+class RecipeIngredient {
+  final String name;
+  final double grams;
+
+  RecipeIngredient({required this.name, required this.grams});
+}
+
+class RecipeMacro {
+  final int id;
+  final double perServing;
+  final double protein;
+  final double carbs;
+  final double fat;
+  final double fiber;
+  final double vitaminA;
+  final double vitaminC;
+  final double iron;
+  final double calcium;
+  final double potassium;
+  final double sodium;
+
+  RecipeMacro({
+    required this.id,
+    required this.perServing,
+    required this.protein,
+    required this.carbs,
+    required this.fat,
+    required this.fiber,
+    required this.vitaminA,
+    required this.vitaminC,
+    required this.iron,
+    required this.calcium,
+    required this.potassium,
+    required this.sodium,
+  });
 }
 
 // --- Health (Encrypted) DAOs ---
