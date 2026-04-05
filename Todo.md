@@ -354,10 +354,11 @@
 ---
 
 ## Phase 7 — Step Tracking
-- [ ] ⚡🟢 Integrate the `health` package — request Health Connect (Android) / HealthKit (iOS) permissions
-- [ ] 🟢 Read today's step count and write to `step_logs` Drift table
+- [x] ⚡🟢 Integrate the `health` package — request Health Connect (Android) / HealthKit (iOS) permissions
+- [x] 🟢 Read today's step count and write to `step_logs` Drift table
+- [x] 🟢 Set up background sync — WorkManager (Android) / `BGAppRefreshTask` (iOS) to batch-sync steps at 15m intervals
+- [x] 🟢 Build `StepsScreen` — historical charts and today's progress visualization
 - [ ] 🟢 Fallback: use `pedometer` package if health platform permissions are denied
-- [ ] 🟢 Set up background sync — WorkManager (Android) / `BGAppRefreshTask` (iOS) to batch-sync steps at midnight
 - [ ] 🟢 Implement **adaptive goal** — daily target = 7-day rolling average
 - [ ] 🟢 Add inactivity nudge — detect > 60 min phone inactivity → push gentle movement reminder
 - [ ] 🟢 Award +5 XP per 1,000 steps (max 50 XP/day)

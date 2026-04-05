@@ -2,6 +2,7 @@ import 'package:workmanager/workmanager.dart';
 
 import 'background_sync_runner.dart';
 import 'sync_service.dart';
+import '../../features/steps/data/health_service.dart';
 
 @pragma('vm:entry-point')
 void callbackDispatcher() {
@@ -11,10 +12,20 @@ void callbackDispatcher() {
     await runner.init();
 
     try {
-      // 2. Process Sync Queue
+      // 2. Process Health Sync (Passive)
+      final user = await runner.db.select(runner.db.userProfiles).getSingleOrNull();
+      if (user != null) {
+        final health = HealthService(runner.db);
+        final hasPermission = await health.requestPermissions();
+        if (hasPermission) {
+          await health.syncTodayMetrics(user.id);
+        }
+      }
+
+      // 3. Process Sync Queue
       await SyncService.processManual(runner.db, runner.databases);
     } finally {
-      // 3. Cleanup
+      // 4. Cleanup
       await runner.dispose();
     }
     

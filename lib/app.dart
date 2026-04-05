@@ -12,6 +12,7 @@ import 'features/dashboard/presentation/dashboard_screen.dart';
 import 'features/food/presentation/food_log_screen.dart';
 import 'features/food/presentation/food_search_screen.dart';
 import 'features/food/presentation/food_detail_screen.dart';
+import 'features/steps/presentation/steps_screen.dart';
 import 'core/storage/app_database.dart';
 
 class FitKarmaApp extends ConsumerWidget {
@@ -113,7 +114,7 @@ class FitKarmaApp extends ConsumerWidget {
             ),
             GoRoute(
               path: '/steps',
-              builder: (context, state) => const _PlaceholderScreen(title: 'Steps · कदम'),
+              builder: (context, state) => const StepsScreen(),
             ),
             GoRoute(
               path: '/profile',
