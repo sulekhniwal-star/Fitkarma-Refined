@@ -48,7 +48,7 @@ final class AuthRepositoryProvider
   }
 }
 
-String _$authRepositoryHash() => r'd4d1a0ad163cc2c2a356f385e841212c54a7a5a3';
+String _$authRepositoryHash() => r'ea0d51f9426ca424320871fafa9bdffba41b2aa5';
 
 /// A provider that exposes the current Appwrite User, or null if logged out.
 
@@ -92,7 +92,7 @@ final class CurrentUserProvider
   }
 }
 
-String _$currentUserHash() => r'4a1d968a9cedf9c31ee817443670e79d6574ae49';
+String _$currentUserHash() => r'fb855c87dc47c968dcbc4090e080d440b5dac6e3';
 
 /// A provider that manages the authentication state (authenticated/unauthenticated/initial).
 
@@ -136,4 +136,4 @@ final class AuthStateChangesProvider
   }
 }
 
-String _$authStateChangesHash() => r'506903f36836124cc60eca850f1b1af144ac60b2';
+String _$authStateChangesHash() => r'c8a6a5e99e6e41dbb7418e32be508d050474b0ed';

@@ -382,18 +382,21 @@
 ---
 
 ## Phase 9 — Workout System
+- [x] ⚡🔴 **Structured Workout Library** — add `Exercises` and `ExerciseSets` Drift tables
+- [x] 🟡 **Foundational Exercise Seeding** — 100+ items including Indian regional context (Surya Namaskar)
+- [x] ⚡🔴 **Workout Log Screen** — dynamic addition of sets with `Weight` · `Reps` · `RPE` inputs
 - [ ] ⚡🟢 Seed workout data into the Appwrite `workouts` collection (title, YouTube ID, duration, difficulty, category)
-- [ ] 🟢 Build `WorkoutHomeScreen` — category grid (Yoga, HIIT, Strength, Dance, Bollywood, Pranayama…)
+- [x] 🟢 Build `WorkoutHomeScreen` — category grid (Yoga, HIIT, Strength, Dance, Bollywood, Pranayama…)
 - [ ] 🟢 Build `WorkoutDetailScreen` — thumbnail, description, difficulty, duration, Start button
 - [ ] 🟢 **YouTube player** — `youtube_player_flutter` — play workout by YouTube video ID
 - [ ] 🟢 **GPS Outdoor** — `geolocator` tracks location → `flutter_map` draws the route on OpenStreetMap
 - [ ] 🆕🟡 **Offline map tile caching** — use `flutter_map_tile_caching` to pre-cache tiles for the user's home region (detected from onboarding city) before first GPS workout; prevents blank map on 2G
 - [ ] 🟡 **Custom Workout Builder** — add exercises with sets/reps/rest time; save as a custom workout
-- [ ] 🆕🟡 **Rest timer between sets** — countdown timer that auto-starts after each set is logged; configurable duration per exercise; plays a soft chime on completion
-- [ ] 🆕🟢 **RPE (Rate of Perceived Exertion) logging** — add a 1–10 RPE slider to the post-workout summary; store in `workout_logs.rpe`; use in the correlation engine
+- [x] 🆕🟡 **Rest timer between sets** — countdown timer that auto-starts after each set is logged; configurable duration per exercise; plays a soft chime on completion
+- [x] 🆕🟢 **RPE (Rate of Perceived Exertion) logging** — add a 1–10 RPE slider to the post-workout summary; store in `workout_logs.rpe`; use in the correlation engine
 - [ ] 🟡 **Workout Calendar** — schedule future workouts; mark rest days
-- [ ] 🟢 Log completed workout to `workout_logs` Drift table → sync queue → award +20 XP
-- [ ] 🟡 Auto-detect **personal records** (max lift, fastest 5K, longest run) and award +100 XP
+- [x] 🟢 Log completed workout to `workout_logs` Drift table → sync queue → award +20 XP
+- [x] 🟡 Auto-detect **personal records** (max lift, fastest 5K, longest run) and award +100 XP
 
 ---
 

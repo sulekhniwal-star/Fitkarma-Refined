@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'auth_service.dart';
+part of 'workout_controller.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -9,27 +9,28 @@ part of 'auth_service.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(AuthService)
-final authServiceProvider = AuthServiceProvider._();
+@ProviderFor(WorkoutController)
+final workoutControllerProvider = WorkoutControllerProvider._();
 
-final class AuthServiceProvider extends $NotifierProvider<AuthService, void> {
-  AuthServiceProvider._()
+final class WorkoutControllerProvider
+    extends $NotifierProvider<WorkoutController, void> {
+  WorkoutControllerProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'authServiceProvider',
+        name: r'workoutControllerProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$authServiceHash();
+  String debugGetCreateSourceHash() => _$workoutControllerHash();
 
   @$internal
   @override
-  AuthService create() => AuthService();
+  WorkoutController create() => WorkoutController();
 
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(void value) {
@@ -40,9 +41,9 @@ final class AuthServiceProvider extends $NotifierProvider<AuthService, void> {
   }
 }
 
-String _$authServiceHash() => r'9df3492ff572ff5f6d944077bb1a8a6a5c6e9e16';
+String _$workoutControllerHash() => r'35ab63f3a7b2b61d634468993a92e1997d7e752b';
 
-abstract class _$AuthService extends $Notifier<void> {
+abstract class _$WorkoutController extends $Notifier<void> {
   void build();
   @$mustCallSuper
   @override

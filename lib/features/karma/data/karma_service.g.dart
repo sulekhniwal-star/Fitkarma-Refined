@@ -40,7 +40,7 @@ final class KarmaServiceProvider extends $NotifierProvider<KarmaService, void> {
   }
 }
 
-String _$karmaServiceHash() => r'8eb6fb0ab99674724e30158adfe57739797c9aa9';
+String _$karmaServiceHash() => r'3619fc4d189047ea178bac5b9ab985271002c1fc';
 
 abstract class _$KarmaService extends $Notifier<void> {
   void build();

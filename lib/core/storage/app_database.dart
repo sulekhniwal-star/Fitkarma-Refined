@@ -17,6 +17,7 @@ part 'app_database.g.dart';
     MoodLogs, Medications, Habits, HabitCompletions, BodyMeasurements,
     FastingLogs, MealPlans, Recipes, PersonalRecords, NutritionGoals,
     KarmaTransactions, SyncQueue, SyncDeadLetter, UserProfiles,
+    Exercises, ExerciseSets, Workouts,
     // Sensitive / encrypted tables
     BloodPressureLogs, GlucoseLogs, Spo2Logs, PeriodLogs,
     JournalEntries, DoctorAppointments,
@@ -34,6 +35,7 @@ part 'app_database.g.dart';
     EmergencyCardDao, FestivalCalendarDao, RemoteConfigCacheDao,
     KarmaTransactionsDao, NutritionGoalsDao, PersonalRecordsDao,
     SyncQueueDao, SyncDeadLetterDao, UserProfilesDao,
+    ExercisesDao, ExerciseSetsDao, WorkoutsDao,
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -54,7 +56,7 @@ class AppDatabase extends _$AppDatabase {
   }
 
   @override
-  int get schemaVersion => 6;
+  int get schemaVersion => 9;
 
   @override
   MigrationStrategy get migration {
@@ -90,12 +92,22 @@ class AppDatabase extends _$AppDatabase {
           await m.createTable(journalEntries);
           await m.createTable(doctorAppointments);
         }
-        // v4 → v5: India ecosystem + platform tables
-        if (from < 5) {
-          await m.createTable(abhaLinks);
-          await m.createTable(emergencyCards);
-          await m.createTable(festivalCalendar);
-          await m.createTable(remoteConfigCaches);
+        // v5 → v6: user profiles
+        if (from < 6) {
+          await m.createTable(userProfiles);
+        }
+        // v6 → v7: exercises and sets
+        if (from < 7) {
+          await m.createTable(exercises);
+          await m.createTable(exerciseSets);
+        }
+        // v7 → v8: PR reps tracking
+        if (from < 8) {
+          await m.addColumn(personalRecords, personalRecords.reps);
+        }
+        // v8 → v9: Workouts library
+        if (from < 9) {
+          await m.createTable(workouts);
         }
       },
       onCreate: (m) async {
@@ -329,5 +341,23 @@ class UserProfilesDao extends DatabaseAccessor<AppDatabase> with _$UserProfilesD
 
   Future<void> upsertProfile(UserProfilesCompanion profile) =>
       into(userProfiles).insertOnConflictUpdate(profile);
+}
+
+@DriftAccessor(tables: [Exercises])
+class ExercisesDao extends DatabaseAccessor<AppDatabase> with _$ExercisesDaoMixin {
+  ExercisesDao(super.db);
+}
+
+@DriftAccessor(tables: [ExerciseSets])
+class ExerciseSetsDao extends DatabaseAccessor<AppDatabase> with _$ExerciseSetsDaoMixin {
+  ExerciseSetsDao(super.db);
+}
+
+@DriftAccessor(tables: [Workouts])
+class WorkoutsDao extends DatabaseAccessor<AppDatabase> with _$WorkoutsDaoMixin {
+  WorkoutsDao(super.db);
+
+  Future<List<Workout>> getAllWorkouts() => select(workouts).get();
+  Future<List<Workout>> getByCategory(String category) => (select(workouts)..where((t) => t.category.equals(category))).get();
 }
 

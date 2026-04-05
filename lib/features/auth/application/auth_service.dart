@@ -1,5 +1,5 @@
 // lib/features/auth/application/auth_service.dart
-import 'package:appwrite/appwrite.dart';
+import 'package:appwrite/enums.dart' show OAuthProvider;
 import 'package:appwrite/models.dart' as models;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../data/auth_repository.dart';
@@ -34,7 +34,7 @@ class AuthService extends _$AuthService {
   /// Initiates Google OAuth2 login via Appwrite.
   Future<void> loginWithGoogle() async {
     final account = ref.read(accountProvider);
-    await account.createOAuth2Session(provider: 'google');
+    await account.createOAuth2Session(provider: OAuthProvider.google);
     ref.invalidate(authStateChangesProvider);
   }
 
@@ -42,7 +42,7 @@ class AuthService extends _$AuthService {
   Future<void> loginWithApple() async {
     final account = ref.read(accountProvider);
     try {
-      await account.createOAuth2Session(provider: 'apple');
+      await account.createOAuth2Session(provider: OAuthProvider.apple);
       ref.invalidate(authStateChangesProvider);
     } catch (e) {
       // Handle or rethrow

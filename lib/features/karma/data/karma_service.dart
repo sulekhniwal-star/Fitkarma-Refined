@@ -15,7 +15,7 @@ part 'karma_service.g.dart';
 enum KarmaAction {
   foodLog(5, 'Food Logged'),
   stepGoal(50, 'Daily Step Goal Reached'),
-  workout(30, 'Workout Completed'),
+  workout(20, 'Workout Completed'),
   waterGoal(20, 'Water Intake Goal Reached'),
   moodLog(5, 'Mood Tracked'),
   bpLog(5, 'BP Logged'),
@@ -121,7 +121,7 @@ class KarmaService extends _$KarmaService {
         return query.watchSingle().map((row) => row.read(amountSum) ?? 0);
       },
       loading: () => Stream.value(0),
-      error: (_, __) => Stream.value(0),
+      error: (_, _) => Stream.value(0),
     );
   }
 

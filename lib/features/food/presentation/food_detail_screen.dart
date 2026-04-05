@@ -136,7 +136,7 @@ class _FoodDetailScreenState extends ConsumerState<FoodDetailScreen> {
             Expanded(
               flex: 2,
               child: DropdownButtonFormField<String>(
-                value: _selectedUnit,
+                initialValue: _selectedUnit,
                 items: [
                   const DropdownMenuItem(value: 'grams', child: Text('grams')),
                   ..._servingSizes.map((s) => DropdownMenuItem(value: s['name'] as String, child: Text(s['name']))),

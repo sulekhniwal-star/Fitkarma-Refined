@@ -57,13 +57,13 @@ class AuthRepository {
 }
 
 @riverpod
-AuthRepository authRepository(AuthRepositoryRef ref) {
+AuthRepository authRepository(Ref ref) {
   return AuthRepository(ref.watch(appwriteAccountProvider));
 }
 
 /// A provider that exposes the current Appwrite User, or null if logged out.
 @riverpod
-Future<models.User?> currentUser(CurrentUserRef ref) async {
+Future<models.User?> currentUser(Ref ref) async {
   final repo = ref.watch(authRepositoryProvider);
   try {
     return await repo.getCurrentUser();
@@ -75,7 +75,7 @@ Future<models.User?> currentUser(CurrentUserRef ref) async {
 
 /// A provider that manages the authentication state (authenticated/unauthenticated/initial).
 @riverpod
-Stream<models.User?> authStateChanges(AuthStateChangesRef ref) async* {
+Stream<models.User?> authStateChanges(Ref ref) async* {
   final repo = ref.watch(authRepositoryProvider);
   // Initial check
   models.User? user;

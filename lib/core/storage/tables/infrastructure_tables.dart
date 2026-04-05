@@ -156,6 +156,7 @@ class PersonalRecords extends Table {
   TextColumn get userId => text()();
   TextColumn get exerciseName => text()();
   RealColumn get value => real()();
+  IntColumn get reps => integer().nullable()();
   TextColumn get unit => text()();
   DateTimeColumn get achievedAt => dateTime()();
   TextColumn get syncStatus => text().withDefault(const Constant('pending'))();

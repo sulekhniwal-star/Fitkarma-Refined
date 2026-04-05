@@ -13,6 +13,10 @@ import 'features/food/presentation/food_log_screen.dart';
 import 'features/food/presentation/food_search_screen.dart';
 import 'features/food/presentation/food_detail_screen.dart';
 import 'features/steps/presentation/steps_screen.dart';
+import 'features/workout/presentation/workout_log_screen.dart';
+import 'features/workout/presentation/workout_list_screen.dart';
+import 'features/workout/presentation/workout_detail_screen.dart';
+import 'features/workout/presentation/personal_records_screen.dart';
 import 'core/storage/app_database.dart';
 
 class FitKarmaApp extends ConsumerWidget {
@@ -104,11 +108,22 @@ class FitKarmaApp extends ConsumerWidget {
             ),
             GoRoute(
               path: '/workout',
-              builder: (context, state) => const _PlaceholderScreen(title: 'Workout Home · व्यायाम'),
+              builder: (context, state) => const WorkoutListScreen(),
               routes: [
                 GoRoute(
+                  path: 'log',
+                  builder: (context, state) => const WorkoutLogScreen(),
+                ),
+                GoRoute(
+                  path: 'prs',
+                  builder: (context, state) => const PersonalRecordsScreen(),
+                ),
+                GoRoute(
                   path: ':id',
-                  builder: (context, state) => _PlaceholderScreen(title: 'Workout ${state.pathParameters['id']}'),
+                  builder: (context, state) {
+                    final id = state.pathParameters['id']!;
+                    return WorkoutDetailScreen(id: id);
+                  },
                 ),
               ],
             ),

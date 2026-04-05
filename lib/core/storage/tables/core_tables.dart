@@ -123,6 +123,7 @@ class UserProfiles extends Table {
   Set<Column> get primaryKey => {id};
 }
 
+
 @DataClassName('MoodLog')
 class MoodLogs extends Table {
   TextColumn get id => text()();
@@ -135,6 +136,54 @@ class MoodLogs extends Table {
   DateTimeColumn get loggedAt => dateTime()();
   TextColumn get syncStatus => text().withDefault(const Constant('pending'))();
 
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
+@DataClassName('Exercise')
+class Exercises extends Table {
+  TextColumn get id => text()();
+  TextColumn get name => text()();
+  TextColumn get muscleGroup => text()(); // Chest, Back, Legs, etc.
+  TextColumn get equipment => text().nullable()(); // Barbell, Dumbbell, Bodyweight
+  TextColumn get description => text().nullable()();
+  TextColumn get gifUrl => text().nullable()();
+  BoolColumn get isCustom => boolean().withDefault(const Constant(false))();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
+@DataClassName('ExerciseSet')
+class ExerciseSets extends Table {
+  TextColumn get id => text()();
+  TextColumn get workoutLogId => text()();
+  TextColumn get exerciseId => text()();
+  IntColumn get setNumber => integer()();
+  RealColumn get weight => real().nullable()();
+  IntColumn get reps => integer().nullable()();
+  IntColumn get rpe => integer().nullable()(); // 1-10
+  BoolColumn get isWarmup => boolean().withDefault(const Constant(false))();
+  BoolColumn get isCompleted => boolean().withDefault(const Constant(false))();
+  DateTimeColumn get createdAt => dateTime()();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
+@DataClassName('Workout')
+class Workouts extends Table {
+  TextColumn get id => text()(); 
+  TextColumn get title => text()();
+  TextColumn get youtubeId => text().nullable()();
+  IntColumn get durationMin => integer()();
+  TextColumn get difficulty => text()(); // Beginner, Intermediate, Advanced
+  TextColumn get category => text()(); // Yoga, HIIT, Strength, Dance, Bollywood, Pranayama
+  TextColumn get language => text().withDefault(const Constant('en'))();
+  BoolColumn get isPremium => boolean().withDefault(const Constant(false))();
+  RealColumn get rpeLevel => real().nullable()();
+  TextColumn get thumbnailUrl => text().nullable()();
+  
   @override
   Set<Column> get primaryKey => {id};
 }

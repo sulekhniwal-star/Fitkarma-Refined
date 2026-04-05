@@ -48,7 +48,7 @@ final class AppwriteClientProvider
   }
 }
 
-String _$appwriteClientHash() => r'd31effbf9decbd7b0741357239d5dd5bc9bba632';
+String _$appwriteClientHash() => r'33bc71e2aff0043749f9badd683f2b655cc42ab5';
 
 @ProviderFor(appwriteAccount)
 final appwriteAccountProvider = AppwriteAccountProvider._();
@@ -89,7 +89,7 @@ final class AppwriteAccountProvider
   }
 }
 
-String _$appwriteAccountHash() => r'44dd7a9ffb341d0fb4c68879c10e79bbe3447ea3';
+String _$appwriteAccountHash() => r'597a064e54a98d36e5d24a7044cdfb2cc2bfb867';
 
 @ProviderFor(appwriteDatabases)
 final appwriteDatabasesProvider = AppwriteDatabasesProvider._();
@@ -130,7 +130,7 @@ final class AppwriteDatabasesProvider
   }
 }
 
-String _$appwriteDatabasesHash() => r'53721f33c5471379d5360dae685172ec764616a1';
+String _$appwriteDatabasesHash() => r'fdde4fc25375ef56fe735f977afa45f3eb419aac';
 
 @ProviderFor(appwriteStorage)
 final appwriteStorageProvider = AppwriteStorageProvider._();
@@ -171,7 +171,7 @@ final class AppwriteStorageProvider
   }
 }
 
-String _$appwriteStorageHash() => r'7a8973e4cc5c8a9cfc05b608c19783d943a34fcb';
+String _$appwriteStorageHash() => r'7b28686df1dd17f89e0d29a2d4c23191dfa68f46';
 
 @ProviderFor(appwriteRealtime)
 final appwriteRealtimeProvider = AppwriteRealtimeProvider._();
@@ -212,4 +212,4 @@ final class AppwriteRealtimeProvider
   }
 }
 
-String _$appwriteRealtimeHash() => r'03d10228c6d7cc6699dc69169d2596fafd47d1a2';
+String _$appwriteRealtimeHash() => r'2dbc9325f9a9a1cd759367b7961e730676f300b2';

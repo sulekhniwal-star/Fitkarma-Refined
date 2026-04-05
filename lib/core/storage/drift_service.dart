@@ -37,6 +37,6 @@ class DriftService {
 
 /// Provider for the Drift database singleton.
 @Riverpod(keepAlive: true)
-AppDatabase driftDb(DriftDbRef ref) {
+AppDatabase driftDb(Ref ref) {
   return DriftService.db;
 }

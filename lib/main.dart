@@ -5,6 +5,8 @@ import 'app.dart';
 import 'core/storage/drift_service.dart';
 import 'core/network/sync_background_worker.dart';
 import 'features/food/data/food_seed_data.dart';
+import 'package:timezone/data/latest_all.dart' as tz;
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,6 +34,17 @@ void main() async {
     await SyncBackgroundWorker.scheduleSync();
   } catch (e) {
     debugPrint('Worker Initialization Error: $e');
+  }
+
+  // 4. Initialize notifications & timezone
+  try {
+    final notifications = FlutterLocalNotificationsPlugin();
+    const androidInit = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const initSettings = InitializationSettings(android: androidInit);
+    await notifications.initialize(settings: initSettings);
+    tz.initializeTimeZones();
+  } catch (e) {
+    debugPrint('Notification Initialization Error: $e');
   }
   
   runApp(

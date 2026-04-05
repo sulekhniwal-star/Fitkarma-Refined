@@ -67,6 +67,6 @@ class EncryptionService {
 }
 
 @riverpod
-EncryptionService encryptionService(EncryptionServiceRef ref, String dataClass) {
+EncryptionService encryptionService(Ref ref, String dataClass) {
   return EncryptionService(dataClass);
 }

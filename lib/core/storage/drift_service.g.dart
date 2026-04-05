@@ -52,4 +52,4 @@ final class DriftDbProvider
   }
 }
 
-String _$driftDbHash() => r'0d48977068a7ccb5f930d5f55c537e1ba700aa9b';
+String _$driftDbHash() => r'17349fa667de20372c4d8960f1ccc8f167d78198';

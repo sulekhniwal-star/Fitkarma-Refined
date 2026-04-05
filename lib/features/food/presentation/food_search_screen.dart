@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:drift/drift.dart' hide Column;
 import '../../../shared/theme/app_colors.dart';
 import '../../../shared/widgets/bilingual_text.dart';
 import '../../../shared/widgets/shimmer_loader.dart';

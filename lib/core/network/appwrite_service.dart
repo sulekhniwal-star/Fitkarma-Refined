@@ -5,7 +5,7 @@ import '../constants/app_config.dart';
 part 'appwrite_service.g.dart';
 
 @riverpod
-Client appwriteClient(AppwriteClientRef ref) {
+Client appwriteClient(Ref ref) {
   final client = Client()
     ..setEndpoint(AppConfig.appwriteEndpoint)
     ..setProject(AppConfig.appwriteProjectId)
@@ -14,21 +14,21 @@ Client appwriteClient(AppwriteClientRef ref) {
 }
 
 @riverpod
-Account appwriteAccount(AppwriteAccountRef ref) {
+Account appwriteAccount(Ref ref) {
   return Account(ref.watch(appwriteClientProvider));
 }
 
 @riverpod
-Databases appwriteDatabases(AppwriteDatabasesRef ref) {
+Databases appwriteDatabases(Ref ref) {
   return Databases(ref.watch(appwriteClientProvider));
 }
 
 @riverpod
-Storage appwriteStorage(AppwriteStorageRef ref) {
+Storage appwriteStorage(Ref ref) {
   return Storage(ref.watch(appwriteClientProvider));
 }
 
 @riverpod
-Realtime appwriteRealtime(AppwriteRealtimeRef ref) {
+Realtime appwriteRealtime(Ref ref) {
   return Realtime(ref.watch(appwriteClientProvider));
 }
