@@ -24,7 +24,7 @@ part 'app_database.g.dart';
     // India-specific tables
     LabReports, AbhaLinks,
     // Platform / infrastructure tables
-    EmergencyCards, FestivalCalendar, RemoteConfigCaches,
+    EmergencyCards, FestivalCalendar, WeddingEvents, RemoteConfigCaches,
   ],
   daos: [
     FoodLogsDao, FoodItemsDao, WorkoutLogsDao, StepLogsDao, SleepLogsDao,
@@ -35,7 +35,7 @@ part 'app_database.g.dart';
     EmergencyCardDao, FestivalCalendarDao, RemoteConfigCacheDao,
     KarmaTransactionsDao, NutritionGoalsDao, PersonalRecordsDao,
     SyncQueueDao, SyncDeadLetterDao, UserProfilesDao,
-    ExercisesDao, ExerciseSetsDao, WorkoutsDao,
+    ExercisesDao, ExerciseSetsDao, WorkoutsDao, WeddingEventsDao,
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -56,7 +56,7 @@ class AppDatabase extends _$AppDatabase {
   }
 
   @override
-  int get schemaVersion => 9;
+  int get schemaVersion => 10;
 
   @override
   MigrationStrategy get migration {
@@ -105,9 +105,11 @@ class AppDatabase extends _$AppDatabase {
         if (from < 8) {
           await m.addColumn(personalRecords, personalRecords.reps);
         }
-        // v8 → v9: Workouts library
-        if (from < 9) {
-          await m.createTable(workouts);
+        // v9 → v10: Expanded festivals + internal wedding planner
+        if (from < 10) {
+          await m.deleteTable('festival_calendar'); // recreating with new schema
+          await m.createTable(festivalCalendar);
+          await m.createTable(weddingEvents);
         }
       },
       onCreate: (m) async {
@@ -155,19 +157,33 @@ class AppDatabase extends _$AppDatabase {
     );
   }
 
-  // FTS5 search query
-  Future<List<FoodItem>> searchFoodFts(String query) {
+  Future<List<FoodItem>> searchFoodFts(String query, {List<String>? allowedIds, List<String>? forbiddenIds}) {
     if (query.isEmpty) return Future.value([]);
     final ftsQuery = query.trim().split(' ').map((t) => '$t*').join(' ');
-    return customSelect(
-      '''
+    
+    var sql = '''
       SELECT fi.* FROM food_items fi
       JOIN food_items_fts fts ON fi.rowid = fts.rowid
       WHERE food_items_fts MATCH ?
-      ORDER BY bm25(food_items_fts)
-      LIMIT 50
-      ''',
-      variables: [Variable.withString(ftsQuery)],
+    ''';
+    
+    final variables = [Variable.withString(ftsQuery)];
+    
+    if (allowedIds != null && allowedIds.isNotEmpty) {
+      sql += ' AND fi.id IN (${allowedIds.map((_) => '?').join(',')})';
+      variables.addAll(allowedIds.map((id) => Variable.withString(id)));
+    }
+    
+    if (forbiddenIds != null && forbiddenIds.isNotEmpty) {
+      sql += ' AND fi.id NOT IN (${forbiddenIds.map((_) => '?').join(',')})';
+      variables.addAll(forbiddenIds.map((id) => Variable.withString(id)));
+    }
+    
+    sql += ' ORDER BY bm25(food_items_fts) LIMIT 50';
+    
+    return customSelect(
+      sql,
+      variables: variables,
     ).map((row) => FoodItem.fromJson(row.data)).get();
   }
 }
@@ -288,6 +304,41 @@ class EmergencyCardDao extends DatabaseAccessor<AppDatabase> with _$EmergencyCar
 @DriftAccessor(tables: [FestivalCalendar])
 class FestivalCalendarDao extends DatabaseAccessor<AppDatabase> with _$FestivalCalendarDaoMixin {
   FestivalCalendarDao(super.db);
+
+  Future<List<FestivalCalendarEntry>> getActiveFestivals(DateTime date) {
+    final d = DateTime(date.year, date.month, date.day);
+    return (select(festivalCalendar)
+      ..where((t) => t.startDate.isSmallerOrEqual(Variable(d)) & t.endDate.isBiggerOrEqual(Variable(d))))
+      .get();
+  }
+
+  Future<List<FestivalCalendarEntry>> getUpcomingFestivals(DateTime from, int limit) {
+    return (select(festivalCalendar)
+      ..where((t) => t.startDate.isBiggerThan(Variable(from)))
+      ..orderBy([(t) => OrderingTerm(expression: t.startDate, mode: OrderingMode.asc)])
+      ..limit(limit))
+      .get();
+  }
+
+  Future<void> upsertFestivals(List<FestivalCalendarCompanion> rows) async {
+    await batch((batch) {
+      batch.insertAllOnConflictUpdate(festivalCalendar, rows);
+    });
+  }
+}
+
+@DriftAccessor(tables: [WeddingEvents])
+class WeddingEventsDao extends DatabaseAccessor<AppDatabase> with _$WeddingEventsDaoMixin {
+  WeddingEventsDao(super.db);
+
+  Future<WeddingEventEntry?> getActiveWeddingPlan(String userId) {
+    final now = DateTime.now();
+    return (select(weddingEvents)
+      ..where((t) => t.userId.equals(userId) & t.startDate.isSmallerOrEqualValue(now) & t.endDate.isBiggerOrEqualValue(now))
+      ..orderBy([(t) => OrderingTerm(expression: t.createdAt, mode: OrderingMode.desc)])
+      ..limit(1))
+      .getSingleOrNull();
+  }
 }
 
 @DriftAccessor(tables: [RemoteConfigCaches])

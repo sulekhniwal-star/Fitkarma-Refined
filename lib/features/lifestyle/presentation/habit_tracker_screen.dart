@@ -96,7 +96,7 @@ class _FastingTrackerScreenState extends State<FastingTrackerScreen> {
   String _protocol = '16:8';
   bool _isFasting = false;
   DateTime? _startTime;
-  int _elapsedMinutes = 0;
+  final int _elapsedMinutes = 0;
 
   final _protocols = ['16:8', '18:6', '20:4', '5:2', 'OMAD'];
 

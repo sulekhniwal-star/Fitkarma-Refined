@@ -105,6 +105,10 @@ class DashboardScreen extends ConsumerWidget {
         children: [
           const SizedBox(height: 20),
           _buildHealthSummary(context, data),
+          if (data.activeFestivals.isNotEmpty || data.activeWeddingPlan != null) ...[
+            const SizedBox(height: 24),
+            _buildContextualAdvice(context, data),
+          ],
           const SizedBox(height: 24),
           const InsightCard(
             title: "Ayurvedic Tip",
@@ -181,6 +185,32 @@ class DashboardScreen extends ConsumerWidget {
         ],
       ),
     );
+  }
+
+  Widget _buildContextualAdvice(BuildContext context, DashboardData data) {
+    if (data.activeWeddingPlan != null) {
+      final plan = data.activeWeddingPlan!;
+      return InsightCard(
+        title: "Wedding Prep: ${plan.phase.name}",
+        message: plan.adviceEn,
+        backgroundColor: const Color(0xFFFFF9E6), // Gold tint
+        icon: Icons.celebration,
+        iconColor: const Color(0xFFD4AF37),
+      );
+    }
+
+    if (data.activeFestivals.isNotEmpty) {
+      final festival = data.activeFestivals.first;
+      return InsightCard(
+        title: "Festival: ${festival.festivalKey}",
+        message: festival.insightMessage,
+        backgroundColor: Colors.orange.shade50,
+        icon: Icons.timer,
+        iconColor: Colors.orange,
+      );
+    }
+
+    return const SizedBox.shrink();
   }
 
   Widget _buildMetricRow(IconData icon, String label, String value) {

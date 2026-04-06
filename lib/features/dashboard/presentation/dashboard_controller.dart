@@ -3,6 +3,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../core/di/providers.dart';
 import '../../../core/storage/app_database.dart';
 import '../../auth/data/auth_repository.dart';
+import '../../festival_calendar/domain/festival_diet_engine.dart';
+import '../../wedding/domain/wedding_diet_engine.dart';
 import '../../../core/utils/ayur_utils.dart';
 
 part 'dashboard_controller.g.dart';
@@ -19,6 +21,8 @@ class DashboardData {
   final SleepLog? lastSleep;
   final List<FoodLog> todayMeals;
   final List<WorkoutLog> recentWorkouts;
+  final List<FestivalDietConfig> activeFestivals;
+  final WeddingDietPlan? activeWeddingPlan;
 
   DashboardData({
     this.profile,
@@ -32,6 +36,8 @@ class DashboardData {
     this.lastSleep,
     this.todayMeals = const [],
     this.recentWorkouts = const [],
+    this.activeFestivals = const [],
+    this.activeWeddingPlan,
   });
 }
 
@@ -45,13 +51,14 @@ class DashboardController extends _$DashboardController {
     final db = ref.read(databaseProvider);
     final userId = user.$id;
 
-    // Fetch in parallel for <1s load
     final results = await Future.wait([
       db.userProfilesDao.getProfile(userId),
       _getTodaySteps(db, userId),
       _getTodayNutrition(db, userId),
       _getLastSleep(db, userId),
       _getRecentWorkouts(db, userId),
+      ref.watch(festivalDietProviderProvider.future),
+      ref.watch(weddingDietProviderProvider.future),
     ]);
 
     final profile = results[0] as UserProfile?;
@@ -59,6 +66,8 @@ class DashboardController extends _$DashboardController {
     final nutrition = results[2] as Map<String, double>;
     final sleep = results[3] as SleepLog?;
     final workouts = results[4] as List<WorkoutLog>;
+    final festivals = results[5] as List<FestivalDietConfig>;
+    final weddingPlan = results[6] as WeddingDietPlan?;
 
     Map<String, double> doshaPercentages = {};
     if (profile?.doshaScores != null) {
@@ -79,6 +88,8 @@ class DashboardController extends _$DashboardController {
       todayMeals: await _getTodayMeals(db, userId),
       lastSleep: sleep,
       recentWorkouts: workouts,
+      activeFestivals: festivals,
+      activeWeddingPlan: weddingPlan,
     );
   }
 

@@ -1,10 +1,89 @@
+import 'package:drift/drift.dart' show OrderingTerm, OrderingMode;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
-import 'package:drift/drift.dart' hide Column;
-
+import '../../../shared/theme/app_colors.dart';
+import '../../../core/di/providers.dart';
 import '../../../core/storage/app_database.dart';
+import '../../auth/data/auth_repository.dart';
+import '../../karma/data/karma_service.dart';
 
+// ── Glucose Classification ────────────────────────────────────────────────────
+enum GlucoseTestType { fasting, postMeal, random, bedtime }
+
+extension GlucoseTestTypeExt on GlucoseTestType {
+  String get label {
+    switch (this) {
+      case GlucoseTestType.fasting:  return 'Fasting';
+      case GlucoseTestType.postMeal: return 'Post-meal (2h)';
+      case GlucoseTestType.random:   return 'Random';
+      case GlucoseTestType.bedtime:  return 'Bedtime';
+    }
+  }
+  String get labelHi {
+    switch (this) {
+      case GlucoseTestType.fasting:  return 'खाली पेट';
+      case GlucoseTestType.postMeal: return 'खाने के 2 घंटे बाद';
+      case GlucoseTestType.random:   return 'कभी भी';
+      case GlucoseTestType.bedtime:  return 'सोने से पहले';
+    }
+  }
+}
+
+enum GlucoseClass { normal, prediabetes, diabetes, hypoglycemia }
+
+extension GlucoseClassExt on GlucoseClass {
+  String get label {
+    switch (this) {
+      case GlucoseClass.normal:       return 'Normal';
+      case GlucoseClass.prediabetes:  return 'Pre-diabetes';
+      case GlucoseClass.diabetes:     return 'High — Consult Doctor';
+      case GlucoseClass.hypoglycemia: return '⚠️ Low — Act Now';
+    }
+  }
+
+  Color get color {
+    switch (this) {
+      case GlucoseClass.normal:       return const Color(0xFF2ECC71);
+      case GlucoseClass.prediabetes:  return const Color(0xFFF39C12);
+      case GlucoseClass.diabetes:     return const Color(0xFFE74C3C);
+      case GlucoseClass.hypoglycemia: return const Color(0xFFAD1457);
+    }
+  }
+}
+
+GlucoseClass classifyFasting(double mgDl) {
+  if (mgDl < 54)  return GlucoseClass.hypoglycemia;
+  if (mgDl < 100) return GlucoseClass.normal;
+  if (mgDl < 126) return GlucoseClass.prediabetes;
+  return GlucoseClass.diabetes;
+}
+
+GlucoseClass classifyPostMeal2h(double mgDl) {
+  if (mgDl < 54)  return GlucoseClass.hypoglycemia;
+  if (mgDl < 140) return GlucoseClass.normal;
+  if (mgDl < 200) return GlucoseClass.prediabetes;
+  return GlucoseClass.diabetes;
+}
+
+GlucoseClass classifyRandom(double mgDl) {
+  if (mgDl < 54)  return GlucoseClass.hypoglycemia;
+  if (mgDl < 140) return GlucoseClass.normal;
+  if (mgDl < 200) return GlucoseClass.prediabetes;
+  return GlucoseClass.diabetes;
+}
+
+// ── Provider ──────────────────────────────────────────────────────────────────
+final glucoseLogsProvider = StreamProvider.family<List<GlucoseLog>, String>((ref, userId) {
+  final db = ref.watch(databaseProvider);
+  return (db.select(db.glucoseLogs)
+    ..where((t) => t.userId.equals(userId))
+    ..orderBy([(t) => OrderingTerm(expression: t.loggedAt, mode: OrderingMode.desc)])
+    ..limit(30))
+      .watch();
+});
+
+// ── Screen ────────────────────────────────────────────────────────────────────
 class GlucoseLogScreen extends ConsumerStatefulWidget {
   const GlucoseLogScreen({super.key});
 
@@ -13,250 +92,381 @@ class GlucoseLogScreen extends ConsumerStatefulWidget {
 }
 
 class _GlucoseLogScreenState extends ConsumerState<GlucoseLogScreen> {
-  final _valueController = TextEditingController();
-  String _testType = 'fasting';
-  bool _isLoading = false;
+  final _valueCtrl = TextEditingController();
+  GlucoseTestType _testType = GlucoseTestType.fasting;
+  GlucoseClass? _preview;
+  bool _saving = false;
 
-  String classifyFasting(double value) {
-    if (value < 70) return 'low';
-    if (value <= 100) return 'normal';
-    if (value <= 125) return 'prediabetes';
-    return 'diabetes';
+  @override
+  void dispose() {
+    _valueCtrl.dispose();
+    super.dispose();
   }
 
-  String classifyPostMeal(double value) {
-    if (value < 70) return 'low';
-    if (value <= 140) return 'normal';
-    if (value <= 199) return 'prediabetes';
-    return 'diabetes';
+  void _updatePreview() {
+    final v = double.tryParse(_valueCtrl.text);
+    if (v == null) { setState(() => _preview = null); return; }
+    setState(() {
+      switch (_testType) {
+        case GlucoseTestType.fasting:  _preview = classifyFasting(v);
+        case GlucoseTestType.postMeal: _preview = classifyPostMeal2h(v);
+        default:                       _preview = classifyRandom(v);
+      }
+    });
   }
 
-  Color getClassificationColor(String classification) {
-    switch (classification) {
-      case 'low':
-        return Colors.blue;
-      case 'normal':
-        return Colors.green;
-      case 'prediabetes':
-        return Colors.orange;
-      case 'diabetes':
-        return Colors.red;
-      default:
-        return Colors.grey;
-    }
-  }
+  Future<void> _save() async {
+    final v = double.tryParse(_valueCtrl.text);
+    if (v == null) return;
 
-  double? estimateHbA1c(List<double> recentValues) {
-    if (recentValues.isEmpty) return null;
-    final avg = recentValues.reduce((a, b) => a + b) / recentValues.length;
-    return (avg + 46.7) / 28.7;
-  }
+    setState(() => _saving = true);
+    final user = ref.read(currentUserProvider).asData?.value;
+    final db = ref.read(databaseProvider);
 
-  Future<void> _saveGlucoseLog() async {
-    final value = double.tryParse(_valueController.text);
+    await db.into(db.glucoseLogs).insert(
+      GlucoseLogsCompanion.insert(
+        id: const Uuid().v4(),
+        userId: user?.$id ?? 'local',
+        valueMgDl: v,
+        testType: _testType.name,
+        loggedAt: DateTime.now(),
+      ),
+    );
 
-    if (value == null) {
+    await ref.read(karmaServiceProvider.notifier).grantXP(KarmaAction.glucoseLog);
+    setState(() { _saving = false; _preview = null; });
+    _valueCtrl.clear();
+
+    if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter a valid value')),
-      );
-      return;
-    }
-
-    setState(() => _isLoading = true);
-
-    try {
-      final db = DriftService.db;
-      final id = const Uuid().v4();
-      final classification = _testType == 'after_meal'
-          ? classifyPostMeal(value)
-          : classifyFasting(value);
-
-      await db.into(db.glucoseLogs).insert(
-        GlucoseLogsCompanion.insert(
-          id: id,
-          userId: 'current_user',
-          valueMgDl: value,
-          testType: _testType,
-          loggedAt: DateTime.now(),
+        SnackBar(
+          content: Text('Glucose logged: ${v.round()} mg/dL — ${_preview?.label ?? ''}'),
+          backgroundColor: _preview?.color ?? AppColors.primary,
+          behavior: SnackBarBehavior.floating,
         ),
       );
-
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Glucose logged! +5 XP')),
-        );
-        _valueController.clear();
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e')),
-        );
-      }
-    } finally {
-      setState(() => _isLoading = false);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final user = ref.watch(currentUserProvider).asData?.value;
+    final logsAsync = ref.watch(glucoseLogsProvider(user?.$id ?? ''));
+
     return Scaffold(
+      backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text('Blood Glucose'),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+        title: const Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+            Text('Blood Glucose', style: TextStyle(fontWeight: FontWeight.bold)),
+            Text('रक्त ग्लूकोज', style: TextStyle(fontSize: 11, color: Colors.white60)),
+          ],
+        ),
+        backgroundColor: const Color(0xFF3498DB),
+        foregroundColor: Colors.white,
+        actions: [
+          Container(
+            margin: const EdgeInsets.only(right: 12),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: const Text('🔒 AES-256', style: TextStyle(color: Colors.white, fontSize: 11)),
+          ),
+        ],
+      ),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          // ── Test Type Selector ────────────────────────────────────
+          _TestTypeSelector(
+            selected: _testType,
+            onChanged: (t) { setState(() => _testType = t); _updatePreview(); },
+          ),
+          const SizedBox(height: 16),
+
+          // ── Input Card ────────────────────────────────────────────
+          _GlucoseInputCard(
+            ctrl: _valueCtrl,
+            preview: _preview,
+            onChanged: (_) => _updatePreview(),
+            onSave: _save,
+            saving: _saving,
+          ),
+
+          const SizedBox(height: 24),
+
+          // ── Reference Ranges ──────────────────────────────────────
+          _GlucoseReferenceCard(testType: _testType),
+
+          const SizedBox(height: 24),
+
+          // ── History ───────────────────────────────────────────────
+          const Text('Recent Readings · हालिया रीडिंग',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+          const SizedBox(height: 12),
+          logsAsync.when(
+            data: (logs) => logs.isEmpty
+                ? const _EmptyGlucoseState()
+                : Column(children: logs.take(10).map((l) => _GlucoseTile(log: l)).toList()),
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (e, _) => Text('Error: $e'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ── Widgets ───────────────────────────────────────────────────────────────────
+class _TestTypeSelector extends StatelessWidget {
+  const _TestTypeSelector({required this.selected, required this.onChanged});
+  final GlucoseTestType selected;
+  final ValueChanged<GlucoseTestType> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 44,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: GlucoseTestType.values.length,
+        itemBuilder: (context, i) {
+          final t = GlucoseTestType.values[i];
+          final isSel = t == selected;
+          return Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: FilterChip(
+              label: Text(t.label),
+              selected: isSel,
+              onSelected: (_) => onChanged(t),
+              selectedColor: const Color(0xFF3498DB).withOpacity(0.15),
+              labelStyle: TextStyle(
+                color: isSel ? const Color(0xFF3498DB) : Colors.grey[600],
+                fontWeight: isSel ? FontWeight.bold : FontWeight.normal,
+              ),
+              showCheckmark: false,
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _GlucoseInputCard extends StatelessWidget {
+  const _GlucoseInputCard({
+    required this.ctrl,
+    required this.preview,
+    required this.onChanged,
+    required this.onSave,
+    required this.saving,
+  });
+
+  final TextEditingController ctrl;
+  final GlucoseClass? preview;
+  final ValueChanged<String> onChanged;
+  final VoidCallback onSave;
+  final bool saving;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Theme.of(context).brightness == Brightness.dark
+            ? const Color(0xFF1E1E2E)
+            : Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.06), blurRadius: 12)],
+      ),
+      child: Column(
+        children: [
+          TextField(
+            controller: ctrl,
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            onChanged: onChanged,
+            style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+            textAlign: TextAlign.center,
+            decoration: const InputDecoration(
+              labelText: 'Glucose Level',
+              suffixText: 'mg/dL',
+              border: OutlineInputBorder(),
+              contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+            ),
+          ),
+
+          if (preview != null) ...[
+            const SizedBox(height: 14),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+              decoration: BoxDecoration(
+                color: preview!.color.withOpacity(0.12),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Text(preview!.label,
+                  style: TextStyle(color: preview!.color, fontWeight: FontWeight.bold)),
+            ),
+          ],
+
+          const SizedBox(height: 20),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: saving ? null : onSave,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF3498DB),
+                foregroundColor: Colors.white,
+                minimumSize: const Size.fromHeight(52),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+              ),
+              child: saving
+                  ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+                  : const Text('LOG GLUCOSE · ग्लूकोज सेव करें',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _GlucoseReferenceCard extends StatelessWidget {
+  const _GlucoseReferenceCard({required this.testType});
+  final GlucoseTestType testType;
+
+  @override
+  Widget build(BuildContext context) {
+    final ranges = testType == GlucoseTestType.postMeal
+        ? [
+            (GlucoseClass.normal,       'Normal', '< 140'),
+            (GlucoseClass.prediabetes,  'Pre-diabetes', '140-199'),
+            (GlucoseClass.diabetes,     'Diabetes', '≥ 200'),
+            (GlucoseClass.hypoglycemia, 'Low', '< 54'),
+          ]
+        : [
+            (GlucoseClass.normal,       'Normal', '70-99'),
+            (GlucoseClass.prediabetes,  'Pre-diabetes', '100-125'),
+            (GlucoseClass.diabetes,     'Diabetes', '≥ 126'),
+            (GlucoseClass.hypoglycemia, 'Low', '< 70'),
+          ];
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Theme.of(context).brightness == Brightness.dark
+            ? const Color(0xFF1E1E2E)
+            : Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 8)],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('Reference Ranges (mg/dL)',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+          const SizedBox(height: 12),
+          ...ranges.map((r) => Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Row(
                   children: [
-                    Text(
-                      'Log Glucose',
-                      style: Theme.of(context).textTheme.titleMedium,
+                    Container(
+                      width: 8, height: 8,
+                      decoration: BoxDecoration(color: r.$1.color, shape: BoxShape.circle),
                     ),
-                    const SizedBox(height: 16),
-                    SegmentedButton<String>(
-                      segments: const [
-                        ButtonSegment(value: 'fasting', label: Text('Fasting')),
-                        ButtonSegment(value: 'after_meal', label: Text('Post-Meal')),
-                        ButtonSegment(value: 'random', label: Text('Random')),
-                        ButtonSegment(value: 'bedtime', label: Text('Bedtime')),
-                      ],
-                      selected: {_testType},
-                      onSelectionChanged: (selected) {
-                        setState(() => _testType = selected.first);
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    TextField(
-                      controller: _valueController,
-                      keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
-                        labelText: 'Glucose Level',
-                        hintText: '100',
-                        suffixText: 'mg/dL',
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-                    SizedBox(
-                      width: double.infinity,
-                      child: FilledButton(
-                        onPressed: _isLoading ? null : _saveGlucoseLog,
-                        child: _isLoading
-                            ? const SizedBox(
-                                height: 20,
-                                width: 20,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  color: Colors.white,
-                                ),
-                              )
-                            : const Text('Save'),
-                      ),
-                    ),
+                    const SizedBox(width: 10),
+                    Expanded(child: Text(r.$2, style: const TextStyle(fontSize: 13))),
+                    Text(r.$3, style: TextStyle(color: Colors.grey[500], fontSize: 12)),
                   ],
                 ),
+              )),
+        ],
+      ),
+    );
+  }
+}
+
+class _GlucoseTile extends StatelessWidget {
+  const _GlucoseTile({required this.log});
+  final GlucoseLog log;
+
+  @override
+  Widget build(BuildContext context) {
+    final classification = log.testType == 'postMeal'
+        ? classifyPostMeal2h(log.valueMgDl)
+        : classifyFasting(log.valueMgDl);
+    final time = '${log.loggedAt.hour.toString().padLeft(2, '0')}:${log.loggedAt.minute.toString().padLeft(2, '0')}';
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      decoration: BoxDecoration(
+        color: Theme.of(context).brightness == Brightness.dark
+            ? const Color(0xFF1E1E2E)
+            : Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        border: Border(left: BorderSide(color: classification.color, width: 4)),
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 6)],
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('${log.valueMgDl.round()} mg/dL',
+                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 22)),
+                Text(GlucoseTestType.values.firstWhere((t) => t.name == log.testType, orElse: () => GlucoseTestType.random).label,
+                    style: TextStyle(color: Colors.grey[500], fontSize: 12)),
+              ],
+            ),
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: classification.color.withOpacity(0.12),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  classification.label,
+                  style: TextStyle(color: classification.color, fontSize: 10, fontWeight: FontWeight.bold),
+                ),
               ),
-            ),
-            const SizedBox(height: 24),
-            Text(
-              'Recent Readings',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            const SizedBox(height: 8),
-            _buildRecentLogs(),
+              const SizedBox(height: 4),
+              Text('${log.loggedAt.day}/${log.loggedAt.month}  $time',
+                  style: TextStyle(color: Colors.grey[400], fontSize: 11)),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _EmptyGlucoseState extends StatelessWidget {
+  const _EmptyGlucoseState();
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          children: [
+            const Text('🩸', style: TextStyle(fontSize: 48)),
+            const SizedBox(height: 12),
+            const Text('No readings yet', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+            Text('Log your first glucose reading above',
+                style: TextStyle(color: Colors.grey[500], fontSize: 13)),
           ],
         ),
       ),
     );
   }
-
-  Widget _buildRecentLogs() {
-    return FutureBuilder<List<GlucoseLog>>(
-      future: () async {
-        final db = DriftService.db;
-        return (db.select(db.glucoseLogs)
-              ..orderBy([(t) => OrderingTerm.desc(t.loggedAt)])
-              ..limit(10))
-            .get();
-      }(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        final logs = snapshot.data ?? [];
-        if (logs.isEmpty) {
-          return Card(
-            child: Padding(
-              padding: const EdgeInsets.all(24),
-              child: Center(
-                child: Column(
-                  children: [
-                    Icon(Icons.water_drop,
-                        size: 48,
-                        color: Theme.of(context).colorScheme.primary),
-                    const SizedBox(height: 8),
-                    const Text('No glucose logs yet'),
-                  ],
-                ),
-              ),
-            ),
-          );
-        }
-
-        return ListView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: logs.length,
-          itemBuilder: (context, index) {
-            final log = logs[index];
-            final classification = log.testType == 'after_meal'
-                ? classifyPostMeal(log.valueMgDl)
-                : classifyFasting(log.valueMgDl);
-            final color = getClassificationColor(classification);
-
-            return Card(
-              child: ListTile(
-                leading: CircleAvatar(
-                  backgroundColor: color.withValues(alpha: 0.1),
-                  child: Icon(Icons.water_drop, color: color),
-                ),
-                title: Text('${log.valueMgDl.toInt()} mg/dL'),
-                subtitle: Text(
-                  '${log.testType} · ${log.loggedAt.day}/${log.loggedAt.month}',
-                ),
-                trailing: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: color.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    classification.toUpperCase(),
-                    style: TextStyle(color: color, fontSize: 10, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
-
-  @override
-  void dispose() {
-    _valueController.dispose();
-    super.dispose();
-  }
-}
-
-class DriftService {
-  static AppDatabase get db => throw UnimplementedError();
 }

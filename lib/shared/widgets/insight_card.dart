@@ -7,6 +7,11 @@ class InsightCard extends StatelessWidget {
   final VoidCallback? onThumbsDown;
   final VoidCallback? onTap;
 
+  final IconData? icon;
+  final Color? iconColor;
+  final Color? backgroundColor;
+  final List<Color>? gradientColors;
+
   const InsightCard({
     super.key,
     required this.title,
@@ -14,6 +19,10 @@ class InsightCard extends StatelessWidget {
     this.onThumbsUp,
     this.onThumbsDown,
     this.onTap,
+    this.icon,
+    this.iconColor,
+    this.backgroundColor,
+    this.gradientColors,
   });
 
   @override
@@ -26,17 +35,17 @@ class InsightCard extends StatelessWidget {
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          // Amber/Gold gradient for highlights
-          gradient: LinearGradient(
-            colors: isDark 
+          color: backgroundColor,
+          gradient: backgroundColor != null ? null : LinearGradient(
+            colors: gradientColors ?? (isDark 
               ? [Colors.amber[900]!.withOpacity(0.3), Colors.amber[800]!.withOpacity(0.1)]
-              : [Colors.amber[100]!, Colors.amber[50]!],
+              : [Colors.amber[100]!, Colors.amber[50]!]),
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: Colors.amber.withOpacity(0.3),
+            color: (iconColor ?? Colors.amber).withOpacity(0.3),
             width: 1,
           ),
           boxShadow: [
@@ -52,7 +61,7 @@ class InsightCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                const Icon(Icons.lightbulb_outline, color: Colors.amber, size: 24),
+                Icon(icon ?? Icons.lightbulb_outline, color: iconColor ?? Colors.amber, size: 24),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(

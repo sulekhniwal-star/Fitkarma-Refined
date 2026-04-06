@@ -5,7 +5,6 @@ import '../data/workout_providers.dart';
 import '../../../shared/theme/app_colors.dart';
 import '../../../shared/widgets/bilingual_text.dart';
 import '../../../shared/widgets/workout_card.dart';
-import '../../../core/storage/app_database.dart';
 
 class WorkoutListScreen extends ConsumerStatefulWidget {
   const WorkoutListScreen({super.key});

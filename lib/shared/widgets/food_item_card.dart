@@ -41,7 +41,7 @@ class FoodItemCard extends StatelessWidget {
                     width: 60,
                     height: 60,
                     fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => _placeholder(context),
+                    errorBuilder: (_, _, _) => _placeholder(context),
                   ),
                 )
               else

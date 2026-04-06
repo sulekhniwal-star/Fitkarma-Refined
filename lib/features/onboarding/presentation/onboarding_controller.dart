@@ -4,6 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../core/di/providers.dart';
 import '../../../core/storage/app_database.dart';
 import '../../auth/data/auth_repository.dart';
+import '../../food/domain/tdee_calculator.dart';
 
 part 'onboarding_controller.g.dart';
 
@@ -199,10 +200,70 @@ class OnboardingController extends _$OnboardingController {
         ),
       );
 
+      // 5. Calculate and store initial Nutrition Goals (Phase 10)
+      if (state.weight != null && state.height != null && state.dob != null && state.gender != null) {
+        final age = DateTime.now().year - state.dob!.year;
+        final goals = TdeeCalculator.calculateGoals(
+          weightKg: state.weight!,
+          heightCm: state.height!,
+          ageYears: age,
+          gender: _mapGender(state.gender!),
+          activity: _mapActivity(state.activityLevel ?? 'sedentary'),
+          goal: _mapGoal(state.fitnessGoal ?? 'maintenance'),
+        );
+
+        await db.nutritionGoalsDao.into(db.nutritionGoals).insert(
+          NutritionGoalsCompanion.insert(
+            id: DateTime.now().toIso8601String(),
+            userId: user.$id,
+            calorieTarget: goals.calorieTarget,
+            proteinTarget: Value(goals.proteinG),
+            carbsTarget: Value(goals.carbsG),
+            fatTarget: Value(goals.fatG),
+            updatedAt: DateTime.now(),
+            syncStatus: const Value('pending'),
+          ),
+        );
+      }
+
       // Final: Invalidate user related providers to refresh state
       ref.invalidate(currentUserProvider);
     } finally {
       state = state.copyWith(isSaving: false);
+    }
+  }
+
+  Gender _mapGender(String gender) {
+    if (gender.toLowerCase().contains('female')) return Gender.female;
+    if (gender.toLowerCase().contains('male')) return Gender.male;
+    return Gender.other;
+  }
+
+  ActivityLevel _mapActivity(String activity) {
+    switch (activity.toLowerCase()) {
+      case 'lightlyactive':
+      case 'lightly active': return ActivityLevel.lightlyActive;
+      case 'moderatelyactive':
+      case 'moderately active': return ActivityLevel.moderatelyActive;
+      case 'veryactive':
+      case 'very active': return ActivityLevel.veryActive;
+      case 'extremelyactive':
+      case 'extremely active': return ActivityLevel.extremelyActive;
+      default: return ActivityLevel.sedentary;
+    }
+  }
+
+  FitnessGoal _mapGoal(String goal) {
+    switch (goal.toLowerCase()) {
+      case 'weightloss':
+      case 'weight loss':
+      case 'lose weight': return FitnessGoal.weightLoss;
+      case 'musclegain':
+      case 'muscle gain':
+      case 'gain muscle': return FitnessGoal.muscleGain;
+      case 'athletic':
+      case 'performance': return FitnessGoal.athletic;
+      default: return FitnessGoal.maintenance;
     }
   }
 }

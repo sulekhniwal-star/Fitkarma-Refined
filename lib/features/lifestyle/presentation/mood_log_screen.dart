@@ -74,8 +74,11 @@ class _MoodLogScreenState extends ConsumerState<MoodLogScreen> {
                           selected: selected,
                           onSelected: (s) {
                             setState(() {
-                              if (s) _tags.add(tag);
-                              else _tags.remove(tag);
+                              if (s) {
+                                _tags.add(tag);
+                              } else {
+                                _tags.remove(tag);
+                              }
                             });
                           },
                         );

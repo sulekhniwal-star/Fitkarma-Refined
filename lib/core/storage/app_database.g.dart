@@ -17694,6 +17694,26 @@ class $FestivalCalendarTable extends FestivalCalendar
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _nameLocalMeta = const VerificationMeta(
+    'nameLocal',
+  );
+  @override
+  late final GeneratedColumn<String> nameLocal = GeneratedColumn<String>(
+    'name_local',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _yearMeta = const VerificationMeta('year');
+  @override
+  late final GeneratedColumn<int> year = GeneratedColumn<int>(
+    'year',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
   static const VerificationMeta _startDateMeta = const VerificationMeta(
     'startDate',
   );
@@ -17738,6 +17758,28 @@ class $FestivalCalendarTable extends FestivalCalendar
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _regionCodesMeta = const VerificationMeta(
+    'regionCodes',
+  );
+  @override
+  late final GeneratedColumn<String> regionCodes = GeneratedColumn<String>(
+    'region_codes',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _religionMeta = const VerificationMeta(
+    'religion',
+  );
+  @override
+  late final GeneratedColumn<String> religion = GeneratedColumn<String>(
+    'religion',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _isFastingDayMeta = const VerificationMeta(
     'isFastingDay',
   );
@@ -17753,17 +17795,120 @@ class $FestivalCalendarTable extends FestivalCalendar
     ),
     defaultValue: const Constant(false),
   );
+  static const VerificationMeta _fastingTypeMeta = const VerificationMeta(
+    'fastingType',
+  );
+  @override
+  late final GeneratedColumn<String> fastingType = GeneratedColumn<String>(
+    'fasting_type',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _allowedFoodsMeta = const VerificationMeta(
+    'allowedFoods',
+  );
+  @override
+  late final GeneratedColumn<String> allowedFoods = GeneratedColumn<String>(
+    'allowed_foods',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _forbiddenFoodsMeta = const VerificationMeta(
+    'forbiddenFoods',
+  );
+  @override
+  late final GeneratedColumn<String> forbiddenFoods = GeneratedColumn<String>(
+    'forbidden_foods',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _workoutNoteMeta = const VerificationMeta(
+    'workoutNote',
+  );
+  @override
+  late final GeneratedColumn<String> workoutNote = GeneratedColumn<String>(
+    'workout_note',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _insightMessageMeta = const VerificationMeta(
+    'insightMessage',
+  );
+  @override
+  late final GeneratedColumn<String> insightMessage = GeneratedColumn<String>(
+    'insight_message',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _karmaChallengeMeta = const VerificationMeta(
+    'karmaChallenge',
+  );
+  @override
+  late final GeneratedColumn<String> karmaChallenge = GeneratedColumn<String>(
+    'karma_challenge',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _computedDynamicallyMeta =
+      const VerificationMeta('computedDynamically');
+  @override
+  late final GeneratedColumn<bool> computedDynamically = GeneratedColumn<bool>(
+    'computed_dynamically',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("computed_dynamically" IN (0, 1))',
+    ),
+    defaultValue: const Constant(true),
+  );
+  static const VerificationMeta _computedAtMeta = const VerificationMeta(
+    'computedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> computedAt = GeneratedColumn<DateTime>(
+    'computed_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
     festivalKey,
     nameEn,
     nameHi,
+    nameLocal,
+    year,
     startDate,
     endDate,
     calendarSystem,
     dietPlanType,
+    regionCodes,
+    religion,
     isFastingDay,
+    fastingType,
+    allowedFoods,
+    forbiddenFoods,
+    workoutNote,
+    insightMessage,
+    karmaChallenge,
+    computedDynamically,
+    computedAt,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -17809,6 +17954,20 @@ class $FestivalCalendarTable extends FestivalCalendar
     } else if (isInserting) {
       context.missing(_nameHiMeta);
     }
+    if (data.containsKey('name_local')) {
+      context.handle(
+        _nameLocalMeta,
+        nameLocal.isAcceptableOrUnknown(data['name_local']!, _nameLocalMeta),
+      );
+    }
+    if (data.containsKey('year')) {
+      context.handle(
+        _yearMeta,
+        year.isAcceptableOrUnknown(data['year']!, _yearMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_yearMeta);
+    }
     if (data.containsKey('start_date')) {
       context.handle(
         _startDateMeta,
@@ -17847,6 +18006,21 @@ class $FestivalCalendarTable extends FestivalCalendar
     } else if (isInserting) {
       context.missing(_dietPlanTypeMeta);
     }
+    if (data.containsKey('region_codes')) {
+      context.handle(
+        _regionCodesMeta,
+        regionCodes.isAcceptableOrUnknown(
+          data['region_codes']!,
+          _regionCodesMeta,
+        ),
+      );
+    }
+    if (data.containsKey('religion')) {
+      context.handle(
+        _religionMeta,
+        religion.isAcceptableOrUnknown(data['religion']!, _religionMeta),
+      );
+    }
     if (data.containsKey('is_fasting_day')) {
       context.handle(
         _isFastingDayMeta,
@@ -17855,6 +18029,77 @@ class $FestivalCalendarTable extends FestivalCalendar
           _isFastingDayMeta,
         ),
       );
+    }
+    if (data.containsKey('fasting_type')) {
+      context.handle(
+        _fastingTypeMeta,
+        fastingType.isAcceptableOrUnknown(
+          data['fasting_type']!,
+          _fastingTypeMeta,
+        ),
+      );
+    }
+    if (data.containsKey('allowed_foods')) {
+      context.handle(
+        _allowedFoodsMeta,
+        allowedFoods.isAcceptableOrUnknown(
+          data['allowed_foods']!,
+          _allowedFoodsMeta,
+        ),
+      );
+    }
+    if (data.containsKey('forbidden_foods')) {
+      context.handle(
+        _forbiddenFoodsMeta,
+        forbiddenFoods.isAcceptableOrUnknown(
+          data['forbidden_foods']!,
+          _forbiddenFoodsMeta,
+        ),
+      );
+    }
+    if (data.containsKey('workout_note')) {
+      context.handle(
+        _workoutNoteMeta,
+        workoutNote.isAcceptableOrUnknown(
+          data['workout_note']!,
+          _workoutNoteMeta,
+        ),
+      );
+    }
+    if (data.containsKey('insight_message')) {
+      context.handle(
+        _insightMessageMeta,
+        insightMessage.isAcceptableOrUnknown(
+          data['insight_message']!,
+          _insightMessageMeta,
+        ),
+      );
+    }
+    if (data.containsKey('karma_challenge')) {
+      context.handle(
+        _karmaChallengeMeta,
+        karmaChallenge.isAcceptableOrUnknown(
+          data['karma_challenge']!,
+          _karmaChallengeMeta,
+        ),
+      );
+    }
+    if (data.containsKey('computed_dynamically')) {
+      context.handle(
+        _computedDynamicallyMeta,
+        computedDynamically.isAcceptableOrUnknown(
+          data['computed_dynamically']!,
+          _computedDynamicallyMeta,
+        ),
+      );
+    }
+    if (data.containsKey('computed_at')) {
+      context.handle(
+        _computedAtMeta,
+        computedAt.isAcceptableOrUnknown(data['computed_at']!, _computedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_computedAtMeta);
     }
     return context;
   }
@@ -17881,6 +18126,14 @@ class $FestivalCalendarTable extends FestivalCalendar
         DriftSqlType.string,
         data['${effectivePrefix}name_hi'],
       )!,
+      nameLocal: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name_local'],
+      ),
+      year: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}year'],
+      )!,
       startDate: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}start_date'],
@@ -17897,9 +18150,49 @@ class $FestivalCalendarTable extends FestivalCalendar
         DriftSqlType.string,
         data['${effectivePrefix}diet_plan_type'],
       )!,
+      regionCodes: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}region_codes'],
+      ),
+      religion: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}religion'],
+      ),
       isFastingDay: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
         data['${effectivePrefix}is_fasting_day'],
+      )!,
+      fastingType: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}fasting_type'],
+      ),
+      allowedFoods: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}allowed_foods'],
+      ),
+      forbiddenFoods: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}forbidden_foods'],
+      ),
+      workoutNote: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}workout_note'],
+      ),
+      insightMessage: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}insight_message'],
+      ),
+      karmaChallenge: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}karma_challenge'],
+      ),
+      computedDynamically: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}computed_dynamically'],
+      )!,
+      computedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}computed_at'],
       )!,
     );
   }
@@ -17916,21 +18209,45 @@ class FestivalCalendarEntry extends DataClass
   final String festivalKey;
   final String nameEn;
   final String nameHi;
+  final String? nameLocal;
+  final int year;
   final DateTime startDate;
   final DateTime endDate;
   final String calendarSystem;
   final String dietPlanType;
+  final String? regionCodes;
+  final String? religion;
   final bool isFastingDay;
+  final String? fastingType;
+  final String? allowedFoods;
+  final String? forbiddenFoods;
+  final String? workoutNote;
+  final String? insightMessage;
+  final String? karmaChallenge;
+  final bool computedDynamically;
+  final DateTime computedAt;
   const FestivalCalendarEntry({
     required this.id,
     required this.festivalKey,
     required this.nameEn,
     required this.nameHi,
+    this.nameLocal,
+    required this.year,
     required this.startDate,
     required this.endDate,
     required this.calendarSystem,
     required this.dietPlanType,
+    this.regionCodes,
+    this.religion,
     required this.isFastingDay,
+    this.fastingType,
+    this.allowedFoods,
+    this.forbiddenFoods,
+    this.workoutNote,
+    this.insightMessage,
+    this.karmaChallenge,
+    required this.computedDynamically,
+    required this.computedAt,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -17939,11 +18256,41 @@ class FestivalCalendarEntry extends DataClass
     map['festival_key'] = Variable<String>(festivalKey);
     map['name_en'] = Variable<String>(nameEn);
     map['name_hi'] = Variable<String>(nameHi);
+    if (!nullToAbsent || nameLocal != null) {
+      map['name_local'] = Variable<String>(nameLocal);
+    }
+    map['year'] = Variable<int>(year);
     map['start_date'] = Variable<DateTime>(startDate);
     map['end_date'] = Variable<DateTime>(endDate);
     map['calendar_system'] = Variable<String>(calendarSystem);
     map['diet_plan_type'] = Variable<String>(dietPlanType);
+    if (!nullToAbsent || regionCodes != null) {
+      map['region_codes'] = Variable<String>(regionCodes);
+    }
+    if (!nullToAbsent || religion != null) {
+      map['religion'] = Variable<String>(religion);
+    }
     map['is_fasting_day'] = Variable<bool>(isFastingDay);
+    if (!nullToAbsent || fastingType != null) {
+      map['fasting_type'] = Variable<String>(fastingType);
+    }
+    if (!nullToAbsent || allowedFoods != null) {
+      map['allowed_foods'] = Variable<String>(allowedFoods);
+    }
+    if (!nullToAbsent || forbiddenFoods != null) {
+      map['forbidden_foods'] = Variable<String>(forbiddenFoods);
+    }
+    if (!nullToAbsent || workoutNote != null) {
+      map['workout_note'] = Variable<String>(workoutNote);
+    }
+    if (!nullToAbsent || insightMessage != null) {
+      map['insight_message'] = Variable<String>(insightMessage);
+    }
+    if (!nullToAbsent || karmaChallenge != null) {
+      map['karma_challenge'] = Variable<String>(karmaChallenge);
+    }
+    map['computed_dynamically'] = Variable<bool>(computedDynamically);
+    map['computed_at'] = Variable<DateTime>(computedAt);
     return map;
   }
 
@@ -17953,11 +18300,41 @@ class FestivalCalendarEntry extends DataClass
       festivalKey: Value(festivalKey),
       nameEn: Value(nameEn),
       nameHi: Value(nameHi),
+      nameLocal: nameLocal == null && nullToAbsent
+          ? const Value.absent()
+          : Value(nameLocal),
+      year: Value(year),
       startDate: Value(startDate),
       endDate: Value(endDate),
       calendarSystem: Value(calendarSystem),
       dietPlanType: Value(dietPlanType),
+      regionCodes: regionCodes == null && nullToAbsent
+          ? const Value.absent()
+          : Value(regionCodes),
+      religion: religion == null && nullToAbsent
+          ? const Value.absent()
+          : Value(religion),
       isFastingDay: Value(isFastingDay),
+      fastingType: fastingType == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fastingType),
+      allowedFoods: allowedFoods == null && nullToAbsent
+          ? const Value.absent()
+          : Value(allowedFoods),
+      forbiddenFoods: forbiddenFoods == null && nullToAbsent
+          ? const Value.absent()
+          : Value(forbiddenFoods),
+      workoutNote: workoutNote == null && nullToAbsent
+          ? const Value.absent()
+          : Value(workoutNote),
+      insightMessage: insightMessage == null && nullToAbsent
+          ? const Value.absent()
+          : Value(insightMessage),
+      karmaChallenge: karmaChallenge == null && nullToAbsent
+          ? const Value.absent()
+          : Value(karmaChallenge),
+      computedDynamically: Value(computedDynamically),
+      computedAt: Value(computedAt),
     );
   }
 
@@ -17971,11 +18348,25 @@ class FestivalCalendarEntry extends DataClass
       festivalKey: serializer.fromJson<String>(json['festivalKey']),
       nameEn: serializer.fromJson<String>(json['nameEn']),
       nameHi: serializer.fromJson<String>(json['nameHi']),
+      nameLocal: serializer.fromJson<String?>(json['nameLocal']),
+      year: serializer.fromJson<int>(json['year']),
       startDate: serializer.fromJson<DateTime>(json['startDate']),
       endDate: serializer.fromJson<DateTime>(json['endDate']),
       calendarSystem: serializer.fromJson<String>(json['calendarSystem']),
       dietPlanType: serializer.fromJson<String>(json['dietPlanType']),
+      regionCodes: serializer.fromJson<String?>(json['regionCodes']),
+      religion: serializer.fromJson<String?>(json['religion']),
       isFastingDay: serializer.fromJson<bool>(json['isFastingDay']),
+      fastingType: serializer.fromJson<String?>(json['fastingType']),
+      allowedFoods: serializer.fromJson<String?>(json['allowedFoods']),
+      forbiddenFoods: serializer.fromJson<String?>(json['forbiddenFoods']),
+      workoutNote: serializer.fromJson<String?>(json['workoutNote']),
+      insightMessage: serializer.fromJson<String?>(json['insightMessage']),
+      karmaChallenge: serializer.fromJson<String?>(json['karmaChallenge']),
+      computedDynamically: serializer.fromJson<bool>(
+        json['computedDynamically'],
+      ),
+      computedAt: serializer.fromJson<DateTime>(json['computedAt']),
     );
   }
   @override
@@ -17986,11 +18377,23 @@ class FestivalCalendarEntry extends DataClass
       'festivalKey': serializer.toJson<String>(festivalKey),
       'nameEn': serializer.toJson<String>(nameEn),
       'nameHi': serializer.toJson<String>(nameHi),
+      'nameLocal': serializer.toJson<String?>(nameLocal),
+      'year': serializer.toJson<int>(year),
       'startDate': serializer.toJson<DateTime>(startDate),
       'endDate': serializer.toJson<DateTime>(endDate),
       'calendarSystem': serializer.toJson<String>(calendarSystem),
       'dietPlanType': serializer.toJson<String>(dietPlanType),
+      'regionCodes': serializer.toJson<String?>(regionCodes),
+      'religion': serializer.toJson<String?>(religion),
       'isFastingDay': serializer.toJson<bool>(isFastingDay),
+      'fastingType': serializer.toJson<String?>(fastingType),
+      'allowedFoods': serializer.toJson<String?>(allowedFoods),
+      'forbiddenFoods': serializer.toJson<String?>(forbiddenFoods),
+      'workoutNote': serializer.toJson<String?>(workoutNote),
+      'insightMessage': serializer.toJson<String?>(insightMessage),
+      'karmaChallenge': serializer.toJson<String?>(karmaChallenge),
+      'computedDynamically': serializer.toJson<bool>(computedDynamically),
+      'computedAt': serializer.toJson<DateTime>(computedAt),
     };
   }
 
@@ -17999,21 +18402,51 @@ class FestivalCalendarEntry extends DataClass
     String? festivalKey,
     String? nameEn,
     String? nameHi,
+    Value<String?> nameLocal = const Value.absent(),
+    int? year,
     DateTime? startDate,
     DateTime? endDate,
     String? calendarSystem,
     String? dietPlanType,
+    Value<String?> regionCodes = const Value.absent(),
+    Value<String?> religion = const Value.absent(),
     bool? isFastingDay,
+    Value<String?> fastingType = const Value.absent(),
+    Value<String?> allowedFoods = const Value.absent(),
+    Value<String?> forbiddenFoods = const Value.absent(),
+    Value<String?> workoutNote = const Value.absent(),
+    Value<String?> insightMessage = const Value.absent(),
+    Value<String?> karmaChallenge = const Value.absent(),
+    bool? computedDynamically,
+    DateTime? computedAt,
   }) => FestivalCalendarEntry(
     id: id ?? this.id,
     festivalKey: festivalKey ?? this.festivalKey,
     nameEn: nameEn ?? this.nameEn,
     nameHi: nameHi ?? this.nameHi,
+    nameLocal: nameLocal.present ? nameLocal.value : this.nameLocal,
+    year: year ?? this.year,
     startDate: startDate ?? this.startDate,
     endDate: endDate ?? this.endDate,
     calendarSystem: calendarSystem ?? this.calendarSystem,
     dietPlanType: dietPlanType ?? this.dietPlanType,
+    regionCodes: regionCodes.present ? regionCodes.value : this.regionCodes,
+    religion: religion.present ? religion.value : this.religion,
     isFastingDay: isFastingDay ?? this.isFastingDay,
+    fastingType: fastingType.present ? fastingType.value : this.fastingType,
+    allowedFoods: allowedFoods.present ? allowedFoods.value : this.allowedFoods,
+    forbiddenFoods: forbiddenFoods.present
+        ? forbiddenFoods.value
+        : this.forbiddenFoods,
+    workoutNote: workoutNote.present ? workoutNote.value : this.workoutNote,
+    insightMessage: insightMessage.present
+        ? insightMessage.value
+        : this.insightMessage,
+    karmaChallenge: karmaChallenge.present
+        ? karmaChallenge.value
+        : this.karmaChallenge,
+    computedDynamically: computedDynamically ?? this.computedDynamically,
+    computedAt: computedAt ?? this.computedAt,
   );
   FestivalCalendarEntry copyWithCompanion(FestivalCalendarCompanion data) {
     return FestivalCalendarEntry(
@@ -18023,6 +18456,8 @@ class FestivalCalendarEntry extends DataClass
           : this.festivalKey,
       nameEn: data.nameEn.present ? data.nameEn.value : this.nameEn,
       nameHi: data.nameHi.present ? data.nameHi.value : this.nameHi,
+      nameLocal: data.nameLocal.present ? data.nameLocal.value : this.nameLocal,
+      year: data.year.present ? data.year.value : this.year,
       startDate: data.startDate.present ? data.startDate.value : this.startDate,
       endDate: data.endDate.present ? data.endDate.value : this.endDate,
       calendarSystem: data.calendarSystem.present
@@ -18031,9 +18466,37 @@ class FestivalCalendarEntry extends DataClass
       dietPlanType: data.dietPlanType.present
           ? data.dietPlanType.value
           : this.dietPlanType,
+      regionCodes: data.regionCodes.present
+          ? data.regionCodes.value
+          : this.regionCodes,
+      religion: data.religion.present ? data.religion.value : this.religion,
       isFastingDay: data.isFastingDay.present
           ? data.isFastingDay.value
           : this.isFastingDay,
+      fastingType: data.fastingType.present
+          ? data.fastingType.value
+          : this.fastingType,
+      allowedFoods: data.allowedFoods.present
+          ? data.allowedFoods.value
+          : this.allowedFoods,
+      forbiddenFoods: data.forbiddenFoods.present
+          ? data.forbiddenFoods.value
+          : this.forbiddenFoods,
+      workoutNote: data.workoutNote.present
+          ? data.workoutNote.value
+          : this.workoutNote,
+      insightMessage: data.insightMessage.present
+          ? data.insightMessage.value
+          : this.insightMessage,
+      karmaChallenge: data.karmaChallenge.present
+          ? data.karmaChallenge.value
+          : this.karmaChallenge,
+      computedDynamically: data.computedDynamically.present
+          ? data.computedDynamically.value
+          : this.computedDynamically,
+      computedAt: data.computedAt.present
+          ? data.computedAt.value
+          : this.computedAt,
     );
   }
 
@@ -18044,27 +18507,51 @@ class FestivalCalendarEntry extends DataClass
           ..write('festivalKey: $festivalKey, ')
           ..write('nameEn: $nameEn, ')
           ..write('nameHi: $nameHi, ')
+          ..write('nameLocal: $nameLocal, ')
+          ..write('year: $year, ')
           ..write('startDate: $startDate, ')
           ..write('endDate: $endDate, ')
           ..write('calendarSystem: $calendarSystem, ')
           ..write('dietPlanType: $dietPlanType, ')
-          ..write('isFastingDay: $isFastingDay')
+          ..write('regionCodes: $regionCodes, ')
+          ..write('religion: $religion, ')
+          ..write('isFastingDay: $isFastingDay, ')
+          ..write('fastingType: $fastingType, ')
+          ..write('allowedFoods: $allowedFoods, ')
+          ..write('forbiddenFoods: $forbiddenFoods, ')
+          ..write('workoutNote: $workoutNote, ')
+          ..write('insightMessage: $insightMessage, ')
+          ..write('karmaChallenge: $karmaChallenge, ')
+          ..write('computedDynamically: $computedDynamically, ')
+          ..write('computedAt: $computedAt')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(
+  int get hashCode => Object.hashAll([
     id,
     festivalKey,
     nameEn,
     nameHi,
+    nameLocal,
+    year,
     startDate,
     endDate,
     calendarSystem,
     dietPlanType,
+    regionCodes,
+    religion,
     isFastingDay,
-  );
+    fastingType,
+    allowedFoods,
+    forbiddenFoods,
+    workoutNote,
+    insightMessage,
+    karmaChallenge,
+    computedDynamically,
+    computedAt,
+  ]);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -18073,11 +18560,23 @@ class FestivalCalendarEntry extends DataClass
           other.festivalKey == this.festivalKey &&
           other.nameEn == this.nameEn &&
           other.nameHi == this.nameHi &&
+          other.nameLocal == this.nameLocal &&
+          other.year == this.year &&
           other.startDate == this.startDate &&
           other.endDate == this.endDate &&
           other.calendarSystem == this.calendarSystem &&
           other.dietPlanType == this.dietPlanType &&
-          other.isFastingDay == this.isFastingDay);
+          other.regionCodes == this.regionCodes &&
+          other.religion == this.religion &&
+          other.isFastingDay == this.isFastingDay &&
+          other.fastingType == this.fastingType &&
+          other.allowedFoods == this.allowedFoods &&
+          other.forbiddenFoods == this.forbiddenFoods &&
+          other.workoutNote == this.workoutNote &&
+          other.insightMessage == this.insightMessage &&
+          other.karmaChallenge == this.karmaChallenge &&
+          other.computedDynamically == this.computedDynamically &&
+          other.computedAt == this.computedAt);
 }
 
 class FestivalCalendarCompanion extends UpdateCompanion<FestivalCalendarEntry> {
@@ -18085,22 +18584,46 @@ class FestivalCalendarCompanion extends UpdateCompanion<FestivalCalendarEntry> {
   final Value<String> festivalKey;
   final Value<String> nameEn;
   final Value<String> nameHi;
+  final Value<String?> nameLocal;
+  final Value<int> year;
   final Value<DateTime> startDate;
   final Value<DateTime> endDate;
   final Value<String> calendarSystem;
   final Value<String> dietPlanType;
+  final Value<String?> regionCodes;
+  final Value<String?> religion;
   final Value<bool> isFastingDay;
+  final Value<String?> fastingType;
+  final Value<String?> allowedFoods;
+  final Value<String?> forbiddenFoods;
+  final Value<String?> workoutNote;
+  final Value<String?> insightMessage;
+  final Value<String?> karmaChallenge;
+  final Value<bool> computedDynamically;
+  final Value<DateTime> computedAt;
   final Value<int> rowid;
   const FestivalCalendarCompanion({
     this.id = const Value.absent(),
     this.festivalKey = const Value.absent(),
     this.nameEn = const Value.absent(),
     this.nameHi = const Value.absent(),
+    this.nameLocal = const Value.absent(),
+    this.year = const Value.absent(),
     this.startDate = const Value.absent(),
     this.endDate = const Value.absent(),
     this.calendarSystem = const Value.absent(),
     this.dietPlanType = const Value.absent(),
+    this.regionCodes = const Value.absent(),
+    this.religion = const Value.absent(),
     this.isFastingDay = const Value.absent(),
+    this.fastingType = const Value.absent(),
+    this.allowedFoods = const Value.absent(),
+    this.forbiddenFoods = const Value.absent(),
+    this.workoutNote = const Value.absent(),
+    this.insightMessage = const Value.absent(),
+    this.karmaChallenge = const Value.absent(),
+    this.computedDynamically = const Value.absent(),
+    this.computedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   FestivalCalendarCompanion.insert({
@@ -18108,30 +18631,56 @@ class FestivalCalendarCompanion extends UpdateCompanion<FestivalCalendarEntry> {
     required String festivalKey,
     required String nameEn,
     required String nameHi,
+    this.nameLocal = const Value.absent(),
+    required int year,
     required DateTime startDate,
     required DateTime endDate,
     required String calendarSystem,
     required String dietPlanType,
+    this.regionCodes = const Value.absent(),
+    this.religion = const Value.absent(),
     this.isFastingDay = const Value.absent(),
+    this.fastingType = const Value.absent(),
+    this.allowedFoods = const Value.absent(),
+    this.forbiddenFoods = const Value.absent(),
+    this.workoutNote = const Value.absent(),
+    this.insightMessage = const Value.absent(),
+    this.karmaChallenge = const Value.absent(),
+    this.computedDynamically = const Value.absent(),
+    required DateTime computedAt,
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        festivalKey = Value(festivalKey),
        nameEn = Value(nameEn),
        nameHi = Value(nameHi),
+       year = Value(year),
        startDate = Value(startDate),
        endDate = Value(endDate),
        calendarSystem = Value(calendarSystem),
-       dietPlanType = Value(dietPlanType);
+       dietPlanType = Value(dietPlanType),
+       computedAt = Value(computedAt);
   static Insertable<FestivalCalendarEntry> custom({
     Expression<String>? id,
     Expression<String>? festivalKey,
     Expression<String>? nameEn,
     Expression<String>? nameHi,
+    Expression<String>? nameLocal,
+    Expression<int>? year,
     Expression<DateTime>? startDate,
     Expression<DateTime>? endDate,
     Expression<String>? calendarSystem,
     Expression<String>? dietPlanType,
+    Expression<String>? regionCodes,
+    Expression<String>? religion,
     Expression<bool>? isFastingDay,
+    Expression<String>? fastingType,
+    Expression<String>? allowedFoods,
+    Expression<String>? forbiddenFoods,
+    Expression<String>? workoutNote,
+    Expression<String>? insightMessage,
+    Expression<String>? karmaChallenge,
+    Expression<bool>? computedDynamically,
+    Expression<DateTime>? computedAt,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -18139,11 +18688,24 @@ class FestivalCalendarCompanion extends UpdateCompanion<FestivalCalendarEntry> {
       if (festivalKey != null) 'festival_key': festivalKey,
       if (nameEn != null) 'name_en': nameEn,
       if (nameHi != null) 'name_hi': nameHi,
+      if (nameLocal != null) 'name_local': nameLocal,
+      if (year != null) 'year': year,
       if (startDate != null) 'start_date': startDate,
       if (endDate != null) 'end_date': endDate,
       if (calendarSystem != null) 'calendar_system': calendarSystem,
       if (dietPlanType != null) 'diet_plan_type': dietPlanType,
+      if (regionCodes != null) 'region_codes': regionCodes,
+      if (religion != null) 'religion': religion,
       if (isFastingDay != null) 'is_fasting_day': isFastingDay,
+      if (fastingType != null) 'fasting_type': fastingType,
+      if (allowedFoods != null) 'allowed_foods': allowedFoods,
+      if (forbiddenFoods != null) 'forbidden_foods': forbiddenFoods,
+      if (workoutNote != null) 'workout_note': workoutNote,
+      if (insightMessage != null) 'insight_message': insightMessage,
+      if (karmaChallenge != null) 'karma_challenge': karmaChallenge,
+      if (computedDynamically != null)
+        'computed_dynamically': computedDynamically,
+      if (computedAt != null) 'computed_at': computedAt,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -18153,11 +18715,23 @@ class FestivalCalendarCompanion extends UpdateCompanion<FestivalCalendarEntry> {
     Value<String>? festivalKey,
     Value<String>? nameEn,
     Value<String>? nameHi,
+    Value<String?>? nameLocal,
+    Value<int>? year,
     Value<DateTime>? startDate,
     Value<DateTime>? endDate,
     Value<String>? calendarSystem,
     Value<String>? dietPlanType,
+    Value<String?>? regionCodes,
+    Value<String?>? religion,
     Value<bool>? isFastingDay,
+    Value<String?>? fastingType,
+    Value<String?>? allowedFoods,
+    Value<String?>? forbiddenFoods,
+    Value<String?>? workoutNote,
+    Value<String?>? insightMessage,
+    Value<String?>? karmaChallenge,
+    Value<bool>? computedDynamically,
+    Value<DateTime>? computedAt,
     Value<int>? rowid,
   }) {
     return FestivalCalendarCompanion(
@@ -18165,11 +18739,23 @@ class FestivalCalendarCompanion extends UpdateCompanion<FestivalCalendarEntry> {
       festivalKey: festivalKey ?? this.festivalKey,
       nameEn: nameEn ?? this.nameEn,
       nameHi: nameHi ?? this.nameHi,
+      nameLocal: nameLocal ?? this.nameLocal,
+      year: year ?? this.year,
       startDate: startDate ?? this.startDate,
       endDate: endDate ?? this.endDate,
       calendarSystem: calendarSystem ?? this.calendarSystem,
       dietPlanType: dietPlanType ?? this.dietPlanType,
+      regionCodes: regionCodes ?? this.regionCodes,
+      religion: religion ?? this.religion,
       isFastingDay: isFastingDay ?? this.isFastingDay,
+      fastingType: fastingType ?? this.fastingType,
+      allowedFoods: allowedFoods ?? this.allowedFoods,
+      forbiddenFoods: forbiddenFoods ?? this.forbiddenFoods,
+      workoutNote: workoutNote ?? this.workoutNote,
+      insightMessage: insightMessage ?? this.insightMessage,
+      karmaChallenge: karmaChallenge ?? this.karmaChallenge,
+      computedDynamically: computedDynamically ?? this.computedDynamically,
+      computedAt: computedAt ?? this.computedAt,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -18189,6 +18775,12 @@ class FestivalCalendarCompanion extends UpdateCompanion<FestivalCalendarEntry> {
     if (nameHi.present) {
       map['name_hi'] = Variable<String>(nameHi.value);
     }
+    if (nameLocal.present) {
+      map['name_local'] = Variable<String>(nameLocal.value);
+    }
+    if (year.present) {
+      map['year'] = Variable<int>(year.value);
+    }
     if (startDate.present) {
       map['start_date'] = Variable<DateTime>(startDate.value);
     }
@@ -18201,8 +18793,38 @@ class FestivalCalendarCompanion extends UpdateCompanion<FestivalCalendarEntry> {
     if (dietPlanType.present) {
       map['diet_plan_type'] = Variable<String>(dietPlanType.value);
     }
+    if (regionCodes.present) {
+      map['region_codes'] = Variable<String>(regionCodes.value);
+    }
+    if (religion.present) {
+      map['religion'] = Variable<String>(religion.value);
+    }
     if (isFastingDay.present) {
       map['is_fasting_day'] = Variable<bool>(isFastingDay.value);
+    }
+    if (fastingType.present) {
+      map['fasting_type'] = Variable<String>(fastingType.value);
+    }
+    if (allowedFoods.present) {
+      map['allowed_foods'] = Variable<String>(allowedFoods.value);
+    }
+    if (forbiddenFoods.present) {
+      map['forbidden_foods'] = Variable<String>(forbiddenFoods.value);
+    }
+    if (workoutNote.present) {
+      map['workout_note'] = Variable<String>(workoutNote.value);
+    }
+    if (insightMessage.present) {
+      map['insight_message'] = Variable<String>(insightMessage.value);
+    }
+    if (karmaChallenge.present) {
+      map['karma_challenge'] = Variable<String>(karmaChallenge.value);
+    }
+    if (computedDynamically.present) {
+      map['computed_dynamically'] = Variable<bool>(computedDynamically.value);
+    }
+    if (computedAt.present) {
+      map['computed_at'] = Variable<DateTime>(computedAt.value);
     }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
@@ -18217,11 +18839,687 @@ class FestivalCalendarCompanion extends UpdateCompanion<FestivalCalendarEntry> {
           ..write('festivalKey: $festivalKey, ')
           ..write('nameEn: $nameEn, ')
           ..write('nameHi: $nameHi, ')
+          ..write('nameLocal: $nameLocal, ')
+          ..write('year: $year, ')
           ..write('startDate: $startDate, ')
           ..write('endDate: $endDate, ')
           ..write('calendarSystem: $calendarSystem, ')
           ..write('dietPlanType: $dietPlanType, ')
+          ..write('regionCodes: $regionCodes, ')
+          ..write('religion: $religion, ')
           ..write('isFastingDay: $isFastingDay, ')
+          ..write('fastingType: $fastingType, ')
+          ..write('allowedFoods: $allowedFoods, ')
+          ..write('forbiddenFoods: $forbiddenFoods, ')
+          ..write('workoutNote: $workoutNote, ')
+          ..write('insightMessage: $insightMessage, ')
+          ..write('karmaChallenge: $karmaChallenge, ')
+          ..write('computedDynamically: $computedDynamically, ')
+          ..write('computedAt: $computedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $WeddingEventsTable extends WeddingEvents
+    with TableInfo<$WeddingEventsTable, WeddingEventEntry> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $WeddingEventsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
+    'user_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _roleMeta = const VerificationMeta('role');
+  @override
+  late final GeneratedColumn<String> role = GeneratedColumn<String>(
+    'role',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _relationTypeMeta = const VerificationMeta(
+    'relationType',
+  );
+  @override
+  late final GeneratedColumn<String> relationType = GeneratedColumn<String>(
+    'relation_type',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _startDateMeta = const VerificationMeta(
+    'startDate',
+  );
+  @override
+  late final GeneratedColumn<DateTime> startDate = GeneratedColumn<DateTime>(
+    'start_date',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _endDateMeta = const VerificationMeta(
+    'endDate',
+  );
+  @override
+  late final GeneratedColumn<DateTime> endDate = GeneratedColumn<DateTime>(
+    'end_date',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _prepWeeksMeta = const VerificationMeta(
+    'prepWeeks',
+  );
+  @override
+  late final GeneratedColumn<int> prepWeeks = GeneratedColumn<int>(
+    'prep_weeks',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(4),
+  );
+  static const VerificationMeta _eventsListMeta = const VerificationMeta(
+    'eventsList',
+  );
+  @override
+  late final GeneratedColumn<String> eventsList = GeneratedColumn<String>(
+    'events_list',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _primaryGoalMeta = const VerificationMeta(
+    'primaryGoal',
+  );
+  @override
+  late final GeneratedColumn<String> primaryGoal = GeneratedColumn<String>(
+    'primary_goal',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _syncStatusMeta = const VerificationMeta(
+    'syncStatus',
+  );
+  @override
+  late final GeneratedColumn<String> syncStatus = GeneratedColumn<String>(
+    'sync_status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('pending'),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    userId,
+    role,
+    relationType,
+    startDate,
+    endDate,
+    prepWeeks,
+    eventsList,
+    primaryGoal,
+    createdAt,
+    syncStatus,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'wedding_events';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<WeddingEventEntry> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_userIdMeta);
+    }
+    if (data.containsKey('role')) {
+      context.handle(
+        _roleMeta,
+        role.isAcceptableOrUnknown(data['role']!, _roleMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_roleMeta);
+    }
+    if (data.containsKey('relation_type')) {
+      context.handle(
+        _relationTypeMeta,
+        relationType.isAcceptableOrUnknown(
+          data['relation_type']!,
+          _relationTypeMeta,
+        ),
+      );
+    }
+    if (data.containsKey('start_date')) {
+      context.handle(
+        _startDateMeta,
+        startDate.isAcceptableOrUnknown(data['start_date']!, _startDateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_startDateMeta);
+    }
+    if (data.containsKey('end_date')) {
+      context.handle(
+        _endDateMeta,
+        endDate.isAcceptableOrUnknown(data['end_date']!, _endDateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_endDateMeta);
+    }
+    if (data.containsKey('prep_weeks')) {
+      context.handle(
+        _prepWeeksMeta,
+        prepWeeks.isAcceptableOrUnknown(data['prep_weeks']!, _prepWeeksMeta),
+      );
+    }
+    if (data.containsKey('events_list')) {
+      context.handle(
+        _eventsListMeta,
+        eventsList.isAcceptableOrUnknown(data['events_list']!, _eventsListMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_eventsListMeta);
+    }
+    if (data.containsKey('primary_goal')) {
+      context.handle(
+        _primaryGoalMeta,
+        primaryGoal.isAcceptableOrUnknown(
+          data['primary_goal']!,
+          _primaryGoalMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_primaryGoalMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('sync_status')) {
+      context.handle(
+        _syncStatusMeta,
+        syncStatus.isAcceptableOrUnknown(data['sync_status']!, _syncStatusMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  WeddingEventEntry map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return WeddingEventEntry(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      userId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_id'],
+      )!,
+      role: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}role'],
+      )!,
+      relationType: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}relation_type'],
+      ),
+      startDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}start_date'],
+      )!,
+      endDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}end_date'],
+      )!,
+      prepWeeks: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}prep_weeks'],
+      )!,
+      eventsList: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}events_list'],
+      )!,
+      primaryGoal: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}primary_goal'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      syncStatus: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sync_status'],
+      )!,
+    );
+  }
+
+  @override
+  $WeddingEventsTable createAlias(String alias) {
+    return $WeddingEventsTable(attachedDatabase, alias);
+  }
+}
+
+class WeddingEventEntry extends DataClass
+    implements Insertable<WeddingEventEntry> {
+  final String id;
+  final String userId;
+  final String role;
+  final String? relationType;
+  final DateTime startDate;
+  final DateTime endDate;
+  final int prepWeeks;
+  final String eventsList;
+  final String primaryGoal;
+  final DateTime createdAt;
+  final String syncStatus;
+  const WeddingEventEntry({
+    required this.id,
+    required this.userId,
+    required this.role,
+    this.relationType,
+    required this.startDate,
+    required this.endDate,
+    required this.prepWeeks,
+    required this.eventsList,
+    required this.primaryGoal,
+    required this.createdAt,
+    required this.syncStatus,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['user_id'] = Variable<String>(userId);
+    map['role'] = Variable<String>(role);
+    if (!nullToAbsent || relationType != null) {
+      map['relation_type'] = Variable<String>(relationType);
+    }
+    map['start_date'] = Variable<DateTime>(startDate);
+    map['end_date'] = Variable<DateTime>(endDate);
+    map['prep_weeks'] = Variable<int>(prepWeeks);
+    map['events_list'] = Variable<String>(eventsList);
+    map['primary_goal'] = Variable<String>(primaryGoal);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['sync_status'] = Variable<String>(syncStatus);
+    return map;
+  }
+
+  WeddingEventsCompanion toCompanion(bool nullToAbsent) {
+    return WeddingEventsCompanion(
+      id: Value(id),
+      userId: Value(userId),
+      role: Value(role),
+      relationType: relationType == null && nullToAbsent
+          ? const Value.absent()
+          : Value(relationType),
+      startDate: Value(startDate),
+      endDate: Value(endDate),
+      prepWeeks: Value(prepWeeks),
+      eventsList: Value(eventsList),
+      primaryGoal: Value(primaryGoal),
+      createdAt: Value(createdAt),
+      syncStatus: Value(syncStatus),
+    );
+  }
+
+  factory WeddingEventEntry.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return WeddingEventEntry(
+      id: serializer.fromJson<String>(json['id']),
+      userId: serializer.fromJson<String>(json['userId']),
+      role: serializer.fromJson<String>(json['role']),
+      relationType: serializer.fromJson<String?>(json['relationType']),
+      startDate: serializer.fromJson<DateTime>(json['startDate']),
+      endDate: serializer.fromJson<DateTime>(json['endDate']),
+      prepWeeks: serializer.fromJson<int>(json['prepWeeks']),
+      eventsList: serializer.fromJson<String>(json['eventsList']),
+      primaryGoal: serializer.fromJson<String>(json['primaryGoal']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      syncStatus: serializer.fromJson<String>(json['syncStatus']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'userId': serializer.toJson<String>(userId),
+      'role': serializer.toJson<String>(role),
+      'relationType': serializer.toJson<String?>(relationType),
+      'startDate': serializer.toJson<DateTime>(startDate),
+      'endDate': serializer.toJson<DateTime>(endDate),
+      'prepWeeks': serializer.toJson<int>(prepWeeks),
+      'eventsList': serializer.toJson<String>(eventsList),
+      'primaryGoal': serializer.toJson<String>(primaryGoal),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'syncStatus': serializer.toJson<String>(syncStatus),
+    };
+  }
+
+  WeddingEventEntry copyWith({
+    String? id,
+    String? userId,
+    String? role,
+    Value<String?> relationType = const Value.absent(),
+    DateTime? startDate,
+    DateTime? endDate,
+    int? prepWeeks,
+    String? eventsList,
+    String? primaryGoal,
+    DateTime? createdAt,
+    String? syncStatus,
+  }) => WeddingEventEntry(
+    id: id ?? this.id,
+    userId: userId ?? this.userId,
+    role: role ?? this.role,
+    relationType: relationType.present ? relationType.value : this.relationType,
+    startDate: startDate ?? this.startDate,
+    endDate: endDate ?? this.endDate,
+    prepWeeks: prepWeeks ?? this.prepWeeks,
+    eventsList: eventsList ?? this.eventsList,
+    primaryGoal: primaryGoal ?? this.primaryGoal,
+    createdAt: createdAt ?? this.createdAt,
+    syncStatus: syncStatus ?? this.syncStatus,
+  );
+  WeddingEventEntry copyWithCompanion(WeddingEventsCompanion data) {
+    return WeddingEventEntry(
+      id: data.id.present ? data.id.value : this.id,
+      userId: data.userId.present ? data.userId.value : this.userId,
+      role: data.role.present ? data.role.value : this.role,
+      relationType: data.relationType.present
+          ? data.relationType.value
+          : this.relationType,
+      startDate: data.startDate.present ? data.startDate.value : this.startDate,
+      endDate: data.endDate.present ? data.endDate.value : this.endDate,
+      prepWeeks: data.prepWeeks.present ? data.prepWeeks.value : this.prepWeeks,
+      eventsList: data.eventsList.present
+          ? data.eventsList.value
+          : this.eventsList,
+      primaryGoal: data.primaryGoal.present
+          ? data.primaryGoal.value
+          : this.primaryGoal,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      syncStatus: data.syncStatus.present
+          ? data.syncStatus.value
+          : this.syncStatus,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('WeddingEventEntry(')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('role: $role, ')
+          ..write('relationType: $relationType, ')
+          ..write('startDate: $startDate, ')
+          ..write('endDate: $endDate, ')
+          ..write('prepWeeks: $prepWeeks, ')
+          ..write('eventsList: $eventsList, ')
+          ..write('primaryGoal: $primaryGoal, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('syncStatus: $syncStatus')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    userId,
+    role,
+    relationType,
+    startDate,
+    endDate,
+    prepWeeks,
+    eventsList,
+    primaryGoal,
+    createdAt,
+    syncStatus,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is WeddingEventEntry &&
+          other.id == this.id &&
+          other.userId == this.userId &&
+          other.role == this.role &&
+          other.relationType == this.relationType &&
+          other.startDate == this.startDate &&
+          other.endDate == this.endDate &&
+          other.prepWeeks == this.prepWeeks &&
+          other.eventsList == this.eventsList &&
+          other.primaryGoal == this.primaryGoal &&
+          other.createdAt == this.createdAt &&
+          other.syncStatus == this.syncStatus);
+}
+
+class WeddingEventsCompanion extends UpdateCompanion<WeddingEventEntry> {
+  final Value<String> id;
+  final Value<String> userId;
+  final Value<String> role;
+  final Value<String?> relationType;
+  final Value<DateTime> startDate;
+  final Value<DateTime> endDate;
+  final Value<int> prepWeeks;
+  final Value<String> eventsList;
+  final Value<String> primaryGoal;
+  final Value<DateTime> createdAt;
+  final Value<String> syncStatus;
+  final Value<int> rowid;
+  const WeddingEventsCompanion({
+    this.id = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.role = const Value.absent(),
+    this.relationType = const Value.absent(),
+    this.startDate = const Value.absent(),
+    this.endDate = const Value.absent(),
+    this.prepWeeks = const Value.absent(),
+    this.eventsList = const Value.absent(),
+    this.primaryGoal = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  WeddingEventsCompanion.insert({
+    required String id,
+    required String userId,
+    required String role,
+    this.relationType = const Value.absent(),
+    required DateTime startDate,
+    required DateTime endDate,
+    this.prepWeeks = const Value.absent(),
+    required String eventsList,
+    required String primaryGoal,
+    required DateTime createdAt,
+    this.syncStatus = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       userId = Value(userId),
+       role = Value(role),
+       startDate = Value(startDate),
+       endDate = Value(endDate),
+       eventsList = Value(eventsList),
+       primaryGoal = Value(primaryGoal),
+       createdAt = Value(createdAt);
+  static Insertable<WeddingEventEntry> custom({
+    Expression<String>? id,
+    Expression<String>? userId,
+    Expression<String>? role,
+    Expression<String>? relationType,
+    Expression<DateTime>? startDate,
+    Expression<DateTime>? endDate,
+    Expression<int>? prepWeeks,
+    Expression<String>? eventsList,
+    Expression<String>? primaryGoal,
+    Expression<DateTime>? createdAt,
+    Expression<String>? syncStatus,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (userId != null) 'user_id': userId,
+      if (role != null) 'role': role,
+      if (relationType != null) 'relation_type': relationType,
+      if (startDate != null) 'start_date': startDate,
+      if (endDate != null) 'end_date': endDate,
+      if (prepWeeks != null) 'prep_weeks': prepWeeks,
+      if (eventsList != null) 'events_list': eventsList,
+      if (primaryGoal != null) 'primary_goal': primaryGoal,
+      if (createdAt != null) 'created_at': createdAt,
+      if (syncStatus != null) 'sync_status': syncStatus,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  WeddingEventsCompanion copyWith({
+    Value<String>? id,
+    Value<String>? userId,
+    Value<String>? role,
+    Value<String?>? relationType,
+    Value<DateTime>? startDate,
+    Value<DateTime>? endDate,
+    Value<int>? prepWeeks,
+    Value<String>? eventsList,
+    Value<String>? primaryGoal,
+    Value<DateTime>? createdAt,
+    Value<String>? syncStatus,
+    Value<int>? rowid,
+  }) {
+    return WeddingEventsCompanion(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      role: role ?? this.role,
+      relationType: relationType ?? this.relationType,
+      startDate: startDate ?? this.startDate,
+      endDate: endDate ?? this.endDate,
+      prepWeeks: prepWeeks ?? this.prepWeeks,
+      eventsList: eventsList ?? this.eventsList,
+      primaryGoal: primaryGoal ?? this.primaryGoal,
+      createdAt: createdAt ?? this.createdAt,
+      syncStatus: syncStatus ?? this.syncStatus,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<String>(userId.value);
+    }
+    if (role.present) {
+      map['role'] = Variable<String>(role.value);
+    }
+    if (relationType.present) {
+      map['relation_type'] = Variable<String>(relationType.value);
+    }
+    if (startDate.present) {
+      map['start_date'] = Variable<DateTime>(startDate.value);
+    }
+    if (endDate.present) {
+      map['end_date'] = Variable<DateTime>(endDate.value);
+    }
+    if (prepWeeks.present) {
+      map['prep_weeks'] = Variable<int>(prepWeeks.value);
+    }
+    if (eventsList.present) {
+      map['events_list'] = Variable<String>(eventsList.value);
+    }
+    if (primaryGoal.present) {
+      map['primary_goal'] = Variable<String>(primaryGoal.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (syncStatus.present) {
+      map['sync_status'] = Variable<String>(syncStatus.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('WeddingEventsCompanion(')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('role: $role, ')
+          ..write('relationType: $relationType, ')
+          ..write('startDate: $startDate, ')
+          ..write('endDate: $endDate, ')
+          ..write('prepWeeks: $prepWeeks, ')
+          ..write('eventsList: $eventsList, ')
+          ..write('primaryGoal: $primaryGoal, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('syncStatus: $syncStatus, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -18540,6 +19838,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $FestivalCalendarTable festivalCalendar = $FestivalCalendarTable(
     this,
   );
+  late final $WeddingEventsTable weddingEvents = $WeddingEventsTable(this);
   late final $RemoteConfigCachesTable remoteConfigCaches =
       $RemoteConfigCachesTable(this);
   late final FoodLogsDao foodLogsDao = FoodLogsDao(this as AppDatabase);
@@ -18610,6 +19909,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     this as AppDatabase,
   );
   late final WorkoutsDao workoutsDao = WorkoutsDao(this as AppDatabase);
+  late final WeddingEventsDao weddingEventsDao = WeddingEventsDao(
+    this as AppDatabase,
+  );
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -18647,6 +19949,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     abhaLinks,
     emergencyCards,
     festivalCalendar,
+    weddingEvents,
     remoteConfigCaches,
   ];
 }
@@ -27419,11 +28722,23 @@ typedef $$FestivalCalendarTableCreateCompanionBuilder =
       required String festivalKey,
       required String nameEn,
       required String nameHi,
+      Value<String?> nameLocal,
+      required int year,
       required DateTime startDate,
       required DateTime endDate,
       required String calendarSystem,
       required String dietPlanType,
+      Value<String?> regionCodes,
+      Value<String?> religion,
       Value<bool> isFastingDay,
+      Value<String?> fastingType,
+      Value<String?> allowedFoods,
+      Value<String?> forbiddenFoods,
+      Value<String?> workoutNote,
+      Value<String?> insightMessage,
+      Value<String?> karmaChallenge,
+      Value<bool> computedDynamically,
+      required DateTime computedAt,
       Value<int> rowid,
     });
 typedef $$FestivalCalendarTableUpdateCompanionBuilder =
@@ -27432,11 +28747,23 @@ typedef $$FestivalCalendarTableUpdateCompanionBuilder =
       Value<String> festivalKey,
       Value<String> nameEn,
       Value<String> nameHi,
+      Value<String?> nameLocal,
+      Value<int> year,
       Value<DateTime> startDate,
       Value<DateTime> endDate,
       Value<String> calendarSystem,
       Value<String> dietPlanType,
+      Value<String?> regionCodes,
+      Value<String?> religion,
       Value<bool> isFastingDay,
+      Value<String?> fastingType,
+      Value<String?> allowedFoods,
+      Value<String?> forbiddenFoods,
+      Value<String?> workoutNote,
+      Value<String?> insightMessage,
+      Value<String?> karmaChallenge,
+      Value<bool> computedDynamically,
+      Value<DateTime> computedAt,
       Value<int> rowid,
     });
 
@@ -27469,6 +28796,16 @@ class $$FestivalCalendarTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<String> get nameLocal => $composableBuilder(
+    column: $table.nameLocal,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get year => $composableBuilder(
+    column: $table.year,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<DateTime> get startDate => $composableBuilder(
     column: $table.startDate,
     builder: (column) => ColumnFilters(column),
@@ -27489,8 +28826,58 @@ class $$FestivalCalendarTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<String> get regionCodes => $composableBuilder(
+    column: $table.regionCodes,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get religion => $composableBuilder(
+    column: $table.religion,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<bool> get isFastingDay => $composableBuilder(
     column: $table.isFastingDay,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get fastingType => $composableBuilder(
+    column: $table.fastingType,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get allowedFoods => $composableBuilder(
+    column: $table.allowedFoods,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get forbiddenFoods => $composableBuilder(
+    column: $table.forbiddenFoods,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get workoutNote => $composableBuilder(
+    column: $table.workoutNote,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get insightMessage => $composableBuilder(
+    column: $table.insightMessage,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get karmaChallenge => $composableBuilder(
+    column: $table.karmaChallenge,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get computedDynamically => $composableBuilder(
+    column: $table.computedDynamically,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get computedAt => $composableBuilder(
+    column: $table.computedAt,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -27524,6 +28911,16 @@ class $$FestivalCalendarTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get nameLocal => $composableBuilder(
+    column: $table.nameLocal,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get year => $composableBuilder(
+    column: $table.year,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get startDate => $composableBuilder(
     column: $table.startDate,
     builder: (column) => ColumnOrderings(column),
@@ -27544,8 +28941,58 @@ class $$FestivalCalendarTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get regionCodes => $composableBuilder(
+    column: $table.regionCodes,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get religion => $composableBuilder(
+    column: $table.religion,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<bool> get isFastingDay => $composableBuilder(
     column: $table.isFastingDay,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get fastingType => $composableBuilder(
+    column: $table.fastingType,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get allowedFoods => $composableBuilder(
+    column: $table.allowedFoods,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get forbiddenFoods => $composableBuilder(
+    column: $table.forbiddenFoods,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get workoutNote => $composableBuilder(
+    column: $table.workoutNote,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get insightMessage => $composableBuilder(
+    column: $table.insightMessage,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get karmaChallenge => $composableBuilder(
+    column: $table.karmaChallenge,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get computedDynamically => $composableBuilder(
+    column: $table.computedDynamically,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get computedAt => $composableBuilder(
+    column: $table.computedAt,
     builder: (column) => ColumnOrderings(column),
   );
 }
@@ -27573,6 +29020,12 @@ class $$FestivalCalendarTableAnnotationComposer
   GeneratedColumn<String> get nameHi =>
       $composableBuilder(column: $table.nameHi, builder: (column) => column);
 
+  GeneratedColumn<String> get nameLocal =>
+      $composableBuilder(column: $table.nameLocal, builder: (column) => column);
+
+  GeneratedColumn<int> get year =>
+      $composableBuilder(column: $table.year, builder: (column) => column);
+
   GeneratedColumn<DateTime> get startDate =>
       $composableBuilder(column: $table.startDate, builder: (column) => column);
 
@@ -27589,8 +29042,56 @@ class $$FestivalCalendarTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumn<String> get regionCodes => $composableBuilder(
+    column: $table.regionCodes,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get religion =>
+      $composableBuilder(column: $table.religion, builder: (column) => column);
+
   GeneratedColumn<bool> get isFastingDay => $composableBuilder(
     column: $table.isFastingDay,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get fastingType => $composableBuilder(
+    column: $table.fastingType,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get allowedFoods => $composableBuilder(
+    column: $table.allowedFoods,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get forbiddenFoods => $composableBuilder(
+    column: $table.forbiddenFoods,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get workoutNote => $composableBuilder(
+    column: $table.workoutNote,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get insightMessage => $composableBuilder(
+    column: $table.insightMessage,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get karmaChallenge => $composableBuilder(
+    column: $table.karmaChallenge,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get computedDynamically => $composableBuilder(
+    column: $table.computedDynamically,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get computedAt => $composableBuilder(
+    column: $table.computedAt,
     builder: (column) => column,
   );
 }
@@ -27636,22 +29137,46 @@ class $$FestivalCalendarTableTableManager
                 Value<String> festivalKey = const Value.absent(),
                 Value<String> nameEn = const Value.absent(),
                 Value<String> nameHi = const Value.absent(),
+                Value<String?> nameLocal = const Value.absent(),
+                Value<int> year = const Value.absent(),
                 Value<DateTime> startDate = const Value.absent(),
                 Value<DateTime> endDate = const Value.absent(),
                 Value<String> calendarSystem = const Value.absent(),
                 Value<String> dietPlanType = const Value.absent(),
+                Value<String?> regionCodes = const Value.absent(),
+                Value<String?> religion = const Value.absent(),
                 Value<bool> isFastingDay = const Value.absent(),
+                Value<String?> fastingType = const Value.absent(),
+                Value<String?> allowedFoods = const Value.absent(),
+                Value<String?> forbiddenFoods = const Value.absent(),
+                Value<String?> workoutNote = const Value.absent(),
+                Value<String?> insightMessage = const Value.absent(),
+                Value<String?> karmaChallenge = const Value.absent(),
+                Value<bool> computedDynamically = const Value.absent(),
+                Value<DateTime> computedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => FestivalCalendarCompanion(
                 id: id,
                 festivalKey: festivalKey,
                 nameEn: nameEn,
                 nameHi: nameHi,
+                nameLocal: nameLocal,
+                year: year,
                 startDate: startDate,
                 endDate: endDate,
                 calendarSystem: calendarSystem,
                 dietPlanType: dietPlanType,
+                regionCodes: regionCodes,
+                religion: religion,
                 isFastingDay: isFastingDay,
+                fastingType: fastingType,
+                allowedFoods: allowedFoods,
+                forbiddenFoods: forbiddenFoods,
+                workoutNote: workoutNote,
+                insightMessage: insightMessage,
+                karmaChallenge: karmaChallenge,
+                computedDynamically: computedDynamically,
+                computedAt: computedAt,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -27660,22 +29185,46 @@ class $$FestivalCalendarTableTableManager
                 required String festivalKey,
                 required String nameEn,
                 required String nameHi,
+                Value<String?> nameLocal = const Value.absent(),
+                required int year,
                 required DateTime startDate,
                 required DateTime endDate,
                 required String calendarSystem,
                 required String dietPlanType,
+                Value<String?> regionCodes = const Value.absent(),
+                Value<String?> religion = const Value.absent(),
                 Value<bool> isFastingDay = const Value.absent(),
+                Value<String?> fastingType = const Value.absent(),
+                Value<String?> allowedFoods = const Value.absent(),
+                Value<String?> forbiddenFoods = const Value.absent(),
+                Value<String?> workoutNote = const Value.absent(),
+                Value<String?> insightMessage = const Value.absent(),
+                Value<String?> karmaChallenge = const Value.absent(),
+                Value<bool> computedDynamically = const Value.absent(),
+                required DateTime computedAt,
                 Value<int> rowid = const Value.absent(),
               }) => FestivalCalendarCompanion.insert(
                 id: id,
                 festivalKey: festivalKey,
                 nameEn: nameEn,
                 nameHi: nameHi,
+                nameLocal: nameLocal,
+                year: year,
                 startDate: startDate,
                 endDate: endDate,
                 calendarSystem: calendarSystem,
                 dietPlanType: dietPlanType,
+                regionCodes: regionCodes,
+                religion: religion,
                 isFastingDay: isFastingDay,
+                fastingType: fastingType,
+                allowedFoods: allowedFoods,
+                forbiddenFoods: forbiddenFoods,
+                workoutNote: workoutNote,
+                insightMessage: insightMessage,
+                karmaChallenge: karmaChallenge,
+                computedDynamically: computedDynamically,
+                computedAt: computedAt,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -27705,6 +29254,332 @@ typedef $$FestivalCalendarTableProcessedTableManager =
         >,
       ),
       FestivalCalendarEntry,
+      PrefetchHooks Function()
+    >;
+typedef $$WeddingEventsTableCreateCompanionBuilder =
+    WeddingEventsCompanion Function({
+      required String id,
+      required String userId,
+      required String role,
+      Value<String?> relationType,
+      required DateTime startDate,
+      required DateTime endDate,
+      Value<int> prepWeeks,
+      required String eventsList,
+      required String primaryGoal,
+      required DateTime createdAt,
+      Value<String> syncStatus,
+      Value<int> rowid,
+    });
+typedef $$WeddingEventsTableUpdateCompanionBuilder =
+    WeddingEventsCompanion Function({
+      Value<String> id,
+      Value<String> userId,
+      Value<String> role,
+      Value<String?> relationType,
+      Value<DateTime> startDate,
+      Value<DateTime> endDate,
+      Value<int> prepWeeks,
+      Value<String> eventsList,
+      Value<String> primaryGoal,
+      Value<DateTime> createdAt,
+      Value<String> syncStatus,
+      Value<int> rowid,
+    });
+
+class $$WeddingEventsTableFilterComposer
+    extends Composer<_$AppDatabase, $WeddingEventsTable> {
+  $$WeddingEventsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get role => $composableBuilder(
+    column: $table.role,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get relationType => $composableBuilder(
+    column: $table.relationType,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get startDate => $composableBuilder(
+    column: $table.startDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get endDate => $composableBuilder(
+    column: $table.endDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get prepWeeks => $composableBuilder(
+    column: $table.prepWeeks,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get eventsList => $composableBuilder(
+    column: $table.eventsList,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get primaryGoal => $composableBuilder(
+    column: $table.primaryGoal,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$WeddingEventsTableOrderingComposer
+    extends Composer<_$AppDatabase, $WeddingEventsTable> {
+  $$WeddingEventsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get role => $composableBuilder(
+    column: $table.role,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get relationType => $composableBuilder(
+    column: $table.relationType,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get startDate => $composableBuilder(
+    column: $table.startDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get endDate => $composableBuilder(
+    column: $table.endDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get prepWeeks => $composableBuilder(
+    column: $table.prepWeeks,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get eventsList => $composableBuilder(
+    column: $table.eventsList,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get primaryGoal => $composableBuilder(
+    column: $table.primaryGoal,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$WeddingEventsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $WeddingEventsTable> {
+  $$WeddingEventsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get userId =>
+      $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<String> get role =>
+      $composableBuilder(column: $table.role, builder: (column) => column);
+
+  GeneratedColumn<String> get relationType => $composableBuilder(
+    column: $table.relationType,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get startDate =>
+      $composableBuilder(column: $table.startDate, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get endDate =>
+      $composableBuilder(column: $table.endDate, builder: (column) => column);
+
+  GeneratedColumn<int> get prepWeeks =>
+      $composableBuilder(column: $table.prepWeeks, builder: (column) => column);
+
+  GeneratedColumn<String> get eventsList => $composableBuilder(
+    column: $table.eventsList,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get primaryGoal => $composableBuilder(
+    column: $table.primaryGoal,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => column,
+  );
+}
+
+class $$WeddingEventsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $WeddingEventsTable,
+          WeddingEventEntry,
+          $$WeddingEventsTableFilterComposer,
+          $$WeddingEventsTableOrderingComposer,
+          $$WeddingEventsTableAnnotationComposer,
+          $$WeddingEventsTableCreateCompanionBuilder,
+          $$WeddingEventsTableUpdateCompanionBuilder,
+          (
+            WeddingEventEntry,
+            BaseReferences<
+              _$AppDatabase,
+              $WeddingEventsTable,
+              WeddingEventEntry
+            >,
+          ),
+          WeddingEventEntry,
+          PrefetchHooks Function()
+        > {
+  $$WeddingEventsTableTableManager(_$AppDatabase db, $WeddingEventsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$WeddingEventsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$WeddingEventsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$WeddingEventsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> userId = const Value.absent(),
+                Value<String> role = const Value.absent(),
+                Value<String?> relationType = const Value.absent(),
+                Value<DateTime> startDate = const Value.absent(),
+                Value<DateTime> endDate = const Value.absent(),
+                Value<int> prepWeeks = const Value.absent(),
+                Value<String> eventsList = const Value.absent(),
+                Value<String> primaryGoal = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => WeddingEventsCompanion(
+                id: id,
+                userId: userId,
+                role: role,
+                relationType: relationType,
+                startDate: startDate,
+                endDate: endDate,
+                prepWeeks: prepWeeks,
+                eventsList: eventsList,
+                primaryGoal: primaryGoal,
+                createdAt: createdAt,
+                syncStatus: syncStatus,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String userId,
+                required String role,
+                Value<String?> relationType = const Value.absent(),
+                required DateTime startDate,
+                required DateTime endDate,
+                Value<int> prepWeeks = const Value.absent(),
+                required String eventsList,
+                required String primaryGoal,
+                required DateTime createdAt,
+                Value<String> syncStatus = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => WeddingEventsCompanion.insert(
+                id: id,
+                userId: userId,
+                role: role,
+                relationType: relationType,
+                startDate: startDate,
+                endDate: endDate,
+                prepWeeks: prepWeeks,
+                eventsList: eventsList,
+                primaryGoal: primaryGoal,
+                createdAt: createdAt,
+                syncStatus: syncStatus,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$WeddingEventsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $WeddingEventsTable,
+      WeddingEventEntry,
+      $$WeddingEventsTableFilterComposer,
+      $$WeddingEventsTableOrderingComposer,
+      $$WeddingEventsTableAnnotationComposer,
+      $$WeddingEventsTableCreateCompanionBuilder,
+      $$WeddingEventsTableUpdateCompanionBuilder,
+      (
+        WeddingEventEntry,
+        BaseReferences<_$AppDatabase, $WeddingEventsTable, WeddingEventEntry>,
+      ),
+      WeddingEventEntry,
       PrefetchHooks Function()
     >;
 typedef $$RemoteConfigCachesTableCreateCompanionBuilder =
@@ -27950,6 +29825,8 @@ class $AppDatabaseManager {
       $$EmergencyCardsTableTableManager(_db, _db.emergencyCards);
   $$FestivalCalendarTableTableManager get festivalCalendar =>
       $$FestivalCalendarTableTableManager(_db, _db.festivalCalendar);
+  $$WeddingEventsTableTableManager get weddingEvents =>
+      $$WeddingEventsTableTableManager(_db, _db.weddingEvents);
   $$RemoteConfigCachesTableTableManager get remoteConfigCaches =>
       $$RemoteConfigCachesTableTableManager(_db, _db.remoteConfigCaches);
 }
@@ -28392,4 +30269,16 @@ class WorkoutsDaoManager {
   WorkoutsDaoManager(this._db);
   $$WorkoutsTableTableManager get workouts =>
       $$WorkoutsTableTableManager(_db.attachedDatabase, _db.workouts);
+}
+
+mixin _$WeddingEventsDaoMixin on DatabaseAccessor<AppDatabase> {
+  $WeddingEventsTable get weddingEvents => attachedDatabase.weddingEvents;
+  WeddingEventsDaoManager get managers => WeddingEventsDaoManager(this);
+}
+
+class WeddingEventsDaoManager {
+  final _$WeddingEventsDaoMixin _db;
+  WeddingEventsDaoManager(this._db);
+  $$WeddingEventsTableTableManager get weddingEvents =>
+      $$WeddingEventsTableTableManager(_db.attachedDatabase, _db.weddingEvents);
 }

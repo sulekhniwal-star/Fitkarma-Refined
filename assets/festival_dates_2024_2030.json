@@ -1,0 +1,74 @@
+[
+  {
+    "key": "ramadan_2024",
+    "festivalKey": "ramadan",
+    "nameEn": "Ramadan",
+    "nameHi": "रमजान",
+    "year": 2024,
+    "startDate": "2024-03-11T00:00:00",
+    "endDate": "2024-04-09T23:59:59",
+    "calendarSystem": "hijri",
+    "dietPlanType": "fasting",
+    "fastingType": "roza",
+    "insightMessage": "Focus on Suhoor and Iftar hydration."
+  },
+  {
+    "key": "holi_2024",
+    "festivalKey": "holi",
+    "nameEn": "Holi",
+    "nameHi": "होली",
+    "year": 2024,
+    "startDate": "2024-03-25T00:00:00",
+    "endDate": "2024-03-25T23:59:59",
+    "calendarSystem": "hindu",
+    "dietPlanType": "feast",
+    "insightMessage": "Enjoy the colors and treats! Light dinner recommended."
+  },
+  {
+    "key": "eid_ul_fitr_2024",
+    "festivalKey": "eid_ul_fitr",
+    "nameEn": "Eid al-Fitr",
+    "nameHi": "ईद-उल-फितर",
+    "year": 2024,
+    "startDate": "2024-04-10T00:00:00",
+    "endDate": "2024-04-10T23:59:59",
+    "calendarSystem": "hijri",
+    "dietPlanType": "feast"
+  },
+  {
+    "key": "navratri_sha_2024",
+    "festivalKey": "sharadiya_navratri",
+    "nameEn": "Sharadiya Navratri",
+    "nameHi": "शारदीय नवरात्रि",
+    "year": 2024,
+    "startDate": "2024-10-03T00:00:00",
+    "endDate": "2024-10-12T23:59:59",
+    "calendarSystem": "hindu",
+    "dietPlanType": "fasting",
+    "fastingType": "phalahar",
+    "allowedFoods": "Fruits, Sabudana, Milk, Curd, Singara, Kuttu",
+    "forbiddenFoods": "Grains, Onion, Garlic"
+  },
+  {
+    "key": "diwali_2024",
+    "festivalKey": "diwali",
+    "nameEn": "Diwali",
+    "nameHi": "दिवाली",
+    "year": 2024,
+    "startDate": "2024-10-31T00:00:00",
+    "endDate": "2024-10-31T23:59:59",
+    "calendarSystem": "hindu",
+    "dietPlanType": "feast"
+  },
+  {
+    "key": "christmas_2024",
+    "festivalKey": "christmas",
+    "nameEn": "Christmas",
+    "nameHi": "क्रिसमस",
+    "year": 2024,
+    "startDate": "2024-12-25T00:00:00",
+    "endDate": "2024-12-25T23:59:59",
+    "calendarSystem": "gregorian",
+    "dietPlanType": "feast"
+  }
+]

@@ -200,11 +200,42 @@ class FestivalCalendar extends Table {
   TextColumn get festivalKey => text()();
   TextColumn get nameEn => text()();
   TextColumn get nameHi => text()();
+  TextColumn get nameLocal => text().nullable()();
+  IntColumn get year => integer()();
   DateTimeColumn get startDate => dateTime()();
   DateTimeColumn get endDate => dateTime()();
-  TextColumn get calendarSystem => text()();
-  TextColumn get dietPlanType => text()();
+  TextColumn get calendarSystem => text()(); // hindu, hijri, sikh, gregorian
+  TextColumn get dietPlanType => text()(); // fasting, feast, sattvic, normal
+  TextColumn get regionCodes => text().nullable()(); // JSON list (KA, TN, UP...)
+  TextColumn get religion => text().nullable()();
   BoolColumn get isFastingDay => boolean().withDefault(const Constant(false))();
+  TextColumn get fastingType => text().nullable()(); // nirjala, phalahar, roza
+  TextColumn get allowedFoods => text().nullable()(); // JSON list
+  TextColumn get forbiddenFoods => text().nullable()(); // JSON list
+  TextColumn get workoutNote => text().nullable()();
+  TextColumn get insightMessage => text().nullable()();
+  TextColumn get karmaChallenge => text().nullable()();
+  BoolColumn get computedDynamically => boolean().withDefault(const Constant(true))();
+  DateTimeColumn get computedAt => dateTime()();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
+@DataClassName('WeddingEventEntry')
+class WeddingEvents extends Table {
+  TextColumn get id => text()();
+  TextColumn get userId => text()();
+  TextColumn get role => text()(); // bride, groom, guest, relative
+  TextColumn get relationType => text().nullable()();
+  DateTimeColumn get startDate => dateTime()();
+  DateTimeColumn get endDate => dateTime()();
+  IntColumn get prepWeeks => integer().withDefault(const Constant(4))();
+  TextColumn get eventsList => text()(); // JSON list of Haldi, Mehendi...
+  TextColumn get primaryGoal => text()(); // look_best, energy, stress_manage
+  DateTimeColumn get createdAt => dateTime()();
+  TextColumn get syncStatus => text().withDefault(const Constant('pending'))();
+
   @override
   Set<Column> get primaryKey => {id};
 }

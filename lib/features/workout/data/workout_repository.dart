@@ -1,5 +1,4 @@
 import '../../../core/storage/app_database.dart';
-import '../../../core/di/providers.dart';
 
 class WorkoutRepository {
   final AppDatabase db;

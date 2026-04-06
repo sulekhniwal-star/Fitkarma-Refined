@@ -6,6 +6,7 @@ import '../../../shared/widgets/bilingual_text.dart';
 import '../../../core/storage/app_database.dart';
 import '../../auth/data/auth_repository.dart';
 import '../data/food_repository.dart';
+import '../data/nutrition_repository.dart';
 
 class FoodLogScreen extends ConsumerWidget {
   const FoodLogScreen({super.key});
@@ -41,17 +42,25 @@ class FoodLogScreen extends ConsumerWidget {
               final snacks = logs.where((l) => l.mealType == 'Snacks').toList();
 
               final totalCalories = logs.fold<double>(0, (sum, l) => sum + l.calories);
+              
+              final goalsStream = ref.watch(nutritionRepositoryProvider).watchGoals(user.$id);
 
-              return ListView(
-                padding: const EdgeInsets.all(20),
-                children: [
-                  _buildSummaryCard(totalCalories, logs),
-                  const SizedBox(height: 24),
-                  _buildMealSection(context, "Breakfast", "नाश्ता", breakfast),
-                  _buildMealSection(context, "Lunch", "दोपहर का भोजन", lunch),
-                  _buildMealSection(context, "Dinner", "रात का खाना", dinner),
-                  _buildMealSection(context, "Snacks", "अल्पाहार", snacks),
-                ],
+              return StreamBuilder<NutritionGoal?>(
+                stream: goalsStream,
+                builder: (context, goalsSnapshot) {
+                  final goals = goalsSnapshot.data;
+                  return ListView(
+                    padding: const EdgeInsets.all(20),
+                    children: [
+                      _buildSummaryCard(totalCalories, logs, goals),
+                      const SizedBox(height: 24),
+                      _buildMealSection(context, "Breakfast", "नाश्ता", breakfast),
+                      _buildMealSection(context, "Lunch", "दोपहर का भोजन", lunch),
+                      _buildMealSection(context, "Dinner", "रात का खाना", dinner),
+                      _buildMealSection(context, "Snacks", "अल्पाहार", snacks),
+                    ],
+                  );
+                },
               );
             },
           );
@@ -68,10 +77,15 @@ class FoodLogScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildSummaryCard(double calories, List<FoodLog> logs) {
+  Widget _buildSummaryCard(double calories, List<FoodLog> logs, NutritionGoal? goals) {
     final protein = logs.fold<double>(0, (sum, l) => sum + l.proteinG);
     final carbs = logs.fold<double>(0, (sum, l) => sum + l.carbsG);
     final fat = logs.fold<double>(0, (sum, l) => sum + l.fatG);
+
+    final targetCals = goals?.calorieTarget ?? 2000;
+    final targetProtein = goals?.proteinTarget ?? (targetCals * 0.2 / 4).round();
+    final targetCarbs = goals?.carbsTarget ?? (targetCals * 0.55 / 4).round();
+    final targetFat = goals?.fatTarget ?? (targetCals * 0.25 / 9).round();
 
     return Container(
       padding: const EdgeInsets.all(24),
@@ -84,14 +98,14 @@ class FoodLogScreen extends ConsumerWidget {
         children: [
           const Text("Daily Progress", style: TextStyle(color: Colors.white70, fontSize: 13, fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
-          Text("${calories.toInt()} / 2000 kcal", style: const TextStyle(color: Colors.white, fontSize: 26, fontWeight: FontWeight.bold)),
+          Text("${calories.toInt()} / $targetCals kcal", style: const TextStyle(color: Colors.white, fontSize: 26, fontWeight: FontWeight.bold)),
           const SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _summaryItem("P", protein.toInt(), "g"),
-              _summaryItem("C", carbs.toInt(), "g"),
-              _summaryItem("F", fat.toInt(), "g"),
+              _summaryItem("P", protein.toInt(), targetProtein, "g"),
+              _summaryItem("C", carbs.toInt(), targetCarbs, "g"),
+              _summaryItem("F", fat.toInt(), targetFat, "g"),
             ],
           ),
         ],
@@ -99,11 +113,11 @@ class FoodLogScreen extends ConsumerWidget {
     );
   }
 
-  Widget _summaryItem(String label, int value, String unit) {
+  Widget _summaryItem(String label, int value, int target, String unit) {
     return Column(
       children: [
         Text(label, style: const TextStyle(color: Colors.white70, fontWeight: FontWeight.bold)),
-        Text("$value$unit", style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+        Text("$value / $target$unit", style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
       ],
     );
   }

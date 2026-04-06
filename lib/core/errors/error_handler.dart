@@ -1,166 +1,150 @@
 import 'package:flutter/material.dart';
 import 'app_exception.dart';
 
+/// Maps [AppException] (and raw exceptions) to bilingual UI messages.
 class ErrorHandler {
-  static String getUserMessage(AppException exception) {
-    switch (exception.runtimeType) {
-      case NetworkException:
-        return 'No internet connection. Please check your network.';
-      case StorageException:
-        return 'Unable to save data. Please try again.';
-      case AuthException:
-        if (exception.code == 'invalid_credentials') {
-          return 'Invalid email or password.';
-        } else if (exception.code == 'user_not_found') {
-          return 'No account found with this email.';
-        } else if (exception.code == 'session_expired') {
-          return 'Your session expired. Please login again.';
-        }
-        return 'Authentication failed. Please try again.';
-      case EncryptionException:
-        return 'Security error. Please restart the app.';
-      case SyncException:
-        if (exception.code == 'conflict') {
-          return 'Data conflict. Please try again.';
-        } else if (exception.code == 'dead_letter') {
-          return 'Sync failed after multiple attempts. Please check your connection.';
-        }
-        return 'Unable to sync data. Will retry automatically.';
-      case ValidationException:
-        return exception.message;
-      case PermissionException:
-        return 'Permission denied. Please check app permissions.';
-      default:
-        return 'Something went wrong. Please try again.';
+  ErrorHandler._();
+
+  /// Returns a [_BilingualMessage] with English + Hindi text for the given error.
+  static _BilingualMessage messageFor(Object error) {
+    if (error is ValidationException) {
+      return _BilingualMessage(error.message, error.message);
     }
+    if (error is SessionExpiredException) {
+      return const _BilingualMessage(
+        'Your session has expired. Please log in again.',
+        'आपका सत्र समाप्त हो गया। कृपया फिर से लॉग इन करें।',
+      );
+    }
+    if (error is AuthException) {
+      return _BilingualMessage(
+        error.message,
+        _authHindi(error.code),
+      );
+    }
+    if (error is TimeoutException) {
+      return const _BilingualMessage(
+        'Request timed out. Please check your connection.',
+        'अनुरोध का समय समाप्त हो गया। कृपया अपना इंटरनेट जांचें।',
+      );
+    }
+    if (error is NetworkException) {
+      return const _BilingualMessage(
+        'No internet connection. Data saved locally.',
+        'इंटरनेट नहीं है। डेटा स्थानीय रूप से सहेजा गया।',
+      );
+    }
+    if (error is KeyDerivationException) {
+      return const _BilingualMessage(
+        'Could not unlock secure storage. Please restart the app.',
+        'सुरक्षित संग्रहण नहीं खुल सका। ऐप को दोबारा आज़माएं।',
+      );
+    }
+    if (error is EncryptionException) {
+      return const _BilingualMessage(
+        'Security error. Your data is safe.',
+        'सुरक्षा त्रुटि। आपका डेटा सुरक्षित है।',
+      );
+    }
+    if (error is DeadLetterException) {
+      return const _BilingualMessage(
+        'Some items failed to sync after multiple attempts.',
+        'कुछ आइटम बार-बार प्रयास के बाद भी सिंक नहीं हो सके।',
+      );
+    }
+    if (error is SyncException) {
+      return const _BilingualMessage(
+        'Sync failed. Will retry automatically.',
+        'सिंक विफल हुआ। स्वचालित रूप से पुनः प्रयास होगा।',
+      );
+    }
+    if (error is StorageException) {
+      return const _BilingualMessage(
+        'Local storage error. Please restart the app.',
+        'स्थानीय संग्रहण त्रुटि। ऐप को पुनः चालू करें।',
+      );
+    }
+    if (error is PermissionException) {
+      return _BilingualMessage(
+        'Permission required: ${error.permission ?? 'unknown'}',
+        'अनुमति आवश्यक: ${error.permission ?? 'अज्ञात'}',
+      );
+    }
+    if (error is FoodNotFoundException) {
+      return const _BilingualMessage(
+        'Food item not found.',
+        'खाद्य पदार्थ नहीं मिला।',
+      );
+    }
+    // Fallback
+    return const _BilingualMessage(
+      'Something went wrong. Please try again.',
+      'कुछ गलत हो गया। कृपया पुनः प्रयास करें।',
+    );
   }
 
-  static String getHindiMessage(AppException exception) {
-    switch (exception.runtimeType) {
-      case NetworkException:
-        return 'इंटरनेट कनेक्शन नहीं है। कृपया नेटवर्क जांचें।';
-      case StorageException:
-        return 'डेटा सेव नहीं हो सका। कृपया पुनः प्रयास करें।';
-      case AuthException:
-        if (exception.code == 'invalid_credentials') {
-          return 'गलत ईमेल या पासवर्ड।';
-        } else if (exception.code == 'user_not_found') {
-          return 'इस ईमेल पर कोई खाता नहीं मिला।';
-        } else if (exception.code == 'session_expired') {
-          return 'आपका सत्र समाप्त हो गया। कृपया पुनः लॉगिन करें।';
-        }
-        return 'प्रमाणीकरण विफल। कृपया पुनः प्रयास करें।';
-      case EncryptionException:
-        return 'सुरक्षा त्रुटि। कृपया ऐप पुनः आरंभ करें।';
-      case SyncException:
-        if (exception.code == 'conflict') {
-          return 'डेटा विरोध। कृपया पुनः प्रयास करें।';
-        } else if (exception.code == 'dead_letter') {
-          return 'कई प्रयासों के बाद सिंक विफल। कृपया कनेक्शन जांचें।';
-        }
-        return 'डेटा सिंक नहीं हो सका। स्वचालित रूप से पुनः प्रयास होगा।';
-      case ValidationException:
-        return exception.message;
-      case PermissionException:
-        return 'अनुमति नहीं मिली। कृपया ऐप अनुमतियां जांचें।';
-      default:
-        return 'कुछ गलत हो गया। कृपया पुनः प्रयास करें।';
-    }
-  }
-
-  static Widget buildErrorWidget(
-    BuildContext context,
-    AppException exception, {
-    VoidCallback? onRetry,
-    VoidCallback? onDismiss,
-  }) {
-    final locale = Localizations.localeOf(context);
-    final isHindi = locale.languageCode == 'hi';
-    
-    final message = isHindi 
-        ? getHindiMessage(exception) 
-        : getUserMessage(exception);
-
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
+  /// Shows a [SnackBar] with bilingual message.
+  static void show(BuildContext context, Object error) {
+    final msg = messageFor(error);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Column(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(
-              _getIconForException(exception),
-              size: 64,
-              color: Theme.of(context).colorScheme.error,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              message,
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodyLarge,
-            ),
-            const SizedBox(height: 24),
-            if (onRetry != null)
-              FilledButton.icon(
-                onPressed: onRetry,
-                icon: const Icon(Icons.refresh),
-                label: Text(isHindi ? 'पुनः प्रयास' : 'Retry'),
-              ),
-            if (onDismiss != null)
-              TextButton(
-                onPressed: onDismiss,
-                child: Text(isHindi ? 'बंद करें' : 'Dismiss'),
-              ),
+            Text(msg.english, style: const TextStyle(fontWeight: FontWeight.w600)),
+            Text(msg.hindi, style: const TextStyle(fontSize: 12, color: Colors.white70)),
           ],
+        ),
+        backgroundColor: const Color(0xFF1E1E2E),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        duration: const Duration(seconds: 4),
+        action: SnackBarAction(
+          label: 'OK',
+          textColor: const Color(0xFFFF6B35),
+          onPressed: () => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
         ),
       ),
     );
   }
 
-  static IconData _getIconForException(AppException exception) {
-    switch (exception.runtimeType) {
-      case NetworkException:
-        return Icons.wifi_off;
-      case StorageException:
-        return Icons.storage;
-      case AuthException:
-        return Icons.lock_outline;
-      case EncryptionException:
-        return Icons.security;
-      case SyncException:
-        return Icons.sync_problem;
-      case PermissionException:
-        return Icons.no_accounts;
-      default:
-        return Icons.error_outline;
-    }
-  }
-
-  static AppException handle(Object error, StackTrace? stackTrace) {
+  /// Maps raw exceptions to [AppException].
+  static AppException wrap(Object error) {
     if (error is AppException) return error;
-
-    // Wrap known Dart exceptions
-    if (error.toString().contains('SocketException') ||
-        error.toString().contains('HttpException')) {
-      return NetworkException(
-        message: 'Network error',
-        originalError: error,
-        stackTrace: stackTrace,
-      );
+    final msg = error.toString();
+    if (msg.contains('network') || msg.contains('socket') || msg.contains('connection')) {
+      return NetworkException(cause: error);
     }
-
-    if (error.toString().contains('FormatException')) {
-      return ValidationException(
-        message: 'Invalid data format',
-        originalError: error,
-        stackTrace: stackTrace,
-      );
+    if (msg.contains('401') || msg.contains('unauthorized') || msg.contains('user_invalid')) {
+      return AuthException(cause: error);
     }
-
-    // Default to generic exception
-    return StorageException(
-      message: error.toString(),
-      originalError: error,
-      stackTrace: stackTrace,
-    );
+    if (msg.contains('timeout')) return TimeoutException(cause: error);
+    if (msg.contains('encrypt') || msg.contains('decrypt')) {
+      return EncryptionException(cause: error);
+    }
+    if (msg.contains('database') || msg.contains('sqlite') || msg.contains('drift')) {
+      return StorageException(cause: error);
+    }
+    return NetworkException(cause: error, message: msg);
   }
+
+  static String _authHindi(String? code) {
+    switch (code) {
+      case 'user_invalid_credentials':
+        return 'गलत ईमेल या पासवर्ड।';
+      case 'user_already_exists':
+        return 'यह ईमेल पहले से पंजीकृत है।';
+      case 'session_expired':
+        return 'आपका सत्र समाप्त हो गया।';
+      default:
+        return 'प्रमाणीकरण विफल हुआ।';
+    }
+  }
+}
+
+class _BilingualMessage {
+  const _BilingualMessage(this.english, this.hindi);
+  final String english;
+  final String hindi;
 }
