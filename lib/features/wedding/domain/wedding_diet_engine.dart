@@ -1,7 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../core/di/providers.dart';
 import '../../../core/storage/app_database.dart';
-import '../../food/domain/tdee_calculator.dart';
 import '../../auth/data/auth_repository.dart';
 
 part 'wedding_diet_engine.g.dart';

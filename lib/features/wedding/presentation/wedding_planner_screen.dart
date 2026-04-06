@@ -3,9 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:drift/drift.dart' show Value;
 import 'package:uuid/uuid.dart';
+import 'package:go_router/go_router.dart';
 import '../../../core/di/providers.dart';
 import '../../../core/storage/app_database.dart';
 import '../../auth/data/auth_repository.dart';
+import '../../../shared/theme/app_colors.dart';
+import '../../../shared/widgets/bilingual_text.dart';
 
 class WeddingPlannerHomeScreen extends ConsumerWidget {
   const WeddingPlannerHomeScreen({super.key});
@@ -14,66 +17,187 @@ class WeddingPlannerHomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Wedding Planner'),
+        title: const Text('Wedding Planner · वेडिंग प्लानर'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () => context.go('/wedding-planner/setup'),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Container(
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [Color(0xFFD4AF37), Color(0xFFFFD700)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(16),
-              ),
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                children: [
-                  const Icon(Icons.favorite, color: Colors.white, size: 48),
-                  const SizedBox(height: 8),
-                  const Text('Your Wedding Journey', style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 4),
-                  const Text('30 days to go', style: TextStyle(color: Colors.white70)),
-                ],
-              ),
-            ),
+            _HeroSection(),
             const SizedBox(height: 24),
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Today\'s Plan', style: Theme.of(context).textTheme.titleMedium),
-                    const SizedBox(height: 8),
-                    const Text('• Breakfast: 400 kcal - Protein rich'),
-                    const Text('• Workout: 30 min light cardio'),
-                    const Text('• Water: 8 glasses'),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Upcoming Events', style: Theme.of(context).textTheme.titleMedium),
-                    const SizedBox(height: 8),
-                    _EventCard(eventName: 'Haldi', daysUntil: 5, color: Colors.yellow),
-                    _EventCard(eventName: 'Mehendi', daysUntil: 6, color: Colors.green),
-                    _EventCard(eventName: 'Sangeet', daysUntil: 7, color: Colors.purple),
-                    _EventCard(eventName: 'Wedding Day', daysUntil: 30, color: Colors.red),
-                  ],
-                ),
-              ),
-            ),
+            _FeatureGrid(),
+            const SizedBox(height: 24),
+            _UpcomingCeremonies(),
+            const SizedBox(height: 24),
+            _PlanSummary(),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _HeroSection extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [Color(0xFFB8860B), Color(0xFFD4AF37), Color(0xFFFFD700)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFFD4AF37).withOpacity(0.3),
+            blurRadius: 15,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.all(28),
+      child: const Column(
+        children: [
+          Icon(Icons.auto_awesome, color: Colors.white, size: 40),
+          SizedBox(height: 16),
+          Text(
+            'THE BRIDE\'S JOURNEY',
+            style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold, letterSpacing: 3),
+          ),
+          SizedBox(height: 8),
+          Text(
+            '30 Days to Forever',
+            style: TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.w300, fontStyle: FontStyle.italic),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _FeatureGrid extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 110,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        children: [
+          _FeatureItem(
+            icon: Icons.fitness_center,
+            label: 'Fitness',
+            color: Colors.orange,
+            onTap: () => context.go('/wedding-planner/fitness'),
+          ),
+          _FeatureItem(
+            icon: Icons.spa,
+            label: 'Recovery',
+            color: AppColors.teal,
+            onTap: () => context.go('/wedding-planner/recovery'),
+          ),
+          _FeatureItem(
+            icon: Icons.shopping_cart,
+            label: 'Groceries',
+            color: Colors.purple,
+            onTap: () => context.go('/wedding-planner/grocery'),
+          ),
+          _FeatureItem(
+            icon: Icons.calendar_today,
+            label: 'Ceremonies',
+            color: AppColors.secondary,
+            onTap: () {
+              final now = DateTime.now();
+              context.go('/wedding-planner/event/${now.year}-${now.month}-${now.day}');
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _FeatureItem extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final Color color;
+  final VoidCallback onTap;
+
+  const _FeatureItem({required this.icon, required this.label, required this.color, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 100,
+        margin: const EdgeInsets.only(right: 12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: Colors.grey.withOpacity(0.1)),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, color: color, size: 28),
+            const SizedBox(height: 8),
+            Text(label, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _UpcomingCeremonies extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const BilingualText(
+          english: 'Upcoming Ceremonies',
+          hindi: 'आने वाले समारोह',
+          englishStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 16),
+        _EventCard(eventName: 'Mehendi', daysUntil: 6, color: Colors.green),
+        _EventCard(eventName: 'Sangeet', daysUntil: 7, color: Colors.purple),
+        _EventCard(eventName: 'Baraat', daysUntil: 8, color: Colors.orange),
+      ],
+    );
+  }
+}
+
+class _PlanSummary extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: BorderSide(color: Colors.grey.withOpacity(0.1)),
+      ),
+      child: const Padding(
+        padding: EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('TODAY\'S FOCUS', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey)),
+            SizedBox(height: 12),
+            Text('• Stay hydrated (3L Goal) for skin glow.', style: TextStyle(fontSize: 15)),
+            SizedBox(height: 4),
+            Text('• Light cardio + core toning (25 mins).', style: TextStyle(fontSize: 15)),
+            SizedBox(height: 4),
+            Text('• Avoid salt-heavy meals tonight.', style: TextStyle(fontSize: 15)),
           ],
         ),
       ),
@@ -182,8 +306,11 @@ class _WeddingSetupScreenState extends ConsumerState<WeddingSetupScreen> {
                 selected: _selectedEvents.contains(e),
                 onSelected: (val) {
                   setState(() {
-                    if (val) _selectedEvents.add(e);
-                    else _selectedEvents.remove(e);
+                    if (val) {
+                      _selectedEvents.add(e);
+                    } else {
+                      _selectedEvents.remove(e);
+                    }
                   });
                 },
               )).toList(),

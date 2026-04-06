@@ -17,7 +17,15 @@ import 'features/workout/presentation/workout_log_screen.dart';
 import 'features/workout/presentation/workout_list_screen.dart';
 import 'features/workout/presentation/workout_detail_screen.dart';
 import 'features/workout/presentation/personal_records_screen.dart';
+import 'features/festival_calendar/presentation/festival_calendar_screen.dart';
+import 'features/festival_calendar/presentation/festival_diet_plan_screen.dart';
+import 'features/wedding/presentation/wedding_planner_screen.dart';
+import 'features/wedding/presentation/wedding_event_day_screen.dart';
+import 'features/wedding/presentation/wedding_fitness_plan_screen.dart';
+import 'features/wedding/presentation/wedding_recovery_screen.dart';
+import 'features/wedding/presentation/wedding_grocery_list_screen.dart';
 import 'core/storage/app_database.dart';
+import 'features/wedding/domain/wedding_logic.dart';
 
 class FitKarmaApp extends ConsumerWidget {
   const FitKarmaApp({super.key});
@@ -130,6 +138,52 @@ class FitKarmaApp extends ConsumerWidget {
             GoRoute(
               path: '/steps',
               builder: (context, state) => const StepsScreen(),
+            ),
+            GoRoute(
+              path: '/festival-calendar',
+              builder: (context, state) => const FestivalCalendarScreen(),
+              routes: [
+                GoRoute(
+                  path: 'diet/:festivalKey',
+                  builder: (context, state) {
+                    final festivalKey = state.pathParameters['festivalKey']!;
+                    return FestivalDietPlanScreen(festivalKey: festivalKey);
+                  },
+                ),
+              ],
+            ),
+            GoRoute(
+              path: '/wedding-planner',
+              builder: (context, state) => const WeddingPlannerHomeScreen(),
+              routes: [
+                GoRoute(
+                  path: 'setup',
+                  builder: (context, state) => const WeddingSetupScreen(),
+                ),
+                GoRoute(
+                  path: 'fitness',
+                  builder: (context, state) {
+                    final role = state.extra as WeddingRole? ?? WeddingRole.guest;
+                    final goal = WeddingPrimaryGoal.values.first; // Should be fetched from DB preferably
+                    return WeddingFitnessPlanScreen(role: role, goal: goal);
+                  },
+                ),
+                GoRoute(
+                  path: 'recovery',
+                  builder: (context, state) => const WeddingRecoveryScreen(),
+                ),
+                GoRoute(
+                  path: 'grocery',
+                  builder: (context, state) => const WeddingGroceryListScreen(),
+                ),
+                GoRoute(
+                  path: 'event/:date',
+                  builder: (context, state) {
+                    final dateStr = state.pathParameters['date']!;
+                    return WeddingEventDayScreen(date: DateTime.parse(dateStr));
+                  },
+                ),
+              ],
             ),
             GoRoute(
               path: '/profile',

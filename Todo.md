@@ -115,31 +115,31 @@
 
 ### 2.2 Shared Widgets
 - [x] `shimmer_loader.dart` — loading placeholder
-- [ ] `async_value_widget.dart` — generic `AsyncValue<T>` wrapper
-- [ ] `error_retry_widget.dart` — error state with Retry button
-- [ ] `bilingual_label.dart` — stacked English + Hindi `Text` widget
+- [x] `async_value_widget.dart` — generic `AsyncValue<T>` wrapper
+- [x] `error_retry_widget.dart` — error state with Retry button
+- [x] `bilingual_label.dart` — stacked English + Hindi `Text` widget
 - [x] `activity_rings.dart` — four concentric rings (orange, green, teal, purple)
 - [x] `insight_card.dart` — amber card with lightbulb icon and 👍/👎 buttons
-- [ ] `correlation_insight_card.dart` — multi-module insight with per-module pill links
-- [ ] `food_item_card.dart` — photo, bilingual name, portion, kcal, `+` button
+- [x] `correlation_insight_card.dart` — multi-module insight with per-module pill links
+- [x] `food_item_card.dart` — photo, bilingual name, portion, kcal, `+` button
 - [x] `karma_level_card.dart` — dark purple gradient card with progress bar
-- [ ] `dosha_chart.dart` — three-segment donut using `fl_chart`
+- [x] `dosha_chart.dart` — three-segment donut using `fl_chart`
 - [ ] `challenge_card.dart` — horizontally scrollable challenge card
 - [x] `quick_log_fab.dart` — speed-dial orange FAB with 6 sub-actions
-- [ ] `meal_tab_bar.dart` — Breakfast / Lunch / Dinner / Snacks tab bar
-- [ ] `encryption_badge.dart` — 🔒 AES-256 pill badge for sensitive data
-- [ ] `sync_status_banner.dart` — DLQ banner + offline status indicator
-- [ ] `micronutrient_bar.dart` — compact progress bar for Iron / B12 / Vit D / Calcium
-- [ ] `lab_value_row.dart` — extracted lab metric with inline field and confirm checkbox
-- [ ] `abha_badge.dart` — ABHA linked (green) / unlinked (amber) indicator
+- [x] `meal_tab_bar.dart` — Breakfast / Lunch / Dinner / Snacks tab bar
+- [x] `encryption_badge.dart` — 🔒 AES-256 pill badge for sensitive data
+- [x] `sync_status_banner.dart` — DLQ banner + offline status indicator
+- [x] `micronutrient_bar.dart` — compact progress bar for Iron / B12 / Vit D / Calcium
+- [x] `lab_value_row.dart` — extracted lab metric with inline field and confirm checkbox
+- [x] `abha_badge.dart` — ABHA linked (green) / unlinked (amber) indicator
 - [ ] `health_share_card.dart` — shareable doctor link card with countdown
-- [ ] `home_widget_preview.dart` — scaled preview of Android/iOS home screen widgets
-- [ ] 🆕🟡 `festival_card.dart` — festival name (bilingual), date range, fasting pill, region pill, reminder + diet plan CTAs
-- [ ] 🆕🟡 `festival_countdown_banner.dart` — active festival dashboard banner; festival-colour gradient; fasting mode indicator; quick action buttons
-- [ ] 🆕🟡 `wedding_countdown_card.dart` — gold gradient card; days to wedding + next event; role badge; link to wedding planner
-- [ ] 🆕🟡 `wedding_role_chip.dart` — large illustrated role selection card (Bride/Groom/Guest/Relative) for onboarding
-- [ ] 🆕🟡 `event_day_card.dart` — individual wedding event card with energy demand badge and meal plan summary
-- [ ] 🆕🟢 `festival_diet_badge.dart` — fasting type pill badge (Nirjala / Phalahar / Roza / Feast / Sattvic)
+- [x] `home_widget_preview.dart` — scaled preview of Android/iOS home screen widgets
+- [x] 🆕🟡 `festival_card.dart` — festival name (bilingual), date range, fasting pill, region pill, reminder + diet plan CTAs
+- [x] 🆕🟡 `festival_countdown_banner.dart` — active festival dashboard banner; festival-colour gradient; fasting mode indicator; quick action buttons
+- [x] 🆕🟡 `wedding_countdown_card.dart` — gold gradient card; days to wedding + next event; role badge; link to wedding planner
+- [x] 🆕🟡 `wedding_role_chip.dart` — large illustrated role selection card (Bride/Groom/Guest/Relative) for onboarding
+- [x] 🆕🟡 `event_day_card.dart` — individual wedding event card with energy demand badge and meal plan summary
+- [x] 🆕🟢 `festival_diet_badge.dart` — fasting type pill badge (Nirjala / Phalahar / Roza / Feast / Sattvic)
 
 ### 2.3 Navigation
 - [x] Create `lib/app.dart` with `GoRouter` — added all routes from the Route Map in Section 19
@@ -220,11 +220,11 @@
   - [x] Respect Android battery saver — check `DeviceInfoPlugin` for power save mode before heavy sync
 
 ### 3.6 Error Handling
-- [ ] 🟡 Create `lib/core/errors/app_exception.dart` — custom exception types: `NetworkException`, `StorageException`, `AuthException`, `EncryptionException`, `SyncException`
-- [ ] 🟡 Create `lib/core/errors/error_handler.dart` — maps raw exceptions to friendly bilingual UI messages
+- [x] 🟡 Create `lib/core/errors/app_exception.dart` — custom exception types: `NetworkException`, `StorageException`, `AuthException`, `EncryptionException`, `SyncException`
+- [x] 🟡 Create `lib/core/errors/error_handler.dart` — maps raw exceptions to friendly bilingual UI messages
 - [ ] 🆕🟡 **Enforce `AsyncValue` error boundaries** on every Riverpod provider that touches Drift or Appwrite:
   - [ ] Every `FutureProvider` / `StreamProvider` must expose `loading`, `data`, and `error` states
-  - [ ] Use the shared `AsyncValueWidget` from Phase 2.2 — no ad-hoc null checks in UI code
+  - [x] Use the shared `AsyncValueWidget` from Phase 2.2 — no ad-hoc null checks in UI code
 
 ### 3.7 Appwrite Permissions (Security Fix)
 > ⚠️ Critical security fix from architecture review
@@ -242,12 +242,12 @@
   - [ ] `sleep_logs`: `[userId, date DESC]`
 
 ### 3.8 Riverpod Provider Architecture
-- [ ] 🟡 Create `lib/core/di/providers.dart` — root-level providers (Appwrite client, Drift DB, encryption keys)
+- [x] 🟡 Create `lib/core/di/providers.dart` — root-level providers (Appwrite client, Drift DB, encryption keys)
 - [ ] 🟡 Document provider organisation in each feature folder:
   - [ ] `features/*/data/*_providers.dart` — repository providers
   - [ ] `features/*/presentation/*_providers.dart` — UI state providers
 - [ ] 🆕🟡 **Provider scoping and disposal** — use `keepAlive: false` on non-critical providers; scope feature providers to their routes using `ProviderScope` overrides so they are GC'd on pop
-- [ ] 🆕🟡 **Cancellation tokens** — add `CancelToken` (via `dio`) to all long-running operations (food search, GPS route save, bulk sync) and cancel them in the provider's `dispose`
+- [x] 🆕🟡 **Cancellation tokens** — add `CancelToken` (via `dio`) to all long-running operations (food search, GPS route save, bulk sync) and cancel them in the provider's `dispose`
 
 ---
 
@@ -288,9 +288,6 @@
 ## Phase 5 — Dashboard (Home Screen)
 > *The first thing users see every day — must load from Drift in under 1 second.*
 
-## Phase 5 — Dashboard (Home Screen)
-> *The first thing users see every day — must load from Drift in under 1 second.*
-
 - [x] ⚡🟡 Build `DashboardScreen` — reads **only from Drift** on first render (no Appwrite calls)
 - [x] 🟡 Add the **header** — avatar, "Namaste, [Name] 🙏", karma XP and level badge
 - [x] 🟡 Add the `ActivityRingsWidget` — wire calories, steps, water, active minutes progress
@@ -325,12 +322,12 @@
 
 ### 6.2 Food Log Service
 - [x] 🟡 Create `lib/features/food/data/food_drift_service.dart` — (Integrated into FoodRepository)
-- [ ] 🟡 Create `lib/features/food/data/food_aw_service.dart` — search food items and sync logs to Appwrite
+- [x] 🟡 Create `lib/features/food/data/food_aw_service.dart` — search food items and sync logs to Appwrite
 - [x] 🟡 Create `lib/features/food/data/food_repository.dart` — Drift first, Appwrite fallback, queue sync
 
 ### 6.3 Food Log Model
-- [ ] 🟡 Create `lib/features/food/domain/food_log_model.dart` — Drift `DataClass`
-- [ ] 🟢 Run `dart run build_runner build` to generate the Drift companion and query classes
+- [x] 🟡 Create `lib/features/food/domain/food_log_model.dart` — Drift `DataClass`
+- [x] 🟢 Run `dart run build_runner build` to generate the Drift companion and query classes
 
 ### 6.4 Food Log Screen
 - [x] 🟡 Build `FoodLogScreen` (e.g. "Log Breakfast") with:
@@ -676,17 +673,17 @@
 - [ ] 🆕🟢 Add a manual trigger endpoint (admin-only) to force a refresh mid-year if a date calculation error is reported
 
 ### 13A.3 Festival Drift Table & DAO
-- [ ] 🆕🟡 Create `FestivalCalendar` Drift table (see Section 11.11.4 schema):
-  - [ ] Fields: `id, festivalKey, nameEn, nameHi, nameLocal, year, startDate, endDate, calendarSystem, dietPlanType, regionCodes, religion, isFastingDay, fastingType, allowedFoods, forbiddenFoods, workoutNote, insightMessage, karmaChallenge, computedDynamically, computedAt`
-- [ ] 🆕🟡 Create `WeddingEvents` Drift table (see Section 11.12.2 schema)
-- [ ] 🆕🟡 Create `FestivalCalendarDao` with queries:
-  - [ ] `getActiveFestivals(DateTime date)` — returns festivals whose range covers today
-  - [ ] `getUpcomingFestivals(DateTime from, int limit)` — next N festivals after `from`
-  - [ ] `getFestivalByKey(String key, int year)` — fetch a specific festival
-  - [ ] `upsertFestivals(List<FestivalCalendarCompanion> rows)` — used by the date engine on refresh
-- [ ] 🆕🟡 Create `WeddingEventsDao` with queries:
-  - [ ] `getActiveWeddingPlan(String userId)` — returns the active wedding plan if within date range
-  - [ ] `getWeddingPhase(String userId, DateTime date)` — returns `pre_wedding` / `wedding_week` / `post_wedding`
+- [x] 🆕🟡 Create `FestivalCalendar` Drift table (see Section 11.11.4 schema):
+  - [x] Fields: `id, festivalKey, nameEn, nameHi, nameLocal, year, startDate, endDate, calendarSystem, dietPlanType, regionCodes, religion, isFastingDay, fastingType, allowedFoods, forbiddenFoods, workoutNote, insightMessage, karmaChallenge, computedDynamically, computedAt`
+- [x] 🆕🟡 Create `WeddingEvents` Drift table (see Section 11.12.2 schema)
+- [x] 🆕🟡 Create `FestivalCalendarDao` with queries:
+  - [x] `getActiveFestivals(DateTime date)` — returns festivals whose range covers today
+  - [x] `getUpcomingFestivals(DateTime from, int limit)` — next N festivals after `from`
+  - [x] `getFestivalByKey(String key, int year)` — fetch a specific festival
+  - [x] `upsertFestivals(List<FestivalCalendarCompanion> rows)` — used by the date engine on refresh
+- [x] 🆕🟡 Create `WeddingEventsDao` with queries:
+  - [x] `getActiveWeddingPlan(String userId)` — returns the active wedding plan if within date range
+  - [x] `getWeddingPhase(String userId, DateTime date)` — returns `pre_wedding` / `wedding_week` / `post_wedding`
 
 ### 13A.4 Festival Diet Plan Engine
 - [ ] 🆕🔴🟡 Create `lib/features/festival_calendar/domain/festival_diet_engine.dart`:
@@ -704,9 +701,9 @@
   - [ ] Surface as a quick-log shortcut from the Navratri festival banner on Dashboard
 
 ### 13A.5 Festival Calendar Screens
-- [ ] 🆕🟡 Build `FestivalCalendarScreen` `/festival-calendar` — upcoming festivals list + active banner + region filter + mini calendar + "Plan a Wedding" CTA (see UI spec Section 7.14)
-- [ ] 🆕🟡 Build `FestivalDietPlanScreen` `/festival-calendar/{festivalKey}/diet` — diet plan tabs per day; allowed foods grid; quick log CTA; workout note banner; festival-specific additions (Ramadan countdown, Karva Chauth moonrise)
-- [ ] 🆕🟢 Build `FestivalReminderBottomSheet` — "Set Reminder" for upcoming festivals; creates a local notification N days before start date (user-configurable: 7 days / 3 days / 1 day before)
+- [x] 🆕🟡 Build `FestivalCalendarScreen` `/festival-calendar` — upcoming festivals list + active banner + region filter + mini calendar + "Plan a Wedding" CTA (see UI spec Section 7.14)
+- [x] 🆕🟡 Build `FestivalDietPlanScreen` `/festival-calendar/{festivalKey}/diet` — diet plan tabs per day; allowed foods grid; quick log CTA; workout note banner; festival-specific additions (Ramadan countdown, Karva Chauth moonrise)
+- [x] 🆕🟢 Build `FestivalReminderBottomSheet` — "Set Reminder" for upcoming festivals; creates a local notification N days before start date (user-configurable: 7 days / 3 days / 1 day before)
 - [ ] 🆕🟢 Add **region filter persistence** — user's selected religion/region filter stored in Drift `user_preferences`; irrelevant festivals hidden by default
 
 ### 13A.6 Festival Karma Challenges
@@ -736,23 +733,23 @@
 - [ ] 🆕🟡 Create `WeddingFitnessEngine` — generates pre-wedding workout schedule per role and prep weeks
 
 ### 13B.2 Wedding Onboarding Flow
-- [ ] 🆕🟡 Build `/wedding-planner/setup` — 6-step onboarding (see UI spec Section 7.14):
-  - [ ] **Step 1** — Role selection: Bride / Groom / Guest / Relative (illustrated 4-card grid)
-  - [ ] **Step 1b** — Relation type (shown only if Relative selected): Father/Mother of Bride/Groom / Sibling / Close Family
-  - [ ] **Step 2** — Wedding date range picker (`DateRangePicker`, max 14 days, validates end ≥ start)
-    - [ ] Show warning if date range overlaps with an active festival (amber notice, not a blocker)
-  - [ ] **Step 3** — Event multi-select: Haldi / Mehendi / Sangeet / Baraat / Vivah / Reception (checkbox grid)
-  - [ ] **Step 4** — Prep time: 1 week / 2 weeks / 4 weeks / 8 weeks / Already wedding week
-  - [ ] **Step 5** — Primary goal (role-aware options): Look my best / Feel energised / Manage stress (Bride/Groom) OR Manage indulgence / Stay active / Maintain routine (Guest/Relative)
-  - [ ] **Step 6** — Summary confirmation screen with "Start My Wedding Plan" CTA
-  - [ ] On completion: write `WeddingEvents` record to Drift → enqueue Appwrite sync → award `+100 XP`
+- [x] 🆕🟡 Build `/wedding-planner/setup` — 6-step onboarding (see UI spec Section 7.14):
+  - [x] **Step 1** — Role selection: Bride / Groom / Guest / Relative (illustrated 4-card grid)
+  - [x] **Step 1b** — Relation type (shown only if Relative selected): Father/Mother of Bride/Groom / Sibling / Close Family
+  - [x] **Step 2** — Wedding date range picker (`DateRangePicker`, max 14 days, validates end ≥ start)
+    - [x] Show warning if date range overlaps with an active festival (amber notice, not a blocker)
+  - [x] **Step 3** — Event multi-select: Haldi / Mehendi / Sangeet / Baraat / Vivah / Reception (checkbox grid)
+  - [x] **Step 4** — Prep time: 1 week / 2 weeks / 4 weeks / 8 weeks / Already wedding week
+  - [x] **Step 5** — Primary goal (role-aware options): Look my best / Feel energised / Manage stress (Bride/Groom) OR Manage indulgence / Stay active / Maintain routine (Guest/Relative)
+  - [x] **Step 6** — Summary confirmation screen with "Start My Wedding Plan" CTA
+  - [x] On completion: write `WeddingEvents` record to Drift → enqueue Appwrite sync → award `+100 XP`
 
 ### 13B.3 Wedding Planner Screens
-- [ ] 🆕🟡 Build `WeddingPlannerHomeScreen` `/wedding-planner` — gold gradient hero; phase progress card; today's diet + workout card; event countdown strip; wedding tips InsightCard variant; grocery list CTA (see UI spec Section 7.14)
-- [ ] 🆕🟡 Build `WeddingEventDayScreen` `/wedding-planner/event/{eventKey}` — pre-event meal plan; during-event tips; post-event recovery meal; calorie budget + dance burn estimate; quick log CTA (see UI spec Section 7.14)
-- [ ] 🆕🟡 Build `WeddingFitnessPlanScreen` `/wedding-planner/fitness` — week-by-week workout schedule table; phase-appropriate workout intensity; "This week's plan" highlighted
-- [ ] 🆕🟡 Build `WeddingRecoveryScreen` `/wedding-planner/recovery` — 3-day detox plan; gradual calorie return chart; gentle workout plan; archive CTA (see UI spec Section 7.14)
-- [ ] 🆕🟢 Build `WeddingGroceryListScreen` `/wedding-planner/groceries` — auto-generated shopping list for wedding week meals; Swiggy/Blinkit deep-links
+- [x] 🆕🟡 Build `WeddingPlannerHomeScreen` `/wedding-planner` — gold gradient hero; phase progress card; today's diet + workout card; event countdown strip; wedding tips InsightCard variant; grocery list CTA (see UI spec Section 7.14)
+- [x] 🆕🟡 Build `WeddingEventDayScreen` `/wedding-planner/event/{eventKey}` — pre-event meal plan; during-event tips; post-event recovery meal; calorie budget + dance burn estimate; quick log CTA (see UI spec Section 7.14)
+- [x] 🆕🟡 Build `WeddingFitnessPlanScreen` `/wedding-planner/fitness` — week-by-week workout schedule table; phase-appropriate workout intensity; "This week's plan" highlighted
+- [x] 🆕🟡 Build `WeddingRecoveryScreen` `/wedding-planner/recovery` — 3-day detox plan; gradual calorie return chart; gentle workout plan; archive CTA (see UI spec Section 7.14)
+- [x] 🆕🟢 Build `WeddingGroceryListScreen` `/wedding-planner/groceries` — auto-generated shopping list for wedding week meals; Swiggy/Blinkit deep-links
 
 ### 13B.4 Wedding Dashboard Integration
 - [ ] 🆕🟡 When `weddingStartDate ≤ today ≤ weddingEndDate`, replace the standard `InsightCard` on the Dashboard with `WeddingCountdownCard` (gold gradient):

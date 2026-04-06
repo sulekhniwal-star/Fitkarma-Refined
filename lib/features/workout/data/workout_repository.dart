@@ -90,6 +90,18 @@ class WorkoutRepository {
         rpeLevel: null,
         thumbnailUrl: 'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e',
       ),
+      Workout(
+        id: '7',
+        title: 'Garba Night Cardio',
+        youtubeId: null,
+        durationMin: 45,
+        difficulty: 'Intermediate',
+        category: 'Dance',
+        language: 'en',
+        isPremium: false,
+        rpeLevel: 6, // MET ~6.5
+        thumbnailUrl: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad',
+      ),
     ];
 
     await db.batch((batch) {

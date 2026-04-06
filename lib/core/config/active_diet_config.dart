@@ -39,8 +39,9 @@ Future<CombinedDietConfig> activeDietConfig(ActiveDietConfigRef ref) async {
   } else if (festivalsAsync.isNotEmpty) {
     // Fallback to festival calorie offset
     for (final f in festivalsAsync) {
-      if (f.dietPlanType == 'fasting') calorieOffset -= 300;
-      else if (f.dietPlanType == 'feast') calorieOffset += 400;
+      if (f.dietPlanType == 'fasting') {
+        calorieOffset -= 300;
+      } else if (f.dietPlanType == 'feast') calorieOffset += 400;
     }
   }
 

@@ -75,8 +75,7 @@ class _FestivalCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(f.nameEn, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                      if (f.nameHi != null) 
-                        Text(f.nameHi!, style: TextStyle(color: Colors.grey.shade700, fontSize: 14)),
+                      Text(f.nameHi!, style: TextStyle(color: Colors.grey.shade700, fontSize: 14)),
                     ],
                   ),
                 ),
