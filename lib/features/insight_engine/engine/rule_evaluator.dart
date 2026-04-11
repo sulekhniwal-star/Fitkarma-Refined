@@ -2,6 +2,10 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../core/di/providers.dart';
 import '../models/insight_rule.dart';
 import '../rules/cross_module_rules.dart';
+import '../rules/nutrition_rules.dart';
+import '../rules/sleep_rules.dart';
+import '../rules/bp_rules.dart';
+import '../rules/glucose_rules.dart';
 
 part 'rule_evaluator.g.dart';
 
@@ -14,11 +18,27 @@ class RuleEvaluator {
 
   /// All registered rules — add new rules here.
   static const List<InsightRule> _registry = [
+    // Cross-module
     WorkoutProteinRule(),
     SleepMoodCorrelationRule(),
     StepsGlucoseRule(),
     RpeSleepBurnoutRule(),
+    FastingBpCorrelationRule(),
+    ScreenTimeMoodRule(),
+    FestivalCalorieRule(),
+
+    // Nutrition
     ProteinGapRule(),
+    MicronutrientGapRule(),
+
+    // Sleep
+    SleepDebtRule(),
+    SleepConsistencyRule(),
+
+    // Health
+    BpHighAlertRule(),
+    BpCrisisRule(),
+    GlucoseHighAlertRule(),
   ];
 
   /// Loads Drift data for [userId], evaluates all rules, returns top [maxCards].
@@ -65,6 +85,22 @@ class RuleEvaluator {
       variables: [db.variable(userId), db.variable(thirtyDaysAgo)],
     ).get();
 
+    final fastingLogs = await db.customSelect(
+      'SELECT * FROM fasting_logs WHERE user_id = ? AND start_time > ? ORDER BY start_time DESC LIMIT 30',
+      variables: [db.variable(userId), db.variable(thirtyDaysAgo)],
+    ).get();
+
+    final activeFestivals = await db.customSelect(
+      'SELECT * FROM festival_calendar WHERE start_date <= ? AND end_date >= ?',
+      variables: [db.variable(now), db.variable(now)],
+    ).get();
+
+    final negativeFeedbacks = await db.customSelect(
+      'SELECT rule_id FROM insight_feedbacks WHERE user_id = ? AND is_positive = 0',
+      variables: [db.variable(userId)],
+    ).get();
+    final suppressedRuleIds = negativeFeedbacks.map((r) => r.data['rule_id'] as String).toSet();
+
     Map<String, dynamic>? nutritionGoals;
     final goalsResult = await db.customSelect(
       'SELECT * FROM nutrition_goals WHERE user_id = ? ORDER BY updated_at DESC LIMIT 1',
@@ -84,11 +120,15 @@ class RuleEvaluator {
       recentBpLogs: bpLogs.map((r) => r.data).toList(),
       recentGlucoseLogs: glucoseLogs.map((r) => r.data).toList(),
       recentStepLogs: stepLogs.map((r) => r.data).toList(),
+      recentFastingLogs: fastingLogs.map((r) => r.data).toList(),
+      activeFestivals: activeFestivals.map((r) => r.data).toList(),
       nutritionGoals: nutritionGoals,
     );
 
-    // ── Evaluate all rules in parallel ───────────────────────────────────────
-    final futures = _registry.map((rule) => _safeEvaluate(rule, context));
+    // ── Evaluate all rules in parallel (excluding suppressed ones) ───────────
+    final futures = _registry
+        .where((rule) => !suppressedRuleIds.contains(rule.id))
+        .map((rule) => _safeEvaluate(rule, context));
     final results = await Future.wait(futures);
 
     final fired = results.whereType<InsightOutput>().toList();

@@ -174,6 +174,32 @@ class FestivalDateEngine {
         dietType: DietaryType.feast,
       ),
       FestivalDate(
+        key: 'rongali_bihu_$year',
+        festivalKey: 'BIHU',
+        nameEn: 'Rongali Bihu',
+        nameHi: 'रंगाली बिहु',
+        nameLocal: 'বঙালী বিহু',
+        year: year,
+        startDate: DateTime(year, 4, 14),
+        endDate: DateTime(year, 4, 15, 23, 59),
+        system: CalendarSystem.gregorian,
+        dietType: DietaryType.feast,
+        insight: 'Traditional Assamese feast. Enjoy pitha and laru in moderation!',
+      ),
+      FestivalDate(
+        key: 'vishu_$year',
+        festivalKey: 'VISHU',
+        nameEn: 'Vishu',
+        nameHi: 'विशु',
+        nameLocal: 'വിഷു',
+        year: year,
+        startDate: DateTime(year, 4, 14),
+        endDate: DateTime(year, 4, 14, 23, 59),
+        system: CalendarSystem.gregorian,
+        dietType: DietaryType.feast,
+        insight: 'Kerala New Year. Focus on the Vishu Kanji and Sadhya.',
+      ),
+      FestivalDate(
         key: 'christmas_$year',
         festivalKey: 'christmas',
         nameEn: 'Christmas',
@@ -186,6 +212,7 @@ class FestivalDateEngine {
       ),
     ];
   }
+
 
   static List<FestivalDate> _computeLunisolarFestivals(int year) {
     // In a real app, this would use complex astronomy (Meeus/Swiss Ephemeris).

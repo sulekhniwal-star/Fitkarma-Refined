@@ -37,3 +37,9 @@ Databases databases(Ref ref) {
 Storage storage(Ref ref) {
   return ref.read(appwriteStorageProvider);
 }
+
+/// Provider for the Appwrite Functions service.
+@Riverpod(keepAlive: true)
+Functions functions(Ref ref) {
+  return ref.read(appwriteFunctionsProvider);
+}

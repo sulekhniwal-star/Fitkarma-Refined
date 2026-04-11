@@ -2,11 +2,15 @@ import 'dart:convert';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../core/di/providers.dart';
 import '../../../core/storage/app_database.dart';
+import '../../../core/utils/astronomy_utils.dart';
 
 part 'festival_diet_engine.g.dart';
 
 class FestivalDietConfig {
   final String festivalKey;
+  final String nameEn;
+  final String nameHi;
+  final DateTime startDate;
   final String fastingType; // nirjala, phalahar, roza, none
   final List<String> allowedFoods;
   final List<String> forbiddenFoods;
@@ -17,6 +21,9 @@ class FestivalDietConfig {
 
   FestivalDietConfig({
     required this.festivalKey,
+    required this.nameEn,
+    required this.nameHi,
+    required this.startDate,
     this.fastingType = 'none',
     required this.dietPlanType,
     this.allowedFoods = const [],
@@ -60,6 +67,9 @@ class FestivalDietProvider extends _$FestivalDietProvider {
 
     return FestivalDietConfig(
       festivalKey: f.festivalKey,
+      nameEn: f.nameEn,
+      nameHi: f.nameHi,
+      startDate: f.startDate,
       fastingType: f.fastingType ?? 'none',
       allowedFoods: allowed,
       forbiddenFoods: forbidden,
@@ -91,6 +101,28 @@ class FestivalDietProvider extends _$FestivalDietProvider {
           f.toLowerCase() == foodName.toLowerCase()
         );
         if (forbidden) return false;
+      }
+    }
+    return true;
+  }
+
+  /// Check if food intake is allowed at the current time (Ramadan/Karva Chauth)
+  bool canEatNow(DateTime time, double lat, double lon) {
+    if (!state.hasValue || state.value!.isEmpty) return true;
+
+    for (final config in state.value!) {
+      final sunTimes = AstronomyUtils.calculateSunTimes(latitude: lat, longitude: lon, date: time);
+      final sunrise = sunTimes['sunrise']!;
+      final sunset = sunTimes['sunset']!;
+
+      if (config.fastingType == 'roza' || config.festivalKey == 'RAMADAN') {
+        // Fasting from sunrise to sunset
+        if (time.isAfter(sunrise) && time.isBefore(sunset)) return false;
+      }
+
+      if (config.festivalKey == 'KARVA_CHAUTH') {
+        final breakTime = AstronomyUtils.calculateMoonrise(latitude: lat, longitude: lon, date: time);
+        if (time.isAfter(sunrise) && time.isBefore(breakTime)) return false;
       }
     }
     return true;

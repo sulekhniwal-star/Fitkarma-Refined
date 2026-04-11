@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../data/lifestyle_repository.dart';
 
 class MoodLogScreen extends ConsumerStatefulWidget {
   const MoodLogScreen({super.key});
@@ -12,6 +13,7 @@ class _MoodLogScreenState extends ConsumerState<MoodLogScreen> {
   int _mood = 3;
   int _energy = 3;
   int _stress = 3;
+  int _screenTimeHours = 2;
   final _tags = <String>[];
   final _notesController = TextEditingController();
 
@@ -62,6 +64,8 @@ class _MoodLogScreenState extends ConsumerState<MoodLogScreen> {
                     _buildSlider('Energy Level', _energy, (v) => setState(() => _energy = v.toInt())),
                     _buildSlider('Stress Level', _stress, (v) => setState(() => _stress = v.toInt())),
                     const SizedBox(height: 16),
+                    _buildSlider('Screen Time', _screenTimeHours, (v) => setState(() => _screenTimeHours = v.toInt()), max: 12, unit: 'hrs'),
+                    const SizedBox(height: 16),
                     Text('Tags', style: Theme.of(context).textTheme.titleSmall),
                     const SizedBox(height: 8),
                     Wrap(
@@ -97,8 +101,10 @@ class _MoodLogScreenState extends ConsumerState<MoodLogScreen> {
                     SizedBox(
                       width: double.infinity,
                       child: FilledButton(
-                        onPressed: _saveMoodLog,
-                        child: const Text('Save'),
+                        onPressed: _isSaving ? null : _saveMoodLog,
+                        child: _isSaving 
+                          ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+                          : const Text('Save'),
                       ),
                     ),
                   ],
@@ -111,18 +117,24 @@ class _MoodLogScreenState extends ConsumerState<MoodLogScreen> {
     );
   }
 
-  Widget _buildSlider(String label, int value, ValueChanged<double> onChanged) {
+  Widget _buildSlider(String label, int value, ValueChanged<double> onChanged, {double max = 10, String unit = '/10'}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(label),
-            Text('$value/10'),
+            Text(label, style: const TextStyle(fontWeight: FontWeight.w500)),
+            Text('$value$unit'),
           ],
         ),
-        Slider(value: value.toDouble(), min: 1, max: 10, divisions: 9, onChanged: onChanged),
+        Slider(
+          value: value.toDouble(), 
+          min: 0, 
+          max: max, 
+          divisions: max.toInt() == 0 ? 1 : max.toInt(), 
+          onChanged: onChanged,
+        ),
       ],
     );
   }
@@ -150,10 +162,36 @@ class _MoodLogScreenState extends ConsumerState<MoodLogScreen> {
   }
 
   Future<void> _saveMoodLog() async {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Mood logged! +3 XP')),
-    );
+    setState(() => _isSaving = true);
+    try {
+      final repo = ref.read(lifestyleRepositoryProvider.notifier);
+      await repo.saveMoodLog(
+        score: _mood,
+        energyLevel: _energy,
+        stressLevel: _stress,
+        screenTimeMin: _screenTimeHours * 60,
+        tags: _tags.isNotEmpty ? _tags : null,
+        notes: _notesController.text.isNotEmpty ? _notesController.text : null,
+      );
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Mood logged! +5 XP')),
+        );
+        Navigator.pop(context);
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e')),
+        );
+      }
+    } finally {
+      setState(() => _isSaving = false);
+    }
   }
+
+  bool _isSaving = false;
 
   @override
   void dispose() {

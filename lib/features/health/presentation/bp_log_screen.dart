@@ -1,12 +1,11 @@
 import 'package:drift/drift.dart' show OrderingTerm, OrderingMode, Value;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:uuid/uuid.dart';
+import '../data/health_repository.dart';
 import '../../../shared/theme/app_colors.dart';
 import '../../../core/di/providers.dart';
 import '../../../core/storage/app_database.dart';
 import '../../auth/data/auth_repository.dart';
-import '../../karma/data/karma_service.dart';
 
 // ── BP Classification ─────────────────────────────────────────────────────────
 enum BpClass { normal, elevated, stage1, stage2, crisis }
@@ -93,24 +92,13 @@ class _BpLogScreenState extends ConsumerState<BpLogScreen> {
     }
 
     setState(() => _saving = true);
-    final user = ref.read(currentUserProvider).asData?.value;
-    final db = ref.read(databaseProvider);
     final classification = classifyBp(s, d);
-
-    await db.into(db.bloodPressureLogs).insert(
-      BloodPressureLogsCompanion.insert(
-        id: const Uuid().v4(),
-        userId: user?.$id ?? 'local',
-        systolic: s,
-        diastolic: d,
-        pulse: Value(_pulseCtrl.text.isNotEmpty ? int.tryParse(_pulseCtrl.text) : null),
-        classification: classification.name,
-        loggedAt: DateTime.now(),
-      ),
+    await ref.read(healthRepositoryProvider).saveBloodPressureLog(
+      systolic: s,
+      diastolic: d,
+      pulse: int.tryParse(_pulseCtrl.text),
+      classification: classification.name,
     );
-
-    // Award XP
-    await ref.read(karmaServiceProvider.notifier).grantXP(KarmaAction.bpLog);
 
     // Crisis alert
     if (classification == BpClass.crisis && mounted) {

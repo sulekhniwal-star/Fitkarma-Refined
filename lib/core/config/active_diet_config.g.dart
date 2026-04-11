@@ -48,4 +48,4 @@ final class ActiveDietConfigProvider
   }
 }
 
-String _$activeDietConfigHash() => r'cb038ac620dd0ef900a244fedb43740525f15005';
+String _$activeDietConfigHash() => r'a76e04e02012b17e4544798f4197e8e2ad13324f';

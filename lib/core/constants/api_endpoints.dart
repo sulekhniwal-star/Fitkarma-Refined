@@ -25,6 +25,7 @@ class AW {
   static const subscriptions    = 'subscriptions';
   static const familyGroups     = 'family_groups';
   static const workouts         = 'workouts';
+  static const waterLogs        = 'water_logs';
 
   // Extended collections
   static const bloodPressureLogs    = 'blood_pressure_logs';
@@ -48,4 +49,7 @@ class AW {
   static const avatarsBucket        = 'avatars';
   static const postsBucket          = 'posts_media';
   static const healthReportsBucket  = 'health_reports_share'; // NEW — time-limited share links
+
+  // Functions
+  static const fnLabReportExtractor = 'extract-lab-metrics';
 }

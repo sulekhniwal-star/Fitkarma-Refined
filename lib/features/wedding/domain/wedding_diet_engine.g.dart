@@ -34,7 +34,7 @@ final class WeddingDietProviderProvider
 }
 
 String _$weddingDietProviderHash() =>
-    r'aa2d8d127b4bb2dfb4ddc9fa7466165b22310d0b';
+    r'edfae1bb5f125210c768bfd22d395bac88cd1aa3';
 
 abstract class _$WeddingDietProvider extends $AsyncNotifier<WeddingDietPlan?> {
   FutureOr<WeddingDietPlan?> build();

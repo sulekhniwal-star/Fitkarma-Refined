@@ -35,7 +35,7 @@ final class FestivalDietProviderProvider
 }
 
 String _$festivalDietProviderHash() =>
-    r'b438f02bb8285cad38fd78291598d0155886ff88';
+    r'e45149e4956b437ccc71633298a00fd4ebc70191';
 
 abstract class _$FestivalDietProvider
     extends $AsyncNotifier<List<FestivalDietConfig>> {

@@ -21,7 +21,7 @@ class CombinedDietConfig {
 }
 
 @riverpod
-Future<CombinedDietConfig> activeDietConfig(ActiveDietConfigRef ref) async {
+Future<CombinedDietConfig> activeDietConfig(Ref ref) async {
   final festivalsAsync = await ref.watch(festivalDietProviderProvider.future);
   final weddingAsync = await ref.watch(weddingDietProviderProvider.future);
 
@@ -37,12 +37,18 @@ Future<CombinedDietConfig> activeDietConfig(ActiveDietConfigRef ref) async {
     insights.add(weddingAsync.adviceEn);
     // Wedding doesn't usually suppress workouts unless explicitly stated
   } else if (festivalsAsync.isNotEmpty) {
-    // Fallback to festival calorie offset
+    // Combine festival calorie multipliers (multiplicative or additive? usually one festival is dominant)
+    // Let's use the most significant one
+    double totalMultiplier = 1.0;
     for (final f in festivalsAsync) {
-      if (f.dietPlanType == 'fasting') {
-        calorieOffset -= 300;
-      } else if (f.dietPlanType == 'feast') calorieOffset += 400;
+      if (f.calorieMultiplier < 0.9) {
+        totalMultiplier = f.calorieMultiplier;
+      } else if (f.calorieMultiplier > 1.1) totalMultiplier = f.calorieMultiplier;
     }
+    // We'll apply this to a base 2000 kcal for now or just treat as offset
+    if (totalMultiplier < 1.0) {
+      calorieOffset = -350;
+    } else if (totalMultiplier > 1.0) calorieOffset = 450;
   }
 
   // Festival fasting rules are informational if wedding is active, 

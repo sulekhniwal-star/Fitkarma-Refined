@@ -32,3 +32,8 @@ Storage appwriteStorage(Ref ref) {
 Realtime appwriteRealtime(Ref ref) {
   return Realtime(ref.watch(appwriteClientProvider));
 }
+
+@riverpod
+Functions appwriteFunctions(Ref ref) {
+  return Functions(ref.watch(appwriteClientProvider));
+}

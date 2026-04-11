@@ -3,6 +3,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
 import '../../../core/di/providers.dart';
 import '../../../core/storage/app_database.dart';
+import '../../../core/utils/nutrition_calculator.dart';
 
 part 'nutrition_repository.g.dart';
 
@@ -27,6 +28,40 @@ class NutritionRepository {
           ..orderBy([(t) => OrderingTerm(expression: t.updatedAt, mode: OrderingMode.desc)])
           ..limit(1))
         .getSingleOrNull();
+  }
+
+  /// Calculates and sets goals based on user profile.
+  Future<void> calculateAndSetGoals({
+    required String userId,
+    required double weightKg,
+    required double heightCm,
+    required int age,
+    required bool isMale,
+    required String activityLevel,
+    required String goal,
+  }) async {
+    final bmr = NutritionCalculator.calculateBMR(
+      weightKg: weightKg,
+      heightCm: heightCm,
+      age: age,
+      isMale: isMale,
+    );
+    final multiplier = NutritionCalculator.getActivityMultiplier(activityLevel);
+    final tdee = NutritionCalculator.calculateTDEE(bmr: bmr, activityMultiplier: multiplier);
+    final calorieTarget = NutritionCalculator.calculateCalorieGoal(tdee, goal);
+
+    // Standard split: 55% carbs, 20% protein, 25% fat
+    final proteinTarget = (calorieTarget * 0.20 / 4).round();
+    final carbsTarget = (calorieTarget * 0.55 / 4).round();
+    final fatTarget = (calorieTarget * 0.25 / 9).round();
+
+    await updateGoals(
+      userId: userId,
+      calorieTarget: calorieTarget,
+      proteinTarget: proteinTarget,
+      carbsTarget: carbsTarget,
+      fatTarget: fatTarget,
+    );
   }
 
   /// Updates or inserts new nutrition goals.

@@ -1,12 +1,11 @@
 import 'package:drift/drift.dart' show OrderingTerm, OrderingMode;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:uuid/uuid.dart';
+import '../data/health_repository.dart';
 import '../../../shared/theme/app_colors.dart';
 import '../../../core/di/providers.dart';
 import '../../../core/storage/app_database.dart';
 import '../../auth/data/auth_repository.dart';
-import '../../karma/data/karma_service.dart';
 
 // ── Glucose Classification ────────────────────────────────────────────────────
 enum GlucoseTestType { fasting, postMeal, random, bedtime }
@@ -120,20 +119,10 @@ class _GlucoseLogScreenState extends ConsumerState<GlucoseLogScreen> {
     if (v == null) return;
 
     setState(() => _saving = true);
-    final user = ref.read(currentUserProvider).asData?.value;
-    final db = ref.read(databaseProvider);
-
-    await db.into(db.glucoseLogs).insert(
-      GlucoseLogsCompanion.insert(
-        id: const Uuid().v4(),
-        userId: user?.$id ?? 'local',
-        valueMgDl: v,
-        testType: _testType.name,
-        loggedAt: DateTime.now(),
-      ),
+    await ref.read(healthRepositoryProvider).saveGlucoseLog(
+      valueMgDl: v,
+      testType: _testType.name,
     );
-
-    await ref.read(karmaServiceProvider.notifier).grantXP(KarmaAction.glucoseLog);
     setState(() { _saving = false; _preview = null; });
     _valueCtrl.clear();
 

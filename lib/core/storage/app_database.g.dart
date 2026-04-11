@@ -4073,6 +4073,17 @@ class $MoodLogsTable extends MoodLogs with TableInfo<$MoodLogsTable, MoodLog> {
     type: DriftSqlType.int,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _screenTimeMinMeta = const VerificationMeta(
+    'screenTimeMin',
+  );
+  @override
+  late final GeneratedColumn<int> screenTimeMin = GeneratedColumn<int>(
+    'screen_time_min',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _tagsMeta = const VerificationMeta('tags');
   @override
   late final GeneratedColumn<String> tags = GeneratedColumn<String>(
@@ -4121,6 +4132,7 @@ class $MoodLogsTable extends MoodLogs with TableInfo<$MoodLogsTable, MoodLog> {
     score,
     energyLevel,
     stressLevel,
+    screenTimeMin,
     tags,
     notes,
     loggedAt,
@@ -4174,6 +4186,15 @@ class $MoodLogsTable extends MoodLogs with TableInfo<$MoodLogsTable, MoodLog> {
         stressLevel.isAcceptableOrUnknown(
           data['stress_level']!,
           _stressLevelMeta,
+        ),
+      );
+    }
+    if (data.containsKey('screen_time_min')) {
+      context.handle(
+        _screenTimeMinMeta,
+        screenTimeMin.isAcceptableOrUnknown(
+          data['screen_time_min']!,
+          _screenTimeMinMeta,
         ),
       );
     }
@@ -4232,6 +4253,10 @@ class $MoodLogsTable extends MoodLogs with TableInfo<$MoodLogsTable, MoodLog> {
         DriftSqlType.int,
         data['${effectivePrefix}stress_level'],
       ),
+      screenTimeMin: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}screen_time_min'],
+      ),
       tags: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}tags'],
@@ -4263,6 +4288,7 @@ class MoodLog extends DataClass implements Insertable<MoodLog> {
   final int score;
   final int? energyLevel;
   final int? stressLevel;
+  final int? screenTimeMin;
   final String? tags;
   final String? notes;
   final DateTime loggedAt;
@@ -4273,6 +4299,7 @@ class MoodLog extends DataClass implements Insertable<MoodLog> {
     required this.score,
     this.energyLevel,
     this.stressLevel,
+    this.screenTimeMin,
     this.tags,
     this.notes,
     required this.loggedAt,
@@ -4289,6 +4316,9 @@ class MoodLog extends DataClass implements Insertable<MoodLog> {
     }
     if (!nullToAbsent || stressLevel != null) {
       map['stress_level'] = Variable<int>(stressLevel);
+    }
+    if (!nullToAbsent || screenTimeMin != null) {
+      map['screen_time_min'] = Variable<int>(screenTimeMin);
     }
     if (!nullToAbsent || tags != null) {
       map['tags'] = Variable<String>(tags);
@@ -4312,6 +4342,9 @@ class MoodLog extends DataClass implements Insertable<MoodLog> {
       stressLevel: stressLevel == null && nullToAbsent
           ? const Value.absent()
           : Value(stressLevel),
+      screenTimeMin: screenTimeMin == null && nullToAbsent
+          ? const Value.absent()
+          : Value(screenTimeMin),
       tags: tags == null && nullToAbsent ? const Value.absent() : Value(tags),
       notes: notes == null && nullToAbsent
           ? const Value.absent()
@@ -4332,6 +4365,7 @@ class MoodLog extends DataClass implements Insertable<MoodLog> {
       score: serializer.fromJson<int>(json['score']),
       energyLevel: serializer.fromJson<int?>(json['energyLevel']),
       stressLevel: serializer.fromJson<int?>(json['stressLevel']),
+      screenTimeMin: serializer.fromJson<int?>(json['screenTimeMin']),
       tags: serializer.fromJson<String?>(json['tags']),
       notes: serializer.fromJson<String?>(json['notes']),
       loggedAt: serializer.fromJson<DateTime>(json['loggedAt']),
@@ -4347,6 +4381,7 @@ class MoodLog extends DataClass implements Insertable<MoodLog> {
       'score': serializer.toJson<int>(score),
       'energyLevel': serializer.toJson<int?>(energyLevel),
       'stressLevel': serializer.toJson<int?>(stressLevel),
+      'screenTimeMin': serializer.toJson<int?>(screenTimeMin),
       'tags': serializer.toJson<String?>(tags),
       'notes': serializer.toJson<String?>(notes),
       'loggedAt': serializer.toJson<DateTime>(loggedAt),
@@ -4360,6 +4395,7 @@ class MoodLog extends DataClass implements Insertable<MoodLog> {
     int? score,
     Value<int?> energyLevel = const Value.absent(),
     Value<int?> stressLevel = const Value.absent(),
+    Value<int?> screenTimeMin = const Value.absent(),
     Value<String?> tags = const Value.absent(),
     Value<String?> notes = const Value.absent(),
     DateTime? loggedAt,
@@ -4370,6 +4406,9 @@ class MoodLog extends DataClass implements Insertable<MoodLog> {
     score: score ?? this.score,
     energyLevel: energyLevel.present ? energyLevel.value : this.energyLevel,
     stressLevel: stressLevel.present ? stressLevel.value : this.stressLevel,
+    screenTimeMin: screenTimeMin.present
+        ? screenTimeMin.value
+        : this.screenTimeMin,
     tags: tags.present ? tags.value : this.tags,
     notes: notes.present ? notes.value : this.notes,
     loggedAt: loggedAt ?? this.loggedAt,
@@ -4386,6 +4425,9 @@ class MoodLog extends DataClass implements Insertable<MoodLog> {
       stressLevel: data.stressLevel.present
           ? data.stressLevel.value
           : this.stressLevel,
+      screenTimeMin: data.screenTimeMin.present
+          ? data.screenTimeMin.value
+          : this.screenTimeMin,
       tags: data.tags.present ? data.tags.value : this.tags,
       notes: data.notes.present ? data.notes.value : this.notes,
       loggedAt: data.loggedAt.present ? data.loggedAt.value : this.loggedAt,
@@ -4403,6 +4445,7 @@ class MoodLog extends DataClass implements Insertable<MoodLog> {
           ..write('score: $score, ')
           ..write('energyLevel: $energyLevel, ')
           ..write('stressLevel: $stressLevel, ')
+          ..write('screenTimeMin: $screenTimeMin, ')
           ..write('tags: $tags, ')
           ..write('notes: $notes, ')
           ..write('loggedAt: $loggedAt, ')
@@ -4418,6 +4461,7 @@ class MoodLog extends DataClass implements Insertable<MoodLog> {
     score,
     energyLevel,
     stressLevel,
+    screenTimeMin,
     tags,
     notes,
     loggedAt,
@@ -4432,6 +4476,7 @@ class MoodLog extends DataClass implements Insertable<MoodLog> {
           other.score == this.score &&
           other.energyLevel == this.energyLevel &&
           other.stressLevel == this.stressLevel &&
+          other.screenTimeMin == this.screenTimeMin &&
           other.tags == this.tags &&
           other.notes == this.notes &&
           other.loggedAt == this.loggedAt &&
@@ -4444,6 +4489,7 @@ class MoodLogsCompanion extends UpdateCompanion<MoodLog> {
   final Value<int> score;
   final Value<int?> energyLevel;
   final Value<int?> stressLevel;
+  final Value<int?> screenTimeMin;
   final Value<String?> tags;
   final Value<String?> notes;
   final Value<DateTime> loggedAt;
@@ -4455,6 +4501,7 @@ class MoodLogsCompanion extends UpdateCompanion<MoodLog> {
     this.score = const Value.absent(),
     this.energyLevel = const Value.absent(),
     this.stressLevel = const Value.absent(),
+    this.screenTimeMin = const Value.absent(),
     this.tags = const Value.absent(),
     this.notes = const Value.absent(),
     this.loggedAt = const Value.absent(),
@@ -4467,6 +4514,7 @@ class MoodLogsCompanion extends UpdateCompanion<MoodLog> {
     required int score,
     this.energyLevel = const Value.absent(),
     this.stressLevel = const Value.absent(),
+    this.screenTimeMin = const Value.absent(),
     this.tags = const Value.absent(),
     this.notes = const Value.absent(),
     required DateTime loggedAt,
@@ -4482,6 +4530,7 @@ class MoodLogsCompanion extends UpdateCompanion<MoodLog> {
     Expression<int>? score,
     Expression<int>? energyLevel,
     Expression<int>? stressLevel,
+    Expression<int>? screenTimeMin,
     Expression<String>? tags,
     Expression<String>? notes,
     Expression<DateTime>? loggedAt,
@@ -4494,6 +4543,7 @@ class MoodLogsCompanion extends UpdateCompanion<MoodLog> {
       if (score != null) 'score': score,
       if (energyLevel != null) 'energy_level': energyLevel,
       if (stressLevel != null) 'stress_level': stressLevel,
+      if (screenTimeMin != null) 'screen_time_min': screenTimeMin,
       if (tags != null) 'tags': tags,
       if (notes != null) 'notes': notes,
       if (loggedAt != null) 'logged_at': loggedAt,
@@ -4508,6 +4558,7 @@ class MoodLogsCompanion extends UpdateCompanion<MoodLog> {
     Value<int>? score,
     Value<int?>? energyLevel,
     Value<int?>? stressLevel,
+    Value<int?>? screenTimeMin,
     Value<String?>? tags,
     Value<String?>? notes,
     Value<DateTime>? loggedAt,
@@ -4520,6 +4571,7 @@ class MoodLogsCompanion extends UpdateCompanion<MoodLog> {
       score: score ?? this.score,
       energyLevel: energyLevel ?? this.energyLevel,
       stressLevel: stressLevel ?? this.stressLevel,
+      screenTimeMin: screenTimeMin ?? this.screenTimeMin,
       tags: tags ?? this.tags,
       notes: notes ?? this.notes,
       loggedAt: loggedAt ?? this.loggedAt,
@@ -4545,6 +4597,9 @@ class MoodLogsCompanion extends UpdateCompanion<MoodLog> {
     }
     if (stressLevel.present) {
       map['stress_level'] = Variable<int>(stressLevel.value);
+    }
+    if (screenTimeMin.present) {
+      map['screen_time_min'] = Variable<int>(screenTimeMin.value);
     }
     if (tags.present) {
       map['tags'] = Variable<String>(tags.value);
@@ -4572,6 +4627,7 @@ class MoodLogsCompanion extends UpdateCompanion<MoodLog> {
           ..write('score: $score, ')
           ..write('energyLevel: $energyLevel, ')
           ..write('stressLevel: $stressLevel, ')
+          ..write('screenTimeMin: $screenTimeMin, ')
           ..write('tags: $tags, ')
           ..write('notes: $notes, ')
           ..write('loggedAt: $loggedAt, ')
@@ -13228,6 +13284,372 @@ class WorkoutsCompanion extends UpdateCompanion<Workout> {
   }
 }
 
+class $WaterLogsTable extends WaterLogs
+    with TableInfo<$WaterLogsTable, WaterLog> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $WaterLogsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
+    'user_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _amountGlassesMeta = const VerificationMeta(
+    'amountGlasses',
+  );
+  @override
+  late final GeneratedColumn<double> amountGlasses = GeneratedColumn<double>(
+    'amount_glasses',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _loggedAtMeta = const VerificationMeta(
+    'loggedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> loggedAt = GeneratedColumn<DateTime>(
+    'logged_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _syncStatusMeta = const VerificationMeta(
+    'syncStatus',
+  );
+  @override
+  late final GeneratedColumn<String> syncStatus = GeneratedColumn<String>(
+    'sync_status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('pending'),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    userId,
+    amountGlasses,
+    loggedAt,
+    syncStatus,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'water_logs';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<WaterLog> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_userIdMeta);
+    }
+    if (data.containsKey('amount_glasses')) {
+      context.handle(
+        _amountGlassesMeta,
+        amountGlasses.isAcceptableOrUnknown(
+          data['amount_glasses']!,
+          _amountGlassesMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_amountGlassesMeta);
+    }
+    if (data.containsKey('logged_at')) {
+      context.handle(
+        _loggedAtMeta,
+        loggedAt.isAcceptableOrUnknown(data['logged_at']!, _loggedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_loggedAtMeta);
+    }
+    if (data.containsKey('sync_status')) {
+      context.handle(
+        _syncStatusMeta,
+        syncStatus.isAcceptableOrUnknown(data['sync_status']!, _syncStatusMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  WaterLog map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return WaterLog(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      userId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_id'],
+      )!,
+      amountGlasses: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}amount_glasses'],
+      )!,
+      loggedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}logged_at'],
+      )!,
+      syncStatus: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sync_status'],
+      )!,
+    );
+  }
+
+  @override
+  $WaterLogsTable createAlias(String alias) {
+    return $WaterLogsTable(attachedDatabase, alias);
+  }
+}
+
+class WaterLog extends DataClass implements Insertable<WaterLog> {
+  final String id;
+  final String userId;
+  final double amountGlasses;
+  final DateTime loggedAt;
+  final String syncStatus;
+  const WaterLog({
+    required this.id,
+    required this.userId,
+    required this.amountGlasses,
+    required this.loggedAt,
+    required this.syncStatus,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['user_id'] = Variable<String>(userId);
+    map['amount_glasses'] = Variable<double>(amountGlasses);
+    map['logged_at'] = Variable<DateTime>(loggedAt);
+    map['sync_status'] = Variable<String>(syncStatus);
+    return map;
+  }
+
+  WaterLogsCompanion toCompanion(bool nullToAbsent) {
+    return WaterLogsCompanion(
+      id: Value(id),
+      userId: Value(userId),
+      amountGlasses: Value(amountGlasses),
+      loggedAt: Value(loggedAt),
+      syncStatus: Value(syncStatus),
+    );
+  }
+
+  factory WaterLog.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return WaterLog(
+      id: serializer.fromJson<String>(json['id']),
+      userId: serializer.fromJson<String>(json['userId']),
+      amountGlasses: serializer.fromJson<double>(json['amountGlasses']),
+      loggedAt: serializer.fromJson<DateTime>(json['loggedAt']),
+      syncStatus: serializer.fromJson<String>(json['syncStatus']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'userId': serializer.toJson<String>(userId),
+      'amountGlasses': serializer.toJson<double>(amountGlasses),
+      'loggedAt': serializer.toJson<DateTime>(loggedAt),
+      'syncStatus': serializer.toJson<String>(syncStatus),
+    };
+  }
+
+  WaterLog copyWith({
+    String? id,
+    String? userId,
+    double? amountGlasses,
+    DateTime? loggedAt,
+    String? syncStatus,
+  }) => WaterLog(
+    id: id ?? this.id,
+    userId: userId ?? this.userId,
+    amountGlasses: amountGlasses ?? this.amountGlasses,
+    loggedAt: loggedAt ?? this.loggedAt,
+    syncStatus: syncStatus ?? this.syncStatus,
+  );
+  WaterLog copyWithCompanion(WaterLogsCompanion data) {
+    return WaterLog(
+      id: data.id.present ? data.id.value : this.id,
+      userId: data.userId.present ? data.userId.value : this.userId,
+      amountGlasses: data.amountGlasses.present
+          ? data.amountGlasses.value
+          : this.amountGlasses,
+      loggedAt: data.loggedAt.present ? data.loggedAt.value : this.loggedAt,
+      syncStatus: data.syncStatus.present
+          ? data.syncStatus.value
+          : this.syncStatus,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('WaterLog(')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('amountGlasses: $amountGlasses, ')
+          ..write('loggedAt: $loggedAt, ')
+          ..write('syncStatus: $syncStatus')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, userId, amountGlasses, loggedAt, syncStatus);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is WaterLog &&
+          other.id == this.id &&
+          other.userId == this.userId &&
+          other.amountGlasses == this.amountGlasses &&
+          other.loggedAt == this.loggedAt &&
+          other.syncStatus == this.syncStatus);
+}
+
+class WaterLogsCompanion extends UpdateCompanion<WaterLog> {
+  final Value<String> id;
+  final Value<String> userId;
+  final Value<double> amountGlasses;
+  final Value<DateTime> loggedAt;
+  final Value<String> syncStatus;
+  final Value<int> rowid;
+  const WaterLogsCompanion({
+    this.id = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.amountGlasses = const Value.absent(),
+    this.loggedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  WaterLogsCompanion.insert({
+    required String id,
+    required String userId,
+    required double amountGlasses,
+    required DateTime loggedAt,
+    this.syncStatus = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       userId = Value(userId),
+       amountGlasses = Value(amountGlasses),
+       loggedAt = Value(loggedAt);
+  static Insertable<WaterLog> custom({
+    Expression<String>? id,
+    Expression<String>? userId,
+    Expression<double>? amountGlasses,
+    Expression<DateTime>? loggedAt,
+    Expression<String>? syncStatus,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (userId != null) 'user_id': userId,
+      if (amountGlasses != null) 'amount_glasses': amountGlasses,
+      if (loggedAt != null) 'logged_at': loggedAt,
+      if (syncStatus != null) 'sync_status': syncStatus,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  WaterLogsCompanion copyWith({
+    Value<String>? id,
+    Value<String>? userId,
+    Value<double>? amountGlasses,
+    Value<DateTime>? loggedAt,
+    Value<String>? syncStatus,
+    Value<int>? rowid,
+  }) {
+    return WaterLogsCompanion(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      amountGlasses: amountGlasses ?? this.amountGlasses,
+      loggedAt: loggedAt ?? this.loggedAt,
+      syncStatus: syncStatus ?? this.syncStatus,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<String>(userId.value);
+    }
+    if (amountGlasses.present) {
+      map['amount_glasses'] = Variable<double>(amountGlasses.value);
+    }
+    if (loggedAt.present) {
+      map['logged_at'] = Variable<DateTime>(loggedAt.value);
+    }
+    if (syncStatus.present) {
+      map['sync_status'] = Variable<String>(syncStatus.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('WaterLogsCompanion(')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('amountGlasses: $amountGlasses, ')
+          ..write('loggedAt: $loggedAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $BloodPressureLogsTable extends BloodPressureLogs
     with TableInfo<$BloodPressureLogsTable, BloodPressureLog> {
   @override
@@ -19792,6 +20214,508 @@ class RemoteConfigCachesCompanion extends UpdateCompanion<RemoteConfigCache> {
   }
 }
 
+class $UserStreaksTable extends UserStreaks
+    with TableInfo<$UserStreaksTable, UserStreak> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $UserStreaksTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
+    'user_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _activityTypeMeta = const VerificationMeta(
+    'activityType',
+  );
+  @override
+  late final GeneratedColumn<String> activityType = GeneratedColumn<String>(
+    'activity_type',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _streakCountMeta = const VerificationMeta(
+    'streakCount',
+  );
+  @override
+  late final GeneratedColumn<int> streakCount = GeneratedColumn<int>(
+    'streak_count',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _previousStreakCountMeta =
+      const VerificationMeta('previousStreakCount');
+  @override
+  late final GeneratedColumn<int> previousStreakCount = GeneratedColumn<int>(
+    'previous_streak_count',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _lastActivityDateMeta = const VerificationMeta(
+    'lastActivityDate',
+  );
+  @override
+  late final GeneratedColumn<DateTime> lastActivityDate =
+      GeneratedColumn<DateTime>(
+        'last_activity_date',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _lastRecoveryDateMeta = const VerificationMeta(
+    'lastRecoveryDate',
+  );
+  @override
+  late final GeneratedColumn<DateTime> lastRecoveryDate =
+      GeneratedColumn<DateTime>(
+        'last_recovery_date',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _syncStatusMeta = const VerificationMeta(
+    'syncStatus',
+  );
+  @override
+  late final GeneratedColumn<String> syncStatus = GeneratedColumn<String>(
+    'sync_status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('pending'),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    userId,
+    activityType,
+    streakCount,
+    previousStreakCount,
+    lastActivityDate,
+    lastRecoveryDate,
+    syncStatus,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'user_streaks';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<UserStreak> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_userIdMeta);
+    }
+    if (data.containsKey('activity_type')) {
+      context.handle(
+        _activityTypeMeta,
+        activityType.isAcceptableOrUnknown(
+          data['activity_type']!,
+          _activityTypeMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_activityTypeMeta);
+    }
+    if (data.containsKey('streak_count')) {
+      context.handle(
+        _streakCountMeta,
+        streakCount.isAcceptableOrUnknown(
+          data['streak_count']!,
+          _streakCountMeta,
+        ),
+      );
+    }
+    if (data.containsKey('previous_streak_count')) {
+      context.handle(
+        _previousStreakCountMeta,
+        previousStreakCount.isAcceptableOrUnknown(
+          data['previous_streak_count']!,
+          _previousStreakCountMeta,
+        ),
+      );
+    }
+    if (data.containsKey('last_activity_date')) {
+      context.handle(
+        _lastActivityDateMeta,
+        lastActivityDate.isAcceptableOrUnknown(
+          data['last_activity_date']!,
+          _lastActivityDateMeta,
+        ),
+      );
+    }
+    if (data.containsKey('last_recovery_date')) {
+      context.handle(
+        _lastRecoveryDateMeta,
+        lastRecoveryDate.isAcceptableOrUnknown(
+          data['last_recovery_date']!,
+          _lastRecoveryDateMeta,
+        ),
+      );
+    }
+    if (data.containsKey('sync_status')) {
+      context.handle(
+        _syncStatusMeta,
+        syncStatus.isAcceptableOrUnknown(data['sync_status']!, _syncStatusMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {userId, activityType};
+  @override
+  UserStreak map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return UserStreak(
+      userId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_id'],
+      )!,
+      activityType: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}activity_type'],
+      )!,
+      streakCount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}streak_count'],
+      )!,
+      previousStreakCount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}previous_streak_count'],
+      )!,
+      lastActivityDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}last_activity_date'],
+      ),
+      lastRecoveryDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}last_recovery_date'],
+      ),
+      syncStatus: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sync_status'],
+      )!,
+    );
+  }
+
+  @override
+  $UserStreaksTable createAlias(String alias) {
+    return $UserStreaksTable(attachedDatabase, alias);
+  }
+}
+
+class UserStreak extends DataClass implements Insertable<UserStreak> {
+  final String userId;
+  final String activityType;
+  final int streakCount;
+  final int previousStreakCount;
+  final DateTime? lastActivityDate;
+  final DateTime? lastRecoveryDate;
+  final String syncStatus;
+  const UserStreak({
+    required this.userId,
+    required this.activityType,
+    required this.streakCount,
+    required this.previousStreakCount,
+    this.lastActivityDate,
+    this.lastRecoveryDate,
+    required this.syncStatus,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['user_id'] = Variable<String>(userId);
+    map['activity_type'] = Variable<String>(activityType);
+    map['streak_count'] = Variable<int>(streakCount);
+    map['previous_streak_count'] = Variable<int>(previousStreakCount);
+    if (!nullToAbsent || lastActivityDate != null) {
+      map['last_activity_date'] = Variable<DateTime>(lastActivityDate);
+    }
+    if (!nullToAbsent || lastRecoveryDate != null) {
+      map['last_recovery_date'] = Variable<DateTime>(lastRecoveryDate);
+    }
+    map['sync_status'] = Variable<String>(syncStatus);
+    return map;
+  }
+
+  UserStreaksCompanion toCompanion(bool nullToAbsent) {
+    return UserStreaksCompanion(
+      userId: Value(userId),
+      activityType: Value(activityType),
+      streakCount: Value(streakCount),
+      previousStreakCount: Value(previousStreakCount),
+      lastActivityDate: lastActivityDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastActivityDate),
+      lastRecoveryDate: lastRecoveryDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastRecoveryDate),
+      syncStatus: Value(syncStatus),
+    );
+  }
+
+  factory UserStreak.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return UserStreak(
+      userId: serializer.fromJson<String>(json['userId']),
+      activityType: serializer.fromJson<String>(json['activityType']),
+      streakCount: serializer.fromJson<int>(json['streakCount']),
+      previousStreakCount: serializer.fromJson<int>(
+        json['previousStreakCount'],
+      ),
+      lastActivityDate: serializer.fromJson<DateTime?>(
+        json['lastActivityDate'],
+      ),
+      lastRecoveryDate: serializer.fromJson<DateTime?>(
+        json['lastRecoveryDate'],
+      ),
+      syncStatus: serializer.fromJson<String>(json['syncStatus']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'userId': serializer.toJson<String>(userId),
+      'activityType': serializer.toJson<String>(activityType),
+      'streakCount': serializer.toJson<int>(streakCount),
+      'previousStreakCount': serializer.toJson<int>(previousStreakCount),
+      'lastActivityDate': serializer.toJson<DateTime?>(lastActivityDate),
+      'lastRecoveryDate': serializer.toJson<DateTime?>(lastRecoveryDate),
+      'syncStatus': serializer.toJson<String>(syncStatus),
+    };
+  }
+
+  UserStreak copyWith({
+    String? userId,
+    String? activityType,
+    int? streakCount,
+    int? previousStreakCount,
+    Value<DateTime?> lastActivityDate = const Value.absent(),
+    Value<DateTime?> lastRecoveryDate = const Value.absent(),
+    String? syncStatus,
+  }) => UserStreak(
+    userId: userId ?? this.userId,
+    activityType: activityType ?? this.activityType,
+    streakCount: streakCount ?? this.streakCount,
+    previousStreakCount: previousStreakCount ?? this.previousStreakCount,
+    lastActivityDate: lastActivityDate.present
+        ? lastActivityDate.value
+        : this.lastActivityDate,
+    lastRecoveryDate: lastRecoveryDate.present
+        ? lastRecoveryDate.value
+        : this.lastRecoveryDate,
+    syncStatus: syncStatus ?? this.syncStatus,
+  );
+  UserStreak copyWithCompanion(UserStreaksCompanion data) {
+    return UserStreak(
+      userId: data.userId.present ? data.userId.value : this.userId,
+      activityType: data.activityType.present
+          ? data.activityType.value
+          : this.activityType,
+      streakCount: data.streakCount.present
+          ? data.streakCount.value
+          : this.streakCount,
+      previousStreakCount: data.previousStreakCount.present
+          ? data.previousStreakCount.value
+          : this.previousStreakCount,
+      lastActivityDate: data.lastActivityDate.present
+          ? data.lastActivityDate.value
+          : this.lastActivityDate,
+      lastRecoveryDate: data.lastRecoveryDate.present
+          ? data.lastRecoveryDate.value
+          : this.lastRecoveryDate,
+      syncStatus: data.syncStatus.present
+          ? data.syncStatus.value
+          : this.syncStatus,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('UserStreak(')
+          ..write('userId: $userId, ')
+          ..write('activityType: $activityType, ')
+          ..write('streakCount: $streakCount, ')
+          ..write('previousStreakCount: $previousStreakCount, ')
+          ..write('lastActivityDate: $lastActivityDate, ')
+          ..write('lastRecoveryDate: $lastRecoveryDate, ')
+          ..write('syncStatus: $syncStatus')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    userId,
+    activityType,
+    streakCount,
+    previousStreakCount,
+    lastActivityDate,
+    lastRecoveryDate,
+    syncStatus,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is UserStreak &&
+          other.userId == this.userId &&
+          other.activityType == this.activityType &&
+          other.streakCount == this.streakCount &&
+          other.previousStreakCount == this.previousStreakCount &&
+          other.lastActivityDate == this.lastActivityDate &&
+          other.lastRecoveryDate == this.lastRecoveryDate &&
+          other.syncStatus == this.syncStatus);
+}
+
+class UserStreaksCompanion extends UpdateCompanion<UserStreak> {
+  final Value<String> userId;
+  final Value<String> activityType;
+  final Value<int> streakCount;
+  final Value<int> previousStreakCount;
+  final Value<DateTime?> lastActivityDate;
+  final Value<DateTime?> lastRecoveryDate;
+  final Value<String> syncStatus;
+  final Value<int> rowid;
+  const UserStreaksCompanion({
+    this.userId = const Value.absent(),
+    this.activityType = const Value.absent(),
+    this.streakCount = const Value.absent(),
+    this.previousStreakCount = const Value.absent(),
+    this.lastActivityDate = const Value.absent(),
+    this.lastRecoveryDate = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  UserStreaksCompanion.insert({
+    required String userId,
+    required String activityType,
+    this.streakCount = const Value.absent(),
+    this.previousStreakCount = const Value.absent(),
+    this.lastActivityDate = const Value.absent(),
+    this.lastRecoveryDate = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : userId = Value(userId),
+       activityType = Value(activityType);
+  static Insertable<UserStreak> custom({
+    Expression<String>? userId,
+    Expression<String>? activityType,
+    Expression<int>? streakCount,
+    Expression<int>? previousStreakCount,
+    Expression<DateTime>? lastActivityDate,
+    Expression<DateTime>? lastRecoveryDate,
+    Expression<String>? syncStatus,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (userId != null) 'user_id': userId,
+      if (activityType != null) 'activity_type': activityType,
+      if (streakCount != null) 'streak_count': streakCount,
+      if (previousStreakCount != null)
+        'previous_streak_count': previousStreakCount,
+      if (lastActivityDate != null) 'last_activity_date': lastActivityDate,
+      if (lastRecoveryDate != null) 'last_recovery_date': lastRecoveryDate,
+      if (syncStatus != null) 'sync_status': syncStatus,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  UserStreaksCompanion copyWith({
+    Value<String>? userId,
+    Value<String>? activityType,
+    Value<int>? streakCount,
+    Value<int>? previousStreakCount,
+    Value<DateTime?>? lastActivityDate,
+    Value<DateTime?>? lastRecoveryDate,
+    Value<String>? syncStatus,
+    Value<int>? rowid,
+  }) {
+    return UserStreaksCompanion(
+      userId: userId ?? this.userId,
+      activityType: activityType ?? this.activityType,
+      streakCount: streakCount ?? this.streakCount,
+      previousStreakCount: previousStreakCount ?? this.previousStreakCount,
+      lastActivityDate: lastActivityDate ?? this.lastActivityDate,
+      lastRecoveryDate: lastRecoveryDate ?? this.lastRecoveryDate,
+      syncStatus: syncStatus ?? this.syncStatus,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (userId.present) {
+      map['user_id'] = Variable<String>(userId.value);
+    }
+    if (activityType.present) {
+      map['activity_type'] = Variable<String>(activityType.value);
+    }
+    if (streakCount.present) {
+      map['streak_count'] = Variable<int>(streakCount.value);
+    }
+    if (previousStreakCount.present) {
+      map['previous_streak_count'] = Variable<int>(previousStreakCount.value);
+    }
+    if (lastActivityDate.present) {
+      map['last_activity_date'] = Variable<DateTime>(lastActivityDate.value);
+    }
+    if (lastRecoveryDate.present) {
+      map['last_recovery_date'] = Variable<DateTime>(lastRecoveryDate.value);
+    }
+    if (syncStatus.present) {
+      map['sync_status'] = Variable<String>(syncStatus.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('UserStreaksCompanion(')
+          ..write('userId: $userId, ')
+          ..write('activityType: $activityType, ')
+          ..write('streakCount: $streakCount, ')
+          ..write('previousStreakCount: $previousStreakCount, ')
+          ..write('lastActivityDate: $lastActivityDate, ')
+          ..write('lastRecoveryDate: $lastRecoveryDate, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -19824,6 +20748,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $ExercisesTable exercises = $ExercisesTable(this);
   late final $ExerciseSetsTable exerciseSets = $ExerciseSetsTable(this);
   late final $WorkoutsTable workouts = $WorkoutsTable(this);
+  late final $WaterLogsTable waterLogs = $WaterLogsTable(this);
   late final $BloodPressureLogsTable bloodPressureLogs =
       $BloodPressureLogsTable(this);
   late final $GlucoseLogsTable glucoseLogs = $GlucoseLogsTable(this);
@@ -19841,6 +20766,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $WeddingEventsTable weddingEvents = $WeddingEventsTable(this);
   late final $RemoteConfigCachesTable remoteConfigCaches =
       $RemoteConfigCachesTable(this);
+  late final $UserStreaksTable userStreaks = $UserStreaksTable(this);
   late final FoodLogsDao foodLogsDao = FoodLogsDao(this as AppDatabase);
   late final FoodItemsDao foodItemsDao = FoodItemsDao(this as AppDatabase);
   late final WorkoutLogsDao workoutLogsDao = WorkoutLogsDao(
@@ -19912,6 +20838,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final WeddingEventsDao weddingEventsDao = WeddingEventsDao(
     this as AppDatabase,
   );
+  late final StreaksDao streaksDao = StreaksDao(this as AppDatabase);
+  late final WaterLogsDao waterLogsDao = WaterLogsDao(this as AppDatabase);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -19939,6 +20867,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     exercises,
     exerciseSets,
     workouts,
+    waterLogs,
     bloodPressureLogs,
     glucoseLogs,
     spo2Logs,
@@ -19951,6 +20880,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     festivalCalendar,
     weddingEvents,
     remoteConfigCaches,
+    userStreaks,
   ];
 }
 
@@ -21808,6 +22738,7 @@ typedef $$MoodLogsTableCreateCompanionBuilder =
       required int score,
       Value<int?> energyLevel,
       Value<int?> stressLevel,
+      Value<int?> screenTimeMin,
       Value<String?> tags,
       Value<String?> notes,
       required DateTime loggedAt,
@@ -21821,6 +22752,7 @@ typedef $$MoodLogsTableUpdateCompanionBuilder =
       Value<int> score,
       Value<int?> energyLevel,
       Value<int?> stressLevel,
+      Value<int?> screenTimeMin,
       Value<String?> tags,
       Value<String?> notes,
       Value<DateTime> loggedAt,
@@ -21859,6 +22791,11 @@ class $$MoodLogsTableFilterComposer
 
   ColumnFilters<int> get stressLevel => $composableBuilder(
     column: $table.stressLevel,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get screenTimeMin => $composableBuilder(
+    column: $table.screenTimeMin,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -21917,6 +22854,11 @@ class $$MoodLogsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get screenTimeMin => $composableBuilder(
+    column: $table.screenTimeMin,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get tags => $composableBuilder(
     column: $table.tags,
     builder: (column) => ColumnOrderings(column),
@@ -21963,6 +22905,11 @@ class $$MoodLogsTableAnnotationComposer
 
   GeneratedColumn<int> get stressLevel => $composableBuilder(
     column: $table.stressLevel,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get screenTimeMin => $composableBuilder(
+    column: $table.screenTimeMin,
     builder: (column) => column,
   );
 
@@ -22014,6 +22961,7 @@ class $$MoodLogsTableTableManager
                 Value<int> score = const Value.absent(),
                 Value<int?> energyLevel = const Value.absent(),
                 Value<int?> stressLevel = const Value.absent(),
+                Value<int?> screenTimeMin = const Value.absent(),
                 Value<String?> tags = const Value.absent(),
                 Value<String?> notes = const Value.absent(),
                 Value<DateTime> loggedAt = const Value.absent(),
@@ -22025,6 +22973,7 @@ class $$MoodLogsTableTableManager
                 score: score,
                 energyLevel: energyLevel,
                 stressLevel: stressLevel,
+                screenTimeMin: screenTimeMin,
                 tags: tags,
                 notes: notes,
                 loggedAt: loggedAt,
@@ -22038,6 +22987,7 @@ class $$MoodLogsTableTableManager
                 required int score,
                 Value<int?> energyLevel = const Value.absent(),
                 Value<int?> stressLevel = const Value.absent(),
+                Value<int?> screenTimeMin = const Value.absent(),
                 Value<String?> tags = const Value.absent(),
                 Value<String?> notes = const Value.absent(),
                 required DateTime loggedAt,
@@ -22049,6 +22999,7 @@ class $$MoodLogsTableTableManager
                 score: score,
                 energyLevel: energyLevel,
                 stressLevel: stressLevel,
+                screenTimeMin: screenTimeMin,
                 tags: tags,
                 notes: notes,
                 loggedAt: loggedAt,
@@ -26440,6 +27391,204 @@ typedef $$WorkoutsTableProcessedTableManager =
       Workout,
       PrefetchHooks Function()
     >;
+typedef $$WaterLogsTableCreateCompanionBuilder =
+    WaterLogsCompanion Function({
+      required String id,
+      required String userId,
+      required double amountGlasses,
+      required DateTime loggedAt,
+      Value<String> syncStatus,
+      Value<int> rowid,
+    });
+typedef $$WaterLogsTableUpdateCompanionBuilder =
+    WaterLogsCompanion Function({
+      Value<String> id,
+      Value<String> userId,
+      Value<double> amountGlasses,
+      Value<DateTime> loggedAt,
+      Value<String> syncStatus,
+      Value<int> rowid,
+    });
+
+class $$WaterLogsTableFilterComposer
+    extends Composer<_$AppDatabase, $WaterLogsTable> {
+  $$WaterLogsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get amountGlasses => $composableBuilder(
+    column: $table.amountGlasses,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get loggedAt => $composableBuilder(
+    column: $table.loggedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$WaterLogsTableOrderingComposer
+    extends Composer<_$AppDatabase, $WaterLogsTable> {
+  $$WaterLogsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get amountGlasses => $composableBuilder(
+    column: $table.amountGlasses,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get loggedAt => $composableBuilder(
+    column: $table.loggedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$WaterLogsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $WaterLogsTable> {
+  $$WaterLogsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get userId =>
+      $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<double> get amountGlasses => $composableBuilder(
+    column: $table.amountGlasses,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get loggedAt =>
+      $composableBuilder(column: $table.loggedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => column,
+  );
+}
+
+class $$WaterLogsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $WaterLogsTable,
+          WaterLog,
+          $$WaterLogsTableFilterComposer,
+          $$WaterLogsTableOrderingComposer,
+          $$WaterLogsTableAnnotationComposer,
+          $$WaterLogsTableCreateCompanionBuilder,
+          $$WaterLogsTableUpdateCompanionBuilder,
+          (WaterLog, BaseReferences<_$AppDatabase, $WaterLogsTable, WaterLog>),
+          WaterLog,
+          PrefetchHooks Function()
+        > {
+  $$WaterLogsTableTableManager(_$AppDatabase db, $WaterLogsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$WaterLogsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$WaterLogsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$WaterLogsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> userId = const Value.absent(),
+                Value<double> amountGlasses = const Value.absent(),
+                Value<DateTime> loggedAt = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => WaterLogsCompanion(
+                id: id,
+                userId: userId,
+                amountGlasses: amountGlasses,
+                loggedAt: loggedAt,
+                syncStatus: syncStatus,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String userId,
+                required double amountGlasses,
+                required DateTime loggedAt,
+                Value<String> syncStatus = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => WaterLogsCompanion.insert(
+                id: id,
+                userId: userId,
+                amountGlasses: amountGlasses,
+                loggedAt: loggedAt,
+                syncStatus: syncStatus,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$WaterLogsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $WaterLogsTable,
+      WaterLog,
+      $$WaterLogsTableFilterComposer,
+      $$WaterLogsTableOrderingComposer,
+      $$WaterLogsTableAnnotationComposer,
+      $$WaterLogsTableCreateCompanionBuilder,
+      $$WaterLogsTableUpdateCompanionBuilder,
+      (WaterLog, BaseReferences<_$AppDatabase, $WaterLogsTable, WaterLog>),
+      WaterLog,
+      PrefetchHooks Function()
+    >;
 typedef $$BloodPressureLogsTableCreateCompanionBuilder =
     BloodPressureLogsCompanion Function({
       required String id,
@@ -29757,6 +30906,256 @@ typedef $$RemoteConfigCachesTableProcessedTableManager =
       RemoteConfigCache,
       PrefetchHooks Function()
     >;
+typedef $$UserStreaksTableCreateCompanionBuilder =
+    UserStreaksCompanion Function({
+      required String userId,
+      required String activityType,
+      Value<int> streakCount,
+      Value<int> previousStreakCount,
+      Value<DateTime?> lastActivityDate,
+      Value<DateTime?> lastRecoveryDate,
+      Value<String> syncStatus,
+      Value<int> rowid,
+    });
+typedef $$UserStreaksTableUpdateCompanionBuilder =
+    UserStreaksCompanion Function({
+      Value<String> userId,
+      Value<String> activityType,
+      Value<int> streakCount,
+      Value<int> previousStreakCount,
+      Value<DateTime?> lastActivityDate,
+      Value<DateTime?> lastRecoveryDate,
+      Value<String> syncStatus,
+      Value<int> rowid,
+    });
+
+class $$UserStreaksTableFilterComposer
+    extends Composer<_$AppDatabase, $UserStreaksTable> {
+  $$UserStreaksTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get activityType => $composableBuilder(
+    column: $table.activityType,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get streakCount => $composableBuilder(
+    column: $table.streakCount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get previousStreakCount => $composableBuilder(
+    column: $table.previousStreakCount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get lastActivityDate => $composableBuilder(
+    column: $table.lastActivityDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get lastRecoveryDate => $composableBuilder(
+    column: $table.lastRecoveryDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$UserStreaksTableOrderingComposer
+    extends Composer<_$AppDatabase, $UserStreaksTable> {
+  $$UserStreaksTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get activityType => $composableBuilder(
+    column: $table.activityType,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get streakCount => $composableBuilder(
+    column: $table.streakCount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get previousStreakCount => $composableBuilder(
+    column: $table.previousStreakCount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get lastActivityDate => $composableBuilder(
+    column: $table.lastActivityDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get lastRecoveryDate => $composableBuilder(
+    column: $table.lastRecoveryDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$UserStreaksTableAnnotationComposer
+    extends Composer<_$AppDatabase, $UserStreaksTable> {
+  $$UserStreaksTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get userId =>
+      $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<String> get activityType => $composableBuilder(
+    column: $table.activityType,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get streakCount => $composableBuilder(
+    column: $table.streakCount,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get previousStreakCount => $composableBuilder(
+    column: $table.previousStreakCount,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get lastActivityDate => $composableBuilder(
+    column: $table.lastActivityDate,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get lastRecoveryDate => $composableBuilder(
+    column: $table.lastRecoveryDate,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => column,
+  );
+}
+
+class $$UserStreaksTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $UserStreaksTable,
+          UserStreak,
+          $$UserStreaksTableFilterComposer,
+          $$UserStreaksTableOrderingComposer,
+          $$UserStreaksTableAnnotationComposer,
+          $$UserStreaksTableCreateCompanionBuilder,
+          $$UserStreaksTableUpdateCompanionBuilder,
+          (
+            UserStreak,
+            BaseReferences<_$AppDatabase, $UserStreaksTable, UserStreak>,
+          ),
+          UserStreak,
+          PrefetchHooks Function()
+        > {
+  $$UserStreaksTableTableManager(_$AppDatabase db, $UserStreaksTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$UserStreaksTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$UserStreaksTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$UserStreaksTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> userId = const Value.absent(),
+                Value<String> activityType = const Value.absent(),
+                Value<int> streakCount = const Value.absent(),
+                Value<int> previousStreakCount = const Value.absent(),
+                Value<DateTime?> lastActivityDate = const Value.absent(),
+                Value<DateTime?> lastRecoveryDate = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => UserStreaksCompanion(
+                userId: userId,
+                activityType: activityType,
+                streakCount: streakCount,
+                previousStreakCount: previousStreakCount,
+                lastActivityDate: lastActivityDate,
+                lastRecoveryDate: lastRecoveryDate,
+                syncStatus: syncStatus,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String userId,
+                required String activityType,
+                Value<int> streakCount = const Value.absent(),
+                Value<int> previousStreakCount = const Value.absent(),
+                Value<DateTime?> lastActivityDate = const Value.absent(),
+                Value<DateTime?> lastRecoveryDate = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => UserStreaksCompanion.insert(
+                userId: userId,
+                activityType: activityType,
+                streakCount: streakCount,
+                previousStreakCount: previousStreakCount,
+                lastActivityDate: lastActivityDate,
+                lastRecoveryDate: lastRecoveryDate,
+                syncStatus: syncStatus,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$UserStreaksTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $UserStreaksTable,
+      UserStreak,
+      $$UserStreaksTableFilterComposer,
+      $$UserStreaksTableOrderingComposer,
+      $$UserStreaksTableAnnotationComposer,
+      $$UserStreaksTableCreateCompanionBuilder,
+      $$UserStreaksTableUpdateCompanionBuilder,
+      (
+        UserStreak,
+        BaseReferences<_$AppDatabase, $UserStreaksTable, UserStreak>,
+      ),
+      UserStreak,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -29805,6 +31204,8 @@ class $AppDatabaseManager {
       $$ExerciseSetsTableTableManager(_db, _db.exerciseSets);
   $$WorkoutsTableTableManager get workouts =>
       $$WorkoutsTableTableManager(_db, _db.workouts);
+  $$WaterLogsTableTableManager get waterLogs =>
+      $$WaterLogsTableTableManager(_db, _db.waterLogs);
   $$BloodPressureLogsTableTableManager get bloodPressureLogs =>
       $$BloodPressureLogsTableTableManager(_db, _db.bloodPressureLogs);
   $$GlucoseLogsTableTableManager get glucoseLogs =>
@@ -29829,6 +31230,8 @@ class $AppDatabaseManager {
       $$WeddingEventsTableTableManager(_db, _db.weddingEvents);
   $$RemoteConfigCachesTableTableManager get remoteConfigCaches =>
       $$RemoteConfigCachesTableTableManager(_db, _db.remoteConfigCaches);
+  $$UserStreaksTableTableManager get userStreaks =>
+      $$UserStreaksTableTableManager(_db, _db.userStreaks);
 }
 
 mixin _$FoodLogsDaoMixin on DatabaseAccessor<AppDatabase> {
@@ -30281,4 +31684,28 @@ class WeddingEventsDaoManager {
   WeddingEventsDaoManager(this._db);
   $$WeddingEventsTableTableManager get weddingEvents =>
       $$WeddingEventsTableTableManager(_db.attachedDatabase, _db.weddingEvents);
+}
+
+mixin _$StreaksDaoMixin on DatabaseAccessor<AppDatabase> {
+  $UserStreaksTable get userStreaks => attachedDatabase.userStreaks;
+  StreaksDaoManager get managers => StreaksDaoManager(this);
+}
+
+class StreaksDaoManager {
+  final _$StreaksDaoMixin _db;
+  StreaksDaoManager(this._db);
+  $$UserStreaksTableTableManager get userStreaks =>
+      $$UserStreaksTableTableManager(_db.attachedDatabase, _db.userStreaks);
+}
+
+mixin _$WaterLogsDaoMixin on DatabaseAccessor<AppDatabase> {
+  $WaterLogsTable get waterLogs => attachedDatabase.waterLogs;
+  WaterLogsDaoManager get managers => WaterLogsDaoManager(this);
+}
+
+class WaterLogsDaoManager {
+  final _$WaterLogsDaoMixin _db;
+  WaterLogsDaoManager(this._db);
+  $$WaterLogsTableTableManager get waterLogs =>
+      $$WaterLogsTableTableManager(_db.attachedDatabase, _db.waterLogs);
 }

@@ -213,3 +213,44 @@ final class AppwriteRealtimeProvider
 }
 
 String _$appwriteRealtimeHash() => r'2dbc9325f9a9a1cd759367b7961e730676f300b2';
+
+@ProviderFor(appwriteFunctions)
+final appwriteFunctionsProvider = AppwriteFunctionsProvider._();
+
+final class AppwriteFunctionsProvider
+    extends $FunctionalProvider<Functions, Functions, Functions>
+    with $Provider<Functions> {
+  AppwriteFunctionsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'appwriteFunctionsProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$appwriteFunctionsHash();
+
+  @$internal
+  @override
+  $ProviderElement<Functions> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  Functions create(Ref ref) {
+    return appwriteFunctions(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(Functions value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<Functions>(value),
+    );
+  }
+}
+
+String _$appwriteFunctionsHash() => r'b7d10550645e93734b473bbceb32aa72384aaf90';

@@ -1,16 +1,18 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 import 'dart:typed_data';
 import 'package:cryptography/cryptography.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:uuid/uuid.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+
 
 class KeyManager {
   static const _storage = FlutterSecureStorage();
   static const _masterKeyName = 'fitkarma_master_key';
-  static const _installUuidName = 'fitkarma_install_uuid';
   static const _saltName = 'fitkarma_master_salt';
+
 
   /// Returns the master key for database-level encryption (SQLCipher)
   static Future<Uint8List> getMasterKey() async {
@@ -20,19 +22,20 @@ class KeyManager {
     }
 
     // First run: derive master key
-    final deviceId = await _getDeviceId();
-    final installUuid = await _getInstallUuid();
+    final packageInfo = await PackageInfo.fromPlatform();
+    final bundleId = packageInfo.packageName;
     final salt = await _getOrGenerateSalt();
 
-    // PBKDF2 derivation
+    // PBKDF2 derivation (200,000 iterations as per requirement)
     final pbkdf2 = Pbkdf2(
       macAlgorithm: Hmac.sha256(),
       iterations: 200000,
       bits: 256,
     );
 
+    // Using bundleId + salt for derivation ensures it's unique to the app and device
     final secretKey = await pbkdf2.deriveKeyFromPassword(
-      password: '$deviceId:$installUuid',
+      password: bundleId,
       nonce: salt,
     );
 
@@ -66,7 +69,24 @@ class KeyManager {
     return Uint8List.fromList(await output.extractBytes());
   }
 
-  static Future<String> _getDeviceId() async {
+  static Future<Uint8List> _getOrGenerateSalt() async {
+    final storedSalt = await _storage.read(key: _saltName);
+    if (storedSalt != null) {
+      return base64.decode(storedSalt);
+    }
+
+    // Generate a secure random salt (32 bytes)
+    final random = Random.secure();
+    final salt = Uint8List.fromList(
+      List<int>.generate(32, (_) => random.nextInt(256)),
+    );
+    
+    await _storage.write(key: _saltName, value: base64.encode(salt));
+    return salt;
+  }
+
+  // Legacy/Helper methods if needed
+  static Future<String> getDeviceId() async {
     final deviceInfo = DeviceInfoPlugin();
     if (Platform.isAndroid) {
       final androidInfo = await deviceInfo.androidInfo;
@@ -77,31 +97,5 @@ class KeyManager {
     }
     return 'unknown-platform-id';
   }
-
-  static Future<String> _getInstallUuid() async {
-    var uuid = await _storage.read(key: _installUuidName);
-    if (uuid == null) {
-      uuid = const Uuid().v4();
-      await _storage.write(key: _installUuidName, value: uuid);
-    }
-    return uuid;
-  }
-
-  static Future<Uint8List> _getOrGenerateSalt() async {
-    final storedSalt = await _storage.read(key: _saltName);
-    if (storedSalt != null) {
-      return base64.decode(storedSalt);
-    }
-
-    final salt = Uint8List.fromList(
-      List<int>.generate(32, (i) => i).map((_) => (DateTime.now().microsecondsSinceEpoch % 256)).toList(),
-    );
-    // Actually, let's use a better random for salt
-    final randomSalt = Uint8List.fromList(
-      List<int>.generate(32, (index) => (index + DateTime.now().millisecond) % 256),
-    );
-    
-    await _storage.write(key: _saltName, value: base64.encode(randomSalt));
-    return randomSalt;
-  }
 }
+

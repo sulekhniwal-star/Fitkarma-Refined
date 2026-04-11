@@ -24,6 +24,9 @@ class FestivalDietPlanScreen extends ConsumerWidget {
             (c) => c.festivalKey == festivalKey,
             orElse: () => FestivalDietConfig(
               festivalKey: festivalKey,
+              nameEn: 'Festival',
+              nameHi: 'त्योहार',
+              startDate: DateTime.now(),
               dietPlanType: 'normal',
               insightMessage: 'Follow a balanced regional diet.',
             ),

@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../features/health/data/health_repository.dart';
+import 'water_intake_dialog.dart';
 import 'quick_log_fab.dart';
 
-class MainScaffold extends StatefulWidget {
+class MainScaffold extends ConsumerStatefulWidget {
   final Widget child;
 
   const MainScaffold({super.key, required this.child});
 
   @override
-  State<MainScaffold> createState() => _MainScaffoldState();
+  ConsumerState<MainScaffold> createState() => _MainScaffoldState();
 }
 
-class _MainScaffoldState extends State<MainScaffold> {
+class _MainScaffoldState extends ConsumerState<MainScaffold> {
   int _currentIndex = 0;
 
   @override
@@ -21,7 +25,9 @@ class _MainScaffoldState extends State<MainScaffold> {
         currentIndex: _currentIndex,
         onTap: (index) {
           setState(() => _currentIndex = index);
-          // TODO: Use context.go for routing
+          // Navigation logic
+          final routes = ['/home', '/food', '/workout', '/steps', '/me'];
+          context.go(routes[index]);
         },
         type: BottomNavigationBarType.fixed,
         selectedItemColor: Colors.orange[700],
@@ -55,12 +61,28 @@ class _MainScaffoldState extends State<MainScaffold> {
         ],
       ),
       floatingActionButton: QuickLogFAB(
-        onFood: () {},
-        onWorkout: () {},
-        onWeight: () {},
-        onWater: () {},
-        onMood: () {},
-        onSleep: () {},
+        onFood: () => context.push('/food/search'),
+        onWorkout: () => context.push('/workout/log'),
+        onBp: () => context.push('/health/bp'),
+        onGlucose: () => context.push('/health/glucose'),
+        onWater: _showWaterDialog,
+        onMood: () => context.push('/lifestyle/mood'),
+      ),
+    );
+  }
+
+  void _showWaterDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => WaterIntakeDialog(
+        onSave: (glasses) async {
+          await ref.read(healthRepositoryProvider).saveWaterIntake(glasses);
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Logged $glasses glasses of water! 💧')),
+            );
+          }
+        },
       ),
     );
   }

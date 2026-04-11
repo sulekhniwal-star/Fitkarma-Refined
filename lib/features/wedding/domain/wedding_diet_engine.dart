@@ -12,6 +12,7 @@ class WeddingDietPlan {
   final int daysToWedding;
   final String adviceEn;
   final String adviceHi;
+  final String role;
   final int calorieOffset; // changes to the base goal
   final String? eventName;
 
@@ -20,6 +21,7 @@ class WeddingDietPlan {
     required this.daysToWedding,
     required this.adviceEn,
     required this.adviceHi,
+    required this.role,
     this.calorieOffset = 0,
     this.eventName,
   });
@@ -49,6 +51,7 @@ class WeddingDietProvider extends _$WeddingDietProvider {
         daysToWedding: daysToWedding,
         adviceEn: _getPreWeddingAdvice(weddingPlan, daysToWedding, 'en'),
         adviceHi: _getPreWeddingAdvice(weddingPlan, daysToWedding, 'hi'),
+        role: weddingPlan.role,
         calorieOffset: weddingPlan.primaryGoal == 'look_best' ? -200 : -100,
       );
     } else if (now.isAfter(weddingEnd)) {
@@ -58,6 +61,7 @@ class WeddingDietProvider extends _$WeddingDietProvider {
         daysToWedding: 0,
         adviceEn: 'Congratulations! Focus on recovery and hydration this week.',
         adviceHi: 'बधाई हो! इस सप्ताह रिकवरी और हाइड्रेशन पर ध्यान दें।',
+        role: weddingPlan.role,
         calorieOffset: 0,
       );
     } else {
@@ -67,6 +71,7 @@ class WeddingDietProvider extends _$WeddingDietProvider {
         daysToWedding: 0,
         adviceEn: 'Prioritize snacks between events. Stay hydrated during ceremonies!',
         adviceHi: 'आयोजनों के बीच स्नैक्स को प्राथमिकता दें। रस्मों के दौरान हाइड्रेटेड रहें!',
+        role: weddingPlan.role,
         calorieOffset: 250, // Feast buffer
       );
     }

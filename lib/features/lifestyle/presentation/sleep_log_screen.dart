@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:uuid/uuid.dart';
-
 import '../../../core/storage/app_database.dart';
+import '../../auth/data/auth_repository.dart';
+import '../data/lifestyle_providers.dart';
+import '../data/lifestyle_repository.dart';
 
 class SleepLogScreen extends ConsumerStatefulWidget {
   const SleepLogScreen({super.key});
@@ -54,28 +55,19 @@ class _SleepLogScreenState extends ConsumerState<SleepLogScreen> {
     setState(() => _isLoading = true);
 
     try {
-      final db = DriftService.db;
-      final id = const Uuid().v4();
-      final hours = calculateDuration();
-      final durationMin = (hours * 60).toInt();
-
-      await db.into(db.sleepLogs).insert(
-        SleepLogsCompanion.insert(
-          id: id,
-          userId: 'current_user',
-          date: _date,
-          bedtime: _bedtime,
-          wakeTime: _wakeTime,
-          durationMin: durationMin,
-          qualityScore: _quality,
-          source: 'manual',
-        ),
+      final repo = ref.read(lifestyleRepositoryProvider.notifier);
+      await repo.saveSleepLog(
+        date: _date,
+        bedtime: _bedtime,
+        wakeTime: _wakeTime,
+        qualityScore: _quality,
       );
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Sleep logged: ${hours.toStringAsFixed(1)} hours! +5 XP')),
+          const SnackBar(content: Text('Sleep logged! +5 XP')),
         );
+        Navigator.pop(context);
       }
     } catch (e) {
       if (mounted) {
@@ -101,6 +93,8 @@ class _SleepLogScreenState extends ConsumerState<SleepLogScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            _buildSleepDebtBanner(context),
+            const SizedBox(height: 16),
             Card(
               child: Padding(
                 padding: const EdgeInsets.all(16),
@@ -233,8 +227,63 @@ class _SleepLogScreenState extends ConsumerState<SleepLogScreen> {
       ),
     );
   }
-}
 
-class DriftService {
-  static AppDatabase get db => throw UnimplementedError();
+  Widget _buildSleepDebtBanner(BuildContext context) {
+    final user = ref.watch(currentUserProvider).asData?.value;
+    if (user == null) return const SizedBox.shrink();
+
+    final sleepDebtAsync = ref.watch(sleepDebtProvider(user.$id));
+
+    return sleepDebtAsync.when(
+      data: (debtMin) {
+        if (debtMin <= 0) return const SizedBox.shrink();
+
+        final hours = debtMin ~/ 60;
+        final mins = debtMin % 60;
+        final debtStr = hours > 0 ? '${hours}h ${mins}m' : '${mins}m';
+
+        return Container(
+          margin: const EdgeInsets.only(bottom: 16),
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.indigo[900]!, Colors.indigo[700]!],
+            ),
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.indigo.withOpacity(0.3),
+                blurRadius: 8,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Row(
+            children: [
+              const Icon(Icons.warning_amber_rounded, color: Colors.orangeAccent),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Sleep Debt · नींद की कमी',
+                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'You owe $debtStr sleep this week. Focus on recovery tonight! 🙏',
+                      style: TextStyle(color: Colors.indigo[100], fontSize: 13),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+      loading: () => const SizedBox.shrink(),
+      error: (_, __) => const SizedBox.shrink(),
+    );
+  }
 }

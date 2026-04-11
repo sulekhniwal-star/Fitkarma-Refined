@@ -1,28 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_jailbreak_detection/flutter_jailbreak_detection.dart';
 import 'app.dart';
 import 'core/storage/drift_service.dart';
 import 'core/network/sync_background_worker.dart';
 import 'features/food/data/food_seed_data.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'core/services/notification_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Root detection
+  try {
+    final bool jailbroken = await FlutterJailbreakDetection.jailbroken;
+    final bool devMode = await FlutterJailbreakDetection.developerMode;
+    if (jailbroken || devMode) {
+      debugPrint('SECURITY WARNING: Device is jailbroken/rooted or in Developer Mode.');
+    }
+  } catch (_) {}
   
   // 1. Load environment variables
   try {
     await dotenv.load(fileName: '.env');
   } catch (e) {
-    // In dev, sometimes .env might be missing or wrongly named
     debugPrint('Dotenv Error: $e');
   }
 
   // 2. Initialize Drift database with SQLCipher (Master Key)
   try {
     await DriftService.init();
-    // Seed initial Indian food database
     await FoodSeedData.seed(DriftService.db);
   } catch (e) {
     debugPrint('Drift Initialization Error: $e');
@@ -38,10 +46,7 @@ void main() async {
 
   // 4. Initialize notifications & timezone
   try {
-    final notifications = FlutterLocalNotificationsPlugin();
-    const androidInit = AndroidInitializationSettings('@mipmap/ic_launcher');
-    const initSettings = InitializationSettings(android: androidInit);
-    await notifications.initialize(settings: initSettings);
+    await NotificationService.init();
     tz.initializeTimeZones();
   } catch (e) {
     debugPrint('Notification Initialization Error: $e');
@@ -50,7 +55,6 @@ void main() async {
   runApp(
     ProviderScope(
       overrides: [
-        // Provide the initialized DB singleton
         driftDbProvider.overrideWithValue(DriftService.db),
       ],
       child: const FitKarmaApp(),

@@ -21,7 +21,6 @@ class WorkoutProteinRule extends InsightRule {
   Future<InsightOutput?> evaluate(InsightContext ctx) async {
     if (ctx.recentWorkoutLogs.isEmpty) return null;
 
-    final goals = ctx.recentWorkoutLogs;
     final proteinGoal = (ctx.nutritionGoals?['proteinTarget'] as num?)?.toDouble() ?? 60;
 
     // Days this week when a workout was logged
@@ -165,17 +164,17 @@ class StepsGlucoseRule extends InsightRule {
     activeAvg /= activeCount;
     sedentaryAvg /= sedentaryCount;
 
-    final diff = sedentaryAvg - activeAvg;
+    final diff = (sedentaryAvg - activeAvg).round();
     if (diff < 10) return null; // < 10 mg/dL difference — not meaningful
 
     return InsightOutput(
       ruleId: 'steps_glucose_correlation',
       module: InsightModule.crossModule,
       priority: InsightPriority.high,
-      titleEn: '🚶 Walking lowers your glucose by ${diff.round()} mg/dL',
-      titleHi: 'पैदल चलने से आपका ग्लूकोज ${diff.round()} mg/dL कम होता है',
-      bodyEn: 'On days you walk 8,000+ steps, your blood sugar is ${diff.round()} mg/dL lower on average. A 20-min walk after lunch can make a big difference.',
-      bodyHi: 'जिन दिनों आप 8,000+ कदम चलते हैं, उन दिनों ब्लड शुगर ${diff.round()} mg/dL कम रहता है।',
+      titleEn: '🚶 Walking lowers your glucose by $diff mg/dL',
+      titleHi: 'पैदल चलने से आपका ग्लूकोज $diff mg/dL कम होता है',
+      bodyEn: 'On days you walk 8,000+ steps, your blood sugar is $diff mg/dL lower on average. A 20-min walk after lunch can make a big difference.',
+      bodyHi: 'जिन दिनों आप 8,000+ कदम चलते हैं, उन दिनों ब्लड शुगर $diff mg/dL कम रहता है।',
       actionLabel: 'Track Steps',
       actionRoute: '/steps',
       icon: Icons.directions_walk,
@@ -239,7 +238,7 @@ class RpeSleepBurnoutRule extends InsightRule {
       priority: InsightPriority.high,
       titleEn: '⚠️ Burnout risk detected',
       titleHi: 'थकान का खतरा — आराम करें',
-      bodyEn: 'You\'ve had intense workouts with poor sleep for ${2}+ consecutive days. Take an active recovery day — light yoga or a walk only.',
+      bodyEn: 'You\'ve had intense workouts with poor sleep for 2+ consecutive days. Take an active recovery day — light yoga or a walk only.',
       bodyHi: 'कई दिनों से तीव्र व्यायाम और खराब नींद है। आज हल्की योग या सैर करें।',
       actionLabel: 'Log Sleep',
       actionRoute: '/lifestyle/sleep',
@@ -249,49 +248,148 @@ class RpeSleepBurnoutRule extends InsightRule {
   }
 }
 
-/// Protein gap (general nutrition rule).
-class ProteinGapRule extends InsightRule {
-  const ProteinGapRule();
+/// Fasting × BP correlation rule.
+class FastingBpCorrelationRule extends InsightRule {
+  const FastingBpCorrelationRule();
 
   @override
-  String get id => 'protein_gap';
+  String get id => 'fasting_bp_correlation';
 
   @override
-  String get name => 'Daily protein goal not met';
+  String get name => 'Fasting lowers systolic BP';
 
   @override
-  InsightModule get module => InsightModule.nutrition;
+  InsightModule get module => InsightModule.crossModule;
 
   @override
   Future<InsightOutput?> evaluate(InsightContext ctx) async {
-    final proteinGoal = (ctx.nutritionGoals?['proteinTarget'] as num?)?.toDouble() ?? 60;
+    if (ctx.recentFastingLogs.isEmpty || ctx.recentBpLogs.isEmpty) return null;
 
-    // Check last 3 days
-    int lowProteinDays = 0;
-    for (int i = 0; i < 3; i++) {
-      final day = ctx.today.subtract(Duration(days: i));
-      final dayLogs = ctx.recentFoodLogs.where((l) {
-        final d = DateTime.parse(l['logged_at'].toString());
-        return d.year == day.year && d.month == day.month && d.day == day.day;
-      });
-      final total = dayLogs.fold(0.0, (s, l) => s + ((l['protein_g'] as num?)?.toDouble() ?? 0));
-      if (total < proteinGoal * 0.75) lowProteinDays++;
+    final fastingDays = ctx.recentFastingLogs
+        .where((l) => l['is_completed'] == true)
+        .map((l) => DateTime.parse(l['start_time'].toString()))
+        .map((d) => DateTime(d.year, d.month, d.day))
+        .toSet();
+
+    if (fastingDays.isEmpty) return null;
+
+    double fastingBpAvg = 0, normalBpAvg = 0;
+    int fastingCount = 0, normalCount = 0;
+
+    for (final bp in ctx.recentBpLogs) {
+      final date = DateTime.parse(bp['logged_at'].toString());
+      final day = DateTime(date.year, date.month, date.day);
+
+      if (fastingDays.contains(day)) {
+        fastingBpAvg += (bp['systolic'] as num).toDouble();
+        fastingCount++;
+      } else {
+        normalBpAvg += (bp['systolic'] as num).toDouble();
+        normalCount++;
+      }
     }
 
-    if (lowProteinDays < 2) return null;
+    if (fastingCount < 3 || normalCount < 3) return null;
+
+    fastingBpAvg /= fastingCount;
+    normalBpAvg /= normalCount;
+
+    final reduction = (normalBpAvg - fastingBpAvg).round();
+    if (reduction < 5) return null;
+
+    return InsightOutput(
+      ruleId: 'fasting_bp_correlation',
+      module: InsightModule.crossModule,
+      priority: InsightPriority.normal,
+      titleEn: '🧘 Fasting reduces your BP by $reduction mmHg',
+      titleHi: 'उपवास से आपका बीपी $reduction mmHg कम होता है',
+      bodyEn: 'Your systolic BP is $reduction mmHg lower on days you complete a fast. Consistent intermittent fasting can help manage hypertension.',
+      bodyHi: 'उपवास वाले दिनों में आपका बीपी $reduction mmHg कम रहता है।',
+      actionLabel: 'Fast Tracker',
+      actionRoute: '/lifestyle/fasting',
+      icon: Icons.auto_awesome,
+      color: const Color(0xFF27AE60),
+    );
+  }
+}
+
+/// Screen Time × Mood correlation rule.
+class ScreenTimeMoodRule extends InsightRule {
+  const ScreenTimeMoodRule();
+
+  @override
+  String get id => 'screen_time_mood';
+
+  @override
+  String get name => 'High screen time impacts mood';
+
+  @override
+  InsightModule get module => InsightModule.crossModule;
+
+  @override
+  Future<InsightOutput?> evaluate(InsightContext ctx) async {
+    if (ctx.recentMoodLogs.length < 7) return null;
+
+    int highScreenLowMoodDays = 0;
+    for (final mood in ctx.recentMoodLogs) {
+      final screenTime = (mood['screen_time_min'] as num?)?.toInt() ?? 0;
+      final score = (mood['score'] as num?)?.toInt() ?? 5;
+
+      if (screenTime > 240 && score <= 2) {
+        highScreenLowMoodDays++;
+      }
+    }
+
+    if (highScreenLowMoodDays < 4) return null;
 
     return const InsightOutput(
-      ruleId: 'protein_gap',
-      module: InsightModule.nutrition,
+      ruleId: 'screen_time_mood',
+      module: InsightModule.crossModule,
       priority: InsightPriority.normal,
-      titleEn: '🥗 You\'re low on protein',
-      titleHi: 'प्रोटीन की कमी है',
-      bodyEn: 'You\'ve been consistently short on daily protein. Add a serving of dal, paneer, or eggs to your next meal.',
-      bodyHi: 'आपके भोजन में नियमित रूप से प्रोटीन कम है। दाल, पनीर या अंडे जोड़ें।',
-      actionLabel: 'Log Food',
-      actionRoute: '/food',
-      icon: Icons.restaurant,
+      titleEn: '📱 Screen time is affecting your mood',
+      titleHi: 'स्क्रीन टाइम आपके मूड को प्रभावित कर रहा है',
+      bodyEn: 'We noticed a pattern: days with 4+ hours of screen time often lead to lower mood. Try a 1-hour digital detox before bed today.',
+      bodyHi: '4+ घंटे स्क्रीन टाइम से आपका मूड खराब रहता है। आज सोने से पहले फोन से दूर रहें।',
+      actionLabel: 'Mood Tracker',
+      actionRoute: '/lifestyle/mood',
+      icon: Icons.phonelink_off,
       color: Color(0xFFE67E22),
+    );
+  }
+}
+
+/// Festival × Calorie spike rule.
+class FestivalCalorieRule extends InsightRule {
+  const FestivalCalorieRule();
+
+  @override
+  String get id => 'festival_calorie_spike';
+
+  @override
+  String get name => 'Festival nutrition proactive nudge';
+
+  @override
+  InsightModule get module => InsightModule.festival;
+
+  @override
+  Future<InsightOutput?> evaluate(InsightContext ctx) async {
+    if (ctx.activeFestivals.isEmpty) return null;
+
+    final festival = ctx.activeFestivals.first;
+    final name = festival['name_en'] ?? 'Festival';
+
+    return InsightOutput(
+      ruleId: 'festival_calorie_nudge',
+      module: InsightModule.festival,
+      priority: InsightPriority.normal,
+      titleEn: '🎉 $name is approaching!',
+      titleHi: '🎉 $name आने वाला है!',
+      bodyEn: 'With $name ahead, plan your meals to enjoy the festivities while staying on track. A light workout today can help prepare!',
+      bodyHi: 'तैयारी शुरू करें! आज हल्का व्यायाम करें ताकि आप उत्सव का आनंद ले सकें।',
+      actionLabel: 'View Plan',
+      actionRoute: '/festival-calendar',
+      icon: Icons.celebration,
+      color: const Color(0xFFFFD700),
     );
   }
 }

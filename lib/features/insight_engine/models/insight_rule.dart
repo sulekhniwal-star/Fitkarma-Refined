@@ -62,6 +62,7 @@ class InsightContext {
     required this.recentGlucoseLogs,
     required this.recentStepLogs,
     required this.nutritionGoals,
+    this.recentFastingLogs = const [],
     this.activeFestivals = const [],
   });
 
@@ -74,6 +75,7 @@ class InsightContext {
   final List<Map<String, dynamic>> recentBpLogs;
   final List<Map<String, dynamic>> recentGlucoseLogs;
   final List<Map<String, dynamic>> recentStepLogs;
+  final List<Map<String, dynamic>> recentFastingLogs;
   final Map<String, dynamic>? nutritionGoals;
   final List<Map<String, dynamic>> activeFestivals;
 }

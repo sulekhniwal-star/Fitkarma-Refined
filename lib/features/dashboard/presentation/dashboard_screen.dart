@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../../../shared/theme/app_colors.dart';
 import '../../../shared/widgets/activity_rings.dart';
 import '../../../shared/widgets/insight_card.dart';
@@ -8,7 +9,14 @@ import '../../../shared/widgets/quick_log_fab.dart';
 import '../../../shared/widgets/dosha_chart.dart';
 import '../../../shared/widgets/bilingual_text.dart';
 import '../../../shared/widgets/shimmer_loader.dart';
+import '../../../shared/widgets/wedding_countdown_card.dart';
+import '../../../shared/widgets/festival_countdown_banner.dart';
+import '../../../shared/widgets/async_value_widget.dart';
+import '../../../shared/widgets/error_retry_widget.dart';
 import 'dashboard_controller.dart';
+import '../../../shared/widgets/water_intake_dialog.dart';
+import '../../health/data/health_repository.dart';
+import '../../../core/storage/app_database.dart';
 import '../../../core/utils/ayur_utils.dart';
 
 class DashboardScreen extends ConsumerWidget {
@@ -23,25 +31,37 @@ class DashboardScreen extends ConsumerWidget {
         slivers: [
           _buildSliverAppBar(context, dashboardState),
           SliverToBoxAdapter(
-            child: dashboardState.when(
-              data: (data) => _buildContent(context, data),
-              loading: () => const Padding(
+            child: AsyncValueWidget<DashboardData>(
+              value: dashboardState,
+              loadingBuilder: const Padding(
                 padding: EdgeInsets.all(20),
                 child: ShimmerLoader(width: double.infinity, height: 600),
               ),
-              error: (e, s) => Center(child: Text('Error: $e')),
+              errorBuilder: (e, s) => ErrorRetryWidget(
+                message: 'Could not load dashboard: $e',
+                onRetry: () => ref.refresh(dashboardControllerProvider),
+              ),
+              builder: (data) => _buildContent(context, data),
             ),
           ),
           const SliverPadding(padding: EdgeInsets.only(bottom: 100)),
         ],
       ),
       floatingActionButton: QuickLogFAB(
-        onFood: () {},
-        onWorkout: () {},
-        onWeight: () {},
-        onWater: () {},
-        onMood: () {},
-        onSleep: () {},
+        onFood: () => context.push('/food/search'),
+        onWorkout: () => context.push('/workout/log'),
+        onBp: () => context.push('/health/bp'),
+        onGlucose: () => context.push('/health/glucose'),
+        onWater: () => showDialog(
+          context: context,
+          builder: (context) => WaterIntakeDialog(
+            onSave: (glasses) async {
+              await ref.read(healthRepositoryProvider).saveWaterIntake(glasses);
+              ref.refresh(dashboardControllerProvider);
+            },
+          ),
+        ),
+        onMood: () => context.push('/lifestyle/mood'),
       ),
     );
   }
@@ -66,7 +86,7 @@ class DashboardScreen extends ConsumerWidget {
                 backgroundColor: AppColors.primary.withOpacity(0.1),
                 child: Text(
                   (profile?.name ?? 'U')[0].toUpperCase(),
-                  style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold),
+                  style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold),
                 ),
               ),
               const SizedBox(width: 12),
@@ -105,11 +125,29 @@ class DashboardScreen extends ConsumerWidget {
         children: [
           const SizedBox(height: 20),
           _buildHealthSummary(context, data),
+          const SizedBox(height: 24),
+          _buildHealthMonitoring(context, data),
           if (data.activeFestivals.isNotEmpty || data.activeWeddingPlan != null) ...[
             const SizedBox(height: 24),
             _buildContextualAdvice(context, data),
           ],
           const SizedBox(height: 24),
+          if (data.micronutrientGapMessage != null)
+            InsightCard(
+              title: "Nutrition Insight",
+              message: data.micronutrientGapMessage!,
+            ),
+          ...data.insights.map((insight) => Padding(
+                padding: const EdgeInsets.only(top: 12),
+                child: InsightCard(
+                  title: insight.titleEn,
+                  message: insight.bodyEn,
+                  icon: insight.icon,
+                  color: insight.color,
+                  onTap: insight.actionRoute != null ? () => context.push(insight.actionRoute!) : null,
+                ),
+              )),
+          const SizedBox(height: 12),
           const InsightCard(
             title: "Ayurvedic Tip",
             message: "Your Pitta is slightly elevated. Try cooling foods like cucumber and coconut water today.",
@@ -140,14 +178,27 @@ class DashboardScreen extends ConsumerWidget {
           ),
         ],
       ),
-      child: Row(
+      child: Stack(
         children: [
+          Positioned(
+            top: 0,
+            right: 0,
+            child: IconButton(
+              icon: const Icon(Icons.settings_outlined, size: 20, color: Colors.grey),
+              onPressed: () => context.push('/food/goals'),
+            ),
+          ),
+          Row(
+            children: [
           ActivityRingsWidget(
             size: 140,
             strokeWidth: 10,
             spacing: 3,
             rings: [
-              ActivityRingData(progress: data.todayCalories / 2000, color: Colors.orange),
+              ActivityRingData(
+                progress: data.todayCalories / (data.nutritionGoal?.calorieTarget ?? 2000),
+                color: _getColorForProgress(data.todayCalories / (data.nutritionGoal?.calorieTarget ?? 2000)),
+              ),
               ActivityRingData(progress: data.todaySteps / 8000, color: Colors.green),
               ActivityRingData(progress: data.waterGlasses / 8, color: Colors.teal),
               ActivityRingData(progress: 0.4, color: Colors.purple), // Active Minutes
@@ -158,7 +209,7 @@ class DashboardScreen extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildMetricRow(Icons.local_fire_department, "Calories", "${data.todayCalories.toInt()} / 2000 kcal"),
+                _buildMetricRow(Icons.local_fire_department, "Calories", "${data.todayCalories.toInt()} / ${data.nutritionGoal?.calorieTarget ?? 2000} kcal"),
                 const SizedBox(height: 8),
                 _buildMetricRow(Icons.directions_walk, "Steps", "${data.todaySteps} / 8000"),
                 const SizedBox(height: 8),
@@ -184,33 +235,40 @@ class DashboardScreen extends ConsumerWidget {
           ),
         ],
       ),
-    );
-  }
+    ]),
+  );
+}
 
   Widget _buildContextualAdvice(BuildContext context, DashboardData data) {
     if (data.activeWeddingPlan != null) {
       final plan = data.activeWeddingPlan!;
-      return InsightCard(
-        title: "Wedding Prep: ${plan.phase.name}",
-        message: plan.adviceEn,
-        backgroundColor: const Color(0xFFFFF9E6), // Gold tint
-        icon: Icons.celebration,
-        iconColor: const Color(0xFFD4AF37),
+      return WeddingCountdownCard(
+        daysUntil: plan.daysToWedding,
+        role: plan.role,
+        phase: plan.phase.name,
+        nextEvent: plan.eventName,
+        onTap: () => context.push('/wedding-planner'),
       );
     }
 
     if (data.activeFestivals.isNotEmpty) {
       final festival = data.activeFestivals.first;
-      return InsightCard(
-        title: "Festival: ${festival.festivalKey}",
-        message: festival.insightMessage,
-        backgroundColor: Colors.orange.shade50,
-        icon: Icons.timer,
-        iconColor: Colors.orange,
+      return FestivalCountdownBanner(
+        nameEn: festival.nameEn,
+        nameHi: festival.nameHi,
+        startDate: festival.startDate,
+        onTap: () => context.push('/festival-calendar'),
       );
     }
 
     return const SizedBox.shrink();
+  }
+
+  Color _getColorForProgress(double progress) {
+    if (progress < 0.9) return Colors.green;
+    if (progress <= 1.1) return Colors.green;
+    if (progress <= 1.25) return Colors.orange;
+    return Colors.red;
   }
 
   Widget _buildMetricRow(IconData icon, String label, String value) {
@@ -306,5 +364,165 @@ class DashboardScreen extends ConsumerWidget {
     final now = DateTime.now();
     if (date.year == now.year && date.month == now.month && date.day == now.day) return "Today";
     return "${date.day}/${date.month}";
+  }
+
+  Widget _buildHealthMonitoring(BuildContext context, DashboardData data) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const BilingualText(
+              english: "Health Monitoring",
+              hindi: "स्वास्थ्य निगरानी",
+              englishStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            TextButton(
+              onPressed: () {}, // TODO: Navigate to full health hub
+              child: const Text('View All'),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: [
+              _buildHealthCard(
+                context,
+                "Blood Pressure",
+                data.lastBp != null ? "${data.lastBp!.systolic}/${data.lastBp!.diastolic}" : "--/--",
+                "mmHg",
+                data.lastBp?.classification ?? "No data",
+                _getBpColor(data.lastBp?.classification),
+                Icons.favorite,
+                () => context.push('/health/bp'),
+              ),
+              _buildHealthCard(
+                context,
+                "Glucose",
+                data.lastGlucose != null ? "${data.lastGlucose!.valueMgDl}" : "--",
+                "mg/dL",
+                data.lastGlucose?.testType ?? "No data",
+                Colors.orange,
+                Icons.bloodtype,
+                () => context.push('/health/glucose'),
+              ),
+              _buildHealthCard(
+                context,
+                "SpO2",
+                data.lastSpo2 != null ? "${data.lastSpo2!.valuePercent}%" : "--%",
+                "Saturation",
+                data.lastSpo2 != null && data.lastSpo2!.valuePercent < 95 ? "Low" : "Normal",
+                data.lastSpo2 != null && data.lastSpo2!.valuePercent < 95 ? Colors.red : Colors.blue,
+                Icons.air,
+                () => context.push('/health/spo2'),
+              ),
+              if (data.nextAppointment != null)
+                _buildAppointmentCard(context, data.nextAppointment!),
+              _buildHealthCard(
+                context,
+                "Lab Reports",
+                "Scan",
+                "Latest",
+                "AI Extractor",
+                Colors.indigo,
+                Icons.document_scanner,
+                () => context.push('/health/lab-scan'),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildHealthCard(BuildContext context, String title, String value, String unit, String status, Color color, IconData icon, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 150,
+        margin: const EdgeInsets.only(right: 12),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: color.withOpacity(0.05),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: color.withOpacity(0.2)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(icon, color: color, size: 20),
+            const SizedBox(height: 12),
+            Text(title, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+            const SizedBox(height: 4),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.baseline,
+              textBaseline: TextBaseline.alphabetic,
+              children: [
+                Text(value, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                const SizedBox(width: 4),
+                Text(unit, style: const TextStyle(fontSize: 10, color: Colors.grey)),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: color.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                status,
+                style: TextStyle(fontSize: 10, color: color, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAppointmentCard(BuildContext context, DoctorAppointment appt) {
+    return GestureDetector(
+      onTap: () => context.push('/health/appointments'),
+      child: Container(
+        width: 180,
+        margin: const EdgeInsets.only(right: 12),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.blue[800]!.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: Colors.blue[800]!.withOpacity(0.2)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Icon(Icons.calendar_month, color: Colors.blue, size: 20),
+            const SizedBox(height: 8),
+            const Text("Upcoming Visit", style: TextStyle(fontSize: 11, color: Colors.grey)),
+            Text(appt.doctorName, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold), maxLines: 1, overflow: TextOverflow.ellipsis),
+            Text(appt.specialty ?? "General", style: const TextStyle(fontSize: 10, color: Colors.blue)),
+            const SizedBox(height: 8),
+            Text(
+              "${appt.appointmentDate.day}/${appt.appointmentDate.month} · ${appt.appointmentDate.hour}:${appt.appointmentDate.minute.toString().padLeft(2, '0')}",
+              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Color _getBpColor(String? classification) {
+    switch (classification) {
+      case 'Normal': return Colors.green;
+      case 'Elevated': return Colors.orange;
+      case 'Hypertension Stage 1': return Colors.deepOrange;
+      case 'Hypertension Stage 2': return Colors.red;
+      case 'Hypertensive Crisis': return Colors.redAccent;
+      default: return Colors.grey;
+    }
   }
 }

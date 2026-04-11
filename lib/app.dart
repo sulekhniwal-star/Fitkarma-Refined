@@ -12,6 +12,7 @@ import 'features/dashboard/presentation/dashboard_screen.dart';
 import 'features/food/presentation/food_log_screen.dart';
 import 'features/food/presentation/food_search_screen.dart';
 import 'features/food/presentation/food_detail_screen.dart';
+import 'features/food/presentation/nutrition_goals_screen.dart';
 import 'features/steps/presentation/steps_screen.dart';
 import 'features/workout/presentation/workout_log_screen.dart';
 import 'features/workout/presentation/workout_list_screen.dart';
@@ -24,8 +25,29 @@ import 'features/wedding/presentation/wedding_event_day_screen.dart';
 import 'features/wedding/presentation/wedding_fitness_plan_screen.dart';
 import 'features/wedding/presentation/wedding_recovery_screen.dart';
 import 'features/wedding/presentation/wedding_grocery_list_screen.dart';
+import 'features/health/presentation/bp_log_screen.dart';
+import 'features/health/presentation/glucose_log_screen.dart';
+import 'features/health/presentation/spo2_log_screen.dart';
+import 'features/health/presentation/appointments_screen.dart';
+import 'features/health/presentation/lab_report_scan_screen.dart';
+import 'features/health/presentation/abha_link_screen.dart';
+import 'features/lifestyle/presentation/period_log_screen.dart';
+import 'features/lifestyle/presentation/sleep_log_screen.dart';
+import 'features/lifestyle/presentation/mood_log_screen.dart';
+import 'features/lifestyle/presentation/habit_tracker_screen.dart';
+import 'features/lifestyle/presentation/medication_list_screen.dart';
+import 'features/lifestyle/presentation/fasting_screen.dart';
 import 'core/storage/app_database.dart';
 import 'features/wedding/domain/wedding_logic.dart';
+import 'shared/widgets/deferred_widget.dart';
+
+// Deferred imports for heavy modules
+import 'features/platform/presentation/wearables_screen.dart' deferred as wearables;
+import 'features/social/presentation/social_screens.dart' deferred as social;
+import 'features/workout/presentation/gps_workout_screen.dart' deferred as gps_workout;
+import 'features/lifestyle/presentation/mental_health_screen.dart' deferred as mental_health;
+import 'features/ayurveda/presentation/meditation_screen.dart' deferred as meditation;
+
 
 class FitKarmaApp extends ConsumerWidget {
   const FitKarmaApp({super.key});
@@ -111,6 +133,10 @@ class FitKarmaApp extends ConsumerWidget {
                 GoRoute(
                   path: 'recipes',
                   builder: (context, state) => const _PlaceholderScreen(title: 'Recipes'),
+                ),
+                GoRoute(
+                  path: 'goals',
+                  builder: (context, state) => const NutritionGoalsScreen(),
                 ),
               ],
             ),
@@ -199,10 +225,106 @@ class FitKarmaApp extends ConsumerWidget {
                 ),
               ],
             ),
+            GoRoute(
+              path: '/social',
+              builder: (context, state) => DeferredWidget(
+                loader: social.loadLibrary,
+                builder: () => social.SocialFeedScreen(),
+              ),
+            ),
+            GoRoute(
+              path: '/wearables',
+              builder: (context, state) => DeferredWidget(
+                loader: wearables.loadLibrary,
+                builder: () => wearables.WearablesScreen(),
+              ),
+            ),
+            GoRoute(
+              path: '/gps-workout',
+              builder: (context, state) => DeferredWidget(
+                loader: gps_workout.loadLibrary,
+                builder: () => gps_workout.GpsWorkoutScreen(),
+              ),
+            ),
+            GoRoute(
+              path: '/mental-health',
+              builder: (context, state) => DeferredWidget(
+                loader: mental_health.loadLibrary,
+                builder: () => mental_health.MentalHealthScreen(),
+              ),
+            ),
+            GoRoute(
+              path: '/meditation',
+              builder: (context, state) => DeferredWidget(
+                loader: meditation.loadLibrary,
+                builder: () => meditation.MeditationScreen(),
+              ),
+            ),
+            GoRoute(
+              path: '/lifestyle',
+              builder: (context, state) => const _PlaceholderScreen(title: 'Lifestyle · लाइफस्टाइल'),
+              routes: [
+                GoRoute(
+                  path: 'period',
+                  builder: (context, state) => const PeriodLogScreen(),
+                ),
+                GoRoute(
+                  path: 'sleep',
+                  builder: (context, state) => const SleepLogScreen(),
+                ),
+                GoRoute(
+                  path: 'mood',
+                  builder: (context, state) => const MoodLogScreen(),
+                ),
+                GoRoute(
+                  path: 'habit',
+                  builder: (context, state) => const HabitTrackerScreen(),
+                ),
+                GoRoute(
+                  path: 'medications',
+                  builder: (context, state) => const MedicationListScreen(),
+                ),
+                GoRoute(
+                  path: 'fasting',
+                  builder: (context, state) => const FastingScreen(),
+                ),
+              ],
+            ),
+            GoRoute(
+              path: '/health',
+              builder: (context, state) => const _PlaceholderScreen(title: 'Health Monitoring'),
+              routes: [
+                GoRoute(
+                  path: 'bp',
+                  builder: (context, state) => const BpLogScreen(),
+                ),
+                GoRoute(
+                  path: 'glucose',
+                  builder: (context, state) => const GlucoseLogScreen(),
+                ),
+                GoRoute(
+                  path: 'spo2',
+                  builder: (context, state) => const Spo2LogScreen(),
+                ),
+                GoRoute(
+                  path: 'appointments',
+                  builder: (context, state) => const AppointmentsScreen(),
+                ),
+                GoRoute(
+                  path: 'lab-scan',
+                  builder: (context, state) => const LabReportScanScreen(),
+                ),
+                GoRoute(
+                  path: 'abha-link',
+                  builder: (context, state) => const AbhaLinkScreen(),
+                ),
+              ],
+            ),
           ],
         ),
       ],
     );
+
 
     return MaterialApp.router(
       title: 'FitKarma',

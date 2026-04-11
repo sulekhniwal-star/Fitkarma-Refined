@@ -60,15 +60,15 @@
 ### 1.3 Dependencies
 > Add these to `pubspec.yaml` — copy from Section 23 of the docs; additions marked 🆕
 
-- [ ] ⚡🟡 Add all packages from the original `pubspec.yaml` section of the docs
-- [ ] ⚡🟡 Set up **`drift`** + `drift_flutter` for ALL data storage:
-  - Add: `drift: ^2.x`, `drift_flutter: ^0.x`, `sqlite3_flutter_libs: ^0.x`, `sqlcipher_flutter_libs: ^0.x`
-- [ ] 🆕🟢 Add `home_widget: ^0.x` — Android/iOS home screen widgets
-- [ ] 🆕🟢 Add `flutter_map_tile_caching: ^9.x` — offline GPS map tiles
-- [ ] 🆕🟢 Add `cryptography: ^2.x` — for HKDF key derivation
-- [ ] 🆕🟢 Add `drift_dev: ^2.x` and `build_runner` update to dev_dependencies
-- [ ] 🟢 Run `flutter pub get` — fix any version conflicts shown in the terminal
-- [ ] 🟡 Run `dart run build_runner build` — generates Drift and Riverpod code (you'll re-run this often)
+- [x] ⚡🟡 Add all packages from the original `pubspec.yaml` section of the docs
+- [x] ⚡🟡 Set up **`drift`** + `drift_flutter` for ALL data storage:
+  - [x] Add: `drift: ^2.x`, `drift_flutter: ^0.x`, `sqlite3_flutter_libs: ^0.x`, `sqlcipher_flutter_libs: ^0.x`
+- [x] 🆕🟢 Add `home_widget: ^0.x` — Android/iOS home screen widgets
+- [x] 🆕🟢 Add `flutter_map_tile_caching: ^9.x` — offline GPS map tiles
+- [x] 🆕🟢 Add `cryptography: ^2.x` — for HKDF key derivation
+- [x] 🆕🟢 Add `drift_dev: ^2.x` and `build_runner` update to dev_dependencies
+- [x] 🟢 Run `flutter pub get` — fix any version conflicts shown in the terminal
+- [x] 🟡 Run `dart run build_runner build` — generates Drift and Riverpod code (you'll re-run this often)
 
 ### 1.4 Architecture Fixes (Critical)
 > ⚠️ These fixes address critical issues identified in the architecture review — do NOT skip
@@ -144,12 +144,12 @@
 ### 2.3 Navigation
 - [x] Create `lib/app.dart` with `GoRouter` — added all routes from the Route Map in Section 19
 - [x] Add the 5-tab `BottomNavigationBar` (Home · Food · Workout · Steps · Me) with bilingual labels
-- [ ] Implement **deferred module loading** for heavy features — load library only on first navigation:
-  - [ ] Wearables screen — `deferred as wearables`
-  - [ ] Community/Social feed — `deferred as social`
-  - [ ] GPS workout map screen — `deferred as gps_workout`
-  - [ ] Mental health module — `deferred as mental_health`
-  - [ ] Meditation audio player — `deferred as meditation`
+- [x] Implement **deferred module loading** for heavy features — load library only on first navigation:
+  - [x] Wearables screen — `deferred as wearables`
+  - [x] Community/Social feed — `deferred as social`
+  - [x] GPS workout map screen — `deferred as gps_workout`
+  - [x] Mental health module — `deferred as mental_health`
+  - [x] Meditation audio player — `deferred as meditation`
 
 ---
 
@@ -172,18 +172,18 @@
 ### 3.3 Encryption Service
 - [x] 🔒🔴 Create `lib/core/security/encryption_service.dart` — AES-256-GCM encryption/decryption
 - [x] 🔒🔴 Create `lib/core/security/key_manager.dart` — derives and stores the master device key
-  - [ ] Derive master key from: `device_id + app_install_uuid + stored_random_salt` using **PBKDF2 (200,000 iterations)** — do NOT tie to the user password
-  - [ ] Store the master key in `flutter_secure_storage` with `AndroidKeyStore` / iOS `SecureEnclave` backing
-  - [ ] Store the random salt separately in `flutter_secure_storage`
-  - [ ] Password changes must NOT invalidate existing encrypted data
-  - [ ] OAuth-only users (no password) must still have working encryption
+  - [x] Derive master key from: `device_id + app_install_uuid + stored_random_salt` using **PBKDF2 (200,000 iterations)** — do NOT tie to the user password
+  - [x] Store the master key in `flutter_secure_storage` with `AndroidKeyStore` / iOS `SecureEnclave` backing
+  - [x] Store the random salt separately in `flutter_secure_storage`
+  - [x] Password changes must NOT invalidate existing encrypted data
+  - [x] OAuth-only users (no password) must still have working encryption
 - [x] 🆕🔒🔴 **Derive a separate encryption key per data class** using HKDF — prevents lateral exposure if one key leaks:
-  - [ ] `HkdfKey.bp = HKDF(masterKey, info: "fitkarma_bp_glucose")`
-  - [ ] `HkdfKey.period = HKDF(masterKey, info: "fitkarma_period")`
-  - [ ] `HkdfKey.journal = HKDF(masterKey, info: "fitkarma_journal")`
-  - [ ] `HkdfKey.appointments = HKDF(masterKey, info: "fitkarma_appointments")`
-  - [ ] Use the `cryptography` package's `Hkdf` class for this
-- [ ] 🔒🟡 Store the salt in `flutter_secure_storage` — never in Drift or plaintext files
+  - [x] `HkdfKey.bp = HKDF(masterKey, info: "fitkarma_bp_glucose")`
+  - [x] `HkdfKey.period = HKDF(masterKey, info: "fitkarma_period")`
+  - [x] `HkdfKey.journal = HKDF(masterKey, info: "fitkarma_journal")`
+  - [x] `HkdfKey.appointments = HKDF(masterKey, info: "fitkarma_appointments")`
+  - [x] Use the `cryptography` package's `Hkdf` class for this
+- [x] 🔒🟡 Store the salt in `flutter_secure_storage` — never in Drift or plaintext files
 
 ### 3.4 Connectivity & Sync Queue
 - [x] 🟡 Create `lib/core/network/connectivity_service.dart` — wraps `connectivity_plus`, exposes an `isOnline` stream
@@ -366,15 +366,15 @@
 ## Phase 8 — Karma System
 > *XP is earned in almost every feature, so build the service early.*
 
-- [ ] ⚡🟢 Create `lib/features/karma/data/karma_drift_service.dart` — instant local XP snapshot in Drift
-- [ ] 🟢 Create `lib/features/karma/data/karma_aw_service.dart` — write `karma_transactions` to Appwrite; server is source of truth for balances
-- [ ] 🟢 Create `KarmaNotifier` (Riverpod `AsyncNotifier`) — `addXP(int amount, String action)` method
-- [ ] 🟢 Subscribe to Appwrite Realtime `karma_transactions` collection
-- [ ] 🟢 Build `KarmaHub` screen — level card, XP bar, karma history list
-- [ ] 🟢 Build `KarmaStore` screen — list of rewards redeemable with XP
-- [ ] 🟢 Build `Leaderboard` screen — Friends / City / National tabs with weekly reset
-- [ ] 🟢 Implement streak multipliers — ×1.5 at 7-day streak, ×2.0 at 30-day streak
-- [ ] 🆕🟢 **Streak recovery mechanic** — user can spend 50 Karma XP to restore a broken streak (reduces churn from missed days); limit to once per 30 days per streak type
+- [x] ⚡🟢 Create `lib/features/karma/data/karma_drift_service.dart` — instant local XP snapshot in Drift
+- [x] 🟢 Create `lib/features/karma/data/karma_aw_service.dart` — write `karma_transactions` to Appwrite; server is source of truth for balances
+- [x] 🟢 Create `KarmaNotifier` (Riverpod `AsyncNotifier`) — `addXP(int amount, String action)` method
+- [x] 🟢 Subscribe to Appwrite Realtime `karma_transactions` collection
+- [x] 🟢 Build `KarmaHub` screen — level card, XP bar, karma history list
+- [x] 🟢 Build `KarmaStore` screen — list of rewards redeemable with XP
+- [x] 🟢 Build `Leaderboard` screen — Friends / City / National tabs with weekly reset
+- [x] 🟢 Implement streak multipliers — ×1.5 at 7-day streak, ×2.0 at 30-day streak
+- [x] 🆕🟢 **Streak recovery mechanic** — user can spend 50 Karma XP to restore a broken streak (reduces churn from missed days); limit to once per 30 days per streak type
 
 ---
 
@@ -398,8 +398,8 @@
 ---
 
 ## Phase 10 — Nutrition Goal Engine
-- [ ] ⚡🟡 Implement TDEE calculator — copy the Mifflin-St Jeor formula from Section 11.7
-- [ ] 🟡 Calculate and store macro targets (55% carbs / 20% protein / 25% fat) in `nutrition_goals` Drift table
+- [x] ⚡🟡 Implement TDEE calculator — copy the Mifflin-St Jeor formula from Section 11.7
+- [x] 🟡 Calculate and store macro targets (55% carbs / 20% protein / 25% fat) in `nutrition_goals` Drift table
 - [ ] 🟡 Build daily nutrition ring charts with traffic-light status 🟢🟡🔴
 - [ ] 🟡 **Micronutrient tracking** — Iron, B12, Vitamin D, Calcium daily totals vs RDA targets
 - [ ] 🆕🟢 **Micronutrient gap summary** — dashboard card that shows the single biggest daily gap (e.g. "You're 8 mcg Vitamin B12 short — add 1 egg or 50g paneer") using the same `InsightCard` component
@@ -623,45 +623,14 @@
 > *Build the dynamic festival date engine and the Festival Calendar screens. This phase feeds into the Meal Planner (Phase 13.8), Insight Engine, and Seasonal Leaderboards (Phase 14).*
 
 ### 13A.1 Festival Date Engine — Dart Implementation
-- [ ] 🆕🔴🟡 Create `lib/features/festival_calendar/domain/festival_date_engine.dart` — multi-calendar algorithmic date computation:
-  - [ ] **Hindu lunisolar** — implement Meeus tithi algorithm to compute festival dates from lunar month + tithi + paksha
-    - [ ] Navratri (Chaitra — April) — Shukla Pratipada, Chaitra month
-    - [ ] Navratri (Sharadiya — Oct) — Shukla Pratipada, Ashwin month
-    - [ ] Diwali — Amavasya, Kartik month
-    - [ ] Holi — Purnima, Phalguna month
-    - [ ] Dussehra — Shukla Dashami, Ashwin month
-    - [ ] Janmashtami — Krishna Ashtami, Bhadrapada month
-    - [ ] Maha Shivaratri — Krishna Chaturdashi, Phalguna/Magha month
-    - [ ] Ram Navami — Shukla Navami, Chaitra month
-    - [ ] Raksha Bandhan — Purnima, Shravana month
-    - [ ] Karva Chauth — Krishna Chaturthi, Kartik month
-    - [ ] Ganesh Chaturthi — Shukla Chaturthi, Bhadrapada month
-    - [ ] Durga Puja / Navami / Ashtami — Ashwin Shukla Ashtami–Navami
-    - [ ] Chhath Puja — Kartik Shukla Shashthi
-    - [ ] Guru Purnima — Ashadha Purnima
-    - [ ] Ekadashi (both monthly Ekadashis — auto-generates ~24 dates/year)
-    - [ ] Ugadi / Gudi Padwa — Shukla Pratipada, Chaitra month
-    - [ ] Buddha Purnima — Vaishakha Purnima
-    - [ ] Teej — Bhadrapada Krishna Tritiya (Hariyali Teej: Shravana Shukla Tritiya)
-  - [ ] **Islamic Hijri (Umm al-Qura algorithm)** — compute Gregorian equivalent:
-    - [ ] Ramadan start — 1 Ramadan (month 9)
-    - [ ] Eid-ul-Fitr — 1 Shawwal (month 10)
-    - [ ] Eid-ul-Adha — 10 Dhu al-Hijjah (month 12)
-    - [ ] Muharram / Islamic New Year — 1 Muharram (month 1)
-  - [ ] **Sikh Nanakshahi calendar** — Baisakhi (Apr 13/14), Guru Nanak Jayanti (Kartik Purnima — Hindu lunisolar)
-  - [ ] **Gregorian fixed** — dates that never change:
-    - [ ] Lohri — Jan 13
-    - [ ] Makar Sankranti — Jan 14 (±1 day, solar ingress computation)
-    - [ ] Pongal — Jan 14 (Tamil solar)
-    - [ ] Republic Day — Jan 26
-    - [ ] Independence Day — Aug 15
-    - [ ] Christmas — Dec 25
-  - [ ] **Easter (Good Friday)** — Anonymous Gregorian computus algorithm
-  - [ ] **Paryushana** — 8-day Jain festival: Bhadrapada Shukla 5–13 (lunisolar)
-  - [ ] Compute for years: `[currentYear - 1, currentYear, currentYear + 1, currentYear + 2]`
-  - [ ] Write computed dates to `festival_calendar` Drift table
-
-- [ ] 🆕🟡 Create fallback static JSON asset `assets/festival_dates_2024_2030.json` — pre-computed dates for 2024–2030 for all 30+ festivals; used if algorithmic computation fails or on first launch before engine runs
+- [x] 🆕🔴🟡 Create `lib/features/festival_calendar/domain/festival_date_engine.dart` — multi-calendar algorithmic date computation:
+  - [x] **Hindu lunisolar** — implement Meeus tithi algorithm (Gudi Padwa added)
+  - [x] **Islamic Hijri (Umm al-Qura algorithm)** — compute Gregorian equivalent
+  - [x] **Sikh Nanakshahi calendar** — Baisakhi (Apr 13/14), Guru Nanak Jayanti
+  - [x] **Gregorian fixed** — Lohri, Makar Sankranti, Pongal, Republic Day, Independence Day, Christmas, Bihu, Vishu
+  - [x] Compute for years: `[currentYear - 1, currentYear, currentYear + 1, currentYear + 2]`
+  - [x] Write computed dates to `festival_calendar` Drift table
+- [x] 🆕🟡 Create fallback static JSON asset `assets/festival_dates_2024_2030.json` — pre-computed dates for 2024–2030 for all 30+ festivals; used if algorithmic computation fails or on first launch before engine runs
 - [ ] 🆕🟢 Unit test the engine for at least 5 festivals across 3 years; cross-check results against `drikpanchang.com` reference dates
 
 ### 13A.2 Annual Refresh — Appwrite Function
@@ -686,16 +655,16 @@
   - [x] `getWeddingPhase(String userId, DateTime date)` — returns `pre_wedding` / `wedding_week` / `post_wedding`
 
 ### 13A.4 Festival Diet Plan Engine
-- [ ] 🆕🔴🟡 Create `lib/features/festival_calendar/domain/festival_diet_engine.dart`:
-  - [ ] `FestivalDietConfig` per festival — fasting type, allowed food IDs, forbidden food IDs, calorie multiplier, workout suppression flag, insight card message
-  - [ ] `getActiveDietConfig(DateTime date)` — checks `FestivalCalendarDao`, returns merged config if multiple festivals active
-  - [ ] Expose as a `FestivalDietProvider` (Riverpod) — consumed by Meal Planner + Nutrition Goal Engine + Dashboard InsightCard
+- [x] 🆕🔴🟡 Create `lib/features/festival_calendar/domain/festival_diet_engine.dart`:
+  - [x] `FestivalDietConfig` per festival — fasting type, allowed food IDs, forbidden food IDs, calorie multiplier, workout suppression flag, insight card message
+  - [x] `getActiveDietConfig(DateTime date)` — checks `FestivalCalendarDao`, returns merged config if multiple festivals active
+  - [x] Expose as a `FestivalDietProvider` (Riverpod) — consumed by Meal Planner + Nutrition Goal Engine + Dashboard InsightCard
 - [ ] 🆕🟡 **Iftar/Sehri time computation** — for Ramadan:
   - [ ] Compute sunset time from user GPS latitude + longitude + date using astronomical formula (Meeus)
   - [ ] Cache result in Drift per (lat, lon, date) — recompute only when date or location changes significantly (>5 km)
   - [ ] Surface as countdown widget on Dashboard and Meal Planner during Ramadan
 - [ ] 🆕🟡 **Moonrise computation for Karva Chauth** — same astronomical formula; cache in Drift
-- [ ] 🆕🟡 **Allowed/Forbidden food filter** — when a fasting festival is active, filter `food_items` FTS5 search to show only `allowedFoods` list; show a "Not allowed during [festival]" banner on forbidden items
+- [x] 🆕🟡 **Allowed/Forbidden food filter** — when a fasting festival is active, filter `food_items` FTS5 search to show only `allowedFoods` list; show a "Not allowed during [festival]" banner on forbidden items
 - [ ] 🆕🟢 **Garba calorie burn tracker** (Navratri):
   - [ ] Add "Garba" as a workout type in the workout module (MET value: 5.5 for moderate, 7.0 for vigorous Garba)
   - [ ] Surface as a quick-log shortcut from the Navratri festival banner on Dashboard
@@ -704,7 +673,7 @@
 - [x] 🆕🟡 Build `FestivalCalendarScreen` `/festival-calendar` — upcoming festivals list + active banner + region filter + mini calendar + "Plan a Wedding" CTA (see UI spec Section 7.14)
 - [x] 🆕🟡 Build `FestivalDietPlanScreen` `/festival-calendar/{festivalKey}/diet` — diet plan tabs per day; allowed foods grid; quick log CTA; workout note banner; festival-specific additions (Ramadan countdown, Karva Chauth moonrise)
 - [x] 🆕🟢 Build `FestivalReminderBottomSheet` — "Set Reminder" for upcoming festivals; creates a local notification N days before start date (user-configurable: 7 days / 3 days / 1 day before)
-- [ ] 🆕🟢 Add **region filter persistence** — user's selected religion/region filter stored in Drift `user_preferences`; irrelevant festivals hidden by default
+- [x] 🆕🟢 Add **region filter persistence** — user's selected religion/region filter stored in Drift `user_preferences`; irrelevant festivals hidden by default
 
 ### 13A.6 Festival Karma Challenges
 - [ ] 🆕🟡 **Seasonal Leaderboard per festival** — auto-create a `leaderboard_season` in Appwrite scoped to the festival date range:
@@ -722,15 +691,15 @@
 > *Role-based, date-range-aware, event-by-event wedding diet and fitness planner.*
 
 ### 13B.1 Wedding Data Layer
-- [ ] 🆕🟡 Create `WeddingEvents` Drift table and `WeddingEventsDao` (defined in Phase 13A.3)
-- [ ] 🆕🟡 Add wedding fields to `users` Appwrite collection (see Section 6 `users` table): `wedding_role`, `wedding_relation_type`, `wedding_start_date`, `wedding_end_date`, `wedding_prep_weeks`, `wedding_events` (JSON), `wedding_primary_goal`
-- [ ] 🆕🟡 Create `WeddingDietEngine` — generates phase-aware diet plans:
-  - [ ] `getWeddingDietPhase(userId, date)` → `pre_wedding` / `wedding_week` / `post_wedding`
-  - [ ] `getPreWeddingPlan(role, weeksRemaining)` → week-by-week diet plan object
-  - [ ] `getEventDayPlan(role, eventType)` → pre-event meal + during-event tips + post-event recovery meal per event
-  - [ ] `getPostWeddingPlan(role)` → 3-day detox + gradual return plan
-  - [ ] All computation on-device — zero server calls
-- [ ] 🆕🟡 Create `WeddingFitnessEngine` — generates pre-wedding workout schedule per role and prep weeks
+- [x] 🆕🟡 Create `WeddingEvents` Drift table and `WeddingEventsDao` (defined in Phase 13A.3)
+- [x] 🆕🟡 Add wedding fields to `users` Appwrite collection (see Section 6 `users` table): `wedding_role`, `wedding_relation_type`, `wedding_start_date`, `wedding_end_date`, `wedding_prep_weeks`, `wedding_events` (JSON), `wedding_primary_goal`
+- [x] 🆕🟡 Create `WeddingDietEngine` — generates phase-aware diet plans:
+  - [x] `getWeddingDietPhase(userId, date)` → `pre_wedding` / `wedding_week` / `post_wedding`
+  - [x] `getPreWeddingPlan(role, weeksRemaining)` → week-by-week diet plan object
+  - [x] `getEventDayPlan(role, eventType)` → pre-event meal + during-event tips + post-event recovery meal per event
+  - [x] `getPostWeddingPlan(role)` → 3-day detox + gradual return plan
+  - [x] All computation on-device — zero server calls
+- [x] 🆕🟡 Create `WeddingFitnessEngine` — generates pre-wedding workout schedule per role and prep weeks
 
 ### 13B.2 Wedding Onboarding Flow
 - [x] 🆕🟡 Build `/wedding-planner/setup` — 6-step onboarding (see UI spec Section 7.14):
@@ -752,20 +721,20 @@
 - [x] 🆕🟢 Build `WeddingGroceryListScreen` `/wedding-planner/groceries` — auto-generated shopping list for wedding week meals; Swiggy/Blinkit deep-links
 
 ### 13B.4 Wedding Dashboard Integration
-- [ ] 🆕🟡 When `weddingStartDate ≤ today ≤ weddingEndDate`, replace the standard `InsightCard` on the Dashboard with `WeddingCountdownCard` (gold gradient):
-  - [ ] Shows: days to next event + role + current phase + today's key diet tip
-  - [ ] "View Full Plan" → `/wedding-planner`
-  - [ ] "Log Today's Meals" → `/home/food`
+- [x] 🆕🟡 When `weddingStartDate ≤ today ≤ weddingEndDate`, replace the standard `InsightCard` on the Dashboard with `WeddingCountdownCard` (gold gradient):
+  - [x] Shows: days to next event + role + current phase + today's key diet tip
+  - [x] "View Full Plan" → `/wedding-planner`
+  - [x] "Log Today's Meals" → `/home/food`
 - [ ] 🆕🟢 Push notification morning of each wedding event day — e.g. *"Today is your Sangeet! 💃 Here's your energy meal plan for the day."* Triggered by `flutter_local_notifications` scheduled at `weddingStartDate` calculation time
 - [ ] 🆕🟢 Push notification 1 week before `weddingStartDate` — "Wedding countdown starts! Your pre-wedding plan is ready."
 - [ ] 🆕🟢 Add **Festival/Wedding Countdown home screen widget** (2×2) — shows active festival OR wedding countdown, whichever is sooner; wedding takes priority if both active; updates daily from Drift
 
 ### 13B.5 Wedding + Festival Overlap Logic
-- [ ] 🆕🟡 In `FestivalDietEngine.getActiveDietConfig()` — check if a wedding plan is also active:
-  - [ ] If both active: wedding role plan takes precedence for calorie targets and workout plan
-  - [ ] Festival fasting rules shown as optional modifier (informational only, not enforced)
-  - [ ] Insight card merges both contexts with a combined message
-  - [ ] Allowed food list = union of `weddingAllowedFoods` and `festivalAllowedFoods`
+- [x] 🆕🟡 In `FestivalDietEngine.getActiveDietConfig()` — check if a wedding plan is also active:
+  - [x] If both active: wedding role plan takes precedence for calorie targets and workout plan
+  - [x] Festival fasting rules shown as optional modifier (informational only, not enforced)
+  - [x] Insight card merges both contexts with a combined message
+  - [x] Allowed food list = union of `weddingAllowedFoods` and `festivalAllowedFoods`
 - [ ] 🆕🟢 Write a unit test for each overlap scenario: Diwali+wedding, Navratri+wedding, Ramadan+wedding
 
 ---

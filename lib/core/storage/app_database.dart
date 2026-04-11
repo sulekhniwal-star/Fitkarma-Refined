@@ -17,14 +17,14 @@ part 'app_database.g.dart';
     MoodLogs, Medications, Habits, HabitCompletions, BodyMeasurements,
     FastingLogs, MealPlans, Recipes, PersonalRecords, NutritionGoals,
     KarmaTransactions, SyncQueue, SyncDeadLetter, UserProfiles,
-    Exercises, ExerciseSets, Workouts,
+    Exercises, ExerciseSets, Workouts, WaterLogs,
     // Sensitive / encrypted tables
     BloodPressureLogs, GlucoseLogs, Spo2Logs, PeriodLogs,
     JournalEntries, DoctorAppointments,
     // India-specific tables
     LabReports, AbhaLinks,
     // Platform / infrastructure tables
-    EmergencyCards, FestivalCalendar, WeddingEvents, RemoteConfigCaches,
+    EmergencyCards, FestivalCalendar, WeddingEvents, RemoteConfigCaches, UserStreaks,
   ],
   daos: [
     FoodLogsDao, FoodItemsDao, WorkoutLogsDao, StepLogsDao, SleepLogsDao,
@@ -35,11 +35,13 @@ part 'app_database.g.dart';
     EmergencyCardDao, FestivalCalendarDao, RemoteConfigCacheDao,
     KarmaTransactionsDao, NutritionGoalsDao, PersonalRecordsDao,
     SyncQueueDao, SyncDeadLetterDao, UserProfilesDao,
-    ExercisesDao, ExerciseSetsDao, WorkoutsDao, WeddingEventsDao,
+    ExercisesDao, ExerciseSetsDao, WorkoutsDao, WeddingEventsDao, StreaksDao,
+    WaterLogsDao,
   ],
 )
 class AppDatabase extends _$AppDatabase {
   AppDatabase(String encryptionKey) : super(_openConnection(encryptionKey));
+  AppDatabase.forTesting(super.executor);
 
   static QueryExecutor _openConnection(String encryptionKey) {
     return LazyDatabase(() async {
@@ -56,7 +58,7 @@ class AppDatabase extends _$AppDatabase {
   }
 
   @override
-  int get schemaVersion => 10;
+  int get schemaVersion => 11;
 
   @override
   MigrationStrategy get migration {
@@ -110,6 +112,10 @@ class AppDatabase extends _$AppDatabase {
           await m.deleteTable('festival_calendar'); // recreating with new schema
           await m.createTable(festivalCalendar);
           await m.createTable(weddingEvents);
+        }
+        // v10 → v11: Add previousStreakCount to user_streaks
+        if (from < 11) {
+          await m.addColumn(userStreaks, userStreaks.previousStreakCount);
         }
       },
       onCreate: (m) async {
@@ -361,11 +367,22 @@ class RemoteConfigCacheDao extends DatabaseAccessor<AppDatabase> with _$RemoteCo
 @DriftAccessor(tables: [KarmaTransactions])
 class KarmaTransactionsDao extends DatabaseAccessor<AppDatabase> with _$KarmaTransactionsDaoMixin {
   KarmaTransactionsDao(super.db);
+
+  Stream<List<KarmaTransaction>> watchRecentTransactions(String userId, {int limit = 50}) {
+    return (select(karmaTransactions)
+          ..where((t) => t.userId.equals(userId))
+          ..orderBy([(t) => OrderingTerm(expression: t.createdAt, mode: OrderingMode.desc)])
+          ..limit(limit))
+        .watch();
+  }
 }
 
 @DriftAccessor(tables: [NutritionGoals])
 class NutritionGoalsDao extends DatabaseAccessor<AppDatabase> with _$NutritionGoalsDaoMixin {
   NutritionGoalsDao(super.db);
+
+  Future<NutritionGoal?> getGoals(String userId) =>
+      (select(nutritionGoals)..where((t) => t.userId.equals(userId))..orderBy([(t) => OrderingTerm(expression: t.updatedAt, mode: OrderingMode.desc)])..limit(1)).getSingleOrNull();
 }
 
 @DriftAccessor(tables: [PersonalRecords])
@@ -410,5 +427,38 @@ class WorkoutsDao extends DatabaseAccessor<AppDatabase> with _$WorkoutsDaoMixin 
 
   Future<List<Workout>> getAllWorkouts() => select(workouts).get();
   Future<List<Workout>> getByCategory(String category) => (select(workouts)..where((t) => t.category.equals(category))).get();
+}
+
+@DriftAccessor(tables: [UserStreaks])
+class StreaksDao extends DatabaseAccessor<AppDatabase> with _$StreaksDaoMixin {
+  StreaksDao(super.db);
+
+  Future<UserStreak?> getStreak(String userId, String activityType) {
+    return (select(userStreaks)..where((t) => t.userId.equals(userId) & t.activityType.equals(activityType))).getSingleOrNull();
+  }
+
+  Future<void> upsertStreak(UserStreaksCompanion companion) {
+    return into(userStreaks).insertOnConflictUpdate(companion);
+  }
+  
+  Stream<List<UserStreak>> watchAllStreaks(String userId) {
+    return (select(userStreaks)..where((t) => t.userId.equals(userId))).watch();
+  }
+}
+
+@DriftAccessor(tables: [WaterLogs])
+class WaterLogsDao extends DatabaseAccessor<AppDatabase> with _$WaterLogsDaoMixin {
+  WaterLogsDao(super.db);
+  
+  Future<void> logWater(WaterLogsCompanion log) => into(waterLogs).insert(log);
+
+  Future<double> getTodayWater(String userId) async {
+    final now = DateTime.now();
+    final startOfDay = DateTime(now.year, now.month, now.day);
+    final results = await (select(waterLogs)
+          ..where((t) => t.userId.equals(userId) & t.loggedAt.isBiggerOrEqual(Variable(startOfDay))))
+        .get();
+    return results.fold(0.0, (sum, log) => sum + log.amountGlasses);
+  }
 }
 

@@ -131,6 +131,7 @@ class MoodLogs extends Table {
   IntColumn get score => integer()(); // 1-5
   IntColumn get energyLevel => integer().nullable()();
   IntColumn get stressLevel => integer().nullable()();
+  IntColumn get screenTimeMin => integer().nullable()();
   TextColumn get tags => text().nullable()(); // JSON list
   TextColumn get notes => text().nullable()();
   DateTimeColumn get loggedAt => dateTime()();
@@ -184,6 +185,18 @@ class Workouts extends Table {
   RealColumn get rpeLevel => real().nullable()();
   TextColumn get thumbnailUrl => text().nullable()();
   
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
+@DataClassName('WaterLog')
+class WaterLogs extends Table {
+  TextColumn get id => text()();
+  TextColumn get userId => text()();
+  RealColumn get amountGlasses => real()();
+  DateTimeColumn get loggedAt => dateTime()();
+  TextColumn get syncStatus => text().withDefault(const Constant('pending'))();
+
   @override
   Set<Column> get primaryKey => {id};
 }

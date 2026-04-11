@@ -247,3 +247,28 @@ class RemoteConfigCaches extends Table {
   @override
   Set<Column> get primaryKey => {key};
 }
+
+@DataClassName('UserStreak')
+class UserStreaks extends Table {
+  TextColumn get userId => text()();
+  TextColumn get activityType => text()(); // food, steps, workout, water
+  IntColumn get streakCount => integer().withDefault(const Constant(0))();
+  IntColumn get previousStreakCount => integer().withDefault(const Constant(0))();
+  DateTimeColumn get lastActivityDate => dateTime().nullable()();
+  DateTimeColumn get lastRecoveryDate => dateTime().nullable()();
+  TextColumn get syncStatus => text().withDefault(const Constant('pending'))();
+
+  @override
+  Set<Column> get primaryKey => {userId, activityType};
+}
+
+@DataClassName('InsightFeedback')
+class InsightFeedbacks extends Table {
+  TextColumn get userId => text()();
+  TextColumn get ruleId => text()();
+  BoolColumn get isPositive => boolean()(); // true for 👍, false for 👎
+  DateTimeColumn get createdAt => dateTime()();
+
+  @override
+  Set<Column> get primaryKey => {userId, ruleId};
+}

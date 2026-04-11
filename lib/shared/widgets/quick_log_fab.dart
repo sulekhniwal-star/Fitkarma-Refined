@@ -3,19 +3,19 @@ import 'package:flutter/material.dart';
 class QuickLogFAB extends StatefulWidget {
   final VoidCallback onFood;
   final VoidCallback onWorkout;
-  final VoidCallback onWeight;
+  final VoidCallback onBp;
+  final VoidCallback onGlucose;
   final VoidCallback onWater;
   final VoidCallback onMood;
-  final VoidCallback onSleep;
 
   const QuickLogFAB({
     super.key,
     required this.onFood,
     required this.onWorkout,
-    required this.onWeight,
+    required this.onBp,
+    required this.onGlucose,
     required this.onWater,
     required this.onMood,
-    required this.onSleep,
   });
 
   @override
@@ -61,10 +61,10 @@ class _QuickLogFABState extends State<QuickLogFAB> with SingleTickerProviderStat
         if (_isOpen) ...[
           _buildActionButton(Icons.restaurant, 'Food', widget.onFood, 1),
           _buildActionButton(Icons.fitness_center, 'Workout', widget.onWorkout, 2),
-          _buildActionButton(Icons.monitor_weight, 'Weight', widget.onWeight, 3),
-          _buildActionButton(Icons.local_drink, 'Water', widget.onWater, 4),
-          _buildActionButton(Icons.sentiment_satisfied, 'Mood', widget.onMood, 5),
-          _buildActionButton(Icons.bedtime, 'Sleep', widget.onSleep, 6),
+          _buildActionButton(Icons.favorite, 'BP', widget.onBp, 3),
+          _buildActionButton(Icons.bloodtype, 'Glucose', widget.onGlucose, 4),
+          _buildActionButton(Icons.local_drink, 'Water', widget.onWater, 5),
+          _buildActionButton(Icons.sentiment_satisfied, 'Mood', widget.onMood, 6),
           const SizedBox(height: 16),
         ],
         FloatingActionButton(
