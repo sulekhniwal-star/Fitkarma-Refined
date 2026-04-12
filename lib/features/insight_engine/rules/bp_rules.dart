@@ -69,7 +69,7 @@ class BpCrisisRule extends InsightRule {
     final diastolic = (latest['diastolic'] as num?)?.toInt() ?? 0;
 
     if (systolic >= 180 || diastolic >= 120) {
-      return const InsightOutput(
+      return InsightOutput(
         ruleId: 'bp_crisis',
         module: InsightModule.bloodPressure,
         priority: InsightPriority.critical,
@@ -80,7 +80,7 @@ class BpCrisisRule extends InsightRule {
         actionLabel: 'Emergency Card',
         actionRoute: '/health/emergency',
         icon: Icons.warning_rounded,
-        color: Color(0xFFC0392B),
+        color: const Color(0xFFC0392B),
       );
     }
     return null;

@@ -9,6 +9,7 @@ import '../../../core/storage/app_database.dart';
 import '../../auth/data/auth_repository.dart';
 import '../../../shared/theme/app_colors.dart';
 import '../../../shared/widgets/bilingual_text.dart';
+import '../../../core/services/notification_service.dart';
 
 class WeddingPlannerHomeScreen extends ConsumerWidget {
   const WeddingPlannerHomeScreen({super.key});
@@ -377,9 +378,42 @@ class _WeddingSetupScreenState extends ConsumerState<WeddingSetupScreen> {
       ),
     );
 
+    // Schedule notifications
+    try {
+      final startId = _dateRange!.start.millisecondsSinceEpoch % 100000;
+      
+      // 1 week before
+      final oneWeekBefore = _dateRange!.start.subtract(const Duration(days: 7));
+      if (oneWeekBefore.isAfter(DateTime.now())) {
+        await NotificationService.schedule(
+          id: startId + 777,
+          title: 'Wedding Countdown Begins! ⏳',
+          body: 'Your pre-wedding plan is active. Check today\'s glow tips!',
+          scheduledDate: DateTime(oneWeekBefore.year, oneWeekBefore.month, oneWeekBefore.day, 9, 0),
+        );
+      }
+      
+      // Morning of each event day
+      final days = _dateRange!.end.difference(_dateRange!.start).inDays + 1;
+      for (int i = 0; i < days; i++) {
+        final day = _dateRange!.start.add(Duration(days: i));
+        final scheduledTime = DateTime(day.year, day.month, day.day, 8, 0); // 8 AM
+        if (scheduledTime.isAfter(DateTime.now())) {
+          await NotificationService.schedule(
+            id: startId + i,
+            title: 'Wedding Event Day ${i + 1}! 💃',
+            body: 'Here\'s your energy meal plan for the day to stay active and glowing.',
+            scheduledDate: scheduledTime,
+          );
+        }
+      }
+    } catch (e) {
+      // Ignore notification failures in UI
+    }
+
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Wedding plan saved!')),
+        const SnackBar(content: Text('Wedding plan saved! Notifications scheduled.')),
       );
       Navigator.pop(context);
     }

@@ -171,11 +171,16 @@ class _SectionHeader extends StatelessWidget {
 
 
 
-class ProfileScreen extends StatelessWidget {
+import '../../lifestyle/data/lifestyle_providers.dart';
+
+class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(currentUserProvider).asData?.value;
+    final chronotype = ref.watch(chronotypeProvider(user?.$id ?? ''));
+
     return Scaffold(
       appBar: AppBar(title: const Text('Profile')),
       body: SingleChildScrollView(
@@ -184,8 +189,8 @@ class ProfileScreen extends StatelessWidget {
           children: [
             const CircleAvatar(radius: 50, child: Icon(Icons.person, size: 50)),
             const SizedBox(height: 16),
-            Text('User Name', style: Theme.of(context).textTheme.headlineSmall),
-            Text('user@email.com', style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey)),
+            Text(user?.name ?? 'User Name', style: Theme.of(context).textTheme.headlineSmall),
+            Text(user?.email ?? 'user@email.com', style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey)),
             const SizedBox(height: 24),
             Card(
               child: Padding(
@@ -196,6 +201,14 @@ class ProfileScreen extends StatelessWidget {
                     _ProfileRow(label: 'Current Streak', value: '12 days'),
                     _ProfileRow(label: 'Total XP', value: '2,450'),
                     _ProfileRow(label: 'Level', value: 'Level 5'),
+                    chronotype.when(
+                      data: (type) => _ProfileRow(
+                        label: 'Chronotype', 
+                        value: type ?? 'Analyzing (need 30 days)'
+                      ),
+                      loading: () => const _ProfileRow(label: 'Chronotype', value: 'Loading...'),
+                      error: (err, st) => const _ProfileRow(label: 'Chronotype', value: 'Error'),
+                    ),
                   ],
                 ),
               ),

@@ -64,6 +64,8 @@ class InsightContext {
     required this.nutritionGoals,
     this.recentFastingLogs = const [],
     this.activeFestivals = const [],
+    this.hasLabReports = false,
+    this.accountAgeDays = 0,
   });
 
   final String userId;
@@ -78,6 +80,8 @@ class InsightContext {
   final List<Map<String, dynamic>> recentFastingLogs;
   final Map<String, dynamic>? nutritionGoals;
   final List<Map<String, dynamic>> activeFestivals;
+  final bool hasLabReports;
+  final int accountAgeDays;
 }
 
 /// The output of a fired rule — shown on the Dashboard as an InsightCard.

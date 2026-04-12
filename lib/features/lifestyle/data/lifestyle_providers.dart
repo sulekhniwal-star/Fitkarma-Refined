@@ -54,3 +54,40 @@ final sleepDebtProvider = Provider.family<AsyncValue<int>, String>((ref, userId)
     error: (e, st) => AsyncError(e, st),
   );
 });
+
+final chronotypeProvider = FutureProvider.family<String?, String>((ref, userId) async {
+  final db = ref.watch(databaseProvider);
+  final logs = await db.sleepLogsDao.getLast30DaysLogs(userId);
+  
+  if (logs.length < 30) return null; // Need 30 days of logs for classification
+
+  final bedTimesMin = logs.map((log) {
+    try {
+      final parts = log.bedtime.split(':');
+      final hour = int.parse(parts[0]);
+      final min = int.parse(parts[1]);
+      // Normalize to minutes past 6 PM to handle passing midnight
+      int normalizedHour = hour;
+      if (normalizedHour < 18) {
+        normalizedHour += 24;
+      }
+      return (normalizedHour * 60) + min;
+    } catch (e) {
+      return 22 * 60; // fallback to 10 PM
+    }
+  }).toList();
+
+  bedTimesMin.sort();
+  final medianBedtimeMin = bedTimesMin[bedTimesMin.length ~/ 2];
+  
+  // Median < 10:30 PM (22.5 h) -> Early Bird
+  // Median > 12:30 AM (24.5 h) -> Night Owl
+  // Else -> Intermediate
+  if (medianBedtimeMin < (22.5 * 60)) {
+    return 'Early Bird';
+  } else if (medianBedtimeMin > (24.5 * 60)) {
+    return 'Night Owl';
+  } else {
+    return 'Intermediate';
+  }
+});

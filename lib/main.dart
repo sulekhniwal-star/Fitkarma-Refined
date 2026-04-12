@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_jailbreak_detection/flutter_jailbreak_detection.dart';
 import 'app.dart';
 import 'core/storage/drift_service.dart';
 import 'core/network/sync_background_worker.dart';
@@ -11,15 +10,6 @@ import 'core/services/notification_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  // Root detection
-  try {
-    final bool jailbroken = await FlutterJailbreakDetection.jailbroken;
-    final bool devMode = await FlutterJailbreakDetection.developerMode;
-    if (jailbroken || devMode) {
-      debugPrint('SECURITY WARNING: Device is jailbroken/rooted or in Developer Mode.');
-    }
-  } catch (_) {}
   
   // 1. Load environment variables
   try {

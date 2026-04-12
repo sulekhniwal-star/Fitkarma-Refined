@@ -6,6 +6,8 @@ import '../rules/nutrition_rules.dart';
 import '../rules/sleep_rules.dart';
 import '../rules/bp_rules.dart';
 import '../rules/glucose_rules.dart';
+import '../models/server_insight_rule.dart';
+import '../../../core/config/remote_config.dart';
 
 part 'rule_evaluator.g.dart';
 
@@ -26,6 +28,7 @@ class RuleEvaluator {
     FastingBpCorrelationRule(),
     ScreenTimeMoodRule(),
     FestivalCalorieRule(),
+    UploadLabReportPromptRule(),
 
     // Nutrition
     ProteinGapRule(),
@@ -34,6 +37,7 @@ class RuleEvaluator {
     // Sleep
     SleepDebtRule(),
     SleepConsistencyRule(),
+    ChronotypeNudgeRule(),
 
     // Health
     BpHighAlertRule(),
@@ -45,6 +49,7 @@ class RuleEvaluator {
   static Future<List<InsightOutput>> evaluate({
     required String userId,
     required dynamic db, // AppDatabase
+    List<Map<String, dynamic>> serverRulesConfig = const [],
   }) async {
     final now = DateTime.now();
     final thirtyDaysAgo = now.subtract(const Duration(days: 30));
@@ -110,6 +115,27 @@ class RuleEvaluator {
       nutritionGoals = goalsResult.first.data;
     }
 
+    final labReportsResult = await db.customSelect(
+      'SELECT id FROM lab_reports WHERE user_id = ? LIMIT 1',
+      variables: [db.variable(userId)],
+    ).get();
+    final hasLabReports = labReportsResult.isNotEmpty;
+
+    final userProfileResult = await db.customSelect(
+      'SELECT created_at FROM user_profiles WHERE id = ? LIMIT 1',
+      variables: [db.variable(userId)],
+    ).get();
+    int accountAgeDays = 0;
+    if (userProfileResult.isNotEmpty && userProfileResult.first.data['created_at'] != null) {
+      try {
+        final int createdAtMillis = userProfileResult.first.data['created_at'] is int ? userProfileResult.first.data['created_at'] as int : int.parse(userProfileResult.first.data['created_at'].toString());
+        final createdAt = DateTime.fromMillisecondsSinceEpoch(createdAtMillis * 1000);
+        accountAgeDays = now.difference(createdAt).inDays;
+      } catch (e) {
+        // Ignored
+      }
+    }
+
     final context = InsightContext(
       userId: userId,
       today: now,
@@ -123,10 +149,17 @@ class RuleEvaluator {
       recentFastingLogs: fastingLogs.map((r) => r.data).toList(),
       activeFestivals: activeFestivals.map((r) => r.data).toList(),
       nutritionGoals: nutritionGoals,
+      hasLabReports: hasLabReports,
+      accountAgeDays: accountAgeDays,
     );
 
     // ── Evaluate all rules in parallel (excluding suppressed ones) ───────────
-    final futures = _registry
+    final allRules = [
+      ..._registry,
+      ...serverRulesConfig.map((config) => ServerInsightRule(config)),
+    ];
+
+    final futures = allRules
         .where((rule) => !suppressedRuleIds.contains(rule.id))
         .map((rule) => _safeEvaluate(rule, context));
     final results = await Future.wait(futures);
@@ -153,5 +186,11 @@ class RuleEvaluator {
 Future<List<InsightOutput>> insightEngine(Ref ref, String userId) async {
   if (userId.isEmpty) return [];
   final db = ref.watch(databaseProvider);
-  return RuleEvaluator.evaluate(userId: userId, db: db);
+  final remoteConfig = await ref.watch(remoteConfigServiceProvider.future);
+  
+  return RuleEvaluator.evaluate(
+    userId: userId, 
+    db: db,
+    serverRulesConfig: remoteConfig.getServerRules(),
+  );
 }

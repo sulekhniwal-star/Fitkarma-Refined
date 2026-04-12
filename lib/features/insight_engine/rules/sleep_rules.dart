@@ -99,3 +99,72 @@ class SleepConsistencyRule extends InsightRule {
     );
   }
 }
+
+/// Rule for personalised nudges based on chronotype.
+class ChronotypeNudgeRule extends InsightRule {
+  const ChronotypeNudgeRule();
+
+  @override
+  String get id => 'chronotype_nudge';
+
+  @override
+  String get name => 'Chronotype-based personalised nudge';
+
+  @override
+  InsightModule get module => InsightModule.sleep;
+
+  @override
+  Future<InsightOutput?> evaluate(InsightContext ctx) async {
+    if (ctx.recentSleepLogs.length < 30) return null;
+
+    final bedTimesMin = ctx.recentSleepLogs.take(30).map((log) {
+      final parts = (log['bedtime'] as String).split(':');
+      final hour = int.parse(parts[0]);
+      final min = int.parse(parts[1]);
+      int normalizedHour = hour < 18 ? hour + 24 : hour;
+      return (normalizedHour * 60) + min;
+    }).toList();
+
+    bedTimesMin.sort();
+    final medianBedtimeMin = bedTimesMin[bedTimesMin.length ~/ 2];
+
+    final nowHr = ctx.today.hour;
+
+    // Early Bird
+    if (medianBedtimeMin < (22.5 * 60)) {
+      // Suggest calming down if it's past 8 PM
+      if (nowHr >= 20 && nowHr < 22) {
+        return const InsightOutput(
+          ruleId: 'chronotype_nudge',
+          module: InsightModule.sleep,
+          priority: InsightPriority.normal,
+          titleEn: '🌅 Early Bird Wind Down',
+          titleHi: 'सोने का समय हो रहा है',
+          bodyEn: 'As an Early Bird, your body naturally wants to rest soon. Start dimming lights and avoiding screens now to protect your sleep quality.',
+          bodyHi: 'आपके जल्दी सोने के रूटीन के अनुसार, अब स्क्रीन से दूर होने का समय है।',
+          icon: Icons.wb_twilight,
+          color: Color(0xFFE67E22),
+        );
+      }
+    } 
+    // Night Owl
+    else if (medianBedtimeMin > (24.5 * 60)) {
+      // Suggest morning sunlight if it's morning
+      if (nowHr >= 8 && nowHr < 11) {
+         return const InsightOutput(
+          ruleId: 'chronotype_nudge',
+          module: InsightModule.sleep,
+          priority: InsightPriority.normal,
+          titleEn: '🦉 Night Owl Morning Anchor',
+          titleHi: 'सुबह की धूप लें',
+          bodyEn: 'As a Night Owl, getting 15 mins of morning sunlight right now is crucial to anchor your circadian rhythm and feel alert today.',
+          bodyHi: 'एक नाइट आउल के रूप में, अभी 15 मिनट की सुबह की धूप लेना आपके लिए आवश्यक है।',
+          icon: Icons.light_mode,
+          color: Color(0xFFF1C40F),
+        );
+      }
+    }
+    
+    return null;
+  }
+}

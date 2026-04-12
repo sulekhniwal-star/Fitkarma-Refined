@@ -223,7 +223,7 @@ class _FastingScreenState extends ConsumerState<FastingScreen> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Level: ${_protocol}', style: const TextStyle(fontWeight: FontWeight.bold)),
+                  Text('Level: $_protocol', style: const TextStyle(fontWeight: FontWeight.bold)),
                   Text('Started at ${DateFormat('jm').format(_startTime!)}', style: TextStyle(color: Colors.grey[600], fontSize: 13)),
                 ],
               ),

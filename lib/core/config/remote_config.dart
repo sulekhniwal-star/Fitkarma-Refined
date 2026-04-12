@@ -32,6 +32,15 @@ class RemoteConfig {
   bool isKilled(String featureKey) {
     return getBool('kill_switch.$featureKey', defaultValue: false);
   }
+
+  /// Returns server-delivered insight rules as a JSON array.
+  List<Map<String, dynamic>> getServerRules() {
+    final val = _config['server_rules'];
+    if (val is List) {
+      return val.whereType<Map<String, dynamic>>().toList();
+    }
+    return [];
+  }
 }
 
 /// Service that manages Appwrite Remote Config and local Drift caching.

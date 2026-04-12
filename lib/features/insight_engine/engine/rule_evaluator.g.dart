@@ -70,7 +70,7 @@ final class InsightEngineProvider
   }
 }
 
-String _$insightEngineHash() => r'ed310d6c86e34e99736ed8c1905f8af1f3862c67';
+String _$insightEngineHash() => r'c97e98187d61d60638182209e8ff5b11302769e4';
 
 /// Riverpod provider that exposes the insight list for a given userId.
 

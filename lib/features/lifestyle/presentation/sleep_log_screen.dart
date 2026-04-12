@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../core/storage/app_database.dart';
 import '../../auth/data/auth_repository.dart';
 import '../data/lifestyle_providers.dart';
 import '../data/lifestyle_repository.dart';
@@ -283,7 +282,7 @@ class _SleepLogScreenState extends ConsumerState<SleepLogScreen> {
         );
       },
       loading: () => const SizedBox.shrink(),
-      error: (_, __) => const SizedBox.shrink(),
+      error: (_, _) => const SizedBox.shrink(),
     );
   }
 }

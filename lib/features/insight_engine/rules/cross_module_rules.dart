@@ -393,3 +393,40 @@ class FestivalCalorieRule extends InsightRule {
     );
   }
 }
+
+/// Prompt to scan lab reports after 30 days of usage if none are found.
+class UploadLabReportPromptRule extends InsightRule {
+  const UploadLabReportPromptRule();
+
+  @override
+  String get id => 'upload_lab_report_prompt';
+
+  @override
+  String get name => 'Lab report scan reminder';
+
+  @override
+  InsightModule get module => InsightModule.crossModule;
+
+  @override
+  InsightPriority get priority => InsightPriority.low;
+
+  @override
+  Future<InsightOutput?> evaluate(InsightContext ctx) async {
+    if (ctx.hasLabReports) return null;
+    if (ctx.accountAgeDays < 30) return null;
+
+    return const InsightOutput(
+      ruleId: 'upload_lab_report_prompt',
+      module: InsightModule.crossModule,
+      priority: InsightPriority.low,
+      titleEn: '📄 Digitize your Lab Reports',
+      titleHi: 'लैब रिपोर्ट अपलोड करें',
+      bodyEn: 'Upload your recent blood tests or lab reports to get automated health metrics tracking and AI insights.',
+      bodyHi: 'अपनी हाल की स्वास्थ्य जाँच या लैब रिपोर्ट अपलोड करें ताकि हम आपके मेट्रिक्स ट्रैक कर सकें।',
+      actionLabel: 'Scan Report',
+      actionRoute: '/health/lab-report',
+      icon: Icons.document_scanner,
+      color: Color(0xFF3498DB),
+    );
+  }
+}

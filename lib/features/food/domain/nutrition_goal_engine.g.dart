@@ -48,4 +48,4 @@ final class NutritionGoalsProvider
   }
 }
 
-String _$nutritionGoalsHash() => r'31b3684fa3af5eefaa291d5113c748ba7dba9965';
+String _$nutritionGoalsHash() => r'6d7b3363d2f1af5c04a585488591d2633b9dc400';

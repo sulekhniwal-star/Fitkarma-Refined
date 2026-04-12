@@ -152,7 +152,7 @@ class _AddMedicationBottomSheetState extends ConsumerState<AddMedicationBottomSh
           ),
           const SizedBox(height: 16),
           DropdownButtonFormField<String>(
-            value: _frequency,
+            initialValue: _frequency,
             items: ['Daily', 'Twice a day', 'Three times a day', 'Weekly', 'As needed']
                 .map((f) => DropdownMenuItem(value: f, child: Text(f)))
                 .toList(),

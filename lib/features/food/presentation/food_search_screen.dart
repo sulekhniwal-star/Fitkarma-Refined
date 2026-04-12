@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../shared/theme/app_colors.dart';
 import '../../../shared/widgets/bilingual_text.dart';
@@ -25,11 +25,31 @@ class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen> {
   bool _isLoading = false;
 
   Future<void> _scanBarcode() async {
-    final barcode = await FlutterBarcodeScanner.scanBarcode(
-      '#ff6666', 'Cancel', true, ScanMode.BARCODE);
+    final controller = MobileScannerController();
     
-    if (barcode == '-1') return;
+    if (!mounted) return;
     
+    await showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => SizedBox(
+        height: MediaQuery.of(context).size.height * 0.6,
+        child: MobileScanner(
+          controller: controller,
+          onDetect: (capture) async {
+            final barcode = capture.barcodes.firstOrNull?.rawValue;
+            if (barcode != null) {
+              controller.dispose();
+              Navigator.pop(context);
+              await _processBarcode(barcode);
+            }
+          },
+        ),
+      ),
+    );
+  }
+
+  Future<void> _processBarcode(String barcode) async {
     setState(() => _isLoading = true);
     final api = ref.read(foodApiServiceProvider);
     final item = await api.fetchByBarcode(barcode);
@@ -142,9 +162,9 @@ class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen> {
   Widget _scanButton(IconData icon, VoidCallback onPressed) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.primary.withOpacity(0.1),
+        color: AppColors.primary.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.primary.withOpacity(0.3)),
+        border: Border.all(color: AppColors.primary.withValues(alpha: 0.3)),
       ),
       child: IconButton(
         icon: Icon(icon, color: AppColors.primary),
@@ -165,7 +185,7 @@ class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen> {
           child: ListTile(
             contentPadding: const EdgeInsets.all(12),
             leading: CircleAvatar(
-              backgroundColor: AppColors.primary.withOpacity(0.1),
+              backgroundColor: AppColors.primary.withValues(alpha: 0.1),
               child: const Icon(Icons.restaurant, color: AppColors.primary),
             ),
             title: Text(item.name, style: const TextStyle(fontWeight: FontWeight.bold)),

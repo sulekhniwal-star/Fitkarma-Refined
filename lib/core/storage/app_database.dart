@@ -220,6 +220,14 @@ class StepLogsDao extends DatabaseAccessor<AppDatabase> with _$StepLogsDaoMixin 
 @DriftAccessor(tables: [SleepLogs])
 class SleepLogsDao extends DatabaseAccessor<AppDatabase> with _$SleepLogsDaoMixin {
   SleepLogsDao(super.db);
+
+  Future<List<SleepLog>> getLast30DaysLogs(String userId) {
+    return (select(sleepLogs)
+      ..where((t) => t.userId.equals(userId))
+      ..orderBy([(t) => OrderingTerm(expression: t.date, mode: OrderingMode.desc)])
+      ..limit(30))
+      .get();
+  }
 }
 
 @DriftAccessor(tables: [MoodLogs])
@@ -458,7 +466,7 @@ class WaterLogsDao extends DatabaseAccessor<AppDatabase> with _$WaterLogsDaoMixi
     final results = await (select(waterLogs)
           ..where((t) => t.userId.equals(userId) & t.loggedAt.isBiggerOrEqual(Variable(startOfDay))))
         .get();
-    return results.fold(0.0, (sum, log) => sum + log.amountGlasses);
+    return results.fold<double>(0.0, (sum, log) => sum + log.amountGlasses);
   }
 }
 

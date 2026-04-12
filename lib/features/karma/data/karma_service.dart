@@ -5,7 +5,6 @@ import 'package:uuid/uuid.dart';
 
 import '../../../core/storage/app_database.dart';
 import '../../../core/di/providers.dart';
-import '../../../core/storage/drift_service.dart';
 import '../../../core/network/appwrite_service.dart';
 import '../../../core/network/sync_queue.dart';
 import '../../../core/constants/api_endpoints.dart';

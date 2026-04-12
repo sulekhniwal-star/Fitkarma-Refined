@@ -124,7 +124,7 @@
 - [x] `food_item_card.dart` — photo, bilingual name, portion, kcal, `+` button
 - [x] `karma_level_card.dart` — dark purple gradient card with progress bar
 - [x] `dosha_chart.dart` — three-segment donut using `fl_chart`
-- [ ] `challenge_card.dart` — horizontally scrollable challenge card
+- [x] `challenge_card.dart` — horizontally scrollable challenge card
 - [x] `quick_log_fab.dart` — speed-dial orange FAB with 6 sub-actions
 - [x] `meal_tab_bar.dart` — Breakfast / Lunch / Dinner / Snacks tab bar
 - [x] `encryption_badge.dart` — 🔒 AES-256 pill badge for sensitive data
@@ -437,18 +437,18 @@
 
 ### 11.2 Cross-Module Correlation Rules (NEW)
 > *These queries span multiple Drift tables.*
-- [ ] 🆕🔴🟡 Implement `cross_module_rules.dart` with the following correlations:
-  - [ ] **Sleep × Mood**: if `sleep_hours < 6` on day N, check if `mood_score` on day N+1 is ≤ 2; if pattern repeats ≥ 5 times in 30 days → surface insight
-  - [ ] **Workout × Protein**: on days with a logged workout, check if `protein_g < goal * 0.7` → "You under-eat protein on workout days"
-  - [ ] **Fasting × BP**: correlate `fasting_logs.completed = true` days with `bp_logs.systolic`; if average is ≥ 5 mmHg lower → surface positive insight
-  - [ ] **Steps × Glucose**: on days with `step_count >= 8000`, check average post-meal glucose vs non-walking days
-  - [ ] **Festival × Calorie spike**: cross-reference `festival_calendar` dates with `food_logs.calories`; 3 days before a festival → proactive recovery plan nudge
-  - [ ] **RPE × Sleep**: if `workout.rpe >= 8` and `sleep_logs.quality <= 2` on consecutive days → burnout risk alert
-  - [ ] **Screen time × Mood**: if `mood_logs.screen_time_min > 240` correlates with low mood over 7 days → screen time insight
+- [x] 🆕🔴🟡 Implement `cross_module_rules.dart` with the following correlations:
+  - [x] **Sleep × Mood**: if `sleep_hours < 6` on day N, check if `mood_score` on day N+1 is ≤ 2; if pattern repeats ≥ 5 times in 30 days → surface insight
+  - [x] **Workout × Protein**: on days with a logged workout, check if `protein_g < goal * 0.7` → "You under-eat protein on workout days"
+  - [x] **Fasting × BP**: correlate `fasting_logs.completed = true` days with `bp_logs.systolic`; if average is ≥ 5 mmHg lower → surface positive insight
+  - [x] **Steps × Glucose**: on days with `step_count >= 8000`, check average post-meal glucose vs non-walking days
+  - [x] **Festival × Calorie spike**: cross-reference `festival_calendar` dates with `food_logs.calories`; 3 days before a festival → proactive recovery plan nudge
+  - [x] **RPE × Sleep**: if `workout.rpe >= 8` and `sleep_logs.quality <= 2` on consecutive days → burnout risk alert
+  - [x] **Screen time × Mood**: if `mood_logs.screen_time_min > 240` correlates with low mood over 7 days → screen time insight
 
 ### 11.3 Server-Delivered Rules (NEW)
-- [ ] 🆕🟡 Add a `server_rules` key to Remote Config — a JSON array of simple threshold rules that can be updated without an app release (e.g. seasonal hydration thresholds, festival-specific tips)
-- [ ] 🆕🟡 `RuleEvaluator` should merge local hardcoded rules with server-delivered rules before evaluation
+- [x] 🆕🟡 Add a `server_rules` key to Remote Config — a JSON array of simple threshold rules that can be updated without an app release (e.g. seasonal hydration thresholds, festival-specific tips)
+- [x] 🆕🟡 `RuleEvaluator` should merge local hardcoded rules with server-delivered rules before evaluation
 
 ---
 
@@ -631,7 +631,7 @@
   - [x] Compute for years: `[currentYear - 1, currentYear, currentYear + 1, currentYear + 2]`
   - [x] Write computed dates to `festival_calendar` Drift table
 - [x] 🆕🟡 Create fallback static JSON asset `assets/festival_dates_2024_2030.json` — pre-computed dates for 2024–2030 for all 30+ festivals; used if algorithmic computation fails or on first launch before engine runs
-- [ ] 🆕🟢 Unit test the engine for at least 5 festivals across 3 years; cross-check results against `drikpanchang.com` reference dates
+- [x] 🆕🟢 Unit test the engine for at least 5 festivals across 3 years; cross-check results against `drikpanchang.com` reference dates
 
 ### 13A.2 Annual Refresh — Appwrite Function
 - [ ] 🆕🟡 Create `appwrite-functions/refresh-festival-dates/` Node.js function:
@@ -725,9 +725,9 @@
   - [x] Shows: days to next event + role + current phase + today's key diet tip
   - [x] "View Full Plan" → `/wedding-planner`
   - [x] "Log Today's Meals" → `/home/food`
-- [ ] 🆕🟢 Push notification morning of each wedding event day — e.g. *"Today is your Sangeet! 💃 Here's your energy meal plan for the day."* Triggered by `flutter_local_notifications` scheduled at `weddingStartDate` calculation time
-- [ ] 🆕🟢 Push notification 1 week before `weddingStartDate` — "Wedding countdown starts! Your pre-wedding plan is ready."
-- [ ] 🆕🟢 Add **Festival/Wedding Countdown home screen widget** (2×2) — shows active festival OR wedding countdown, whichever is sooner; wedding takes priority if both active; updates daily from Drift
+- [x] 🆕🟢 Push notification morning of each wedding event day — e.g. *"Today is your Sangeet! 💃 Here's your energy meal plan for the day."* Triggered by `flutter_local_notifications` scheduled at `weddingStartDate` calculation time
+- [x] 🆕🟢 Push notification 1 week before `weddingStartDate` — "Wedding countdown starts! Your pre-wedding plan is ready."
+- [x] 🆕🟢 Add **Festival/Wedding Countdown home screen widget** (2×2) — shows active festival OR wedding countdown, whichever is sooner; wedding takes priority if both active; updates daily from Drift
 
 ### 13B.5 Wedding + Festival Overlap Logic
 - [x] 🆕🟡 In `FestivalDietEngine.getActiveDietConfig()` — check if a wedding plan is also active:
@@ -735,7 +735,7 @@
   - [x] Festival fasting rules shown as optional modifier (informational only, not enforced)
   - [x] Insight card merges both contexts with a combined message
   - [x] Allowed food list = union of `weddingAllowedFoods` and `festivalAllowedFoods`
-- [ ] 🆕🟢 Write a unit test for each overlap scenario: Diwali+wedding, Navratri+wedding, Ramadan+wedding
+- [x] 🆕🟢 Write a unit test for each overlap scenario: Diwali+wedding, Navratri+wedding, Ramadan+wedding
 
 ---
 
