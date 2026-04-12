@@ -202,7 +202,7 @@
   `appwrite databases createIndex --databaseId fitkarma-db --collectionId food_logs --key user_logged_at --type key --attributes user_id,logged_at --orders ASC,DESC`
   ```
 
-- [ ] **1.5 — Create workout, step, sleep, mood log collections via CLI**
+- [x] **1.5 — Create workout, step, sleep, mood log collections via CLI**
   ```
   Using Appwrite CLI, create the following four collections in database fitkarma-db. For each, add the specified attributes and the required composite index on [user_id, date/logged_at DESC]:
 
@@ -223,7 +223,7 @@
   Index: [user_id, logged_at DESC]
   ```
 
-- [ ] **1.6 — Create health monitoring collections via CLI**
+- [x] **1.6 — Create health monitoring collections via CLI**
   ```
   Using Appwrite CLI, create these collections in fitkarma-db:
 
@@ -244,7 +244,7 @@
   Index: [user_id, cycle_start DESC]
   ```
 
-- [ ] **1.7 — Create remaining core collections via CLI**
+- [x] **1.7 — Create remaining core collections via CLI**
   ```
   Using Appwrite CLI, create these collections in fitkarma-db:
 
@@ -266,7 +266,7 @@
   Index: [user_id, created_at DESC]
   ```
 
-- [ ] **1.8 — Create advanced feature collections via CLI**
+- [x] **1.8 — Create advanced feature collections via CLI**
   ```
   Using Appwrite CLI, create these collections in fitkarma-db:
 
@@ -295,7 +295,7 @@
   Attributes: title (string,255,req), youtube_id (string,50,opt), duration_min (integer,req), difficulty (enum:beginner,intermediate,advanced,req), category (string,100,req), language (string,10,req), is_premium (boolean,default:false), rpe_level (integer,opt)
   ```
 
-- [ ] **1.9 — Create India-specific & social collections via CLI**
+- [x] **1.9 — Create India-specific & social collections via CLI**
   ```
   Using Appwrite CLI, create these collections in fitkarma-db:
 
@@ -338,47 +338,33 @@
 
 ### 1B — Storage Buckets
 
-- [ ] **1.10 — Create Appwrite Storage buckets via CLI**
+- [x] **1.10 — Create Consolidated Appwrite Storage bucket via CLI**
   ```
-  Using Appwrite CLI, create three storage buckets for project fitkarma-staging:
-
-  `appwrite storage createBucket --bucketId avatars --name "Avatars" --permissions 'read("users")' 'create("users")' --maximumFileSize 5242880 --allowedFileExtensions jpg,jpeg,png,webp`
-
-  `appwrite storage createBucket --bucketId posts_media --name "Posts Media" --permissions 'read("any")' 'create("users")' --maximumFileSize 10485760 --allowedFileExtensions jpg,jpeg,png,mp4`
-
-  `appwrite storage createBucket --bucketId health_reports_share --name "Health Reports Share" --permissions 'read("any")' 'create("users")' --maximumFileSize 10485760 --allowedFileExtensions pdf`
-
-  Repeat all three for the production project.
+  Using Appwrite CLI, create a unified storage bucket for project fitkarma-staging:
+  
+  `appwrite storage createBucket --bucketId fitkarma_files --name "FitKarma App Files" --maximumFileSize 50000000 --allowedFileExtensions jpg,jpeg,png,webp,mp4,pdf`
+  
+  Note: Permissions and specific access logic (Avatars vs Posts vs Reports) are handled at the application layer.
+  Repeat for the production project.
   ```
 
 ### 1C — Appwrite Functions
 
-- [ ] **1.11 — Scaffold Appwrite Functions directory structure**
+- [x] **1.11 — Scaffold Consolidated Appwrite Function directory structure**
   ```
-  In the project root, create a directory `appwrite-functions/`. Inside it, create five subdirectories:
-  - fitbit-token-exchange/src/
-  - garmin-token-exchange/src/
-  - razorpay-webhook/src/
-  - whatsapp-bot/src/
-  - refresh-festival-dates/src/
-  - shareable-health-report/src/
-  - abha-token-exchange/src/
-  - fcm-hook/src/
-
-  In each subdirectory, create a package.json with `"type": "module"` and an `index.js` file with the Appwrite function export boilerplate: `export default async ({ req, res, log, error }) => { return res.json({ status: 'ok' }); }`.
+  In the project root, create `appwrite-functions/core-engine/`. 
+  Inside `src/handlers/`, scaffold modular handlers:
+  - fitbit.js, garmin.js, razorpay.js, whatsapp.js, festival.js, reports.js, abha.js, fcm.js
+  Initialize the central router in `src/index.js`.
   ```
 
-- [ ] **1.12 — Deploy Appwrite Functions via CLI**
+- [x] **1.12 — Deploy Consolidated Appwrite Function via CLI**
   ```
-  For each function in appwrite-functions/, deploy using the Appwrite CLI:
-
-  `appwrite functions create --functionId fitbit-token-exchange --name "Fitbit Token Exchange" --runtime node-18.0 --project-id fitkarma-staging`
-  `appwrite functions createDeployment --functionId fitbit-token-exchange --entrypoint src/index.js --commands "npm install" --project-id fitkarma-staging`
-
-  Repeat for: garmin-token-exchange, razorpay-webhook, whatsapp-bot, refresh-festival-dates, shareable-health-report, abha-token-exchange, fcm-hook.
-
-  Then add environment variables to each function via:
-  `appwrite functions createVariable --functionId fitbit-token-exchange --key FITBIT_CLIENT_SECRET --value "<your_secret>" --project-id fitkarma-staging`
+  Deploy the unified core engine for staging and production:
+  `appwrite functions create --functionId fitkarma-core-engine --name "FitKarma Core Engine" --runtime node-18.0`
+  `appwrite functions createDeployment --functionId fitkarma-core-engine --entrypoint src/index.js --commands "npm install" --activate true`
+  
+  Note: Logic selection is handled via the `X-FitKarma-Action` header.
   ```
 
 - [ ] **1.13 — Set Appwrite Auth providers via CLI**
