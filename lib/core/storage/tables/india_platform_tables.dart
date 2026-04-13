@@ -25,7 +25,7 @@ class AbhaLinks extends Table {
 }
 
 @DataClassName('EmergencyCard')
-class EmergencyCard extends Table {
+class EmergencyCards extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get userId => text()();
   TextColumn get name => text()();

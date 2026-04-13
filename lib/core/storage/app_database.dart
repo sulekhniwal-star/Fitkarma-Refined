@@ -38,7 +38,7 @@ part 'app_database.g.dart';
   DoctorAppointments,
   LabReports,
   AbhaLinks,
-  EmergencyCard,
+  EmergencyCards,
   FestivalCalendar,
   RemoteConfigCache,
   WeddingEvents,
@@ -96,7 +96,7 @@ class AppDatabase extends _$AppDatabase {
         }
         if (from < 5) {
           await m.createTable(abhaLinks);
-          await m.createTable(emergencyCard);
+          await m.createTable(emergencyCards);
           await m.createTable(festivalCalendar);
           await m.createTable(remoteConfigCache);
         }
@@ -105,15 +105,16 @@ class AppDatabase extends _$AppDatabase {
   }
 
   /// Prefix-based FTS5 search for food items with BM25 ranking.
-  Future<List<FoodItem>> searchFoodFts(String query) {
-    return customSelect(
+  Future<List<FoodItem>> searchFoodFts(String query) async {
+    final rows = await customSelect(
       "SELECT food_items.* FROM food_items "
       "INNER JOIN food_items_fts ON food_items_fts.rowid = food_items.id "
       "WHERE food_items_fts MATCH '$query*' "
       "ORDER BY bm25(food_items_fts) "
       "LIMIT 50",
       readsFrom: {foodItems},
-    ).map((row) => foodItems.map(row)).get();
+    ).get();
+    return rows.map((row) => foodItems.map(row.data)).toList();
   }
 }
 

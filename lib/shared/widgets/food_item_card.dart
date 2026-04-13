@@ -32,7 +32,7 @@ class FoodItemCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -69,17 +69,17 @@ class FoodItemCard extends StatelessWidget {
                 children: [
                   Text(
                     name,
-                    style: AppTextStyles.h3(isDark: isDark),
+                    style: AppTextStyles.h3(isDark),
                   ),
                   if (nameHi != null)
                     Text(
                       nameHi!,
-                      style: AppTextStyles.sectionHeaderHindi(isDark: isDark),
+                      style: AppTextStyles.sectionHeaderHindi(isDark),
                     ),
                   const SizedBox(height: 4),
                   Text(
                     portionInfo,
-                    style: AppTextStyles.bodySmall(isDark: isDark).copyWith(
+                    style: AppTextStyles.bodySmall(isDark).copyWith(
                       color: isDark ? AppColorsDark.textSecondary : AppColors.textSecondary,
                     ),
                   ),

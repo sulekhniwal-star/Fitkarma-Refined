@@ -20,9 +20,9 @@ class EncryptionBadge extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
-          color: tealColor.withOpacity(0.1),
+          color: tealColor.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: tealColor.withOpacity(0.3)),
+          border: Border.all(color: tealColor.withValues(alpha: 0.3)),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -31,7 +31,7 @@ class EncryptionBadge extends StatelessWidget {
             const SizedBox(width: 4),
             Text(
               'AES-256',
-              style: AppTextStyles.caption(isDark: isDark).copyWith(
+              style: AppTextStyles.caption(isDark).copyWith(
                 color: tealColor,
                 fontWeight: FontWeight.bold,
                 fontSize: 9,

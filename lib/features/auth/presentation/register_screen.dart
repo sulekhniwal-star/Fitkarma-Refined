@@ -74,11 +74,11 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 children: [
                   Text(
                     'Start your journey',
-                    style: AppTextStyles.h1(isDark: isDark),
+                    style: AppTextStyles.h1(isDark),
                   ),
                   Text(
                     'अपनी यात्रा शुरू करें',
-                    style: AppTextStyles.sectionHeaderHindi(isDark: isDark),
+                    style: AppTextStyles.sectionHeaderHindi(isDark),
                   ),
                   const SizedBox(height: 40),
                   

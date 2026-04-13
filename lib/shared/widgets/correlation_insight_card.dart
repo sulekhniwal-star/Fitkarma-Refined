@@ -54,7 +54,7 @@ class CorrelationInsightCard extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(6),
                   decoration: BoxDecoration(
-                    color: primaryColor.withOpacity(0.1),
+                    color: primaryColor.withValues(alpha: 0.1),
                     shape: BoxShape.circle,
                   ),
                   child: const Text('🔗', style: TextStyle(fontSize: 14)),
@@ -63,7 +63,7 @@ class CorrelationInsightCard extends StatelessWidget {
                 Expanded(
                   child: Text(
                     message,
-                    style: AppTextStyles.bodyMedium(isDark: isDark),
+                    style: AppTextStyles.bodyMedium(isDark),
                   ),
                 ),
               ],
@@ -80,7 +80,7 @@ class CorrelationInsightCard extends StatelessWidget {
               children: [
                 Text(
                   'Was this helpful?',
-                  style: AppTextStyles.caption(isDark: isDark),
+                  style: AppTextStyles.caption(isDark),
                 ),
                 const Spacer(),
                 IconButton(
@@ -126,7 +126,7 @@ class _ModulePill extends StatelessWidget {
         decoration: BoxDecoration(
           color: surfaceColor,
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: primaryColor.withOpacity(0.3)),
+          border: Border.all(color: primaryColor.withValues(alpha: 0.3)),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -135,7 +135,7 @@ class _ModulePill extends StatelessWidget {
             const SizedBox(width: 4),
             Text(
               link.label,
-              style: AppTextStyles.labelMedium(isDark: isDark).copyWith(
+              style: AppTextStyles.labelMedium(isDark).copyWith(
                 color: primaryColor,
               ),
             ),

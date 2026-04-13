@@ -40,7 +40,7 @@ class AppTheme {
         iconTheme: IconThemeData(color: AppColors.textPrimary),
         centerTitle: false,
       ),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         elevation: 2,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         color: AppColors.surface,
@@ -149,7 +149,7 @@ class AppTheme {
         iconTheme: IconThemeData(color: AppColorsDark.textPrimary),
         centerTitle: false,
       ),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),

@@ -8,7 +8,8 @@ import '../../../shared/widgets/meal_tab_bar.dart';
 import '../../../shared/widgets/micronutrient_bar.dart';
 import '../../../shared/widgets/food_item_card.dart';
 import '../../../shared/widgets/quick_log_fab.dart';
-import '../domain/food_providers.dart'; // I will create this next
+import '../../dashboard/domain/dashboard_providers.dart';
+import '../domain/food_providers.dart';
 
 class FoodHomeScreen extends ConsumerWidget {
   const FoodHomeScreen({super.key});
@@ -49,7 +50,7 @@ class FoodHomeScreen extends ConsumerWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Meal Logs', style: AppTextStyles.h2(isDark: isDark)),
+                    Text('Meal Logs', style: AppTextStyles.h2(isDark)),
                     const Text('Edit', style: TextStyle(color: AppColors.primary)),
                   ],
                 ),
@@ -108,10 +109,10 @@ class FoodHomeScreen extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('DAILY ENERGY', style: AppTextStyles.caption(isDark: isDark)),
-                Text('1,840 kcal', style: AppTextStyles.statLarge(isDark: isDark)),
+                Text('DAILY ENERGY', style: AppTextStyles.caption(isDark)),
+                Text('1,840 kcal', style: AppTextStyles.statLarge(isDark)),
                 const SizedBox(height: 8),
-                Text('640 kcal remaining', style: AppTextStyles.bodySmall(isDark: isDark)),
+                Text('640 kcal remaining', style: AppTextStyles.bodySmall(isDark)),
               ],
             ),
           ),
@@ -124,7 +125,7 @@ class FoodHomeScreen extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Micronutrients', style: AppTextStyles.h3(isDark: isDark)),
+        Text('Micronutrients', style: AppTextStyles.h3(isDark)),
         const SizedBox(height: 12),
         const MicronutrientBar(name: 'Vitamin D', current: 400, goal: 600, unit: ' IU'),
         const MicronutrientBar(name: 'Vitamin B12', current: 2.1, goal: 2.4, unit: ' mcg'),
@@ -139,7 +140,7 @@ class FoodHomeScreen extends ConsumerWidget {
       decoration: BoxDecoration(
         color: AppColors.primarySurface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.primaryLight.withOpacity(0.3)),
+        border: Border.all(color: AppColors.primaryLight.withValues(alpha: 0.3)),
       ),
       child: Row(
         children: [
@@ -149,8 +150,8 @@ class FoodHomeScreen extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Repeat Yesterday?', style: AppTextStyles.labelLarge(isDark: false)),
-                Text('Add all meals from yesterday in one tap.', style: AppTextStyles.caption(isDark: false)),
+                Text('Repeat Yesterday?', style: AppTextStyles.labelLarge(false)),
+                Text('Add all meals from yesterday in one tap.', style: AppTextStyles.caption(false)),
               ],
             ),
           ),

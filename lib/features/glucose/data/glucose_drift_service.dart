@@ -2,6 +2,7 @@ import 'package:drift/drift.dart';
 import '../../../core/storage/app_database.dart';
 import '../../../core/security/encryption_service.dart';
 import '../../../core/network/sync_queue.dart';
+import '../../blood_pressure/domain/bp_classifier.dart';
 
 class GlucoseDriftService {
   final AppDatabase _db;
@@ -9,31 +10,47 @@ class GlucoseDriftService {
 
   GlucoseDriftService(this._db);
 
-  /// Inserts an encrypted glucose log.
   Future<int> insertGlucoseLog({
     required String userId,
     required double value,
-    required String type, // Fasting, Post-meal, etc.
+    required String readingType,
     String? mealId,
     String? note,
   }) async {
     final encValue = await EncryptionService.encryptField(value.toString(), _dataClass);
     final encNote = note != null ? await EncryptionService.encryptField(note, _dataClass) : null;
-
+    
+    final classification = _classifyGlucose(value, readingType);
+    
     final companion = GlucoseLogsCompanion.insert(
       userId: userId,
-      value: encValue,
-      type: Value(type),
-      mealId: Value(mealId),
-      note: Value(encNote),
+      glucoseMgdl: encValue,
+      readingType: readingType,
+      foodLogId: Value(mealId),
       loggedAt: DateTime.now(),
+      classification: classification,
+      notes: Value(encNote),
+      source: 'manual',
       idempotencyKey: generateIdempotencyKey(userId, 'glucose_log', DateTime.now().toIso8601String()),
     );
 
     return await _db.into(_db.glucoseLogs).insert(companion);
   }
 
-  /// Fetches and decrypts glucose logs.
+  String _classifyGlucose(double value, String readingType) {
+    if (readingType.toLowerCase().contains('fasting')) {
+      if (value < 70) return 'low';
+      if (value <= 100) return 'normal';
+      if (value <= 125) return 'prediabetic';
+      return 'diabetic';
+    } else {
+      if (value < 70) return 'low';
+      if (value <= 140) return 'normal';
+      if (value <= 180) return 'prediabetic';
+      return 'diabetic';
+    }
+  }
+
   Future<List<Map<String, dynamic>>> getDecryptedLogs(String userId) async {
     final logs = await (_db.select(_db.glucoseLogs)
           ..where((t) => t.userId.equals(userId))
@@ -44,11 +61,12 @@ class GlucoseDriftService {
     for (final log in logs) {
       decrypted.add({
         'id': log.id,
-        'value': double.parse(await EncryptionService.decryptField(log.value, _dataClass)),
-        'type': log.type,
-        'mealId': log.mealId,
-        'note': log.note != null ? await EncryptionService.decryptField(log.note!, _dataClass) : null,
+        'value': double.parse(await EncryptionService.decryptField(log.glucoseMgdl, _dataClass)),
+        'readingType': log.readingType,
+        'foodLogId': log.foodLogId,
+        'notes': log.notes != null ? await EncryptionService.decryptField(log.notes!, _dataClass) : null,
         'loggedAt': log.loggedAt,
+        'classification': log.classification,
       });
     }
     return decrypted;

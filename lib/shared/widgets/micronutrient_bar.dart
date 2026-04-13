@@ -32,7 +32,7 @@ class MicronutrientBar extends StatelessWidget {
             width: 80,
             child: Text(
               name,
-              style: AppTextStyles.caption(isDark: isDark).copyWith(fontSize: 10),
+              style: AppTextStyles.caption(isDark).copyWith(fontSize: 10),
             ),
           ),
           const SizedBox(width: 8),
@@ -41,7 +41,7 @@ class MicronutrientBar extends StatelessWidget {
               borderRadius: BorderRadius.circular(4),
               child: LinearProgressIndicator(
                 value: progress,
-                backgroundColor: barColor.withOpacity(0.1),
+                backgroundColor: barColor.withValues(alpha: 0.1),
                 color: barColor,
                 minHeight: 6,
               ),
@@ -53,7 +53,7 @@ class MicronutrientBar extends StatelessWidget {
             child: Text(
               '${current.toStringAsFixed(1)}$unit / ${goal.toStringAsFixed(0)}$unit',
               textAlign: TextAlign.end,
-              style: AppTextStyles.caption(isDark: isDark).copyWith(
+              style: AppTextStyles.caption(isDark).copyWith(
                 fontSize: 10,
                 color: isDark ? Colors.white54 : Colors.black54,
               ),

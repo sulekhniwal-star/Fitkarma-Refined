@@ -37,7 +37,7 @@ class KarmaLevelCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: AppColors.secondary.withOpacity(0.3),
+            color: AppColors.secondary.withValues(alpha: 0.3),
             blurRadius: 15,
             offset: const Offset(0, 8),
           ),
@@ -52,7 +52,7 @@ class KarmaLevelCard extends StatelessWidget {
             child: Icon(
               Icons.auto_awesome,
               size: 120,
-              color: Colors.white.withOpacity(0.05),
+              color: Colors.white.withValues(alpha: 0.05),
             ),
           ),
           Padding(
@@ -80,13 +80,13 @@ class KarmaLevelCard extends StatelessWidget {
                 const SizedBox(height: 8),
                 Text(
                   title,
-                  style: AppTextStyles.h1(isDark: true).copyWith(color: Colors.white),
+                  style: AppTextStyles.h1(true).copyWith(color: Colors.white),
                 ),
                 const SizedBox(height: 24),
                 // Progress Bar
                 LinearProgressIndicator(
                   value: progress,
-                  backgroundColor: Colors.white.withOpacity(0.1),
+                  backgroundColor: Colors.white.withValues(alpha: 0.1),
                   color: AppColors.accent,
                   minHeight: 8,
                   borderRadius: BorderRadius.circular(4),
@@ -97,13 +97,13 @@ class KarmaLevelCard extends StatelessWidget {
                   children: [
                     Text(
                       '$currentXP / $nextLevelXP XP',
-                      style: AppTextStyles.labelMedium(isDark: true).copyWith(
+                      style: AppTextStyles.labelMedium(true).copyWith(
                         color: Colors.white70,
                       ),
                     ),
                     Text(
                       'Next level in $xpRemaining XP',
-                      style: AppTextStyles.caption(isDark: true).copyWith(
+                      style: AppTextStyles.caption(true).copyWith(
                         color: Colors.white54,
                       ),
                     ),

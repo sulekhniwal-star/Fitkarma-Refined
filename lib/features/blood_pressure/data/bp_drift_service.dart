@@ -2,6 +2,7 @@ import 'package:drift/drift.dart';
 import '../../../core/storage/app_database.dart';
 import '../../../core/security/encryption_service.dart';
 import '../../../core/network/sync_queue.dart';
+import '../domain/bp_classifier.dart';
 
 class BPDriftService {
   final AppDatabase _db;
@@ -22,13 +23,16 @@ class BPDriftService {
     final encPulse = await EncryptionService.encryptField(pulse.toString(), _dataClass);
     final encNote = note != null ? await EncryptionService.encryptField(note, _dataClass) : null;
 
+    final classification = BPClassifier.classify(systolic, diastolic).name;
     final companion = BloodPressureLogsCompanion.insert(
       userId: userId,
       systolic: encSystolic,
       diastolic: encDiastolic,
-      pulse: encPulse,
-      note: Value(encNote),
+      pulse: Value(encPulse),
       loggedAt: DateTime.now(),
+      classification: classification,
+      notes: Value(encNote),
+      source: 'manual',
       idempotencyKey: generateIdempotencyKey(userId, 'bp_log', DateTime.now().toIso8601String()),
     );
 
@@ -48,8 +52,8 @@ class BPDriftService {
         'id': log.id,
         'systolic': int.parse(await EncryptionService.decryptField(log.systolic, _dataClass)),
         'diastolic': int.parse(await EncryptionService.decryptField(log.diastolic, _dataClass)),
-        'pulse': int.parse(await EncryptionService.decryptField(log.pulse, _dataClass)),
-        'note': log.note != null ? await EncryptionService.decryptField(log.note!, _dataClass) : null,
+        'pulse': log.pulse != null ? int.parse(await EncryptionService.decryptField(log.pulse!, _dataClass)) : null,
+        'note': log.notes != null ? await EncryptionService.decryptField(log.notes!, _dataClass) : null,
         'loggedAt': log.loggedAt,
       });
     }

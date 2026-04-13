@@ -52,7 +52,7 @@ class HabitTrackerScreen extends ConsumerWidget {
             ),
             
             const SizedBox(height: 48),
-            Text('Consistency Heatmap', style: AppTextStyles.h3(isDark: isDark)),
+            Text('Consistency Heatmap', style: AppTextStyles.h3(isDark)),
             const SizedBox(height: 24),
             _buildHeatmapGrid(isDark),
           ],
@@ -78,7 +78,7 @@ class HabitTrackerScreen extends ConsumerWidget {
       decoration: BoxDecoration(
         color: isDark ? AppColorsDark.surface : Colors.white,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10)],
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10)],
       ),
       child: Column(
         children: [
@@ -96,7 +96,7 @@ class HabitTrackerScreen extends ConsumerWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: Colors.orange.withOpacity(0.1),
+                    color: Colors.orange.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text('🔥 $streak', style: const TextStyle(color: Colors.orange, fontWeight: FontWeight.bold)),
@@ -111,14 +111,14 @@ class HabitTrackerScreen extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(4),
                   child: LinearProgressIndicator(
                     value: progress,
-                    backgroundColor: AppColors.divider.withOpacity(0.2),
+                    backgroundColor: AppColors.divider.withValues(alpha: 0.2),
                     color: AppColors.primary,
                     minHeight: 8,
                   ),
                 ),
               ),
               const SizedBox(width: 16),
-              Text('$current/$target', style: AppTextStyles.labelLarge(isDark: isDark)),
+              Text('$current/$target', style: AppTextStyles.labelLarge(isDark)),
             ],
           ),
           if (brokenRecently) ...[
@@ -161,7 +161,7 @@ class HabitTrackerScreen extends ConsumerWidget {
           final intensity = (index % 5) / 5.0; // Mock intensity
           return Container(
             decoration: BoxDecoration(
-              color: AppColors.primary.withOpacity(intensity == 0 ? 0.05 : intensity),
+              color: AppColors.primary.withValues(alpha: intensity == 0 ? 0.05 : intensity),
               borderRadius: BorderRadius.circular(2),
             ),
           );

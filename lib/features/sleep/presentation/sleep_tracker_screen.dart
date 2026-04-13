@@ -80,16 +80,16 @@ class SleepTrackerScreen extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.baseline,
                     textBaseline: TextBaseline.alphabetic,
                     children: [
-                      Text('$hours', style: AppTextStyles.displayLarge(isDark: true).copyWith(fontSize: 80, color: Colors.white)),
-                      Text('h $minutes', style: AppTextStyles.h1(isDark: true).copyWith(color: Colors.white70)),
-                      Text('m', style: AppTextStyles.bodyMedium(isDark: true).copyWith(color: Colors.white54)),
+                      Text('$hours', style: AppTextStyles.displayLarge(true).copyWith(fontSize: 80, color: Colors.white)),
+                      Text('h $minutes', style: AppTextStyles.h1(true).copyWith(color: Colors.white70)),
+                      Text('m', style: AppTextStyles.bodyMedium(true).copyWith(color: Colors.white54)),
                     ],
                   ),
                   const SizedBox(height: 16),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     decoration: BoxDecoration(
-                      color: hours >= 7 ? Colors.green.withOpacity(0.3) : Colors.red.withOpacity(0.3),
+                      color: hours >= 7 ? Colors.green.withValues(alpha: 0.3) : Colors.red.withValues(alpha: 0.3),
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(color: hours >= 7 ? Colors.green : Colors.red),
                     ),
@@ -116,9 +116,9 @@ class SleepTrackerScreen extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: debtMinutes > 60 ? Colors.red.withOpacity(0.1) : Colors.green.withOpacity(0.1),
+        color: debtMinutes > 60 ? Colors.red.withValues(alpha: 0.1) : Colors.green.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: debtMinutes > 60 ? Colors.red.withOpacity(0.3) : Colors.green.withOpacity(0.3)),
+        border: Border.all(color: debtMinutes > 60 ? Colors.red.withValues(alpha: 0.3) : Colors.green.withValues(alpha: 0.3)),
       ),
       child: Row(
         children: [
@@ -131,7 +131,7 @@ class SleepTrackerScreen extends ConsumerWidget {
                 const Text('SLEEP DEBT', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, letterSpacing: 1)),
                 Text(
                   debtMinutes > 0 ? '$hours h $mins m lost this week' : 'No sleep debt!',
-                  style: AppTextStyles.h3(isDark: isDark),
+                  style: AppTextStyles.h3(isDark),
                 ),
               ],
             ),
@@ -145,7 +145,7 @@ class SleepTrackerScreen extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Last 7 Nights', style: AppTextStyles.h3(isDark: isDark)),
+        Text('Last 7 Nights', style: AppTextStyles.h3(isDark)),
         const SizedBox(height: 24),
         SizedBox(
           height: 180,
@@ -153,7 +153,7 @@ class SleepTrackerScreen extends ConsumerWidget {
             BarChartData(
               alignment: BarChartAlignment.spaceAround,
               maxY: 12,
-              barGroups: logs.reversed.asMap().entries.map((e) {
+              barGroups: logs.reversed.toList().asMap().entries.map((e) {
                 return BarChartGroupData(
                   x: e.key,
                   barRods: [
@@ -215,9 +215,9 @@ class SleepTrackerScreen extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.amber.withOpacity(0.1),
+        color: Colors.amber.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.amber.withOpacity(0.3)),
+        border: Border.all(color: Colors.amber.withValues(alpha: 0.3)),
       ),
       child: const Row(
         children: [
@@ -308,9 +308,12 @@ class _SleepLogSheetState extends State<_SleepLogSheet> {
               final isSelected = _quality == val;
               return IconButton(
                 onPressed: () => setState(() => _quality = val),
-                icon: Text(
-                  _getEmoji(val),
-                  style: TextStyle(fontSize: 32, opacity: isSelected ? 1.0 : 0.3),
+                icon: Opacity(
+                  opacity: isSelected ? 1.0 : 0.3,
+                  child: Text(
+                    _getEmoji(val),
+                    style: const TextStyle(fontSize: 32),
+                  ),
                 ),
               );
             }),

@@ -157,13 +157,13 @@ class _StatItem extends StatelessWidget {
             const SizedBox(width: 4),
             Text(
               ring.label,
-              style: AppTextStyles.caption(isDark: isDark),
+              style: AppTextStyles.caption(isDark),
             ),
           ],
         ),
         Text(
           '${ring.value}/${ring.goal}',
-          style: AppTextStyles.labelMedium(isDark: isDark),
+          style: AppTextStyles.labelMedium(isDark),
         ),
       ],
     );

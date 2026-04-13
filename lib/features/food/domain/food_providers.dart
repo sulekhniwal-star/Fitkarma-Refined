@@ -1,6 +1,16 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../core/di/providers.dart';
 import '../data/food_repository.dart';
+import '../data/food_drift_service.dart';
+import '../data/food_aw_service.dart';
 import '../../auth/domain/auth_providers.dart';
+
+final foodRepositoryProvider = Provider<FoodRepository>((ref) {
+  final db = ref.watch(driftDbProvider);
+  final drift = FoodDriftService(db);
+  final aw = FoodAwService();
+  return FoodRepository(drift, aw, db);
+});
 
 /// Provider for searching food items with 300ms debounce (handled in UI).
 final foodSearchProvider = FutureProvider.family<List<Map<String, dynamic>>, String>((ref, query) async {

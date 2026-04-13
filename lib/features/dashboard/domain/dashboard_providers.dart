@@ -60,7 +60,16 @@ final latestInsightProvider = FutureProvider<InsightOutput?>((ref) async {
   );
 });
 
-final selectedMealTabProvider = StateProvider<MealType>((ref) => MealType.breakfast);
+final selectedMealTabProvider = NotifierProvider<MealTabNotifier, MealType>(MealTabNotifier.new);
+
+class MealTabNotifier extends Notifier<MealType> {
+  @override
+  MealType build() => MealType.breakfast;
+
+  void setTab(MealType tab) {
+    state = tab;
+  }
+}
 
 final karmaProvider = FutureProvider<KarmaData>((ref) async {
   return KarmaData(level: 12, title: 'Health Warrior', currentXP: 1450, nextLevelXP: 2000);

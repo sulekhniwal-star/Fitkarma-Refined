@@ -95,7 +95,7 @@ class _LabReportScanScreenState extends ConsumerState<LabReportScanScreen> {
         const SizedBox(height: 24),
         Text(
           'Digitize Your Reports',
-          style: AppTextStyles.h2(isDark: isDark),
+          style: AppTextStyles.h2(isDark),
         ),
         const SizedBox(height: 12),
         const Text(
@@ -150,7 +150,7 @@ class _LabReportScanScreenState extends ConsumerState<LabReportScanScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Extracted Values', style: AppTextStyles.h3(isDark: isDark)),
+        Text('Extracted Values', style: AppTextStyles.h3(isDark)),
         const SizedBox(height: 12),
         ..._extractedValues.map((val) => _LabValueRow(val: val, isDark: isDark)),
         const SizedBox(height: 32),
@@ -191,10 +191,10 @@ class _LabValueRow extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(val.name, style: AppTextStyles.bodyMedium(isDark: isDark)),
+          Text(val.name, style: AppTextStyles.bodyMedium(isDark)),
           Text(
             '${val.value} ${val.unit}',
-            style: AppTextStyles.labelLarge(isDark: isDark).copyWith(color: AppColors.primary),
+            style: AppTextStyles.labelLarge(isDark).copyWith(color: AppColors.primary),
           ),
         ],
       ),

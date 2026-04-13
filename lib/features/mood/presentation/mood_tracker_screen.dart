@@ -56,7 +56,7 @@ class _MoodTrackerScreenState extends ConsumerState<MoodTrackerScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('How are you feeling?', style: AppTextStyles.h2(isDark: isDark)),
+            Text('How are you feeling?', style: AppTextStyles.h2(isDark)),
             const SizedBox(height: 24),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -69,7 +69,7 @@ class _MoodTrackerScreenState extends ConsumerState<MoodTrackerScreen> {
                     duration: const Duration(milliseconds: 200),
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: isSelected ? AppColors.primary.withOpacity(0.1) : Colors.transparent,
+                      color: isSelected ? AppColors.primary.withValues(alpha: 0.1) : Colors.transparent,
                       shape: BoxShape.circle,
                       border: isSelected ? Border.all(color: AppColors.primary, width: 2) : null,
                     ),
@@ -85,7 +85,7 @@ class _MoodTrackerScreenState extends ConsumerState<MoodTrackerScreen> {
             _buildSliderSection('Stress Level', _stress, (val) => setState(() => _stress = val), isDark, Icons.psychology),
             
             const SizedBox(height: 48),
-            Text('Mood Tags', style: AppTextStyles.labelLarge(isDark: isDark)),
+            Text('Mood Tags', style: AppTextStyles.labelLarge(isDark)),
             const SizedBox(height: 16),
             Wrap(
               spacing: 8,

@@ -95,7 +95,7 @@ class RemoteConfig extends AsyncNotifier<RemoteConfigData> {
 
           batch.insert(
             db.remoteConfigCache,
-            RemoteConfigCacheEntryCompanion.insert(
+            RemoteConfigCacheCompanion.insert(
               key: key,
               value: value,
               type: type,

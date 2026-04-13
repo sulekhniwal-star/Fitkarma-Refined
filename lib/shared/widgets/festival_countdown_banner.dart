@@ -33,14 +33,14 @@ class FestivalCountdownBanner extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [bannerColor, bannerColor.withOpacity(0.8)],
+          colors: [bannerColor, bannerColor.withValues(alpha: 0.8)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: bannerColor.withOpacity(0.3),
+            color: bannerColor.withValues(alpha: 0.3),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -59,11 +59,11 @@ class FestivalCountdownBanner extends StatelessWidget {
                     children: [
                       Text(
                         festivalName,
-                        style: AppTextStyles.h2(isDark: true).copyWith(color: Colors.white),
+                        style: AppTextStyles.h2(true).copyWith(color: Colors.white),
                       ),
                       Text(
                         festivalNameHi,
-                        style: AppTextStyles.sectionHeaderHindi(isDark: true).copyWith(color: Colors.white70),
+                        style: AppTextStyles.sectionHeaderHindi(true).copyWith(color: Colors.white70),
                       ),
                     ],
                   ),
@@ -71,14 +71,14 @@ class FestivalCountdownBanner extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.2),
+                    color: Colors.white.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Column(
                     children: [
                       Text(
                         daysRemaining.toString(),
-                        style: AppTextStyles.statLarge(isDark: true).copyWith(color: Colors.white),
+                        style: AppTextStyles.statLarge(true).copyWith(color: Colors.white),
                       ),
                       const Text(
                         'DAYS',
@@ -144,7 +144,7 @@ class _FeaturePill extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.1),
+        color: Colors.black.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Row(

@@ -102,7 +102,7 @@ class _QuickLogFABState extends State<QuickLogFAB>
               child: GestureDetector(
             onTap: _toggle,
             child: Container(
-              color: Colors.black.withOpacity(0.5),
+              color: Colors.black.withValues(alpha: 0.5),
             ),
           )),
 
@@ -160,7 +160,7 @@ class _QuickLogFABState extends State<QuickLogFAB>
                       borderRadius: BorderRadius.circular(8),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
+                          color: Colors.black.withValues(alpha: 0.1),
                           blurRadius: 4,
                           offset: const Offset(0, 2),
                         ),
@@ -168,7 +168,7 @@ class _QuickLogFABState extends State<QuickLogFAB>
                     ),
                     child: Text(
                       data.label,
-                      style: AppTextStyles.labelLarge(isDark: isDark),
+                      style: AppTextStyles.labelLarge(isDark),
                     ),
                   ),
                 SizedBox(

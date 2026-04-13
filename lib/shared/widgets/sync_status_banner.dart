@@ -77,7 +77,7 @@ class _BannerContainer extends StatelessWidget {
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        color: color.withOpacity(0.9),
+        color: color.withValues(alpha: 0.9),
         child: Row(
           children: [
             Expanded(
@@ -86,14 +86,14 @@ class _BannerContainer extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: AppTextStyles.labelLarge(isDark: true).copyWith(
+                    style: AppTextStyles.labelLarge(true).copyWith(
                       color: Colors.white,
                       height: 1.1,
                     ),
                   ),
                   Text(
                     subtitle,
-                    style: AppTextStyles.caption(isDark: true).copyWith(
+                    style: AppTextStyles.caption(true).copyWith(
                       color: Colors.white70,
                     ),
                   ),

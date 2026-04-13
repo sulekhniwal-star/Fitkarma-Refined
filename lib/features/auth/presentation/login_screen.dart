@@ -69,7 +69,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       Container(
                         height: 350,
                         width: double.infinity,
-                        decoration: const BoxDecoration(
+                        decoration: BoxDecoration(
                           image: DecorationImage(
                             image: FileImage(
                                 // Absolute path from generation
@@ -87,7 +87,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             end: Alignment.bottomCenter,
                             colors: [
                               Colors.transparent,
-                              (isDark ? AppColorsDark.background : AppColors.background).withOpacity(0.8),
+                              (isDark ? AppColorsDark.background : AppColors.background).withValues(alpha: 0.8),
                               isDark ? AppColorsDark.background : AppColors.background,
                             ],
                           ),
@@ -104,11 +104,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       children: [
                         Text(
                           'Welcome Home',
-                          style: AppTextStyles.displayMedium(isDark: isDark),
+                          style: AppTextStyles.displayMedium(isDark),
                         ),
                         Text(
                           'पुनः आपका स्वागत है',
-                          style: AppTextStyles.sectionHeaderHindi(isDark: isDark),
+                          style: AppTextStyles.sectionHeaderHindi(isDark),
                         ),
                         const SizedBox(height: 32),
                         

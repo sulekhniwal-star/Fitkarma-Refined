@@ -58,11 +58,11 @@ class DoshaChart extends StatelessWidget {
                 children: [
                   Text(
                     dominant.toUpperCase(),
-                    style: AppTextStyles.h2(isDark: isDark),
+                    style: AppTextStyles.h2(isDark),
                   ),
                   Text(
                     'Dominant',
-                    style: AppTextStyles.caption(isDark: isDark),
+                    style: AppTextStyles.caption(isDark),
                   ),
                 ],
               ),
@@ -118,7 +118,7 @@ class _LegendItem extends StatelessWidget {
         const SizedBox(width: 6),
         Text(
           label,
-          style: AppTextStyles.labelMedium(isDark: isDark),
+          style: AppTextStyles.labelMedium(isDark),
         ),
       ],
     );

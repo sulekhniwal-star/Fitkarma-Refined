@@ -21,7 +21,7 @@ class NutritionGoalScreen extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Daily Micro-Targets', style: AppTextStyles.h2(isDark: isDark)),
+            Text('Daily Micro-Targets', style: AppTextStyles.h2(isDark)),
             const SizedBox(height: 8),
             const Text('Based on ICMR RDA Guidelines for Indian Adults', style: TextStyle(fontSize: 10, color: AppColors.textSecondary)),
             const SizedBox(height: 32),
@@ -49,9 +49,9 @@ class NutritionGoalScreen extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.red.withOpacity(0.05),
+        color: Colors.red.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.red.withOpacity(0.2)),
+        border: Border.all(color: Colors.red.withValues(alpha: 0.2)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -102,8 +102,8 @@ class NutritionGoalScreen extends ConsumerWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('BASAL METABOLIC RATE', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, opacity: 0.6)),
-                  Text('1,640 kcal/day', style: AppTextStyles.h3(isDark: isDark)),
+                  const Text('BASAL METABOLIC RATE', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.black54)),
+                  Text('1,640 kcal/day', style: AppTextStyles.h3(isDark)),
                 ],
               ),
               const Icon(Icons.calculate_outlined, color: AppColors.primary),
@@ -116,8 +116,8 @@ class NutritionGoalScreen extends ConsumerWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('MAINTENANCE (TDEE)', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, opacity: 0.6)),
-                  Text('2,450 kcal', style: AppTextStyles.h3(isDark: isDark).copyWith(color: AppColors.primary)),
+                  const Text('MAINTENANCE (TDEE)', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.black54)),
+                  Text('2,450 kcal', style: AppTextStyles.h3(isDark).copyWith(color: AppColors.primary)),
                 ],
               ),
               TextButton(onPressed: () {}, child: const Text('Recalculate')),

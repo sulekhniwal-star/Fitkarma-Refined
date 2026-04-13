@@ -89,7 +89,7 @@ class _FoodLogScreenState extends ConsumerState<FoodLogScreen> {
             const SizedBox(height: 24),
 
             if (_query.isNotEmpty) ...[
-              Text('Search Results', style: AppTextStyles.h3(isDark: isDark)),
+              Text('Search Results', style: AppTextStyles.h3(isDark)),
               AsyncValueWidget<List<Map<String, dynamic>>>(
                 value: searchResults,
                 data: (items) => ListView.builder(
@@ -113,13 +113,13 @@ class _FoodLogScreenState extends ConsumerState<FoodLogScreen> {
               const SizedBox(height: 32),
 
               // 3. Frequent Indian Portions
-              Text('Common Indian Portions', style: AppTextStyles.h3(isDark: isDark)),
+              Text('Common Indian Portions', style: AppTextStyles.h3(isDark)),
               const SizedBox(height: 12),
               _buildFrequentGrid(ref, isDark),
               const SizedBox(height: 32),
 
               // 4. Recent Logs
-              Text('Recently Logged', style: AppTextStyles.h3(isDark: isDark)),
+              Text('Recently Logged', style: AppTextStyles.h3(isDark)),
               const SizedBox(height: 12),
               _buildRecentLogs(isDark),
             ],
@@ -135,7 +135,7 @@ class _FoodLogScreenState extends ConsumerState<FoodLogScreen> {
         color: isDark ? AppColorsDark.surface : Colors.white,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10),
+          BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10),
         ],
       ),
       child: TextField(
@@ -215,7 +215,7 @@ class _FoodLogScreenState extends ConsumerState<FoodLogScreen> {
               decoration: BoxDecoration(
                 color: isDark ? AppColorsDark.surface : Colors.white,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppColors.divider.withOpacity(0.5)),
+                border: Border.all(color: AppColors.divider.withValues(alpha: 0.5)),
               ),
               child: Row(
                 children: [
@@ -226,8 +226,8 @@ class _FoodLogScreenState extends ConsumerState<FoodLogScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(item['name'], style: AppTextStyles.labelMedium(isDark: isDark), maxLines: 1),
-                        Text(item['portion'], style: AppTextStyles.caption(isDark: isDark)),
+                        Text(item['name'], style: AppTextStyles.labelMedium(isDark), maxLines: 1),
+                        Text(item['portion'], style: AppTextStyles.caption(isDark)),
                       ],
                     ),
                   ),
@@ -293,20 +293,20 @@ class _PortionSelectorSheetState extends State<_PortionSelectorSheet> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(widget.item['name'], style: AppTextStyles.h2(isDark: isDark)),
+                    Text(widget.item['name'], style: AppTextStyles.h2(isDark)),
                     Text('Approx. ${widget.item['calories']} kcal per unit',
-                        style: AppTextStyles.caption(isDark: isDark)),
+                        style: AppTextStyles.caption(isDark)),
                   ],
                 ),
               ),
             ],
           ),
           const SizedBox(height: 32),
-          Text('Select Portion', style: AppTextStyles.labelLarge(isDark: isDark)),
+          Text('Select Portion', style: AppTextStyles.labelLarge(isDark)),
           const SizedBox(height: 16),
           Row(
             children: [
-              Text('${_quantity.toStringAsFixed(1)} ', style: AppTextStyles.h1(isDark: isDark)),
+              Text('${_quantity.toStringAsFixed(1)} ', style: AppTextStyles.h1(isDark)),
               const SizedBox(width: 8),
               DropdownButton<String>(
                 value: _unit,

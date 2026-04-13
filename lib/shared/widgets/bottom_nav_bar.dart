@@ -143,7 +143,7 @@ class _NavBarItem extends StatelessWidget {
 
     return InkWell(
       onTap: onTap,
-      splashColor: activeColor.withOpacity(0.1),
+      splashColor: activeColor.withValues(alpha: 0.1),
       highlightColor: Colors.transparent,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
@@ -159,14 +159,14 @@ class _NavBarItem extends StatelessWidget {
             const SizedBox(height: 4),
             Text(
               item.labelEn,
-              style: AppTextStyles.navLabelEn(isDark: isDark).copyWith(
+              style: AppTextStyles.navLabelEn(isDark).copyWith(
                 color: color,
               ),
             ),
             Text(
               item.labelHi,
-              style: AppTextStyles.navLabelHi(isDark: isDark).copyWith(
-                color: isSelected ? activeColor.withOpacity(0.8) : inactiveColor,
+              style: AppTextStyles.navLabelHi(isDark).copyWith(
+                color: isSelected ? activeColor.withValues(alpha: 0.8) : inactiveColor,
               ),
             ),
           ],

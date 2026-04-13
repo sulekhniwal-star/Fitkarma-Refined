@@ -66,7 +66,7 @@ class _MealTabPill extends StatelessWidget {
         decoration: BoxDecoration(
           color: isSelected ? primaryColor : surfaceColor,
           borderRadius: BorderRadius.circular(24),
-          border: isSelected ? null : Border.all(color: primaryColor.withOpacity(0.5)),
+          border: isSelected ? null : Border.all(color: primaryColor.withValues(alpha: 0.5)),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -79,7 +79,7 @@ class _MealTabPill extends StatelessWidget {
               children: [
                 Text(
                   _getNameEn(type),
-                  style: AppTextStyles.labelLarge(isDark: isDark).copyWith(
+                  style: AppTextStyles.labelLarge(isDark).copyWith(
                     color: isSelected ? Colors.white : primaryColor,
                     fontSize: 12,
                     height: 1.1,
@@ -87,7 +87,7 @@ class _MealTabPill extends StatelessWidget {
                 ),
                 Text(
                   _getNameHi(type),
-                  style: AppTextStyles.sectionHeaderHindi(isDark: isDark).copyWith(
+                  style: AppTextStyles.sectionHeaderHindi(isDark).copyWith(
                     color: isSelected ? Colors.white70 : AppColors.textSecondary,
                     fontSize: 10,
                     height: 1.0,

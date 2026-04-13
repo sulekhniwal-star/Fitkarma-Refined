@@ -30,11 +30,11 @@ class BilingualLabel extends StatelessWidget {
       children: [
         Text(
           english,
-          style: englishStyle ?? AppTextStyles.h3(isDark: isDark),
+          style: englishStyle ?? AppTextStyles.h3(isDark),
         ),
         Text(
           hindi,
-          style: hindiStyle ?? AppTextStyles.sectionHeaderHindi(isDark: isDark),
+          style: hindiStyle ?? AppTextStyles.sectionHeaderHindi(isDark),
         ),
       ],
     );

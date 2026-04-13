@@ -21,9 +21,8 @@ class FoodRepository {
     results.addAll(localItems.map((i) => {
       'id': i.id,
       'name': i.name,
-      'calories': i.calories,
+      'caloriesPer100g': i.caloriesPer100g,
       'source': 'local',
-      'emoji': i.emoji,
     }));
 
     // 2. Remote Appwrite Search if local results are sparse
@@ -59,9 +58,9 @@ class FoodRepository {
         operation: 'create',
         localId: localId.toString(),
         payload: jsonEncode({
-          'food_item_id': log.foodItemId.value,
+          'food_name': log.foodName.value,
           'meal_type': log.mealType.value,
-          'quantity': log.quantity.value,
+          'quantity_g': log.quantityG.value,
           'calories': log.calories.value,
           'protein_g': log.proteinG.value,
           'carbs_g': log.carbsG.value,

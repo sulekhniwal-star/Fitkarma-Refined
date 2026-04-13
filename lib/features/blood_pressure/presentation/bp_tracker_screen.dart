@@ -60,7 +60,7 @@ class BPTrackerScreen extends ConsumerWidget {
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [AppColors.primary, AppColors.primary.withOpacity(0.8)],
+              colors: [AppColors.primary, AppColors.primary.withValues(alpha: 0.8)],
             ),
           ),
           child: SafeArea(
@@ -75,8 +75,8 @@ class BPTrackerScreen extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.baseline,
                     textBaseline: TextBaseline.alphabetic,
                     children: [
-                      Text('$sys', style: AppTextStyles.displayLarge(isDark: true).copyWith(fontSize: 72, color: Colors.white)),
-                      Text(' / $dia', style: AppTextStyles.h1(isDark: true).copyWith(color: Colors.white70)),
+                      Text('$sys', style: AppTextStyles.displayLarge(true).copyWith(fontSize: 72, color: Colors.white)),
+                      Text(' / $dia', style: AppTextStyles.h1(true).copyWith(color: Colors.white70)),
                     ],
                   ),
                   const Text('mmHg', style: TextStyle(color: Colors.white60, letterSpacing: 2)),
@@ -107,7 +107,7 @@ class BPTrackerScreen extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('7-Day Trend', style: AppTextStyles.h3(isDark: isDark)),
+        Text('7-Day Trend', style: AppTextStyles.h3(isDark)),
         const SizedBox(height: 24),
         SizedBox(
           height: 200,
@@ -146,7 +146,7 @@ class BPTrackerScreen extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('History', style: AppTextStyles.h3(isDark: isDark)),
+        Text('History', style: AppTextStyles.h3(isDark)),
         const SizedBox(height: 12),
         ...logs.map((log) {
           final classification = BPClassifier.classify(log['systolic'], log['diastolic']);
@@ -173,15 +173,15 @@ class BPTrackerScreen extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('${log['systolic']}/${log['diastolic']} mmHg', style: AppTextStyles.labelLarge(isDark: isDark)),
-                      Text(DateFormat('MMM dd, hh:mm a').format(log['loggedAt']), style: AppTextStyles.caption(isDark: isDark)),
+                      Text('${log['systolic']}/${log['diastolic']} mmHg', style: AppTextStyles.labelLarge(isDark)),
+                      Text(DateFormat('MMM dd, hh:mm a').format(log['loggedAt']), style: AppTextStyles.caption(isDark)),
                     ],
                   ),
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Text('Pulse: ${log['pulse']}', style: AppTextStyles.bodySmall(isDark: isDark)),
+                    Text('Pulse: ${log['pulse']}', style: AppTextStyles.bodySmall(isDark)),
                     Text(BPClassifier.getLabel(classification),
                         style: TextStyle(color: BPClassifier.getColor(classification), fontSize: 10, fontWeight: FontWeight.bold)),
                   ],

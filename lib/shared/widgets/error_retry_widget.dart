@@ -37,13 +37,13 @@ class ErrorRetryWidget extends StatelessWidget {
             const SizedBox(height: 16),
             Text(
               'Something went wrong',
-              style: AppTextStyles.h2(isDark: isDark),
+              style: AppTextStyles.h2(isDark),
             ),
             const SizedBox(height: 8),
             Text(
               message ?? 'We encountered an error while loading your data. Please check your connection and try again.',
               textAlign: TextAlign.center,
-              style: AppTextStyles.bodyMedium(isDark: isDark).copyWith(
+              style: AppTextStyles.bodyMedium(isDark).copyWith(
                 color: isDark ? AppColorsDark.textSecondary : AppColors.textSecondary,
               ),
             ),
@@ -60,7 +60,7 @@ class ErrorRetryWidget extends StatelessWidget {
               ),
               child: Text(
                 'Retry',
-                style: AppTextStyles.buttonLarge(isDark: isDark),
+                style: AppTextStyles.buttonLarge(isDark),
               ),
             ),
           ],

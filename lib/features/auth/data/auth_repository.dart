@@ -1,4 +1,5 @@
 import 'package:appwrite/appwrite.dart';
+import 'package:appwrite/enums.dart';
 import 'package:appwrite/models.dart' as models;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../../../core/network/appwrite_client.dart';
@@ -39,7 +40,7 @@ class AuthRepository {
 
   /// Initiates Google OAuth2 login flow.
   Future<void> loginWithGoogle() async {
-    await _account.createOAuth2Session(provider: 'google');
+    await _account.createOAuth2Session(provider: OAuthProvider.google);
   }
 
   /// Deletes the current session and clears secure storage.

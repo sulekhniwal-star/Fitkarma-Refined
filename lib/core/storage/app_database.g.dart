@@ -16190,12 +16190,12 @@ class AbhaLinksCompanion extends UpdateCompanion<AbhaLink> {
   }
 }
 
-class $EmergencyCardTable extends EmergencyCard
-    with TableInfo<$EmergencyCardTable, EmergencyCard> {
+class $EmergencyCardsTable extends EmergencyCards
+    with TableInfo<$EmergencyCardsTable, EmergencyCard> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $EmergencyCardTable(this.attachedDatabase, [this._alias]);
+  $EmergencyCardsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -16295,7 +16295,7 @@ class $EmergencyCardTable extends EmergencyCard
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'emergency_card';
+  static const String $name = 'emergency_cards';
   @override
   VerificationContext validateIntegrity(
     Insertable<EmergencyCard> instance, {
@@ -16408,8 +16408,8 @@ class $EmergencyCardTable extends EmergencyCard
   }
 
   @override
-  $EmergencyCardTable createAlias(String alias) {
-    return $EmergencyCardTable(attachedDatabase, alias);
+  $EmergencyCardsTable createAlias(String alias) {
+    return $EmergencyCardsTable(attachedDatabase, alias);
   }
 }
 
@@ -16448,8 +16448,8 @@ class EmergencyCard extends DataClass implements Insertable<EmergencyCard> {
     return map;
   }
 
-  EmergencyCardCompanion toCompanion(bool nullToAbsent) {
-    return EmergencyCardCompanion(
+  EmergencyCardsCompanion toCompanion(bool nullToAbsent) {
+    return EmergencyCardsCompanion(
       id: Value(id),
       userId: Value(userId),
       name: Value(name),
@@ -16513,7 +16513,7 @@ class EmergencyCard extends DataClass implements Insertable<EmergencyCard> {
     medicalNotes: medicalNotes.present ? medicalNotes.value : this.medicalNotes,
     createdAt: createdAt ?? this.createdAt,
   );
-  EmergencyCard copyWithCompanion(EmergencyCardCompanion data) {
+  EmergencyCard copyWithCompanion(EmergencyCardsCompanion data) {
     return EmergencyCard(
       id: data.id.present ? data.id.value : this.id,
       userId: data.userId.present ? data.userId.value : this.userId,
@@ -16570,7 +16570,7 @@ class EmergencyCard extends DataClass implements Insertable<EmergencyCard> {
           other.createdAt == this.createdAt);
 }
 
-class EmergencyCardCompanion extends UpdateCompanion<EmergencyCard> {
+class EmergencyCardsCompanion extends UpdateCompanion<EmergencyCard> {
   final Value<int> id;
   final Value<String> userId;
   final Value<String> name;
@@ -16579,7 +16579,7 @@ class EmergencyCardCompanion extends UpdateCompanion<EmergencyCard> {
   final Value<String> relation;
   final Value<String?> medicalNotes;
   final Value<DateTime> createdAt;
-  const EmergencyCardCompanion({
+  const EmergencyCardsCompanion({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
     this.name = const Value.absent(),
@@ -16589,7 +16589,7 @@ class EmergencyCardCompanion extends UpdateCompanion<EmergencyCard> {
     this.medicalNotes = const Value.absent(),
     this.createdAt = const Value.absent(),
   });
-  EmergencyCardCompanion.insert({
+  EmergencyCardsCompanion.insert({
     this.id = const Value.absent(),
     required String userId,
     required String name,
@@ -16626,7 +16626,7 @@ class EmergencyCardCompanion extends UpdateCompanion<EmergencyCard> {
     });
   }
 
-  EmergencyCardCompanion copyWith({
+  EmergencyCardsCompanion copyWith({
     Value<int>? id,
     Value<String>? userId,
     Value<String>? name,
@@ -16636,7 +16636,7 @@ class EmergencyCardCompanion extends UpdateCompanion<EmergencyCard> {
     Value<String?>? medicalNotes,
     Value<DateTime>? createdAt,
   }) {
-    return EmergencyCardCompanion(
+    return EmergencyCardsCompanion(
       id: id ?? this.id,
       userId: userId ?? this.userId,
       name: name ?? this.name,
@@ -16680,7 +16680,7 @@ class EmergencyCardCompanion extends UpdateCompanion<EmergencyCard> {
 
   @override
   String toString() {
-    return (StringBuffer('EmergencyCardCompanion(')
+    return (StringBuffer('EmergencyCardsCompanion(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
           ..write('name: $name, ')
@@ -18748,7 +18748,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       $DoctorAppointmentsTable(this);
   late final $LabReportsTable labReports = $LabReportsTable(this);
   late final $AbhaLinksTable abhaLinks = $AbhaLinksTable(this);
-  late final $EmergencyCardTable emergencyCard = $EmergencyCardTable(this);
+  late final $EmergencyCardsTable emergencyCards = $EmergencyCardsTable(this);
   late final $FestivalCalendarTable festivalCalendar = $FestivalCalendarTable(
     this,
   );
@@ -18786,7 +18786,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     doctorAppointments,
     labReports,
     abhaLinks,
-    emergencyCard,
+    emergencyCards,
     festivalCalendar,
     remoteConfigCache,
     weddingEvents,
@@ -26614,8 +26614,8 @@ typedef $$AbhaLinksTableProcessedTableManager =
       AbhaLink,
       PrefetchHooks Function()
     >;
-typedef $$EmergencyCardTableCreateCompanionBuilder =
-    EmergencyCardCompanion Function({
+typedef $$EmergencyCardsTableCreateCompanionBuilder =
+    EmergencyCardsCompanion Function({
       Value<int> id,
       required String userId,
       required String name,
@@ -26625,8 +26625,8 @@ typedef $$EmergencyCardTableCreateCompanionBuilder =
       Value<String?> medicalNotes,
       required DateTime createdAt,
     });
-typedef $$EmergencyCardTableUpdateCompanionBuilder =
-    EmergencyCardCompanion Function({
+typedef $$EmergencyCardsTableUpdateCompanionBuilder =
+    EmergencyCardsCompanion Function({
       Value<int> id,
       Value<String> userId,
       Value<String> name,
@@ -26637,9 +26637,9 @@ typedef $$EmergencyCardTableUpdateCompanionBuilder =
       Value<DateTime> createdAt,
     });
 
-class $$EmergencyCardTableFilterComposer
-    extends Composer<_$AppDatabase, $EmergencyCardTable> {
-  $$EmergencyCardTableFilterComposer({
+class $$EmergencyCardsTableFilterComposer
+    extends Composer<_$AppDatabase, $EmergencyCardsTable> {
+  $$EmergencyCardsTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -26687,9 +26687,9 @@ class $$EmergencyCardTableFilterComposer
   );
 }
 
-class $$EmergencyCardTableOrderingComposer
-    extends Composer<_$AppDatabase, $EmergencyCardTable> {
-  $$EmergencyCardTableOrderingComposer({
+class $$EmergencyCardsTableOrderingComposer
+    extends Composer<_$AppDatabase, $EmergencyCardsTable> {
+  $$EmergencyCardsTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -26737,9 +26737,9 @@ class $$EmergencyCardTableOrderingComposer
   );
 }
 
-class $$EmergencyCardTableAnnotationComposer
-    extends Composer<_$AppDatabase, $EmergencyCardTable> {
-  $$EmergencyCardTableAnnotationComposer({
+class $$EmergencyCardsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $EmergencyCardsTable> {
+  $$EmergencyCardsTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -26775,35 +26775,37 @@ class $$EmergencyCardTableAnnotationComposer
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 }
 
-class $$EmergencyCardTableTableManager
+class $$EmergencyCardsTableTableManager
     extends
         RootTableManager<
           _$AppDatabase,
-          $EmergencyCardTable,
+          $EmergencyCardsTable,
           EmergencyCard,
-          $$EmergencyCardTableFilterComposer,
-          $$EmergencyCardTableOrderingComposer,
-          $$EmergencyCardTableAnnotationComposer,
-          $$EmergencyCardTableCreateCompanionBuilder,
-          $$EmergencyCardTableUpdateCompanionBuilder,
+          $$EmergencyCardsTableFilterComposer,
+          $$EmergencyCardsTableOrderingComposer,
+          $$EmergencyCardsTableAnnotationComposer,
+          $$EmergencyCardsTableCreateCompanionBuilder,
+          $$EmergencyCardsTableUpdateCompanionBuilder,
           (
             EmergencyCard,
-            BaseReferences<_$AppDatabase, $EmergencyCardTable, EmergencyCard>,
+            BaseReferences<_$AppDatabase, $EmergencyCardsTable, EmergencyCard>,
           ),
           EmergencyCard,
           PrefetchHooks Function()
         > {
-  $$EmergencyCardTableTableManager(_$AppDatabase db, $EmergencyCardTable table)
-    : super(
+  $$EmergencyCardsTableTableManager(
+    _$AppDatabase db,
+    $EmergencyCardsTable table,
+  ) : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$EmergencyCardTableFilterComposer($db: db, $table: table),
+              $$EmergencyCardsTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$EmergencyCardTableOrderingComposer($db: db, $table: table),
+              $$EmergencyCardsTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$EmergencyCardTableAnnotationComposer($db: db, $table: table),
+              $$EmergencyCardsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
@@ -26814,7 +26816,7 @@ class $$EmergencyCardTableTableManager
                 Value<String> relation = const Value.absent(),
                 Value<String?> medicalNotes = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
-              }) => EmergencyCardCompanion(
+              }) => EmergencyCardsCompanion(
                 id: id,
                 userId: userId,
                 name: name,
@@ -26834,7 +26836,7 @@ class $$EmergencyCardTableTableManager
                 required String relation,
                 Value<String?> medicalNotes = const Value.absent(),
                 required DateTime createdAt,
-              }) => EmergencyCardCompanion.insert(
+              }) => EmergencyCardsCompanion.insert(
                 id: id,
                 userId: userId,
                 name: name,
@@ -26852,19 +26854,19 @@ class $$EmergencyCardTableTableManager
       );
 }
 
-typedef $$EmergencyCardTableProcessedTableManager =
+typedef $$EmergencyCardsTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDatabase,
-      $EmergencyCardTable,
+      $EmergencyCardsTable,
       EmergencyCard,
-      $$EmergencyCardTableFilterComposer,
-      $$EmergencyCardTableOrderingComposer,
-      $$EmergencyCardTableAnnotationComposer,
-      $$EmergencyCardTableCreateCompanionBuilder,
-      $$EmergencyCardTableUpdateCompanionBuilder,
+      $$EmergencyCardsTableFilterComposer,
+      $$EmergencyCardsTableOrderingComposer,
+      $$EmergencyCardsTableAnnotationComposer,
+      $$EmergencyCardsTableCreateCompanionBuilder,
+      $$EmergencyCardsTableUpdateCompanionBuilder,
       (
         EmergencyCard,
-        BaseReferences<_$AppDatabase, $EmergencyCardTable, EmergencyCard>,
+        BaseReferences<_$AppDatabase, $EmergencyCardsTable, EmergencyCard>,
       ),
       EmergencyCard,
       PrefetchHooks Function()
@@ -27910,8 +27912,8 @@ class $AppDatabaseManager {
       $$LabReportsTableTableManager(_db, _db.labReports);
   $$AbhaLinksTableTableManager get abhaLinks =>
       $$AbhaLinksTableTableManager(_db, _db.abhaLinks);
-  $$EmergencyCardTableTableManager get emergencyCard =>
-      $$EmergencyCardTableTableManager(_db, _db.emergencyCard);
+  $$EmergencyCardsTableTableManager get emergencyCards =>
+      $$EmergencyCardsTableTableManager(_db, _db.emergencyCards);
   $$FestivalCalendarTableTableManager get festivalCalendar =>
       $$FestivalCalendarTableTableManager(_db, _db.festivalCalendar);
   $$RemoteConfigCacheTableTableManager get remoteConfigCache =>

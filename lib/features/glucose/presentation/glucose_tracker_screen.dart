@@ -70,7 +70,7 @@ class GlucoseTrackerScreen extends ConsumerWidget {
                 if (latest != null) ...[
                   Text(
                     '${latest['value']}',
-                    style: AppTextStyles.displayLarge(isDark: true).copyWith(fontSize: 80, color: Colors.white),
+                    style: AppTextStyles.displayLarge(true).copyWith(fontSize: 80, color: Colors.white),
                   ),
                   Text('mg/dL · ${latest['type']}', style: const TextStyle(color: Colors.white70)),
                   const SizedBox(height: 24),
@@ -78,7 +78,7 @@ class GlucoseTrackerScreen extends ConsumerWidget {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
+                        color: Colors.white.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(color: Colors.white30),
                       ),
@@ -118,7 +118,7 @@ class GlucoseTrackerScreen extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Glucose Trend', style: AppTextStyles.h3(isDark: isDark)),
+        Text('Glucose Trend', style: AppTextStyles.h3(isDark)),
         const SizedBox(height: 24),
         SizedBox(
           height: 200,
@@ -129,14 +129,14 @@ class GlucoseTrackerScreen extends ConsumerWidget {
               borderData: FlBorderData(show: false),
               lineBarsData: [
                 LineChartBarData(
-                  spots: logs.reversed.asMap().entries.map((e) {
+                  spots: logs.reversed.toList().asMap().entries.map((e) {
                     return FlSpot(e.key.toDouble(), (e.value['value'] as double));
                   }).toList(),
                   isCurved: true,
                   color: Colors.tealAccent,
                   barWidth: 3,
                   dotData: const FlDotData(show: false),
-                  belowBarData: BarAreaData(show: true, color: Colors.tealAccent.withOpacity(0.1)),
+                  belowBarData: BarAreaData(show: true, color: Colors.tealAccent.withValues(alpha: 0.1)),
                 ),
               ],
             ),
@@ -150,7 +150,7 @@ class GlucoseTrackerScreen extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('History', style: AppTextStyles.h3(isDark: isDark)),
+        Text('History', style: AppTextStyles.h3(isDark)),
         const SizedBox(height: 12),
         ...logs.map((log) => _buildLogItem(log, isDark)),
       ],
@@ -189,8 +189,8 @@ class GlucoseTrackerScreen extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('${log['value']} mg/dL', style: AppTextStyles.labelLarge(isDark: isDark)),
-                Text(DateFormat('MMM dd, hh:mm a').format(log['loggedAt']), style: AppTextStyles.caption(isDark: isDark)),
+                Text('${log['value']} mg/dL', style: AppTextStyles.labelLarge(isDark)),
+                Text(DateFormat('MMM dd, hh:mm a').format(log['loggedAt']), style: AppTextStyles.caption(isDark)),
               ],
             ),
           ),
@@ -237,7 +237,7 @@ class _GlucoseLogSheetState extends State<_GlucoseLogSheet> {
     await widget.ref.read(glucoseDriftServiceProvider).insertGlucoseLog(
       userId: 'current_user',
       value: val,
-      type: _selectedType,
+      readingType: _selectedType,
     );
 
     widget.ref.invalidate(glucoseLogsProvider);
@@ -260,7 +260,7 @@ class _GlucoseLogSheetState extends State<_GlucoseLogSheet> {
             decoration: const InputDecoration(labelText: 'Reading (mg/dL)', hintText: '100'),
           ),
           const SizedBox(height: 24),
-          Text('Reading Type', style: AppTextStyles.bodySmall(isDark: false)),
+          Text('Reading Type', style: AppTextStyles.bodySmall(false)),
           const SizedBox(height: 8),
           Wrap(
             spacing: 8,

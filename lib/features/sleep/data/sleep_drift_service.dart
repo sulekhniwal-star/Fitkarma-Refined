@@ -9,19 +9,14 @@ class SleepDriftService {
 
   SleepDriftService(this._db);
 
-  /// Returns a stream of sleep logs for the last 7 days.
   Stream<List<SleepLog>> getWeeklyLogs(String userId) {
     final sevenDaysAgo = DateTime.now().subtract(const Duration(days: 7));
     return (_db.select(_db.sleepLogs)
-          ..where((t) => t.userId.equals(userId) & t.loggedAt.isAfterValue(sevenDaysAgo))
-          ..orderBy([(t) => OrderingTerm(expression: t.loggedAt, mode: OrderingMode.desc)]))
+          ..where((t) => t.userId.equals(userId) & t.date.isBiggerThanValue(sevenDaysAgo))
+          ..orderBy([(t) => OrderingTerm(expression: t.date, mode: OrderingMode.desc)]))
         .watch();
   }
 
-  /// Calculates the current weekly sleep debt in minutes.
-  /// 
-  /// Each night's target is 7 hours (420 minutes). 
-  /// Surplus sleep does not offset debt from previous nights.
   int computeSleepDebt(List<SleepLog> logs) {
     const targetMin = 420;
     int totalDebt = 0;
@@ -35,16 +30,13 @@ class SleepDriftService {
     return totalDebt;
   }
 
-  /// Detects the user's chronotype based on historical bedtime.
-  /// 
-  /// Requires at least 30 logs for a stable detection.
   Chronotype? detectChronotype(List<SleepLog> logs) {
     if (logs.length < 30) return null;
 
     double totalBedtimeHour = 0;
     for (final log in logs) {
-      final hour = log.bedtime.hour + (log.bedtime.minute / 60.0);
-      // Handle wrap-around (e.g., 01:00 am as 25:00)
+      final parts = log.bedtime.split(':');
+      final hour = double.parse(parts[0]) + (double.parse(parts[1]) / 60.0);
       totalBedtimeHour += (hour < 5) ? (hour + 24) : hour;
     }
 
@@ -55,7 +47,6 @@ class SleepDriftService {
     return Chronotype.intermediate;
   }
 
-  /// Inserts a new sleep log.
   Future<int> insertSleepLog({
     required String userId,
     required DateTime bedtime,
@@ -64,15 +55,18 @@ class SleepDriftService {
     String? note,
   }) async {
     final duration = wakeTime.difference(bedtime).inMinutes;
+    final bedtimeStr = '${bedtime.hour.toString().padLeft(2, '0')}:${bedtime.minute.toString().padLeft(2, '0')}';
+    final wakeTimeStr = '${wakeTime.hour.toString().padLeft(2, '0')}:${wakeTime.minute.toString().padLeft(2, '0')}';
     
     final companion = SleepLogsCompanion.insert(
       userId: userId,
-      bedtime: bedtime,
-      wakeTime: wakeTime,
+      date: DateTime.now(),
+      bedtime: bedtimeStr,
+      wakeTime: wakeTimeStr,
       durationMin: duration,
-      quality: quality,
-      loggedAt: DateTime.now(),
-      idempotencyKey: generateIdempotencyKey(userId, 'sleep_log', DateTime.now().toIso8601String()),
+      qualityScore: quality,
+      notes: Value(note),
+      source: 'manual',
     );
 
     return await _db.into(_db.sleepLogs).insert(companion);

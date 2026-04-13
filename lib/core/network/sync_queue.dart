@@ -30,7 +30,7 @@ class SyncQueueProcessor {
   /// Fetches pending sync items and processes them in batches.
   Future<void> flushPending() async {
     final pendingItems = await (db.select(db.syncQueue)
-          ..where((t) => t.retryCount.isLessThan(5))
+          ..where((t) => t.retryCount.isSmallerThanValue(5))
           ..orderBy([(t) => OrderingTerm(expression: t.createdAt, mode: OrderingMode.asc)])
           ..limit(20))
         .get();
