@@ -970,7 +970,7 @@
 
 ## PHASE 8 — Festival & Wedding Modules
 
-- [ ] **8.1 — Implement FestivalDateEngine**
+- [x] **8.1 — Implement FestivalDateEngine**
   ```
   Create lib/features/festival/domain/festival_date_engine.dart. Implement class FestivalDateEngine with:
 
@@ -1005,7 +1005,7 @@
   - paryushana: type=jainFast, forbiddenFoods=[potato, carrot, beet, onion, garlic]
   ```
 
-- [ ] **8.3 — Implement FestivalCalendarScreen and FestivalDietPlanScreen**
+- [x] **8.3 — Implement FestivalCalendarScreen and FestivalDietPlanScreen**
   ```
   Create lib/features/festival/presentation/festival_calendar_screen.dart per spec Section 7.14.
   Layout:

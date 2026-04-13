@@ -16,6 +16,8 @@ import '../../features/blood_pressure/presentation/bp_tracker_screen.dart';
 import '../../features/glucose/presentation/glucose_tracker_screen.dart';
 import '../../features/nutrition/presentation/nutrition_goal_screen.dart';
 import '../../shared/widgets/bottom_nav_bar.dart';
+import '../../features/festival/presentation/festival_calendar_screen.dart';
+import '../../features/festival/presentation/festival_diet_plan_screen.dart';
 import '../storage/app_database.dart';
 
 final driftDbProvider = Provider<AppDatabase>((ref) {
@@ -209,11 +211,13 @@ final appRouter = Provider<GoRouter>((ref) {
       GoRoute(path: '/subscription', builder: (context, state) => const _PlaceholderScreen(name: 'SubscriptionPlansScreen')),
       GoRoute(
         path: '/festival-calendar',
-        builder: (context, state) => const _PlaceholderScreen(name: 'FestivalCalendarScreen'),
+        builder: (context, state) => const FestivalCalendarScreen(),
         routes: [
           GoRoute(
             path: ':festivalKey/diet',
-            builder: (context, state) => _PlaceholderScreen(name: 'DietPlan: ${state.pathParameters['festivalKey']}'),
+            builder: (context, state) => FestivalDietPlanScreen(
+              festivalKey: state.pathParameters['festivalKey'] ?? '',
+            ),
           ),
         ],
       ),
