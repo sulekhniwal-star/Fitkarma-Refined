@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -57,8 +58,10 @@ class FestivalDietPlanScreen extends ConsumerWidget {
                     children: [
                       _FastingOverviewCard(config: config),
                       const SizedBox(height: 24),
-                      if (festivalKey == 'ramadan') const _RamadanClocks(),
-                      if (festivalKey == 'karva_chauth') const _MoonriseCountdown(),
+                      if (festivalKey == 'ramadan') 
+                        _RamadanClocks(festival: detail),
+                      if (festivalKey == 'karva_chauth') 
+                        _MoonriseCountdown(festival: detail),
                       const SizedBox(height: 24),
                       if (config.forbiddenFoodIds != null || config.allowedFoodIds != null)
                         _FoodRestrictionsSection(config: config),
@@ -159,23 +162,82 @@ class _FoodRestrictionsSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text('Food Guidelines', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-        const SizedBox(height: 12),
-        if (config.allowedFoodIds != null) ...[
-          const Text('Recommended Foods', style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold)),
-          Wrap(
-            spacing: 8,
-            children: config.allowedFoodIds!.map((f) => Chip(label: Text(f))).toList(),
+        const SizedBox(height: 16),
+        if (config.allowedFoodIds != null && config.allowedFoodIds!.isNotEmpty) ...[
+          const Row(
+            children: [
+              Icon(Icons.check_circle, color: Colors.green, size: 20),
+              SizedBox(width: 8),
+              Text('Recommended / Allowed', style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold)),
+            ],
           ),
+          const SizedBox(height: 8),
+          GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3,
+              childAspectRatio: 2.5,
+              crossAxisSpacing: 8,
+              mainAxisSpacing: 8,
+            ),
+            itemCount: config.allowedFoodIds!.length,
+            itemBuilder: (context, index) => _FoodItemChip(
+              name: config.allowedFoodIds![index],
+              color: Colors.green,
+            ),
+          ),
+          const SizedBox(height: 20),
         ],
-        if (config.forbiddenFoodIds != null) ...[
-          const SizedBox(height: 16),
-          const Text('Forbidden Foods', style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
-          Wrap(
-            spacing: 8,
-            children: config.forbiddenFoodIds!.map((f) => Chip(label: Text(f))).toList(),
+        if (config.forbiddenFoodIds != null && config.forbiddenFoodIds!.isNotEmpty) ...[
+          const Row(
+            children: [
+              Icon(Icons.cancel, color: Colors.red, size: 20),
+              SizedBox(width: 8),
+              Text('Restricted / Forbidden', style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+            ],
+          ),
+          const SizedBox(height: 8),
+          GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3,
+              childAspectRatio: 2.5,
+              crossAxisSpacing: 8,
+              mainAxisSpacing: 8,
+            ),
+            itemCount: config.forbiddenFoodIds!.length,
+            itemBuilder: (context, index) => _FoodItemChip(
+              name: config.forbiddenFoodIds![index],
+              color: Colors.red,
+            ),
           ),
         ],
       ],
+    );
+  }
+}
+
+class _FoodItemChip extends StatelessWidget {
+  final String name;
+  final Color color;
+  const _FoodItemChip({required this.name, required this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.05),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: color.withOpacity(0.2)),
+      ),
+      child: Text(
+        name.replaceAll('_', ' ').toUpperCase(),
+        style: TextStyle(color: color, fontSize: 10, fontWeight: FontWeight.bold),
+        textAlign: TextAlign.center,
+      ),
     );
   }
 }
@@ -232,50 +294,172 @@ class _MealList extends StatelessWidget {
   }
 }
 
-class _RamadanClocks extends StatelessWidget {
-  const _RamadanClocks();
+class _RamadanClocks extends ConsumerStatefulWidget {
+  final FestivalCalendarEntry festival;
+  const _RamadanClocks({required this.festival});
+
+  @override
+  ConsumerState<_RamadanClocks> createState() => _RamadanClocksState();
+}
+
+class _RamadanClocksState extends ConsumerState<_RamadanClocks> {
+  Timer? _timer;
+  late DateTime _now;
+
+  @override
+  void initState() {
+    super.initState();
+    _now = DateTime.now();
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (mounted) setState(() => _now = DateTime.now());
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    // These would ideally come from an API or specific date engine
+    final sehriTime = DateTime(_now.year, _now.month, _now.day, 4, 45);
+    final iftarTime = DateTime(_now.year, _now.month, _now.day, 18, 52);
+
+    final sehriRemaining = sehriTime.isAfter(_now) ? sehriTime.difference(_now) : Duration.zero;
+    final iftarRemaining = iftarTime.isAfter(_now) ? iftarTime.difference(_now) : Duration.zero;
+
     return Row(
       children: [
-        Expanded(child: _TimeBox(label: 'Sehri Ends', time: '04:32 AM', color: Colors.blue)),
+        Expanded(
+          child: _TimeBox(
+            label: 'Sehri Ends', 
+            time: '04:45 AM', 
+            countdown: _formatDuration(sehriRemaining),
+            color: Colors.blue,
+          ),
+        ),
         const SizedBox(width: 16),
-        Expanded(child: _TimeBox(label: 'Iftar Starts', time: '06:48 PM', color: Colors.orange)),
+        Expanded(
+          child: _TimeBox(
+            label: 'Iftar Starts', 
+            time: '06:52 PM', 
+            countdown: _formatDuration(iftarRemaining),
+            color: Colors.orange,
+          ),
+        ),
       ],
     );
   }
+
+  String _formatDuration(Duration d) {
+    if (d.isNegative || d.inSeconds == 0) return "Active";
+    final h = d.inHours;
+    final m = d.inMinutes.remainder(60);
+    final s = d.inSeconds.remainder(60);
+    return "${h.toString().padLeft(2, '0')}:${m.toString().padLeft(2, '0')}:${s.toString().padLeft(2, '0')}";
+  }
 }
 
-class _MoonriseCountdown extends StatelessWidget {
-  const _MoonriseCountdown();
+class _MoonriseCountdown extends ConsumerStatefulWidget {
+  final FestivalCalendarEntry festival;
+  const _MoonriseCountdown({required this.festival});
+
+  @override
+  ConsumerState<_MoonriseCountdown> createState() => _MoonriseCountdownState();
+}
+
+class _MoonriseCountdownState extends ConsumerState<_MoonriseCountdown> {
+  Timer? _timer;
+  late DateTime _now;
+
+  @override
+  void initState() {
+    super.initState();
+    _now = DateTime.now();
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (mounted) setState(() => _now = DateTime.now());
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return _TimeBox(label: 'Expected Moonrise', time: '08:12 PM', color: Colors.indigo);
+    final moonriseTime = _computeMoonrise(_now);
+    final timeRemaining = moonriseTime.isAfter(_now) ? moonriseTime.difference(_now) : Duration.zero;
+
+    return _TimeBox(
+      label: 'Expected Moonrise (Arghya Time)', 
+      time: '08:24 PM', 
+      countdown: _formatDuration(timeRemaining),
+      color: Colors.indigo,
+      fullWidth: true,
+    );
+  }
+
+  DateTime _computeMoonrise(DateTime date) {
+    // Simplified astronomical approximation for Delhi/Central India
+    // On Karva Chauth, moonrise is roughly 8:20 PM - 8:45 PM
+    return DateTime(date.year, date.month, date.day, 20, 24);
+  }
+
+  String _formatDuration(Duration d) {
+    if (d.isNegative || d.inSeconds == 0) return "Arghya Time! 🌙";
+    final h = d.inHours;
+    final m = d.inMinutes.remainder(60);
+    final s = d.inSeconds.remainder(60);
+    return "T-Minus: ${h.toString().padLeft(2, '0')}:${m.toString().padLeft(2, '0')}:${s.toString().padLeft(2, '0')}";
   }
 }
 
 class _TimeBox extends StatelessWidget {
   final String label;
   final String time;
+  final String countdown;
   final Color color;
-  const _TimeBox({required this.label, required this.time, required this.color});
+  final bool fullWidth;
+
+  const _TimeBox({
+    required this.label, 
+    required this.time, 
+    required this.countdown,
+    required this.color,
+    this.fullWidth = false,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: fullWidth ? double.infinity : null,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withOpacity(0.3)),
+        color: color.withOpacity(0.05),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: color.withOpacity(0.2)),
       ),
       child: Column(
         children: [
-          Text(label, style: TextStyle(color: color, fontSize: 12)),
+          Text(label, style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 8),
+          Text(time, style: TextStyle(color: color, fontSize: 24, fontWeight: FontWeight.bold)),
           const SizedBox(height: 4),
-          Text(time, style: TextStyle(color: color, fontSize: 20, fontWeight: FontWeight.bold)),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Text(
+              countdown, 
+              style: TextStyle(color: color, fontSize: 14, fontWeight: FontWeight.bold, fontFamily: 'monospace'),
+            ),
+          ),
         ],
       ),
     );

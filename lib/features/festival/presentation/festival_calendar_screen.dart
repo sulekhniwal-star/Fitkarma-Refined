@@ -7,6 +7,7 @@ import 'festival_providers.dart';
 import 'festival_filter_provider.dart';
 import '../../../shared/widgets/async_value_widget.dart';
 import '../../../shared/widgets/bilingual_label.dart';
+import 'dart:async';
 
 class FestivalCalendarScreen extends ConsumerWidget {
   const FestivalCalendarScreen({super.key});
@@ -22,7 +23,7 @@ class FestivalCalendarScreen extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const ActiveFestivalBanner(),
+            const FestivalCountdownBanner(),
             const SizedBox(height: 16),
             const RegionFilterRow(),
             const SizedBox(height: 16),
@@ -38,19 +39,48 @@ class FestivalCalendarScreen extends ConsumerWidget {
   }
 }
 
-class ActiveFestivalBanner extends ConsumerWidget {
-  const ActiveFestivalBanner({super.key});
+class FestivalCountdownBanner extends ConsumerStatefulWidget {
+  const FestivalCountdownBanner({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<FestivalCountdownBanner> createState() => _FestivalCountdownBannerState();
+}
+
+class _FestivalCountdownBannerState extends ConsumerState<FestivalCountdownBanner> {
+  Timer? _timer;
+  late DateTime _now;
+
+  @override
+  void initState() {
+    super.initState();
+    _now = DateTime.now();
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (mounted) setState(() => _now = DateTime.now());
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final activeAsync = ref.watch(activeFestivalsProvider);
 
     return AsyncValueWidget<List<FestivalCalendarEntry>>(
-  value: activeAsync as AsyncValue<List<FestivalCalendarEntry>>,
+      value: activeAsync as AsyncValue<List<FestivalCalendarEntry>>,
       data: (festivals) {
         if (festivals.isEmpty) return const SizedBox.shrink();
 
         final festival = festivals.first;
+        final timeRemaining = festival.endDate.difference(_now);
+        
+        final hours = timeRemaining.inHours;
+        final minutes = timeRemaining.inMinutes.remainder(60);
+        final seconds = timeRemaining.inSeconds.remainder(60);
+
         return Container(
           width: double.infinity,
           padding: const EdgeInsets.all(16),
@@ -59,18 +89,39 @@ class ActiveFestivalBanner extends ConsumerWidget {
               colors: [Theme.of(context).primaryColor, Colors.orangeAccent],
             ),
             borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: Theme.of(context).primaryColor.withOpacity(0.3),
+                blurRadius: 8,
+                offset: const Offset(0, 4),
+              ),
+            ],
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 children: [
-                   const Icon(Icons.celebration, color: Colors.white),
+                   Text(
+                     festivalEmojis[festival.festivalKey] ?? '✨',
+                     style: const TextStyle(fontSize: 24),
+                   ),
                    const SizedBox(width: 8),
                    Expanded(
                      child: Text(
                        '${festival.nameEn} is Active!',
                        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
+                     ),
+                   ),
+                   Container(
+                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                     decoration: BoxDecoration(
+                       color: Colors.white24,
+                       borderRadius: BorderRadius.circular(8),
+                     ),
+                     child: Text(
+                       '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}',
+                       style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontFamily: 'monospace'),
                      ),
                    ),
                 ],
@@ -83,7 +134,11 @@ class ActiveFestivalBanner extends ConsumerWidget {
               const SizedBox(height: 12),
               ElevatedButton(
                 onPressed: () => context.push('/festival-calendar/${festival.festivalKey}/diet'),
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.white, foregroundColor: Colors.orange),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white, 
+                  foregroundColor: Colors.orange,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                ),
                 child: const Text('View Diet Plan'),
               ),
             ],
@@ -151,27 +206,40 @@ class FestivalCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Padding(
-        padding: const EdgeInsets.all(12.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
-                const CircleAvatar(
-                  backgroundColor: Colors.orange,
-                  child: Icon(Icons.event, color: Colors.white),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Colors.orange.withOpacity(0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Text(
+                    festivalEmojis[festival.festivalKey] ?? '✨',
+                    style: const TextStyle(fontSize: 24),
+                  ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      BilingualLabel(english: festival.nameEn, hindi: festival.nameHi),
+                      BilingualLabel(
+                        english: festival.nameEn, 
+                        hindi: festival.nameHi,
+                        englishStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                      ),
+                      const SizedBox(height: 2),
                       Text(
                         '${festival.startDate.day} ${_getMonth(festival.startDate.month)} - ${festival.endDate.day} ${_getMonth(festival.endDate.month)}',
-                        style: Theme.of(context).textTheme.bodySmall,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey.shade600),
                       ),
                     ],
                   ),
@@ -187,17 +255,30 @@ class FestivalCard extends StatelessWidget {
                 _TagChip(label: festival.religion.toUpperCase(), color: Colors.blue),
               ],
             ),
-            const Divider(),
+            const SizedBox(height: 12),
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                TextButton(
-                  onPressed: () {},
-                  child: const Text('Set Reminder'),
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: () {},
+                    icon: const Icon(Icons.notifications_none, size: 18),
+                    label: const Text('Remind Me'),
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    ),
+                  ),
                 ),
-                ElevatedButton(
-                  onPressed: () => context.push('/festival-calendar/${festival.festivalKey}/diet'),
-                  child: const Text('View Diet Plan'),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () => context.push('/festival-calendar/${festival.festivalKey}/diet'),
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    ),
+                    child: const Text('Diet Plan'),
+                  ),
                 ),
               ],
             ),
@@ -234,28 +315,63 @@ class _TagChip extends StatelessWidget {
   }
 }
 
-class MiniTableCalendar extends StatelessWidget {
+class MiniTableCalendar extends ConsumerWidget {
   const MiniTableCalendar({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final allFestivalsAsync = ref.watch(upcomingFestivalsProvider); // Using upcoming for now or create a better provider
+
     return Container(
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16),
         boxShadow: [
-          BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2)),
+          BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 4)),
         ],
       ),
-      child: TableCalendar(
-        firstDay: DateTime.utc(2024, 1, 1),
-        lastDay: DateTime.utc(2030, 12, 31),
-        focusedDay: DateTime.now(),
-        calendarFormat: CalendarFormat.month,
-        headerStyle: const HeaderStyle(formatButtonVisible: false, titleCentered: true),
-        calendarStyle: const CalendarStyle(
-          todayDecoration: BoxDecoration(color: Colors.orange, shape: BoxShape.circle),
-        ),
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              children: [
+                const Icon(Icons.calendar_month, color: Colors.orange),
+                const SizedBox(width: 8),
+                Text('Festival Calendar', style: Theme.of(context).textTheme.titleMedium),
+              ],
+            ),
+          ),
+          TableCalendar(
+            firstDay: DateTime.utc(2024, 1, 1),
+            lastDay: DateTime.utc(2030, 12, 31),
+            focusedDay: DateTime.now(),
+            calendarFormat: CalendarFormat.month,
+            headerVisible: true,
+            headerStyle: const HeaderStyle(
+              formatButtonVisible: false, 
+              titleCentered: true,
+              titleTextStyle: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            calendarStyle: CalendarStyle(
+              todayDecoration: const BoxDecoration(color: Colors.orange, shape: BoxShape.circle),
+              markerDecoration: const BoxDecoration(color: Colors.redAccent, shape: BoxShape.circle),
+              outsideDaysVisible: false,
+            ),
+            eventLoader: (day) {
+              return allFestivalsAsync.when(
+                data: (festivals) => festivals.where((f) => 
+                  isSameDay(f.startDate, day) || 
+                  (day.isAfter(f.startDate) && day.isBefore(f.endDate)) ||
+                  isSameDay(f.endDate, day)
+                ).toList(),
+                loading: () => [],
+                error: (_, __) => [],
+              );
+            },
+          ),
+          const SizedBox(height: 16),
+        ],
       ),
     );
   }
@@ -301,3 +417,25 @@ class WeddingSetupCTA extends StatelessWidget {
     );
   }
 }
+const Map<String, String> festivalEmojis = {
+  'navratri': '🔱',
+  'diwali': '🪔',
+  'holi': '🎨',
+  'karva_chauth': '🌙',
+  'ramadan': '🌙',
+  'eid_ul_fitr': '🌙',
+  'eid_ul_adha': '🕋',
+  'janmashtami': '🏺',
+  'shivaratri': '🔱',
+  'christmas': '🎄',
+  'ganesh_chaturthi': '🐘',
+  'raksha_bandhan': '🥨',
+  'guru_nanak_jayanti': '🕯️',
+  'onam': '🛶',
+  'pongal': '🥣',
+  'baisakhi': '🌾',
+  'lohri': '🔥',
+  'buddha_purnima': '☸️',
+  'republic_day': '🇮🇳',
+  'independence_day': '🇮🇳',
+};

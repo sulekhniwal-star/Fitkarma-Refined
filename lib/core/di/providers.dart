@@ -18,6 +18,11 @@ import '../../features/nutrition/presentation/nutrition_goal_screen.dart';
 import '../../shared/widgets/bottom_nav_bar.dart';
 import '../../features/festival/presentation/festival_calendar_screen.dart';
 import '../../features/festival/presentation/festival_diet_plan_screen.dart';
+import '../../features/wedding_planner/presentation/wedding_planner_home_screen.dart';
+import '../../features/wedding_planner/presentation/wedding_event_day_screen.dart';
+import '../../features/wedding_planner/presentation/wedding_recovery_screen.dart';
+import '../../features/wedding_planner/presentation/wedding_setup_screen.dart';
+import '../../features/auth/data/users_repository.dart';
 import '../storage/app_database.dart';
 
 final driftDbProvider = Provider<AppDatabase>((ref) {
@@ -223,13 +228,15 @@ final appRouter = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: '/wedding-planner',
-        builder: (context, state) => const _PlaceholderScreen(name: 'WeddingPlannerHomeScreen'),
+        builder: (context, state) => const WeddingPlannerHomeScreen(),
         routes: [
-          GoRoute(path: 'setup', builder: (context, state) => const _PlaceholderScreen(name: 'WeddingPlannerSetupScreen')),
-          GoRoute(path: 'recovery', builder: (context, state) => const _PlaceholderScreen(name: 'WeddingRecoveryScreen')),
+          GoRoute(path: 'setup', builder: (context, state) => const WeddingSetupScreen()),
+          GoRoute(path: 'recovery', builder: (context, state) => const WeddingRecoveryScreen()),
           GoRoute(
             path: 'event/:eventKey',
-            builder: (context, state) => _PlaceholderScreen(name: 'WeddingEvent: ${state.pathParameters['eventKey']}'),
+            builder: (context, state) => WeddingEventDayScreen(
+              eventKey: state.pathParameters['eventKey'] ?? '',
+            ),
           ),
         ],
       ),

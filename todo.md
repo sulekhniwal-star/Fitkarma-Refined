@@ -1018,7 +1018,7 @@
   Create FestivalDietPlanScreen for route /festival-calendar/:festivalKey/diet. Reads festivalKey, loads FestivalDietConfig. Pattern B scaffold with festival-specific hero color. Body: fasting overview card, allowed/forbidden food grids, day-by-day meal plan tabs, Quick Log CTA. Ramadan additions: Sehri + Iftar countdown clocks. Karva Chauth additions: moonrise countdown (compute from user GPS lat/lng + astronomical sunset formula).
   ```
 
-- [ ] **8.4 — Implement Wedding Planner setup flow (6 steps)**
+- [x] **8.4 — Implement Wedding Planner setup flow (6 steps)**
   ```
   Create lib/features/wedding_planner/presentation/wedding_setup_screen.dart. Implement a multi-step flow (6 steps) with a progress pill indicator. Use a PageView or step-by-step state machine via StateNotifierProvider<WeddingSetupNotifier>.
 
@@ -1033,7 +1033,7 @@
   On completion: saves to WeddingEvents Drift table + updates user record in Appwrite via usersRepository.updateWeddingData().
   ```
 
-- [ ] **8.5 — Implement Wedding Planner home + event day screens**
+- [x] **8.5 — Implement Wedding Planner home + event day screens**
   ```
   Create lib/features/wedding_planner/presentation/wedding_planner_home_screen.dart. Pattern B scaffold with gold gradient (#D4A017 → #B8860B). Hero: role badge, "Wedding in X days", next event name.
 
