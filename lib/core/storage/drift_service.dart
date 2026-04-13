@@ -2,9 +2,11 @@ import 'dart:convert';
 import '../security/key_manager.dart';
 import 'app_database.dart';
 
-/// Singleton service to manage the Drift database instance and its lifecycle.
+/// Service to manage the Drift database instance and its lifecycle.
 class DriftService {
-  DriftService._();
+  final AppDatabase database;
+  
+  DriftService(this.database);
 
   static AppDatabase? _db;
 
@@ -17,11 +19,6 @@ class DriftService {
   }
 
   /// Initializes the SQLCipher-encrypted database.
-  /// 
-  /// 1. Derives the master key from [KeyManager].
-  /// 2. Base64-encodes the key for SQLCipher consumption.
-  /// 3. Instantiates [AppDatabase].
-  /// 4. Pre-warms the connection to ensure immediate availability for the UI.
   static Future<void> init() async {
     // 1. Get the device-anchored master key
     final masterKeyBytes = await KeyManager.getMasterKey();
@@ -33,7 +30,6 @@ class DriftService {
     _db = AppDatabase(keyB64);
 
     // 4. Pre-warm connection
-    // This executes a no-op query to trigger the LazyDatabase open and pragmas.
     await _db!.customSelect('SELECT 1').get();
   }
 }

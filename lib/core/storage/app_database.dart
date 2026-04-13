@@ -8,6 +8,7 @@ import 'tables/core_log_tables.dart';
 import 'tables/sync_tables.dart';
 import 'tables/sensitive_tables.dart';
 import 'tables/india_platform_tables.dart';
+import 'tables/insight_tables.dart';
 
 part 'app_database.g.dart';
 
@@ -42,12 +43,14 @@ part 'app_database.g.dart';
   FestivalCalendar,
   RemoteConfigCache,
   WeddingEvents,
+  InsightLogs,
+  InsightRatings,
 ])
 class AppDatabase extends _$AppDatabase {
   AppDatabase(String encryptionKey) : super(_openConnection(encryptionKey));
 
   @override
-  int get schemaVersion => 5;
+  int get schemaVersion => 6;
 
   @override
   MigrationStrategy get migration {
@@ -99,6 +102,10 @@ class AppDatabase extends _$AppDatabase {
           await m.createTable(emergencyCards);
           await m.createTable(festivalCalendar);
           await m.createTable(remoteConfigCache);
+        }
+        if (from < 6) {
+          await m.createTable(insightLogs);
+          await m.createTable(insightRatings);
         }
       },
     );

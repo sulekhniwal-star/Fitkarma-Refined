@@ -908,7 +908,7 @@
 
 ## PHASE 7 — Insight Engine
 
-- [ ] **7.1 — Implement insight engine core (evaluator + scheduler)**
+- [x] **7.1 — Implement insight engine core (evaluator + scheduler)**
   ```
   Create lib/features/insight_engine/models/insight_rule.dart:
   abstract class InsightRule {
@@ -932,7 +932,7 @@
   - Stores user ratings (👍/👎) in Drift; suppresses rules with > 3 thumbs-down from the same user
   ```
 
-- [ ] **7.2 — Implement insight rules (all modules)**
+- [x] **7.2 — Implement insight rules (all modules)**
   ```
   Create lib/features/insight_engine/rules/ with these files:
 
