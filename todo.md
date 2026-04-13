@@ -518,7 +518,7 @@
 
 ## PHASE 3 — Drift Local Database
 
-- [ ] **3.1 — Define all Drift table classes**
+- [x] **3.1 — Define all Drift table classes**
   ```
   Create lib/core/storage/tables/. Create one file per table group:
 
@@ -533,7 +533,7 @@
   All tables must use @DataClassName annotations and override primaryKey where needed.
   ```
 
-- [ ] **3.2 — Implement `AppDatabase` class with migrations**
+- [x] **3.2 — Implement `AppDatabase` class with migrations**
   ```
   Create lib/core/storage/app_database.dart. Implement the AppDatabase class annotated with @DriftDatabase listing ALL table classes from 3.1. The constructor takes an encryptionKey String and passes it to _openConnection().
 
@@ -556,7 +556,7 @@
   Run `flutter pub run build_runner build` after implementing to generate the .g.dart file.
   ```
 
-- [ ] **3.3 — Implement `drift_service.dart` (singleton init)**
+- [x] **3.3 — Implement `drift_service.dart` (singleton init)**
   ```
   Create lib/core/storage/drift_service.dart. Implement class DriftService with:
   - static AppDatabase? _db
