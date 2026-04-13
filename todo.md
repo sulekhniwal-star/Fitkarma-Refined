@@ -592,19 +592,19 @@
 
 ## PHASE 4 — Shared Widget Library
 
-- [ ] **4.1 — Implement `activity_rings.dart`**
+- [x] **4.1 — Implement `activity_rings.dart`**
   ```
   Create lib/shared/widgets/activity_rings.dart. Implement ActivityRingsWidget as a StatelessWidget. Props: List<RingData> rings where RingData has {double progress (0.0–1.0), Color color, String label, String value, String goal}. Renders four concentric CustomPaint rings using Canvas.drawArc. Ring stroke width: 10px, lineCap: round. Outer ring = index 0 (calories, orange), then steps (green), water (teal), active minutes (purple). Gap between rings: 8px. Renders stat labels below the ring cluster with value/goal text. Adapts ring track color from AppColors.divider (light) / AppColorsDark.divider (dark) via Theme.of(context).
   ```
 
-- [ ] **4.2 — Implement `insight_card.dart` and `correlation_insight_card.dart`**
+- [x] **4.2 — Implement `insight_card.dart` and `correlation_insight_card.dart`**
   ```
   Create lib/shared/widgets/insight_card.dart. Props: String message, VoidCallback onThumbsUp, VoidCallback onThumbsDown, VoidCallback onDismiss. Background: AppColors.accentLight (light) / AppColorsDark.accentLight (dark). Left edge: 4px amber primary border. Leading: lightbulb Icon. Text: bodyMedium. Bottom-right: 👍 👎 IconButtons. Top-right: dismiss X button.
 
   Create lib/shared/widgets/correlation_insight_card.dart. Props: String message, List<ModuleLink> modules (each has: String label, IconData icon, VoidCallback onTap), VoidCallback onThumbsUp, VoidCallback onThumbsDown. Background: AppColors.secondarySurface (light) / AppColorsDark.secondarySurface (dark). Bottom row: module pill chips that are tappable. Renders "🔗" icon in top-left. Same 👍/👎 controls as InsightCard.
   ```
 
-- [ ] **4.3 — Implement `async_value_widget.dart`, `shimmer_loader.dart`, `error_retry_widget.dart`**
+- [x] **4.3 — Implement `async_value_widget.dart`, `shimmer_loader.dart`, `error_retry_widget.dart`**
   ```
   Create lib/shared/widgets/async_value_widget.dart. A generic widget: class AsyncValueWidget<T> extends ConsumerWidget. Props: AsyncValue<T> value, Widget Function(T) data, Widget? loading, Widget? error. Uses value.when() internally. Default loading: ShimmerLoader(). Default error: ErrorRetryWidget.
 
@@ -613,7 +613,7 @@
   Create lib/shared/widgets/error_retry_widget.dart: Props: Object error, VoidCallback onRetry, String? message. Shows error icon, message text, and an orange "Retry" ElevatedButton. Never shows raw exception details to the user — only a generic "Something went wrong" message.
   ```
 
-- [ ] **4.4 — Implement `bilingual_label.dart`, `encryption_badge.dart`, `sync_status_banner.dart`**
+- [x] **4.4 — Implement `bilingual_label.dart`, `encryption_badge.dart`, `sync_status_banner.dart`**
   ```
   Create lib/shared/widgets/bilingual_label.dart. Props: String english, String hindi, TextStyle? englishStyle, TextStyle? hindiStyle. Renders a Column with English text (default h3) above Hindi text (default sectionHeaderHindi, color: textSecondary). Use AppTextStyles.
 
@@ -622,7 +622,7 @@
   Create lib/shared/widgets/sync_status_banner.dart. Props: int dlqCount, bool isOffline, bool isLowDataMode. Priority: if dlqCount > 0 → amber banner "⚠ {dlqCount} items failed to sync. Tap to review." with onTap callback. Else if isOffline → teal banner "Offline — changes saved locally". Else if isLowDataMode → teal "Low Data Mode active". Returns SizedBox.shrink() if none apply. Positioned as a top PreferredSizeWidget or pinned Column child.
   ```
 
-- [ ] **4.5 — Implement `quick_log_fab.dart`**
+- [x] **4.5 — Implement `quick_log_fab.dart`**
   ```
   Create lib/shared/widgets/quick_log_fab.dart. Implement QuickLogFAB as a StatefulWidget speed-dial FAB. The main FAB is orange (#FF5722), white + icon, 56px. On tap: expands to show 6 sub-action mini-FABs with labels and icons, stacked vertically above the main FAB with a 200ms staggered animation:
   1. 🍽 Food — opens FoodLogBottomSheet
@@ -634,7 +634,7 @@
   Each sub-FAB is 40px, surface colour background, primary colour icon. An overlay scrim covers the rest of the screen when expanded. Props: Map<QuickLogAction, VoidCallback> onActions.
   ```
 
-- [ ] **4.6 — Implement remaining shared widgets**
+- [x] **4.6 — Implement remaining shared widgets**
   ```
   Create the following shared widgets in lib/shared/widgets/:
 
