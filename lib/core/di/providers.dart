@@ -65,17 +65,25 @@ import '../../features/auth/presentation/register_screen.dart';
       ShellRoute(
         builder: (context, state, child) => _MainShell(child: child),
         routes: [
+import '../../features/dashboard/presentation/dashboard_screen.dart';
+
           GoRoute(
             path: '/home/dashboard',
-            builder: (context, state) => const _PlaceholderScreen(name: 'DashboardScreen'),
+            builder: (context, state) => const DashboardScreen(),
           ),
+import '../../features/food/presentation/food_home_screen.dart';
+
           GoRoute(
             path: '/home/food',
-            builder: (context, state) => const _PlaceholderScreen(name: 'FoodHomeScreen'),
+            builder: (context, state) => const FoodHomeScreen(),
             routes: [
+import '../../features/food/presentation/food_log_screen.dart';
+
               GoRoute(
                 path: 'log/:mealType',
-                builder: (context, state) => _PlaceholderScreen(name: 'FoodLog: ${state.pathParameters['mealType']}'),
+                builder: (context, state) => FoodLogScreen(
+                  mealType: state.pathParameters['mealType'] ?? 'meal',
+                ),
               ),
               GoRoute(
                 path: 'search',
@@ -89,9 +97,11 @@ import '../../features/auth/presentation/register_screen.dart';
                 path: 'photo',
                 builder: (context, state) => const _PlaceholderScreen(name: 'PhotoScanScreen'),
               ),
+import '../../features/food/presentation/lab_report_scan_screen.dart';
+
               GoRoute(
                 path: 'lab-scan',
-                builder: (context, state) => const _PlaceholderScreen(name: 'LabReportScanScreen'),
+                builder: (context, state) => const LabReportScanScreen(),
               ),
               GoRoute(
                 path: 'detail/:id',
@@ -169,17 +179,26 @@ import '../../features/auth/presentation/register_screen.dart';
       // Standalone Feature Routes
       GoRoute(path: '/karma', builder: (context, state) => const _PlaceholderScreen(name: 'KarmaHubScreen')),
       GoRoute(path: '/profile', builder: (context, state) => const _PlaceholderScreen(name: 'ProfileScreen')),
-      GoRoute(path: '/sleep', builder: (context, state) => const _PlaceholderScreen(name: 'SleepTrackerScreen')),
-      GoRoute(path: '/mood', builder: (context, state) => const _PlaceholderScreen(name: 'MoodTrackerScreen')),
-      GoRoute(path: '/habits', builder: (context, state) => const _PlaceholderScreen(name: 'HabitTrackerScreen')),
+import '../../features/sleep/presentation/sleep_tracker_screen.dart';
+
+      GoRoute(path: '/sleep', builder: (context, state) => const SleepTrackerScreen()),
+import '../../features/mood/presentation/mood_tracker_screen.dart';
+import '../../features/habits/presentation/habit_tracker_screen.dart';
+
+      GoRoute(path: '/mood', builder: (context, state) => const MoodTrackerScreen()),
+      GoRoute(path: '/habits', builder: (context, state) => const HabitTrackerScreen()),
       GoRoute(path: '/period', builder: (context, state) => const _PlaceholderScreen(name: 'PeriodTrackerScreen')),
       GoRoute(path: '/medications', builder: (context, state) => const _PlaceholderScreen(name: 'MedicationsScreen')),
       GoRoute(path: '/body-metrics', builder: (context, state) => const _PlaceholderScreen(name: 'BodyMetricsScreen')),
       GoRoute(path: '/ayurveda', builder: (context, state) => const _PlaceholderScreen(name: 'AyurvedaHubScreen')),
       GoRoute(path: '/family', builder: (context, state) => const _PlaceholderScreen(name: 'FamilyProfilesScreen')),
       GoRoute(path: '/emergency', builder: (context, state) => const _PlaceholderScreen(name: 'EmergencyCardScreen')),
-      GoRoute(path: '/blood-pressure', builder: (context, state) => const _PlaceholderScreen(name: 'BPTrackerScreen')),
-      GoRoute(path: '/glucose', builder: (context, state) => const _PlaceholderScreen(name: 'GlucoseTrackerScreen')),
+import '../../features/blood_pressure/presentation/bp_tracker_screen.dart';
+
+import '../../features/glucose/presentation/glucose_tracker_screen.dart';
+
+      GoRoute(path: '/blood-pressure', builder: (context, state) => const BPTrackerScreen()),
+      GoRoute(path: '/glucose', builder: (context, state) => const GlucoseTrackerScreen()),
       GoRoute(path: '/spo2', builder: (context, state) => const _PlaceholderScreen(name: 'Spo2Screen')),
       GoRoute(path: '/lab-reports', builder: (context, state) => const _PlaceholderScreen(name: 'LabReportsHomeScreen')),
       GoRoute(path: '/abha', builder: (context, state) => const _PlaceholderScreen(name: 'ABHAScreen')),
@@ -191,7 +210,10 @@ import '../../features/auth/presentation/register_screen.dart';
       GoRoute(path: '/wearables', builder: (context, state) => const _PlaceholderScreen(name: 'WearableConnectionsScreen')),
       GoRoute(path: '/home-widgets', builder: (context, state) => const _PlaceholderScreen(name: 'HomeWidgetConfigScreen')),
       GoRoute(path: '/reports', builder: (context, state) => const _PlaceholderScreen(name: 'HealthReportsScreen')),
+import '../../features/nutrition/presentation/nutrition_goal_screen.dart';
+
       GoRoute(path: '/personal-records', builder: (context, state) => const _PlaceholderScreen(name: 'PersonalRecordsScreen')),
+      GoRoute(path: '/nutrition-goals', builder: (context, state) => const NutritionGoalScreen()),
       GoRoute(path: '/doctor-appointments', builder: (context, state) => const _PlaceholderScreen(name: 'DoctorAppointmentsScreen')),
       GoRoute(path: '/referral', builder: (context, state) => const _PlaceholderScreen(name: 'ReferralScreen')),
       GoRoute(path: '/settings', builder: (context, state) => const _PlaceholderScreen(name: 'SettingsScreen')),

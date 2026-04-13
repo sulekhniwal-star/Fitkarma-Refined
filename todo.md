@@ -770,7 +770,7 @@
 
 ## PHASE 6 — Core Feature Screens
 
-- [ ] **6.1 — Dashboard screen**
+- [x] **6.1 — Dashboard screen**
   ```
   Create lib/features/dashboard/presentation/dashboard_screen.dart. Implement DashboardScreen as a ConsumerWidget. Uses Pattern A scaffold (standard light/dark).
 
@@ -798,7 +798,7 @@
   All async values wrapped in AsyncValueWidget. Data is loaded from Drift first (zero network calls on initial render).
   ```
 
-- [ ] **6.2 — Food logging feature (repository + drift service + screen)**
+- [x] **6.2 — Food logging feature (repository + drift service + screen)**
   ```
   Create lib/features/food/data/food_drift_service.dart: implement typed Drift queries:
   - getTodayLogs(String userId, DateTime date) → Stream<List<FoodLog>>
@@ -813,7 +813,7 @@
   Create FoodHomeScreen in lib/features/food/presentation/. Implement full UI per spec Section 7.3 including: daily macro rings, micronutrient bars, meal log list, Copy Yesterday banner. Use MealTypeTabBar for tab switching.
   ```
 
-- [ ] **6.3 — Food Log Screen (search + scan + voice)**
+- [x] **6.3 — Food Log Screen (search + scan + voice)**
   ```
   Create lib/features/food/presentation/food_log_screen.dart. Receives route param mealType. Implements the full food log UI from spec Section 7.3:
 
@@ -826,7 +826,7 @@
   7. Voice log via speech_to_text: on mic tap → listen → transcribe → auto-search. Show results for confirmation.
   ```
 
-- [ ] **6.4 — Barcode + Photo + Lab OCR scan screens**
+- [x] **6.4 — Barcode + Photo + Lab OCR scan screens**
   ```
   Create lib/features/food/data/barcode_service.dart: wraps flutter_barcode_scanner. scanBarcode() → Future<String?>. On result: calls OpenFoodFacts API (https://world.openfoodfacts.org/api/v2/product/{barcode}.json), parses nutrients, caches to Drift food_items.
 
@@ -837,7 +837,7 @@
   Create LabReportScanScreen per spec Section 7.7: camera/gallery picker, ShimmerLoader during OCR, extracted LabValueRow list, Import button that writes to glucose_logs / blood_pressure_logs via their respective repositories.
   ```
 
-- [ ] **6.5 — Blood pressure tracker (screen + repository)**
+- [x] **6.5 — Blood pressure tracker (screen + repository)**
   ```
   Create lib/features/blood_pressure/domain/bp_classifier.dart: implement classify(int systolic, int diastolic) → BPClassification enum {normal, elevated, stage1, stage2, crisis} using AHA thresholds exactly:
   - crisis: systolic >= 180 OR diastolic >= 120
@@ -853,7 +853,7 @@
   Emergency alert: if classification == crisis → show AlertDialog with red header "Seek immediate medical attention" + call emergency button.
   ```
 
-- [ ] **6.6 — Glucose tracker (screen + HbA1c estimator)**
+- [x] **6.6 — Glucose tracker (screen + HbA1c estimator)**
   ```
   Create lib/features/glucose/presentation/glucose_tracker_screen.dart. Pattern B scaffold. Props from glucoseProvider: latest reading, classification, 90-day readings for HbA1c estimate.
 
@@ -862,7 +862,7 @@
   Reading type chips: Fasting / Post-meal / Random / Bedtime. Chart: fl_chart LineChart with coloured reference bands per reading type (fasting: normal < 100, prediabetic 100–125, diabetic ≥ 126). Meal correlation row: shows linked FoodLog for post-meal readings. "Import from Lab Report" row links to /home/food/lab-scan. All data encrypted via EncryptionService (dataClass: 'bp_glucose').
   ```
 
-- [ ] **6.7 — Sleep tracker (with sleep debt + chronotype)**
+- [x] **6.7 — Sleep tracker (with sleep debt + chronotype)**
   ```
   Create lib/features/sleep/presentation/sleep_tracker_screen.dart. Pattern B (sleepGradient). Hero: last night duration, quality emoji, Good/Poor badge.
 
@@ -875,14 +875,14 @@
   Log Sleep bottom sheet: bedtime TimePicker, wake TimePicker, quality 1–5 emoji row, notes field.
   ```
 
-- [ ] **6.8 — Mood tracker + habit tracker screens**
+- [x] **6.8 — Mood tracker + habit tracker screens**
   ```
   Create MoodTrackerScreen in lib/features/mood/presentation/. Layout: 5-emoji mood selector (tap to select), energy slider 1–10, stress slider 1–10, scrollable tags row (anxious/calm/focused/tired/motivated/irritable), optional voice note button (records to local file, never uploaded). Log Mood button → writes to MoodDriftService → enqueues sync. Show 7-day mood heatmap calendar below (fl_chart HeatMapCalendar equivalent using a GridView).
 
   Create HabitTrackerScreen in lib/features/habits/presentation/. List of habit cards: each shows habit icon (emoji), name, BilingualLabel, streak flame 🔥 badge if streak > 0, daily progress bar (current/target). Tap to increment. Streak Recovery button (amber outlined): shown only if streak was broken within 24h, costs 50 XP confirmation dialog. Below list: weekly heatmap grid per habit (GitHub-style contribution graph using a CustomPaint or Table widget).
   ```
 
-- [ ] **6.9 — Nutrition goal engine + micronutrient tracking**
+- [x] **6.9 — Nutrition goal engine + micronutrient tracking**
   ```
   Create lib/features/nutrition/domain/nutrition_calculator.dart. Implement:
 
