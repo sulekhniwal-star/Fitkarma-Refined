@@ -227,7 +227,7 @@
   Index: [user_id, logged_at DESC]
   ```
 
-- [ ] **1.6 — Create health monitoring collections via CLI**
+- [x] **1.6 — Create health monitoring collections via CLI**
   ```
   Using Appwrite CLI, create these collections in fitkarma-db:
 
@@ -248,7 +248,7 @@
   Index: [user_id, cycle_start DESC]
   ```
 
-- [ ] **1.7 — Create remaining core collections via CLI**
+- [x] **1.7 — Create remaining core collections via CLI**
   ```
   Using Appwrite CLI, create these collections in fitkarma-db:
 
@@ -270,7 +270,7 @@
   Index: [user_id, created_at DESC]
   ```
 
-- [ ] **1.8 — Create advanced feature collections via CLI**
+- [x] **1.8 — Create advanced feature collections via CLI**
   ```
   Using Appwrite CLI, create these collections in fitkarma-db:
 
@@ -299,7 +299,7 @@
   Attributes: title (string,255,req), youtube_id (string,50,opt), duration_min (integer,req), difficulty (enum:beginner,intermediate,advanced,req), category (string,100,req), language (string,10,req), is_premium (boolean,default:false), rpe_level (integer,opt)
   ```
 
-- [ ] **1.9 — Create India-specific & social collections via CLI**
+- [x] **1.9 — Create India-specific & social collections via CLI**
   ```
   Using Appwrite CLI, create these collections in fitkarma-db:
 
@@ -342,7 +342,7 @@
 
 ### 1B — Storage Buckets
 
-- [ ] **1.10 — Create Consolidated Appwrite Storage bucket via CLI**
+- [x] **1.10 — Create Consolidated Appwrite Storage bucket via CLI**
   ```
   Using Appwrite CLI, create a unified storage bucket for project fitkarma-staging:
   
@@ -353,7 +353,7 @@
 
 ### 1C — Appwrite Functions
 
-- [ ] **1.11 — Scaffold Consolidated Appwrite Function directory structure**
+- [x] **1.11 — Scaffold Consolidated Appwrite Function directory structure**
   ```
   In the project root, create `appwrite-functions/core-engine/`. 
   Inside `src/handlers/`, scaffold modular handlers for all logic (consolidated):
@@ -361,7 +361,7 @@
   Initialize the central router in `src/index.js` which routes requests based on an internal action key or header.
   ```
 
-- [ ] **1.12 — Deploy Consolidated Appwrite Function via CLI**
+- [x] **1.12 — Deploy Consolidated Appwrite Function via CLI**
   ```
   Deploy the unified core engine for staging and production:
   `appwrite functions create --functionId fitkarma-core-engine --name "FitKarma Core Engine" --runtime node-18.0`
@@ -370,18 +370,11 @@
   Note: Logic selection is handled via the `X-FitKarma-Action` header.
   ```
 
-- [ ] **1.13 — Set Appwrite Auth providers via CLI**
+- [x] **1.13 — Set Appwrite Auth providers via CLI** (Performed via Console for Security)
   ```
-  Using Appwrite CLI, enable OAuth2 providers for the staging project:
-
-  Enable Google OAuth2:
-  `appwrite projects updateOAuth2 --projectId fitkarma-staging --provider google --appId <GOOGLE_CLIENT_ID> --secret <GOOGLE_CLIENT_SECRET>`
-
-  Enable Apple OAuth2 (iOS):
-  `appwrite projects updateOAuth2 --projectId fitkarma-staging --provider apple --appId <APPLE_SERVICE_ID> --secret <APPLE_KEY>`
-
-  Enable SMTP for password reset:
-  `appwrite projects updateSmtp --projectId fitkarma-staging --enabled true --host smtp.sendgrid.net --port 587 --username apikey --password <SENDGRID_API_KEY> --senderName FitKarma --senderEmail noreply@fitkarma.app`
+  Enable OAuth2 (Google, Apple) and SMTP via Appwrite Console.
+  Settings -> Auth -> Google/Apple
+  Settings -> SMTP
   ```
 
 ---
