@@ -381,7 +381,7 @@
 
 ## PHASE 2 — Flutter Project Structure & Core Infrastructure
 
-- [ ] **2.1 — Create full folder structure**
+- [x] **2.1 — Create full folder structure**
   ```
   In the Flutter project under lib/, create the complete directory tree exactly as follows. Use `mkdir -p` commands or create them in your IDE:
 
@@ -421,7 +421,7 @@
   Create a .dart file named `.gitkeep` placeholder in each leaf directory so git tracks them.
   ```
 
-- [ ] **2.2 — Implement `app_colors.dart` (light + dark tokens)**
+- [x] **2.2 — Implement `app_colors.dart` (light + dark tokens)**
   ```
   Create lib/shared/theme/app_colors.dart. Define two abstract classes: AppColors (light mode) and AppColorsDark (dark mode). Each must define static const Color values for every token listed below. Use the exact hex values specified.
 
@@ -443,7 +443,7 @@
   success = #66BB6A, teal = #26C6DA, purple = #CE93D8, warning = #FFA726, error = #EF5350
   ```
 
-- [ ] **2.3 — Implement `app_text_styles.dart`**
+- [x] **2.3 — Implement `app_text_styles.dart`**
   ```
   Create lib/shared/theme/app_text_styles.dart. Define a class AppTextStyles with static TextStyle getters for every style in the typography scale:
   displayLarge (32sp, w700), displayMedium (28sp, w700), h1 (24sp, w700), h2 (20sp, w700),
@@ -456,7 +456,7 @@
   All styles default to system font family (no explicit fontFamily set). Colors come from AppColors for light and AppColorsDark for dark — accept a bool isDark parameter or use a static method to return the correct set.
   ```
 
-- [ ] **2.4 — Implement `app_theme.dart` (light + dark ThemeData)**
+- [x] **2.4 — Implement `app_theme.dart` (light + dark ThemeData)**
   ```
   Create lib/shared/theme/app_theme.dart. Define a class AppTheme with two static ThemeData getters: lightTheme and darkTheme. Both must use:
   - useMaterial3: true
@@ -472,7 +472,7 @@
   - Scaffold background: AppColors.background (light) / AppColorsDark.background (dark)
   ```
 
-- [ ] **2.5 — Implement `api_endpoints.dart` (AW constants)**
+- [x] **2.5 — Implement `api_endpoints.dart` (AW constants)**
   ```
   Create lib/core/constants/api_endpoints.dart. Define a class AW with all static const String collection IDs using String.fromEnvironment for projectId, endpoint, and dbId. List every collection constant exactly:
   users, foodLogs='food_logs', foodItems='food_items', workoutLogs='workout_logs',
@@ -491,12 +491,12 @@
   Storage buckets: filesBucket='fitkarma_files'. (Consolidated; all media stored here).
   ```
 
-- [ ] **2.6 — Implement `appwrite_client.dart`**
+- [x] **2.6 — Implement `appwrite_client.dart`**
   ```
   Create lib/core/network/appwrite_client.dart. Implement the AppwriteClient class as a singleton with a static Client initialized using the endpoint and projectId from AW constants via String.fromEnvironment. Set setSelfSigned(status: false). Expose static getters for: client (Client), account (Account), databases (Databases), storage (Storage), realtime (Realtime), functions (Functions). Add a static initialize() async method that must be called in main() before runApp(). Add a comment block explaining where to add certificate pinning via a native channel or http_certificate_pinning package.
   ```
 
-- [ ] **2.7 — Implement `key_manager.dart` (PBKDF2 + HKDF)**
+- [x] **2.7 — Implement `key_manager.dart` (PBKDF2 + HKDF)**
   ```
   Create lib/core/security/key_manager.dart. Implement class KeyManager using the `cryptography` package. It must:
   1. getMasterKey() async → Uint8List: checks flutter_secure_storage for 'master_key'. If absent, derives via PBKDF2(input: '$deviceId:$installUuid', salt: stored 32-byte random salt, iterations: 200000, keyLength: 32). Stores result in secure storage. deviceId from device_info_plus, installUuid generated once and stored in secure storage.
@@ -504,7 +504,7 @@
   Each data class produces a cryptographically independent key — compromise of one does not affect others. Add unit-testable pure functions for PBKDF2 and HKDF separately.
   ```
 
-- [ ] **2.8 — Implement `encryption_service.dart` (AES-256-GCM)**
+- [x] **2.8 — Implement `encryption_service.dart` (AES-256-GCM)**
   ```
   Create lib/core/security/encryption_service.dart. Implement class EncryptionService using the `cryptography` package's AesCbc or AesGcm. Provide:
   - static Future<String> encrypt(String plaintext, Uint8List key): generates a random 12-byte nonce, encrypts with AES-256-GCM, returns base64(nonce + ciphertext + mac) as a single string.
