@@ -566,7 +566,7 @@
   In main.dart, call DriftService.init() before runApp(). Pass DriftService.db to a Riverpod provider override.
   ```
 
-- [ ] **3.4 — Implement sync queue processor**
+- [x] **3.4 — Implement sync queue processor**
   ```
   Create lib/core/network/sync_queue.dart. Implement:
 
@@ -581,7 +581,7 @@
      callbackDispatcher(): re-inits DriftService and AppwriteClient independently, checks ConnectivityResult, calls SyncQueueProcessor.flushPending().
   ```
 
-- [ ] **3.5 — Implement `connectivity_service.dart` and `remote_config.dart`**
+- [x] **3.5 — Implement `connectivity_service.dart` and `remote_config.dart`**
   ```
   Create lib/core/network/connectivity_service.dart: a Riverpod StreamProvider that wraps connectivity_plus's ConnectivityResult stream. Expose isOnline getter returning true if result != ConnectivityResult.none.
 
