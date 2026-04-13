@@ -1,39 +1,30 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'core/storage/drift_service.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+import 'app.dart';
 import 'core/di/providers.dart';
+import 'core/network/appwrite_client.dart';
+import 'core/storage/drift_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize Local Database with encryption
+  // Load environment variables based on flavor
+  // Build with --dart-define=FLAVOR=staging/prod
+  const flavor = String.fromEnvironment('FLAVOR', defaultValue: 'prod');
+  await dotenv.load(fileName: '.env.$flavor');
+
+  // Initialize Core Services
   await DriftService.init();
+  await AppwriteClient.initialize();
 
   runApp(
     ProviderScope(
       overrides: [
         driftDbProvider.overrideWithValue(DriftService.db),
       ],
-      child: const MyApp(),
+      child: const FitKarmaApp(),
     ),
   );
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'FitKarma',
-      theme: ThemeData(
-        useMaterial3: true,
-        colorSchemeSeed: Colors.deepPurple,
-      ),
-      home: const Scaffold(
-        body: Center(
-          child: Text('FitKarma - Clean Start'),
-        ),
-      ),
-    );
-  }
 }

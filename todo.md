@@ -657,7 +657,7 @@
 
 ## PHASE 5 — App Root, Navigation & Auth
 
-- [ ] **5.1 — Implement `main.dart` and `app.dart`**
+- [x] **5.1 — Implement `main.dart` and `app.dart`**
   ```
   Create lib/main.dart: async main() that calls WidgetsFlutterBinding.ensureInitialized(), loads dotenv from the correct .env file based on build flavor, calls DriftService.init(), calls AppwriteClient.initialize(), then runApp(ProviderScope(overrides: [driftDbProvider.overrideWithValue(DriftService.db)], child: FitKarmaApp())).
 
@@ -670,7 +670,7 @@
   - title: 'FitKarma'
   ```
 
-- [ ] **5.2 — Implement GoRouter with all routes**
+- [x] **5.2 — Implement GoRouter with all routes**
   ```
   Create lib/core/di/providers.dart. Define appRouter as a GoRouter with all routes listed below. Use ShellRoute for the bottom-nav shell wrapping /home/* routes. Implement a redirect guard that checks authStateProvider — if not authenticated and route is not /login or /register or /onboarding/*, redirect to /login.
 
@@ -739,7 +739,7 @@
   /wedding-planner/recovery → WeddingRecoveryScreen
   ```
 
-- [ ] **5.3 — Implement Auth feature (login, register, session)**
+- [x] **5.3 — Implement Auth feature (login, register, session)**
   ```
   Create lib/features/auth/data/auth_repository.dart. Implement AuthRepository with methods:
   - login(String email, String password) async → void: calls AppwriteClient.account.createEmailPasswordSession(). Stores the session JWT in flutter_secure_storage under key 'session_jwt'.
@@ -755,7 +755,7 @@
   Create LoginScreen and RegisterScreen in lib/features/auth/presentation/ following the UI spec in Section 7.1. Use Riverpod ConsumerWidget. All loading states use ShimmerLoader. All errors display in an ErrorSnackBar.
   ```
 
-- [ ] **5.4 — Implement bottom navigation bar**
+- [x] **5.4 — Implement bottom navigation bar**
   ```
   Create lib/shared/widgets/bottom_nav_bar.dart. Implement FitKarmaBottomNav as a StatelessWidget. Props: int currentIndex, ValueChanged<int> onTap. Five tabs defined as a list of BottomNavItem {IconData outlinedIcon, IconData filledIcon, String labelEn, String labelHi, String route}.
 
