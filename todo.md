@@ -1,6 +1,6 @@
 # FitKarma — Master Development TODO
 > **Stack:** Flutter 3.x · Riverpod 2.x · Drift (SQLCipher) · Appwrite CLI (terminal only)
-> **Rule:** Every Appwrite resource (databases, collections, attributes, indices, buckets, functions) is created via `appwrite` CLI — never via the web console.
+> **Rule:** Every Appwrite resource (databases, collections, attributes, indices, buckets, functions) is created via `appwrite` CLI — never via the web console. Access control (permissions) is strictly enforced at the application layer; backend resources are provisioned with 'any' permissions at the CLI level.
 > **AI Prompt Style:** Each task below is a self-contained instruction. Paste it verbatim into your IDE AI. Tasks are ordered by dependency.
 
 ---
@@ -18,14 +18,17 @@
   Install the Appwrite CLI globally: `npm install -g appwrite-cli`. Verify with `appwrite --version`. Then run `appwrite client --endpoint https://cloud.appwrite.io/v1` to configure the endpoint. Login with `appwrite login`.
   ```
 
-- [x] **0.3 — Create Appwrite Projects via CLI**
+- [x] **0.3 — Create Appwrite Projects and Folders via CLI**
   ```
-  Using the Appwrite CLI, create two projects: one named "fitkarma-staging" and one named "fitkarma-production". Run `appwrite projects create --projectId fitkarma-staging --name "FitKarma Staging"` and `appwrite projects create --projectId fitkarma-prod --name "FitKarma Production"`. Save both project IDs.
+  1. Create two folders in your project root: `appwrite/staging/` and `appwrite/production/`.
+  2. Navigate into `appwrite/staging/` and run `appwrite init project` to link/create the staging project (ID: fitkarma-staging).
+  3. Navigate into `appwrite/production/` and run `appwrite init project` to link/create the production project (ID: fitkarma-prod).
+  This ensures separate configuration files (appwrite.json) for each environment.
   ```
 
 - [x] **0.4 — Create Flutter project**
   ```
-  Run `flutter create --org com.fitkarma --project-name fitkarma app`. Then open the project. Set the bundle ID to `com.fitkarma.app` in android/app/build.gradle (applicationId) and ios/Runner.xcodeproj (PRODUCT_BUNDLE_IDENTIFIER). Delete the default counter app code from lib/main.dart.
+  Run `flutter create --org com.fitkarma --project-name fitkarma .`. Set the bundle ID to `com.fitkarma.app` in android/app/build.gradle.kts (applicationId) and ios/Runner.xcodeproj (PRODUCT_BUNDLE_IDENTIFIER). Delete the default counter app code from lib/main.dart.
   ```
 
 - [x] **0.5 — Create .env files and .gitignore**
@@ -48,51 +51,51 @@
   In pubspec.yaml, add all dependencies exactly as listed below. Run `flutter pub get` after:
 
   dependencies:
-    flutter_riverpod: ^2.4.9
-    riverpod_annotation: ^2.3.3
+    flutter_riverpod: ^3.3.1
+    riverpod_annotation: ^4.0.2
     drift: ^2.14.1
-    drift_flutter: ^0.1.0
+    drift_flutter: ^0.2.8
     sqlite3_flutter_libs: ^0.5.0
-    sqlcipher_flutter_libs: ^0.5.0
+    sqlcipher_flutter_libs: ^0.7.0+eol
     cryptography: ^2.7.0
     crypto: ^3.0.3
-    appwrite: ^13.0.0
-    go_router: ^11.0.0
+    appwrite: ^23.0.0
+    go_router: ^17.2.0
     dio: ^5.4.0
     http: ^1.1.0
-    flutter_secure_storage: ^9.0.0
-    local_auth: ^2.1.7
+    flutter_secure_storage: ^10.0.0
+    local_auth: ^3.0.1
     flutter_jailbreak_detection: ^1.9.0
-    connectivity_plus: ^5.0.2
-    geolocator: ^10.1.0
-    flutter_map: ^6.1.0
-    flutter_map_tile_caching: ^9.0.0
-    youtube_player_flutter: ^8.1.2
-    google_mlkit_text_recognition: ^0.11.0
-    google_mlkit_object_detection: ^0.11.0
-    flutter_barcode_scanner: ^1.0.0
-    speech_to_text: ^6.3.0
-    health: ^9.0.0
-    fl_chart: ^0.66.0
+    connectivity_plus: ^7.1.1
+    geolocator: ^14.0.2
+    flutter_map: ^8.2.2
+    flutter_map_tile_caching: ^10.1.1
+    youtube_player_flutter: ^9.1.3
+    google_mlkit_text_recognition: ^0.15.1
+    google_mlkit_object_detection: ^0.15.1
+    flutter_barcode_scanner: ^2.0.0
+    speech_to_text: ^7.3.0
+    health: ^13.3.1
+    fl_chart: ^1.2.0
     shimmer: ^3.0.0
-    flutter_local_notifications: ^16.1.0
+    flutter_local_notifications: ^21.0.0
     razorpay_flutter: ^1.3.7
-    home_widget: ^0.4.1
-    firebase_messaging: ^14.7.9
-    sentry_flutter: ^7.14.0
+    home_widget: ^0.9.0
+    firebase_messaging: ^16.1.3
+    sentry_flutter: ^8.14.2
     cached_network_image: ^3.3.1
     image_picker: ^1.0.4
     path_provider: ^2.1.1
     path: ^1.9.0
-    flutter_dotenv: ^5.1.0
+    flutter_dotenv: ^6.0.0
     pdf: ^3.10.0
-    flutter_quill: ^9.0.0
-    just_audio: ^0.9.0
-    workmanager: ^0.5.0
+    flutter_quill: ^11.5.0
+    just_audio: ^0.10.5
+    workmanager: ^0.9.0+3
     url_launcher: ^6.2.5
 
   dev_dependencies:
-    riverpod_generator: ^2.3.9
+    riverpod_generator: ^4.0.3
     drift_dev: ^2.14.1
     build_runner: ^2.4.7
     mockito: ^5.4.4
@@ -144,7 +147,8 @@
   - wedding_prep_weeks (integer, optional)
   - wedding_events (string, size 500, optional)
   - wedding_primary_goal (enum: tone_up,energised,manage_stress,manage_indulgence, optional)
-  Then set permissions: `appwrite databases updateCollection --databaseId fitkarma-db --collectionId users --permissions 'read("users")' 'create("users")' 'update("users")' 'delete("users")'`
+  Then set permissions: `appwrite databases updateCollection --databaseId fitkarma-db --collectionId users --permissions 'read("any")' 'create("any")' 'update("any")' 'delete("any")'`
+  Note: Access control is handled at the application layer; CLI permissions are set to 'any' for initial provisioning.
   ```
 
 - [x] **1.3 — Create `food_items` collection via CLI**
@@ -223,7 +227,7 @@
   Index: [user_id, logged_at DESC]
   ```
 
-- [x] **1.6 — Create health monitoring collections via CLI**
+- [ ] **1.6 — Create health monitoring collections via CLI**
   ```
   Using Appwrite CLI, create these collections in fitkarma-db:
 
@@ -244,7 +248,7 @@
   Index: [user_id, cycle_start DESC]
   ```
 
-- [x] **1.7 — Create remaining core collections via CLI**
+- [ ] **1.7 — Create remaining core collections via CLI**
   ```
   Using Appwrite CLI, create these collections in fitkarma-db:
 
@@ -266,7 +270,7 @@
   Index: [user_id, created_at DESC]
   ```
 
-- [x] **1.8 — Create advanced feature collections via CLI**
+- [ ] **1.8 — Create advanced feature collections via CLI**
   ```
   Using Appwrite CLI, create these collections in fitkarma-db:
 
@@ -295,7 +299,7 @@
   Attributes: title (string,255,req), youtube_id (string,50,opt), duration_min (integer,req), difficulty (enum:beginner,intermediate,advanced,req), category (string,100,req), language (string,10,req), is_premium (boolean,default:false), rpe_level (integer,opt)
   ```
 
-- [x] **1.9 — Create India-specific & social collections via CLI**
+- [ ] **1.9 — Create India-specific & social collections via CLI**
   ```
   Using Appwrite CLI, create these collections in fitkarma-db:
 
@@ -338,27 +342,26 @@
 
 ### 1B — Storage Buckets
 
-- [x] **1.10 — Create Consolidated Appwrite Storage bucket via CLI**
+- [ ] **1.10 — Create Consolidated Appwrite Storage bucket via CLI**
   ```
   Using Appwrite CLI, create a unified storage bucket for project fitkarma-staging:
   
-  `appwrite storage createBucket --bucketId fitkarma_files --name "FitKarma App Files" --maximumFileSize 50000000 --allowedFileExtensions jpg,jpeg,png,webp,mp4,pdf`
+  `appwrite storage createBucket --bucketId fitkarma_files --name "FitKarma App Files" --maximumFileSize 50000000 --allowedFileExtensions jpg,jpeg,png,webp,mp4,pdf --permissions 'read("any")' 'create("any")' 'update("any")' 'delete("any")'`
   
-  Note: Permissions and specific access logic (Avatars vs Posts vs Reports) are handled at the application layer.
-  Repeat for the production project.
+  Note: Permissions and specific access logic (Avatars vs Posts vs Reports) are strictly handled at the application layer. Repeat for the production project.
   ```
 
 ### 1C — Appwrite Functions
 
-- [x] **1.11 — Scaffold Consolidated Appwrite Function directory structure**
+- [ ] **1.11 — Scaffold Consolidated Appwrite Function directory structure**
   ```
   In the project root, create `appwrite-functions/core-engine/`. 
-  Inside `src/handlers/`, scaffold modular handlers:
-  - fitbit.js, garmin.js, razorpay.js, whatsapp.js, festival.js, reports.js, abha.js, fcm.js
-  Initialize the central router in `src/index.js`.
+  Inside `src/handlers/`, scaffold modular handlers for all logic (consolidated):
+  - fitbit.js, garmin.js, razorpay.js, whatsapp.js, fcm.js, festival.js, reports.js, abha.js
+  Initialize the central router in `src/index.js` which routes requests based on an internal action key or header.
   ```
 
-- [x] **1.12 — Deploy Consolidated Appwrite Function via CLI**
+- [ ] **1.12 — Deploy Consolidated Appwrite Function via CLI**
   ```
   Deploy the unified core engine for staging and production:
   `appwrite functions create --functionId fitkarma-core-engine --name "FitKarma Core Engine" --runtime node-18.0`
@@ -492,7 +495,7 @@
   communityDms='community_dms', labReports='lab_reports',
   abhaLinks='abha_links', remoteConfig='remote_config',
   syncDeadLetter='sync_dead_letter'.
-  Storage buckets: avatarsBucket='avatars', postsBucket='posts_media', healthReportsBucket='health_reports_share'.
+  Storage buckets: filesBucket='fitkarma_files'. (Consolidated; all media stored here).
   ```
 
 - [ ] **2.6 — Implement `appwrite_client.dart`**
@@ -1097,7 +1100,7 @@
 
   Create ABHAScreen per spec Section 7.7. ABHALinkBadge large variant. If not linked: 14-digit ABHA ID input + "Verify via OTP" button. If linked: masked ID, last sync time, list of linked records with Import buttons. Consent note. EncryptionBadge.
 
-  Create lib/features/abha/data/abha_repository.dart: ABHA linking flow calls an Appwrite Function (abha-token-exchange) server-side with the ABHA ID + OTP. The returned OAuth token is stored ONLY in flutter_secure_storage, never in Drift or plaintext. Linked metadata (abha_id, abha_address, linked_at) stored in encrypted AbhaLinks Drift table.
+  Create lib/features/abha/data/abha_repository.dart: ABHA linking flow calls the consolidated Appwrite Function (action: abha-token-exchange) server-side with the ABHA ID + OTP. The returned OAuth token is stored ONLY in flutter_secure_storage, never in Drift or plaintext. Linked metadata (abha_id, abha_address, linked_at) stored in encrypted AbhaLinks Drift table.
   ```
 
 - [ ] **9.5 — Wearable integration + health connect**
@@ -1107,14 +1110,14 @@
   - syncSleep(DateTime from, DateTime to) → Future<List<SleepData>>: reads sleep sessions, writes to sleep_logs.
   - syncHeartRate(DateTime from) → Future<List<HRData>>: stores in workout_logs or a dedicated hr_logs table.
 
-  Create WearableConnectionsScreen: per spec Section 7.11. Connected device cards for Fitbit, Garmin, Health Connect, HealthKit. Each shows device name, last sync time, sync status pill, Disconnect button. Fitbit and Garmin OAuth flow via Appwrite Functions (fitbit-token-exchange, garmin-token-exchange). Stored tokens in flutter_secure_storage only.
+  Create WearableConnectionsScreen: per spec Section 7.11. Connected device cards for Fitbit, Garmin, Health Connect, HealthKit. Each shows device name, last sync time, sync status pill, Disconnect button. Fitbit and Garmin OAuth flow via the consolidated Appwrite Function (actions: fitbit-token-exchange, garmin-token-exchange). Stored tokens in flutter_secure_storage only.
   ```
 
 - [ ] **9.6 — Doctor appointments + shareable health reports**
   ```
   Create DoctorAppointmentsScreen: list of upcoming appointments (from DoctorAppointments Drift table, all fields decrypted via EncryptionService dataClass:'appointments'). Add Appointment bottom sheet: doctor name, speciality, datetime picker, notes. 24h reminder via flutter_local_notifications. EncryptionBadge visible.
 
-  Create HealthReportsScreen per spec Section 7.11: auto-generated weekly/monthly report cards. Each shows summary stats. "Share with Doctor" button flow: calls shareable-health-report Appwrite Function with PDF bytes → receives share_url + expires_at → shows HealthShareCard widget with WhatsApp share CTA and 7-day expiry countdown. "Delete Link" button calls Appwrite storage.deleteFile().
+  Create HealthReportsScreen per spec Section 7.11: auto-generated weekly/monthly report cards. Each shows summary stats. "Share with Doctor" button flow: calls the consolidated Appwrite Function (action: shareable-health-report) with PDF bytes → receives share_url + expires_at → shows HealthShareCard widget with WhatsApp share CTA and 7-day expiry countdown. "Delete Link" button calls Appwrite storage.deleteFile().
   ```
 
 - [ ] **9.7 — Emergency health card**
@@ -1158,21 +1161,14 @@
 
 ## PHASE 10 — WhatsApp Bot + Push Notifications
 
-- [ ] **10.1 — Implement WhatsApp bot Appwrite Function**
+- [ ] **10.1 — Integrate WhatsApp bot into Consolidated Function**
   ```
-  In appwrite-functions/whatsapp-bot/src/index.js, implement the full WhatsApp Cloud API webhook handler:
+  In `appwrite-functions/core-engine/src/handlers/whatsapp.js`, implement the WhatsApp Cloud API webhook handler logic:
   1. Verify webhook challenge (GET request from Meta).
   2. On POST: extract sender phone number, message text from the WhatsApp Cloud API payload.
   3. Look up user by phone number in Appwrite users collection.
-  4. If not found: reply "Your WhatsApp number is not linked to a FitKarma account. Open the app to link."
-  5. parseIntent(text) function: detects intent from message text:
-     - Food log: patterns like "dal rice 2 katori", "ate chicken 150g" → extract food + quantity
-     - Mood log: "log mood 4", "mood 3" → extract score
-     - Stats: "today stats", "my progress" → fetch today's summary from Appwrite
-  6. For food log: call the FitKarma food NLP parser (regex + keyword matching against food_items collection), find best match, compute calories, write food_log document with log_method='whatsapp', reply with confirmation.
-  7. For mood: write mood_log, reply with XP confirmation.
-  8. For stats: query today's food_logs, step_logs for this user, reply with a text summary of ring data.
-  Deploy via CLI: `appwrite functions createDeployment --functionId whatsapp-bot ...`
+  4. Parse intent (Food log, Mood log, Stats) and update database.
+  This handler is triggered by the main function router when the request originates from WhatsApp/Meta.
   ```
 
 - [ ] **10.2 — FCM push notification setup**
@@ -1187,7 +1183,7 @@
   - showInactivityNudge() → one-off notification for 60+ min inactivity
   - cancelAll() → cancels all scheduled notifications
 
-  In appwrite-functions/fcm-hook/src/index.js: implement a function triggered by Appwrite database events (new challenge, karma milestone, social like) that sends FCM push via the Firebase Admin SDK. Use the user's fcm_token from the users collection.
+  In `appwrite-functions/core-engine/src/handlers/fcm.js`: implement logic triggered by Appwrite database events (consolidated into the core engine) that sends FCM push via the Firebase Admin SDK. Use the user's fcm_token from the users collection.
   ```
 
 ---
@@ -1457,7 +1453,7 @@
   [ ] Progress photos (body metrics) are stored locally in app documents directory — verify no upload code path exists
   [ ] Voice notes (mood tracker) auto-delete after 30 days — implement a cleanup job in WorkManager
   [ ] Prescription photos (medications) have no upload path — verify
-  [ ] All Appwrite collection permissions set to Role.user(uid) for read/write — verify via CLI: `appwrite databases getCollection --collectionId period_logs` and check permissions
+  [ ] All Appwrite collection/bucket permissions set to 'any' for public/initial provisioning, with access restricted via application-layer checks — verify that repo methods enforce ownership.
   ```
 
 - [ ] **16.5 — App Store & Play Store preparation**
