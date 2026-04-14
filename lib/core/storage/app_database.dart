@@ -53,7 +53,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(String encryptionKey) : super(_openConnection(encryptionKey));
 
   @override
-  int get schemaVersion => 12;
+  int get schemaVersion => 13;
 
   @override
   MigrationStrategy get migration {
@@ -132,6 +132,15 @@ class AppDatabase extends _$AppDatabase {
         if (from < 12) {
           await m.deleteTable('emergency_cards');
           await m.createTable(emergencyCards);
+        }
+        if (from < 13) {
+          await m.addColumn(users, users.weddingRole);
+          await m.addColumn(users, users.weddingRelationType);
+          await m.addColumn(users, users.weddingStartDate);
+          await m.addColumn(users, users.weddingEndDate);
+          await m.addColumn(users, users.weddingPrepWeeks);
+          await m.addColumn(users, users.weddingEvents);
+          await m.addColumn(users, users.weddingPrimaryGoal);
         }
       },
     );

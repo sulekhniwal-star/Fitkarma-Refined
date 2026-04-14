@@ -2,46 +2,117 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/storage/drift_service.dart';
 import '../../../core/storage/app_database.dart';
 import '../../auth/domain/auth_providers.dart';
-import 'package:drift/drift.dart';
+import '../domain/wedding_plan_rule.dart';
+import 'package:drift/drift.dart' as drift;
+
+// ─── Profile data ─────────────────────────────────────────────────────────────
 
 class WeddingProfileData {
   final String role;
-  final DateTime startDate;
-  final DateTime endDate;
-  final String goal;
+  final String? relationType;
+  final DateTime? startDate;
+  final DateTime? endDate;
+  final int? prepWeeks;
+  final List<String> events;
+  final String? goal;
 
-  WeddingProfileData({
+  const WeddingProfileData({
     required this.role,
-    required this.startDate,
-    required this.endDate,
-    required this.goal,
+    this.relationType,
+    this.startDate,
+    this.endDate,
+    this.prepWeeks,
+    required this.events,
+    this.goal,
   });
+
+  bool get hasWeddingSetup =>
+      startDate != null && endDate != null && role != 'none' && role.isNotEmpty;
 }
 
 final weddingProfileProvider = FutureProvider<WeddingProfileData?>((ref) async {
+  final db = DriftService.db;
+  final authState = ref.watch(authStateProvider);
+  final userId = authState.value?.id ?? 'anonymous';
+
+  final query = db.select(db.users)
+    ..where((u) => u.id.equals(userId));
+  final user = await query.getSingleOrNull();
+
+  if (user == null) return null;
+
   return WeddingProfileData(
-    role: 'bride',
-    startDate: DateTime.now().add(const Duration(days: 12)),
-    endDate: DateTime.now().add(const Duration(days: 15)),
-    goal: 'Glowing Skin',
+    role: user.weddingRole ?? 'none',
+    relationType: user.weddingRelationType,
+    startDate: user.weddingStartDate,
+    endDate: user.weddingEndDate,
+    prepWeeks: user.weddingPrepWeeks,
+    events: user.weddingEvents != null
+        ? List<String>.from(
+            (user.weddingEvents!.replaceAll('[', '').replaceAll(']', '').replaceAll('"', '').split(','))
+                .where((e) => e.trim().isNotEmpty),
+          )
+        : [],
+    goal: user.weddingPrimaryGoal,
   );
 });
+
+// ─── Events ──────────────────────────────────────────────────────────────────
 
 final weddingEventsProvider = FutureProvider<List<WeddingEvent>>((ref) async {
   final db = DriftService.db;
   final authState = ref.watch(authStateProvider);
   final userId = authState.value?.id ?? 'anonymous';
-  
-  return (db.select(db.weddingEvents)..where((t) => t.userId.equals(userId))).get();
+
+  return (db.select(db.weddingEvents)
+        ..where((t) => t.userId.equals(userId))
+        ..orderBy([(t) => drift.OrderingTerm.asc(t.date)]))
+      .get();
 });
 
 final nextWeddingEventProvider = FutureProvider<WeddingEvent?>((ref) async {
-  final eventsAsync = await ref.watch(weddingEventsProvider.future);
-  if (eventsAsync.isEmpty) return null;
-  
+  final events = await ref.watch(weddingEventsProvider.future);
   final now = DateTime.now();
-  final upcoming = eventsAsync.where((e) => e.date.isAfter(now)).toList();
-  upcoming.sort((a, b) => a.date.compareTo(b.date));
-  
+  final upcoming = events.where((e) => e.date.isAfter(now)).toList();
   return upcoming.isNotEmpty ? upcoming.first : null;
 });
+
+// ─── Phase ───────────────────────────────────────────────────────────────────
+
+final weddingPhaseProvider = FutureProvider<WeddingPhase>((ref) async {
+  final profile = await ref.watch(weddingProfileProvider.future);
+  return WeddingPlanEngine.computePhase(
+    startDate: profile?.startDate,
+    endDate: profile?.endDate,
+  );
+});
+
+// ─── Today's Plan (rule-engine driven) ───────────────────────────────────────
+
+final weddingTodaysPlanProvider = FutureProvider<WeddingDayPlan?>((ref) async {
+  final profile = await ref.watch(weddingProfileProvider.future);
+  final phase = await ref.watch(weddingPhaseProvider.future);
+
+  if (profile == null || !profile.hasWeddingSetup) return null;
+
+  final planRole = _parseRole(profile.role);
+
+  // NOTE: RemoteConfig overrides would be fetched from DriftService.db
+  // remoteConfigCache and passed here. For now, pass null to use local rules.
+  return WeddingPlanEngine.evaluate(
+    phase: phase,
+    role: planRole,
+    goal: profile.goal,
+    remoteOverrides: null, // TODO: wire RemoteConfig cache
+  );
+});
+
+WeddingPlanRole _parseRole(String role) {
+  switch (role) {
+    case 'bride': return WeddingPlanRole.bride;
+    case 'groom': return WeddingPlanRole.groom;
+    case 'guest': return WeddingPlanRole.guest;
+    case 'relative': return WeddingPlanRole.relative;
+    default: return WeddingPlanRole.none;
+  }
+}

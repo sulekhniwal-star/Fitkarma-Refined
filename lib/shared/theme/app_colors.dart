@@ -28,6 +28,42 @@ abstract class AppColors {
   static const Color textPrimary = Color(0xFF1A1A2E);
   static const Color textSecondary = Color(0xFF6B6B8A);
   static const Color textMuted = Color(0xFFB0AECB);
+
+  // Wedding Planner gold
+  static const Color weddingGoldStart = Color(0xFFD4A017);
+  static const Color weddingGoldEnd = Color(0xFFB8860B);
+
+  // Named gradients
+  static const LinearGradient heroGradient = LinearGradient(
+    colors: [Color(0xFF3F3D8F), Color(0xFF2C2A6B)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+  static const LinearGradient heroGradientDark = LinearGradient(
+    colors: [Color(0xFF1A1035), Color(0xFF2C2A6B)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+  static const LinearGradient orangeGradient = LinearGradient(
+    colors: [Color(0xFFFF5722), Color(0xFFFF8A65)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+  static const LinearGradient amberGradient = LinearGradient(
+    colors: [Color(0xFFFFC107), Color(0xFFFFD54F)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+  static const LinearGradient weddingGoldGradient = LinearGradient(
+    colors: [Color(0xFFD4A017), Color(0xFFB8860B)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+  static const LinearGradient sleepGradient = LinearGradient(
+    colors: [Color(0xFF1A1A3E), Color(0xFF2C2A6B), Color(0xFFFDF6EC)],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+  );
 }
 
 abstract class AppColorsDark {
