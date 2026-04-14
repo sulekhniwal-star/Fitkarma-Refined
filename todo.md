@@ -1183,7 +1183,7 @@
 
 ## PHASE 11 — Settings, Onboarding & Profile
 
-- [ ] **11.1 — Implement all 6 onboarding screens**
+- [x] **11.1 — Implement all 6 onboarding screens**
   ```
   Create lib/features/auth/presentation/onboarding/ with OnboardingScreen that manages step routing. Implement all 6 steps as separate widgets: OnboardingStep1 through OnboardingStep6. Progress pill indicator at top (6 pills, active = orange filled, inactive = grey outline). "Next →" orange primary button. "Back" text link on steps 2–6.
 
@@ -1194,7 +1194,7 @@
   On onboarding completion: awards +50 XP, updates user.onboarding_completed = true, navigates to /home/dashboard.
   ```
 
-- [ ] **11.2 — Implement Settings screen**
+- [x] **11.2 — Implement Settings screen**
   ```
   Create lib/features/settings/presentation/settings_screen.dart per spec Section 7.13. Use a ListView of ListTile sections with dividers. Implement all sections:
 
@@ -1206,7 +1206,7 @@
   Home Widgets: navigates to /home-widgets.
   ```
 
-- [ ] **11.3 — Implement Profile screen + Subscription screen**
+- [x] **11.3 — Implement Profile screen + Subscription screen**
   ```
   Create ProfileScreen per spec Section 7.13. Pattern B (dark hero). Hero: avatar (tappable → image_picker for photo, stored locally only), name h1OnDark, email captionOnDark, KarmaLevelCard compact. Body: DoshaDonutChart mini card, editable personal info rows, ABHALinkBadge compact, Achievements grid (100+ achievements from a static list — earned=coloured, unearned=grey), Referral card.
 

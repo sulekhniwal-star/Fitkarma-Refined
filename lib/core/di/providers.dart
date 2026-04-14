@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../features/auth/domain/auth_providers.dart';
 import '../../features/auth/presentation/login_screen.dart';
 import '../../features/auth/presentation/register_screen.dart';
+import '../../features/auth/presentation/onboarding/onboarding_screen.dart';
 import '../../features/dashboard/presentation/dashboard_screen.dart';
 import '../../features/food/presentation/food_home_screen.dart';
 import '../../features/food/presentation/food_log_screen.dart';
@@ -36,6 +37,9 @@ import '../../features/emergency/presentation/emergency_card_screen.dart';
 import '../../features/social/presentation/social_feed_screen.dart';
 import '../../features/social/presentation/community_groups_screen.dart';
 import '../../features/social/presentation/referral_screen.dart';
+import '../../features/settings/presentation/settings_screen.dart';
+import '../../features/profile/presentation/profile_screen.dart';
+import '../../features/subscription/presentation/subscription_plans_screen.dart';
 import '../storage/app_database.dart';
 
 final driftDbProvider = Provider<AppDatabase>((ref) {
@@ -199,7 +203,8 @@ final appRouter = Provider<GoRouter>((ref) {
       ),
       GoRoute(path: '/karma', builder: (context, state) => const KarmaHubScreen()),
       GoRoute(path: '/social', builder: (context, state) => const SocialFeedScreen()),
-      GoRoute(path: '/profile', builder: (context, state) => const _PlaceholderScreen(name: 'ProfileScreen')),
+      GoRoute(path: '/onboarding', builder: (context, state) => const OnboardingScreen()),
+      GoRoute(path: '/profile', builder: (context, state) => const ProfileScreen()),
       GoRoute(path: '/sleep', builder: (context, state) => const SleepTrackerScreen()),
       GoRoute(path: '/mood', builder: (context, state) => const MoodTrackerScreen()),
       GoRoute(path: '/habits', builder: (context, state) => const HabitTrackerScreen()),
@@ -227,8 +232,8 @@ final appRouter = Provider<GoRouter>((ref) {
       GoRoute(path: '/nutrition-goals', builder: (context, state) => const NutritionGoalScreen()),
       GoRoute(path: '/doctor-appointments', builder: (context, state) => const DoctorAppointmentsScreen()),
       GoRoute(path: '/referral', builder: (context, state) => const ReferralScreen()),
-      GoRoute(path: '/settings', builder: (context, state) => const _PlaceholderScreen(name: 'SettingsScreen')),
-      GoRoute(path: '/subscription', builder: (context, state) => const _PlaceholderScreen(name: 'SubscriptionPlansScreen')),
+      GoRoute(path: '/settings', builder: (context, state) => const SettingsScreen()),
+      GoRoute(path: '/subscription', builder: (context, state) => const SubscriptionPlansScreen()),
       GoRoute(
         path: '/festival-calendar',
         builder: (context, state) => const FestivalCalendarScreen(),
