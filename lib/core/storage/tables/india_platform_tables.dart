@@ -17,11 +17,11 @@ class LabReports extends Table {
 class AbhaLinks extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get userId => text()();
-  TextColumn get abhaId => text()();
-  TextColumn get abhaAddress => text().nullable()();
-  DateTimeColumn get linkedAt => dateTime()();
+  TextColumn get abhaIdEncrypted => text()();
+  TextColumn get abhaAddressEncrypted => text().nullable()();
+  TextColumn get linkedAtEncrypted => text()();
   BoolColumn get consentGranted => boolean()();
-  DateTimeColumn get lastSync => dateTime().nullable()();
+  TextColumn get lastSyncEncrypted => text().nullable()();
 }
 
 @DataClassName('EmergencyCard')
@@ -30,8 +30,13 @@ class EmergencyCards extends Table {
   TextColumn get userId => text()();
   TextColumn get name => text()();
   TextColumn get bloodGroup => text()();
-  TextColumn get phone => text()();
-  TextColumn get relation => text()();
+  TextColumn get allergies => text().nullable()(); // JSON list
+  TextColumn get chronicConditions => text().nullable()(); // JSON list
+  TextColumn get emergencyContactName => text()();
+  TextColumn get emergencyContactPhone => text()();
+  TextColumn get doctorName => text().nullable()();
+  TextColumn get doctorPhone => text().nullable()();
+  TextColumn get insurancePolicy => text().nullable()();
   TextColumn get medicalNotes => text().nullable()();
   DateTimeColumn get createdAt => dateTime()();
 }

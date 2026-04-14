@@ -45,11 +45,11 @@ class Spo2Logs extends Table {
 class PeriodLogs extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get userId => text()();
-  DateTimeColumn get cycleStart => dateTime()();
-  DateTimeColumn get cycleEnd => dateTime().nullable()();
-  TextColumn get symptoms => text().nullable()();
-  TextColumn get flowIntensity => text().nullable()();
-  TextColumn get notesEncrypted => text().nullable()(); // Encrypted TextColumn
+  TextColumn get cycleStartEncrypted => text()(); // Encrypted DateTime string
+  TextColumn get cycleEndEncrypted => text().nullable()(); // Encrypted DateTime string
+  TextColumn get symptomsEncrypted => text().nullable()(); // Encrypted
+  TextColumn get flowIntensityEncrypted => text().nullable()(); // Encrypted
+  TextColumn get notesEncrypted => text().nullable()(); // Encrypted
   TextColumn get syncStatus => text().nullable()();
   TextColumn get idempotencyKey => text().nullable()();
 }
@@ -71,8 +71,8 @@ class DoctorAppointments extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get userId => text()();
   TextColumn get doctorNameEncrypted => text()(); // Encrypted TextColumn
-  TextColumn get speciality => text().nullable()();
-  DateTimeColumn get appointmentDt => dateTime()();
-  TextColumn get notesEncrypted => text().nullable()(); // Encrypted TextColumn
+  TextColumn get specialityEncrypted => text().nullable()();
+  TextColumn get appointmentDtEncrypted => text()(); // Encrypted ISO string
+  TextColumn get notesEncrypted => text().nullable()();
   BoolColumn get reminderSent => boolean().withDefault(const Constant(false))();
 }

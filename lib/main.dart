@@ -7,8 +7,11 @@ import 'core/di/providers.dart';
 import 'core/network/appwrite_client.dart';
 import 'core/storage/drift_service.dart';
 
+import 'core/initialization/background_tasks.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await BackgroundTaskInitializer.init();
 
   // Load environment variables based on flavor
   // Build with --dart-define=FLAVOR=staging/prod

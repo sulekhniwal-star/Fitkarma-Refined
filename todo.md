@@ -1054,7 +1054,7 @@
 
 ## PHASE 9 — Remaining Feature Modules
 
-- [ ] **9.1 — Karma system + leaderboards**
+- [x] **9.1 — Karma system + leaderboards**
   ```
   Create lib/features/karma/data/karma_repository.dart. Implement:
   - awardXP(String userId, int amount, String action, String description) async: writes to karma_transactions Drift table + enqueues sync. Updates user's karma_total and karma_level in Drift.
@@ -1066,7 +1066,7 @@
   KarmaHubScreen per spec Section 7.2 with leaderboard tabs (Friends/City/National/Seasonal), ChallengeCarouselCard scroll, DailyRituals checklist, Karma Store section.
   ```
 
-- [ ] **9.2 — Period tracker (fully encrypted)**
+- [x] **9.2 — Period tracker (fully encrypted)**
   ```
   Create lib/features/period/data/period_drift_service.dart. ALL reads and writes must go through EncryptionService.encryptField/decryptField with dataClass 'period'. The raw Drift columns store only ciphertext.
 
@@ -1078,7 +1078,7 @@
   PeriodTrackerScreen: EncryptionBadge prominent at top. Cycle calendar view. Current phase indicator card. Symptom logging. Workout suggestions adapted to phase. PCOD/PCOS mode toggle (if enabled in chronic conditions). Privacy disclaimer: "This data is AES-256 encrypted and never shared."
   ```
 
-- [ ] **9.3 — Fasting tracker**
+- [x] **9.3 — Fasting tracker**
   ```
   Create lib/features/fasting_tracker/domain/fasting_stage.dart:
   enum FastingStage { fed, earlyFast, fatBurning, ketosis, deepFast }
@@ -1087,7 +1087,7 @@
   Create FastingTrackerScreen: large circular countdown ring (CustomPaint). Current stage label + description card. Hydration reminder notification (every 2h while fasting). Supported protocols: 16:8, 18:6, 5:2, OMAD, Ramadan, Custom. Ramadan mode uses Sehri/Iftar times as boundaries. "Break Fast" button shows a confirmation + recommended break-fast foods. Streak tracking. +15 XP on completion.
   ```
 
-- [ ] **9.4 — Lab reports home + ABHA screen**
+- [x] **9.4 — Lab reports home + ABHA screen**
   ```
   Create LabReportsHomeScreen per spec Section 7.7. List of imported lab reports from Drift. "Scan New Report" orange CTA. "Import from ABHA" card (if ABHA linked). Privacy note. Each report row shows lab name, date, imported metric count, View link.
 
@@ -1096,7 +1096,7 @@
   Create lib/features/abha/data/abha_repository.dart: ABHA linking flow calls the consolidated Appwrite Function (action: abha-token-exchange) server-side with the ABHA ID + OTP. The returned OAuth token is stored ONLY in flutter_secure_storage, never in Drift or plaintext. Linked metadata (abha_id, abha_address, linked_at) stored in encrypted AbhaLinks Drift table.
   ```
 
-- [ ] **9.5 — Wearable integration + health connect**
+- [x] **9.5 — Wearable integration + health connect**
   ```
   Create lib/features/wearables/data/health_connect_service.dart: uses the health package. Request permissions for: steps, sleep, heartRate, bloodOxygen, bloodPressure. Implement:
   - syncSteps(DateTime from, DateTime to) → Future<int>: reads step data, writes to Drift step_logs with source='health_connect'.
@@ -1106,19 +1106,19 @@
   Create WearableConnectionsScreen: per spec Section 7.11. Connected device cards for Fitbit, Garmin, Health Connect, HealthKit. Each shows device name, last sync time, sync status pill, Disconnect button. Fitbit and Garmin OAuth flow via the consolidated Appwrite Function (actions: fitbit-token-exchange, garmin-token-exchange). Stored tokens in flutter_secure_storage only.
   ```
 
-- [ ] **9.6 — Doctor appointments + shareable health reports**
+- [x] **9.6 — Doctor appointments + shareable health reports**
   ```
   Create DoctorAppointmentsScreen: list of upcoming appointments (from DoctorAppointments Drift table, all fields decrypted via EncryptionService dataClass:'appointments'). Add Appointment bottom sheet: doctor name, speciality, datetime picker, notes. 24h reminder via flutter_local_notifications. EncryptionBadge visible.
 
   Create HealthReportsScreen per spec Section 7.11: auto-generated weekly/monthly report cards. Each shows summary stats. "Share with Doctor" button flow: calls the consolidated Appwrite Function (action: shareable-health-report) with PDF bytes → receives share_url + expires_at → shows HealthShareCard widget with WhatsApp share CTA and 7-day expiry countdown. "Delete Link" button calls Appwrite storage.deleteFile().
   ```
 
-- [ ] **9.7 — Emergency health card**
+- [x] **9.7 — Emergency health card**
   ```
   Create EmergencyCardScreen per spec Section 7.12. This screen must be accessible WITHOUT biometric re-auth (override biometric lock for emergencies). Reads from EmergencyCard Drift table (LOCAL ONLY — never synced to Appwrite). Fields: blood group (large coloured chip), allergies (red pills), chronic conditions (amber pills), current medications (auto-pulled from medications Drift table), emergency contact name + phone (Call CTA), doctor name + phone (Call CTA), insurance policy number. Export PDF button and Show QR button. QR encodes all fields as a JSON string for quick medical staff scan.
   ```
 
-- [ ] **9.8 — Home screen widgets**
+- [x] **9.8 — Home screen widgets**
   ```
   Create lib/features/home_widgets/data/home_widget_service.dart: uses the home_widget package. Implements:
   - updateActivityRings(): reads today's steps/calories/water/activeMin from Drift, writes to shared prefs (Android) / App Group (iOS) for widget consumption.
@@ -1132,7 +1132,7 @@
   Implement Android widget files in android/app/src/main/res/layout/ and configure in AndroidManifest. Implement iOS WidgetKit extension via the home_widget WidgetKit bridge.
   ```
 
-- [ ] **9.9 — Ayurveda module**
+- [x] **9.9 — Ayurveda module**
   ```
   Create lib/features/ayurveda/domain/dosha_calculator.dart: takes quiz answers (12 questions, each scored 0-2 for vata/pitta/kapha) → returns {vataScore, pittaScore, kaphaScore} as percentages.
 
@@ -1141,7 +1141,7 @@
   Daily rituals + seasonal plans are static data bundled in the app as Dart constants — zero server calls.
   ```
 
-- [ ] **9.10 — Social feed + community + referral**
+- [x] **9.10 — Social feed + community + referral**
   ```
   Create SocialFeedScreen per spec Section 7.10. Posts from AppwriteClient.databases with realtime updates via AppwriteClient.realtime subscription. Low Data Mode: text-only cards, no media. Like/comment interactions. +5 XP social karma animation on receiving a like (amber float animation).
 

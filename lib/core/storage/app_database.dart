@@ -9,6 +9,7 @@ import 'tables/sync_tables.dart';
 import 'tables/sensitive_tables.dart';
 import 'tables/india_platform_tables.dart';
 import 'tables/insight_tables.dart';
+import 'tables/user_tables.dart';
 
 part 'app_database.g.dart';
 
@@ -45,12 +46,14 @@ part 'app_database.g.dart';
   WeddingEvents,
   InsightLogs,
   InsightRatings,
+  Users,
+  HeartRateLogs,
 ])
 class AppDatabase extends _$AppDatabase {
   AppDatabase(String encryptionKey) : super(_openConnection(encryptionKey));
 
   @override
-  int get schemaVersion => 6;
+  int get schemaVersion => 12;
 
   @override
   MigrationStrategy get migration {
@@ -106,6 +109,29 @@ class AppDatabase extends _$AppDatabase {
         if (from < 6) {
           await m.createTable(insightLogs);
           await m.createTable(insightRatings);
+        }
+        if (from < 7) {
+          await m.createTable(users);
+        }
+        if (from < 8) {
+          // Re-create PeriodLogs because columns changed significantly
+          await m.deleteTable('period_logs');
+          await m.createTable(periodLogs);
+        }
+        if (from < 9) {
+          await m.deleteTable('abha_links');
+          await m.createTable(abhaLinks);
+        }
+        if (from < 10) {
+          await m.createTable(heartRateLogs);
+        }
+        if (from < 11) {
+          await m.deleteTable('doctor_appointments');
+          await m.createTable(doctorAppointments);
+        }
+        if (from < 12) {
+          await m.deleteTable('emergency_cards');
+          await m.createTable(emergencyCards);
         }
       },
     );

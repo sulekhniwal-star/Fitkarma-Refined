@@ -243,3 +243,11 @@ class KarmaTransactions extends Table {
   IntColumn get balanceAfter => integer()();
   DateTimeColumn get createdAt => dateTime()();
 }
+@DataClassName('HeartRateLog')
+class HeartRateLogs extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get userId => text()();
+  IntColumn get bpm => integer()();
+  DateTimeColumn get timestamp => dateTime()();
+  TextColumn get source => text()(); // fitbit, garmin, health_connect, etc.
+}

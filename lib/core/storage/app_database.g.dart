@@ -13610,50 +13610,52 @@ class $PeriodLogsTable extends PeriodLogs
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _cycleStartMeta = const VerificationMeta(
-    'cycleStart',
+  static const VerificationMeta _cycleStartEncryptedMeta =
+      const VerificationMeta('cycleStartEncrypted');
+  @override
+  late final GeneratedColumn<String> cycleStartEncrypted =
+      GeneratedColumn<String>(
+        'cycle_start_encrypted',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _cycleEndEncryptedMeta = const VerificationMeta(
+    'cycleEndEncrypted',
   );
   @override
-  late final GeneratedColumn<DateTime> cycleStart = GeneratedColumn<DateTime>(
-    'cycle_start',
-    aliasedName,
-    false,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _cycleEndMeta = const VerificationMeta(
-    'cycleEnd',
-  );
-  @override
-  late final GeneratedColumn<DateTime> cycleEnd = GeneratedColumn<DateTime>(
-    'cycle_end',
-    aliasedName,
-    true,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _symptomsMeta = const VerificationMeta(
-    'symptoms',
+  late final GeneratedColumn<String> cycleEndEncrypted =
+      GeneratedColumn<String>(
+        'cycle_end_encrypted',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _symptomsEncryptedMeta = const VerificationMeta(
+    'symptomsEncrypted',
   );
   @override
-  late final GeneratedColumn<String> symptoms = GeneratedColumn<String>(
-    'symptoms',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _flowIntensityMeta = const VerificationMeta(
-    'flowIntensity',
-  );
+  late final GeneratedColumn<String> symptomsEncrypted =
+      GeneratedColumn<String>(
+        'symptoms_encrypted',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _flowIntensityEncryptedMeta =
+      const VerificationMeta('flowIntensityEncrypted');
   @override
-  late final GeneratedColumn<String> flowIntensity = GeneratedColumn<String>(
-    'flow_intensity',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
+  late final GeneratedColumn<String> flowIntensityEncrypted =
+      GeneratedColumn<String>(
+        'flow_intensity_encrypted',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
   static const VerificationMeta _notesEncryptedMeta = const VerificationMeta(
     'notesEncrypted',
   );
@@ -13691,10 +13693,10 @@ class $PeriodLogsTable extends PeriodLogs
   List<GeneratedColumn> get $columns => [
     id,
     userId,
-    cycleStart,
-    cycleEnd,
-    symptoms,
-    flowIntensity,
+    cycleStartEncrypted,
+    cycleEndEncrypted,
+    symptomsEncrypted,
+    flowIntensityEncrypted,
     notesEncrypted,
     syncStatus,
     idempotencyKey,
@@ -13722,32 +13724,41 @@ class $PeriodLogsTable extends PeriodLogs
     } else if (isInserting) {
       context.missing(_userIdMeta);
     }
-    if (data.containsKey('cycle_start')) {
+    if (data.containsKey('cycle_start_encrypted')) {
       context.handle(
-        _cycleStartMeta,
-        cycleStart.isAcceptableOrUnknown(data['cycle_start']!, _cycleStartMeta),
+        _cycleStartEncryptedMeta,
+        cycleStartEncrypted.isAcceptableOrUnknown(
+          data['cycle_start_encrypted']!,
+          _cycleStartEncryptedMeta,
+        ),
       );
     } else if (isInserting) {
-      context.missing(_cycleStartMeta);
+      context.missing(_cycleStartEncryptedMeta);
     }
-    if (data.containsKey('cycle_end')) {
+    if (data.containsKey('cycle_end_encrypted')) {
       context.handle(
-        _cycleEndMeta,
-        cycleEnd.isAcceptableOrUnknown(data['cycle_end']!, _cycleEndMeta),
+        _cycleEndEncryptedMeta,
+        cycleEndEncrypted.isAcceptableOrUnknown(
+          data['cycle_end_encrypted']!,
+          _cycleEndEncryptedMeta,
+        ),
       );
     }
-    if (data.containsKey('symptoms')) {
+    if (data.containsKey('symptoms_encrypted')) {
       context.handle(
-        _symptomsMeta,
-        symptoms.isAcceptableOrUnknown(data['symptoms']!, _symptomsMeta),
+        _symptomsEncryptedMeta,
+        symptomsEncrypted.isAcceptableOrUnknown(
+          data['symptoms_encrypted']!,
+          _symptomsEncryptedMeta,
+        ),
       );
     }
-    if (data.containsKey('flow_intensity')) {
+    if (data.containsKey('flow_intensity_encrypted')) {
       context.handle(
-        _flowIntensityMeta,
-        flowIntensity.isAcceptableOrUnknown(
-          data['flow_intensity']!,
-          _flowIntensityMeta,
+        _flowIntensityEncryptedMeta,
+        flowIntensityEncrypted.isAcceptableOrUnknown(
+          data['flow_intensity_encrypted']!,
+          _flowIntensityEncryptedMeta,
         ),
       );
     }
@@ -13792,21 +13803,21 @@ class $PeriodLogsTable extends PeriodLogs
         DriftSqlType.string,
         data['${effectivePrefix}user_id'],
       )!,
-      cycleStart: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}cycle_start'],
+      cycleStartEncrypted: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}cycle_start_encrypted'],
       )!,
-      cycleEnd: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}cycle_end'],
-      ),
-      symptoms: attachedDatabase.typeMapping.read(
+      cycleEndEncrypted: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}symptoms'],
+        data['${effectivePrefix}cycle_end_encrypted'],
       ),
-      flowIntensity: attachedDatabase.typeMapping.read(
+      symptomsEncrypted: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}flow_intensity'],
+        data['${effectivePrefix}symptoms_encrypted'],
+      ),
+      flowIntensityEncrypted: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}flow_intensity_encrypted'],
       ),
       notesEncrypted: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
@@ -13832,20 +13843,20 @@ class $PeriodLogsTable extends PeriodLogs
 class PeriodLog extends DataClass implements Insertable<PeriodLog> {
   final int id;
   final String userId;
-  final DateTime cycleStart;
-  final DateTime? cycleEnd;
-  final String? symptoms;
-  final String? flowIntensity;
+  final String cycleStartEncrypted;
+  final String? cycleEndEncrypted;
+  final String? symptomsEncrypted;
+  final String? flowIntensityEncrypted;
   final String? notesEncrypted;
   final String? syncStatus;
   final String? idempotencyKey;
   const PeriodLog({
     required this.id,
     required this.userId,
-    required this.cycleStart,
-    this.cycleEnd,
-    this.symptoms,
-    this.flowIntensity,
+    required this.cycleStartEncrypted,
+    this.cycleEndEncrypted,
+    this.symptomsEncrypted,
+    this.flowIntensityEncrypted,
     this.notesEncrypted,
     this.syncStatus,
     this.idempotencyKey,
@@ -13855,15 +13866,17 @@ class PeriodLog extends DataClass implements Insertable<PeriodLog> {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
     map['user_id'] = Variable<String>(userId);
-    map['cycle_start'] = Variable<DateTime>(cycleStart);
-    if (!nullToAbsent || cycleEnd != null) {
-      map['cycle_end'] = Variable<DateTime>(cycleEnd);
+    map['cycle_start_encrypted'] = Variable<String>(cycleStartEncrypted);
+    if (!nullToAbsent || cycleEndEncrypted != null) {
+      map['cycle_end_encrypted'] = Variable<String>(cycleEndEncrypted);
     }
-    if (!nullToAbsent || symptoms != null) {
-      map['symptoms'] = Variable<String>(symptoms);
+    if (!nullToAbsent || symptomsEncrypted != null) {
+      map['symptoms_encrypted'] = Variable<String>(symptomsEncrypted);
     }
-    if (!nullToAbsent || flowIntensity != null) {
-      map['flow_intensity'] = Variable<String>(flowIntensity);
+    if (!nullToAbsent || flowIntensityEncrypted != null) {
+      map['flow_intensity_encrypted'] = Variable<String>(
+        flowIntensityEncrypted,
+      );
     }
     if (!nullToAbsent || notesEncrypted != null) {
       map['notes_encrypted'] = Variable<String>(notesEncrypted);
@@ -13881,16 +13894,16 @@ class PeriodLog extends DataClass implements Insertable<PeriodLog> {
     return PeriodLogsCompanion(
       id: Value(id),
       userId: Value(userId),
-      cycleStart: Value(cycleStart),
-      cycleEnd: cycleEnd == null && nullToAbsent
+      cycleStartEncrypted: Value(cycleStartEncrypted),
+      cycleEndEncrypted: cycleEndEncrypted == null && nullToAbsent
           ? const Value.absent()
-          : Value(cycleEnd),
-      symptoms: symptoms == null && nullToAbsent
+          : Value(cycleEndEncrypted),
+      symptomsEncrypted: symptomsEncrypted == null && nullToAbsent
           ? const Value.absent()
-          : Value(symptoms),
-      flowIntensity: flowIntensity == null && nullToAbsent
+          : Value(symptomsEncrypted),
+      flowIntensityEncrypted: flowIntensityEncrypted == null && nullToAbsent
           ? const Value.absent()
-          : Value(flowIntensity),
+          : Value(flowIntensityEncrypted),
       notesEncrypted: notesEncrypted == null && nullToAbsent
           ? const Value.absent()
           : Value(notesEncrypted),
@@ -13911,10 +13924,18 @@ class PeriodLog extends DataClass implements Insertable<PeriodLog> {
     return PeriodLog(
       id: serializer.fromJson<int>(json['id']),
       userId: serializer.fromJson<String>(json['userId']),
-      cycleStart: serializer.fromJson<DateTime>(json['cycleStart']),
-      cycleEnd: serializer.fromJson<DateTime?>(json['cycleEnd']),
-      symptoms: serializer.fromJson<String?>(json['symptoms']),
-      flowIntensity: serializer.fromJson<String?>(json['flowIntensity']),
+      cycleStartEncrypted: serializer.fromJson<String>(
+        json['cycleStartEncrypted'],
+      ),
+      cycleEndEncrypted: serializer.fromJson<String?>(
+        json['cycleEndEncrypted'],
+      ),
+      symptomsEncrypted: serializer.fromJson<String?>(
+        json['symptomsEncrypted'],
+      ),
+      flowIntensityEncrypted: serializer.fromJson<String?>(
+        json['flowIntensityEncrypted'],
+      ),
       notesEncrypted: serializer.fromJson<String?>(json['notesEncrypted']),
       syncStatus: serializer.fromJson<String?>(json['syncStatus']),
       idempotencyKey: serializer.fromJson<String?>(json['idempotencyKey']),
@@ -13926,10 +13947,12 @@ class PeriodLog extends DataClass implements Insertable<PeriodLog> {
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
       'userId': serializer.toJson<String>(userId),
-      'cycleStart': serializer.toJson<DateTime>(cycleStart),
-      'cycleEnd': serializer.toJson<DateTime?>(cycleEnd),
-      'symptoms': serializer.toJson<String?>(symptoms),
-      'flowIntensity': serializer.toJson<String?>(flowIntensity),
+      'cycleStartEncrypted': serializer.toJson<String>(cycleStartEncrypted),
+      'cycleEndEncrypted': serializer.toJson<String?>(cycleEndEncrypted),
+      'symptomsEncrypted': serializer.toJson<String?>(symptomsEncrypted),
+      'flowIntensityEncrypted': serializer.toJson<String?>(
+        flowIntensityEncrypted,
+      ),
       'notesEncrypted': serializer.toJson<String?>(notesEncrypted),
       'syncStatus': serializer.toJson<String?>(syncStatus),
       'idempotencyKey': serializer.toJson<String?>(idempotencyKey),
@@ -13939,22 +13962,26 @@ class PeriodLog extends DataClass implements Insertable<PeriodLog> {
   PeriodLog copyWith({
     int? id,
     String? userId,
-    DateTime? cycleStart,
-    Value<DateTime?> cycleEnd = const Value.absent(),
-    Value<String?> symptoms = const Value.absent(),
-    Value<String?> flowIntensity = const Value.absent(),
+    String? cycleStartEncrypted,
+    Value<String?> cycleEndEncrypted = const Value.absent(),
+    Value<String?> symptomsEncrypted = const Value.absent(),
+    Value<String?> flowIntensityEncrypted = const Value.absent(),
     Value<String?> notesEncrypted = const Value.absent(),
     Value<String?> syncStatus = const Value.absent(),
     Value<String?> idempotencyKey = const Value.absent(),
   }) => PeriodLog(
     id: id ?? this.id,
     userId: userId ?? this.userId,
-    cycleStart: cycleStart ?? this.cycleStart,
-    cycleEnd: cycleEnd.present ? cycleEnd.value : this.cycleEnd,
-    symptoms: symptoms.present ? symptoms.value : this.symptoms,
-    flowIntensity: flowIntensity.present
-        ? flowIntensity.value
-        : this.flowIntensity,
+    cycleStartEncrypted: cycleStartEncrypted ?? this.cycleStartEncrypted,
+    cycleEndEncrypted: cycleEndEncrypted.present
+        ? cycleEndEncrypted.value
+        : this.cycleEndEncrypted,
+    symptomsEncrypted: symptomsEncrypted.present
+        ? symptomsEncrypted.value
+        : this.symptomsEncrypted,
+    flowIntensityEncrypted: flowIntensityEncrypted.present
+        ? flowIntensityEncrypted.value
+        : this.flowIntensityEncrypted,
     notesEncrypted: notesEncrypted.present
         ? notesEncrypted.value
         : this.notesEncrypted,
@@ -13967,14 +13994,18 @@ class PeriodLog extends DataClass implements Insertable<PeriodLog> {
     return PeriodLog(
       id: data.id.present ? data.id.value : this.id,
       userId: data.userId.present ? data.userId.value : this.userId,
-      cycleStart: data.cycleStart.present
-          ? data.cycleStart.value
-          : this.cycleStart,
-      cycleEnd: data.cycleEnd.present ? data.cycleEnd.value : this.cycleEnd,
-      symptoms: data.symptoms.present ? data.symptoms.value : this.symptoms,
-      flowIntensity: data.flowIntensity.present
-          ? data.flowIntensity.value
-          : this.flowIntensity,
+      cycleStartEncrypted: data.cycleStartEncrypted.present
+          ? data.cycleStartEncrypted.value
+          : this.cycleStartEncrypted,
+      cycleEndEncrypted: data.cycleEndEncrypted.present
+          ? data.cycleEndEncrypted.value
+          : this.cycleEndEncrypted,
+      symptomsEncrypted: data.symptomsEncrypted.present
+          ? data.symptomsEncrypted.value
+          : this.symptomsEncrypted,
+      flowIntensityEncrypted: data.flowIntensityEncrypted.present
+          ? data.flowIntensityEncrypted.value
+          : this.flowIntensityEncrypted,
       notesEncrypted: data.notesEncrypted.present
           ? data.notesEncrypted.value
           : this.notesEncrypted,
@@ -13992,10 +14023,10 @@ class PeriodLog extends DataClass implements Insertable<PeriodLog> {
     return (StringBuffer('PeriodLog(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
-          ..write('cycleStart: $cycleStart, ')
-          ..write('cycleEnd: $cycleEnd, ')
-          ..write('symptoms: $symptoms, ')
-          ..write('flowIntensity: $flowIntensity, ')
+          ..write('cycleStartEncrypted: $cycleStartEncrypted, ')
+          ..write('cycleEndEncrypted: $cycleEndEncrypted, ')
+          ..write('symptomsEncrypted: $symptomsEncrypted, ')
+          ..write('flowIntensityEncrypted: $flowIntensityEncrypted, ')
           ..write('notesEncrypted: $notesEncrypted, ')
           ..write('syncStatus: $syncStatus, ')
           ..write('idempotencyKey: $idempotencyKey')
@@ -14007,10 +14038,10 @@ class PeriodLog extends DataClass implements Insertable<PeriodLog> {
   int get hashCode => Object.hash(
     id,
     userId,
-    cycleStart,
-    cycleEnd,
-    symptoms,
-    flowIntensity,
+    cycleStartEncrypted,
+    cycleEndEncrypted,
+    symptomsEncrypted,
+    flowIntensityEncrypted,
     notesEncrypted,
     syncStatus,
     idempotencyKey,
@@ -14021,10 +14052,10 @@ class PeriodLog extends DataClass implements Insertable<PeriodLog> {
       (other is PeriodLog &&
           other.id == this.id &&
           other.userId == this.userId &&
-          other.cycleStart == this.cycleStart &&
-          other.cycleEnd == this.cycleEnd &&
-          other.symptoms == this.symptoms &&
-          other.flowIntensity == this.flowIntensity &&
+          other.cycleStartEncrypted == this.cycleStartEncrypted &&
+          other.cycleEndEncrypted == this.cycleEndEncrypted &&
+          other.symptomsEncrypted == this.symptomsEncrypted &&
+          other.flowIntensityEncrypted == this.flowIntensityEncrypted &&
           other.notesEncrypted == this.notesEncrypted &&
           other.syncStatus == this.syncStatus &&
           other.idempotencyKey == this.idempotencyKey);
@@ -14033,20 +14064,20 @@ class PeriodLog extends DataClass implements Insertable<PeriodLog> {
 class PeriodLogsCompanion extends UpdateCompanion<PeriodLog> {
   final Value<int> id;
   final Value<String> userId;
-  final Value<DateTime> cycleStart;
-  final Value<DateTime?> cycleEnd;
-  final Value<String?> symptoms;
-  final Value<String?> flowIntensity;
+  final Value<String> cycleStartEncrypted;
+  final Value<String?> cycleEndEncrypted;
+  final Value<String?> symptomsEncrypted;
+  final Value<String?> flowIntensityEncrypted;
   final Value<String?> notesEncrypted;
   final Value<String?> syncStatus;
   final Value<String?> idempotencyKey;
   const PeriodLogsCompanion({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
-    this.cycleStart = const Value.absent(),
-    this.cycleEnd = const Value.absent(),
-    this.symptoms = const Value.absent(),
-    this.flowIntensity = const Value.absent(),
+    this.cycleStartEncrypted = const Value.absent(),
+    this.cycleEndEncrypted = const Value.absent(),
+    this.symptomsEncrypted = const Value.absent(),
+    this.flowIntensityEncrypted = const Value.absent(),
     this.notesEncrypted = const Value.absent(),
     this.syncStatus = const Value.absent(),
     this.idempotencyKey = const Value.absent(),
@@ -14054,22 +14085,22 @@ class PeriodLogsCompanion extends UpdateCompanion<PeriodLog> {
   PeriodLogsCompanion.insert({
     this.id = const Value.absent(),
     required String userId,
-    required DateTime cycleStart,
-    this.cycleEnd = const Value.absent(),
-    this.symptoms = const Value.absent(),
-    this.flowIntensity = const Value.absent(),
+    required String cycleStartEncrypted,
+    this.cycleEndEncrypted = const Value.absent(),
+    this.symptomsEncrypted = const Value.absent(),
+    this.flowIntensityEncrypted = const Value.absent(),
     this.notesEncrypted = const Value.absent(),
     this.syncStatus = const Value.absent(),
     this.idempotencyKey = const Value.absent(),
   }) : userId = Value(userId),
-       cycleStart = Value(cycleStart);
+       cycleStartEncrypted = Value(cycleStartEncrypted);
   static Insertable<PeriodLog> custom({
     Expression<int>? id,
     Expression<String>? userId,
-    Expression<DateTime>? cycleStart,
-    Expression<DateTime>? cycleEnd,
-    Expression<String>? symptoms,
-    Expression<String>? flowIntensity,
+    Expression<String>? cycleStartEncrypted,
+    Expression<String>? cycleEndEncrypted,
+    Expression<String>? symptomsEncrypted,
+    Expression<String>? flowIntensityEncrypted,
     Expression<String>? notesEncrypted,
     Expression<String>? syncStatus,
     Expression<String>? idempotencyKey,
@@ -14077,10 +14108,12 @@ class PeriodLogsCompanion extends UpdateCompanion<PeriodLog> {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (userId != null) 'user_id': userId,
-      if (cycleStart != null) 'cycle_start': cycleStart,
-      if (cycleEnd != null) 'cycle_end': cycleEnd,
-      if (symptoms != null) 'symptoms': symptoms,
-      if (flowIntensity != null) 'flow_intensity': flowIntensity,
+      if (cycleStartEncrypted != null)
+        'cycle_start_encrypted': cycleStartEncrypted,
+      if (cycleEndEncrypted != null) 'cycle_end_encrypted': cycleEndEncrypted,
+      if (symptomsEncrypted != null) 'symptoms_encrypted': symptomsEncrypted,
+      if (flowIntensityEncrypted != null)
+        'flow_intensity_encrypted': flowIntensityEncrypted,
       if (notesEncrypted != null) 'notes_encrypted': notesEncrypted,
       if (syncStatus != null) 'sync_status': syncStatus,
       if (idempotencyKey != null) 'idempotency_key': idempotencyKey,
@@ -14090,10 +14123,10 @@ class PeriodLogsCompanion extends UpdateCompanion<PeriodLog> {
   PeriodLogsCompanion copyWith({
     Value<int>? id,
     Value<String>? userId,
-    Value<DateTime>? cycleStart,
-    Value<DateTime?>? cycleEnd,
-    Value<String?>? symptoms,
-    Value<String?>? flowIntensity,
+    Value<String>? cycleStartEncrypted,
+    Value<String?>? cycleEndEncrypted,
+    Value<String?>? symptomsEncrypted,
+    Value<String?>? flowIntensityEncrypted,
     Value<String?>? notesEncrypted,
     Value<String?>? syncStatus,
     Value<String?>? idempotencyKey,
@@ -14101,10 +14134,11 @@ class PeriodLogsCompanion extends UpdateCompanion<PeriodLog> {
     return PeriodLogsCompanion(
       id: id ?? this.id,
       userId: userId ?? this.userId,
-      cycleStart: cycleStart ?? this.cycleStart,
-      cycleEnd: cycleEnd ?? this.cycleEnd,
-      symptoms: symptoms ?? this.symptoms,
-      flowIntensity: flowIntensity ?? this.flowIntensity,
+      cycleStartEncrypted: cycleStartEncrypted ?? this.cycleStartEncrypted,
+      cycleEndEncrypted: cycleEndEncrypted ?? this.cycleEndEncrypted,
+      symptomsEncrypted: symptomsEncrypted ?? this.symptomsEncrypted,
+      flowIntensityEncrypted:
+          flowIntensityEncrypted ?? this.flowIntensityEncrypted,
       notesEncrypted: notesEncrypted ?? this.notesEncrypted,
       syncStatus: syncStatus ?? this.syncStatus,
       idempotencyKey: idempotencyKey ?? this.idempotencyKey,
@@ -14120,17 +14154,21 @@ class PeriodLogsCompanion extends UpdateCompanion<PeriodLog> {
     if (userId.present) {
       map['user_id'] = Variable<String>(userId.value);
     }
-    if (cycleStart.present) {
-      map['cycle_start'] = Variable<DateTime>(cycleStart.value);
+    if (cycleStartEncrypted.present) {
+      map['cycle_start_encrypted'] = Variable<String>(
+        cycleStartEncrypted.value,
+      );
     }
-    if (cycleEnd.present) {
-      map['cycle_end'] = Variable<DateTime>(cycleEnd.value);
+    if (cycleEndEncrypted.present) {
+      map['cycle_end_encrypted'] = Variable<String>(cycleEndEncrypted.value);
     }
-    if (symptoms.present) {
-      map['symptoms'] = Variable<String>(symptoms.value);
+    if (symptomsEncrypted.present) {
+      map['symptoms_encrypted'] = Variable<String>(symptomsEncrypted.value);
     }
-    if (flowIntensity.present) {
-      map['flow_intensity'] = Variable<String>(flowIntensity.value);
+    if (flowIntensityEncrypted.present) {
+      map['flow_intensity_encrypted'] = Variable<String>(
+        flowIntensityEncrypted.value,
+      );
     }
     if (notesEncrypted.present) {
       map['notes_encrypted'] = Variable<String>(notesEncrypted.value);
@@ -14149,10 +14187,10 @@ class PeriodLogsCompanion extends UpdateCompanion<PeriodLog> {
     return (StringBuffer('PeriodLogsCompanion(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
-          ..write('cycleStart: $cycleStart, ')
-          ..write('cycleEnd: $cycleEnd, ')
-          ..write('symptoms: $symptoms, ')
-          ..write('flowIntensity: $flowIntensity, ')
+          ..write('cycleStartEncrypted: $cycleStartEncrypted, ')
+          ..write('cycleEndEncrypted: $cycleEndEncrypted, ')
+          ..write('symptomsEncrypted: $symptomsEncrypted, ')
+          ..write('flowIntensityEncrypted: $flowIntensityEncrypted, ')
           ..write('notesEncrypted: $notesEncrypted, ')
           ..write('syncStatus: $syncStatus, ')
           ..write('idempotencyKey: $idempotencyKey')
@@ -14709,27 +14747,26 @@ class $DoctorAppointmentsTable extends DoctorAppointments
         type: DriftSqlType.string,
         requiredDuringInsert: true,
       );
-  static const VerificationMeta _specialityMeta = const VerificationMeta(
-    'speciality',
-  );
+  static const VerificationMeta _specialityEncryptedMeta =
+      const VerificationMeta('specialityEncrypted');
   @override
-  late final GeneratedColumn<String> speciality = GeneratedColumn<String>(
-    'speciality',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _appointmentDtMeta = const VerificationMeta(
-    'appointmentDt',
-  );
+  late final GeneratedColumn<String> specialityEncrypted =
+      GeneratedColumn<String>(
+        'speciality_encrypted',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _appointmentDtEncryptedMeta =
+      const VerificationMeta('appointmentDtEncrypted');
   @override
-  late final GeneratedColumn<DateTime> appointmentDt =
-      GeneratedColumn<DateTime>(
-        'appointment_dt',
+  late final GeneratedColumn<String> appointmentDtEncrypted =
+      GeneratedColumn<String>(
+        'appointment_dt_encrypted',
         aliasedName,
         false,
-        type: DriftSqlType.dateTime,
+        type: DriftSqlType.string,
         requiredDuringInsert: true,
       );
   static const VerificationMeta _notesEncryptedMeta = const VerificationMeta(
@@ -14763,8 +14800,8 @@ class $DoctorAppointmentsTable extends DoctorAppointments
     id,
     userId,
     doctorNameEncrypted,
-    speciality,
-    appointmentDt,
+    specialityEncrypted,
+    appointmentDtEncrypted,
     notesEncrypted,
     reminderSent,
   ];
@@ -14802,22 +14839,25 @@ class $DoctorAppointmentsTable extends DoctorAppointments
     } else if (isInserting) {
       context.missing(_doctorNameEncryptedMeta);
     }
-    if (data.containsKey('speciality')) {
+    if (data.containsKey('speciality_encrypted')) {
       context.handle(
-        _specialityMeta,
-        speciality.isAcceptableOrUnknown(data['speciality']!, _specialityMeta),
+        _specialityEncryptedMeta,
+        specialityEncrypted.isAcceptableOrUnknown(
+          data['speciality_encrypted']!,
+          _specialityEncryptedMeta,
+        ),
       );
     }
-    if (data.containsKey('appointment_dt')) {
+    if (data.containsKey('appointment_dt_encrypted')) {
       context.handle(
-        _appointmentDtMeta,
-        appointmentDt.isAcceptableOrUnknown(
-          data['appointment_dt']!,
-          _appointmentDtMeta,
+        _appointmentDtEncryptedMeta,
+        appointmentDtEncrypted.isAcceptableOrUnknown(
+          data['appointment_dt_encrypted']!,
+          _appointmentDtEncryptedMeta,
         ),
       );
     } else if (isInserting) {
-      context.missing(_appointmentDtMeta);
+      context.missing(_appointmentDtEncryptedMeta);
     }
     if (data.containsKey('notes_encrypted')) {
       context.handle(
@@ -14858,13 +14898,13 @@ class $DoctorAppointmentsTable extends DoctorAppointments
         DriftSqlType.string,
         data['${effectivePrefix}doctor_name_encrypted'],
       )!,
-      speciality: attachedDatabase.typeMapping.read(
+      specialityEncrypted: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}speciality'],
+        data['${effectivePrefix}speciality_encrypted'],
       ),
-      appointmentDt: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}appointment_dt'],
+      appointmentDtEncrypted: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}appointment_dt_encrypted'],
       )!,
       notesEncrypted: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
@@ -14888,16 +14928,16 @@ class DoctorAppointment extends DataClass
   final int id;
   final String userId;
   final String doctorNameEncrypted;
-  final String? speciality;
-  final DateTime appointmentDt;
+  final String? specialityEncrypted;
+  final String appointmentDtEncrypted;
   final String? notesEncrypted;
   final bool reminderSent;
   const DoctorAppointment({
     required this.id,
     required this.userId,
     required this.doctorNameEncrypted,
-    this.speciality,
-    required this.appointmentDt,
+    this.specialityEncrypted,
+    required this.appointmentDtEncrypted,
     this.notesEncrypted,
     required this.reminderSent,
   });
@@ -14907,10 +14947,10 @@ class DoctorAppointment extends DataClass
     map['id'] = Variable<int>(id);
     map['user_id'] = Variable<String>(userId);
     map['doctor_name_encrypted'] = Variable<String>(doctorNameEncrypted);
-    if (!nullToAbsent || speciality != null) {
-      map['speciality'] = Variable<String>(speciality);
+    if (!nullToAbsent || specialityEncrypted != null) {
+      map['speciality_encrypted'] = Variable<String>(specialityEncrypted);
     }
-    map['appointment_dt'] = Variable<DateTime>(appointmentDt);
+    map['appointment_dt_encrypted'] = Variable<String>(appointmentDtEncrypted);
     if (!nullToAbsent || notesEncrypted != null) {
       map['notes_encrypted'] = Variable<String>(notesEncrypted);
     }
@@ -14923,10 +14963,10 @@ class DoctorAppointment extends DataClass
       id: Value(id),
       userId: Value(userId),
       doctorNameEncrypted: Value(doctorNameEncrypted),
-      speciality: speciality == null && nullToAbsent
+      specialityEncrypted: specialityEncrypted == null && nullToAbsent
           ? const Value.absent()
-          : Value(speciality),
-      appointmentDt: Value(appointmentDt),
+          : Value(specialityEncrypted),
+      appointmentDtEncrypted: Value(appointmentDtEncrypted),
       notesEncrypted: notesEncrypted == null && nullToAbsent
           ? const Value.absent()
           : Value(notesEncrypted),
@@ -14945,8 +14985,12 @@ class DoctorAppointment extends DataClass
       doctorNameEncrypted: serializer.fromJson<String>(
         json['doctorNameEncrypted'],
       ),
-      speciality: serializer.fromJson<String?>(json['speciality']),
-      appointmentDt: serializer.fromJson<DateTime>(json['appointmentDt']),
+      specialityEncrypted: serializer.fromJson<String?>(
+        json['specialityEncrypted'],
+      ),
+      appointmentDtEncrypted: serializer.fromJson<String>(
+        json['appointmentDtEncrypted'],
+      ),
       notesEncrypted: serializer.fromJson<String?>(json['notesEncrypted']),
       reminderSent: serializer.fromJson<bool>(json['reminderSent']),
     );
@@ -14958,8 +15002,10 @@ class DoctorAppointment extends DataClass
       'id': serializer.toJson<int>(id),
       'userId': serializer.toJson<String>(userId),
       'doctorNameEncrypted': serializer.toJson<String>(doctorNameEncrypted),
-      'speciality': serializer.toJson<String?>(speciality),
-      'appointmentDt': serializer.toJson<DateTime>(appointmentDt),
+      'specialityEncrypted': serializer.toJson<String?>(specialityEncrypted),
+      'appointmentDtEncrypted': serializer.toJson<String>(
+        appointmentDtEncrypted,
+      ),
       'notesEncrypted': serializer.toJson<String?>(notesEncrypted),
       'reminderSent': serializer.toJson<bool>(reminderSent),
     };
@@ -14969,16 +15015,19 @@ class DoctorAppointment extends DataClass
     int? id,
     String? userId,
     String? doctorNameEncrypted,
-    Value<String?> speciality = const Value.absent(),
-    DateTime? appointmentDt,
+    Value<String?> specialityEncrypted = const Value.absent(),
+    String? appointmentDtEncrypted,
     Value<String?> notesEncrypted = const Value.absent(),
     bool? reminderSent,
   }) => DoctorAppointment(
     id: id ?? this.id,
     userId: userId ?? this.userId,
     doctorNameEncrypted: doctorNameEncrypted ?? this.doctorNameEncrypted,
-    speciality: speciality.present ? speciality.value : this.speciality,
-    appointmentDt: appointmentDt ?? this.appointmentDt,
+    specialityEncrypted: specialityEncrypted.present
+        ? specialityEncrypted.value
+        : this.specialityEncrypted,
+    appointmentDtEncrypted:
+        appointmentDtEncrypted ?? this.appointmentDtEncrypted,
     notesEncrypted: notesEncrypted.present
         ? notesEncrypted.value
         : this.notesEncrypted,
@@ -14991,12 +15040,12 @@ class DoctorAppointment extends DataClass
       doctorNameEncrypted: data.doctorNameEncrypted.present
           ? data.doctorNameEncrypted.value
           : this.doctorNameEncrypted,
-      speciality: data.speciality.present
-          ? data.speciality.value
-          : this.speciality,
-      appointmentDt: data.appointmentDt.present
-          ? data.appointmentDt.value
-          : this.appointmentDt,
+      specialityEncrypted: data.specialityEncrypted.present
+          ? data.specialityEncrypted.value
+          : this.specialityEncrypted,
+      appointmentDtEncrypted: data.appointmentDtEncrypted.present
+          ? data.appointmentDtEncrypted.value
+          : this.appointmentDtEncrypted,
       notesEncrypted: data.notesEncrypted.present
           ? data.notesEncrypted.value
           : this.notesEncrypted,
@@ -15012,8 +15061,8 @@ class DoctorAppointment extends DataClass
           ..write('id: $id, ')
           ..write('userId: $userId, ')
           ..write('doctorNameEncrypted: $doctorNameEncrypted, ')
-          ..write('speciality: $speciality, ')
-          ..write('appointmentDt: $appointmentDt, ')
+          ..write('specialityEncrypted: $specialityEncrypted, ')
+          ..write('appointmentDtEncrypted: $appointmentDtEncrypted, ')
           ..write('notesEncrypted: $notesEncrypted, ')
           ..write('reminderSent: $reminderSent')
           ..write(')'))
@@ -15025,8 +15074,8 @@ class DoctorAppointment extends DataClass
     id,
     userId,
     doctorNameEncrypted,
-    speciality,
-    appointmentDt,
+    specialityEncrypted,
+    appointmentDtEncrypted,
     notesEncrypted,
     reminderSent,
   );
@@ -15037,8 +15086,8 @@ class DoctorAppointment extends DataClass
           other.id == this.id &&
           other.userId == this.userId &&
           other.doctorNameEncrypted == this.doctorNameEncrypted &&
-          other.speciality == this.speciality &&
-          other.appointmentDt == this.appointmentDt &&
+          other.specialityEncrypted == this.specialityEncrypted &&
+          other.appointmentDtEncrypted == this.appointmentDtEncrypted &&
           other.notesEncrypted == this.notesEncrypted &&
           other.reminderSent == this.reminderSent);
 }
@@ -15047,16 +15096,16 @@ class DoctorAppointmentsCompanion extends UpdateCompanion<DoctorAppointment> {
   final Value<int> id;
   final Value<String> userId;
   final Value<String> doctorNameEncrypted;
-  final Value<String?> speciality;
-  final Value<DateTime> appointmentDt;
+  final Value<String?> specialityEncrypted;
+  final Value<String> appointmentDtEncrypted;
   final Value<String?> notesEncrypted;
   final Value<bool> reminderSent;
   const DoctorAppointmentsCompanion({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
     this.doctorNameEncrypted = const Value.absent(),
-    this.speciality = const Value.absent(),
-    this.appointmentDt = const Value.absent(),
+    this.specialityEncrypted = const Value.absent(),
+    this.appointmentDtEncrypted = const Value.absent(),
     this.notesEncrypted = const Value.absent(),
     this.reminderSent = const Value.absent(),
   });
@@ -15064,19 +15113,19 @@ class DoctorAppointmentsCompanion extends UpdateCompanion<DoctorAppointment> {
     this.id = const Value.absent(),
     required String userId,
     required String doctorNameEncrypted,
-    this.speciality = const Value.absent(),
-    required DateTime appointmentDt,
+    this.specialityEncrypted = const Value.absent(),
+    required String appointmentDtEncrypted,
     this.notesEncrypted = const Value.absent(),
     this.reminderSent = const Value.absent(),
   }) : userId = Value(userId),
        doctorNameEncrypted = Value(doctorNameEncrypted),
-       appointmentDt = Value(appointmentDt);
+       appointmentDtEncrypted = Value(appointmentDtEncrypted);
   static Insertable<DoctorAppointment> custom({
     Expression<int>? id,
     Expression<String>? userId,
     Expression<String>? doctorNameEncrypted,
-    Expression<String>? speciality,
-    Expression<DateTime>? appointmentDt,
+    Expression<String>? specialityEncrypted,
+    Expression<String>? appointmentDtEncrypted,
     Expression<String>? notesEncrypted,
     Expression<bool>? reminderSent,
   }) {
@@ -15085,8 +15134,10 @@ class DoctorAppointmentsCompanion extends UpdateCompanion<DoctorAppointment> {
       if (userId != null) 'user_id': userId,
       if (doctorNameEncrypted != null)
         'doctor_name_encrypted': doctorNameEncrypted,
-      if (speciality != null) 'speciality': speciality,
-      if (appointmentDt != null) 'appointment_dt': appointmentDt,
+      if (specialityEncrypted != null)
+        'speciality_encrypted': specialityEncrypted,
+      if (appointmentDtEncrypted != null)
+        'appointment_dt_encrypted': appointmentDtEncrypted,
       if (notesEncrypted != null) 'notes_encrypted': notesEncrypted,
       if (reminderSent != null) 'reminder_sent': reminderSent,
     });
@@ -15096,8 +15147,8 @@ class DoctorAppointmentsCompanion extends UpdateCompanion<DoctorAppointment> {
     Value<int>? id,
     Value<String>? userId,
     Value<String>? doctorNameEncrypted,
-    Value<String?>? speciality,
-    Value<DateTime>? appointmentDt,
+    Value<String?>? specialityEncrypted,
+    Value<String>? appointmentDtEncrypted,
     Value<String?>? notesEncrypted,
     Value<bool>? reminderSent,
   }) {
@@ -15105,8 +15156,9 @@ class DoctorAppointmentsCompanion extends UpdateCompanion<DoctorAppointment> {
       id: id ?? this.id,
       userId: userId ?? this.userId,
       doctorNameEncrypted: doctorNameEncrypted ?? this.doctorNameEncrypted,
-      speciality: speciality ?? this.speciality,
-      appointmentDt: appointmentDt ?? this.appointmentDt,
+      specialityEncrypted: specialityEncrypted ?? this.specialityEncrypted,
+      appointmentDtEncrypted:
+          appointmentDtEncrypted ?? this.appointmentDtEncrypted,
       notesEncrypted: notesEncrypted ?? this.notesEncrypted,
       reminderSent: reminderSent ?? this.reminderSent,
     );
@@ -15126,11 +15178,13 @@ class DoctorAppointmentsCompanion extends UpdateCompanion<DoctorAppointment> {
         doctorNameEncrypted.value,
       );
     }
-    if (speciality.present) {
-      map['speciality'] = Variable<String>(speciality.value);
+    if (specialityEncrypted.present) {
+      map['speciality_encrypted'] = Variable<String>(specialityEncrypted.value);
     }
-    if (appointmentDt.present) {
-      map['appointment_dt'] = Variable<DateTime>(appointmentDt.value);
+    if (appointmentDtEncrypted.present) {
+      map['appointment_dt_encrypted'] = Variable<String>(
+        appointmentDtEncrypted.value,
+      );
     }
     if (notesEncrypted.present) {
       map['notes_encrypted'] = Variable<String>(notesEncrypted.value);
@@ -15147,8 +15201,8 @@ class DoctorAppointmentsCompanion extends UpdateCompanion<DoctorAppointment> {
           ..write('id: $id, ')
           ..write('userId: $userId, ')
           ..write('doctorNameEncrypted: $doctorNameEncrypted, ')
-          ..write('speciality: $speciality, ')
-          ..write('appointmentDt: $appointmentDt, ')
+          ..write('specialityEncrypted: $specialityEncrypted, ')
+          ..write('appointmentDtEncrypted: $appointmentDtEncrypted, ')
           ..write('notesEncrypted: $notesEncrypted, ')
           ..write('reminderSent: $reminderSent')
           ..write(')'))
@@ -15753,37 +15807,40 @@ class $AbhaLinksTable extends AbhaLinks
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _abhaIdMeta = const VerificationMeta('abhaId');
+  static const VerificationMeta _abhaIdEncryptedMeta = const VerificationMeta(
+    'abhaIdEncrypted',
+  );
   @override
-  late final GeneratedColumn<String> abhaId = GeneratedColumn<String>(
-    'abha_id',
+  late final GeneratedColumn<String> abhaIdEncrypted = GeneratedColumn<String>(
+    'abha_id_encrypted',
     aliasedName,
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _abhaAddressMeta = const VerificationMeta(
-    'abhaAddress',
+  static const VerificationMeta _abhaAddressEncryptedMeta =
+      const VerificationMeta('abhaAddressEncrypted');
+  @override
+  late final GeneratedColumn<String> abhaAddressEncrypted =
+      GeneratedColumn<String>(
+        'abha_address_encrypted',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _linkedAtEncryptedMeta = const VerificationMeta(
+    'linkedAtEncrypted',
   );
   @override
-  late final GeneratedColumn<String> abhaAddress = GeneratedColumn<String>(
-    'abha_address',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _linkedAtMeta = const VerificationMeta(
-    'linkedAt',
-  );
-  @override
-  late final GeneratedColumn<DateTime> linkedAt = GeneratedColumn<DateTime>(
-    'linked_at',
-    aliasedName,
-    false,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: true,
-  );
+  late final GeneratedColumn<String> linkedAtEncrypted =
+      GeneratedColumn<String>(
+        'linked_at_encrypted',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
   static const VerificationMeta _consentGrantedMeta = const VerificationMeta(
     'consentGranted',
   );
@@ -15798,26 +15855,27 @@ class $AbhaLinksTable extends AbhaLinks
       'CHECK ("consent_granted" IN (0, 1))',
     ),
   );
-  static const VerificationMeta _lastSyncMeta = const VerificationMeta(
-    'lastSync',
+  static const VerificationMeta _lastSyncEncryptedMeta = const VerificationMeta(
+    'lastSyncEncrypted',
   );
   @override
-  late final GeneratedColumn<DateTime> lastSync = GeneratedColumn<DateTime>(
-    'last_sync',
-    aliasedName,
-    true,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: false,
-  );
+  late final GeneratedColumn<String> lastSyncEncrypted =
+      GeneratedColumn<String>(
+        'last_sync_encrypted',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
   @override
   List<GeneratedColumn> get $columns => [
     id,
     userId,
-    abhaId,
-    abhaAddress,
-    linkedAt,
+    abhaIdEncrypted,
+    abhaAddressEncrypted,
+    linkedAtEncrypted,
     consentGranted,
-    lastSync,
+    lastSyncEncrypted,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -15842,30 +15900,36 @@ class $AbhaLinksTable extends AbhaLinks
     } else if (isInserting) {
       context.missing(_userIdMeta);
     }
-    if (data.containsKey('abha_id')) {
+    if (data.containsKey('abha_id_encrypted')) {
       context.handle(
-        _abhaIdMeta,
-        abhaId.isAcceptableOrUnknown(data['abha_id']!, _abhaIdMeta),
+        _abhaIdEncryptedMeta,
+        abhaIdEncrypted.isAcceptableOrUnknown(
+          data['abha_id_encrypted']!,
+          _abhaIdEncryptedMeta,
+        ),
       );
     } else if (isInserting) {
-      context.missing(_abhaIdMeta);
+      context.missing(_abhaIdEncryptedMeta);
     }
-    if (data.containsKey('abha_address')) {
+    if (data.containsKey('abha_address_encrypted')) {
       context.handle(
-        _abhaAddressMeta,
-        abhaAddress.isAcceptableOrUnknown(
-          data['abha_address']!,
-          _abhaAddressMeta,
+        _abhaAddressEncryptedMeta,
+        abhaAddressEncrypted.isAcceptableOrUnknown(
+          data['abha_address_encrypted']!,
+          _abhaAddressEncryptedMeta,
         ),
       );
     }
-    if (data.containsKey('linked_at')) {
+    if (data.containsKey('linked_at_encrypted')) {
       context.handle(
-        _linkedAtMeta,
-        linkedAt.isAcceptableOrUnknown(data['linked_at']!, _linkedAtMeta),
+        _linkedAtEncryptedMeta,
+        linkedAtEncrypted.isAcceptableOrUnknown(
+          data['linked_at_encrypted']!,
+          _linkedAtEncryptedMeta,
+        ),
       );
     } else if (isInserting) {
-      context.missing(_linkedAtMeta);
+      context.missing(_linkedAtEncryptedMeta);
     }
     if (data.containsKey('consent_granted')) {
       context.handle(
@@ -15878,10 +15942,13 @@ class $AbhaLinksTable extends AbhaLinks
     } else if (isInserting) {
       context.missing(_consentGrantedMeta);
     }
-    if (data.containsKey('last_sync')) {
+    if (data.containsKey('last_sync_encrypted')) {
       context.handle(
-        _lastSyncMeta,
-        lastSync.isAcceptableOrUnknown(data['last_sync']!, _lastSyncMeta),
+        _lastSyncEncryptedMeta,
+        lastSyncEncrypted.isAcceptableOrUnknown(
+          data['last_sync_encrypted']!,
+          _lastSyncEncryptedMeta,
+        ),
       );
     }
     return context;
@@ -15901,25 +15968,25 @@ class $AbhaLinksTable extends AbhaLinks
         DriftSqlType.string,
         data['${effectivePrefix}user_id'],
       )!,
-      abhaId: attachedDatabase.typeMapping.read(
+      abhaIdEncrypted: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}abha_id'],
+        data['${effectivePrefix}abha_id_encrypted'],
       )!,
-      abhaAddress: attachedDatabase.typeMapping.read(
+      abhaAddressEncrypted: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}abha_address'],
+        data['${effectivePrefix}abha_address_encrypted'],
       ),
-      linkedAt: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}linked_at'],
+      linkedAtEncrypted: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}linked_at_encrypted'],
       )!,
       consentGranted: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
         data['${effectivePrefix}consent_granted'],
       )!,
-      lastSync: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}last_sync'],
+      lastSyncEncrypted: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}last_sync_encrypted'],
       ),
     );
   }
@@ -15933,33 +16000,33 @@ class $AbhaLinksTable extends AbhaLinks
 class AbhaLink extends DataClass implements Insertable<AbhaLink> {
   final int id;
   final String userId;
-  final String abhaId;
-  final String? abhaAddress;
-  final DateTime linkedAt;
+  final String abhaIdEncrypted;
+  final String? abhaAddressEncrypted;
+  final String linkedAtEncrypted;
   final bool consentGranted;
-  final DateTime? lastSync;
+  final String? lastSyncEncrypted;
   const AbhaLink({
     required this.id,
     required this.userId,
-    required this.abhaId,
-    this.abhaAddress,
-    required this.linkedAt,
+    required this.abhaIdEncrypted,
+    this.abhaAddressEncrypted,
+    required this.linkedAtEncrypted,
     required this.consentGranted,
-    this.lastSync,
+    this.lastSyncEncrypted,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
     map['user_id'] = Variable<String>(userId);
-    map['abha_id'] = Variable<String>(abhaId);
-    if (!nullToAbsent || abhaAddress != null) {
-      map['abha_address'] = Variable<String>(abhaAddress);
+    map['abha_id_encrypted'] = Variable<String>(abhaIdEncrypted);
+    if (!nullToAbsent || abhaAddressEncrypted != null) {
+      map['abha_address_encrypted'] = Variable<String>(abhaAddressEncrypted);
     }
-    map['linked_at'] = Variable<DateTime>(linkedAt);
+    map['linked_at_encrypted'] = Variable<String>(linkedAtEncrypted);
     map['consent_granted'] = Variable<bool>(consentGranted);
-    if (!nullToAbsent || lastSync != null) {
-      map['last_sync'] = Variable<DateTime>(lastSync);
+    if (!nullToAbsent || lastSyncEncrypted != null) {
+      map['last_sync_encrypted'] = Variable<String>(lastSyncEncrypted);
     }
     return map;
   }
@@ -15968,15 +16035,15 @@ class AbhaLink extends DataClass implements Insertable<AbhaLink> {
     return AbhaLinksCompanion(
       id: Value(id),
       userId: Value(userId),
-      abhaId: Value(abhaId),
-      abhaAddress: abhaAddress == null && nullToAbsent
+      abhaIdEncrypted: Value(abhaIdEncrypted),
+      abhaAddressEncrypted: abhaAddressEncrypted == null && nullToAbsent
           ? const Value.absent()
-          : Value(abhaAddress),
-      linkedAt: Value(linkedAt),
+          : Value(abhaAddressEncrypted),
+      linkedAtEncrypted: Value(linkedAtEncrypted),
       consentGranted: Value(consentGranted),
-      lastSync: lastSync == null && nullToAbsent
+      lastSyncEncrypted: lastSyncEncrypted == null && nullToAbsent
           ? const Value.absent()
-          : Value(lastSync),
+          : Value(lastSyncEncrypted),
     );
   }
 
@@ -15988,11 +16055,15 @@ class AbhaLink extends DataClass implements Insertable<AbhaLink> {
     return AbhaLink(
       id: serializer.fromJson<int>(json['id']),
       userId: serializer.fromJson<String>(json['userId']),
-      abhaId: serializer.fromJson<String>(json['abhaId']),
-      abhaAddress: serializer.fromJson<String?>(json['abhaAddress']),
-      linkedAt: serializer.fromJson<DateTime>(json['linkedAt']),
+      abhaIdEncrypted: serializer.fromJson<String>(json['abhaIdEncrypted']),
+      abhaAddressEncrypted: serializer.fromJson<String?>(
+        json['abhaAddressEncrypted'],
+      ),
+      linkedAtEncrypted: serializer.fromJson<String>(json['linkedAtEncrypted']),
       consentGranted: serializer.fromJson<bool>(json['consentGranted']),
-      lastSync: serializer.fromJson<DateTime?>(json['lastSync']),
+      lastSyncEncrypted: serializer.fromJson<String?>(
+        json['lastSyncEncrypted'],
+      ),
     );
   }
   @override
@@ -16001,44 +16072,54 @@ class AbhaLink extends DataClass implements Insertable<AbhaLink> {
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
       'userId': serializer.toJson<String>(userId),
-      'abhaId': serializer.toJson<String>(abhaId),
-      'abhaAddress': serializer.toJson<String?>(abhaAddress),
-      'linkedAt': serializer.toJson<DateTime>(linkedAt),
+      'abhaIdEncrypted': serializer.toJson<String>(abhaIdEncrypted),
+      'abhaAddressEncrypted': serializer.toJson<String?>(abhaAddressEncrypted),
+      'linkedAtEncrypted': serializer.toJson<String>(linkedAtEncrypted),
       'consentGranted': serializer.toJson<bool>(consentGranted),
-      'lastSync': serializer.toJson<DateTime?>(lastSync),
+      'lastSyncEncrypted': serializer.toJson<String?>(lastSyncEncrypted),
     };
   }
 
   AbhaLink copyWith({
     int? id,
     String? userId,
-    String? abhaId,
-    Value<String?> abhaAddress = const Value.absent(),
-    DateTime? linkedAt,
+    String? abhaIdEncrypted,
+    Value<String?> abhaAddressEncrypted = const Value.absent(),
+    String? linkedAtEncrypted,
     bool? consentGranted,
-    Value<DateTime?> lastSync = const Value.absent(),
+    Value<String?> lastSyncEncrypted = const Value.absent(),
   }) => AbhaLink(
     id: id ?? this.id,
     userId: userId ?? this.userId,
-    abhaId: abhaId ?? this.abhaId,
-    abhaAddress: abhaAddress.present ? abhaAddress.value : this.abhaAddress,
-    linkedAt: linkedAt ?? this.linkedAt,
+    abhaIdEncrypted: abhaIdEncrypted ?? this.abhaIdEncrypted,
+    abhaAddressEncrypted: abhaAddressEncrypted.present
+        ? abhaAddressEncrypted.value
+        : this.abhaAddressEncrypted,
+    linkedAtEncrypted: linkedAtEncrypted ?? this.linkedAtEncrypted,
     consentGranted: consentGranted ?? this.consentGranted,
-    lastSync: lastSync.present ? lastSync.value : this.lastSync,
+    lastSyncEncrypted: lastSyncEncrypted.present
+        ? lastSyncEncrypted.value
+        : this.lastSyncEncrypted,
   );
   AbhaLink copyWithCompanion(AbhaLinksCompanion data) {
     return AbhaLink(
       id: data.id.present ? data.id.value : this.id,
       userId: data.userId.present ? data.userId.value : this.userId,
-      abhaId: data.abhaId.present ? data.abhaId.value : this.abhaId,
-      abhaAddress: data.abhaAddress.present
-          ? data.abhaAddress.value
-          : this.abhaAddress,
-      linkedAt: data.linkedAt.present ? data.linkedAt.value : this.linkedAt,
+      abhaIdEncrypted: data.abhaIdEncrypted.present
+          ? data.abhaIdEncrypted.value
+          : this.abhaIdEncrypted,
+      abhaAddressEncrypted: data.abhaAddressEncrypted.present
+          ? data.abhaAddressEncrypted.value
+          : this.abhaAddressEncrypted,
+      linkedAtEncrypted: data.linkedAtEncrypted.present
+          ? data.linkedAtEncrypted.value
+          : this.linkedAtEncrypted,
       consentGranted: data.consentGranted.present
           ? data.consentGranted.value
           : this.consentGranted,
-      lastSync: data.lastSync.present ? data.lastSync.value : this.lastSync,
+      lastSyncEncrypted: data.lastSyncEncrypted.present
+          ? data.lastSyncEncrypted.value
+          : this.lastSyncEncrypted,
     );
   }
 
@@ -16047,11 +16128,11 @@ class AbhaLink extends DataClass implements Insertable<AbhaLink> {
     return (StringBuffer('AbhaLink(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
-          ..write('abhaId: $abhaId, ')
-          ..write('abhaAddress: $abhaAddress, ')
-          ..write('linkedAt: $linkedAt, ')
+          ..write('abhaIdEncrypted: $abhaIdEncrypted, ')
+          ..write('abhaAddressEncrypted: $abhaAddressEncrypted, ')
+          ..write('linkedAtEncrypted: $linkedAtEncrypted, ')
           ..write('consentGranted: $consentGranted, ')
-          ..write('lastSync: $lastSync')
+          ..write('lastSyncEncrypted: $lastSyncEncrypted')
           ..write(')'))
         .toString();
   }
@@ -16060,11 +16141,11 @@ class AbhaLink extends DataClass implements Insertable<AbhaLink> {
   int get hashCode => Object.hash(
     id,
     userId,
-    abhaId,
-    abhaAddress,
-    linkedAt,
+    abhaIdEncrypted,
+    abhaAddressEncrypted,
+    linkedAtEncrypted,
     consentGranted,
-    lastSync,
+    lastSyncEncrypted,
   );
   @override
   bool operator ==(Object other) =>
@@ -16072,79 +16153,80 @@ class AbhaLink extends DataClass implements Insertable<AbhaLink> {
       (other is AbhaLink &&
           other.id == this.id &&
           other.userId == this.userId &&
-          other.abhaId == this.abhaId &&
-          other.abhaAddress == this.abhaAddress &&
-          other.linkedAt == this.linkedAt &&
+          other.abhaIdEncrypted == this.abhaIdEncrypted &&
+          other.abhaAddressEncrypted == this.abhaAddressEncrypted &&
+          other.linkedAtEncrypted == this.linkedAtEncrypted &&
           other.consentGranted == this.consentGranted &&
-          other.lastSync == this.lastSync);
+          other.lastSyncEncrypted == this.lastSyncEncrypted);
 }
 
 class AbhaLinksCompanion extends UpdateCompanion<AbhaLink> {
   final Value<int> id;
   final Value<String> userId;
-  final Value<String> abhaId;
-  final Value<String?> abhaAddress;
-  final Value<DateTime> linkedAt;
+  final Value<String> abhaIdEncrypted;
+  final Value<String?> abhaAddressEncrypted;
+  final Value<String> linkedAtEncrypted;
   final Value<bool> consentGranted;
-  final Value<DateTime?> lastSync;
+  final Value<String?> lastSyncEncrypted;
   const AbhaLinksCompanion({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
-    this.abhaId = const Value.absent(),
-    this.abhaAddress = const Value.absent(),
-    this.linkedAt = const Value.absent(),
+    this.abhaIdEncrypted = const Value.absent(),
+    this.abhaAddressEncrypted = const Value.absent(),
+    this.linkedAtEncrypted = const Value.absent(),
     this.consentGranted = const Value.absent(),
-    this.lastSync = const Value.absent(),
+    this.lastSyncEncrypted = const Value.absent(),
   });
   AbhaLinksCompanion.insert({
     this.id = const Value.absent(),
     required String userId,
-    required String abhaId,
-    this.abhaAddress = const Value.absent(),
-    required DateTime linkedAt,
+    required String abhaIdEncrypted,
+    this.abhaAddressEncrypted = const Value.absent(),
+    required String linkedAtEncrypted,
     required bool consentGranted,
-    this.lastSync = const Value.absent(),
+    this.lastSyncEncrypted = const Value.absent(),
   }) : userId = Value(userId),
-       abhaId = Value(abhaId),
-       linkedAt = Value(linkedAt),
+       abhaIdEncrypted = Value(abhaIdEncrypted),
+       linkedAtEncrypted = Value(linkedAtEncrypted),
        consentGranted = Value(consentGranted);
   static Insertable<AbhaLink> custom({
     Expression<int>? id,
     Expression<String>? userId,
-    Expression<String>? abhaId,
-    Expression<String>? abhaAddress,
-    Expression<DateTime>? linkedAt,
+    Expression<String>? abhaIdEncrypted,
+    Expression<String>? abhaAddressEncrypted,
+    Expression<String>? linkedAtEncrypted,
     Expression<bool>? consentGranted,
-    Expression<DateTime>? lastSync,
+    Expression<String>? lastSyncEncrypted,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (userId != null) 'user_id': userId,
-      if (abhaId != null) 'abha_id': abhaId,
-      if (abhaAddress != null) 'abha_address': abhaAddress,
-      if (linkedAt != null) 'linked_at': linkedAt,
+      if (abhaIdEncrypted != null) 'abha_id_encrypted': abhaIdEncrypted,
+      if (abhaAddressEncrypted != null)
+        'abha_address_encrypted': abhaAddressEncrypted,
+      if (linkedAtEncrypted != null) 'linked_at_encrypted': linkedAtEncrypted,
       if (consentGranted != null) 'consent_granted': consentGranted,
-      if (lastSync != null) 'last_sync': lastSync,
+      if (lastSyncEncrypted != null) 'last_sync_encrypted': lastSyncEncrypted,
     });
   }
 
   AbhaLinksCompanion copyWith({
     Value<int>? id,
     Value<String>? userId,
-    Value<String>? abhaId,
-    Value<String?>? abhaAddress,
-    Value<DateTime>? linkedAt,
+    Value<String>? abhaIdEncrypted,
+    Value<String?>? abhaAddressEncrypted,
+    Value<String>? linkedAtEncrypted,
     Value<bool>? consentGranted,
-    Value<DateTime?>? lastSync,
+    Value<String?>? lastSyncEncrypted,
   }) {
     return AbhaLinksCompanion(
       id: id ?? this.id,
       userId: userId ?? this.userId,
-      abhaId: abhaId ?? this.abhaId,
-      abhaAddress: abhaAddress ?? this.abhaAddress,
-      linkedAt: linkedAt ?? this.linkedAt,
+      abhaIdEncrypted: abhaIdEncrypted ?? this.abhaIdEncrypted,
+      abhaAddressEncrypted: abhaAddressEncrypted ?? this.abhaAddressEncrypted,
+      linkedAtEncrypted: linkedAtEncrypted ?? this.linkedAtEncrypted,
       consentGranted: consentGranted ?? this.consentGranted,
-      lastSync: lastSync ?? this.lastSync,
+      lastSyncEncrypted: lastSyncEncrypted ?? this.lastSyncEncrypted,
     );
   }
 
@@ -16157,20 +16239,22 @@ class AbhaLinksCompanion extends UpdateCompanion<AbhaLink> {
     if (userId.present) {
       map['user_id'] = Variable<String>(userId.value);
     }
-    if (abhaId.present) {
-      map['abha_id'] = Variable<String>(abhaId.value);
+    if (abhaIdEncrypted.present) {
+      map['abha_id_encrypted'] = Variable<String>(abhaIdEncrypted.value);
     }
-    if (abhaAddress.present) {
-      map['abha_address'] = Variable<String>(abhaAddress.value);
+    if (abhaAddressEncrypted.present) {
+      map['abha_address_encrypted'] = Variable<String>(
+        abhaAddressEncrypted.value,
+      );
     }
-    if (linkedAt.present) {
-      map['linked_at'] = Variable<DateTime>(linkedAt.value);
+    if (linkedAtEncrypted.present) {
+      map['linked_at_encrypted'] = Variable<String>(linkedAtEncrypted.value);
     }
     if (consentGranted.present) {
       map['consent_granted'] = Variable<bool>(consentGranted.value);
     }
-    if (lastSync.present) {
-      map['last_sync'] = Variable<DateTime>(lastSync.value);
+    if (lastSyncEncrypted.present) {
+      map['last_sync_encrypted'] = Variable<String>(lastSyncEncrypted.value);
     }
     return map;
   }
@@ -16180,11 +16264,11 @@ class AbhaLinksCompanion extends UpdateCompanion<AbhaLink> {
     return (StringBuffer('AbhaLinksCompanion(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
-          ..write('abhaId: $abhaId, ')
-          ..write('abhaAddress: $abhaAddress, ')
-          ..write('linkedAt: $linkedAt, ')
+          ..write('abhaIdEncrypted: $abhaIdEncrypted, ')
+          ..write('abhaAddressEncrypted: $abhaAddressEncrypted, ')
+          ..write('linkedAtEncrypted: $linkedAtEncrypted, ')
           ..write('consentGranted: $consentGranted, ')
-          ..write('lastSync: $lastSync')
+          ..write('lastSyncEncrypted: $lastSyncEncrypted')
           ..write(')'))
         .toString();
   }
@@ -16238,25 +16322,83 @@ class $EmergencyCardsTable extends EmergencyCards
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _phoneMeta = const VerificationMeta('phone');
-  @override
-  late final GeneratedColumn<String> phone = GeneratedColumn<String>(
-    'phone',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _relationMeta = const VerificationMeta(
-    'relation',
+  static const VerificationMeta _allergiesMeta = const VerificationMeta(
+    'allergies',
   );
   @override
-  late final GeneratedColumn<String> relation = GeneratedColumn<String>(
-    'relation',
+  late final GeneratedColumn<String> allergies = GeneratedColumn<String>(
+    'allergies',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.string,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _chronicConditionsMeta = const VerificationMeta(
+    'chronicConditions',
+  );
+  @override
+  late final GeneratedColumn<String> chronicConditions =
+      GeneratedColumn<String>(
+        'chronic_conditions',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _emergencyContactNameMeta =
+      const VerificationMeta('emergencyContactName');
+  @override
+  late final GeneratedColumn<String> emergencyContactName =
+      GeneratedColumn<String>(
+        'emergency_contact_name',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _emergencyContactPhoneMeta =
+      const VerificationMeta('emergencyContactPhone');
+  @override
+  late final GeneratedColumn<String> emergencyContactPhone =
+      GeneratedColumn<String>(
+        'emergency_contact_phone',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _doctorNameMeta = const VerificationMeta(
+    'doctorName',
+  );
+  @override
+  late final GeneratedColumn<String> doctorName = GeneratedColumn<String>(
+    'doctor_name',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _doctorPhoneMeta = const VerificationMeta(
+    'doctorPhone',
+  );
+  @override
+  late final GeneratedColumn<String> doctorPhone = GeneratedColumn<String>(
+    'doctor_phone',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _insurancePolicyMeta = const VerificationMeta(
+    'insurancePolicy',
+  );
+  @override
+  late final GeneratedColumn<String> insurancePolicy = GeneratedColumn<String>(
+    'insurance_policy',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
   );
   static const VerificationMeta _medicalNotesMeta = const VerificationMeta(
     'medicalNotes',
@@ -16286,8 +16428,13 @@ class $EmergencyCardsTable extends EmergencyCards
     userId,
     name,
     bloodGroup,
-    phone,
-    relation,
+    allergies,
+    chronicConditions,
+    emergencyContactName,
+    emergencyContactPhone,
+    doctorName,
+    doctorPhone,
+    insurancePolicy,
     medicalNotes,
     createdAt,
   ];
@@ -16330,21 +16477,66 @@ class $EmergencyCardsTable extends EmergencyCards
     } else if (isInserting) {
       context.missing(_bloodGroupMeta);
     }
-    if (data.containsKey('phone')) {
+    if (data.containsKey('allergies')) {
       context.handle(
-        _phoneMeta,
-        phone.isAcceptableOrUnknown(data['phone']!, _phoneMeta),
+        _allergiesMeta,
+        allergies.isAcceptableOrUnknown(data['allergies']!, _allergiesMeta),
       );
-    } else if (isInserting) {
-      context.missing(_phoneMeta);
     }
-    if (data.containsKey('relation')) {
+    if (data.containsKey('chronic_conditions')) {
       context.handle(
-        _relationMeta,
-        relation.isAcceptableOrUnknown(data['relation']!, _relationMeta),
+        _chronicConditionsMeta,
+        chronicConditions.isAcceptableOrUnknown(
+          data['chronic_conditions']!,
+          _chronicConditionsMeta,
+        ),
+      );
+    }
+    if (data.containsKey('emergency_contact_name')) {
+      context.handle(
+        _emergencyContactNameMeta,
+        emergencyContactName.isAcceptableOrUnknown(
+          data['emergency_contact_name']!,
+          _emergencyContactNameMeta,
+        ),
       );
     } else if (isInserting) {
-      context.missing(_relationMeta);
+      context.missing(_emergencyContactNameMeta);
+    }
+    if (data.containsKey('emergency_contact_phone')) {
+      context.handle(
+        _emergencyContactPhoneMeta,
+        emergencyContactPhone.isAcceptableOrUnknown(
+          data['emergency_contact_phone']!,
+          _emergencyContactPhoneMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_emergencyContactPhoneMeta);
+    }
+    if (data.containsKey('doctor_name')) {
+      context.handle(
+        _doctorNameMeta,
+        doctorName.isAcceptableOrUnknown(data['doctor_name']!, _doctorNameMeta),
+      );
+    }
+    if (data.containsKey('doctor_phone')) {
+      context.handle(
+        _doctorPhoneMeta,
+        doctorPhone.isAcceptableOrUnknown(
+          data['doctor_phone']!,
+          _doctorPhoneMeta,
+        ),
+      );
+    }
+    if (data.containsKey('insurance_policy')) {
+      context.handle(
+        _insurancePolicyMeta,
+        insurancePolicy.isAcceptableOrUnknown(
+          data['insurance_policy']!,
+          _insurancePolicyMeta,
+        ),
+      );
     }
     if (data.containsKey('medical_notes')) {
       context.handle(
@@ -16388,14 +16580,34 @@ class $EmergencyCardsTable extends EmergencyCards
         DriftSqlType.string,
         data['${effectivePrefix}blood_group'],
       )!,
-      phone: attachedDatabase.typeMapping.read(
+      allergies: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}phone'],
-      )!,
-      relation: attachedDatabase.typeMapping.read(
+        data['${effectivePrefix}allergies'],
+      ),
+      chronicConditions: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}relation'],
+        data['${effectivePrefix}chronic_conditions'],
+      ),
+      emergencyContactName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}emergency_contact_name'],
       )!,
+      emergencyContactPhone: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}emergency_contact_phone'],
+      )!,
+      doctorName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}doctor_name'],
+      ),
+      doctorPhone: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}doctor_phone'],
+      ),
+      insurancePolicy: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}insurance_policy'],
+      ),
       medicalNotes: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}medical_notes'],
@@ -16418,8 +16630,13 @@ class EmergencyCard extends DataClass implements Insertable<EmergencyCard> {
   final String userId;
   final String name;
   final String bloodGroup;
-  final String phone;
-  final String relation;
+  final String? allergies;
+  final String? chronicConditions;
+  final String emergencyContactName;
+  final String emergencyContactPhone;
+  final String? doctorName;
+  final String? doctorPhone;
+  final String? insurancePolicy;
   final String? medicalNotes;
   final DateTime createdAt;
   const EmergencyCard({
@@ -16427,8 +16644,13 @@ class EmergencyCard extends DataClass implements Insertable<EmergencyCard> {
     required this.userId,
     required this.name,
     required this.bloodGroup,
-    required this.phone,
-    required this.relation,
+    this.allergies,
+    this.chronicConditions,
+    required this.emergencyContactName,
+    required this.emergencyContactPhone,
+    this.doctorName,
+    this.doctorPhone,
+    this.insurancePolicy,
     this.medicalNotes,
     required this.createdAt,
   });
@@ -16439,8 +16661,23 @@ class EmergencyCard extends DataClass implements Insertable<EmergencyCard> {
     map['user_id'] = Variable<String>(userId);
     map['name'] = Variable<String>(name);
     map['blood_group'] = Variable<String>(bloodGroup);
-    map['phone'] = Variable<String>(phone);
-    map['relation'] = Variable<String>(relation);
+    if (!nullToAbsent || allergies != null) {
+      map['allergies'] = Variable<String>(allergies);
+    }
+    if (!nullToAbsent || chronicConditions != null) {
+      map['chronic_conditions'] = Variable<String>(chronicConditions);
+    }
+    map['emergency_contact_name'] = Variable<String>(emergencyContactName);
+    map['emergency_contact_phone'] = Variable<String>(emergencyContactPhone);
+    if (!nullToAbsent || doctorName != null) {
+      map['doctor_name'] = Variable<String>(doctorName);
+    }
+    if (!nullToAbsent || doctorPhone != null) {
+      map['doctor_phone'] = Variable<String>(doctorPhone);
+    }
+    if (!nullToAbsent || insurancePolicy != null) {
+      map['insurance_policy'] = Variable<String>(insurancePolicy);
+    }
     if (!nullToAbsent || medicalNotes != null) {
       map['medical_notes'] = Variable<String>(medicalNotes);
     }
@@ -16454,8 +16691,23 @@ class EmergencyCard extends DataClass implements Insertable<EmergencyCard> {
       userId: Value(userId),
       name: Value(name),
       bloodGroup: Value(bloodGroup),
-      phone: Value(phone),
-      relation: Value(relation),
+      allergies: allergies == null && nullToAbsent
+          ? const Value.absent()
+          : Value(allergies),
+      chronicConditions: chronicConditions == null && nullToAbsent
+          ? const Value.absent()
+          : Value(chronicConditions),
+      emergencyContactName: Value(emergencyContactName),
+      emergencyContactPhone: Value(emergencyContactPhone),
+      doctorName: doctorName == null && nullToAbsent
+          ? const Value.absent()
+          : Value(doctorName),
+      doctorPhone: doctorPhone == null && nullToAbsent
+          ? const Value.absent()
+          : Value(doctorPhone),
+      insurancePolicy: insurancePolicy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(insurancePolicy),
       medicalNotes: medicalNotes == null && nullToAbsent
           ? const Value.absent()
           : Value(medicalNotes),
@@ -16473,8 +16725,19 @@ class EmergencyCard extends DataClass implements Insertable<EmergencyCard> {
       userId: serializer.fromJson<String>(json['userId']),
       name: serializer.fromJson<String>(json['name']),
       bloodGroup: serializer.fromJson<String>(json['bloodGroup']),
-      phone: serializer.fromJson<String>(json['phone']),
-      relation: serializer.fromJson<String>(json['relation']),
+      allergies: serializer.fromJson<String?>(json['allergies']),
+      chronicConditions: serializer.fromJson<String?>(
+        json['chronicConditions'],
+      ),
+      emergencyContactName: serializer.fromJson<String>(
+        json['emergencyContactName'],
+      ),
+      emergencyContactPhone: serializer.fromJson<String>(
+        json['emergencyContactPhone'],
+      ),
+      doctorName: serializer.fromJson<String?>(json['doctorName']),
+      doctorPhone: serializer.fromJson<String?>(json['doctorPhone']),
+      insurancePolicy: serializer.fromJson<String?>(json['insurancePolicy']),
       medicalNotes: serializer.fromJson<String?>(json['medicalNotes']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
     );
@@ -16487,8 +16750,13 @@ class EmergencyCard extends DataClass implements Insertable<EmergencyCard> {
       'userId': serializer.toJson<String>(userId),
       'name': serializer.toJson<String>(name),
       'bloodGroup': serializer.toJson<String>(bloodGroup),
-      'phone': serializer.toJson<String>(phone),
-      'relation': serializer.toJson<String>(relation),
+      'allergies': serializer.toJson<String?>(allergies),
+      'chronicConditions': serializer.toJson<String?>(chronicConditions),
+      'emergencyContactName': serializer.toJson<String>(emergencyContactName),
+      'emergencyContactPhone': serializer.toJson<String>(emergencyContactPhone),
+      'doctorName': serializer.toJson<String?>(doctorName),
+      'doctorPhone': serializer.toJson<String?>(doctorPhone),
+      'insurancePolicy': serializer.toJson<String?>(insurancePolicy),
       'medicalNotes': serializer.toJson<String?>(medicalNotes),
       'createdAt': serializer.toJson<DateTime>(createdAt),
     };
@@ -16499,8 +16767,13 @@ class EmergencyCard extends DataClass implements Insertable<EmergencyCard> {
     String? userId,
     String? name,
     String? bloodGroup,
-    String? phone,
-    String? relation,
+    Value<String?> allergies = const Value.absent(),
+    Value<String?> chronicConditions = const Value.absent(),
+    String? emergencyContactName,
+    String? emergencyContactPhone,
+    Value<String?> doctorName = const Value.absent(),
+    Value<String?> doctorPhone = const Value.absent(),
+    Value<String?> insurancePolicy = const Value.absent(),
     Value<String?> medicalNotes = const Value.absent(),
     DateTime? createdAt,
   }) => EmergencyCard(
@@ -16508,8 +16781,17 @@ class EmergencyCard extends DataClass implements Insertable<EmergencyCard> {
     userId: userId ?? this.userId,
     name: name ?? this.name,
     bloodGroup: bloodGroup ?? this.bloodGroup,
-    phone: phone ?? this.phone,
-    relation: relation ?? this.relation,
+    allergies: allergies.present ? allergies.value : this.allergies,
+    chronicConditions: chronicConditions.present
+        ? chronicConditions.value
+        : this.chronicConditions,
+    emergencyContactName: emergencyContactName ?? this.emergencyContactName,
+    emergencyContactPhone: emergencyContactPhone ?? this.emergencyContactPhone,
+    doctorName: doctorName.present ? doctorName.value : this.doctorName,
+    doctorPhone: doctorPhone.present ? doctorPhone.value : this.doctorPhone,
+    insurancePolicy: insurancePolicy.present
+        ? insurancePolicy.value
+        : this.insurancePolicy,
     medicalNotes: medicalNotes.present ? medicalNotes.value : this.medicalNotes,
     createdAt: createdAt ?? this.createdAt,
   );
@@ -16521,8 +16803,25 @@ class EmergencyCard extends DataClass implements Insertable<EmergencyCard> {
       bloodGroup: data.bloodGroup.present
           ? data.bloodGroup.value
           : this.bloodGroup,
-      phone: data.phone.present ? data.phone.value : this.phone,
-      relation: data.relation.present ? data.relation.value : this.relation,
+      allergies: data.allergies.present ? data.allergies.value : this.allergies,
+      chronicConditions: data.chronicConditions.present
+          ? data.chronicConditions.value
+          : this.chronicConditions,
+      emergencyContactName: data.emergencyContactName.present
+          ? data.emergencyContactName.value
+          : this.emergencyContactName,
+      emergencyContactPhone: data.emergencyContactPhone.present
+          ? data.emergencyContactPhone.value
+          : this.emergencyContactPhone,
+      doctorName: data.doctorName.present
+          ? data.doctorName.value
+          : this.doctorName,
+      doctorPhone: data.doctorPhone.present
+          ? data.doctorPhone.value
+          : this.doctorPhone,
+      insurancePolicy: data.insurancePolicy.present
+          ? data.insurancePolicy.value
+          : this.insurancePolicy,
       medicalNotes: data.medicalNotes.present
           ? data.medicalNotes.value
           : this.medicalNotes,
@@ -16537,8 +16836,13 @@ class EmergencyCard extends DataClass implements Insertable<EmergencyCard> {
           ..write('userId: $userId, ')
           ..write('name: $name, ')
           ..write('bloodGroup: $bloodGroup, ')
-          ..write('phone: $phone, ')
-          ..write('relation: $relation, ')
+          ..write('allergies: $allergies, ')
+          ..write('chronicConditions: $chronicConditions, ')
+          ..write('emergencyContactName: $emergencyContactName, ')
+          ..write('emergencyContactPhone: $emergencyContactPhone, ')
+          ..write('doctorName: $doctorName, ')
+          ..write('doctorPhone: $doctorPhone, ')
+          ..write('insurancePolicy: $insurancePolicy, ')
           ..write('medicalNotes: $medicalNotes, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
@@ -16551,8 +16855,13 @@ class EmergencyCard extends DataClass implements Insertable<EmergencyCard> {
     userId,
     name,
     bloodGroup,
-    phone,
-    relation,
+    allergies,
+    chronicConditions,
+    emergencyContactName,
+    emergencyContactPhone,
+    doctorName,
+    doctorPhone,
+    insurancePolicy,
     medicalNotes,
     createdAt,
   );
@@ -16564,8 +16873,13 @@ class EmergencyCard extends DataClass implements Insertable<EmergencyCard> {
           other.userId == this.userId &&
           other.name == this.name &&
           other.bloodGroup == this.bloodGroup &&
-          other.phone == this.phone &&
-          other.relation == this.relation &&
+          other.allergies == this.allergies &&
+          other.chronicConditions == this.chronicConditions &&
+          other.emergencyContactName == this.emergencyContactName &&
+          other.emergencyContactPhone == this.emergencyContactPhone &&
+          other.doctorName == this.doctorName &&
+          other.doctorPhone == this.doctorPhone &&
+          other.insurancePolicy == this.insurancePolicy &&
           other.medicalNotes == this.medicalNotes &&
           other.createdAt == this.createdAt);
 }
@@ -16575,8 +16889,13 @@ class EmergencyCardsCompanion extends UpdateCompanion<EmergencyCard> {
   final Value<String> userId;
   final Value<String> name;
   final Value<String> bloodGroup;
-  final Value<String> phone;
-  final Value<String> relation;
+  final Value<String?> allergies;
+  final Value<String?> chronicConditions;
+  final Value<String> emergencyContactName;
+  final Value<String> emergencyContactPhone;
+  final Value<String?> doctorName;
+  final Value<String?> doctorPhone;
+  final Value<String?> insurancePolicy;
   final Value<String?> medicalNotes;
   final Value<DateTime> createdAt;
   const EmergencyCardsCompanion({
@@ -16584,8 +16903,13 @@ class EmergencyCardsCompanion extends UpdateCompanion<EmergencyCard> {
     this.userId = const Value.absent(),
     this.name = const Value.absent(),
     this.bloodGroup = const Value.absent(),
-    this.phone = const Value.absent(),
-    this.relation = const Value.absent(),
+    this.allergies = const Value.absent(),
+    this.chronicConditions = const Value.absent(),
+    this.emergencyContactName = const Value.absent(),
+    this.emergencyContactPhone = const Value.absent(),
+    this.doctorName = const Value.absent(),
+    this.doctorPhone = const Value.absent(),
+    this.insurancePolicy = const Value.absent(),
     this.medicalNotes = const Value.absent(),
     this.createdAt = const Value.absent(),
   });
@@ -16594,23 +16918,33 @@ class EmergencyCardsCompanion extends UpdateCompanion<EmergencyCard> {
     required String userId,
     required String name,
     required String bloodGroup,
-    required String phone,
-    required String relation,
+    this.allergies = const Value.absent(),
+    this.chronicConditions = const Value.absent(),
+    required String emergencyContactName,
+    required String emergencyContactPhone,
+    this.doctorName = const Value.absent(),
+    this.doctorPhone = const Value.absent(),
+    this.insurancePolicy = const Value.absent(),
     this.medicalNotes = const Value.absent(),
     required DateTime createdAt,
   }) : userId = Value(userId),
        name = Value(name),
        bloodGroup = Value(bloodGroup),
-       phone = Value(phone),
-       relation = Value(relation),
+       emergencyContactName = Value(emergencyContactName),
+       emergencyContactPhone = Value(emergencyContactPhone),
        createdAt = Value(createdAt);
   static Insertable<EmergencyCard> custom({
     Expression<int>? id,
     Expression<String>? userId,
     Expression<String>? name,
     Expression<String>? bloodGroup,
-    Expression<String>? phone,
-    Expression<String>? relation,
+    Expression<String>? allergies,
+    Expression<String>? chronicConditions,
+    Expression<String>? emergencyContactName,
+    Expression<String>? emergencyContactPhone,
+    Expression<String>? doctorName,
+    Expression<String>? doctorPhone,
+    Expression<String>? insurancePolicy,
     Expression<String>? medicalNotes,
     Expression<DateTime>? createdAt,
   }) {
@@ -16619,8 +16953,15 @@ class EmergencyCardsCompanion extends UpdateCompanion<EmergencyCard> {
       if (userId != null) 'user_id': userId,
       if (name != null) 'name': name,
       if (bloodGroup != null) 'blood_group': bloodGroup,
-      if (phone != null) 'phone': phone,
-      if (relation != null) 'relation': relation,
+      if (allergies != null) 'allergies': allergies,
+      if (chronicConditions != null) 'chronic_conditions': chronicConditions,
+      if (emergencyContactName != null)
+        'emergency_contact_name': emergencyContactName,
+      if (emergencyContactPhone != null)
+        'emergency_contact_phone': emergencyContactPhone,
+      if (doctorName != null) 'doctor_name': doctorName,
+      if (doctorPhone != null) 'doctor_phone': doctorPhone,
+      if (insurancePolicy != null) 'insurance_policy': insurancePolicy,
       if (medicalNotes != null) 'medical_notes': medicalNotes,
       if (createdAt != null) 'created_at': createdAt,
     });
@@ -16631,8 +16972,13 @@ class EmergencyCardsCompanion extends UpdateCompanion<EmergencyCard> {
     Value<String>? userId,
     Value<String>? name,
     Value<String>? bloodGroup,
-    Value<String>? phone,
-    Value<String>? relation,
+    Value<String?>? allergies,
+    Value<String?>? chronicConditions,
+    Value<String>? emergencyContactName,
+    Value<String>? emergencyContactPhone,
+    Value<String?>? doctorName,
+    Value<String?>? doctorPhone,
+    Value<String?>? insurancePolicy,
     Value<String?>? medicalNotes,
     Value<DateTime>? createdAt,
   }) {
@@ -16641,8 +16987,14 @@ class EmergencyCardsCompanion extends UpdateCompanion<EmergencyCard> {
       userId: userId ?? this.userId,
       name: name ?? this.name,
       bloodGroup: bloodGroup ?? this.bloodGroup,
-      phone: phone ?? this.phone,
-      relation: relation ?? this.relation,
+      allergies: allergies ?? this.allergies,
+      chronicConditions: chronicConditions ?? this.chronicConditions,
+      emergencyContactName: emergencyContactName ?? this.emergencyContactName,
+      emergencyContactPhone:
+          emergencyContactPhone ?? this.emergencyContactPhone,
+      doctorName: doctorName ?? this.doctorName,
+      doctorPhone: doctorPhone ?? this.doctorPhone,
+      insurancePolicy: insurancePolicy ?? this.insurancePolicy,
       medicalNotes: medicalNotes ?? this.medicalNotes,
       createdAt: createdAt ?? this.createdAt,
     );
@@ -16663,11 +17015,30 @@ class EmergencyCardsCompanion extends UpdateCompanion<EmergencyCard> {
     if (bloodGroup.present) {
       map['blood_group'] = Variable<String>(bloodGroup.value);
     }
-    if (phone.present) {
-      map['phone'] = Variable<String>(phone.value);
+    if (allergies.present) {
+      map['allergies'] = Variable<String>(allergies.value);
     }
-    if (relation.present) {
-      map['relation'] = Variable<String>(relation.value);
+    if (chronicConditions.present) {
+      map['chronic_conditions'] = Variable<String>(chronicConditions.value);
+    }
+    if (emergencyContactName.present) {
+      map['emergency_contact_name'] = Variable<String>(
+        emergencyContactName.value,
+      );
+    }
+    if (emergencyContactPhone.present) {
+      map['emergency_contact_phone'] = Variable<String>(
+        emergencyContactPhone.value,
+      );
+    }
+    if (doctorName.present) {
+      map['doctor_name'] = Variable<String>(doctorName.value);
+    }
+    if (doctorPhone.present) {
+      map['doctor_phone'] = Variable<String>(doctorPhone.value);
+    }
+    if (insurancePolicy.present) {
+      map['insurance_policy'] = Variable<String>(insurancePolicy.value);
     }
     if (medicalNotes.present) {
       map['medical_notes'] = Variable<String>(medicalNotes.value);
@@ -16685,8 +17056,13 @@ class EmergencyCardsCompanion extends UpdateCompanion<EmergencyCard> {
           ..write('userId: $userId, ')
           ..write('name: $name, ')
           ..write('bloodGroup: $bloodGroup, ')
-          ..write('phone: $phone, ')
-          ..write('relation: $relation, ')
+          ..write('allergies: $allergies, ')
+          ..write('chronicConditions: $chronicConditions, ')
+          ..write('emergencyContactName: $emergencyContactName, ')
+          ..write('emergencyContactPhone: $emergencyContactPhone, ')
+          ..write('doctorName: $doctorName, ')
+          ..write('doctorPhone: $doctorPhone, ')
+          ..write('insurancePolicy: $insurancePolicy, ')
           ..write('medicalNotes: $medicalNotes, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
@@ -19356,6 +19732,759 @@ class InsightRatingsCompanion extends UpdateCompanion<InsightRating> {
   }
 }
 
+class $UsersTable extends Users with TableInfo<$UsersTable, LocalUser> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $UsersTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _emailMeta = const VerificationMeta('email');
+  @override
+  late final GeneratedColumn<String> email = GeneratedColumn<String>(
+    'email',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _karmaTotalMeta = const VerificationMeta(
+    'karmaTotal',
+  );
+  @override
+  late final GeneratedColumn<int> karmaTotal = GeneratedColumn<int>(
+    'karma_total',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _karmaLevelMeta = const VerificationMeta(
+    'karmaLevel',
+  );
+  @override
+  late final GeneratedColumn<int> karmaLevel = GeneratedColumn<int>(
+    'karma_level',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(1),
+  );
+  static const VerificationMeta _onboardingCompletedMeta =
+      const VerificationMeta('onboardingCompleted');
+  @override
+  late final GeneratedColumn<bool> onboardingCompleted = GeneratedColumn<bool>(
+    'onboarding_completed',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("onboarding_completed" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    email,
+    name,
+    karmaTotal,
+    karmaLevel,
+    onboardingCompleted,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'users';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<LocalUser> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('email')) {
+      context.handle(
+        _emailMeta,
+        email.isAcceptableOrUnknown(data['email']!, _emailMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_emailMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('karma_total')) {
+      context.handle(
+        _karmaTotalMeta,
+        karmaTotal.isAcceptableOrUnknown(data['karma_total']!, _karmaTotalMeta),
+      );
+    }
+    if (data.containsKey('karma_level')) {
+      context.handle(
+        _karmaLevelMeta,
+        karmaLevel.isAcceptableOrUnknown(data['karma_level']!, _karmaLevelMeta),
+      );
+    }
+    if (data.containsKey('onboarding_completed')) {
+      context.handle(
+        _onboardingCompletedMeta,
+        onboardingCompleted.isAcceptableOrUnknown(
+          data['onboarding_completed']!,
+          _onboardingCompletedMeta,
+        ),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  LocalUser map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return LocalUser(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      email: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}email'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      karmaTotal: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}karma_total'],
+      )!,
+      karmaLevel: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}karma_level'],
+      )!,
+      onboardingCompleted: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}onboarding_completed'],
+      )!,
+    );
+  }
+
+  @override
+  $UsersTable createAlias(String alias) {
+    return $UsersTable(attachedDatabase, alias);
+  }
+}
+
+class LocalUser extends DataClass implements Insertable<LocalUser> {
+  final String id;
+  final String email;
+  final String name;
+  final int karmaTotal;
+  final int karmaLevel;
+  final bool onboardingCompleted;
+  const LocalUser({
+    required this.id,
+    required this.email,
+    required this.name,
+    required this.karmaTotal,
+    required this.karmaLevel,
+    required this.onboardingCompleted,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['email'] = Variable<String>(email);
+    map['name'] = Variable<String>(name);
+    map['karma_total'] = Variable<int>(karmaTotal);
+    map['karma_level'] = Variable<int>(karmaLevel);
+    map['onboarding_completed'] = Variable<bool>(onboardingCompleted);
+    return map;
+  }
+
+  UsersCompanion toCompanion(bool nullToAbsent) {
+    return UsersCompanion(
+      id: Value(id),
+      email: Value(email),
+      name: Value(name),
+      karmaTotal: Value(karmaTotal),
+      karmaLevel: Value(karmaLevel),
+      onboardingCompleted: Value(onboardingCompleted),
+    );
+  }
+
+  factory LocalUser.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return LocalUser(
+      id: serializer.fromJson<String>(json['id']),
+      email: serializer.fromJson<String>(json['email']),
+      name: serializer.fromJson<String>(json['name']),
+      karmaTotal: serializer.fromJson<int>(json['karmaTotal']),
+      karmaLevel: serializer.fromJson<int>(json['karmaLevel']),
+      onboardingCompleted: serializer.fromJson<bool>(
+        json['onboardingCompleted'],
+      ),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'email': serializer.toJson<String>(email),
+      'name': serializer.toJson<String>(name),
+      'karmaTotal': serializer.toJson<int>(karmaTotal),
+      'karmaLevel': serializer.toJson<int>(karmaLevel),
+      'onboardingCompleted': serializer.toJson<bool>(onboardingCompleted),
+    };
+  }
+
+  LocalUser copyWith({
+    String? id,
+    String? email,
+    String? name,
+    int? karmaTotal,
+    int? karmaLevel,
+    bool? onboardingCompleted,
+  }) => LocalUser(
+    id: id ?? this.id,
+    email: email ?? this.email,
+    name: name ?? this.name,
+    karmaTotal: karmaTotal ?? this.karmaTotal,
+    karmaLevel: karmaLevel ?? this.karmaLevel,
+    onboardingCompleted: onboardingCompleted ?? this.onboardingCompleted,
+  );
+  LocalUser copyWithCompanion(UsersCompanion data) {
+    return LocalUser(
+      id: data.id.present ? data.id.value : this.id,
+      email: data.email.present ? data.email.value : this.email,
+      name: data.name.present ? data.name.value : this.name,
+      karmaTotal: data.karmaTotal.present
+          ? data.karmaTotal.value
+          : this.karmaTotal,
+      karmaLevel: data.karmaLevel.present
+          ? data.karmaLevel.value
+          : this.karmaLevel,
+      onboardingCompleted: data.onboardingCompleted.present
+          ? data.onboardingCompleted.value
+          : this.onboardingCompleted,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LocalUser(')
+          ..write('id: $id, ')
+          ..write('email: $email, ')
+          ..write('name: $name, ')
+          ..write('karmaTotal: $karmaTotal, ')
+          ..write('karmaLevel: $karmaLevel, ')
+          ..write('onboardingCompleted: $onboardingCompleted')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, email, name, karmaTotal, karmaLevel, onboardingCompleted);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is LocalUser &&
+          other.id == this.id &&
+          other.email == this.email &&
+          other.name == this.name &&
+          other.karmaTotal == this.karmaTotal &&
+          other.karmaLevel == this.karmaLevel &&
+          other.onboardingCompleted == this.onboardingCompleted);
+}
+
+class UsersCompanion extends UpdateCompanion<LocalUser> {
+  final Value<String> id;
+  final Value<String> email;
+  final Value<String> name;
+  final Value<int> karmaTotal;
+  final Value<int> karmaLevel;
+  final Value<bool> onboardingCompleted;
+  final Value<int> rowid;
+  const UsersCompanion({
+    this.id = const Value.absent(),
+    this.email = const Value.absent(),
+    this.name = const Value.absent(),
+    this.karmaTotal = const Value.absent(),
+    this.karmaLevel = const Value.absent(),
+    this.onboardingCompleted = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  UsersCompanion.insert({
+    required String id,
+    required String email,
+    required String name,
+    this.karmaTotal = const Value.absent(),
+    this.karmaLevel = const Value.absent(),
+    this.onboardingCompleted = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       email = Value(email),
+       name = Value(name);
+  static Insertable<LocalUser> custom({
+    Expression<String>? id,
+    Expression<String>? email,
+    Expression<String>? name,
+    Expression<int>? karmaTotal,
+    Expression<int>? karmaLevel,
+    Expression<bool>? onboardingCompleted,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (email != null) 'email': email,
+      if (name != null) 'name': name,
+      if (karmaTotal != null) 'karma_total': karmaTotal,
+      if (karmaLevel != null) 'karma_level': karmaLevel,
+      if (onboardingCompleted != null)
+        'onboarding_completed': onboardingCompleted,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  UsersCompanion copyWith({
+    Value<String>? id,
+    Value<String>? email,
+    Value<String>? name,
+    Value<int>? karmaTotal,
+    Value<int>? karmaLevel,
+    Value<bool>? onboardingCompleted,
+    Value<int>? rowid,
+  }) {
+    return UsersCompanion(
+      id: id ?? this.id,
+      email: email ?? this.email,
+      name: name ?? this.name,
+      karmaTotal: karmaTotal ?? this.karmaTotal,
+      karmaLevel: karmaLevel ?? this.karmaLevel,
+      onboardingCompleted: onboardingCompleted ?? this.onboardingCompleted,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (email.present) {
+      map['email'] = Variable<String>(email.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (karmaTotal.present) {
+      map['karma_total'] = Variable<int>(karmaTotal.value);
+    }
+    if (karmaLevel.present) {
+      map['karma_level'] = Variable<int>(karmaLevel.value);
+    }
+    if (onboardingCompleted.present) {
+      map['onboarding_completed'] = Variable<bool>(onboardingCompleted.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('UsersCompanion(')
+          ..write('id: $id, ')
+          ..write('email: $email, ')
+          ..write('name: $name, ')
+          ..write('karmaTotal: $karmaTotal, ')
+          ..write('karmaLevel: $karmaLevel, ')
+          ..write('onboardingCompleted: $onboardingCompleted, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $HeartRateLogsTable extends HeartRateLogs
+    with TableInfo<$HeartRateLogsTable, HeartRateLog> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $HeartRateLogsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
+    'user_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _bpmMeta = const VerificationMeta('bpm');
+  @override
+  late final GeneratedColumn<int> bpm = GeneratedColumn<int>(
+    'bpm',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _timestampMeta = const VerificationMeta(
+    'timestamp',
+  );
+  @override
+  late final GeneratedColumn<DateTime> timestamp = GeneratedColumn<DateTime>(
+    'timestamp',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _sourceMeta = const VerificationMeta('source');
+  @override
+  late final GeneratedColumn<String> source = GeneratedColumn<String>(
+    'source',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, userId, bpm, timestamp, source];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'heart_rate_logs';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<HeartRateLog> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_userIdMeta);
+    }
+    if (data.containsKey('bpm')) {
+      context.handle(
+        _bpmMeta,
+        bpm.isAcceptableOrUnknown(data['bpm']!, _bpmMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_bpmMeta);
+    }
+    if (data.containsKey('timestamp')) {
+      context.handle(
+        _timestampMeta,
+        timestamp.isAcceptableOrUnknown(data['timestamp']!, _timestampMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_timestampMeta);
+    }
+    if (data.containsKey('source')) {
+      context.handle(
+        _sourceMeta,
+        source.isAcceptableOrUnknown(data['source']!, _sourceMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_sourceMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  HeartRateLog map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return HeartRateLog(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      userId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_id'],
+      )!,
+      bpm: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}bpm'],
+      )!,
+      timestamp: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}timestamp'],
+      )!,
+      source: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}source'],
+      )!,
+    );
+  }
+
+  @override
+  $HeartRateLogsTable createAlias(String alias) {
+    return $HeartRateLogsTable(attachedDatabase, alias);
+  }
+}
+
+class HeartRateLog extends DataClass implements Insertable<HeartRateLog> {
+  final int id;
+  final String userId;
+  final int bpm;
+  final DateTime timestamp;
+  final String source;
+  const HeartRateLog({
+    required this.id,
+    required this.userId,
+    required this.bpm,
+    required this.timestamp,
+    required this.source,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['user_id'] = Variable<String>(userId);
+    map['bpm'] = Variable<int>(bpm);
+    map['timestamp'] = Variable<DateTime>(timestamp);
+    map['source'] = Variable<String>(source);
+    return map;
+  }
+
+  HeartRateLogsCompanion toCompanion(bool nullToAbsent) {
+    return HeartRateLogsCompanion(
+      id: Value(id),
+      userId: Value(userId),
+      bpm: Value(bpm),
+      timestamp: Value(timestamp),
+      source: Value(source),
+    );
+  }
+
+  factory HeartRateLog.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return HeartRateLog(
+      id: serializer.fromJson<int>(json['id']),
+      userId: serializer.fromJson<String>(json['userId']),
+      bpm: serializer.fromJson<int>(json['bpm']),
+      timestamp: serializer.fromJson<DateTime>(json['timestamp']),
+      source: serializer.fromJson<String>(json['source']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'userId': serializer.toJson<String>(userId),
+      'bpm': serializer.toJson<int>(bpm),
+      'timestamp': serializer.toJson<DateTime>(timestamp),
+      'source': serializer.toJson<String>(source),
+    };
+  }
+
+  HeartRateLog copyWith({
+    int? id,
+    String? userId,
+    int? bpm,
+    DateTime? timestamp,
+    String? source,
+  }) => HeartRateLog(
+    id: id ?? this.id,
+    userId: userId ?? this.userId,
+    bpm: bpm ?? this.bpm,
+    timestamp: timestamp ?? this.timestamp,
+    source: source ?? this.source,
+  );
+  HeartRateLog copyWithCompanion(HeartRateLogsCompanion data) {
+    return HeartRateLog(
+      id: data.id.present ? data.id.value : this.id,
+      userId: data.userId.present ? data.userId.value : this.userId,
+      bpm: data.bpm.present ? data.bpm.value : this.bpm,
+      timestamp: data.timestamp.present ? data.timestamp.value : this.timestamp,
+      source: data.source.present ? data.source.value : this.source,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('HeartRateLog(')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('bpm: $bpm, ')
+          ..write('timestamp: $timestamp, ')
+          ..write('source: $source')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, userId, bpm, timestamp, source);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is HeartRateLog &&
+          other.id == this.id &&
+          other.userId == this.userId &&
+          other.bpm == this.bpm &&
+          other.timestamp == this.timestamp &&
+          other.source == this.source);
+}
+
+class HeartRateLogsCompanion extends UpdateCompanion<HeartRateLog> {
+  final Value<int> id;
+  final Value<String> userId;
+  final Value<int> bpm;
+  final Value<DateTime> timestamp;
+  final Value<String> source;
+  const HeartRateLogsCompanion({
+    this.id = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.bpm = const Value.absent(),
+    this.timestamp = const Value.absent(),
+    this.source = const Value.absent(),
+  });
+  HeartRateLogsCompanion.insert({
+    this.id = const Value.absent(),
+    required String userId,
+    required int bpm,
+    required DateTime timestamp,
+    required String source,
+  }) : userId = Value(userId),
+       bpm = Value(bpm),
+       timestamp = Value(timestamp),
+       source = Value(source);
+  static Insertable<HeartRateLog> custom({
+    Expression<int>? id,
+    Expression<String>? userId,
+    Expression<int>? bpm,
+    Expression<DateTime>? timestamp,
+    Expression<String>? source,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (userId != null) 'user_id': userId,
+      if (bpm != null) 'bpm': bpm,
+      if (timestamp != null) 'timestamp': timestamp,
+      if (source != null) 'source': source,
+    });
+  }
+
+  HeartRateLogsCompanion copyWith({
+    Value<int>? id,
+    Value<String>? userId,
+    Value<int>? bpm,
+    Value<DateTime>? timestamp,
+    Value<String>? source,
+  }) {
+    return HeartRateLogsCompanion(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      bpm: bpm ?? this.bpm,
+      timestamp: timestamp ?? this.timestamp,
+      source: source ?? this.source,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<String>(userId.value);
+    }
+    if (bpm.present) {
+      map['bpm'] = Variable<int>(bpm.value);
+    }
+    if (timestamp.present) {
+      map['timestamp'] = Variable<DateTime>(timestamp.value);
+    }
+    if (source.present) {
+      map['source'] = Variable<String>(source.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('HeartRateLogsCompanion(')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('bpm: $bpm, ')
+          ..write('timestamp: $timestamp, ')
+          ..write('source: $source')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -19403,6 +20532,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $WeddingEventsTable weddingEvents = $WeddingEventsTable(this);
   late final $InsightLogsTable insightLogs = $InsightLogsTable(this);
   late final $InsightRatingsTable insightRatings = $InsightRatingsTable(this);
+  late final $UsersTable users = $UsersTable(this);
+  late final $HeartRateLogsTable heartRateLogs = $HeartRateLogsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -19440,6 +20571,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     weddingEvents,
     insightLogs,
     insightRatings,
+    users,
+    heartRateLogs,
   ];
 }
 
@@ -25972,10 +27105,10 @@ typedef $$PeriodLogsTableCreateCompanionBuilder =
     PeriodLogsCompanion Function({
       Value<int> id,
       required String userId,
-      required DateTime cycleStart,
-      Value<DateTime?> cycleEnd,
-      Value<String?> symptoms,
-      Value<String?> flowIntensity,
+      required String cycleStartEncrypted,
+      Value<String?> cycleEndEncrypted,
+      Value<String?> symptomsEncrypted,
+      Value<String?> flowIntensityEncrypted,
       Value<String?> notesEncrypted,
       Value<String?> syncStatus,
       Value<String?> idempotencyKey,
@@ -25984,10 +27117,10 @@ typedef $$PeriodLogsTableUpdateCompanionBuilder =
     PeriodLogsCompanion Function({
       Value<int> id,
       Value<String> userId,
-      Value<DateTime> cycleStart,
-      Value<DateTime?> cycleEnd,
-      Value<String?> symptoms,
-      Value<String?> flowIntensity,
+      Value<String> cycleStartEncrypted,
+      Value<String?> cycleEndEncrypted,
+      Value<String?> symptomsEncrypted,
+      Value<String?> flowIntensityEncrypted,
       Value<String?> notesEncrypted,
       Value<String?> syncStatus,
       Value<String?> idempotencyKey,
@@ -26012,23 +27145,23 @@ class $$PeriodLogsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<DateTime> get cycleStart => $composableBuilder(
-    column: $table.cycleStart,
+  ColumnFilters<String> get cycleStartEncrypted => $composableBuilder(
+    column: $table.cycleStartEncrypted,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<DateTime> get cycleEnd => $composableBuilder(
-    column: $table.cycleEnd,
+  ColumnFilters<String> get cycleEndEncrypted => $composableBuilder(
+    column: $table.cycleEndEncrypted,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get symptoms => $composableBuilder(
-    column: $table.symptoms,
+  ColumnFilters<String> get symptomsEncrypted => $composableBuilder(
+    column: $table.symptomsEncrypted,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get flowIntensity => $composableBuilder(
-    column: $table.flowIntensity,
+  ColumnFilters<String> get flowIntensityEncrypted => $composableBuilder(
+    column: $table.flowIntensityEncrypted,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -26067,23 +27200,23 @@ class $$PeriodLogsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<DateTime> get cycleStart => $composableBuilder(
-    column: $table.cycleStart,
+  ColumnOrderings<String> get cycleStartEncrypted => $composableBuilder(
+    column: $table.cycleStartEncrypted,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<DateTime> get cycleEnd => $composableBuilder(
-    column: $table.cycleEnd,
+  ColumnOrderings<String> get cycleEndEncrypted => $composableBuilder(
+    column: $table.cycleEndEncrypted,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get symptoms => $composableBuilder(
-    column: $table.symptoms,
+  ColumnOrderings<String> get symptomsEncrypted => $composableBuilder(
+    column: $table.symptomsEncrypted,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get flowIntensity => $composableBuilder(
-    column: $table.flowIntensity,
+  ColumnOrderings<String> get flowIntensityEncrypted => $composableBuilder(
+    column: $table.flowIntensityEncrypted,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -26118,19 +27251,23 @@ class $$PeriodLogsTableAnnotationComposer
   GeneratedColumn<String> get userId =>
       $composableBuilder(column: $table.userId, builder: (column) => column);
 
-  GeneratedColumn<DateTime> get cycleStart => $composableBuilder(
-    column: $table.cycleStart,
+  GeneratedColumn<String> get cycleStartEncrypted => $composableBuilder(
+    column: $table.cycleStartEncrypted,
     builder: (column) => column,
   );
 
-  GeneratedColumn<DateTime> get cycleEnd =>
-      $composableBuilder(column: $table.cycleEnd, builder: (column) => column);
+  GeneratedColumn<String> get cycleEndEncrypted => $composableBuilder(
+    column: $table.cycleEndEncrypted,
+    builder: (column) => column,
+  );
 
-  GeneratedColumn<String> get symptoms =>
-      $composableBuilder(column: $table.symptoms, builder: (column) => column);
+  GeneratedColumn<String> get symptomsEncrypted => $composableBuilder(
+    column: $table.symptomsEncrypted,
+    builder: (column) => column,
+  );
 
-  GeneratedColumn<String> get flowIntensity => $composableBuilder(
-    column: $table.flowIntensity,
+  GeneratedColumn<String> get flowIntensityEncrypted => $composableBuilder(
+    column: $table.flowIntensityEncrypted,
     builder: (column) => column,
   );
 
@@ -26183,20 +27320,20 @@ class $$PeriodLogsTableTableManager
               ({
                 Value<int> id = const Value.absent(),
                 Value<String> userId = const Value.absent(),
-                Value<DateTime> cycleStart = const Value.absent(),
-                Value<DateTime?> cycleEnd = const Value.absent(),
-                Value<String?> symptoms = const Value.absent(),
-                Value<String?> flowIntensity = const Value.absent(),
+                Value<String> cycleStartEncrypted = const Value.absent(),
+                Value<String?> cycleEndEncrypted = const Value.absent(),
+                Value<String?> symptomsEncrypted = const Value.absent(),
+                Value<String?> flowIntensityEncrypted = const Value.absent(),
                 Value<String?> notesEncrypted = const Value.absent(),
                 Value<String?> syncStatus = const Value.absent(),
                 Value<String?> idempotencyKey = const Value.absent(),
               }) => PeriodLogsCompanion(
                 id: id,
                 userId: userId,
-                cycleStart: cycleStart,
-                cycleEnd: cycleEnd,
-                symptoms: symptoms,
-                flowIntensity: flowIntensity,
+                cycleStartEncrypted: cycleStartEncrypted,
+                cycleEndEncrypted: cycleEndEncrypted,
+                symptomsEncrypted: symptomsEncrypted,
+                flowIntensityEncrypted: flowIntensityEncrypted,
                 notesEncrypted: notesEncrypted,
                 syncStatus: syncStatus,
                 idempotencyKey: idempotencyKey,
@@ -26205,20 +27342,20 @@ class $$PeriodLogsTableTableManager
               ({
                 Value<int> id = const Value.absent(),
                 required String userId,
-                required DateTime cycleStart,
-                Value<DateTime?> cycleEnd = const Value.absent(),
-                Value<String?> symptoms = const Value.absent(),
-                Value<String?> flowIntensity = const Value.absent(),
+                required String cycleStartEncrypted,
+                Value<String?> cycleEndEncrypted = const Value.absent(),
+                Value<String?> symptomsEncrypted = const Value.absent(),
+                Value<String?> flowIntensityEncrypted = const Value.absent(),
                 Value<String?> notesEncrypted = const Value.absent(),
                 Value<String?> syncStatus = const Value.absent(),
                 Value<String?> idempotencyKey = const Value.absent(),
               }) => PeriodLogsCompanion.insert(
                 id: id,
                 userId: userId,
-                cycleStart: cycleStart,
-                cycleEnd: cycleEnd,
-                symptoms: symptoms,
-                flowIntensity: flowIntensity,
+                cycleStartEncrypted: cycleStartEncrypted,
+                cycleEndEncrypted: cycleEndEncrypted,
+                symptomsEncrypted: symptomsEncrypted,
+                flowIntensityEncrypted: flowIntensityEncrypted,
                 notesEncrypted: notesEncrypted,
                 syncStatus: syncStatus,
                 idempotencyKey: idempotencyKey,
@@ -26509,8 +27646,8 @@ typedef $$DoctorAppointmentsTableCreateCompanionBuilder =
       Value<int> id,
       required String userId,
       required String doctorNameEncrypted,
-      Value<String?> speciality,
-      required DateTime appointmentDt,
+      Value<String?> specialityEncrypted,
+      required String appointmentDtEncrypted,
       Value<String?> notesEncrypted,
       Value<bool> reminderSent,
     });
@@ -26519,8 +27656,8 @@ typedef $$DoctorAppointmentsTableUpdateCompanionBuilder =
       Value<int> id,
       Value<String> userId,
       Value<String> doctorNameEncrypted,
-      Value<String?> speciality,
-      Value<DateTime> appointmentDt,
+      Value<String?> specialityEncrypted,
+      Value<String> appointmentDtEncrypted,
       Value<String?> notesEncrypted,
       Value<bool> reminderSent,
     });
@@ -26549,13 +27686,13 @@ class $$DoctorAppointmentsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get speciality => $composableBuilder(
-    column: $table.speciality,
+  ColumnFilters<String> get specialityEncrypted => $composableBuilder(
+    column: $table.specialityEncrypted,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<DateTime> get appointmentDt => $composableBuilder(
-    column: $table.appointmentDt,
+  ColumnFilters<String> get appointmentDtEncrypted => $composableBuilder(
+    column: $table.appointmentDtEncrypted,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -26594,13 +27731,13 @@ class $$DoctorAppointmentsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get speciality => $composableBuilder(
-    column: $table.speciality,
+  ColumnOrderings<String> get specialityEncrypted => $composableBuilder(
+    column: $table.specialityEncrypted,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<DateTime> get appointmentDt => $composableBuilder(
-    column: $table.appointmentDt,
+  ColumnOrderings<String> get appointmentDtEncrypted => $composableBuilder(
+    column: $table.appointmentDtEncrypted,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -26635,13 +27772,13 @@ class $$DoctorAppointmentsTableAnnotationComposer
     builder: (column) => column,
   );
 
-  GeneratedColumn<String> get speciality => $composableBuilder(
-    column: $table.speciality,
+  GeneratedColumn<String> get specialityEncrypted => $composableBuilder(
+    column: $table.specialityEncrypted,
     builder: (column) => column,
   );
 
-  GeneratedColumn<DateTime> get appointmentDt => $composableBuilder(
-    column: $table.appointmentDt,
+  GeneratedColumn<String> get appointmentDtEncrypted => $composableBuilder(
+    column: $table.appointmentDtEncrypted,
     builder: (column) => column,
   );
 
@@ -26699,16 +27836,16 @@ class $$DoctorAppointmentsTableTableManager
                 Value<int> id = const Value.absent(),
                 Value<String> userId = const Value.absent(),
                 Value<String> doctorNameEncrypted = const Value.absent(),
-                Value<String?> speciality = const Value.absent(),
-                Value<DateTime> appointmentDt = const Value.absent(),
+                Value<String?> specialityEncrypted = const Value.absent(),
+                Value<String> appointmentDtEncrypted = const Value.absent(),
                 Value<String?> notesEncrypted = const Value.absent(),
                 Value<bool> reminderSent = const Value.absent(),
               }) => DoctorAppointmentsCompanion(
                 id: id,
                 userId: userId,
                 doctorNameEncrypted: doctorNameEncrypted,
-                speciality: speciality,
-                appointmentDt: appointmentDt,
+                specialityEncrypted: specialityEncrypted,
+                appointmentDtEncrypted: appointmentDtEncrypted,
                 notesEncrypted: notesEncrypted,
                 reminderSent: reminderSent,
               ),
@@ -26717,16 +27854,16 @@ class $$DoctorAppointmentsTableTableManager
                 Value<int> id = const Value.absent(),
                 required String userId,
                 required String doctorNameEncrypted,
-                Value<String?> speciality = const Value.absent(),
-                required DateTime appointmentDt,
+                Value<String?> specialityEncrypted = const Value.absent(),
+                required String appointmentDtEncrypted,
                 Value<String?> notesEncrypted = const Value.absent(),
                 Value<bool> reminderSent = const Value.absent(),
               }) => DoctorAppointmentsCompanion.insert(
                 id: id,
                 userId: userId,
                 doctorNameEncrypted: doctorNameEncrypted,
-                speciality: speciality,
-                appointmentDt: appointmentDt,
+                specialityEncrypted: specialityEncrypted,
+                appointmentDtEncrypted: appointmentDtEncrypted,
                 notesEncrypted: notesEncrypted,
                 reminderSent: reminderSent,
               ),
@@ -27038,21 +28175,21 @@ typedef $$AbhaLinksTableCreateCompanionBuilder =
     AbhaLinksCompanion Function({
       Value<int> id,
       required String userId,
-      required String abhaId,
-      Value<String?> abhaAddress,
-      required DateTime linkedAt,
+      required String abhaIdEncrypted,
+      Value<String?> abhaAddressEncrypted,
+      required String linkedAtEncrypted,
       required bool consentGranted,
-      Value<DateTime?> lastSync,
+      Value<String?> lastSyncEncrypted,
     });
 typedef $$AbhaLinksTableUpdateCompanionBuilder =
     AbhaLinksCompanion Function({
       Value<int> id,
       Value<String> userId,
-      Value<String> abhaId,
-      Value<String?> abhaAddress,
-      Value<DateTime> linkedAt,
+      Value<String> abhaIdEncrypted,
+      Value<String?> abhaAddressEncrypted,
+      Value<String> linkedAtEncrypted,
       Value<bool> consentGranted,
-      Value<DateTime?> lastSync,
+      Value<String?> lastSyncEncrypted,
     });
 
 class $$AbhaLinksTableFilterComposer
@@ -27074,18 +28211,18 @@ class $$AbhaLinksTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get abhaId => $composableBuilder(
-    column: $table.abhaId,
+  ColumnFilters<String> get abhaIdEncrypted => $composableBuilder(
+    column: $table.abhaIdEncrypted,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get abhaAddress => $composableBuilder(
-    column: $table.abhaAddress,
+  ColumnFilters<String> get abhaAddressEncrypted => $composableBuilder(
+    column: $table.abhaAddressEncrypted,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<DateTime> get linkedAt => $composableBuilder(
-    column: $table.linkedAt,
+  ColumnFilters<String> get linkedAtEncrypted => $composableBuilder(
+    column: $table.linkedAtEncrypted,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -27094,8 +28231,8 @@ class $$AbhaLinksTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<DateTime> get lastSync => $composableBuilder(
-    column: $table.lastSync,
+  ColumnFilters<String> get lastSyncEncrypted => $composableBuilder(
+    column: $table.lastSyncEncrypted,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -27119,18 +28256,18 @@ class $$AbhaLinksTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get abhaId => $composableBuilder(
-    column: $table.abhaId,
+  ColumnOrderings<String> get abhaIdEncrypted => $composableBuilder(
+    column: $table.abhaIdEncrypted,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get abhaAddress => $composableBuilder(
-    column: $table.abhaAddress,
+  ColumnOrderings<String> get abhaAddressEncrypted => $composableBuilder(
+    column: $table.abhaAddressEncrypted,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<DateTime> get linkedAt => $composableBuilder(
-    column: $table.linkedAt,
+  ColumnOrderings<String> get linkedAtEncrypted => $composableBuilder(
+    column: $table.linkedAtEncrypted,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -27139,8 +28276,8 @@ class $$AbhaLinksTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<DateTime> get lastSync => $composableBuilder(
-    column: $table.lastSync,
+  ColumnOrderings<String> get lastSyncEncrypted => $composableBuilder(
+    column: $table.lastSyncEncrypted,
     builder: (column) => ColumnOrderings(column),
   );
 }
@@ -27160,24 +28297,30 @@ class $$AbhaLinksTableAnnotationComposer
   GeneratedColumn<String> get userId =>
       $composableBuilder(column: $table.userId, builder: (column) => column);
 
-  GeneratedColumn<String> get abhaId =>
-      $composableBuilder(column: $table.abhaId, builder: (column) => column);
-
-  GeneratedColumn<String> get abhaAddress => $composableBuilder(
-    column: $table.abhaAddress,
+  GeneratedColumn<String> get abhaIdEncrypted => $composableBuilder(
+    column: $table.abhaIdEncrypted,
     builder: (column) => column,
   );
 
-  GeneratedColumn<DateTime> get linkedAt =>
-      $composableBuilder(column: $table.linkedAt, builder: (column) => column);
+  GeneratedColumn<String> get abhaAddressEncrypted => $composableBuilder(
+    column: $table.abhaAddressEncrypted,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get linkedAtEncrypted => $composableBuilder(
+    column: $table.linkedAtEncrypted,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<bool> get consentGranted => $composableBuilder(
     column: $table.consentGranted,
     builder: (column) => column,
   );
 
-  GeneratedColumn<DateTime> get lastSync =>
-      $composableBuilder(column: $table.lastSync, builder: (column) => column);
+  GeneratedColumn<String> get lastSyncEncrypted => $composableBuilder(
+    column: $table.lastSyncEncrypted,
+    builder: (column) => column,
+  );
 }
 
 class $$AbhaLinksTableTableManager
@@ -27210,37 +28353,37 @@ class $$AbhaLinksTableTableManager
               ({
                 Value<int> id = const Value.absent(),
                 Value<String> userId = const Value.absent(),
-                Value<String> abhaId = const Value.absent(),
-                Value<String?> abhaAddress = const Value.absent(),
-                Value<DateTime> linkedAt = const Value.absent(),
+                Value<String> abhaIdEncrypted = const Value.absent(),
+                Value<String?> abhaAddressEncrypted = const Value.absent(),
+                Value<String> linkedAtEncrypted = const Value.absent(),
                 Value<bool> consentGranted = const Value.absent(),
-                Value<DateTime?> lastSync = const Value.absent(),
+                Value<String?> lastSyncEncrypted = const Value.absent(),
               }) => AbhaLinksCompanion(
                 id: id,
                 userId: userId,
-                abhaId: abhaId,
-                abhaAddress: abhaAddress,
-                linkedAt: linkedAt,
+                abhaIdEncrypted: abhaIdEncrypted,
+                abhaAddressEncrypted: abhaAddressEncrypted,
+                linkedAtEncrypted: linkedAtEncrypted,
                 consentGranted: consentGranted,
-                lastSync: lastSync,
+                lastSyncEncrypted: lastSyncEncrypted,
               ),
           createCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
                 required String userId,
-                required String abhaId,
-                Value<String?> abhaAddress = const Value.absent(),
-                required DateTime linkedAt,
+                required String abhaIdEncrypted,
+                Value<String?> abhaAddressEncrypted = const Value.absent(),
+                required String linkedAtEncrypted,
                 required bool consentGranted,
-                Value<DateTime?> lastSync = const Value.absent(),
+                Value<String?> lastSyncEncrypted = const Value.absent(),
               }) => AbhaLinksCompanion.insert(
                 id: id,
                 userId: userId,
-                abhaId: abhaId,
-                abhaAddress: abhaAddress,
-                linkedAt: linkedAt,
+                abhaIdEncrypted: abhaIdEncrypted,
+                abhaAddressEncrypted: abhaAddressEncrypted,
+                linkedAtEncrypted: linkedAtEncrypted,
                 consentGranted: consentGranted,
-                lastSync: lastSync,
+                lastSyncEncrypted: lastSyncEncrypted,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
@@ -27270,8 +28413,13 @@ typedef $$EmergencyCardsTableCreateCompanionBuilder =
       required String userId,
       required String name,
       required String bloodGroup,
-      required String phone,
-      required String relation,
+      Value<String?> allergies,
+      Value<String?> chronicConditions,
+      required String emergencyContactName,
+      required String emergencyContactPhone,
+      Value<String?> doctorName,
+      Value<String?> doctorPhone,
+      Value<String?> insurancePolicy,
       Value<String?> medicalNotes,
       required DateTime createdAt,
     });
@@ -27281,8 +28429,13 @@ typedef $$EmergencyCardsTableUpdateCompanionBuilder =
       Value<String> userId,
       Value<String> name,
       Value<String> bloodGroup,
-      Value<String> phone,
-      Value<String> relation,
+      Value<String?> allergies,
+      Value<String?> chronicConditions,
+      Value<String> emergencyContactName,
+      Value<String> emergencyContactPhone,
+      Value<String?> doctorName,
+      Value<String?> doctorPhone,
+      Value<String?> insurancePolicy,
       Value<String?> medicalNotes,
       Value<DateTime> createdAt,
     });
@@ -27316,13 +28469,38 @@ class $$EmergencyCardsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get phone => $composableBuilder(
-    column: $table.phone,
+  ColumnFilters<String> get allergies => $composableBuilder(
+    column: $table.allergies,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get relation => $composableBuilder(
-    column: $table.relation,
+  ColumnFilters<String> get chronicConditions => $composableBuilder(
+    column: $table.chronicConditions,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get emergencyContactName => $composableBuilder(
+    column: $table.emergencyContactName,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get emergencyContactPhone => $composableBuilder(
+    column: $table.emergencyContactPhone,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get doctorName => $composableBuilder(
+    column: $table.doctorName,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get doctorPhone => $composableBuilder(
+    column: $table.doctorPhone,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get insurancePolicy => $composableBuilder(
+    column: $table.insurancePolicy,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -27366,13 +28544,38 @@ class $$EmergencyCardsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get phone => $composableBuilder(
-    column: $table.phone,
+  ColumnOrderings<String> get allergies => $composableBuilder(
+    column: $table.allergies,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get relation => $composableBuilder(
-    column: $table.relation,
+  ColumnOrderings<String> get chronicConditions => $composableBuilder(
+    column: $table.chronicConditions,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get emergencyContactName => $composableBuilder(
+    column: $table.emergencyContactName,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get emergencyContactPhone => $composableBuilder(
+    column: $table.emergencyContactPhone,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get doctorName => $composableBuilder(
+    column: $table.doctorName,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get doctorPhone => $composableBuilder(
+    column: $table.doctorPhone,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get insurancePolicy => $composableBuilder(
+    column: $table.insurancePolicy,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -27410,11 +28613,38 @@ class $$EmergencyCardsTableAnnotationComposer
     builder: (column) => column,
   );
 
-  GeneratedColumn<String> get phone =>
-      $composableBuilder(column: $table.phone, builder: (column) => column);
+  GeneratedColumn<String> get allergies =>
+      $composableBuilder(column: $table.allergies, builder: (column) => column);
 
-  GeneratedColumn<String> get relation =>
-      $composableBuilder(column: $table.relation, builder: (column) => column);
+  GeneratedColumn<String> get chronicConditions => $composableBuilder(
+    column: $table.chronicConditions,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get emergencyContactName => $composableBuilder(
+    column: $table.emergencyContactName,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get emergencyContactPhone => $composableBuilder(
+    column: $table.emergencyContactPhone,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get doctorName => $composableBuilder(
+    column: $table.doctorName,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get doctorPhone => $composableBuilder(
+    column: $table.doctorPhone,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get insurancePolicy => $composableBuilder(
+    column: $table.insurancePolicy,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<String> get medicalNotes => $composableBuilder(
     column: $table.medicalNotes,
@@ -27462,8 +28692,13 @@ class $$EmergencyCardsTableTableManager
                 Value<String> userId = const Value.absent(),
                 Value<String> name = const Value.absent(),
                 Value<String> bloodGroup = const Value.absent(),
-                Value<String> phone = const Value.absent(),
-                Value<String> relation = const Value.absent(),
+                Value<String?> allergies = const Value.absent(),
+                Value<String?> chronicConditions = const Value.absent(),
+                Value<String> emergencyContactName = const Value.absent(),
+                Value<String> emergencyContactPhone = const Value.absent(),
+                Value<String?> doctorName = const Value.absent(),
+                Value<String?> doctorPhone = const Value.absent(),
+                Value<String?> insurancePolicy = const Value.absent(),
                 Value<String?> medicalNotes = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
               }) => EmergencyCardsCompanion(
@@ -27471,8 +28706,13 @@ class $$EmergencyCardsTableTableManager
                 userId: userId,
                 name: name,
                 bloodGroup: bloodGroup,
-                phone: phone,
-                relation: relation,
+                allergies: allergies,
+                chronicConditions: chronicConditions,
+                emergencyContactName: emergencyContactName,
+                emergencyContactPhone: emergencyContactPhone,
+                doctorName: doctorName,
+                doctorPhone: doctorPhone,
+                insurancePolicy: insurancePolicy,
                 medicalNotes: medicalNotes,
                 createdAt: createdAt,
               ),
@@ -27482,8 +28722,13 @@ class $$EmergencyCardsTableTableManager
                 required String userId,
                 required String name,
                 required String bloodGroup,
-                required String phone,
-                required String relation,
+                Value<String?> allergies = const Value.absent(),
+                Value<String?> chronicConditions = const Value.absent(),
+                required String emergencyContactName,
+                required String emergencyContactPhone,
+                Value<String?> doctorName = const Value.absent(),
+                Value<String?> doctorPhone = const Value.absent(),
+                Value<String?> insurancePolicy = const Value.absent(),
                 Value<String?> medicalNotes = const Value.absent(),
                 required DateTime createdAt,
               }) => EmergencyCardsCompanion.insert(
@@ -27491,8 +28736,13 @@ class $$EmergencyCardsTableTableManager
                 userId: userId,
                 name: name,
                 bloodGroup: bloodGroup,
-                phone: phone,
-                relation: relation,
+                allergies: allergies,
+                chronicConditions: chronicConditions,
+                emergencyContactName: emergencyContactName,
+                emergencyContactPhone: emergencyContactPhone,
+                doctorName: doctorName,
+                doctorPhone: doctorPhone,
+                insurancePolicy: insurancePolicy,
                 medicalNotes: medicalNotes,
                 createdAt: createdAt,
               ),
@@ -28877,6 +30127,418 @@ typedef $$InsightRatingsTableProcessedTableManager =
       InsightRating,
       PrefetchHooks Function()
     >;
+typedef $$UsersTableCreateCompanionBuilder =
+    UsersCompanion Function({
+      required String id,
+      required String email,
+      required String name,
+      Value<int> karmaTotal,
+      Value<int> karmaLevel,
+      Value<bool> onboardingCompleted,
+      Value<int> rowid,
+    });
+typedef $$UsersTableUpdateCompanionBuilder =
+    UsersCompanion Function({
+      Value<String> id,
+      Value<String> email,
+      Value<String> name,
+      Value<int> karmaTotal,
+      Value<int> karmaLevel,
+      Value<bool> onboardingCompleted,
+      Value<int> rowid,
+    });
+
+class $$UsersTableFilterComposer extends Composer<_$AppDatabase, $UsersTable> {
+  $$UsersTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get email => $composableBuilder(
+    column: $table.email,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get karmaTotal => $composableBuilder(
+    column: $table.karmaTotal,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get karmaLevel => $composableBuilder(
+    column: $table.karmaLevel,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get onboardingCompleted => $composableBuilder(
+    column: $table.onboardingCompleted,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$UsersTableOrderingComposer
+    extends Composer<_$AppDatabase, $UsersTable> {
+  $$UsersTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get email => $composableBuilder(
+    column: $table.email,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get karmaTotal => $composableBuilder(
+    column: $table.karmaTotal,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get karmaLevel => $composableBuilder(
+    column: $table.karmaLevel,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get onboardingCompleted => $composableBuilder(
+    column: $table.onboardingCompleted,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$UsersTableAnnotationComposer
+    extends Composer<_$AppDatabase, $UsersTable> {
+  $$UsersTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get email =>
+      $composableBuilder(column: $table.email, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<int> get karmaTotal => $composableBuilder(
+    column: $table.karmaTotal,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get karmaLevel => $composableBuilder(
+    column: $table.karmaLevel,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get onboardingCompleted => $composableBuilder(
+    column: $table.onboardingCompleted,
+    builder: (column) => column,
+  );
+}
+
+class $$UsersTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $UsersTable,
+          LocalUser,
+          $$UsersTableFilterComposer,
+          $$UsersTableOrderingComposer,
+          $$UsersTableAnnotationComposer,
+          $$UsersTableCreateCompanionBuilder,
+          $$UsersTableUpdateCompanionBuilder,
+          (LocalUser, BaseReferences<_$AppDatabase, $UsersTable, LocalUser>),
+          LocalUser,
+          PrefetchHooks Function()
+        > {
+  $$UsersTableTableManager(_$AppDatabase db, $UsersTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$UsersTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$UsersTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$UsersTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> email = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<int> karmaTotal = const Value.absent(),
+                Value<int> karmaLevel = const Value.absent(),
+                Value<bool> onboardingCompleted = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => UsersCompanion(
+                id: id,
+                email: email,
+                name: name,
+                karmaTotal: karmaTotal,
+                karmaLevel: karmaLevel,
+                onboardingCompleted: onboardingCompleted,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String email,
+                required String name,
+                Value<int> karmaTotal = const Value.absent(),
+                Value<int> karmaLevel = const Value.absent(),
+                Value<bool> onboardingCompleted = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => UsersCompanion.insert(
+                id: id,
+                email: email,
+                name: name,
+                karmaTotal: karmaTotal,
+                karmaLevel: karmaLevel,
+                onboardingCompleted: onboardingCompleted,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$UsersTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $UsersTable,
+      LocalUser,
+      $$UsersTableFilterComposer,
+      $$UsersTableOrderingComposer,
+      $$UsersTableAnnotationComposer,
+      $$UsersTableCreateCompanionBuilder,
+      $$UsersTableUpdateCompanionBuilder,
+      (LocalUser, BaseReferences<_$AppDatabase, $UsersTable, LocalUser>),
+      LocalUser,
+      PrefetchHooks Function()
+    >;
+typedef $$HeartRateLogsTableCreateCompanionBuilder =
+    HeartRateLogsCompanion Function({
+      Value<int> id,
+      required String userId,
+      required int bpm,
+      required DateTime timestamp,
+      required String source,
+    });
+typedef $$HeartRateLogsTableUpdateCompanionBuilder =
+    HeartRateLogsCompanion Function({
+      Value<int> id,
+      Value<String> userId,
+      Value<int> bpm,
+      Value<DateTime> timestamp,
+      Value<String> source,
+    });
+
+class $$HeartRateLogsTableFilterComposer
+    extends Composer<_$AppDatabase, $HeartRateLogsTable> {
+  $$HeartRateLogsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get bpm => $composableBuilder(
+    column: $table.bpm,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get timestamp => $composableBuilder(
+    column: $table.timestamp,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get source => $composableBuilder(
+    column: $table.source,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$HeartRateLogsTableOrderingComposer
+    extends Composer<_$AppDatabase, $HeartRateLogsTable> {
+  $$HeartRateLogsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get bpm => $composableBuilder(
+    column: $table.bpm,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get timestamp => $composableBuilder(
+    column: $table.timestamp,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get source => $composableBuilder(
+    column: $table.source,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$HeartRateLogsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $HeartRateLogsTable> {
+  $$HeartRateLogsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get userId =>
+      $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<int> get bpm =>
+      $composableBuilder(column: $table.bpm, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get timestamp =>
+      $composableBuilder(column: $table.timestamp, builder: (column) => column);
+
+  GeneratedColumn<String> get source =>
+      $composableBuilder(column: $table.source, builder: (column) => column);
+}
+
+class $$HeartRateLogsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $HeartRateLogsTable,
+          HeartRateLog,
+          $$HeartRateLogsTableFilterComposer,
+          $$HeartRateLogsTableOrderingComposer,
+          $$HeartRateLogsTableAnnotationComposer,
+          $$HeartRateLogsTableCreateCompanionBuilder,
+          $$HeartRateLogsTableUpdateCompanionBuilder,
+          (
+            HeartRateLog,
+            BaseReferences<_$AppDatabase, $HeartRateLogsTable, HeartRateLog>,
+          ),
+          HeartRateLog,
+          PrefetchHooks Function()
+        > {
+  $$HeartRateLogsTableTableManager(_$AppDatabase db, $HeartRateLogsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$HeartRateLogsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$HeartRateLogsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$HeartRateLogsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> userId = const Value.absent(),
+                Value<int> bpm = const Value.absent(),
+                Value<DateTime> timestamp = const Value.absent(),
+                Value<String> source = const Value.absent(),
+              }) => HeartRateLogsCompanion(
+                id: id,
+                userId: userId,
+                bpm: bpm,
+                timestamp: timestamp,
+                source: source,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String userId,
+                required int bpm,
+                required DateTime timestamp,
+                required String source,
+              }) => HeartRateLogsCompanion.insert(
+                id: id,
+                userId: userId,
+                bpm: bpm,
+                timestamp: timestamp,
+                source: source,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$HeartRateLogsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $HeartRateLogsTable,
+      HeartRateLog,
+      $$HeartRateLogsTableFilterComposer,
+      $$HeartRateLogsTableOrderingComposer,
+      $$HeartRateLogsTableAnnotationComposer,
+      $$HeartRateLogsTableCreateCompanionBuilder,
+      $$HeartRateLogsTableUpdateCompanionBuilder,
+      (
+        HeartRateLog,
+        BaseReferences<_$AppDatabase, $HeartRateLogsTable, HeartRateLog>,
+      ),
+      HeartRateLog,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -28945,4 +30607,8 @@ class $AppDatabaseManager {
       $$InsightLogsTableTableManager(_db, _db.insightLogs);
   $$InsightRatingsTableTableManager get insightRatings =>
       $$InsightRatingsTableTableManager(_db, _db.insightRatings);
+  $$UsersTableTableManager get users =>
+      $$UsersTableTableManager(_db, _db.users);
+  $$HeartRateLogsTableTableManager get heartRateLogs =>
+      $$HeartRateLogsTableTableManager(_db, _db.heartRateLogs);
 }
