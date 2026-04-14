@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
+import '../../../shared/widgets/health_share_card.dart';
 import '../../../core/network/appwrite_client.dart';
 import 'dart:convert';
 
@@ -55,11 +56,14 @@ class _HealthReportsScreenState extends ConsumerState<HealthReportsScreen> {
             _buildReportCard('Monthly Insight', 'March 2026', 'BP: Normal • Mood: Steady'),
             const SizedBox(height: 24),
             if (_shareUrl != null) 
-              _HealthShareCard(
-                url: _shareUrl!, 
+              HealthShareCard(
+                shareUrl: _shareUrl!, 
                 expiresAt: _expiresAt!,
                 onDelete: () => setState(() => _shareUrl = null),
+                onCopy: () {},
+                onShare: () => Share.share('My Health Report: $_shareUrl'),
               ),
+
             if (_isGenerating)
               const Padding(
                 padding: EdgeInsets.all(20),
@@ -116,65 +120,4 @@ class _HealthReportsScreenState extends ConsumerState<HealthReportsScreen> {
   }
 }
 
-class _HealthShareCard extends StatelessWidget {
-  final String url;
-  final DateTime expiresAt;
-  final VoidCallback onDelete;
 
-  const _HealthShareCard({required this.url, required this.expiresAt, required this.onDelete});
-
-  @override
-  Widget build(BuildContext context) {
-    final daysLeft = expiresAt.difference(DateTime.now()).inDays;
-
-    return Card(
-      color: Colors.green.shade50,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16), side: BorderSide(color: Colors.green.shade200)),
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          children: [
-            const Row(
-              children: [
-                Icon(Icons.link, color: Colors.green),
-                SizedBox(width: 12),
-                Text('Active Share Link', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-              ],
-            ),
-            const SizedBox(height: 12),
-            Text(url, style: const TextStyle(color: Colors.blue, decoration: TextDecoration.underline), overflow: TextOverflow.ellipsis),
-            const SizedBox(height: 12),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Expires in $daysLeft days', style: const TextStyle(fontSize: 12, color: Colors.grey)),
-                Row(
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.copy, size: 20),
-                      onPressed: () {},
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.delete_outline, color: Colors.red, size: 20),
-                      onPressed: onDelete,
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton.icon(
-                onPressed: () => Share.share('My Health Report: $url'),
-                icon: const Icon(Icons.share),
-                label: const Text('SHARE REPORT'),
-                style: ElevatedButton.styleFrom(backgroundColor: Color(0xFF25D366)),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}

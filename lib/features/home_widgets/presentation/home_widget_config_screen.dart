@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:home_widget/home_widget.dart';
+import '../../../shared/widgets/home_widget_preview.dart';
 
 class HomeWidgetConfigScreen extends ConsumerWidget {
   const HomeWidgetConfigScreen({super.key});
@@ -12,29 +13,32 @@ class HomeWidgetConfigScreen extends ConsumerWidget {
       body: ListView(
         padding: const EdgeInsets.all(24),
         children: [
-          _buildWidgetPreview(
-            context: context,
-            title: 'Activity Rings (2x2)',
+          HomeWidgetPreview(
+            title: 'Activity Rings',
             description: 'Today\'s steps, calories, and water progress.',
-            previewColor: Colors.orange.shade50,
+            size: '2x2',
             icon: Icons.donut_large,
+            onAdd: () => HomeWidget.requestPinWidget(
+              name: 'ActivityRingsWidgetProvider',
+            ),
           ),
           const SizedBox(height: 24),
-          _buildWidgetPreview(
-            context: context,
-            title: 'Health Insight (4x1)',
+          HomeWidgetPreview(
+            title: 'Health Insight',
             description: 'Weekly health trend and focus area.',
-            previewColor: Colors.blue.shade50,
+            size: '4x1',
             icon: Icons.insights,
+            onAdd: () {},
           ),
           const SizedBox(height: 24),
-          _buildWidgetPreview(
-            context: context,
-            title: 'Event Countdown (2x2)',
+          HomeWidgetPreview(
+            title: 'Event Countdown',
             description: 'Countdown to your next Festival or Wedding.',
-            previewColor: Colors.amber.shade50,
+            size: '2x2',
             icon: Icons.event,
+            onAdd: () {},
           ),
+
           const SizedBox(height: 40),
           _buildInstructionsCard(),
         ],
@@ -42,52 +46,7 @@ class HomeWidgetConfigScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildWidgetPreview({
-    required BuildContext context,
-    required String title,
-    required String description,
-    required Color previewColor,
-    required IconData icon,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-        const SizedBox(height: 12),
-        Container(
-          width: double.infinity,
-          height: 160,
-          decoration: BoxDecoration(
-            color: previewColor,
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: Colors.grey.shade300),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(icon, size: 64, color: Colors.black26),
-              const SizedBox(height: 12),
-              const Text('Widget Preview', style: TextStyle(color: Colors.black45)),
-            ],
-          ),
-        ),
-        const SizedBox(height: 16),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(child: Text(description, style: const TextStyle(color: Colors.grey, fontSize: 13))),
-            ElevatedButton(
-              onPressed: () => HomeWidget.requestPinWidget(
-                name: 'ActivityRingsWidgetProvider', // Simulation
-                androidName: 'ActivityRingsWidgetProvider',
-              ),
-              child: const Text('ADD'),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
+
 
   Widget _buildInstructionsCard() {
     return Container(

@@ -22,6 +22,7 @@ class _ExtractedValueState {
   _ExtractedValueState({
     required this.original,
     required this.currentValue,
+    this.isConfirmed = false,
   });
 }
 
@@ -94,7 +95,7 @@ class _LabReportScanScreenState extends ConsumerState<LabReportScanScreen> {
         await glucoseService.insertGlucoseLog(
           userId: auth.id,
           value: item.currentValue,
-          type: item.original.name.toLowerCase().contains('fasting') ? 'fasting' : 'random',
+          readingType: item.original.name.toLowerCase().contains('fasting') ? 'fasting' : 'random',
           note: 'Imported from Lab Report',
         );
         count++;

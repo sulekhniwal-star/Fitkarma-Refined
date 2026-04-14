@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'wedding_providers.dart';
 import '../../../shared/widgets/async_value_widget.dart';
 import '../../../core/storage/app_database.dart';
+import '../domain/wedding_plan_rule.dart';
 
 class WeddingEventDayScreen extends ConsumerWidget {
   final String eventKey;
@@ -11,32 +12,39 @@ class WeddingEventDayScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final eventsAsync = ref.watch(weddingEventsProvider);
+    final planAsync = ref.watch(weddingEventPlanProvider(eventKey));
 
     return Scaffold(
       backgroundColor: const Color(0xFFFDF7E6),
       appBar: AppBar(
-        title: Text(eventKey.toUpperCase()),
+        title: Text(_eventTitle(eventKey)),
         backgroundColor: const Color(0xFFD4A017),
         foregroundColor: Colors.white,
       ),
-      body: AsyncValueWidget<List<WeddingEvent>>(
-        value: eventsAsync,
+      body: eventsAsync.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (e, s) => Center(child: Text('Error: $e')),
         data: (events) {
-          final event = events.firstWhere((e) => e.eventKey == eventKey, orElse: () => null as dynamic);
-
+          final event = events.where((e) => e.eventKey == eventKey).firstOrNull;
+          final weddingDayPlan = planAsync.when(
+            loading: () => null,
+            error: (_, _) => null,
+            data: (data) => data,
+          );
+          
           return SingleChildScrollView(
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
-                _EventOverviewCard(event: event),
+                _EventOverviewCard(event: event, eventKey: eventKey),
                 const SizedBox(height: 16),
-                const _CalorieBudgetCard(),
+                _CalorieBudgetCard(plan: weddingDayPlan),
                 const SizedBox(height: 16),
-                const _EventMealPlanCard(),
+                _EventMealPlanCard(plan: weddingDayPlan),
                 const SizedBox(height: 16),
-                const _EventTipsCard(),
+                _EventTipsCard(plan: weddingDayPlan),
                 const SizedBox(height: 16),
-                const _QuickLogCTA(),
+                _QuickLogCTA(eventKey: eventKey),
                 const SizedBox(height: 40),
               ],
             ),
@@ -47,9 +55,35 @@ class WeddingEventDayScreen extends ConsumerWidget {
   }
 }
 
+String _eventTitle(String key) {
+    switch (key.toLowerCase()) {
+      case 'haldi': return 'Haldi Ceremony';
+      case 'mehendi': return 'Mehendi Night';
+      case 'sangeet': return 'Sangeet';
+      case 'baraat': return 'Baraat';
+      case 'vivah': return 'Wedding Day';
+      case 'reception': return 'Reception';
+      default: return key.toUpperCase();
+    }
+  }
+}
+
 class _EventOverviewCard extends StatelessWidget {
-  final WeddingEvent event;
-  const _EventOverviewCard({required this.event});
+  final WeddingEvent? event;
+  final String eventKey;
+  const _EventOverviewCard({this.event, required this.eventKey});
+
+  String get _eventEmoji {
+    switch (eventKey.toLowerCase()) {
+      case 'haldi': return '🥣';
+      case 'mehendi': return '🎨';
+      case 'sangeet': return '💃';
+      case 'baraat': return '🎺';
+      case 'vivah': return '💍';
+      case 'reception': return '🥂';
+      default: return '💒';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,24 +100,40 @@ class _EventOverviewCard extends StatelessWidget {
         ),
         child: Column(
           children: [
-             Text(event.eventName, style: const TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.bold)),
-             const SizedBox(height: 8),
-             Text(
-               'Celebrate with awareness and joy!',
-               style: TextStyle(color: Colors.white.withOpacity(0.9)),
-             ),
+            Text(_eventEmoji, style: const TextStyle(fontSize: 48)),
+            const SizedBox(height: 8),
+            Text(event?.eventName ?? _eventTitle(eventKey), style: const TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 8),
+            Text(
+              'Celebrate with awareness and joy!',
+              style: TextStyle(color: Colors.white.withOpacity(0.9)),
+            ),
           ],
         ),
       ),
     );
   }
+
+  String _eventTitle(String key) {
+    switch (key.toLowerCase()) {
+      case 'haldi': return 'Haldi Ceremony';
+      case 'mehendi': return 'Mehendi Night';
+      case 'sangeet': return 'Sangeet';
+      case 'baraat': return 'Baraat';
+      case 'vivah': return 'Wedding Day';
+      case 'reception': return 'Reception';
+      default: return key;
+    }
+  }
 }
 
 class _CalorieBudgetCard extends StatelessWidget {
-  const _CalorieBudgetCard();
+  final WeddingDayPlan? plan;
+  const _CalorieBudgetCard({this.plan});
 
   @override
   Widget build(BuildContext context) {
+    final hasPlan = plan != null;
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Padding(
@@ -93,11 +143,14 @@ class _CalorieBudgetCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Column(
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Today\'s Budget', style: TextStyle(color: Colors.grey)),
-                    Text('2,450 kcal', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                    const Text("Today's Budget", style: TextStyle(color: Colors.grey)),
+                    Text(
+                      hasPlan ? '2,450 kcal' : '-- kcal',
+                      style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                    ),
                   ],
                 ),
                 Container(
@@ -108,12 +161,12 @@ class _CalorieBudgetCard extends StatelessWidget {
               ],
             ),
             const Divider(height: 32),
-            const Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _StatItem(label: 'Dance Burn', value: '450 kcal', icon: Icons.celebration),
-                _StatItem(label: 'Standing', value: '120 kcal', icon: Icons.accessibility),
-                _StatItem(label: 'Net Budget', value: '3,020 kcal', icon: Icons.calculate),
+                _StatItem(label: 'Dance Burn', value: hasPlan ? '400 kcal' : '-- kcal', icon: Icons.celebration),
+                _StatItem(label: 'Standing', value: hasPlan ? '120 kcal' : '-- kcal', icon: Icons.accessibility),
+                _StatItem(label: 'Net Budget', value: hasPlan ? '~2,800 kcal' : '-- kcal', icon: Icons.calculate),
               ],
             ),
           ],

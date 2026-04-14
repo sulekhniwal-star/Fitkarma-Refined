@@ -6,8 +6,9 @@ import '../../../core/storage/app_database.dart';
 import 'festival_providers.dart';
 import 'festival_filter_provider.dart';
 import '../../../shared/widgets/async_value_widget.dart';
-import '../../../shared/widgets/bilingual_label.dart';
-import 'dart:async';
+import '../../../shared/widgets/festival_card.dart' as shared;
+import '../../../shared/theme/app_colors.dart';
+import '../../../shared/theme/app_text_styles.dart';
 
 class FestivalCalendarScreen extends ConsumerWidget {
   const FestivalCalendarScreen({super.key});
@@ -39,35 +40,13 @@ class FestivalCalendarScreen extends ConsumerWidget {
   }
 }
 
-class FestivalCountdownBanner extends ConsumerStatefulWidget {
+class FestivalCountdownBanner extends ConsumerWidget {
   const FestivalCountdownBanner({super.key});
 
   @override
-  ConsumerState<FestivalCountdownBanner> createState() => _FestivalCountdownBannerState();
-}
-
-class _FestivalCountdownBannerState extends ConsumerState<FestivalCountdownBanner> {
-  Timer? _timer;
-  late DateTime _now;
-
-  @override
-  void initState() {
-    super.initState();
-    _now = DateTime.now();
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (mounted) setState(() => _now = DateTime.now());
-    });
-  }
-
-  @override
-  void dispose() {
-    _timer?.cancel();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final activeAsync = ref.watch(activeFestivalsProvider);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return AsyncValueWidget<List<FestivalCalendarEntry>>(
       value: activeAsync as AsyncValue<List<FestivalCalendarEntry>>,
@@ -75,24 +54,39 @@ class _FestivalCountdownBannerState extends ConsumerState<FestivalCountdownBanne
         if (festivals.isEmpty) return const SizedBox.shrink();
 
         final festival = festivals.first;
-        final timeRemaining = festival.endDate.difference(_now);
         
-        final hours = timeRemaining.inHours;
-        final minutes = timeRemaining.inMinutes.remainder(60);
-        final seconds = timeRemaining.inSeconds.remainder(60);
+        Color bannerColor;
+        switch (festival.religion.toLowerCase()) {
+          case 'hindu':
+            bannerColor = const Color(0xFFFF9933); // Saffron
+            break;
+          case 'muslim':
+            bannerColor = const Color(0xFF006400); // Green
+            break;
+          case 'sikh':
+            bannerColor = const Color(0xFF000080); // Deep Blue
+            break;
+          case 'christian':
+            bannerColor = const Color(0xFF800000); // Maroon
+            break;
+          default:
+            bannerColor = AppColors.primary;
+        }
 
         return Container(
           width: double.infinity,
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [Theme.of(context).primaryColor, Colors.orangeAccent],
+              colors: [bannerColor, bannerColor.withValues(alpha: 0.8)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
             ),
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Theme.of(context).primaryColor.withOpacity(0.3),
-                blurRadius: 8,
+                color: bannerColor.withValues(alpha: 0.3),
+                blurRadius: 10,
                 offset: const Offset(0, 4),
               ),
             ],
@@ -101,45 +95,68 @@ class _FestivalCountdownBannerState extends ConsumerState<FestivalCountdownBanne
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                   Text(
-                     festivalEmojis[festival.festivalKey] ?? '✨',
-                     style: const TextStyle(fontSize: 24),
-                   ),
-                   const SizedBox(width: 8),
-                   Expanded(
-                     child: Text(
-                       '${festival.nameEn} is Active!',
-                       style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
-                     ),
-                   ),
-                   Container(
-                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                     decoration: BoxDecoration(
-                       color: Colors.white24,
-                       borderRadius: BorderRadius.circular(8),
-                     ),
-                     child: Text(
-                       '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}',
-                       style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontFamily: 'monospace'),
-                     ),
-                   ),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              festivalEmojis[festival.festivalKey] ?? '✨',
+                              style: const TextStyle(fontSize: 24),
+                            ),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                '${festival.nameEn} — Day 5 of 9', // Example day counter
+                                style: AppTextStyles.h2(true).copyWith(color: Colors.white),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Text(
+                          festival.nameHi,
+                          style: AppTextStyles.sectionHeaderHindi(true).copyWith(color: Colors.white70),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
-              const SizedBox(height: 8),
-              Text(
-                festival.insightMessage,
-                style: const TextStyle(color: Colors.white70),
-              ),
               const SizedBox(height: 12),
-              ElevatedButton(
-                onPressed: () => context.push('/festival-calendar/${festival.festivalKey}/diet'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white, 
-                  foregroundColor: Colors.orange,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                ),
-                child: const Text('View Diet Plan'),
+              const Text(
+                'Fasting mode active · Phalahar diet plan enabled',
+                style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
+              ),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () => context.push('/festival-calendar/${festival.festivalKey}/diet'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        foregroundColor: bannerColor,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      ),
+                      child: const Text('View Diet Plan'),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () {},
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        side: const BorderSide(color: Colors.white),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      ),
+                      child: const Text('Garba Tracker 💃'), // Or relevant special action
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -148,6 +165,7 @@ class _FestivalCountdownBannerState extends ConsumerState<FestivalCountdownBanne
     );
   }
 }
+
 
 class RegionFilterRow extends ConsumerWidget {
   const RegionFilterRow({super.key});
@@ -186,105 +204,23 @@ class UpcomingFestivalsList extends ConsumerWidget {
     final upcomingAsync = ref.watch(upcomingFestivalsProvider);
 
     return AsyncValueWidget<List<FestivalCalendarEntry>>(
-  value: upcomingAsync as AsyncValue<List<FestivalCalendarEntry>>,
+      value: upcomingAsync as AsyncValue<List<FestivalCalendarEntry>>,
       data: (festivals) {
         if (festivals.isEmpty) return const Text('No upcoming festivals found.');
 
         return Column(
-          children: festivals.map((f) => FestivalCard(festival: f)).toList(),
+          children: festivals.map((f) => shared.FestivalCard(
+            title: f.nameEn,
+            titleHi: f.nameHi,
+            dateRange: '${f.startDate.day} ${_getMonth(f.startDate.month)} - ${f.endDate.day} ${_getMonth(f.endDate.month)}',
+            fastingType: f.fastingType ?? 'None',
+            region: f.religion.toUpperCase(),
+            icon: festivalEmojis[f.festivalKey] ?? '✨',
+            onSetReminder: () {},
+            onViewDietPlan: () => context.push('/festival-calendar/${f.festivalKey}/diet'),
+          )).toList(),
         );
       },
-    );
-  }
-}
-
-class FestivalCard extends StatelessWidget {
-  final FestivalCalendarEntry festival;
-  const FestivalCard({super.key, required this.festival});
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 12),
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: Colors.orange.withOpacity(0.1),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Text(
-                    festivalEmojis[festival.festivalKey] ?? '✨',
-                    style: const TextStyle(fontSize: 24),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      BilingualLabel(
-                        english: festival.nameEn, 
-                        hindi: festival.nameHi,
-                        englishStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        '${festival.startDate.day} ${_getMonth(festival.startDate.month)} - ${festival.endDate.day} ${_getMonth(festival.endDate.month)}',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey.shade600),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                if (festival.fastingType != null && festival.fastingType!.isNotEmpty)
-                  _TagChip(label: festival.fastingType!, color: Colors.green),
-                const SizedBox(width: 8),
-                _TagChip(label: festival.religion.toUpperCase(), color: Colors.blue),
-              ],
-            ),
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton.icon(
-                    onPressed: () {},
-                    icon: const Icon(Icons.notifications_none, size: 18),
-                    label: const Text('Remind Me'),
-                    style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () => context.push('/festival-calendar/${festival.festivalKey}/diet'),
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                    ),
-                    child: const Text('Diet Plan'),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
     );
   }
 
@@ -293,27 +229,8 @@ class FestivalCard extends StatelessWidget {
   }
 }
 
-class _TagChip extends StatelessWidget {
-  final String label;
-  final Color color;
-  const _TagChip({required this.label, required this.color});
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: color.withOpacity(0.3)),
-      ),
-      child: Text(
-        label,
-        style: TextStyle(color: color, fontSize: 10, fontWeight: FontWeight.bold),
-      ),
-    );
-  }
-}
+
 
 class MiniTableCalendar extends ConsumerWidget {
   const MiniTableCalendar({super.key});
@@ -386,37 +303,57 @@ class WeddingSetupCTA extends StatelessWidget {
       onTap: () => context.push('/wedding-planner/setup'),
       child: Container(
         width: double.infinity,
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
-          color: Colors.amber.shade700,
-          borderRadius: BorderRadius.circular(16),
+          gradient: AppColors.amberGradient,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.accent.withValues(alpha: 0.3),
+              blurRadius: 15,
+              offset: const Offset(0, 8),
+            ),
+          ],
         ),
         child: Row(
           children: [
-            const Icon(Icons.favorite, color: Colors.white, size: 32),
-            const SizedBox(width: 16),
+            const Text('💍', style: TextStyle(fontSize: 32)),
+            const SizedBox(width: 20),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
+                children: [
                   Text(
-                    'Plan a Wedding 💍',
-                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
+                    'Planning for a Wedding?',
+                    style: AppTextStyles.h2(false).copyWith(color: AppColors.textPrimary),
                   ),
+                  const SizedBox(height: 4),
                   Text(
-                    'Get tailored diet & fitness plans for the big day.',
-                    style: TextStyle(color: Colors.white70),
+                    'Get a personalised diet & fitness plan tailored to your role.',
+                    style: AppTextStyles.bodyMedium(false).copyWith(color: AppColors.textPrimary.withValues(alpha: 0.8)),
+                  ),
+                  const SizedBox(height: 16),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: AppColors.surface,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      'Start Wedding Planner →',
+                      style: AppTextStyles.labelLarge(false).copyWith(color: AppColors.accentDark),
+                    ),
                   ),
                 ],
               ),
             ),
-            const Icon(Icons.chevron_right, color: Colors.white),
           ],
         ),
       ),
     );
   }
 }
+
 const Map<String, String> festivalEmojis = {
   'navratri': '🔱',
   'diwali': '🪔',

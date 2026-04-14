@@ -6,6 +6,7 @@ import '../domain/wedding_setup_state.dart';
 import '../../festival/presentation/festival_providers.dart';
 import '../../../shared/theme/app_colors.dart';
 import '../../../shared/widgets/bilingual_label.dart';
+import '../../../shared/widgets/wedding_role_chip.dart';
 
 class WeddingSetupScreen extends ConsumerWidget {
   const WeddingSetupScreen({super.key});
@@ -146,40 +147,41 @@ class _Step1Role extends StatelessWidget {
             crossAxisCount: 2,
             mainAxisSpacing: 16,
             crossAxisSpacing: 16,
-            childAspectRatio: 120 / 155,
+            childAspectRatio: 120 / 140,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             children: [
-              _IllustratedRoleCard(
+              WeddingRoleChip(
                 label: 'Bride',
-                hindiLabel: 'दुल्हन',
-                imagePath: 'assets/images/wedding/bride.png',
-                isActive: state.role == WeddingRole.bride,
+                labelHi: 'दुल्हन',
+                emoji: '👰',
+                isSelected: state.role == WeddingRole.bride,
                 onTap: () => notifier.setRole(WeddingRole.bride),
               ),
-              _IllustratedRoleCard(
+              WeddingRoleChip(
                 label: 'Groom',
-                hindiLabel: 'दूल्हा',
-                imagePath: 'assets/images/wedding/groom.png',
-                isActive: state.role == WeddingRole.groom,
+                labelHi: 'दूल्हा',
+                emoji: '🤵',
+                isSelected: state.role == WeddingRole.groom,
                 onTap: () => notifier.setRole(WeddingRole.groom),
               ),
-              _IllustratedRoleCard(
+              WeddingRoleChip(
                 label: 'Guest',
-                hindiLabel: 'मेहमान',
-                imagePath: 'assets/images/wedding/guest.png',
-                isActive: state.role == WeddingRole.guest,
+                labelHi: 'मेहमान',
+                emoji: '🎉',
+                isSelected: state.role == WeddingRole.guest,
                 onTap: () => notifier.setRole(WeddingRole.guest),
               ),
-              _IllustratedRoleCard(
+              WeddingRoleChip(
                 label: 'Relative',
-                hindiLabel: 'रिश्तेदार',
-                imagePath: 'assets/images/wedding/relative.png',
-                isActive: state.role == WeddingRole.relative,
+                labelHi: 'रिश्तेदार',
+                emoji: '👨‍👩‍👧',
+                isSelected: state.role == WeddingRole.relative,
                 onTap: () => notifier.setRole(WeddingRole.relative),
               ),
             ],
           ),
+
           if (state.role == WeddingRole.relative) ...[
             const SizedBox(height: 28),
             const Text(
@@ -233,98 +235,7 @@ class _Step1Role extends StatelessWidget {
   }
 }
 
-class _IllustratedRoleCard extends StatelessWidget {
-  final String label;
-  final String hindiLabel;
-  final String imagePath;
-  final bool isActive;
-  final VoidCallback onTap;
 
-  const _IllustratedRoleCard({
-    required this.label,
-    required this.hindiLabel,
-    required this.imagePath,
-    required this.isActive,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 220),
-        decoration: BoxDecoration(
-          color: isActive ? AppColors.primarySurface : AppColors.surface,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: isActive ? AppColors.primary : AppColors.divider,
-            width: isActive ? 2.0 : 1.0,
-          ),
-          boxShadow: [
-            if (isActive)
-              BoxShadow(
-                color: AppColors.primary.withValues(alpha: 0.15),
-                blurRadius: 12,
-                spreadRadius: 2,
-              )
-            else
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.04),
-                blurRadius: 6,
-              ),
-          ],
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(12, 16, 12, 4),
-                child: Image.asset(
-                  imagePath,
-                  fit: BoxFit.contain,
-                  errorBuilder: (_, _, _) => const Icon(Icons.person, size: 56, color: AppColors.textMuted),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 14),
-              child: Column(
-                children: [
-                  Text(
-                    label,
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: isActive ? FontWeight.bold : FontWeight.w600,
-                      color: isActive ? AppColors.primary : AppColors.textPrimary,
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    hindiLabel,
-                    style: const TextStyle(fontSize: 11, color: AppColors.textSecondary),
-                  ),
-                  if (isActive) ...[
-                    const SizedBox(height: 6),
-                    Container(
-                      padding: const EdgeInsets.all(3),
-                      decoration: const BoxDecoration(
-                        color: AppColors.primary,
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(Icons.check, color: Colors.white, size: 12),
-                    ),
-                  ],
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
 
 // ─── Step 2: Dates ────────────────────────────────────────────────────────────
 

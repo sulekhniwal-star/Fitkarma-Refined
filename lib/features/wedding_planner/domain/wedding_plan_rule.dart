@@ -1,7 +1,7 @@
 /// Wedding Plan Rule Engine
 ///
 /// A local-first, rule-based engine that derives today's meal plan and workout
-/// recommendation from the (phase, role, goal) triplet.
+/// recommendation from the (phase, role, goal, eventKey) tuple.
 ///
 /// Rules are defined statically here and can be overridden or extended at
 /// runtime via RemoteConfig-delivered JSON (see RemoteConfigService). The
@@ -15,9 +15,12 @@ enum WeddingPhase { preWedding, weddingWeek, postWedding, unknown }
 
 enum WeddingPlanRole { bride, groom, guest, relative, none }
 
+enum WeddingEventKey { haldi, mehendi, sangeet, baraat, vivah, reception }
+
 // ─── Output model ────────────────────────────────────────────────────────────
 
 class WeddingDayPlan {
+  final String? eventKey;
   final String dietPhaseLabel;
   final String breakfastSuggestion;
   final String lunchSuggestion;
@@ -27,6 +30,7 @@ class WeddingDayPlan {
   final String tip;
 
   const WeddingDayPlan({
+    this.eventKey,
     required this.dietPhaseLabel,
     required this.breakfastSuggestion,
     required this.lunchSuggestion,
@@ -74,12 +78,22 @@ class WeddingPlanEngine {
   ///
   /// [remoteOverrides] — optional map from RemoteConfig (e.g. fetched during
   /// background sync). Keys are `"wedding_plan_${phase}_${role}_${goal}"`.
+  ///
+  /// [eventKey] — optional specific event for event-day meal plans.
+  /// When provided, returns specialized plan for that event.
   static WeddingDayPlan evaluate({
     required WeddingPhase phase,
     required WeddingPlanRole role,
     required String? goal,
     Map<String, dynamic>? remoteOverrides,
+    String? eventKey,
   }) {
+    // If we have a specific event, use event-specific plan
+    if (eventKey != null && eventKey.isNotEmpty) {
+      final eventPlan = _eventSpecificPlan(eventKey, role);
+      if (eventPlan != null) return eventPlan;
+    }
+
     final key = '${_phaseKey(phase)}_${_roleKey(role)}_${goal ?? 'default'}';
 
     // RemoteConfig override wins if present
@@ -120,6 +134,152 @@ class WeddingPlanEngine {
 
     // pre-wedding: role + goal branches
     return _preWeddingPlan(role, goal);
+  }
+
+  // ── Event-specific plans ───────────────────────────────────────────────────
+
+  static WeddingDayPlan? _eventSpecificPlan(String eventKey, WeddingPlanRole role) {
+    final isBrideGroom = role == WeddingPlanRole.bride || role == WeddingPlanRole.groom;
+
+    switch (eventKey.toLowerCase()) {
+      case 'haldi':
+        return _haldiDayPlan(role);
+      case 'mehendi':
+        return _mehendiDayPlan(role);
+      case 'sangeet':
+      case 'garba':
+        return _sangeetDayPlan(role);
+      case 'baraat':
+        return _baraatDayPlan(role);
+      case 'vivah':
+      case 'wedding':
+        return _weddingDayPlan(role);
+      case 'reception':
+        return _receptionDayPlan(role);
+      default:
+        return null;
+    }
+  }
+
+  static WeddingDayPlan _haldiDayPlan(WeddingPlanRole role) {
+    return const WeddingDayPlan(
+      eventKey: 'haldi',
+      dietPhaseLabel: 'Haldi Anti-Inflammatory',
+      breakfastSuggestion: 'Haldi milk (turmeric + milk + black pepper) + banana',
+      lunchSuggestion: 'Light dal + 1 roti + cucumber salad',
+      dinnerSuggestion: 'Grilled paneer + mixed vegetable sabzi',
+      snackSuggestion: 'Turmeric chai + roasted makhana',
+      workoutLabel: '30 min gentle yoga — avoid heavy exercise',
+      tip: 'Haldi has anti-inflammatory properties. Stay hydrated and wear old clothes!',
+    );
+  }
+
+  static WeddingDayPlan _mehendiDayPlan(WeddingPlanRole role) {
+    return const WeddingDayPlan(
+      eventKey: 'mehendi',
+      dietPhaseLabel: 'Mehendi Day Light & Energising',
+      breakfastSuggestion: 'Oats upma + nimbu paani',
+      lunchSuggestion: 'Light rice + dal + salad (avoid heavy lunch before sitting)',
+      dinnerSuggestion: 'Khichdi + curd (easy to eat while waiting for mehendi to dry)',
+      snackSuggestion: 'Fruits + coconut water',
+      workoutLabel: 'Rest day — light stretching only',
+      tip: 'Keep hands still while mehendi dries. Avoid water contact for 6-8 hours.',
+    );
+  }
+
+  static WeddingDayPlan _sangeetDayPlan(WeddingPlanRole role) {
+    final isBrideGroom = role == WeddingPlanRole.bride || role == WeddingPlanRole.groom;
+    return WeddingDayPlan(
+      eventKey: 'sangeet',
+      dietPhaseLabel: 'Sangeet Energy Boost',
+      breakfastSuggestion: isBrideGroom ? 'Banana + 2 eggs + toast' : 'Poha + fruits',
+      lunchSuggestion: isBrideGroom 
+          ? 'Chicken/paneer + rice + salad (load up before dancing)'
+          : 'Dal + rotis + sabzi',
+      dinnerSuggestion: 'Light pre-dance: banana shake or dates + nuts',
+      snackSuggestion: 'Energy bars + coconut water during event',
+      workoutLabel: isBrideGroom 
+          ? 'Warm up session (10 min) before garba'
+          : 'Enjoy the dancing!',
+      tip: isBrideGroom 
+          ? 'You\'ll dance 2-3 hours. Eat protein before to maintain energy.'
+          : 'Stay hydrated and snack between dance sets.',
+    );
+  }
+
+  static WeddingDayPlan _baraatDayPlan(WeddingPlanRole role) {
+    final isGroom = role == WeddingPlanRole.groom;
+    return WeddingDayPlan(
+      eventKey: 'baraat',
+      dietPhaseLabel: 'Baraat Endurance Day',
+      breakfastSuggestion: isGroom 
+          ? 'Peanut butter toast + banana + honey chai'
+          : 'Paratha + curd + fruits',
+      lunchSuggestion: isGroom 
+          ? 'Heavy pre-baraat meal: dal makhani + rice + paneer (2 hours before)'
+          : 'Regular lunch',
+      dinnerSuggestion: isGroom 
+          ? 'Light dinner after baraat: soup + rotis'
+          : 'Buffet dinner — protein first strategy',
+      snackSuggestion: 'Dates + nuts +-electrolyte drinks throughout',
+      workoutLabel: isGroom 
+          ? 'Light warm-up (5 min) — save energy for baraat dance'
+          : 'Stay active during celebrations',
+      tip: isGroom 
+          ? 'Baraat can last 2-3 hours with continuous dancing. Hydrate constantly!'
+          : 'Cheer for the baraat! Keep energy up with small frequent snacks.',
+    );
+  }
+
+  static WeddingDayPlan _weddingDayPlan(WeddingPlanRole role) {
+    final isBrideGroom = role == WeddingPlanRole.bride || role == WeddingPlanRole.groom;
+    
+    if (isBrideGroom) {
+      return const WeddingDayPlan(
+        eventKey: 'vivah',
+        dietPhaseLabel: 'Wedding Day Bloat-Free',
+        breakfastSuggestion: 'Idli + sambar + nimbu paani (light, no bloat)',
+        lunchSuggestion: 'Light dal + rice + salad — don\'t skip, you need energy!',
+        dinnerSuggestion: 'Easy-digest: paneer + rotis + warm jeera water',
+        snackSuggestion: 'Fruits + dry fruits (keep by your side during ceremony)',
+        workoutLabel: 'Rest & breathing only — you\'ll be on your feet all day',
+        tip: 'Don\'t skip meals! Eat small amounts regularly. Stay hydrated. Congratulations! 🎊',
+      );
+    }
+    
+    return const WeddingDayPlan(
+      eventKey: 'vivah',
+      dietPhaseLabel: 'Wedding Day Enjoy',
+      breakfastSuggestion: 'Idli/dosa + sambar + chai',
+      lunchSuggestion: 'Full wedding lunch — enjoy mindfully',
+      dinnerSuggestion: 'Reception dinner — protein first on plate',
+      snackSuggestion: 'Wedding sweets in moderation',
+      workoutLabel: 'Enjoy the celebrations!',
+      tip: 'Use the "protein first" strategy at the buffet: fill half your plate with protein before carbs.',
+    );
+  }
+
+  static WeddingDayPlan _receptionDayPlan(WeddingPlanRole role) {
+    final isBrideGroom = role == WeddingPlanRole.bride || role == WeddingPlanRole.groom;
+    
+    return WeddingDayPlan(
+      eventKey: 'reception',
+      dietPhaseLabel: isBrideGroom ? 'Post-Wedding Celebration' : 'Reception Night',
+      breakfastSuggestion: isBrideGroom 
+          ? 'Light breakfast: fruits + yogurt'
+          : 'Regular breakfast',
+      lunchSuggestion: isBrideGroom 
+          ? 'Recovery meal: dal + rice + vegetables'
+          : 'Regular lunch',
+      dinnerSuggestion: 'Reception dinner — enjoy but stay mindful',
+      snackSuggestion: 'Wedding cake + mithai in moderation',
+      workoutLabel: isBrideGroom 
+          ? 'Rest day after wedding'
+          : 'Enjoy the party!',
+      tip: isBrideGroom 
+          ? 'Congratulations! Focus on rest and hydration today.'
+          : 'At the reception buffet? Eat protein and veggies first, save sweets for last.',
+    );
   }
 
   static WeddingDayPlan _preWeddingPlan(WeddingPlanRole role, String? goal) {
@@ -231,6 +391,7 @@ class WeddingPlanEngine {
 
   static WeddingDayPlan _fromJson(Map<String, dynamic> j) {
     return WeddingDayPlan(
+      eventKey: j['eventKey'] as String?,
       dietPhaseLabel: j['dietPhaseLabel'] ?? '',
       breakfastSuggestion: j['breakfastSuggestion'] ?? '',
       lunchSuggestion: j['lunchSuggestion'] ?? '',

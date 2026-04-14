@@ -24,7 +24,7 @@ class NotificationService {
       iOS: initializationSettingsDarwin,
     );
 
-    await _notificationsPlugin.initialize(initializationSettings);
+    await _notificationsPlugin.initialize(settings: initializationSettings);
   }
 
   /// Schedules a medication reminder
@@ -35,11 +35,11 @@ class NotificationService {
     required TimeOfDay time,
   }) async {
     await _notificationsPlugin.zonedSchedule(
-      id,
-      title,
-      body,
-      _nextInstanceOfTime(time),
-      const NotificationDetails(
+      id: id,
+      title: title,
+      body: body,
+      scheduledDate: _nextInstanceOfTime(time),
+      notificationDetails: const NotificationDetails(
         android: AndroidNotificationDetails(
           'medication_reminders',
           'Medication Reminders',
@@ -48,8 +48,6 @@ class NotificationService {
         ),
       ),
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
       matchDateTimeComponents: DateTimeComponents.time,
     );
   }
@@ -57,19 +55,17 @@ class NotificationService {
   /// Daily BP Reminder
   static Future<void> scheduleBPReminder(TimeOfDay time) async {
     await _notificationsPlugin.zonedSchedule(
-      1001,
-      'Blood Pressure Check',
-      'Time to log your morning BP reading for better accuracy.',
-      _nextInstanceOfTime(time),
-      const NotificationDetails(
+      id: 1001,
+      title: 'Blood Pressure Check',
+      body: 'Time to log your morning BP reading for better accuracy.',
+      scheduledDate: _nextInstanceOfTime(time),
+      notificationDetails: const NotificationDetails(
         android: AndroidNotificationDetails(
           'health_checks',
           'Health Checks',
         ),
       ),
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
       matchDateTimeComponents: DateTimeComponents.time,
     );
   }
@@ -77,19 +73,17 @@ class NotificationService {
   /// Daily Morning Briefing
   static Future<void> scheduleMorningBriefing(TimeOfDay time, int calorieGoal) async {
     await _notificationsPlugin.zonedSchedule(
-      1002,
-      'Morning Briefing',
-      'Good morning! Your calorie goal for today is $calorieGoal kcal. Let\'s stay active!',
-      _nextInstanceOfTime(time),
-      const NotificationDetails(
+      id: 1002,
+      title: 'Morning Briefing',
+      body: 'Good morning! Your calorie goal for today is $calorieGoal kcal. Let\'s stay active!',
+      scheduledDate: _nextInstanceOfTime(time),
+      notificationDetails: const NotificationDetails(
         android: AndroidNotificationDetails(
           'daily_briefing',
           'Daily Briefing',
         ),
       ),
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
       matchDateTimeComponents: DateTimeComponents.time,
     );
   }
@@ -97,16 +91,14 @@ class NotificationService {
   /// Habit Reminder
   static Future<void> scheduleHabitReminder(int id, String name, TimeOfDay time) async {
     await _notificationsPlugin.zonedSchedule(
-      id + 2000,
-      'Habit Reminder',
-      'Don\'t forget your habit: $name',
-      _nextInstanceOfTime(time),
-      const NotificationDetails(
+      id: id + 2000,
+      title: 'Habit Reminder',
+      body: 'Don\'t forget your habit: $name',
+      scheduledDate: _nextInstanceOfTime(time),
+      notificationDetails: const NotificationDetails(
         android: AndroidNotificationDetails('habit_reminders', 'Habit Reminders'),
       ),
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
       matchDateTimeComponents: DateTimeComponents.time,
     );
   }
@@ -114,10 +106,10 @@ class NotificationService {
   /// One-off inactivity nudge
   static Future<void> showInactivityNudge() async {
     await _notificationsPlugin.show(
-      3001,
-      'Time to Move!',
-      'You\'ve been inactive for over an hour. How about a 5-minute stretch?',
-      const NotificationDetails(
+      id: 3001,
+      title: 'Time to Move!',
+      body: 'You\'ve been inactive for over an hour. How about a 5-minute stretch?',
+      notificationDetails: const NotificationDetails(
         android: AndroidNotificationDetails('activity_nudges', 'Activity Nudges'),
       ),
     );

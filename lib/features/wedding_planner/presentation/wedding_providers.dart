@@ -70,13 +70,6 @@ final weddingEventsProvider = FutureProvider<List<WeddingEvent>>((ref) async {
       .get();
 });
 
-final nextWeddingEventProvider = FutureProvider<WeddingEvent?>((ref) async {
-  final events = await ref.watch(weddingEventsProvider.future);
-  final now = DateTime.now();
-  final upcoming = events.where((e) => e.date.isAfter(now)).toList();
-  return upcoming.isNotEmpty ? upcoming.first : null;
-});
-
 // ─── Phase ───────────────────────────────────────────────────────────────────
 
 final weddingPhaseProvider = FutureProvider<WeddingPhase>((ref) async {
@@ -103,9 +96,59 @@ final weddingTodaysPlanProvider = FutureProvider<WeddingDayPlan?>((ref) async {
     phase: phase,
     role: planRole,
     goal: profile.goal,
-    remoteOverrides: null, // TODO: wire RemoteConfig cache
+    remoteOverrides: null,
   );
 });
+
+// ─── Event-specific plan provider ─────────────────────────────────────────────
+
+final weddingEventPlanProvider = FutureProvider.family<WeddingDayPlan?, String>((ref, eventKey) async {
+  final profile = await ref.watch(weddingProfileProvider.future);
+  final phase = await ref.watch(weddingPhaseProvider.future);
+
+  if (profile == null || !profile.hasWeddingSetup) return null;
+
+  final planRole = _parseRole(profile.role);
+
+  return WeddingPlanEngine.evaluate(
+    phase: phase,
+    role: planRole,
+    goal: profile.goal,
+    remoteOverrides: null,
+    eventKey: eventKey,
+  );
+});
+
+// ─── Next event provider ──────────────────────────────────────────────────────
+
+final weddingNextEventProvider = FutureProvider<WeddingEvent?>((ref) async {
+  final events = await ref.watch(weddingEventsProvider.future);
+  final now = DateTime.now();
+  final upcoming = events.where((e) => e.date.isAfter(now)).toList();
+  return upcoming.isNotEmpty ? upcoming.first : null;
+});
+
+// ─── Helper to get all upcoming events with days remaining ──────────────────
+
+final weddingUpcomingEventsWithCountdownProvider = FutureProvider<List<_EventWithCountdown>>((ref) async {
+  final events = await ref.watch(weddingEventsProvider.future);
+  final now = DateTime.now();
+  
+  return events
+      .where((e) => e.date.isAfter(now))
+      .map((e) => _EventWithCountdown(
+            event: e,
+            daysRemaining: e.date.difference(now).inDays,
+          ))
+      .toList()
+    ..sort((a, b) => a.daysRemaining.compareTo(b.daysRemaining));
+});
+
+class _EventWithCountdown {
+  final WeddingEvent event;
+  final int daysRemaining;
+  _EventWithCountdown({required this.event, required this.daysRemaining});
+}
 
 WeddingPlanRole _parseRole(String role) {
   switch (role) {

@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../domain/fasting_stage.dart';
 import '../../karma/data/karma_repository.dart';
-import '../../../core/storage/drift_service.dart';
-import '../../../core/storage/app_database.dart';
 
 class FastingTrackerScreen extends ConsumerStatefulWidget {
   const FastingTrackerScreen({super.key});

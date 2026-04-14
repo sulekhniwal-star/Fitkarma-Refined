@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../data/karma_repository.dart';
+import '../../../shared/theme/app_colors.dart';
+import '../../../shared/theme/app_text_styles.dart';
+import '../../../shared/widgets/challenge_card.dart';
 
 class KarmaHubScreen extends ConsumerStatefulWidget {
   const KarmaHubScreen({super.key});
@@ -8,6 +10,7 @@ class KarmaHubScreen extends ConsumerStatefulWidget {
   @override
   ConsumerState<KarmaHubScreen> createState() => _KarmaHubScreenState();
 }
+
 
 class _KarmaHubScreenState extends ConsumerState<KarmaHubScreen> with SingleTickerProviderStateMixin {
   late TabController _tabController;
@@ -26,129 +29,183 @@ class _KarmaHubScreenState extends ConsumerState<KarmaHubScreen> with SingleTick
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Karma Hub'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.help_outline),
-            onPressed: () {},
-          ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const _KarmaHeader(),
-            const SizedBox(height: 24),
-            const _ChallengeCarousel(),
-            const SizedBox(height: 24),
-            _LeaderboardSection(tabController: _tabController),
-            const SizedBox(height: 24),
-            const _DailyRitualsSection(),
-            const SizedBox(height: 24),
-            const _KarmaStoreSection(),
-            const SizedBox(height: 40),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _KarmaHeader extends ConsumerWidget {
-  const _KarmaHeader();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final karmaRepo = ref.watch(karmaRepositoryProvider);
-    // Mock user for now
-    const currentXP = 4500;
-    final level = karmaRepo.computeLevel(currentXP);
-    final title = karmaRepo.getLevelTitle(level);
-
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Colors.amber.shade700, Colors.orange.shade800],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-      ),
-      child: Column(
+      backgroundColor: isDark ? AppColorsDark.background : AppColors.background,
+      body: Stack(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+          // Pattern B - Hero Background
+          Container(
+            height: 280,
+            decoration: BoxDecoration(
+              gradient: isDark ? AppColors.heroGradientDark : AppColors.heroGradient,
+            ),
+          ),
+          
+          SafeArea(
+            child: SingleChildScrollView(
+              child: Column(
                 children: [
-                  Text(
-                    title,
-                    style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  const Text(
-                    'Karma Level',
-                    style: TextStyle(color: Colors.white70, fontSize: 12),
+                   const _KarmaHero(),
+                  
+                  // Wrap body in a rounded container to create the "Warm Body" look
+                  Container(
+                    margin: const EdgeInsets.only(top: 12),
+                    decoration: BoxDecoration(
+                      color: isDark ? AppColorsDark.background : AppColors.background,
+                      borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 24),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const _DailyRitualsSection(),
+                        const SizedBox(height: 32),
+                        const _ChallengeCarousel(),
+                        const SizedBox(height: 32),
+                        _LeaderboardSection(tabController: _tabController),
+                        const SizedBox(height: 32),
+                        const _KarmaStoreSection(),
+                        const SizedBox(height: 40),
+                      ],
+                    ),
                   ),
                 ],
               ),
-              CircleAvatar(
-                radius: 30,
-                backgroundColor: Colors.white24,
-                child: Text(
-                  'L$level',
-                  style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-              ),
-            ],
+            ),
           ),
-          const SizedBox(height: 20),
-          Row(
-            children: [
-              const Icon(Icons.stars, color: Colors.white70, size: 20),
-              const SizedBox(width: 8),
-              Text(
-                '$currentXP / 100,000 XP',
-                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          LinearProgressIndicator(
-            value: currentXP / 100000,
-            backgroundColor: Colors.white24,
-            valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+          
+          // Transparent AppBar overlaid
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: AppBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              iconTheme: const IconThemeData(color: Colors.white),
+              title: const Text('Karma Hub', style: TextStyle(color: Colors.white)),
+            ),
           ),
         ],
       ),
     );
   }
 }
+
+
+class _KarmaHero extends ConsumerWidget {
+  const _KarmaHero();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Mock user for now
+    const currentXP = 4500;
+    const progressToNext = 0.45;
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(24, 60, 24, 20),
+      child: Column(
+        children: [
+          Text(
+            'Level 12 Warrior',
+            style: AppTextStyles.displayMedium(true).copyWith(color: Colors.white),
+          ),
+          const SizedBox(height: 16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            baseline: TextBaseline.alphabetic,
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            children: [
+              const Text('🪙', style: TextStyle(fontSize: 32)),
+              const SizedBox(width: 12),
+              Text(
+                '4,500',
+                style: AppTextStyles.displayLarge(true).copyWith(color: Colors.white, fontSize: 48),
+              ),
+              const SizedBox(width: 8),
+              Text(
+                'XP',
+                style: AppTextStyles.h2(true).copyWith(color: Colors.white70),
+              ),
+            ],
+          ),
+          const SizedBox(height: 24),
+          Column(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: const LinearProgressIndicator(
+                  value: progressToNext,
+                  backgroundColor: Colors.white24,
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  minHeight: 8,
+                ),
+              ),
+              const SizedBox(height: 8),
+              const Text(
+                '5,500 XP to next level',
+                style: TextStyle(color: Colors.white70, fontSize: 12),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 
 class _ChallengeCarousel extends StatelessWidget {
   const _ChallengeCarousel();
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Padding(
           padding: EdgeInsets.symmetric(horizontal: 20),
-          child: Text('Active Challenges', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Active Challenges', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              Text('सक्रिय चुनौतियाँ', style: TextStyle(fontSize: 11, color: Colors.grey)),
+            ],
+          ),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 16),
         SizedBox(
-          height: 180,
+          height: 160,
           child: ListView(
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            children: const [
-              _ChallengeCard(title: '7-Day Step Warrior', reward: '+500 XP', progress: 0.6, icon: Icons.directions_walk),
-              _ChallengeCard(title: 'Water Hydrator XL', reward: '+300 XP', progress: 0.3, icon: Icons.water_drop),
-              _ChallengeCard(title: 'Early Bird Streak', reward: '+1000 XP', progress: 0.8, icon: Icons.wb_sunny),
+            children: [
+              ChallengeCarouselCard(
+                title: '7-Day Step Warrior',
+                description: 'Hit 10k steps for 7 days in a row.',
+                progress: 0.6,
+                xpReward: 500,
+                onTap: () {},
+              ),
+              ChallengeCarouselCard(
+                title: 'Navratri Fast Adherence',
+                description: 'Log all Phalahar meals correctly.',
+                progress: 0.3,
+                xpReward: 300,
+                festivalTag: 'Navratri',
+                onTap: () {},
+              ),
+              ChallengeCarouselCard(
+                title: 'Early Bird Streak',
+                description: 'Wake up before 6 AM for 5 days.',
+                progress: 0.8,
+                xpReward: 1000,
+                onTap: () {},
+              ),
             ],
           ),
         ),
@@ -157,48 +214,8 @@ class _ChallengeCarousel extends StatelessWidget {
   }
 }
 
-class _ChallengeCard extends StatelessWidget {
-  final String title;
-  final String reward;
-  final double progress;
-  final IconData icon;
-  const _ChallengeCard({required this.title, required this.reward, required this.progress, required this.icon});
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 260,
-      margin: const EdgeInsets.only(right: 12),
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10)],
-        border: Border.all(color: Colors.grey.shade100),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(icon, color: Colors.orange),
-              const SizedBox(width: 12),
-              Expanded(child: Text(title, style: const TextStyle(fontWeight: FontWeight.bold))),
-            ],
-          ),
-          const Spacer(),
-          Text(reward, style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold, fontSize: 13)),
-          const SizedBox(height: 12),
-          LinearProgressIndicator(
-            value: progress,
-            backgroundColor: Colors.grey.shade100,
-            valueColor: const AlwaysStoppedAnimation<Color>(Colors.orange),
-          ),
-        ],
-      ),
-    );
-  }
-}
+
 
 class _LeaderboardSection extends StatelessWidget {
   final TabController tabController;
@@ -279,16 +296,19 @@ class _DailyRitualsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Daily Rituals', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 12),
-          _RitualItem(title: 'Log Today\'s Weight', xp: '+10 XP', isDone: true),
-          _RitualItem(title: 'Record Sleep Quality', xp: '+15 XP', isDone: false),
-          _RitualItem(title: 'Complete 10m Meditation', xp: '+50 XP', isDone: false),
+          const Text('दैनिक अनुष्ठान', style: TextStyle(fontSize: 11, color: Colors.grey)),
+          const SizedBox(height: 16),
+          _RitualItem(title: 'Log Today\'s Weight', xp: '+10 XP', isDone: true, isDark: isDark),
+          _RitualItem(title: 'Record Sleep Quality', xp: '+15 XP', isDone: false, isDark: isDark),
+          _RitualItem(title: 'Complete 10m Meditation', xp: '+50 XP', isDone: false, isDark: isDark),
         ],
       ),
     );
@@ -299,28 +319,57 @@ class _RitualItem extends StatelessWidget {
   final String title;
   final String xp;
   final bool isDone;
-  const _RitualItem({required this.title, required this.xp, required this.isDone});
+  final bool isDark;
+  const _RitualItem({required this.title, required this.xp, required this.isDone, required this.isDark});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      margin: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       decoration: BoxDecoration(
-        color: isDone ? Colors.green.shade50 : Colors.grey.shade50,
+        color: isDone 
+          ? (isDark ? Colors.green.withValues(alpha: 0.1) : Colors.green.shade50)
+          : (isDark ? AppColorsDark.surface : Colors.white),
         borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: isDone
+            ? (isDark ? Colors.green.withValues(alpha: 0.3) : Colors.green.shade200)
+            : (isDark ? AppColorsDark.divider : AppColors.divider),
+        ),
       ),
       child: Row(
         children: [
-          Icon(isDone ? Icons.check_circle : Icons.radio_button_off, color: isDone ? Colors.green : Colors.grey),
+          Icon(
+            isDone ? Icons.check_circle : Icons.radio_button_off, 
+            color: isDone ? Colors.green : (isDark ? Colors.grey.shade600 : Colors.grey),
+            size: 20,
+          ),
           const SizedBox(width: 12),
-          Expanded(child: Text(title, style: TextStyle(decoration: isDone ? TextDecoration.lineThrough : null))),
-          Text(xp, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.orange)),
+          Expanded(
+            child: Text(
+              title, 
+              style: TextStyle(
+                decoration: isDone ? TextDecoration.lineThrough : null,
+                color: isDark ? AppColorsDark.textPrimary : AppColors.textPrimary,
+                fontSize: 14,
+              ),
+            ),
+          ),
+          Text(
+            xp, 
+            style: TextStyle(
+              fontWeight: FontWeight.bold, 
+              color: AppColors.primary,
+              fontSize: 12,
+            ),
+          ),
         ],
       ),
     );
   }
 }
+
 
 class _KarmaStoreSection extends StatelessWidget {
   const _KarmaStoreSection();

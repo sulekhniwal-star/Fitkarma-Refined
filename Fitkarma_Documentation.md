@@ -3,7 +3,7 @@
 > **Offline-First · Privacy-Centric · Built for India**
 > Flutter 3.x · Riverpod 2.x · Drift (SQLite) · Appwrite
 >
-> **Changelog from v1.0:** Sync engine upgraded with idempotency keys, dead-letter queue, and per-field version vectors. Encryption re-architected with HKDF per data class stored in Drift (SQLCipher). First-class RemoteConfig system added. Insight engine modularised. New India-specific features: ABHA, Lab Report OCR, shareable doctor reports, home screen widgets, WhatsApp bot. Full dark mode token set. Offline map tile caching. 25+ additional improvements throughout.
+> **Changelog:** Sync engine upgraded with idempotency keys, dead-letter queue, and per-field version vectors. Encryption re-architected with HKDF per data class stored in Drift (SQLCipher). First-class RemoteConfig system added. Insight engine modularised. New India-specific features: ABHA, Lab Report OCR, shareable doctor reports, home screen widgets, WhatsApp bot. Full dark mode token set. Offline map tile caching. 25+ additional improvements throughout.
 
 ---
 
@@ -67,105 +67,337 @@
 
 ## 2. UI Design Reference
 
-> The following describes the UI design language established by the reference mockups. All screens and components must conform to these specifications.
+### 2.1 Design Philosophy
 
-### 2.1 Screen Inventory from Reference Mockups
+FitKarma is built on five pillars that govern every implementation decision:
 
-#### Dashboard Screen
-- **Header** — Avatar, greeting text ("Namaste, [Name] 🙏"), karma coin indicator (e.g. `1,250 XP`) and level badge (`Level 12 Warrior`) overlaid on the avatar.
-- **Activity Rings** — Four concentric ring widgets arranged in a compact circle:
-  - Ring 1 (outermost, orange): Calories — e.g. `1200 / 2000 kcal`
-  - Ring 2 (green): Steps — e.g. `8,500 / 10,000`
-  - Ring 3 (teal): Water — e.g. `4 / 8 glasses`
-  - Ring 4 (purple): Active minutes — e.g. `35 / 60 mins`
-- **Insight Card** — Amber/yellow card with a lightbulb icon and actionable nudge text (e.g. *"You're 18g protein short today. Adding a katori of dal to dinner will help!"*). Thumbs-up / thumbs-down rating buttons at the bottom right.
-- **Today's Meals Section** — Horizontal row of meal-type tabs (Breakfast · Lunch · Dinner · Snacks). Each tab shows a food category icon and label.
-- **Quick-Log FAB** — Orange circular floating action button with `+` icon, positioned at the bottom-right above the nav bar.
-- **Bottom Navigation Bar** — 5 tabs with icons and bilingual labels (English + Hindi): Home · Food · Workout · Steps · Me.
+| Pillar | Engineering Implication |
+|---|---|
+| **Spatial Depth** | Three-layer surface model (bg → cards → foreground). `BackdropFilter` blur on all Plane 2 cards — **tier-gated**. |
+| **Fluid Motion** | Spring physics via `SpringDescription` on all transitions. Zero linear tweens. **Tier-gated:** low-end uses simplified fades. |
+| **Bold Information** | Metric numbers render at `56–72sp` with `JetBrains Mono` variable font. Context text recedes visually. **One dominant metric per screen.** |
+| **Visual Restraint** | Not every surface blurs. Not every card glows. Calm screens contrast with vibrant ones to make premium moments earned. Glow is a reward, not a default. |
+| **Dark-First** | Dark mode is the primary design target. Light mode is a deliberate warm inversion. |
+| **Cultural Pulse** | Bilingual labels, Indian units, festival context, and ABHA integration are core. Applied **strategically** — not on every element. |
 
-#### Food Logging Screen (`Log Breakfast`)
-- **App bar** — Back arrow + screen title (e.g. `Log Breakfast`).
-- **Search bar** — Bilingual placeholder (`Search food, or tap the mic... / खाना खोजें / स्कैन करें`), microphone icon on the right, barcode icon on the far right.
-- **Quick-action chips** — Four pill-shaped buttons below the search bar: `📷 Scan Label` · `🍽 Upload Plate Photo` · `📋 Lab/Rx Scan` · `✏ Manual Entry`.
-- **Frequent Indian Portions section** — `2 × N` grid of food cards. Each card shows food photo, food name, portion in Indian units, calorie count, and `+` circular button.
-- **Recent Logs section** — List of past entries with thumbnail, name, portion, and a `+` button to re-log.
-- **"Copy Yesterday's Meals"** — Quick-action button at the top of Recent Logs for one-tap duplication.
+### 2.2 Colour Tokens — Dark Mode (Primary)
 
-#### Karma & Ayurveda Screen (Me / Profile tab)
-- **Karma Level card** — Dark purple/indigo gradient card showing level, XP bar, and title (e.g. `Warrior`).
-- **Dosha Profile card** — White card with donut chart and `View Seasonal Guidelines (Ritucharya)` button.
-- **Daily Rituals (Dinacharya) section** — Checklist with checkbox + ritual name + completion indicator.
-- **Challenges Carousel** — Horizontally scrollable cards showing active challenges.
+> Dark mode is the design baseline. All implementations start here. See §2.3 for light mode.
 
-### 2.2 Visual Design System
+| Token | Hex | Usage |
+|---|---|---|
+| `bg0` | `#080810` | Deepest base layer — shows at screen edges behind hero |
+| `bg1` | `#0F0F1A` | Primary scaffold background |
+| `bg2` | `#161625` | Secondary/nested screen background |
+| `surface0` | `#1C1C2E` | Base card surface |
+| `surface1` | `#22223A` | Elevated cards, bottom sheets |
+| `surface2` | `#2A2A45` | Tooltips, pop-overs |
+| `glass` | `rgba(255,255,255,0.06)` | Glassmorphic card overlay on bg0/bg1 |
+| `glassBorder` | `rgba(255,255,255,0.10)` | Glass card border |
+| `glassBlur` | `12px` | `BackdropFilter` blur radius — all glass surfaces |
+| `primary` | `#FF6B35` | CTAs, FAB, active nav, ring fill |
+| `primaryGlow` | `rgba(255,107,53,0.25)` | Box-shadow glow beneath primary elements |
+| `primaryMuted` | `#FF6B3530` | Selected chip background, subtle tints |
+| `accent` | `#FFB547` | Karma XP, streaks, insight card highlights |
+| `accentGlow` | `rgba(255,181,71,0.20)` | Amber element glow |
+| `secondary` | `#7B6FF0` | Hero accents, level badges, progress fills |
+| `secondaryGlow` | `rgba(123,111,240,0.25)` | Secondary element glow |
+| `teal` | `#00D4B4` | Water, SpO2, Ayurveda, Medication |
+| `tealGlow` | `rgba(0,212,180,0.20)` | Teal glow |
+| `success` | `#4ADE80` | Steps rings, habits, healthy readings |
+| `successGlow` | `rgba(74,222,128,0.20)` | Success glow |
+| `warning` | `#FBBF24` | Elevated readings, moderate risk |
+| `error` | `#F87171` | Crisis readings, destructive actions |
+| `rose` | `#FB7185` | Period cycle, menstrual accent |
+| `purple` | `#C084FC` | Active minutes ring |
+| `textPrimary` | `#F1F0FF` | Headings, primary body |
+| `textSecondary` | `#9B99CC` | Labels, subtitles, captions |
+| `textMuted` | `#6B68A0` | Placeholders, inactive states — **decorative only**; ≈ 4.6:1 on bg1; never use for informational text |
+| `divider` | `rgba(255,255,255,0.08)` | Subtle borders — never harsh lines |
 
-| Token             | Value / Specification                                              |
-|-------------------|--------------------------------------------------------------------|
-| Primary colour    | Deep orange `#FF5722`                                              |
-| Secondary colour  | Indigo / deep purple `#3F3D8F`                                     |
-| Accent            | Amber `#FFC107` (insight cards, karma coins)                       |
-| Background (light)| Warm off-white `#FDF6EC`                                           |
-| Background (dark) | Deep indigo-black `#121218`                                        |
-| Surface (light)   | Pure white `#FFFFFF` cards, `8px` radius, soft shadow              |
-| Surface (dark)    | `#1E1E2C` cards, `8px` radius                                      |
-| Hero bg (dark)    | `#1A1035` gradient top stop                                        |
-| Typography        | System default (Roboto on Android, SF Pro on iOS)                  |
-| Ring stroke width | `10px` with `lineCap: round`                                       |
-| Card elevation    | `2dp` shadow, `borderRadius: 12px`                                 |
-| FAB colour        | Orange `#FF5722`, white `+` icon                                   |
-| Bottom nav        | White / `#1E1E2C` dark, active icon in primary orange              |
-| Chip / pill style | Outlined, `borderRadius: 20px`, icon prefix                        |
-| Food card images  | `72 × 72px` rounded thumbnails                                     |
+### 2.3 Colour Tokens — Light Mode
 
-### 2.3 Dark Mode Tokens
+| Token | Hex | Notes |
+|---|---|---|
+| `bg0` | `#F7F0E8` | Warm parchment — deepest background |
+| `bg1` | `#FDF6EC` | Primary scaffold background |
+| `surface0` | `#FFFFFF` | Card surface |
+| `surface1` | `#FFFAF5` | Elevated card |
+| `glass` | `rgba(255,250,245,0.70)` | Frosted glass card |
+| `glassBorder` | `rgba(244,81,30,0.15)` | Glass border (warm orange tint) |
+| `primary` | `#F4511E` | Slightly deeper orange — better contrast on light |
+| `primaryMuted` | `#FEE8E2` | Chip selected background |
+| `accent` | `#F59E0B` | Karma coins |
+| `secondary` | `#5B50D4` | Hero sections, level badges |
+| `teal` | `#0D9488` | Water, Ayurveda |
+| `success` | `#22C55E` | Healthy readings |
+| `textPrimary` | `#1A1830` | All body copy |
+| `textSecondary` | `#6B6A96` | Subtitles, labels |
+| `textMuted` | `#B0AEC8` | Placeholders, inactive |
+| `divider` | `rgba(26,24,48,0.07)` | Subtle dividers |
 
-All screens must support light and dark modes via `ThemeMode.system` + explicit user toggle.
+### 2.4 Glassmorphism Recipe
 
-| Light Token       | Dark Equivalent             | Usage                          |
-|-------------------|-----------------------------|--------------------------------|
-| `#FDF6EC`         | `#121218`                   | Scaffold background            |
-| `#FFFFFF`         | `#1E1E2C`                   | Cards and surfaces             |
-| `#3F3D8F`         | `#5C59C4`                   | Hero sections                  |
-| `#FF5722`         | `#FF7043`                   | Primary CTA (slightly lighter) |
-| `#FFC107`         | `#FFD54F`                   | Accent / karma coins           |
-| `#1A1A2E`         | `#F0EEF8`                   | Primary text                   |
-| `#6B6B8A`         | `#9D9BBC`                   | Secondary text                 |
-| `#EEE8E4`         | `#2C2C3E`                   | Dividers and borders           |
-| `#FFF3EF`         | `#2A1E1A`                   | Selected chip background       |
+Applied to all card widgets (Plane 2 surfaces) in dark mode **on Tier: mid/high devices**:
 
-### 2.4 Bilingual UI Requirements
+```css
+/* Flutter equivalent: ClipRRect + BackdropFilter + Container */
+background: rgba(255, 255, 255, 0.05);
+border: 1px solid rgba(255, 255, 255, 0.10);
+backdrop-filter: blur(12px) saturate(180%);
+border-radius: 20px;
+```
 
-- All primary navigation labels, screen titles, and section headers must include the local language translation rendered beneath the English text.
-- Food names in the Indian food database must include `name` (English) and `name_local` (in the appropriate local script).
-- Search bars on food-related screens display bilingual placeholder text.
-- The bottom navigation bar renders bilingual labels using a two-line `Text` widget styled at `10sp` for the local language sub-label.
+**Light mode glass:** Same blur cap — `blur(12px)` maximum. Never `blur(20px)` in light mode (causes mid-tier jank on mode-switch).
 
-### 2.5 Component Library
+```css
+/* Light mode glass */
+background: rgba(255, 252, 248, 0.80);
+border: 1px solid rgba(244, 81, 30, 0.12);
+backdrop-filter: blur(12px);   /* CAPPED — matches dark mode */
+```
 
-All widgets below are part of the shared design system in `lib/shared/widgets/` and must not be re-implemented per screen.
+### 2.4a Device Performance Tier System
 
-| Component                  | Location                                     | Notes                                                       |
-|----------------------------|----------------------------------------------|-------------------------------------------------------------|
-| `ActivityRingsWidget`      | `shared/widgets/activity_rings.dart`         | Four concentric rings, accepts progress 0.0–1.0             |
-| `InsightCard`              | `shared/widgets/insight_card.dart`           | Amber background, lightbulb icon, thumbs rating             |
-| `CorrelationInsightCard`   | `shared/widgets/correlation_insight_card.dart` | Cross-module insight with per-module pill links            |
-| `FoodItemCard`             | `shared/widgets/food_item_card.dart`         | Photo, bilingual name, portion, kcal, `+` tap handler       |
-| `KarmaLevelCard`           | `shared/widgets/karma_level_card.dart`       | Dark gradient, progress bar, level title                    |
-| `DoshaDonutChart`          | `shared/widgets/dosha_chart.dart`            | Three-segment donut using `fl_chart`                        |
-| `ChallengeCarouselCard`    | `shared/widgets/challenge_card.dart`         | Horizontally scrollable, progress + XP reward               |
-| `QuickLogFAB`              | `shared/widgets/quick_log_fab.dart`          | Speed-dial FAB; sub-actions: Food · Water · Mood · Workout · BP · Glucose |
-| `MealTypeTabBar`           | `shared/widgets/meal_tab_bar.dart`           | Breakfast / Lunch / Dinner / Snacks                         |
-| `ShimmerLoader`            | `shared/widgets/shimmer_loader.dart`         | All async loading states                                    |
-| `BilingualLabel`           | `shared/widgets/bilingual_label.dart`        | English + Hindi stacked `Text` widgets                      |
-| `EncryptionBadge`          | `shared/widgets/encryption_badge.dart`       | 🔒 AES-256 badge for sensitive data screens                 |
-| `HealthShareCard`          | `shared/widgets/health_share_card.dart`      | Shareable doctor report link card with expiry countdown     |
-| `ABHALinkBadge`            | `shared/widgets/abha_badge.dart`             | ABHA ID linked / unlinked status indicator                  |
-| `HomeWidgetPreview`        | `shared/widgets/home_widget_preview.dart`    | Scaled preview of Android/iOS home screen widget            |
-| `MicronutrientBar`         | `shared/widgets/micronutrient_bar.dart`      | Compact progress bar for Iron / B12 / Vit D / Calcium       |
-| `LabValueRow`              | `shared/widgets/lab_value_row.dart`          | Extracted lab metric with inline edit field + confirm toggle |
-| `ErrorRetryWidget`         | `shared/widgets/error_retry_widget.dart`     | Error state with Retry button; use instead of bare `ErrorWidget` |
-| `SyncStatusBanner`         | `shared/widgets/sync_status_banner.dart`     | Top banner for DLQ items (amber) and offline state (teal)   |
-| `AsyncValueWidget`         | `shared/widgets/async_value_widget.dart`     | Generic `AsyncValue<T>` wrapper — loading / error / data states; use on every async screen |
+FitKarma runs on devices from ₹6,000 to flagship. The UI must degrade gracefully:
+
+```dart
+// lib/core/config/device_tier.dart
+enum DeviceTier { low, mid, high }
+
+DeviceTier detectTier() {
+  final ram = DeviceInfo.ramMB;
+  if (ram < 3000) return DeviceTier.low;   // < 3GB
+  if (ram < 6000) return DeviceTier.mid;   // 3–6GB
+  return DeviceTier.high;                  // 6GB+
+}
+```
+
+| Feature | Low-End | Mid-End | High-End |
+|---|---|---|---|
+| `BackdropFilter` blur | ❌ Off globally | ✅ Cards only | ✅ Full |
+| Ambient glow blobs | ❌ Off | ⚡ 1 blob, 50% opacity | ✅ 3 blobs |
+| Glow box-shadows | ❌ Off | ⚡ Hero metric only | ✅ All allowed |
+| Lottie | ⚡ Streak + confetti | ✅ All | ✅ All + Rive |
+| Rive | ❌ Static image | ⚡ Splash only | ✅ All |
+| Spring physics | ⚡ Cross-fade | ✅ Standard spring | ✅ Full physics |
+| Per-digit CountUp | ❌ Single tween | ⚡ Whole-number | ✅ Per-digit |
+| Ring glow | ❌ Plain stroke | ⚡ Primary ring only | ✅ All rings |
+| Card surface | `surface1` solid | `surface0` + border | Full glass |
+
+> `DeviceTierProvider` is a root-level Riverpod provider initialised at app start. Never hard-code visual effects in widgets.
+
+### 2.4b Visual Calm Zone Screens
+
+The following screens use **zero glow, no blur, minimal animation** regardless of tier:
+
+| Screen | Reason |
+|---|---|
+| Settings | Trust; decision-making context |
+| Journal | Emotional space |
+| Emergency Card | Medical urgency |
+| Lab Reports Home | Clinical, professional context |
+| ABHA Account | Government trust signal |
+| Doctor Appointments | Professional |
+| Subscription Plans | Financial decision |
+| Onboarding Steps 1–3 | Reduce new-user overwhelm |
+
+### 2.4c Glow Discipline
+
+> **When everything glows, nothing glows.** Glow is a reward for importance.
+
+**Permitted glow targets:** Hero metric · Primary CTA · Active ring fill · Active nav tab indicator · Encryption badge · ABHA linked status.
+
+**Prohibited:** Secondary cards · Section headers · Log entry rows · Settings rows · Any element on Calm Zone screens.
+
+### 2.4d Bento Min-Cell-Width Guard
+
+On 360dp-wide devices (common in India's target segment), `third` and `quarter` bento cells become too narrow after padding and gaps. `BentoCard` auto-promotes cells smaller than 80dp to the next size up via `_resolvedSize()`. Designers may specify `quarter` — the widget handles small-screen adaptation automatically.
+
+### 2.4e Empty State Asset Inventory
+
+20 context-specific `empty_{context}.json` Lottie animations are defined in `Fitkarma_UI.md §4.3a` covering all major screens (food log, workout, sleep, mood, lab reports, journal, etc.). Engineers must use the correct key per screen. `empty_generic.json` is the fallback if a specific animation is not yet produced.
+
+### 2.5 Typography System
+
+**Primary font:** [Plus Jakarta Sans](https://fonts.google.com/specimen/Plus+Jakarta+Sans) — variable weight, bundled as asset.
+**Stats / metrics font:** [JetBrains Mono](https://fonts.google.com/specimen/JetBrains+Mono) — for all numeric metric displays.
+**Devanagari:** Noto Sans Devanagari — system font, for Hindi labels only.
+
+| Style | Size | Weight | Used for |
+|---|---|---|---|
+| `heroDisplay` | 72sp | 800 ExtraBold | Full-screen dominant metric (step count, fasting timer) |
+| `metricXL` | 56sp | 700 Bold | Primary screen metric (BP, Glucose, Sleep duration) |
+| `metricLg` | 40sp | 700 Bold | Dashboard ring center numbers **only** — do not use on detail screens |
+| `displayLg` | 32sp | 700 Bold | Screen hero titles, Karma XP total |
+| `displayMd` | 28sp | 600 SemiBold | Level titles, section hero |
+| `h1` | 24sp | 600 SemiBold | App bar titles |
+| `h2` | 20sp | 600 SemiBold | Card headings |
+| `h3` | 18sp | 500 Medium | Sub-section headings |
+| `h4` | 16sp | 500 Medium | List item titles |
+| `labelLg` | 15sp | 600 SemiBold | CTA button text, active chips |
+| `labelMd` | 13sp | 500 Medium | Chip text, badge text |
+| `bodyLg` | 16sp | 400 Regular | Main body copy |
+| `bodyMd` | 14sp | 400 Regular | Card subtitles |
+| `bodySm` | 12sp | 400 Regular | Meta text |
+| `monoXL` | 48sp | 700 Bold | **Live / real-time only** (active HR, CGM glucose) — never on static history |
+| `monoLg` | 28sp | 600 SemiBold | Chart axis values, counters, secondary metric on detail screens |
+| `caption` | 11sp | 400 Regular | Timestamps, legal fine print |
+| `hindi` | 12sp | 500 Medium | All Devanagari sub-labels |
+
+> **Single Hero Typography Rule:** `heroDisplay` and `metricXL` must not appear simultaneously on the same screen. See §3.1 in `Fitkarma_UI.md` for the full per-screen enforcement table.
+
+### 2.6 Motion & Animation System
+
+> Every animation uses spring physics. No linear tweens anywhere in the app.
+
+```dart
+// Three spring presets — use consistently across all widgets
+
+// Light spring — chips, toggles, small state changes
+SpringDescription.withDampingRatio(mass: 1.0, stiffness: 400, ratio: 0.85)
+
+// Standard spring — cards, tab transitions, screen routes
+SpringDescription.withDampingRatio(mass: 1.0, stiffness: 250, ratio: 0.80)
+
+// Dramatic spring — hero entrances, metric reveal, level-up
+SpringDescription.withDampingRatio(mass: 1.0, stiffness: 180, ratio: 0.75)
+```
+
+| Interaction | Animation | Duration |
+|---|---|---|
+| Screen push/pop | Shared axis (vertical slide + fade) | 320ms standard spring |
+| Bottom sheet reveal | Slide up + opacity fade | 280ms standard spring |
+| Tab switch | Cross-fade + subtle Y shift (8px) | 220ms light spring |
+| Card tap feedback | Scale `1.0 → 0.97` press, `0.97 → 1.0` release | 80ms / 160ms |
+| FAB expand | Scale up + radial sub-button reveal | 300ms dramatic spring |
+| Metric number change | Per-digit spring CountUp | 400ms standard spring |
+| Ring progress fill | Arc draw with easeOutCubic | 600ms on mount |
+| Chip select | Background + scale (`0.95 → 1.02 → 1.0`) | 200ms light spring |
+| XP float animation | Amber text +XP floats 40px up + fades | 500ms |
+
+**Lottie / Rive assets required:**
+
+| Asset | Path | Used for |
+|---|---|---|
+| Logo reveal | `assets/rive/logo_reveal.riv` | Splash screen |
+| Level-up | `assets/rive/levelup.riv` | Karma level-up full-screen overlay |
+| Loading rings | `assets/rive/loading_rings.riv` | In-progress loading states |
+| Confetti | `assets/lottie/confetti_orange.json` | Step goal reached |
+| Streak fire | `assets/lottie/streak_fire.json` | Streak banners and habit cards |
+| Coin burst | `assets/lottie/coin_burst.json` | XP earned animation |
+| Sync success | `assets/lottie/sync_check.json` | Successful sync confirmation |
+| Empty states | `assets/lottie/empty_{context}.json` | Context-specific empty states |
+
+### 2.7 Surface & Depth System
+
+The three-plane depth model that all screens must follow:
+
+```
+PLANE 3 — Foreground: FAB · Bottom sheets · Tooltips · Modals
+PLANE 2 — Mid-layer:  Cards · Charts · Bento cells · Glass panels
+PLANE 1 — Background: Scaffold · Hero gradients · Ambient glow blobs
+```
+
+**Ambient glow blobs** (hero screens + Dashboard):
+```dart
+// Positioned behind scroll content — 3 blobs per hero screen
+// Example: Dashboard dark mode
+Blob(color: Color(0x207B6FF0), size: 280, blur: 80, pos: topLeft)
+Blob(color: Color(0x15FF6B35), size: 200, blur: 60, pos: topRight)
+Blob(color: Color(0x1000D4B4), size: 160, blur: 50, pos: center)
+```
+
+### 2.8 Scaffold Patterns
+
+| Pattern | Used on | Key Characteristics |
+|---|---|---|
+| **A — Standard** | Most screens | `bg1` background, transparent elevated app bar, `20px` horizontal padding |
+| **B — Immersive Hero** | Dashboard, Karma, Sleep, BP, Profile, Workout Detail | `heroDeep` gradient (320px) + ambient blobs + transparent AppBar. Body overlaps hero by 28px with `radiusXl` clip. |
+| **C — Full-Bleed** | Active Workout, GPS | `bg0` scaffold, `extendBodyBehindAppBar: true`, full-bleed content |
+
+### 2.9 Bento Grid System
+
+The bento grid is the **primary layout pattern** for dashboard-style and summary screens.
+
+```dart
+// BentoCard size variants
+enum BentoSize { full, half, third, twoThird, quarter }
+
+// Grid constants
+const bentoGap = 12.0;
+const bentoRadius = 20.0;     // Outer cards
+const bentoRadiusSm = 14.0;   // Inner/nested cards
+const bentoRadiusLg = 28.0;   // Hero / full-width cards
+```
+
+### 2.10 Bottom Navigation Bar
+
+The bottom nav is a **floating glass pill** — not a traditional bottom bar.
+
+```dart
+// NavBar container spec
+margin: EdgeInsets.fromLTRB(16, 0, 16, 12 + bottomSafeArea)
+borderRadius: BorderRadius.circular(9999)
+height: 64
+background: glass (surface1 + BackdropFilter blur 16px)
+border: 1px glassBorder
+elevation: Elevation 2
+
+// Tab states
+active: icon + label visible, primary color, soft primaryGlow behind icon
+inactive: icon only (no label), textMuted color
+indicator: soft primaryMuted pill behind active icon
+```
+
+### 2.11 Bilingual UI Requirements
+
+> Bilingual labelling is a **differentiator**, not a blanket rule. Applying it everywhere doubles text density and clutters small screens. Apply only where comprehension value is genuine.
+
+**✅ Required:** Bottom nav labels (active tab only) · Screen app bar titles · Section headers · Food card names · Search bar placeholders · Lab value names · Onboarding screen titles · Festival card names.
+
+**❌ Not applied:** CTA button labels · Metric values · Chart axis labels · Settings rows · Chip/filter labels · Badge text · Timestamps.
+
+- Active bottom nav tab: English 10sp SemiBold + Hindi 9sp Regular below. Inactive: icon only.
+- Section headers: `BilingualLabel` (English `h3` + Hindi 11sp, with 3px `primary` left border).
+- **`UXStage.firstWeek` nav behaviour:** All 5 tabs show labels during the first 7 days to aid discoverability. After day 7, standard active-only label mode resumes automatically.
+
+### 2.12 Shared Component Library
+
+All widgets live in `lib/shared/widgets/`. **Never re-implement per screen.**
+
+| Component | File | Notes |
+|---|---|---|
+| `BentoCard` | `bento_card.dart` | **NEW** — glassmorphic card; `BentoSize` enum; glow param; reads `DeviceTierProvider` |
+| `ActivityRingsWidget` | `activity_rings.dart` | Four concentric rings; glow only on primary ring (Tier: mid/high) |
+| `GlowingMetric` | `glowing_metric.dart` | **NEW** — `monoXL` number; per-digit CountUp (Tier: high) or whole-number (Tier: mid) or plain (Tier: low) |
+| `InsightCard` | `insight_card.dart` | Glass surface; amber glow border; 👍/👎 haptic rating |
+| `CorrelationInsightCard` | `correlation_insight_card.dart` | Multi-module insight; secondary glow border |
+| `FoodItemCard` | `food_item_card.dart` | Glassmorphic; blurred photo bg; bilingual name; `+` with spring scale |
+| `KarmaLevelCard` | `karma_level_card.dart` | `heroDeep` gradient; animated XP bar with `primaryGlow` |
+| `DoshaDonutChart` | `dosha_chart.dart` | Three-segment donut; animated draw; glow per segment (Tier: mid/high) |
+| `ChallengeCarouselCard` | `challenge_card.dart` | Horizontal scroll; glass card; XP coin_burst Lottie on earn |
+| `QuickLogFAB` | `quick_log_fab.dart` | Glowing orange FAB; spring speed-dial to 6 sub-actions |
+| `MealTypeTabBar` | `meal_tab_bar.dart` | Floating pill tab; selected: primary glow; animated indicator |
+| `ShimmerLoader` | `shimmer_loader.dart` | `surface0` base + shimmer; respects dark/light |
+| `BilingualLabel` | `bilingual_label.dart` | English `h3` + Devanagari `hindi`; 3px `primary` border |
+| `EncryptionBadge` | `encryption_badge.dart` | 🔒 AES-256 pill; `tealGlow` border; pulse on reveal |
+| `ABHALinkBadge` | `abha_badge.dart` | Linked: `successGlow`; Unlinked: `warningGlow` + CTA |
+| `HealthShareCard` | `health_share_card.dart` | Share-to-doctor card; countdown ring; WhatsApp CTA |
+| `HomeWidgetPreview` | `home_widget_preview.dart` | Phone-frame SVG mockup + scaled widget content |
+| `MicronutrientBar` | `micronutrient_bar.dart` | Animated bar per micronutrient; no glow (secondary data) |
+| `LabValueRow` | `lab_value_row.dart` | Lab metric; classification pill; confirm toggle; **Calm Zone spec** |
+| `ErrorRetryWidget` | `error_retry_widget.dart` | Lottie error + retry; never bare `ErrorWidget` |
+| `SyncStatusBanner` | `sync_status_banner.dart` | teal (low data), amber (DLQ failure); animated dot |
+| `GlassAppBar` | `glass_app_bar.dart` | **NEW** — scroll-aware glass app bar; **disabled on Calm Zone screens** |
+| `PulseRing` | `pulse_ring.dart` | **NEW** — HR, live metrics, countdown; glow Tier: mid/high only |
+| `TrendChip` | `trend_chip.dart` | **NEW** — `▲ +3%` / `▼ -2%`; semantic color; no glow |
+| `StreakFlameWidget` | `streak_flame.dart` | **NEW** — Lottie streak fire; scale with streak count |
+| `FestivalCard` | `festival_card.dart` | Glass card; festival-gradient border; bilingual name; region pills |
+| `FestivalCountdownBanner` | `festival_countdown_banner.dart` | Full-width; festival gradient; fasting badge |
+| `WeddingCountdownCard` | `wedding_countdown_card.dart` | Gold gradient glass; days countdown; role badge |
+| `WeddingRoleChip` | `wedding_role_chip.dart` | Large illustrated role card; spring select animation |
+| `AsyncValueWidget` | `async_value_widget.dart` | Generic `AsyncValue<T>` wrapper; use on every async screen |
 
 ---
 
@@ -348,7 +580,9 @@ lib/
 │
 ├── shared/
 │   ├── widgets/
+│   │   ├── bento_card.dart              # NEW — glassmorphic BentoSize card
 │   │   ├── activity_rings.dart
+│   │   ├── glowing_metric.dart          # NEW — spring CountUp number with neon glow
 │   │   ├── insight_card.dart
 │   │   ├── correlation_insight_card.dart
 │   │   ├── food_item_card.dart
@@ -367,7 +601,11 @@ lib/
 │   │   ├── lab_value_row.dart
 │   │   ├── error_retry_widget.dart
 │   │   ├── sync_status_banner.dart
-│   │   └── async_value_widget.dart   # Generic AsyncValue<T> wrapper — use on every async screen
+│   │   ├── glass_app_bar.dart           # NEW — scroll-aware glass app bar
+│   │   ├── pulse_ring.dart              # NEW — animated pulsing ring (HR, countdown)
+│   │   ├── trend_chip.dart              # NEW — ▲/▼ trend indicator chip
+│   │   ├── streak_flame.dart            # NEW — Lottie streak fire with count overlay
+│   │   └── async_value_widget.dart      # Generic AsyncValue<T> wrapper — use on every async screen
 │   └── theme/
 │       ├── app_theme.dart                 # lightTheme + darkTheme
 │       ├── app_colors.dart               # Light AND dark colour tokens
@@ -2392,21 +2630,24 @@ await launchUrl(upiUrl, mode: LaunchMode.externalApplication);
 
 ## 18. Performance Contracts
 
-| Metric                      | Target          | Strategy                                                              |
+| Metric | Target | Strategy |
 |-----------------------------|-----------------|-----------------------------------------------------------------------|
-| Cold start                  | < 2 seconds     | Drift pre-warmed; deferred Riverpod providers; deferred module loading|
-| Dashboard render            | < 1 second      | Load from Drift first; lazy-load Appwrite data in background          |
-| Local food search (FTS5)    | < 200 ms        | Drift FTS5 virtual table on `name` + `name_local`; BM25 relevance ranking |
-| Offline write latency       | < 50 ms         | Direct Drift write — zero network calls                               |
-| Sync batch flush            | < 5 seconds     | Max 20 documents per batch via Appwrite                               |
-| Installed app size          | < 50 MB         | Deferred loading; tree-shaking; compressed assets; **enforced in CI** |
-| Background battery drain    | < 3% / hour     | Efficient WorkManager isolate; Doze-aware sync scheduling             |
-| GPS workout accuracy        | ± 10 m          | High-accuracy mode; smooth polyline rendering                         |
-| PDF report generation       | < 3 seconds     | Dart isolate for PDF rendering — never blocks UI thread               |
-| Wearable sync               | < 10 s on resume| Delta sync — only data since `last_sync_at`                          |
-| Glucose/BP chart render     | < 300 ms        | Pre-computed chart data in Drift; recalculated only on new log        |
-| Lab report OCR              | < 3 seconds     | On-device ML Kit — no server call                                     |
-| Home widget update          | < 2 seconds     | WorkManager background task writes to shared preferences              |
+| Cold start | < 2 seconds | Drift pre-warmed; deferred Riverpod providers; deferred module loading|
+| Dashboard render | < 1 second | Load from Drift first; lazy-load Appwrite data in background |
+| Dashboard render (Tier: low) | < 800ms | Calm Mode dashboard surfaced for firstWeek UX stage; no blur/glow render cost |
+| Local food search (FTS5) | < 200 ms | Drift FTS5 virtual table on `name` + `name_local`; BM25 relevance ranking |
+| Offline write latency | < 50 ms | Direct Drift write — zero network calls |
+| Sync batch flush | < 5 seconds | Max 20 documents per batch via Appwrite |
+| Installed app size | < 50 MB | Deferred loading; tree-shaking; compressed assets; **enforced in CI** |
+| Background battery drain | < 3% / hour | Efficient WorkManager isolate; Doze-aware sync scheduling |
+| GPS workout accuracy | ± 10 m | High-accuracy mode; smooth polyline rendering |
+| PDF report generation | < 3 seconds | Dart isolate for PDF rendering — never blocks UI thread |
+| Wearable sync | < 10 s on resume| Delta sync — only data since `last_sync_at` |
+| Glucose/BP chart render | < 300 ms | Pre-computed chart data in Drift; recalculated only on new log |
+| Lab report OCR | < 3 seconds | On-device ML Kit — no server call |
+| Home widget update | < 2 seconds | WorkManager background task writes to shared preferences |
+| `BackdropFilter` frame rate | ≥ 55 fps | Tier: mid/high only; Tier: low disables filter entirely |
+| Glow `BoxShadow` frame rate | ≥ 55 fps | Max 2 glow shadows per viewport; Calm Zone screens: zero |
 
 ### Flutter-Specific Optimisations
 
@@ -2423,13 +2664,15 @@ await launchUrl(upiUrl, mode: LaunchMode.externalApplication);
 
 ### Provider Types
 
-| Provider                  | Use Case                                                           |
+| Provider | Use Case |
 |---------------------------|--------------------------------------------------------------------|
-| `Provider`                | Synchronous, immutable values — config, constants, services         |
-| `FutureProvider`          | One-time async fetch — user profile, initial food search           |
-| `StateNotifierProvider`   | Mutable state with business logic — auth, food log form, sync queue |
-| `StreamProvider`          | Real-time data — Appwrite Realtime, step counter, fasting timer     |
-| `AsyncNotifierProvider`   | Async state with mutations — preferred for complex screens          |
+| `Provider` | Synchronous, immutable values — config, constants, services |
+| `FutureProvider` | One-time async fetch — user profile, initial food search |
+| `StateNotifierProvider` | Mutable state with business logic — auth, food log form, sync queue |
+| `StreamProvider` | Real-time data — Appwrite Realtime, step counter, fasting timer |
+| `AsyncNotifierProvider` | Async state with mutations — preferred for complex screens |
+| `DeviceTierProvider` | **Root provider** — detected once at app start; drives all blur/glow conditionals across the entire widget tree |
+| `UXStageProvider` | **Root provider** — `firstWeek` / `familiar` / `expert` based on `firstLaunchDate`; drives progressive disclosure on Dashboard |
 
 ### Provider Disposal & Scoping
 
@@ -2757,6 +3000,9 @@ dependencies:
   just_audio:                    ^0.9.0
   workmanager:                   ^0.5.0
   url_launcher:                  ^6.2.5       # UPI deep-links
+  lottie:                        ^3.0.0       # NEW — Lottie animations (streak fire, confetti, coins, empty states)
+  rive:                          ^0.12.0      # NEW — Rive animations (logo reveal, loading rings, level-up)
+  google_fonts:                  ^6.1.0       # NEW — Plus Jakarta Sans + JetBrains Mono (bundled as asset also)
 
 dev_dependencies:
   riverpod_generator: ^2.3.9

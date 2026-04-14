@@ -40,21 +40,21 @@ class FitKarmaBottomNav extends ConsumerWidget {
       outlinedIcon: Icons.home_outlined,
       filledIcon: Icons.home,
       labelEn: 'Home',
-      labelHi: 'होम',
+      labelHi: 'मुख्यपृष्ठ',
       route: '/home/dashboard',
     ),
     BottomNavItem(
       outlinedIcon: Icons.restaurant_outlined,
       filledIcon: Icons.restaurant,
       labelEn: 'Food',
-      labelHi: 'भोजन',
+      labelHi: 'खाना',
       route: '/home/food',
     ),
     BottomNavItem(
       outlinedIcon: Icons.fitness_center_outlined,
       filledIcon: Icons.fitness_center,
       labelEn: 'Workout',
-      labelHi: 'व्यायाम',
+      labelHi: 'वर्कआउट',
       route: '/home/workout',
     ),
     BottomNavItem(
@@ -68,7 +68,7 @@ class FitKarmaBottomNav extends ConsumerWidget {
       outlinedIcon: Icons.person_outline,
       filledIcon: Icons.person,
       labelEn: 'Me',
-      labelHi: 'स्वयं',
+      labelHi: 'मैं',
       route: '/profile',
     ),
   ];
