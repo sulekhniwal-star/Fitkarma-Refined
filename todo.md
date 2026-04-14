@@ -1154,7 +1154,7 @@
 
 ## PHASE 10 — WhatsApp Bot + Push Notifications
 
-- [ ] **10.1 — Integrate WhatsApp bot into Consolidated Function**
+- [x] **10.1 — Integrate WhatsApp bot into Consolidated Function**
   ```
   In `appwrite-functions/core-engine/src/handlers/whatsapp.js`, implement the WhatsApp Cloud API webhook handler logic:
   1. Verify webhook challenge (GET request from Meta).
@@ -1164,7 +1164,7 @@
   This handler is triggered by the main function router when the request originates from WhatsApp/Meta.
   ```
 
-- [ ] **10.2 — FCM push notification setup**
+- [x] **10.2 — FCM push notification setup**
   ```
   In lib/core/network/: configure firebase_messaging for FCM token retrieval only (no Firebase Auth, no Firestore — just FCM). On app start: get FCM token → save to Appwrite users document under field 'fcm_token'.
 
