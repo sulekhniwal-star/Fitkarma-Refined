@@ -1217,7 +1217,7 @@
 
 ## PHASE 12 — Localization (22 Indian Languages)
 
-- [ ] **12.1 — Set up l10n infrastructure**
+- [x] **12.1 — Set up l10n infrastructure**
   ```
   In pubspec.yaml, add flutter_localizations to dependencies and set generate: true. Configure flutter.l10n section: arb-dir: lib/l10n, template-arb-file: app_en.arb, output-localization-file: app_localizations.dart.
 
