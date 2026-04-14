@@ -1,4 +1,3 @@
-import 'package:drift/drift.dart';
 import '../../../core/storage/app_database.dart';
 
 class HabitDriftService {

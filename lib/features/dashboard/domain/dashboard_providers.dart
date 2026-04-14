@@ -1,5 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../auth/domain/auth_providers.dart';
 import '../../../shared/widgets/meal_tab_bar.dart';
 
 // --- Placeholder Models ---

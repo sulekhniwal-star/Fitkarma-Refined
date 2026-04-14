@@ -163,11 +163,13 @@ class GlucoseTrackerScreen extends ConsumerWidget {
     
     Color statusColor = Colors.green;
     if (type == 'Fasting') {
-      if (val >= 126) statusColor = Colors.red;
-      else if (val >= 100) statusColor = Colors.orange;
+      if (val >= 126) {
+        statusColor = Colors.red;
+      } else if (val >= 100) statusColor = Colors.orange;
     } else {
-      if (val >= 200) statusColor = Colors.red;
-      else if (val >= 140) statusColor = Colors.orange;
+      if (val >= 200) {
+        statusColor = Colors.red;
+      } else if (val >= 140) statusColor = Colors.orange;
     }
 
     return Container(

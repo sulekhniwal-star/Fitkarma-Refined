@@ -14,7 +14,8 @@ import '../../../shared/widgets/food_item_card.dart';
 import '../../../shared/widgets/insight_card.dart';
 import '../../../shared/widgets/meal_tab_bar.dart';
 import '../../../shared/widgets/quick_log_fab.dart';
-import '../../../shared/widgets/wedding_countdown_card.dart';
+import '../../../shared/widgets/abha_link_badge.dart';
+import '../../abha/data/abha_repository.dart';
 import '../domain/dashboard_providers.dart';
 
 /// The primary landing screen of the application.
@@ -109,6 +110,9 @@ class DashboardScreen extends ConsumerWidget {
             hindi: 'नमस्ते, ${user?.name.split(' ').first ?? 'मित्र'}',
           ),
         ),
+        const SizedBox(width: 8),
+        _buildAbhaBadge(ref),
+        const SizedBox(width: 8),
         AsyncValueWidget<KarmaData>(
           value: karmaResult,
           loading: const SizedBox.shrink(),
@@ -146,6 +150,15 @@ class DashboardScreen extends ConsumerWidget {
     );
   }
 
+  Widget _buildAbhaBadge(WidgetRef ref) {
+    final abhaStatus = ref.watch(abhaStatusProvider);
+    return abhaStatus.when(
+      data: (data) => ABHALinkBadge(isLinked: data != null),
+      loading: () => const SizedBox.shrink(),
+      error: (_, _) => const SizedBox.shrink(),
+    );
+  }
+
   Widget _buildPromoBanner(WidgetRef ref) {
     final festival = ref.watch(activeFestivalProvider);
     final wedding = ref.watch(activeWeddingProvider);
@@ -176,11 +189,11 @@ class DashboardScreen extends ConsumerWidget {
             return const SizedBox.shrink();
           },
           loading: () => const SizedBox.shrink(),
-          error: (_, __) => const SizedBox.shrink(),
+          error: (_, _) => const SizedBox.shrink(),
         );
       },
       loading: () => const SizedBox.shrink(),
-      error: (_, __) => const SizedBox.shrink(),
+      error: (_, _) => const SizedBox.shrink(),
     );
   }
 

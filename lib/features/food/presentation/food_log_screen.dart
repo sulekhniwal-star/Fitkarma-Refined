@@ -8,9 +8,7 @@ import '../../../shared/theme/app_colors.dart';
 import '../../../shared/theme/app_text_styles.dart';
 import '../../../shared/widgets/async_value_widget.dart';
 import '../../../shared/widgets/food_item_card.dart';
-import '../../../shared/widgets/shimmer_loader.dart';
 import '../domain/food_providers.dart';
-import '../../../shared/widgets/meal_tab_bar.dart';
 
 class FoodLogScreen extends ConsumerStatefulWidget {
   final String mealType;

@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../shared/theme/app_colors.dart';
 import '../../../shared/theme/app_text_styles.dart';
 import '../../../shared/widgets/micronutrient_bar.dart';
-import '../domain/nutrition_calculator.dart';
 
 class NutritionGoalScreen extends ConsumerWidget {
   const NutritionGoalScreen({super.key});

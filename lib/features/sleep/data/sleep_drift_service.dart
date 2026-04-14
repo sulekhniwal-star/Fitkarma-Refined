@@ -1,6 +1,5 @@
 import 'package:drift/drift.dart';
 import '../../../core/storage/app_database.dart';
-import '../../../core/network/sync_queue.dart';
 
 enum Chronotype { earlyBird, nightOwl, intermediate }
 

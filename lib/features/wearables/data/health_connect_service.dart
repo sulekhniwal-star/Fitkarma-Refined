@@ -1,6 +1,5 @@
 import 'package:health/health.dart';
 import '../../../core/storage/app_database.dart';
-import '../../../core/storage/drift_service.dart';
 import '../../../core/network/sync_queue.dart';
 import 'package:drift/drift.dart';
 

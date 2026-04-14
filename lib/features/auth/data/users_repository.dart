@@ -1,7 +1,7 @@
-import 'package:appwrite/appwrite.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../core/network/appwrite_client.dart';
 import '../domain/auth_providers.dart';
+import '../../../core/storage/drift_service.dart';
+import '../../../core/storage/app_database.dart';
+import 'package:drift/drift.dart';
 
 class UsersRepository {
   final Client client;
@@ -40,6 +40,20 @@ class UsersRepository {
 
     final newPrefs = Map<String, dynamic>.from(prefs.data)..addAll(weddingData);
     await account.updatePrefs(prefs: newPrefs);
+
+    // 3. Update local Drift store
+    final db = DriftService.db;
+    await (db.update(db.users)..where((u) => u.id.equals(userId))).write(
+      UsersCompanion(
+        weddingRole: Value(role),
+        weddingRelationType: Value(relativeType),
+        weddingStartDate: Value(startDate),
+        weddingEndDate: Value(endDate),
+        weddingPrepWeeks: Value(int.tryParse(prepWeeks ?? '')),
+        weddingEvents: Value(events.toString()), // Simple JSON-like list string
+        weddingPrimaryGoal: Value(primaryGoal),
+      ),
+    );
   }
 }
 

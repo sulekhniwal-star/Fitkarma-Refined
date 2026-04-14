@@ -222,7 +222,7 @@ class SleepTrackerScreen extends ConsumerWidget {
       child: const Row(
         children: [
           Text('🧘', style: TextStyle(fontSize: 24)),
-          const SizedBox(width: 12),
+          SizedBox(width: 12),
           Expanded(
             child: Text(
               'Ayurveda Tip: Lack of sleep increases Vata dosha. Try rubbing warm sesame oil on your feet before bed.',

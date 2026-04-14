@@ -56,7 +56,7 @@ class FoodItemCard extends StatelessWidget {
                     ? Image.network(
                         imageUrl!,
                         fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) => _EmojiFallback(emoji: emoji),
+                        errorBuilder: (_, _, _) => _EmojiFallback(emoji: emoji),
                       )
                     : _EmojiFallback(emoji: emoji),
               ),

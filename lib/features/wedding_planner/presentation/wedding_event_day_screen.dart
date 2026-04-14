@@ -23,7 +23,6 @@ class WeddingEventDayScreen extends ConsumerWidget {
         value: eventsAsync,
         data: (events) {
           final event = events.firstWhere((e) => e.eventKey == eventKey, orElse: () => null as dynamic);
-          if (event == null) return const Center(child: Text('Event not found'));
 
           return SingleChildScrollView(
             padding: const EdgeInsets.all(16),

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../../../core/network/appwrite_client.dart';
-import '../../../shared/theme/app_colors.dart';
 
 class WearableConnectionsScreen extends ConsumerStatefulWidget {
   const WearableConnectionsScreen({super.key});

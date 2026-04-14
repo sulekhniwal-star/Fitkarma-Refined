@@ -366,7 +366,7 @@ class MiniTableCalendar extends ConsumerWidget {
                   isSameDay(f.endDate, day)
                 ).toList(),
                 loading: () => [],
-                error: (_, __) => [],
+                error: (_, _) => [],
               );
             },
           ),

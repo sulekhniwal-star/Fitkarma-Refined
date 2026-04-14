@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../dashboard/presentation/dashboard_screen.dart';
 
 class WeddingRecoveryScreen extends StatelessWidget {
   const WeddingRecoveryScreen({super.key});

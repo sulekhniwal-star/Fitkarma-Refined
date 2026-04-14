@@ -3,10 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import '../../../shared/theme/app_colors.dart';
 import '../../../shared/widgets/abha_link_badge.dart';
 import '../../auth/domain/auth_providers.dart';
-import '../../karma/presentation/karma_hub_screen.dart'; // For level card if needed
+// For level card if needed
 
 class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});

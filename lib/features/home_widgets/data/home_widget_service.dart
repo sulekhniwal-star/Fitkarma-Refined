@@ -1,7 +1,6 @@
 import 'package:home_widget/home_widget.dart';
 import 'package:drift/drift.dart';
 import '../../../core/storage/app_database.dart';
-import '../../../core/storage/drift_service.dart';
 
 class HomeWidgetService {
   final AppDatabase db;

@@ -233,7 +233,7 @@ class _PeriodTrackerScreenState extends ConsumerState<PeriodTrackerScreen> {
         subtitle: const Text('Adjusts cycle predictions for irregular cycles'),
         value: _pcosMode,
         onChanged: (val) => setState(() => _pcosMode = val),
-        activeColor: Colors.pink,
+        activeThumbColor: Colors.pink,
       ),
     );
   }

@@ -9,7 +9,6 @@ import '../../../shared/widgets/micronutrient_bar.dart';
 import '../../../shared/widgets/food_item_card.dart';
 import '../../../shared/widgets/quick_log_fab.dart';
 import '../../dashboard/domain/dashboard_providers.dart';
-import '../domain/food_providers.dart';
 
 class FoodHomeScreen extends ConsumerWidget {
   const FoodHomeScreen({super.key});

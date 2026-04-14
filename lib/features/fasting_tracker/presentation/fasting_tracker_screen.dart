@@ -257,8 +257,9 @@ class _FastingTrackerScreenState extends ConsumerState<FastingTrackerScreen> {
                   onSelected: (val) {
                     setState(() {
                       _activeProtocol = p;
-                      if (p == 'OMAD') _targetHours = 23;
-                      else if (p == '16:8') _targetHours = 16;
+                      if (p == 'OMAD') {
+                        _targetHours = 23;
+                      } else if (p == '16:8') _targetHours = 16;
                       else if (p == '18:6') _targetHours = 18;
                       else if (p == '20:4') _targetHours = 20;
                       else if (p == 'Ramadan') _targetHours = 14; // Default Ramadan

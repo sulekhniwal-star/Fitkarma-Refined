@@ -19802,6 +19802,85 @@ class $UsersTable extends Users with TableInfo<$UsersTable, LocalUser> {
     ),
     defaultValue: const Constant(false),
   );
+  static const VerificationMeta _weddingRoleMeta = const VerificationMeta(
+    'weddingRole',
+  );
+  @override
+  late final GeneratedColumn<String> weddingRole = GeneratedColumn<String>(
+    'wedding_role',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _weddingRelationTypeMeta =
+      const VerificationMeta('weddingRelationType');
+  @override
+  late final GeneratedColumn<String> weddingRelationType =
+      GeneratedColumn<String>(
+        'wedding_relation_type',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _weddingStartDateMeta = const VerificationMeta(
+    'weddingStartDate',
+  );
+  @override
+  late final GeneratedColumn<DateTime> weddingStartDate =
+      GeneratedColumn<DateTime>(
+        'wedding_start_date',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _weddingEndDateMeta = const VerificationMeta(
+    'weddingEndDate',
+  );
+  @override
+  late final GeneratedColumn<DateTime> weddingEndDate =
+      GeneratedColumn<DateTime>(
+        'wedding_end_date',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _weddingPrepWeeksMeta = const VerificationMeta(
+    'weddingPrepWeeks',
+  );
+  @override
+  late final GeneratedColumn<int> weddingPrepWeeks = GeneratedColumn<int>(
+    'wedding_prep_weeks',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _weddingEventsMeta = const VerificationMeta(
+    'weddingEvents',
+  );
+  @override
+  late final GeneratedColumn<String> weddingEvents = GeneratedColumn<String>(
+    'wedding_events',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _weddingPrimaryGoalMeta =
+      const VerificationMeta('weddingPrimaryGoal');
+  @override
+  late final GeneratedColumn<String> weddingPrimaryGoal =
+      GeneratedColumn<String>(
+        'wedding_primary_goal',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -19810,6 +19889,13 @@ class $UsersTable extends Users with TableInfo<$UsersTable, LocalUser> {
     karmaTotal,
     karmaLevel,
     onboardingCompleted,
+    weddingRole,
+    weddingRelationType,
+    weddingStartDate,
+    weddingEndDate,
+    weddingPrepWeeks,
+    weddingEvents,
+    weddingPrimaryGoal,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -19865,6 +19951,69 @@ class $UsersTable extends Users with TableInfo<$UsersTable, LocalUser> {
         ),
       );
     }
+    if (data.containsKey('wedding_role')) {
+      context.handle(
+        _weddingRoleMeta,
+        weddingRole.isAcceptableOrUnknown(
+          data['wedding_role']!,
+          _weddingRoleMeta,
+        ),
+      );
+    }
+    if (data.containsKey('wedding_relation_type')) {
+      context.handle(
+        _weddingRelationTypeMeta,
+        weddingRelationType.isAcceptableOrUnknown(
+          data['wedding_relation_type']!,
+          _weddingRelationTypeMeta,
+        ),
+      );
+    }
+    if (data.containsKey('wedding_start_date')) {
+      context.handle(
+        _weddingStartDateMeta,
+        weddingStartDate.isAcceptableOrUnknown(
+          data['wedding_start_date']!,
+          _weddingStartDateMeta,
+        ),
+      );
+    }
+    if (data.containsKey('wedding_end_date')) {
+      context.handle(
+        _weddingEndDateMeta,
+        weddingEndDate.isAcceptableOrUnknown(
+          data['wedding_end_date']!,
+          _weddingEndDateMeta,
+        ),
+      );
+    }
+    if (data.containsKey('wedding_prep_weeks')) {
+      context.handle(
+        _weddingPrepWeeksMeta,
+        weddingPrepWeeks.isAcceptableOrUnknown(
+          data['wedding_prep_weeks']!,
+          _weddingPrepWeeksMeta,
+        ),
+      );
+    }
+    if (data.containsKey('wedding_events')) {
+      context.handle(
+        _weddingEventsMeta,
+        weddingEvents.isAcceptableOrUnknown(
+          data['wedding_events']!,
+          _weddingEventsMeta,
+        ),
+      );
+    }
+    if (data.containsKey('wedding_primary_goal')) {
+      context.handle(
+        _weddingPrimaryGoalMeta,
+        weddingPrimaryGoal.isAcceptableOrUnknown(
+          data['wedding_primary_goal']!,
+          _weddingPrimaryGoalMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -19898,6 +20047,34 @@ class $UsersTable extends Users with TableInfo<$UsersTable, LocalUser> {
         DriftSqlType.bool,
         data['${effectivePrefix}onboarding_completed'],
       )!,
+      weddingRole: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}wedding_role'],
+      ),
+      weddingRelationType: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}wedding_relation_type'],
+      ),
+      weddingStartDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}wedding_start_date'],
+      ),
+      weddingEndDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}wedding_end_date'],
+      ),
+      weddingPrepWeeks: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}wedding_prep_weeks'],
+      ),
+      weddingEvents: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}wedding_events'],
+      ),
+      weddingPrimaryGoal: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}wedding_primary_goal'],
+      ),
     );
   }
 
@@ -19914,6 +20091,13 @@ class LocalUser extends DataClass implements Insertable<LocalUser> {
   final int karmaTotal;
   final int karmaLevel;
   final bool onboardingCompleted;
+  final String? weddingRole;
+  final String? weddingRelationType;
+  final DateTime? weddingStartDate;
+  final DateTime? weddingEndDate;
+  final int? weddingPrepWeeks;
+  final String? weddingEvents;
+  final String? weddingPrimaryGoal;
   const LocalUser({
     required this.id,
     required this.email,
@@ -19921,6 +20105,13 @@ class LocalUser extends DataClass implements Insertable<LocalUser> {
     required this.karmaTotal,
     required this.karmaLevel,
     required this.onboardingCompleted,
+    this.weddingRole,
+    this.weddingRelationType,
+    this.weddingStartDate,
+    this.weddingEndDate,
+    this.weddingPrepWeeks,
+    this.weddingEvents,
+    this.weddingPrimaryGoal,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -19931,6 +20122,27 @@ class LocalUser extends DataClass implements Insertable<LocalUser> {
     map['karma_total'] = Variable<int>(karmaTotal);
     map['karma_level'] = Variable<int>(karmaLevel);
     map['onboarding_completed'] = Variable<bool>(onboardingCompleted);
+    if (!nullToAbsent || weddingRole != null) {
+      map['wedding_role'] = Variable<String>(weddingRole);
+    }
+    if (!nullToAbsent || weddingRelationType != null) {
+      map['wedding_relation_type'] = Variable<String>(weddingRelationType);
+    }
+    if (!nullToAbsent || weddingStartDate != null) {
+      map['wedding_start_date'] = Variable<DateTime>(weddingStartDate);
+    }
+    if (!nullToAbsent || weddingEndDate != null) {
+      map['wedding_end_date'] = Variable<DateTime>(weddingEndDate);
+    }
+    if (!nullToAbsent || weddingPrepWeeks != null) {
+      map['wedding_prep_weeks'] = Variable<int>(weddingPrepWeeks);
+    }
+    if (!nullToAbsent || weddingEvents != null) {
+      map['wedding_events'] = Variable<String>(weddingEvents);
+    }
+    if (!nullToAbsent || weddingPrimaryGoal != null) {
+      map['wedding_primary_goal'] = Variable<String>(weddingPrimaryGoal);
+    }
     return map;
   }
 
@@ -19942,6 +20154,27 @@ class LocalUser extends DataClass implements Insertable<LocalUser> {
       karmaTotal: Value(karmaTotal),
       karmaLevel: Value(karmaLevel),
       onboardingCompleted: Value(onboardingCompleted),
+      weddingRole: weddingRole == null && nullToAbsent
+          ? const Value.absent()
+          : Value(weddingRole),
+      weddingRelationType: weddingRelationType == null && nullToAbsent
+          ? const Value.absent()
+          : Value(weddingRelationType),
+      weddingStartDate: weddingStartDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(weddingStartDate),
+      weddingEndDate: weddingEndDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(weddingEndDate),
+      weddingPrepWeeks: weddingPrepWeeks == null && nullToAbsent
+          ? const Value.absent()
+          : Value(weddingPrepWeeks),
+      weddingEvents: weddingEvents == null && nullToAbsent
+          ? const Value.absent()
+          : Value(weddingEvents),
+      weddingPrimaryGoal: weddingPrimaryGoal == null && nullToAbsent
+          ? const Value.absent()
+          : Value(weddingPrimaryGoal),
     );
   }
 
@@ -19959,6 +20192,19 @@ class LocalUser extends DataClass implements Insertable<LocalUser> {
       onboardingCompleted: serializer.fromJson<bool>(
         json['onboardingCompleted'],
       ),
+      weddingRole: serializer.fromJson<String?>(json['weddingRole']),
+      weddingRelationType: serializer.fromJson<String?>(
+        json['weddingRelationType'],
+      ),
+      weddingStartDate: serializer.fromJson<DateTime?>(
+        json['weddingStartDate'],
+      ),
+      weddingEndDate: serializer.fromJson<DateTime?>(json['weddingEndDate']),
+      weddingPrepWeeks: serializer.fromJson<int?>(json['weddingPrepWeeks']),
+      weddingEvents: serializer.fromJson<String?>(json['weddingEvents']),
+      weddingPrimaryGoal: serializer.fromJson<String?>(
+        json['weddingPrimaryGoal'],
+      ),
     );
   }
   @override
@@ -19971,6 +20217,13 @@ class LocalUser extends DataClass implements Insertable<LocalUser> {
       'karmaTotal': serializer.toJson<int>(karmaTotal),
       'karmaLevel': serializer.toJson<int>(karmaLevel),
       'onboardingCompleted': serializer.toJson<bool>(onboardingCompleted),
+      'weddingRole': serializer.toJson<String?>(weddingRole),
+      'weddingRelationType': serializer.toJson<String?>(weddingRelationType),
+      'weddingStartDate': serializer.toJson<DateTime?>(weddingStartDate),
+      'weddingEndDate': serializer.toJson<DateTime?>(weddingEndDate),
+      'weddingPrepWeeks': serializer.toJson<int?>(weddingPrepWeeks),
+      'weddingEvents': serializer.toJson<String?>(weddingEvents),
+      'weddingPrimaryGoal': serializer.toJson<String?>(weddingPrimaryGoal),
     };
   }
 
@@ -19981,6 +20234,13 @@ class LocalUser extends DataClass implements Insertable<LocalUser> {
     int? karmaTotal,
     int? karmaLevel,
     bool? onboardingCompleted,
+    Value<String?> weddingRole = const Value.absent(),
+    Value<String?> weddingRelationType = const Value.absent(),
+    Value<DateTime?> weddingStartDate = const Value.absent(),
+    Value<DateTime?> weddingEndDate = const Value.absent(),
+    Value<int?> weddingPrepWeeks = const Value.absent(),
+    Value<String?> weddingEvents = const Value.absent(),
+    Value<String?> weddingPrimaryGoal = const Value.absent(),
   }) => LocalUser(
     id: id ?? this.id,
     email: email ?? this.email,
@@ -19988,6 +20248,25 @@ class LocalUser extends DataClass implements Insertable<LocalUser> {
     karmaTotal: karmaTotal ?? this.karmaTotal,
     karmaLevel: karmaLevel ?? this.karmaLevel,
     onboardingCompleted: onboardingCompleted ?? this.onboardingCompleted,
+    weddingRole: weddingRole.present ? weddingRole.value : this.weddingRole,
+    weddingRelationType: weddingRelationType.present
+        ? weddingRelationType.value
+        : this.weddingRelationType,
+    weddingStartDate: weddingStartDate.present
+        ? weddingStartDate.value
+        : this.weddingStartDate,
+    weddingEndDate: weddingEndDate.present
+        ? weddingEndDate.value
+        : this.weddingEndDate,
+    weddingPrepWeeks: weddingPrepWeeks.present
+        ? weddingPrepWeeks.value
+        : this.weddingPrepWeeks,
+    weddingEvents: weddingEvents.present
+        ? weddingEvents.value
+        : this.weddingEvents,
+    weddingPrimaryGoal: weddingPrimaryGoal.present
+        ? weddingPrimaryGoal.value
+        : this.weddingPrimaryGoal,
   );
   LocalUser copyWithCompanion(UsersCompanion data) {
     return LocalUser(
@@ -20003,6 +20282,27 @@ class LocalUser extends DataClass implements Insertable<LocalUser> {
       onboardingCompleted: data.onboardingCompleted.present
           ? data.onboardingCompleted.value
           : this.onboardingCompleted,
+      weddingRole: data.weddingRole.present
+          ? data.weddingRole.value
+          : this.weddingRole,
+      weddingRelationType: data.weddingRelationType.present
+          ? data.weddingRelationType.value
+          : this.weddingRelationType,
+      weddingStartDate: data.weddingStartDate.present
+          ? data.weddingStartDate.value
+          : this.weddingStartDate,
+      weddingEndDate: data.weddingEndDate.present
+          ? data.weddingEndDate.value
+          : this.weddingEndDate,
+      weddingPrepWeeks: data.weddingPrepWeeks.present
+          ? data.weddingPrepWeeks.value
+          : this.weddingPrepWeeks,
+      weddingEvents: data.weddingEvents.present
+          ? data.weddingEvents.value
+          : this.weddingEvents,
+      weddingPrimaryGoal: data.weddingPrimaryGoal.present
+          ? data.weddingPrimaryGoal.value
+          : this.weddingPrimaryGoal,
     );
   }
 
@@ -20014,14 +20314,34 @@ class LocalUser extends DataClass implements Insertable<LocalUser> {
           ..write('name: $name, ')
           ..write('karmaTotal: $karmaTotal, ')
           ..write('karmaLevel: $karmaLevel, ')
-          ..write('onboardingCompleted: $onboardingCompleted')
+          ..write('onboardingCompleted: $onboardingCompleted, ')
+          ..write('weddingRole: $weddingRole, ')
+          ..write('weddingRelationType: $weddingRelationType, ')
+          ..write('weddingStartDate: $weddingStartDate, ')
+          ..write('weddingEndDate: $weddingEndDate, ')
+          ..write('weddingPrepWeeks: $weddingPrepWeeks, ')
+          ..write('weddingEvents: $weddingEvents, ')
+          ..write('weddingPrimaryGoal: $weddingPrimaryGoal')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, email, name, karmaTotal, karmaLevel, onboardingCompleted);
+  int get hashCode => Object.hash(
+    id,
+    email,
+    name,
+    karmaTotal,
+    karmaLevel,
+    onboardingCompleted,
+    weddingRole,
+    weddingRelationType,
+    weddingStartDate,
+    weddingEndDate,
+    weddingPrepWeeks,
+    weddingEvents,
+    weddingPrimaryGoal,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -20031,7 +20351,14 @@ class LocalUser extends DataClass implements Insertable<LocalUser> {
           other.name == this.name &&
           other.karmaTotal == this.karmaTotal &&
           other.karmaLevel == this.karmaLevel &&
-          other.onboardingCompleted == this.onboardingCompleted);
+          other.onboardingCompleted == this.onboardingCompleted &&
+          other.weddingRole == this.weddingRole &&
+          other.weddingRelationType == this.weddingRelationType &&
+          other.weddingStartDate == this.weddingStartDate &&
+          other.weddingEndDate == this.weddingEndDate &&
+          other.weddingPrepWeeks == this.weddingPrepWeeks &&
+          other.weddingEvents == this.weddingEvents &&
+          other.weddingPrimaryGoal == this.weddingPrimaryGoal);
 }
 
 class UsersCompanion extends UpdateCompanion<LocalUser> {
@@ -20041,6 +20368,13 @@ class UsersCompanion extends UpdateCompanion<LocalUser> {
   final Value<int> karmaTotal;
   final Value<int> karmaLevel;
   final Value<bool> onboardingCompleted;
+  final Value<String?> weddingRole;
+  final Value<String?> weddingRelationType;
+  final Value<DateTime?> weddingStartDate;
+  final Value<DateTime?> weddingEndDate;
+  final Value<int?> weddingPrepWeeks;
+  final Value<String?> weddingEvents;
+  final Value<String?> weddingPrimaryGoal;
   final Value<int> rowid;
   const UsersCompanion({
     this.id = const Value.absent(),
@@ -20049,6 +20383,13 @@ class UsersCompanion extends UpdateCompanion<LocalUser> {
     this.karmaTotal = const Value.absent(),
     this.karmaLevel = const Value.absent(),
     this.onboardingCompleted = const Value.absent(),
+    this.weddingRole = const Value.absent(),
+    this.weddingRelationType = const Value.absent(),
+    this.weddingStartDate = const Value.absent(),
+    this.weddingEndDate = const Value.absent(),
+    this.weddingPrepWeeks = const Value.absent(),
+    this.weddingEvents = const Value.absent(),
+    this.weddingPrimaryGoal = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   UsersCompanion.insert({
@@ -20058,6 +20399,13 @@ class UsersCompanion extends UpdateCompanion<LocalUser> {
     this.karmaTotal = const Value.absent(),
     this.karmaLevel = const Value.absent(),
     this.onboardingCompleted = const Value.absent(),
+    this.weddingRole = const Value.absent(),
+    this.weddingRelationType = const Value.absent(),
+    this.weddingStartDate = const Value.absent(),
+    this.weddingEndDate = const Value.absent(),
+    this.weddingPrepWeeks = const Value.absent(),
+    this.weddingEvents = const Value.absent(),
+    this.weddingPrimaryGoal = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        email = Value(email),
@@ -20069,6 +20417,13 @@ class UsersCompanion extends UpdateCompanion<LocalUser> {
     Expression<int>? karmaTotal,
     Expression<int>? karmaLevel,
     Expression<bool>? onboardingCompleted,
+    Expression<String>? weddingRole,
+    Expression<String>? weddingRelationType,
+    Expression<DateTime>? weddingStartDate,
+    Expression<DateTime>? weddingEndDate,
+    Expression<int>? weddingPrepWeeks,
+    Expression<String>? weddingEvents,
+    Expression<String>? weddingPrimaryGoal,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -20079,6 +20434,15 @@ class UsersCompanion extends UpdateCompanion<LocalUser> {
       if (karmaLevel != null) 'karma_level': karmaLevel,
       if (onboardingCompleted != null)
         'onboarding_completed': onboardingCompleted,
+      if (weddingRole != null) 'wedding_role': weddingRole,
+      if (weddingRelationType != null)
+        'wedding_relation_type': weddingRelationType,
+      if (weddingStartDate != null) 'wedding_start_date': weddingStartDate,
+      if (weddingEndDate != null) 'wedding_end_date': weddingEndDate,
+      if (weddingPrepWeeks != null) 'wedding_prep_weeks': weddingPrepWeeks,
+      if (weddingEvents != null) 'wedding_events': weddingEvents,
+      if (weddingPrimaryGoal != null)
+        'wedding_primary_goal': weddingPrimaryGoal,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -20090,6 +20454,13 @@ class UsersCompanion extends UpdateCompanion<LocalUser> {
     Value<int>? karmaTotal,
     Value<int>? karmaLevel,
     Value<bool>? onboardingCompleted,
+    Value<String?>? weddingRole,
+    Value<String?>? weddingRelationType,
+    Value<DateTime?>? weddingStartDate,
+    Value<DateTime?>? weddingEndDate,
+    Value<int?>? weddingPrepWeeks,
+    Value<String?>? weddingEvents,
+    Value<String?>? weddingPrimaryGoal,
     Value<int>? rowid,
   }) {
     return UsersCompanion(
@@ -20099,6 +20470,13 @@ class UsersCompanion extends UpdateCompanion<LocalUser> {
       karmaTotal: karmaTotal ?? this.karmaTotal,
       karmaLevel: karmaLevel ?? this.karmaLevel,
       onboardingCompleted: onboardingCompleted ?? this.onboardingCompleted,
+      weddingRole: weddingRole ?? this.weddingRole,
+      weddingRelationType: weddingRelationType ?? this.weddingRelationType,
+      weddingStartDate: weddingStartDate ?? this.weddingStartDate,
+      weddingEndDate: weddingEndDate ?? this.weddingEndDate,
+      weddingPrepWeeks: weddingPrepWeeks ?? this.weddingPrepWeeks,
+      weddingEvents: weddingEvents ?? this.weddingEvents,
+      weddingPrimaryGoal: weddingPrimaryGoal ?? this.weddingPrimaryGoal,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -20124,6 +20502,29 @@ class UsersCompanion extends UpdateCompanion<LocalUser> {
     if (onboardingCompleted.present) {
       map['onboarding_completed'] = Variable<bool>(onboardingCompleted.value);
     }
+    if (weddingRole.present) {
+      map['wedding_role'] = Variable<String>(weddingRole.value);
+    }
+    if (weddingRelationType.present) {
+      map['wedding_relation_type'] = Variable<String>(
+        weddingRelationType.value,
+      );
+    }
+    if (weddingStartDate.present) {
+      map['wedding_start_date'] = Variable<DateTime>(weddingStartDate.value);
+    }
+    if (weddingEndDate.present) {
+      map['wedding_end_date'] = Variable<DateTime>(weddingEndDate.value);
+    }
+    if (weddingPrepWeeks.present) {
+      map['wedding_prep_weeks'] = Variable<int>(weddingPrepWeeks.value);
+    }
+    if (weddingEvents.present) {
+      map['wedding_events'] = Variable<String>(weddingEvents.value);
+    }
+    if (weddingPrimaryGoal.present) {
+      map['wedding_primary_goal'] = Variable<String>(weddingPrimaryGoal.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -20139,6 +20540,13 @@ class UsersCompanion extends UpdateCompanion<LocalUser> {
           ..write('karmaTotal: $karmaTotal, ')
           ..write('karmaLevel: $karmaLevel, ')
           ..write('onboardingCompleted: $onboardingCompleted, ')
+          ..write('weddingRole: $weddingRole, ')
+          ..write('weddingRelationType: $weddingRelationType, ')
+          ..write('weddingStartDate: $weddingStartDate, ')
+          ..write('weddingEndDate: $weddingEndDate, ')
+          ..write('weddingPrepWeeks: $weddingPrepWeeks, ')
+          ..write('weddingEvents: $weddingEvents, ')
+          ..write('weddingPrimaryGoal: $weddingPrimaryGoal, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -30135,6 +30543,13 @@ typedef $$UsersTableCreateCompanionBuilder =
       Value<int> karmaTotal,
       Value<int> karmaLevel,
       Value<bool> onboardingCompleted,
+      Value<String?> weddingRole,
+      Value<String?> weddingRelationType,
+      Value<DateTime?> weddingStartDate,
+      Value<DateTime?> weddingEndDate,
+      Value<int?> weddingPrepWeeks,
+      Value<String?> weddingEvents,
+      Value<String?> weddingPrimaryGoal,
       Value<int> rowid,
     });
 typedef $$UsersTableUpdateCompanionBuilder =
@@ -30145,6 +30560,13 @@ typedef $$UsersTableUpdateCompanionBuilder =
       Value<int> karmaTotal,
       Value<int> karmaLevel,
       Value<bool> onboardingCompleted,
+      Value<String?> weddingRole,
+      Value<String?> weddingRelationType,
+      Value<DateTime?> weddingStartDate,
+      Value<DateTime?> weddingEndDate,
+      Value<int?> weddingPrepWeeks,
+      Value<String?> weddingEvents,
+      Value<String?> weddingPrimaryGoal,
       Value<int> rowid,
     });
 
@@ -30183,6 +30605,41 @@ class $$UsersTableFilterComposer extends Composer<_$AppDatabase, $UsersTable> {
 
   ColumnFilters<bool> get onboardingCompleted => $composableBuilder(
     column: $table.onboardingCompleted,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get weddingRole => $composableBuilder(
+    column: $table.weddingRole,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get weddingRelationType => $composableBuilder(
+    column: $table.weddingRelationType,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get weddingStartDate => $composableBuilder(
+    column: $table.weddingStartDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get weddingEndDate => $composableBuilder(
+    column: $table.weddingEndDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get weddingPrepWeeks => $composableBuilder(
+    column: $table.weddingPrepWeeks,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get weddingEvents => $composableBuilder(
+    column: $table.weddingEvents,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get weddingPrimaryGoal => $composableBuilder(
+    column: $table.weddingPrimaryGoal,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -30225,6 +30682,41 @@ class $$UsersTableOrderingComposer
     column: $table.onboardingCompleted,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<String> get weddingRole => $composableBuilder(
+    column: $table.weddingRole,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get weddingRelationType => $composableBuilder(
+    column: $table.weddingRelationType,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get weddingStartDate => $composableBuilder(
+    column: $table.weddingStartDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get weddingEndDate => $composableBuilder(
+    column: $table.weddingEndDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get weddingPrepWeeks => $composableBuilder(
+    column: $table.weddingPrepWeeks,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get weddingEvents => $composableBuilder(
+    column: $table.weddingEvents,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get weddingPrimaryGoal => $composableBuilder(
+    column: $table.weddingPrimaryGoal,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$UsersTableAnnotationComposer
@@ -30257,6 +30749,41 @@ class $$UsersTableAnnotationComposer
 
   GeneratedColumn<bool> get onboardingCompleted => $composableBuilder(
     column: $table.onboardingCompleted,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get weddingRole => $composableBuilder(
+    column: $table.weddingRole,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get weddingRelationType => $composableBuilder(
+    column: $table.weddingRelationType,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get weddingStartDate => $composableBuilder(
+    column: $table.weddingStartDate,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get weddingEndDate => $composableBuilder(
+    column: $table.weddingEndDate,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get weddingPrepWeeks => $composableBuilder(
+    column: $table.weddingPrepWeeks,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get weddingEvents => $composableBuilder(
+    column: $table.weddingEvents,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get weddingPrimaryGoal => $composableBuilder(
+    column: $table.weddingPrimaryGoal,
     builder: (column) => column,
   );
 }
@@ -30295,6 +30822,13 @@ class $$UsersTableTableManager
                 Value<int> karmaTotal = const Value.absent(),
                 Value<int> karmaLevel = const Value.absent(),
                 Value<bool> onboardingCompleted = const Value.absent(),
+                Value<String?> weddingRole = const Value.absent(),
+                Value<String?> weddingRelationType = const Value.absent(),
+                Value<DateTime?> weddingStartDate = const Value.absent(),
+                Value<DateTime?> weddingEndDate = const Value.absent(),
+                Value<int?> weddingPrepWeeks = const Value.absent(),
+                Value<String?> weddingEvents = const Value.absent(),
+                Value<String?> weddingPrimaryGoal = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => UsersCompanion(
                 id: id,
@@ -30303,6 +30837,13 @@ class $$UsersTableTableManager
                 karmaTotal: karmaTotal,
                 karmaLevel: karmaLevel,
                 onboardingCompleted: onboardingCompleted,
+                weddingRole: weddingRole,
+                weddingRelationType: weddingRelationType,
+                weddingStartDate: weddingStartDate,
+                weddingEndDate: weddingEndDate,
+                weddingPrepWeeks: weddingPrepWeeks,
+                weddingEvents: weddingEvents,
+                weddingPrimaryGoal: weddingPrimaryGoal,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -30313,6 +30854,13 @@ class $$UsersTableTableManager
                 Value<int> karmaTotal = const Value.absent(),
                 Value<int> karmaLevel = const Value.absent(),
                 Value<bool> onboardingCompleted = const Value.absent(),
+                Value<String?> weddingRole = const Value.absent(),
+                Value<String?> weddingRelationType = const Value.absent(),
+                Value<DateTime?> weddingStartDate = const Value.absent(),
+                Value<DateTime?> weddingEndDate = const Value.absent(),
+                Value<int?> weddingPrepWeeks = const Value.absent(),
+                Value<String?> weddingEvents = const Value.absent(),
+                Value<String?> weddingPrimaryGoal = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => UsersCompanion.insert(
                 id: id,
@@ -30321,6 +30869,13 @@ class $$UsersTableTableManager
                 karmaTotal: karmaTotal,
                 karmaLevel: karmaLevel,
                 onboardingCompleted: onboardingCompleted,
+                weddingRole: weddingRole,
+                weddingRelationType: weddingRelationType,
+                weddingStartDate: weddingStartDate,
+                weddingEndDate: weddingEndDate,
+                weddingPrepWeeks: weddingPrepWeeks,
+                weddingEvents: weddingEvents,
+                weddingPrimaryGoal: weddingPrimaryGoal,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0

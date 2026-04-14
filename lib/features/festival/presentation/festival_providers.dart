@@ -1,5 +1,4 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fitkarma/core/storage/drift_service.dart';
 import 'package:fitkarma/core/storage/app_database.dart';
 import 'package:drift/drift.dart';

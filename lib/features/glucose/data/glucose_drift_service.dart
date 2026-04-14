@@ -2,7 +2,6 @@ import 'package:drift/drift.dart';
 import '../../../core/storage/app_database.dart';
 import '../../../core/security/encryption_service.dart';
 import '../../../core/network/sync_queue.dart';
-import '../../blood_pressure/domain/bp_classifier.dart';
 
 class GlucoseDriftService {
   final AppDatabase _db;

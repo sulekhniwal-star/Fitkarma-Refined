@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:local_auth/local_auth.dart';
-import '../../auth/domain/auth_providers.dart';
 import '../../../core/di/providers.dart';
 import '../../../shared/widgets/encryption_badge.dart';
 

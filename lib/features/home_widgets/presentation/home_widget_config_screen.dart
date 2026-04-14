@@ -106,12 +106,12 @@ class HomeWidgetConfigScreen extends ConsumerWidget {
               Text('How to setup', style: TextStyle(fontWeight: FontWeight.bold)),
             ],
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           Text(
             'Android: Long-press any empty space on your home screen, select Widgets, search for FitKarma, and drag your favorite to the home screen.',
             style: TextStyle(fontSize: 13, color: Colors.black54),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Text(
             'iOS: Long-press your home screen until icons jiggle, tap the + button, search for FitKarma, and choose a widget size.',
             style: TextStyle(fontSize: 13, color: Colors.black54),

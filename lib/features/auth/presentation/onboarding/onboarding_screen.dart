@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../../social/presentation/social_feed_screen.dart'; // For XP animation if needed
-import '../../domain/auth_providers.dart';
-import '../../../ayurveda/domain/dosha_calculator.dart';
-import '../../../ayurveda/presentation/ayurveda_hub_screen.dart'; // For chart if nested
+// For XP animation if needed
+// For chart if nested
 import 'package:fl_chart/fl_chart.dart';
 
 class OnboardingScreen extends ConsumerStatefulWidget {

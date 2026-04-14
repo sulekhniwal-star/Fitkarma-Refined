@@ -34,8 +34,9 @@ class DoshaCalculator {
     // Simplified mapping for demo purposes
     for (int i = 0; i < answers.length; i++) {
         final val = answers[i];
-        if (i % 3 == 0) v += val;
-        else if (i % 3 == 1) p += val;
+        if (i % 3 == 0) {
+          v += val;
+        } else if (i % 3 == 1) p += val;
         else k += val;
     }
     

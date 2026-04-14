@@ -97,8 +97,11 @@ class _MoodTrackerScreenState extends ConsumerState<MoodTrackerScreen> {
                   selected: isSelected,
                   onSelected: (val) {
                     setState(() {
-                      if (val) _selectedTags.add(tag);
-                      else _selectedTags.remove(tag);
+                      if (val) {
+                        _selectedTags.add(tag);
+                      } else {
+                        _selectedTags.remove(tag);
+                      }
                     });
                   },
                 );

@@ -7,7 +7,7 @@
 /// runtime via RemoteConfig-delivered JSON (see RemoteConfigService). The
 /// engine always falls back to the local rules if RemoteConfig is unavailable.
 
-library wedding_plan_rule;
+library;
 
 // ─── Enums ───────────────────────────────────────────────────────────────────
 

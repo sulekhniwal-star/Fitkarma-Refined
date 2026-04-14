@@ -1,5 +1,4 @@
 import '../../food/data/food_drift_service.dart';
-import '../../food/domain/food_providers.dart';
 
 class MicronutrientGap {
   final double iron;

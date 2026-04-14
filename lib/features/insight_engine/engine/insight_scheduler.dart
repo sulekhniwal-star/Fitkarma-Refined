@@ -6,7 +6,6 @@ import 'rule_evaluator.dart';
 import '../../../core/storage/drift_service.dart';
 import '../../../core/storage/app_database.dart';
 
-import '../rules/server_rules.dart';
 import 'insight_rule_registry.dart';
 
 @pragma('vm:entry-point')

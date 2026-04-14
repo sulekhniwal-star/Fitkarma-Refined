@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../data/karma_repository.dart';
-import '../../../shared/widgets/bilingual_label.dart';
 
 class KarmaHubScreen extends ConsumerStatefulWidget {
   const KarmaHubScreen({super.key});

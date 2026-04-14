@@ -1,4 +1,4 @@
-# FitKarma — Developer Documentation (Revised v2.0)
+# FitKarma — Developer Documentation
 
 > **Offline-First · Privacy-Centric · Built for India**
 > Flutter 3.x · Riverpod 2.x · Drift (SQLite) · Appwrite
@@ -2901,6 +2901,6 @@ APPSTORE_PRIVATE_KEY              — App Store Connect private key (NEW)
 
 ---
 
-*FitKarma Developer Documentation v2.0*
+*FitKarma Developer Documentation*
 *Flutter · Riverpod · Drift (SQLCipher) · Appwrite · Built for India*
 *Offline-first · Privacy-centric · 35+ modules · Full bilingual UI · Dark mode · ABHA integrated*

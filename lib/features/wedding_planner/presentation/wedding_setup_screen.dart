@@ -284,7 +284,7 @@ class _IllustratedRoleCard extends StatelessWidget {
                 child: Image.asset(
                   imagePath,
                   fit: BoxFit.contain,
-                  errorBuilder: (_, __, ___) => const Icon(Icons.person, size: 56, color: AppColors.textMuted),
+                  errorBuilder: (_, _, _) => const Icon(Icons.person, size: 56, color: AppColors.textMuted),
                 ),
               ),
             ),
@@ -349,7 +349,7 @@ class _Step2Dates extends ConsumerWidget {
             }
           },
           loading: () => null,
-          error: (_, __) => null,
+          error: (_, _) => null,
         );
 
     final duration = state.dateRange?.duration.inDays ?? 0;
@@ -604,7 +604,7 @@ class _Step4Prep extends StatelessWidget {
         Expanded(
           child: ListView.separated(
             itemCount: _options.length,
-            separatorBuilder: (_, __) => const SizedBox(height: 12),
+            separatorBuilder: (_, _) => const SizedBox(height: 12),
             itemBuilder: (context, i) {
               final o = _options[i];
               final isSelected = state.prepWeeks == o['weeks'];
@@ -706,7 +706,7 @@ class _Step5Goals extends StatelessWidget {
         Expanded(
           child: ListView.separated(
             itemCount: goals.length,
-            separatorBuilder: (_, __) => const SizedBox(height: 12),
+            separatorBuilder: (_, _) => const SizedBox(height: 12),
             itemBuilder: (context, i) {
               final g = goals[i];
               final isSelected = state.primaryGoal == g['key'];

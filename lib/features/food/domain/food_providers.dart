@@ -3,7 +3,6 @@ import '../../../core/di/providers.dart';
 import '../data/food_repository.dart';
 import '../data/food_drift_service.dart';
 import '../data/food_aw_service.dart';
-import '../../auth/domain/auth_providers.dart';
 
 final foodRepositoryProvider = Provider<FoodRepository>((ref) {
   final db = ref.watch(driftDbProvider);
