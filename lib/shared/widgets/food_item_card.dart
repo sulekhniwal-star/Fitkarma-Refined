@@ -8,6 +8,7 @@ class FoodItemCard extends StatelessWidget {
   final String? nameHi;
   final String portionInfo; // e.g., "1 katori · 180 kcal"
   final String? imageUrl;
+  final String? assetPath;
   final String emoji;
   final VoidCallback onAdd;
 
@@ -17,6 +18,7 @@ class FoodItemCard extends StatelessWidget {
     this.nameHi,
     required this.portionInfo,
     this.imageUrl,
+    this.assetPath,
     required this.emoji,
     required this.onAdd,
   });
@@ -29,12 +31,12 @@ class FoodItemCard extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
       decoration: BoxDecoration(
         color: isDark ? AppColorsDark.surface : AppColors.surface,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
@@ -52,13 +54,15 @@ class FoodItemCard extends StatelessWidget {
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(12),
-                child: imageUrl != null
-                    ? Image.network(
-                        imageUrl!,
-                        fit: BoxFit.cover,
-                        errorBuilder: (_, _, _) => _EmojiFallback(emoji: emoji),
-                      )
-                    : _EmojiFallback(emoji: emoji),
+                child: assetPath != null
+                    ? Image.asset(assetPath!, fit: BoxFit.cover)
+                    : imageUrl != null
+                        ? Image.network(
+                            imageUrl!,
+                            fit: BoxFit.cover,
+                            errorBuilder: (_, _, _) => _EmojiFallback(emoji: emoji),
+                          )
+                        : _EmojiFallback(emoji: emoji),
               ),
             ),
             const SizedBox(width: 16),

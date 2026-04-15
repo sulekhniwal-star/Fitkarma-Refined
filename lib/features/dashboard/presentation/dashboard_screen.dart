@@ -95,43 +95,70 @@ class DashboardScreen extends ConsumerWidget {
   Widget _buildHeader(BuildContext context, WidgetRef ref, dynamic user, bool isDark) {
     final karmaResult = ref.watch(karmaProvider);
 
-    return Row(
-      children: [
-        CircleAvatar(
-          radius: 20,
-          backgroundColor: AppColors.secondarySurface,
-          child: Text(user?.name.characters.first ?? 'U'),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: BilingualLabel(
-            english: 'Namaste, ${user?.name.split(' ').first ?? 'Friend'}',
-            hindi: 'नमस्ते, ${user?.name.split(' ').first ?? 'मित्र'}',
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: isDark ? AppColorsDark.surface0 : Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.03), blurRadius: 10)],
+      ),
+      child: Stack(
+        children: [
+          Positioned(
+            right: -10,
+            top: -10,
+            child: Opacity(
+              opacity: 0.1,
+              child: Image.asset('assets/images/ayurveda/kapha.png', width: 100),
+            ),
           ),
-        ),
-        const SizedBox(width: 8),
-        _buildAbhaBadge(ref),
-        const SizedBox(width: 8),
-        AsyncValueWidget<KarmaData>(
-          value: karmaResult,
-          loading: const SizedBox.shrink(),
-          data: (karma) => Row(
+          Row(
             children: [
-              _buildChip(
-                label: '${karma.currentXP} XP',
-                color: AppColors.accent,
-                textColor: Colors.black,
+              CircleAvatar(
+                radius: 24,
+                backgroundColor: AppColors.primarySurface,
+                child: Text(user?.name.characters.first ?? 'U', style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.primary)),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    BilingualLabel(
+                      english: 'Namaste, ${user?.name.split(' ').first ?? 'Friend'}',
+                      hindi: 'नमस्ते, ${user?.name.split(' ').first ?? 'मित्र'}',
+                    ),
+                    const SizedBox(height: 4),
+                    _buildAbhaBadge(ref),
+                  ],
+                ),
               ),
               const SizedBox(width: 8),
-              _buildChip(
-                label: 'Lvl ${karma.level}',
-                color: Colors.indigo,
-                textColor: Colors.white,
+              AsyncValueWidget<KarmaData>(
+                value: karmaResult,
+                loading: const SizedBox.shrink(),
+                data: (karma) => Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    _buildChip(
+                      label: '${karma.currentXP} XP',
+                      color: AppColors.primary,
+                      textColor: Colors.white,
+                    ),
+                    const SizedBox(height: 4),
+                    _buildChip(
+                      label: 'Lvl ${karma.level}',
+                      color: AppColors.accent,
+                      textColor: Colors.black87,
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 

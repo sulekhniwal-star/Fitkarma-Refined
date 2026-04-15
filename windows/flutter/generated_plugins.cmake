@@ -12,6 +12,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   geolocator_windows
   local_auth_windows
   objectbox_flutter_libs
+  rive_native
   sentry_flutter
   share_plus
   speech_to_text_windows

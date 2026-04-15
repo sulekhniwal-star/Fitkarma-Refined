@@ -164,20 +164,25 @@ class FoodHomeScreen extends ConsumerWidget {
   }
 
   Widget _buildMealLogList(BuildContext context, WidgetRef ref, MealType type, bool isDark) {
+    String? asset;
+    if (type == MealType.breakfast) asset = 'assets/images/food/breakfast.png';
+    if (type == MealType.lunch) asset = 'assets/images/food/lunch.png';
+
     return Column(
       children: [
+        FoodItemCard(
+          name: 'Healthy Thali / Meal',
+          nameHi: 'स्वस्थ भोजन',
+          portionInfo: '1 plate · 420 kcal',
+          assetPath: asset,
+          emoji: '🍱',
+          onAdd: () {},
+        ),
         FoodItemCard(
           name: 'Poha with Sprouts',
           nameHi: 'पोहा और अंकुरित अनाज',
           portionInfo: '1 plate · 280 kcal',
           emoji: '🥣',
-          onAdd: () {},
-        ),
-        FoodItemCard(
-          name: 'Chai (No Sugar)',
-          nameHi: 'बिना चीनी की चाय',
-          portionInfo: '1 cup · 45 kcal',
-          emoji: '☕',
           onAdd: () {},
         ),
       ],

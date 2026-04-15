@@ -6,6 +6,7 @@ class WeddingRoleChip extends StatelessWidget {
   final String label;
   final String labelHi;
   final String emoji;
+  final String? imagePath;
   final bool isSelected;
   final VoidCallback onTap;
 
@@ -13,7 +14,8 @@ class WeddingRoleChip extends StatelessWidget {
     super.key,
     required this.label,
     required this.labelHi,
-    required this.emoji,
+    this.emoji = '',
+    this.imagePath,
     required this.isSelected,
     required this.onTap,
   });
@@ -24,47 +26,74 @@ class WeddingRoleChip extends StatelessWidget {
 
     return GestureDetector(
       onTap: onTap,
-      child: Container(
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
         width: 120,
-        height: 140,
+        height: 160,
         decoration: BoxDecoration(
           color: isSelected
-              ? (isDark ? AppColorsDark.primarySurface : AppColors.primarySurface)
-              : (isDark ? AppColorsDark.surface : Colors.white),
-          borderRadius: BorderRadius.circular(12),
+              ? (isDark ? AppColorsDark.primaryMuted : AppColors.primaryMuted)
+              : (isDark ? AppColorsDark.surface0 : AppColors.surface0),
+          borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: isSelected
                 ? (isDark ? AppColorsDark.primary : AppColors.primary)
                 : (isDark ? AppColorsDark.divider : AppColors.divider),
             width: isSelected ? 2 : 1,
           ),
+          boxShadow: isSelected && isDark
+              ? [
+                  BoxShadow(
+                    color: AppColorsDark.primary.withOpacity(0.15),
+                    blurRadius: 15,
+                    spreadRadius: 1,
+                  )
+                ]
+              : null,
         ),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(emoji, style: const TextStyle(fontSize: 40)),
-            const SizedBox(height: 8),
-            Text(
-              label,
-              style: AppTextStyles.labelLarge(isDark).copyWith(
-                color: isSelected ? (isDark ? AppColorsDark.primary : AppColors.primary) : null,
-              ),
-            ),
-            Text(
-              labelHi,
-              style: AppTextStyles.caption(isDark).copyWith(
-                color: isSelected ? (isDark ? AppColorsDark.primary : AppColors.primary) : null,
-              ),
-            ),
-            if (isSelected)
-              Padding(
-                padding: const EdgeInsets.only(top: 4.0),
-                child: Icon(
-                  Icons.check_circle,
-                  color: isDark ? AppColorsDark.primary : AppColors.primary,
-                  size: 20,
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: imagePath != null
+                      ? Image.asset(
+                          imagePath!,
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                        )
+                      : Center(
+                          child: Text(
+                            emoji,
+                            style: const TextStyle(fontSize: 40),
+                          ),
+                        ),
                 ),
               ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(8, 0, 8, 12),
+              child: Column(
+                children: [
+                  Text(
+                    label,
+                    style: AppTextStyles.labelLarge(isDark).copyWith(
+                      color: isSelected ? (isDark ? AppColorsDark.primary : AppColors.primary) : null,
+                      fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                    ),
+                  ),
+                  Text(
+                    labelHi,
+                    style: AppTextStyles.caption(isDark).copyWith(
+                      color: isSelected ? (isDark ? AppColorsDark.primary : AppColors.primary) : (isDark ? AppColorsDark.textSecondary : AppColors.textSecondary),
+                      fontSize: 10,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),

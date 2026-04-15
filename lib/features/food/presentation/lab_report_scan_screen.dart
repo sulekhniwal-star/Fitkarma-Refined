@@ -22,7 +22,6 @@ class _ExtractedValueState {
   _ExtractedValueState({
     required this.original,
     required this.currentValue,
-    this.isConfirmed = false,
   });
 }
 

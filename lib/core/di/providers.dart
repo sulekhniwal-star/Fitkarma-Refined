@@ -9,6 +9,7 @@ import '../../features/auth/presentation/onboarding/onboarding_screen.dart';
 import '../../features/dashboard/presentation/dashboard_screen.dart';
 import '../../features/food/presentation/food_home_screen.dart';
 import '../../features/food/presentation/food_log_screen.dart';
+import '../../features/food/presentation/wedding_meal_log_screen.dart';
 import '../../features/food/presentation/lab_report_scan_screen.dart';
 import '../../features/sleep/presentation/sleep_tracker_screen.dart';
 import '../../features/mood/presentation/mood_tracker_screen.dart';
@@ -127,6 +128,10 @@ final appRouter = Provider<GoRouter>((ref) {
               GoRoute(
                 path: 'lab-scan',
                 builder: (context, state) => const LabReportScanScreen(),
+              ),
+              GoRoute(
+                path: 'log/wedding',
+                builder: (context, state) => const WeddingMealLogScreen(),
               ),
               GoRoute(
                 path: 'detail/:id',

@@ -158,6 +158,18 @@ abstract class AppLocalizations {
   /// **'Food'**
   String get navFood;
 
+  /// No description provided for @navWorkout.
+  ///
+  /// In en, this message translates to:
+  /// **'Workout'**
+  String get navWorkout;
+
+  /// No description provided for @navSteps.
+  ///
+  /// In en, this message translates to:
+  /// **'Steps'**
+  String get navSteps;
+
   /// No description provided for @navSleep.
   ///
   /// In en, this message translates to:
@@ -200,11 +212,65 @@ abstract class AppLocalizations {
   /// **'Food Tracking'**
   String get screenTitleFood;
 
+  /// No description provided for @screenTitleWorkout.
+  ///
+  /// In en, this message translates to:
+  /// **'Workout'**
+  String get screenTitleWorkout;
+
   /// No description provided for @screenTitleYoga.
   ///
   /// In en, this message translates to:
   /// **'Yoga & Mindfulness'**
   String get screenTitleYoga;
+
+  /// No description provided for @screenTitleSteps.
+  ///
+  /// In en, this message translates to:
+  /// **'Steps'**
+  String get screenTitleSteps;
+
+  /// No description provided for @screenTitleSleep.
+  ///
+  /// In en, this message translates to:
+  /// **'Sleep'**
+  String get screenTitleSleep;
+
+  /// No description provided for @screenTitleKarma.
+  ///
+  /// In en, this message translates to:
+  /// **'Karma Hub'**
+  String get screenTitleKarma;
+
+  /// No description provided for @screenTitleLabReports.
+  ///
+  /// In en, this message translates to:
+  /// **'Lab Reports'**
+  String get screenTitleLabReports;
+
+  /// No description provided for @screenTitleABHA.
+  ///
+  /// In en, this message translates to:
+  /// **'ABHA Health ID'**
+  String get screenTitleABHA;
+
+  /// No description provided for @screenTitleEmergency.
+  ///
+  /// In en, this message translates to:
+  /// **'Emergency Card'**
+  String get screenTitleEmergency;
+
+  /// No description provided for @screenTitleWedding.
+  ///
+  /// In en, this message translates to:
+  /// **'Wedding Planner'**
+  String get screenTitleWedding;
+
+  /// No description provided for @screenTitleFestival.
+  ///
+  /// In en, this message translates to:
+  /// **'Festivals'**
+  String get screenTitleFestival;
 
   /// No description provided for @actionNext.
   ///
@@ -242,6 +308,54 @@ abstract class AppLocalizations {
   /// **'Get Started'**
   String get actionGetStarted;
 
+  /// No description provided for @actionContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get actionContinue;
+
+  /// No description provided for @actionSkip.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get actionSkip;
+
+  /// No description provided for @actionDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get actionDone;
+
+  /// No description provided for @actionRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get actionRetry;
+
+  /// No description provided for @actionLogout.
+  ///
+  /// In en, this message translates to:
+  /// **'Logout'**
+  String get actionLogout;
+
+  /// No description provided for @actionDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get actionDelete;
+
+  /// No description provided for @actionLink.
+  ///
+  /// In en, this message translates to:
+  /// **'Link'**
+  String get actionLink;
+
+  /// No description provided for @actionUnlink.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlink'**
+  String get actionUnlink;
+
   /// No description provided for @headerAccount.
   ///
   /// In en, this message translates to:
@@ -265,6 +379,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Data & Sync'**
   String get headerDataSync;
+
+  /// No description provided for @headerNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get headerNotifications;
+
+  /// No description provided for @headerAbout.
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get headerAbout;
+
+  /// No description provided for @headerAchievements.
+  ///
+  /// In en, this message translates to:
+  /// **'Achievements'**
+  String get headerAchievements;
 
   /// No description provided for @errorGeneric.
   ///
@@ -302,6 +434,12 @@ abstract class AppLocalizations {
   /// **'Good Evening!'**
   String get greetingEvening;
 
+  /// No description provided for @greetingNamaste.
+  ///
+  /// In en, this message translates to:
+  /// **'Namaste'**
+  String get greetingNamaste;
+
   /// No description provided for @onboardingWelcomeTitle.
   ///
   /// In en, this message translates to:
@@ -311,8 +449,20 @@ abstract class AppLocalizations {
   /// No description provided for @onboardingWelcomeSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Modern science meets ancient wisdom.'**
+  /// **'Your journey to holistic health starts here.'**
   String get onboardingWelcomeSubtitle;
+
+  /// No description provided for @onboardingStepGoal.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Goal'**
+  String get onboardingStepGoal;
+
+  /// No description provided for @onboardingStepAbout.
+  ///
+  /// In en, this message translates to:
+  /// **'About You'**
+  String get onboardingStepAbout;
 
   /// No description provided for @onboardingStepDosha.
   ///
@@ -323,14 +473,296 @@ abstract class AppLocalizations {
   /// No description provided for @onboardingStepLanguage.
   ///
   /// In en, this message translates to:
-  /// **'Your Health, Your Language'**
+  /// **'Choose Language'**
   String get onboardingStepLanguage;
+
+  /// No description provided for @onboardingStepConnections.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect Health ID'**
+  String get onboardingStepConnections;
 
   /// No description provided for @insightCalorieGoal.
   ///
   /// In en, this message translates to:
   /// **'Your daily calorie goal is {goal} kcal.'**
   String insightCalorieGoal(int goal);
+
+  /// No description provided for @stepsToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s Steps'**
+  String get stepsToday;
+
+  /// No description provided for @stepsGoal.
+  ///
+  /// In en, this message translates to:
+  /// **'Step Goal'**
+  String get stepsGoal;
+
+  /// No description provided for @stepsDistance.
+  ///
+  /// In en, this message translates to:
+  /// **'Distance'**
+  String get stepsDistance;
+
+  /// No description provided for @stepsCalories.
+  ///
+  /// In en, this message translates to:
+  /// **'Calories Burned'**
+  String get stepsCalories;
+
+  /// No description provided for @foodCalories.
+  ///
+  /// In en, this message translates to:
+  /// **'Calories'**
+  String get foodCalories;
+
+  /// No description provided for @foodProtein.
+  ///
+  /// In en, this message translates to:
+  /// **'Protein'**
+  String get foodProtein;
+
+  /// No description provided for @foodCarbs.
+  ///
+  /// In en, this message translates to:
+  /// **'Carbs'**
+  String get foodCarbs;
+
+  /// No description provided for @foodFat.
+  ///
+  /// In en, this message translates to:
+  /// **'Fat'**
+  String get foodFat;
+
+  /// No description provided for @foodSearchPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Search food...'**
+  String get foodSearchPlaceholder;
+
+  /// No description provided for @foodLogMeal.
+  ///
+  /// In en, this message translates to:
+  /// **'Log Meal'**
+  String get foodLogMeal;
+
+  /// No description provided for @sleepDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'Sleep Duration'**
+  String get sleepDuration;
+
+  /// No description provided for @sleepQuality.
+  ///
+  /// In en, this message translates to:
+  /// **'Sleep Quality'**
+  String get sleepQuality;
+
+  /// No description provided for @sleepDebt.
+  ///
+  /// In en, this message translates to:
+  /// **'Sleep Debt'**
+  String get sleepDebt;
+
+  /// No description provided for @bpSystolic.
+  ///
+  /// In en, this message translates to:
+  /// **'Systolic'**
+  String get bpSystolic;
+
+  /// No description provided for @bpDiastolic.
+  ///
+  /// In en, this message translates to:
+  /// **'Diastolic'**
+  String get bpDiastolic;
+
+  /// No description provided for @bpPulse.
+  ///
+  /// In en, this message translates to:
+  /// **'Pulse'**
+  String get bpPulse;
+
+  /// No description provided for @glucoseFasting.
+  ///
+  /// In en, this message translates to:
+  /// **'Fasting'**
+  String get glucoseFasting;
+
+  /// No description provided for @glucosePostMeal.
+  ///
+  /// In en, this message translates to:
+  /// **'Post Meal'**
+  String get glucosePostMeal;
+
+  /// No description provided for @glucoseRandom.
+  ///
+  /// In en, this message translates to:
+  /// **'Random'**
+  String get glucoseRandom;
+
+  /// No description provided for @karmaTotalXP.
+  ///
+  /// In en, this message translates to:
+  /// **'Total XP'**
+  String get karmaTotalXP;
+
+  /// No description provided for @karmaLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Level'**
+  String get karmaLevel;
+
+  /// No description provided for @karmaNextLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Next Level'**
+  String get karmaNextLevel;
+
+  /// No description provided for @settingsTheme.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme'**
+  String get settingsTheme;
+
+  /// No description provided for @settingsThemeLight.
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get settingsThemeLight;
+
+  /// No description provided for @settingsThemeDark.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark'**
+  String get settingsThemeDark;
+
+  /// No description provided for @settingsThemeSystem.
+  ///
+  /// In en, this message translates to:
+  /// **'System'**
+  String get settingsThemeSystem;
+
+  /// No description provided for @settingsLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get settingsLanguage;
+
+  /// No description provided for @settingsLowDataMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Low Data Mode'**
+  String get settingsLowDataMode;
+
+  /// No description provided for @settingsSyncInterval.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync Interval'**
+  String get settingsSyncInterval;
+
+  /// No description provided for @settingsBiometric.
+  ///
+  /// In en, this message translates to:
+  /// **'Biometric Lock'**
+  String get settingsBiometric;
+
+  /// No description provided for @settingsExportData.
+  ///
+  /// In en, this message translates to:
+  /// **'Export My Data'**
+  String get settingsExportData;
+
+  /// No description provided for @settingsDeleteAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Account'**
+  String get settingsDeleteAccount;
+
+  /// No description provided for @subscriptionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock Full FitKarma'**
+  String get subscriptionTitle;
+
+  /// No description provided for @subscriptionMonthly.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly'**
+  String get subscriptionMonthly;
+
+  /// No description provided for @subscriptionQuarterly.
+  ///
+  /// In en, this message translates to:
+  /// **'Quarterly'**
+  String get subscriptionQuarterly;
+
+  /// No description provided for @subscriptionYearly.
+  ///
+  /// In en, this message translates to:
+  /// **'Yearly'**
+  String get subscriptionYearly;
+
+  /// No description provided for @subscriptionFamily.
+  ///
+  /// In en, this message translates to:
+  /// **'Family'**
+  String get subscriptionFamily;
+
+  /// No description provided for @subscriptionPopular.
+  ///
+  /// In en, this message translates to:
+  /// **'Most Popular'**
+  String get subscriptionPopular;
+
+  /// No description provided for @subscriptionBestValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Best Value'**
+  String get subscriptionBestValue;
+
+  /// No description provided for @subscriptionRestore.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore Purchase'**
+  String get subscriptionRestore;
+
+  /// No description provided for @subscriptionTrial.
+  ///
+  /// In en, this message translates to:
+  /// **'7-day free trial, cancel anytime'**
+  String get subscriptionTrial;
+
+  /// No description provided for @emergencyBloodGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Blood Group'**
+  String get emergencyBloodGroup;
+
+  /// No description provided for @emergencyAllergies.
+  ///
+  /// In en, this message translates to:
+  /// **'Allergies'**
+  String get emergencyAllergies;
+
+  /// No description provided for @emergencyMedications.
+  ///
+  /// In en, this message translates to:
+  /// **'Medications'**
+  String get emergencyMedications;
+
+  /// No description provided for @emergencyContact.
+  ///
+  /// In en, this message translates to:
+  /// **'Emergency Contact'**
+  String get emergencyContact;
+
+  /// No description provided for @emergencyDoctor.
+  ///
+  /// In en, this message translates to:
+  /// **'Doctor'**
+  String get emergencyDoctor;
 
   /// No description provided for @festDiwali.
   ///
@@ -463,6 +895,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Reception'**
   String get wedReception;
+
+  /// No description provided for @wedRoleBride.
+  ///
+  /// In en, this message translates to:
+  /// **'Bride'**
+  String get wedRoleBride;
+
+  /// No description provided for @wedRoleGroom.
+  ///
+  /// In en, this message translates to:
+  /// **'Groom'**
+  String get wedRoleGroom;
+
+  /// No description provided for @wedRoleGuest.
+  ///
+  /// In en, this message translates to:
+  /// **'Guest'**
+  String get wedRoleGuest;
+
+  /// No description provided for @wedRoleRelative.
+  ///
+  /// In en, this message translates to:
+  /// **'Relative'**
+  String get wedRoleRelative;
+
+  /// No description provided for @doshaVata.
+  ///
+  /// In en, this message translates to:
+  /// **'Vata'**
+  String get doshaVata;
+
+  /// No description provided for @doshaPitta.
+  ///
+  /// In en, this message translates to:
+  /// **'Pitta'**
+  String get doshaPitta;
+
+  /// No description provided for @doshaKapha.
+  ///
+  /// In en, this message translates to:
+  /// **'Kapha'**
+  String get doshaKapha;
+
+  /// No description provided for @labelMale.
+  ///
+  /// In en, this message translates to:
+  /// **'Male'**
+  String get labelMale;
+
+  /// No description provided for @labelFemale.
+  ///
+  /// In en, this message translates to:
+  /// **'Female'**
+  String get labelFemale;
+
+  /// No description provided for @labelOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get labelOther;
+
+  /// No description provided for @labelLinked.
+  ///
+  /// In en, this message translates to:
+  /// **'Linked'**
+  String get labelLinked;
+
+  /// No description provided for @labelUnlinked.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlinked'**
+  String get labelUnlinked;
+
+  /// No description provided for @labelNormal.
+  ///
+  /// In en, this message translates to:
+  /// **'Normal'**
+  String get labelNormal;
+
+  /// No description provided for @labelHigh.
+  ///
+  /// In en, this message translates to:
+  /// **'High'**
+  String get labelHigh;
+
+  /// No description provided for @labelLow.
+  ///
+  /// In en, this message translates to:
+  /// **'Low'**
+  String get labelLow;
+
+  /// No description provided for @labelConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get labelConfirm;
+
+  /// No description provided for @labelEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get labelEdit;
+
+  /// No description provided for @labelViewAll.
+  ///
+  /// In en, this message translates to:
+  /// **'View All'**
+  String get labelViewAll;
 }
 
 class _AppLocalizationsDelegate

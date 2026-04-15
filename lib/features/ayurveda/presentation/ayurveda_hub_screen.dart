@@ -98,24 +98,44 @@ class _AyurvedaHome extends StatelessWidget {
   Widget _buildHeroCard(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         color: Colors.teal.shade50,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(24),
         border: Border.all(color: Colors.teal.shade100),
       ),
-      child: Column(
+      child: Stack(
         children: [
-          const Icon(Icons.quiz, size: 48, color: Colors.teal),
-          const SizedBox(height: 16),
-          const Text('Take the Prakriti Quiz', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 8),
-          const Text('Identity your dominant Dosha and learn your natural constitution.', textAlign: TextAlign.center),
-          const SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: () {},
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.teal, foregroundColor: Colors.white),
-            child: const Text('START QUIZ'),
+          Positioned(
+            right: -20,
+            bottom: -20,
+            child: Opacity(
+              opacity: 0.2,
+              child: Image.asset('assets/images/ayurveda/vata.png', width: 140),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Icon(Icons.quiz, size: 32, color: Colors.teal),
+                const SizedBox(height: 16),
+                const Text('Take the Prakriti Quiz', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                const SizedBox(height: 8),
+                const Text('Identify your dominant Dosha and learn your natural constitution.', style: TextStyle(fontSize: 14)),
+                const SizedBox(height: 24),
+                ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.teal,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  ),
+                  child: const Text('START QUIZ'),
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -142,35 +162,48 @@ class _DoshaProfile extends StatelessWidget {
     final dominant = score.dominant;
     final percentages = score.percentages;
 
+    final doshaImg = {
+      Dosha.vata: 'assets/images/ayurveda/vata.png',
+      Dosha.pitta: 'assets/images/ayurveda/pitta.png',
+      Dosha.kapha: 'assets/images/ayurveda/kapha.png',
+    }[dominant]!;
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: Column(
         children: [
           const Text('Your Dosha Profile', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 32),
+          const SizedBox(height: 24),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(24),
+            child: Image.asset(doshaImg, height: 160, fit: BoxFit.contain),
+          ),
+          const SizedBox(height: 24),
           SizedBox(
-            height: 200,
+            height: 180,
             child: PieChart(
               PieChartData(
                 sections: [
-                  PieChartSectionData(color: Colors.blue, value: percentages[Dosha.vata]!, title: 'Vata', radius: 60),
-                  PieChartSectionData(color: Colors.red, value: percentages[Dosha.pitta]!, title: 'Pitta', radius: 60),
-                  PieChartSectionData(color: Colors.green, value: percentages[Dosha.kapha]!, title: 'Kapha', radius: 60),
+                  PieChartSectionData(color: Colors.blue.shade300, value: percentages[Dosha.vata]!, title: 'Vata', radius: 50, titleStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                  PieChartSectionData(color: Colors.red.shade400, value: percentages[Dosha.pitta]!, title: 'Pitta', radius: 50, titleStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                  PieChartSectionData(color: Colors.green.shade400, value: percentages[Dosha.kapha]!, title: 'Kapha', radius: 50, titleStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                 ],
                 centerSpaceRadius: 40,
               ),
             ),
           ),
-          const SizedBox(height: 32),
+          const SizedBox(height: 24),
           Card(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            elevation: 0,
+            color: Colors.grey.withOpacity(0.05),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20), border: Border.all(color: Colors.grey.withOpacity(0.1))),
             child: Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(24),
               child: Column(
                 children: [
                   Text('Primary Dosha: ${dominant.name.toUpperCase()}', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.teal)),
-                  const SizedBox(height: 8),
-                  const Text('You possess the focused energy of fire and the fluidity of water. Your Agni (digestive fire) is naturally strong.', textAlign: TextAlign.center),
+                  const SizedBox(height: 12),
+                  const Text('You possess the focused energy of fire and the fluidity of water. Your Agni (digestive fire) is naturally strong.', textAlign: TextAlign.center, style: TextStyle(height: 1.5)),
                 ],
               ),
             ),

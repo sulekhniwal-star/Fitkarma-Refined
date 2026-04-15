@@ -3,9 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import '../../../shared/theme/app_colors.dart';
+import '../../../shared/theme/app_text_styles.dart';
 import '../../../shared/widgets/abha_link_badge.dart';
+import '../../../shared/widgets/karma_level_card.dart';
+import '../../../shared/widgets/dosha_chart.dart';
 import '../../auth/domain/auth_providers.dart';
-// For level card if needed
+import '../../wedding_planner/presentation/wedding_providers.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
@@ -28,29 +32,33 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(authStateProvider).value;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
+      backgroundColor: isDark ? AppColorsDark.background : AppColors.background,
       body: SingleChildScrollView(
         child: Column(
           children: [
             _buildHero(user),
             Padding(
-              padding: const EdgeInsets.all(24),
+              padding: const EdgeInsets.all(20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                   _buildKarmaLevelCard(),
-                   const SizedBox(height: 24),
-                   _buildDoshaMiniCard(),
-                   const SizedBox(height: 24),
-                   _buildPersonalInfo(user),
-                   const SizedBox(height: 32),
-                   const ABHALinkBadge(isLinked: true, isLarge: false),
-                   const SizedBox(height: 32),
-                   _buildAchievementsSection(),
-                   const SizedBox(height: 32),
-                   _buildReferralCard(context),
-                   const SizedBox(height: 40),
+                  _buildKarmaLevelCard(),
+                  const SizedBox(height: 24),
+                  _buildDoshaCard(),
+                  const SizedBox(height: 24),
+                  _buildPersonalInfo(user),
+                  const SizedBox(height: 32),
+                  _buildABHASection(),
+                  const SizedBox(height: 32),
+                  _buildWeddingPlannerSection(context),
+                  const SizedBox(height: 32),
+                  _buildAchievementsSection(),
+                  const SizedBox(height: 32),
+                  _buildReferralCard(context),
+                  const SizedBox(height: 40),
                 ],
               ),
             ),
@@ -61,136 +69,559 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   }
 
   Widget _buildHero(dynamic user) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(24, 60, 24, 40),
       decoration: BoxDecoration(
-        color: Colors.indigo.shade900,
+        gradient: isDark 
+          ? const LinearGradient(
+              colors: [Color(0xFF0A0818), Color(0xFF1E1850)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            )
+          : AppColors.heroGradient,
         borderRadius: const BorderRadius.vertical(bottom: Radius.circular(32)),
       ),
       child: Column(
         children: [
           GestureDetector(
             onTap: _pickImage,
-            child: CircleAvatar(
-              radius: 50,
-              backgroundColor: Colors.white24,
-              backgroundImage: _imagePath != null ? FileImage(File(_imagePath!)) : null,
-              child: _imagePath == null ? const Icon(Icons.camera_alt, color: Colors.white) : null,
+            child: Container(
+              padding: const EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: isDark ? AppColorsDark.primary : AppColors.primary,
+                  width: 3,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: (isDark ? AppColorsDark.primary : AppColors.primary)
+                        .withValues(alpha: 0.3),
+                    blurRadius: 16,
+                    spreadRadius: 2,
+                  ),
+                ],
+              ),
+              child: CircleAvatar(
+                radius: 40,
+                backgroundColor: Colors.white24,
+                backgroundImage: _imagePath != null ? FileImage(File(_imagePath!)) : null,
+                child: _imagePath == null
+                    ? Icon(Icons.camera_alt, color: Colors.white, size: 28)
+                    : null,
+              ),
             ),
           ),
           const SizedBox(height: 16),
-          Text(user?.name ?? 'Arjun Mehta', style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold)),
-          Text(user?.email ?? 'arjun@example.com', style: TextStyle(color: Colors.white.withOpacity(0.7))),
+          Text(
+            user?.name ?? 'Arjun Mehta',
+            style: AppTextStyles.h1(isDark).copyWith(color: Colors.white),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            user?.email ?? 'arjun@example.com',
+            style: AppTextStyles.bodyMedium(isDark).copyWith(color: Colors.white70),
+          ),
         ],
       ),
     );
   }
 
   Widget _buildKarmaLevelCard() {
-    return Card(
-      child: ListTile(
-        leading: const Icon(Icons.workspace_premium, color: Colors.amber, size: 32),
-        title: const Text('Level 14: Warrior', style: TextStyle(fontWeight: FontWeight.bold)),
-        subtitle: const Text('Next level: 450 XP required'),
-        trailing: const Icon(Icons.chevron_right),
-        onTap: () => context.push('/karma'),
-      ),
+    return const KarmaLevelCard(
+      level: 14,
+      title: 'Warrior',
+      currentXP: 1550,
+      nextLevelXP: 2000,
     );
   }
 
-  Widget _buildDoshaMiniCard() {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          children: [
-            const Icon(Icons.spa, color: Colors.teal),
-            const SizedBox(width: 16),
-            const Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                    Text('Pitta Dominant', style: TextStyle(fontWeight: FontWeight.bold)),
-                    Text('Metabolism is strong today.', style: TextStyle(fontSize: 12, color: Colors.grey)),
-                ],
-              ),
-            ),
-            SizedBox(height: 40, width: 40, child: Icon(Icons.donut_large, color: Colors.teal.shade200)),
-          ],
+  Widget _buildDoshaCard() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: isDark ? AppColorsDark.surface : AppColors.surface,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: isDark ? AppColorsDark.divider : AppColors.divider,
         ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 3,
+                height: 18,
+                decoration: BoxDecoration(
+                  color: AppColors.teal,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Text(
+                'Ayurvedic Constitution',
+                style: AppTextStyles.h3(isDark),
+              ),
+              const SizedBox(width: 4),
+              Text(
+                'आयुर्वेदिक प्रकृति',
+                style: AppTextStyles.sectionHeaderHindi(isDark),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          const SizedBox(
+            height: 160,
+            child: DoshaChart(
+              vataPct: 20,
+              pittaPct: 60,
+              kaphaPct: 20,
+            ),
+          ),
+        ],
       ),
     );
   }
 
   Widget _buildPersonalInfo(dynamic user) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: isDark ? AppColorsDark.surface : AppColors.surface,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: isDark ? AppColorsDark.divider : AppColors.divider,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildSectionHeader('Personal Info', 'व्यक्तिगत जानकारी', isDark),
+          const SizedBox(height: 16),
+          _buildInfoRow(Icons.phone, 'Phone', '+91 98765 43210', isDark),
+          _buildInfoRow(Icons.cake, 'Date of Birth', '12 Jan 1992', isDark),
+          _buildInfoRow(Icons.height, 'Height', '178 cm', isDark),
+          _buildInfoRow(Icons.monitor_weight, 'Weight', '74 kg', isDark),
+          _buildInfoRow(Icons.bloodtype, 'Blood Group', 'B+', isDark),
+          _buildInfoRow(Icons.language, 'Language', 'English', isDark),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSectionHeader(String title, String hindi, bool isDark) {
+    return Row(
       children: [
-        const Text('Personal Info', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-        const SizedBox(height: 16),
-        _buildInfoRow(Icons.phone, 'Phone', '+91 98765 43210'),
-        _buildInfoRow(Icons.cake, 'Date of Birth', '12 Jan 1992'),
-        _buildInfoRow(Icons.height, 'Height', '178 cm'),
-        _buildInfoRow(Icons.monitor_weight, 'Weight', '74 kg'),
+        Container(
+          width: 3,
+          height: 16,
+          decoration: BoxDecoration(
+            color: AppColors.primary,
+            borderRadius: BorderRadius.circular(2),
+          ),
+        ),
+        const SizedBox(width: 8),
+        Text(
+          title.toUpperCase(),
+          style: AppTextStyles.sectionHeader(isDark),
+        ),
+        const SizedBox(width: 4),
+        Text(
+          hindi,
+          style: AppTextStyles.caption(isDark),
+        ),
       ],
     );
   }
 
-  Widget _buildInfoRow(IconData icon, String label, String value) {
+  Widget _buildInfoRow(IconData icon, String label, String value, bool isDark) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.only(bottom: 12),
       child: Row(
         children: [
-           Icon(icon, size: 20, color: Colors.grey),
-           const SizedBox(width: 16),
-           Expanded(child: Text(label, style: const TextStyle(color: Colors.grey))),
-           Text(value, style: const TextStyle(fontWeight: FontWeight.w500)),
-           const SizedBox(width: 8),
-           const Icon(Icons.edit, size: 14, color: Colors.blue),
+          Icon(icon, size: 20, color: isDark ? AppColorsDark.textSecondary : AppColors.textSecondary),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              label,
+              style: AppTextStyles.bodyMedium(isDark),
+            ),
+          ),
+          Text(
+            value,
+            style: AppTextStyles.labelLarge(isDark),
+          ),
+          const SizedBox(width: 8),
+          Icon(
+            Icons.edit,
+            size: 14,
+            color: isDark ? AppColorsDark.textSecondary : AppColors.textSecondary,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildABHASection() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: isDark ? AppColorsDark.surface : AppColors.surface,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: isDark ? AppColorsDark.divider : AppColors.divider,
+        ),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildSectionHeader('ABHA Health ID', 'आयुष्मान भारत', isDark),
+                const SizedBox(height: 12),
+                Text(
+                  'Linked',
+                  style: AppTextStyles.bodyMedium(isDark).copyWith(
+                    color: AppColors.success,
+                  ),
+                ),
+                Text(
+                  '12-3456-7890-1234',
+                  style: AppTextStyles.labelLarge(isDark).copyWith(
+                    fontFamily: 'monospace',
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const ABHALinkBadge(isLinked: true, isLarge: true),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildWeddingPlannerSection(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final profileAsync = ref.watch(weddingProfileProvider);
+
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        gradient: AppColors.weddingGoldGradient,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.2),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Icons.celebration, color: Colors.white, size: 24),
+              ),
+              const SizedBox(width: 14),
+              const Expanded(
+                child: Text(
+                  'Wedding Planner',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          profileAsync.when(
+            data: (profile) {
+              if (profile == null || !profile.hasWeddingSetup) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Set up your wedding planner to get personalized diet and fitness plans for your big day!',
+                      style: TextStyle(color: Colors.white70, fontSize: 13),
+                    ),
+                    const SizedBox(height: 14),
+                    ElevatedButton(
+                      onPressed: () => context.push('/wedding-planner/setup'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        foregroundColor: AppColors.weddingGoldStart,
+                        elevation: 0,
+                      ),
+                      child: const Text('Set Up Now'),
+                    ),
+                  ],
+                );
+              }
+
+              final daysLeft = profile.startDate != null
+                  ? profile.startDate!.difference(DateTime.now()).inDays
+                  : 0;
+
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        profile.role == 'none' ? 'Guest' : profile.role.toUpperCase(),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12,
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Text(
+                          '$daysLeft days',
+                          style: const TextStyle(
+                            color: AppColors.weddingGoldStart,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  const Text(
+                    'Tap to view your personalized wedding plan',
+                    style: TextStyle(color: Colors.white70, fontSize: 12),
+                  ),
+                  const SizedBox(height: 12),
+                  SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton(
+                      onPressed: () => context.push('/wedding-planner'),
+                      style: OutlinedButton.styleFrom(
+                        side: const BorderSide(color: Colors.white),
+                        foregroundColor: Colors.white,
+                      ),
+                      child: const Text('View Plan'),
+                    ),
+                  ),
+                ],
+              );
+            },
+            loading: () => const Center(
+              child: CircularProgressIndicator(color: Colors.white),
+            ),
+            error: (_, _) => const Text(
+              'Unable to load wedding data',
+              style: TextStyle(color: Colors.white70),
+            ),
+          ),
         ],
       ),
     );
   }
 
   Widget _buildAchievementsSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text('Achievements', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-        const SizedBox(height: 16),
-        GridView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4, mainAxisSpacing: 16, crossAxisSpacing: 16),
-          itemCount: 8,
-          itemBuilder: (context, index) => _buildAchievementIcon(index),
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final achievements = [
+      {'icon': Icons.emoji_events, 'label': '7 Day Streak'},
+      {'icon': Icons.fitness_center, 'label': '10 Workouts'},
+      {'icon': Icons.restaurant, 'label': '100 Meals'},
+      {'icon': Icons.directions_walk, 'label': '50K Steps'},
+      {'icon': Icons.spa, 'label': 'Yoga Master'},
+      {'icon': Icons.local_fire_department, 'label': 'On Fire'},
+      {'icon': Icons.workspace_premium, 'badge': 'PRO'},
+      {'icon': Icons.lock, 'badge': 'Locked'},
+    ];
+
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: isDark ? AppColorsDark.surface : AppColors.surface,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: isDark ? AppColorsDark.divider : AppColors.divider,
         ),
-      ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildSectionHeader('Achievements', 'उपलब्धियाँ', isDark),
+          const SizedBox(height: 16),
+          GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 4,
+              mainAxisSpacing: 16,
+              crossAxisSpacing: 16,
+              childAspectRatio: 0.85,
+            ),
+            itemCount: achievements.length,
+            itemBuilder: (context, index) {
+              final earned = index < 5;
+              final item = achievements[index];
+              return _buildAchievementItem(
+                icon: item['icon'] as String,
+                label: item['label'] as String?,
+                badge: item['badge'] as String?,
+                isEarned: earned,
+                isDark: isDark,
+              );
+            },
+          ),
+        ],
+      ),
     );
   }
 
-  Widget _buildAchievementIcon(int index) {
-    final earned = index < 3;
+  Widget _buildAchievementItem({
+    required String icon,
+    String? label,
+    String? badge,
+    required bool isEarned,
+    required bool isDark,
+  }) {
     return Column(
       children: [
         Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(color: earned ? Colors.amber.shade100 : Colors.grey.shade100, shape: BoxShape.circle),
-          child: Icon(Icons.emoji_events, color: earned ? Colors.amber : Colors.grey.shade400, size: 24),
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: isEarned
+                ? AppColors.accent.withValues(alpha: 0.15)
+                : (isDark ? AppColorsDark.surfaceVariant : Colors.grey.shade100),
+            shape: BoxShape.circle,
+            border: isEarned
+                ? Border.all(
+                    color: AppColors.accent.withValues(alpha: 0.5),
+                    width: 2,
+                  )
+                : null,
+          ),
+          child: Icon(
+            _getIconData(icon),
+            color: isEarned
+                ? AppColors.accent
+                : (isDark ? AppColorsDark.textMuted : Colors.grey.shade400),
+            size: 24,
+          ),
         ),
+        const SizedBox(height: 4),
+        if (badge != null)
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+            decoration: BoxDecoration(
+              color: isEarned ? AppColors.accent : Colors.grey,
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: Text(
+              badge,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 8,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          )
+        else if (label != null)
+          Text(
+            label,
+            style: AppTextStyles.caption(isDark).copyWith(
+              fontSize: 9,
+            ),
+            textAlign: TextAlign.center,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
       ],
     );
   }
 
+  IconData _getIconData(String iconName) {
+    switch (iconName) {
+      case 'emoji_events':
+        return Icons.emoji_events;
+      case 'fitness_center':
+        return Icons.fitness_center;
+      case 'restaurant':
+        return Icons.restaurant;
+      case 'directions_walk':
+        return Icons.directions_walk;
+      case 'spa':
+        return Icons.spa;
+      case 'local_fire_department':
+        return Icons.local_fire_department;
+      case 'workspace_premium':
+        return Icons.workspace_premium;
+      case 'lock':
+        return Icons.lock;
+      default:
+        return Icons.star;
+    }
+  }
+
   Widget _buildReferralCard(BuildContext context) {
-    return Card(
-      color: Colors.blue.shade50,
-      child: ListTile(
-        title: const Text('Invite Friends', style: TextStyle(fontWeight: FontWeight.bold)),
-        subtitle: const Text('Earn 500 XP for every successful join.'),
-        trailing: const Icon(Icons.share, color: Colors.blue),
-        onTap: () => context.push('/referral'),
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        gradient: AppColors.amberGradient,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.card_giftcard, color: Colors.white, size: 40),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Invite Friends',
+                  style: AppTextStyles.h3(isDark).copyWith(color: Colors.white),
+                ),
+                Text(
+                  'Earn 500 XP for every successful join!',
+                  style: AppTextStyles.bodyMedium(isDark).copyWith(
+                    color: Colors.white70,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () => context.push('/referral'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.white,
+              foregroundColor: AppColors.accentDark,
+            ),
+            child: const Text('Share'),
+          ),
+        ],
       ),
     );
   }
