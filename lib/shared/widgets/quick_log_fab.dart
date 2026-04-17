@@ -207,3 +207,4 @@ class _QuickLogButtonData {
     required this.icon,
   });
 }
+

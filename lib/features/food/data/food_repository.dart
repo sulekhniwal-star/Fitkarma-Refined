@@ -78,3 +78,4 @@ class FoodRepository {
     return await _foodDao.copyYesterdayMeals(userId);
   }
 }
+

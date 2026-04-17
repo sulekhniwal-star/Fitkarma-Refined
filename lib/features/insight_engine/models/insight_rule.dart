@@ -6,3 +6,4 @@ abstract class InsightRule {
   Future<bool> condition(DriftService db, String userId);
   Future<String> message(DriftService db, String userId);
 }
+

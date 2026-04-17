@@ -243,3 +243,4 @@ const Map<String, FestivalDietConfig> festivalDietConfigs = {
     insightCardMessage: "Makar Sankranti. Enjoy some Til-gul for good health!",
   ),
 };
+

@@ -33,3 +33,4 @@ class FestivalDietBadge extends StatelessWidget {
     );
   }
 }
+

@@ -88,3 +88,4 @@ class WeddingEvents extends Table {
   TextColumn get description => text().nullable()();
   BoolColumn get isMainEvent => boolean().withDefault(const Constant(false))();
 }
+

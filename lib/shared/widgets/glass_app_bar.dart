@@ -62,3 +62,4 @@ class GlassAppBar extends ConsumerWidget implements PreferredSizeWidget {
         kToolbarHeight + (bottom?.preferredSize.height ?? 0.0),
       );
 }
+

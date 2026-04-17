@@ -151,3 +151,4 @@ class _MealRow extends StatelessWidget {
     );
   }
 }
+

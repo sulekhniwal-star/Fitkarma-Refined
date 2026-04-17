@@ -138,3 +138,4 @@ class KarmaRepository {
 final karmaRepositoryProvider = Provider<KarmaRepository>((ref) {
   return KarmaRepository(db: DriftService.db);
 });
+

@@ -52,3 +52,4 @@ abstract class _$SecurityNotifier extends $AsyncNotifier<SecurityState> {
     element.handleCreate(ref, build);
   }
 }
+

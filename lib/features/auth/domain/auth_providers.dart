@@ -78,3 +78,4 @@ class AuthNotifier extends AsyncNotifier<AppUser?> {
 
 /// Global provider for the authentication state.
 final authStateProvider = AsyncNotifierProvider<AuthNotifier, AppUser?>(AuthNotifier.new);
+

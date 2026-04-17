@@ -38,3 +38,4 @@ class AsyncValueWidget<T> extends ConsumerWidget {
     );
   }
 }
+

@@ -81,3 +81,4 @@ class SyncDao extends DatabaseAccessor<AppDatabase> with _$SyncDaoMixin {
     );
   }
 }
+

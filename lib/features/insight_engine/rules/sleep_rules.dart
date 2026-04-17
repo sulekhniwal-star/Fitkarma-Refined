@@ -68,3 +68,4 @@ class PoorSleepConsistencyRule extends InsightRule {
     return "Your 7-day sleep average is under 6 hours. Consider drinking warm turmeric milk before bed for better Vata balance.";
   }
 }
+

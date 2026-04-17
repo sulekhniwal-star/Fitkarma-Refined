@@ -35,3 +35,4 @@ class PostMealSpikeRule extends InsightRule {
     return "Post-meal glucose spikes detected 3 days in a row. A 20-min walk after lunch may help.";
   }
 }
+

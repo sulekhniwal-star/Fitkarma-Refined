@@ -31,3 +31,4 @@ final hba1cEstimateProvider = Provider<double?>((ref) {
   final avg = recentLogs.map((l) => l['value'] as double).reduce((a, b) => a + b) / recentLogs.length;
   return (avg + 46.7) / 28.7;
 });
+

@@ -21,3 +21,4 @@ class FoodAwService {
     return response.documents;
   }
 }
+

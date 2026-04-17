@@ -390,3 +390,4 @@ class _QuickAddSection extends ConsumerWidget {
     );
   }
 }
+

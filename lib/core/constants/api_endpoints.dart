@@ -43,3 +43,4 @@ class AW {
   // Storage Buckets
   static const String filesBucket = 'fitkarma_files';
 }
+

@@ -180,3 +180,4 @@ class _NavBarItem extends StatelessWidget {
     );
   }
 }
+

@@ -34,3 +34,4 @@ class InsightRuleRegistry {
     return rules;
   }
 }
+

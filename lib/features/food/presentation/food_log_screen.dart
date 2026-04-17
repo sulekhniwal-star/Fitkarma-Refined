@@ -342,3 +342,4 @@ class _PortionSelectorSheetState extends State<_PortionSelectorSheet> {
     );
   }
 }
+

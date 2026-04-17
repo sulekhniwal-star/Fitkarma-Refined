@@ -57,11 +57,12 @@ class _HealthReportsScreenState extends ConsumerState<HealthReportsScreen> {
             const SizedBox(height: 24),
             if (_shareUrl != null) 
               HealthShareCard(
-                shareUrl: _shareUrl!, 
-                expiresAt: _expiresAt!,
-                onDelete: () => setState(() => _shareUrl = null),
-                onCopy: () {},
-                onShare: () => Share.share('My Health Report: $_shareUrl'),
+                expiryLabel: _expiresAt != null
+                    ? 'Link expires ${_expiresAt!.difference(DateTime.now()).inDays}d'
+                    : 'Link active',
+                onShareWhatsApp: () => Share.share('My Health Report: $_shareUrl'),
+                onCopyLink: () {},
+                onDeleteLink: () => setState(() => _shareUrl = null),
               ),
 
             if (_isGenerating)
@@ -119,5 +120,6 @@ class _HealthReportsScreenState extends ConsumerState<HealthReportsScreen> {
     );
   }
 }
+
 
 

@@ -43,3 +43,4 @@ class DoshaCalculator {
     return DoshaScore(vata: v, pitta: p, kapha: k);
   }
 }
+

@@ -24,3 +24,4 @@ class SyncDeadLetter extends Table {
   TextColumn get lastError => text().nullable()();
   DateTimeColumn get createdAt => dateTime()();
 }
+

@@ -81,3 +81,4 @@ final activeFestivalProvider = FutureProvider<FestivalData?>((ref) async {
 final activeWeddingProvider = FutureProvider<WeddingEventData?>((ref) async {
   return null; // For now
 });
+

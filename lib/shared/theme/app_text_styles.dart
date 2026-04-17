@@ -141,4 +141,12 @@ class AppTextStyles {
         FontWeight.w400,
         isDark ? AppColorsDark.textMuted : AppColors.textMuted,
       );
+
+  static TextStyle labelSmall(bool isDark) => _base(
+        10,
+        FontWeight.w600,
+        isDark ? AppColorsDark.textMuted : AppColors.textMuted,
+      );
 }
+
+

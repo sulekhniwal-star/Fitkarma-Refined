@@ -71,3 +71,4 @@ class GlucoseDriftService {
     return decrypted;
   }
 }
+

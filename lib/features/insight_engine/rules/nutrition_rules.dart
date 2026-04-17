@@ -111,3 +111,4 @@ class MicronutrientGapRule extends InsightRule {
     return "Your micronutrient intake is consistently low. Consider adding more spinach or fortified foods to your diet.";
   }
 }
+

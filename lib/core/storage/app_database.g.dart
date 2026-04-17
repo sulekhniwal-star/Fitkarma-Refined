@@ -21552,6 +21552,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final HealthDao healthDao = HealthDao(this as AppDatabase);
   late final UserDao userDao = UserDao(this as AppDatabase);
   late final SyncDao syncDao = SyncDao(this as AppDatabase);
+  late final AyurvedaDao ayurvedaDao = AyurvedaDao(this as AppDatabase);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -32130,3 +32131,4 @@ class $AppDatabaseManager {
   $$AyurvedicRitualLogsTableTableManager get ayurvedicRitualLogs =>
       $$AyurvedicRitualLogsTableTableManager(_db, _db.ayurvedicRitualLogs);
 }
+

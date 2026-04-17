@@ -165,3 +165,4 @@ class _MoodTrackerScreenState extends ConsumerState<MoodTrackerScreen> {
     }
   }
 }
+

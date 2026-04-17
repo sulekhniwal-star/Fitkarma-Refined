@@ -376,3 +376,4 @@ const Map<String, String> festivalEmojis = {
   'republic_day': '🇮🇳',
   'independence_day': '🇮🇳',
 };
+

@@ -71,3 +71,4 @@ class SleepDriftService {
     return await _db.into(_db.sleepLogs).insert(companion);
   }
 }
+

@@ -54,3 +54,4 @@ class LabReportOcrService {
     _textRecognizer.close();
   }
 }
+

@@ -21,7 +21,7 @@ class SideDrawer extends ConsumerWidget {
       child: Stack(
         children: [
           // Glass Background
-          if (deviceTier.isHighEnd)
+          if (deviceTier.hasBlur)
             BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
               child: Container(
@@ -190,3 +190,4 @@ class _DrawerItem extends StatelessWidget {
     );
   }
 }
+

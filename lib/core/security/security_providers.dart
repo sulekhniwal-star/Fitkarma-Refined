@@ -71,7 +71,7 @@ class SecurityNotifier extends _$SecurityNotifier {
 
   /// Toggles biometric lock setting.
   Future<void> setBiometricEnabled(bool enabled) async {
-    final currentState = state.valueOrNull;
+    final currentState = state.value;
     if (currentState == null) return;
 
     await _storage.write(key: _biometricKey, value: enabled.toString());
@@ -80,7 +80,7 @@ class SecurityNotifier extends _$SecurityNotifier {
 
   /// Called when the app is resumed (from background to foreground).
   void handleAppResumed() {
-    final currentState = state.valueOrNull;
+    final currentState = state.value;
     if (currentState == null || !currentState.isBiometricEnabled) return;
 
     final lastActive = currentState.lastActive;
@@ -98,7 +98,7 @@ class SecurityNotifier extends _$SecurityNotifier {
 
   /// Called when the app is paused (sent to background).
   void handleAppPaused() {
-    final currentState = state.valueOrNull;
+    final currentState = state.value;
     if (currentState == null) return;
     
     state = AsyncData(currentState.copyWith(lastActive: DateTime.now()));
@@ -106,7 +106,7 @@ class SecurityNotifier extends _$SecurityNotifier {
 
   /// Unlocks the app after successful biometric authentication.
   void unlock() {
-    final currentState = state.valueOrNull;
+    final currentState = state.value;
     if (currentState == null) return;
     
     state = AsyncData(currentState.copyWith(
@@ -117,9 +117,10 @@ class SecurityNotifier extends _$SecurityNotifier {
 
   /// Force locks the app (e.g., manual lock).
   void lock() {
-    final currentState = state.valueOrNull;
+    final currentState = state.value;
     if (currentState == null || !currentState.isBiometricEnabled) return;
     
     state = AsyncData(currentState.copyWith(level: SecurityLevel.locked));
   }
 }
+

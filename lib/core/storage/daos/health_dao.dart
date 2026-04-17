@@ -62,3 +62,4 @@ class HealthDao extends DatabaseAccessor<AppDatabase> with _$HealthDaoMixin {
         .watch();
   }
 }
+

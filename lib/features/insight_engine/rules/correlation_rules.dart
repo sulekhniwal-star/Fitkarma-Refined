@@ -187,3 +187,4 @@ class PostMealWalkRule extends InsightRule {
     return "A 20-min walk after lunch may help normalize your post-meal glucose.";
   }
 }
+

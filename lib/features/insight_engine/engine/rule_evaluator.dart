@@ -32,3 +32,4 @@ class RuleEvaluator {
     return results;
   }
 }
+

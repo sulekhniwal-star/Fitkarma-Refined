@@ -30,3 +30,4 @@ final chronotypeProvider = Provider<Chronotype?>((ref) {
   final service = ref.watch(sleepDriftServiceProvider);
   return service.detectChronotype(logs);
 });
+

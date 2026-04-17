@@ -30,3 +30,4 @@ class AyurvedaDao extends DatabaseAccessor<AppDatabase> with _$AyurvedaDaoMixin 
     );
   }
 }
+

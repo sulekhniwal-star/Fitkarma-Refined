@@ -145,3 +145,4 @@ class _ModulePill extends StatelessWidget {
     );
   }
 }
+

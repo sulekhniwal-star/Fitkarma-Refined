@@ -29,3 +29,4 @@ class LowMoodStreakRule extends InsightRule {
     return "Your mood has been low for a week. Consider talking to someone or trying a 10-min meditation.";
   }
 }
+

@@ -103,3 +103,4 @@ class FoodDao extends DatabaseAccessor<AppDatabase> with _$FoodDaoMixin {
     return '$userId:$type:$seed:${DateTime.now().millisecondsSinceEpoch}';
   }
 }
+

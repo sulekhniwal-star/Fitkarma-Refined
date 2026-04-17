@@ -130,3 +130,4 @@ class ChallengeCarouselCard extends StatelessWidget {
     );
   }
 }
+

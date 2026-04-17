@@ -33,7 +33,7 @@ final class AyurvedaNotifierProvider
   AyurvedaNotifier create() => AyurvedaNotifier();
 }
 
-String _$ayurvedaNotifierHash() => r'0d2889786ff62b7684df96cc118cf0ad01d9abf1';
+String _$ayurvedaNotifierHash() => r'84c56cfade5c8b5b1466adb07dd2741573bc31ca';
 
 abstract class _$AyurvedaNotifier extends $AsyncNotifier<DoshaScore?> {
   FutureOr<DoshaScore?> build();
@@ -50,6 +50,95 @@ abstract class _$AyurvedaNotifier extends $AsyncNotifier<DoshaScore?> {
               Object?
             >;
     element.handleCreate(ref, build);
+  }
+}
+
+@ProviderFor(RitualHistory)
+final ritualHistoryProvider = RitualHistoryFamily._();
+
+final class RitualHistoryProvider
+    extends $AsyncNotifierProvider<RitualHistory, List<String>> {
+  RitualHistoryProvider._({
+    required RitualHistoryFamily super.from,
+    required DateTime super.argument,
+  }) : super(
+         retry: null,
+         name: r'ritualHistoryProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$ritualHistoryHash();
+
+  @override
+  String toString() {
+    return r'ritualHistoryProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  RitualHistory create() => RitualHistory();
+
+  @override
+  bool operator ==(Object other) {
+    return other is RitualHistoryProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$ritualHistoryHash() => r'4ea107429d1b8371ba94bf328ae66315b365d3a1';
+
+final class RitualHistoryFamily extends $Family
+    with
+        $ClassFamilyOverride<
+          RitualHistory,
+          AsyncValue<List<String>>,
+          List<String>,
+          FutureOr<List<String>>,
+          DateTime
+        > {
+  RitualHistoryFamily._()
+    : super(
+        retry: null,
+        name: r'ritualHistoryProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  RitualHistoryProvider call(DateTime date) =>
+      RitualHistoryProvider._(argument: date, from: this);
+
+  @override
+  String toString() => r'ritualHistoryProvider';
+}
+
+abstract class _$RitualHistory extends $AsyncNotifier<List<String>> {
+  late final _$args = ref.$arg as DateTime;
+  DateTime get date => _$args;
+
+  FutureOr<List<String>> build(DateTime date);
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<AsyncValue<List<String>>, List<String>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<List<String>>, List<String>>,
+              AsyncValue<List<String>>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, () => build(_$args));
   }
 }
 
@@ -85,7 +174,7 @@ final class QuizProgressProvider
   }
 }
 
-String _$quizProgressHash() => r'5b64c4afcdaa758f427f8997390084af476a0691';
+String _$quizProgressHash() => r'b2dbedee38a97e5126a03b8ea2efe078931e4859';
 
 abstract class _$QuizProgress extends $Notifier<Map<int, int>> {
   Map<int, int> build();
@@ -104,3 +193,4 @@ abstract class _$QuizProgress extends $Notifier<Map<int, int>> {
     element.handleCreate(ref, build);
   }
 }
+

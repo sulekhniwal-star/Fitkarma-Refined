@@ -19,49 +19,46 @@ class FoodHomeScreen extends ConsumerWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final selectedMeal = ref.watch(selectedMealTabProvider);
 
-    return FitScaffold(
-      title: 'Nutrition Log',
-      actions: [
-        IconButton(icon: const Icon(Icons.calendar_today_outlined), onPressed: () {}),
-      ],
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // 1. Macro Summary
-          _buildMacroSummary(context, ref, isDark),
-          const SizedBox(height: 24),
-
-          // 2. Micronutrient Highlights
-          _buildMicronutrientSection(context, ref, isDark),
-          const SizedBox(height: 24),
-
-          // 3. Copy Yesterday Action
-          _buildCopyYesterdayBanner(context, ref, isDark),
-          const SizedBox(height: 24),
-
-          // 4. Meal Logs
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('Meal Logs', style: AppTheme.h2(context)),
-              Text('Edit', style: TextStyle(color: isDark ? AppTheme.primary : AppTheme.lPrimary)),
-            ],
-          ),
-          MealTabBar(
-            selected: selectedMeal,
-            onChanged: (type) => ref.read(selectedMealTabProvider.notifier).state = type,
-          ),
-          const SizedBox(height: 16),
-          _buildMealLogList(context, ref, selectedMeal, isDark),
-
-          const SizedBox(height: 100), // Navigation avoidance
+    return Scaffold(
+      backgroundColor: isDark ? AppColorsDark.background : AppColors.background,
+      appBar: AppBar(
+        title: const Text('Nutrition Log'),
+        actions: [
+          IconButton(icon: const Icon(Icons.calendar_today_outlined), onPressed: () {}),
         ],
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildMacroSummary(context, ref, isDark),
+            const SizedBox(height: 24),
+            _buildMicronutrientSection(context, ref, isDark),
+            const SizedBox(height: 24),
+            _buildCopyYesterdayBanner(context, ref, isDark),
+            const SizedBox(height: 24),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Meal Logs', style: AppTextStyles.h2(isDark)),
+                Text('Edit', style: TextStyle(color: isDark ? AppColorsDark.primary : AppColors.primary)),
+              ],
+            ),
+            MealTabBar(
+              selected: selectedMeal,
+              onChanged: (type) => ref.read(selectedMealTabProvider.notifier).state = type,
+            ),
+            const SizedBox(height: 16),
+            _buildMealLogList(context, ref, selectedMeal, isDark),
+            const SizedBox(height: 100),
+          ],
+        ),
       ),
     );
   }
 
   Widget _buildMacroSummary(BuildContext context, WidgetRef ref, bool isDark) {
-    // Mock values for now
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -142,10 +139,7 @@ class FoodHomeScreen extends ConsumerWidget {
   }
 
   Widget _buildMealLogList(BuildContext context, WidgetRef ref, MealType type, bool isDark) {
-    // For now, let's assume we have logs if it's lunch/breakfast for demo
-    // In a real app, this would check a provider list.
-    
-    if (type == MealType.dinner || type == MealType.snacks) {
+    if (type == MealType.dinner || type == MealType.snack) {
       return FitKarmaEmptyState(
         type: EmptyStateType.food,
         hindiTitle: 'कोई भोजन लॉग नहीं',
@@ -170,13 +164,15 @@ class FoodHomeScreen extends ConsumerWidget {
           onAdd: () {},
         ),
         if (type == MealType.breakfast)
-          const FoodItemCard(
+          FoodItemCard(
             name: 'Poha with Sprouts',
             nameHi: 'पोहा और अंकुरित अनाज',
             portionInfo: '1 plate · 280 kcal',
             emoji: '🥣',
+            onAdd: () {},
           ),
       ],
     );
   }
 }
+

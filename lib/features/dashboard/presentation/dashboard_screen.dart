@@ -93,7 +93,7 @@ class DashboardScreen extends ConsumerWidget {
           const SizedBox(height: 24),
 
           // 2. Promo Banner (Festival or Wedding)
-          _buildPromoBanner(ref),
+          _buildPromoBanner(ref, isDark),
           const SizedBox(height: 16),
 
           // 3. Activity Rings
@@ -123,7 +123,7 @@ class DashboardScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildPromoBanner(WidgetRef ref) {
+  Widget _buildPromoBanner(WidgetRef ref, bool isDark) {
     final festival = ref.watch(activeFestivalProvider);
     final wedding = ref.watch(activeWeddingProvider);
 
@@ -271,3 +271,4 @@ class DashboardScreen extends ConsumerWidget {
     );
   }
 }
+

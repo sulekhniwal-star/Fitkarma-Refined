@@ -17,6 +17,7 @@ import '../../features/auth/presentation/biomorphic_shield_screen.dart';
 import '../../features/ayurveda/presentation/ayurveda_hub_screen.dart';
 import '../../features/ayurveda/presentation/prakriti_quiz_screen.dart';
 import '../security/security_providers.dart';
+import '../../features/profile/presentation/profile_screen.dart';
 import '../../shared/widgets/main_shell.dart';
 
 final appRouter = Provider<GoRouter>((ref) {
@@ -27,7 +28,7 @@ final appRouter = Provider<GoRouter>((ref) {
     initialLocation: '/',
     redirect: (context, state) {
       final authState = ref.read(authStateProvider);
-      final securityState = ref.read(securityNotifierProvider).valueOrNull;
+      final securityState = ref.read(securityNotifierProvider).value;
       final isAuthenticated = authState.value != null;
 
       final isGoingToLogin = state.matchedLocation == '/login';
@@ -163,3 +164,4 @@ class _PlaceholderScreen extends StatelessWidget {
     );
   }
 }
+

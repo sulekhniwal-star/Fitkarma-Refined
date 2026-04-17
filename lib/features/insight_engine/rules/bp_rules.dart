@@ -30,3 +30,4 @@ class ElevatedBPConsistencyRule extends InsightRule {
     return "Your BP has been elevated for 3 consecutive readings. Track sodium intake and consult your doctor.";
   }
 }
+

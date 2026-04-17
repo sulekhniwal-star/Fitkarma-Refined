@@ -152,3 +152,4 @@ class _DiscoverItem extends StatelessWidget {
     );
   }
 }
+

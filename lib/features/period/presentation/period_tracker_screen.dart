@@ -282,3 +282,4 @@ class _SymptomChipState extends State<_SymptomChip> {
     );
   }
 }
+

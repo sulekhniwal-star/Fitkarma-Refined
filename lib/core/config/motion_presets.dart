@@ -25,3 +25,4 @@ class MotionPresets {
   static const durationStandard = Duration(milliseconds: 300);
   static const durationDramatic = Duration(milliseconds: 500);
 }
+

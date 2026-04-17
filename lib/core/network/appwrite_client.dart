@@ -62,3 +62,4 @@ class AppwriteClient {
     _functions = Functions(_client);
   }
 }
+

@@ -906,3 +906,4 @@ class _BottomNavigation extends StatelessWidget {
     }
   }
 }
+

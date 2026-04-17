@@ -121,3 +121,4 @@ class RemoteConfig extends AsyncNotifier<RemoteConfigData> {
 
 /// Global provider for the RemoteConfig service.
 final remoteConfigProvider = AsyncNotifierProvider<RemoteConfig, RemoteConfigData>(RemoteConfig.new);
+

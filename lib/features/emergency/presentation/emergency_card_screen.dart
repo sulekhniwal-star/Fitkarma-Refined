@@ -255,3 +255,4 @@ class EmergencyCardScreen extends ConsumerWidget {
     );
   }
 }
+

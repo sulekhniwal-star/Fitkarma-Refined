@@ -253,3 +253,4 @@ class HeartRateLogs extends Table {
   DateTimeColumn get timestamp => dateTime()();
   TextColumn get source => text()(); // fitbit, garmin, health_connect, etc.
 }
+

@@ -37,3 +37,4 @@ class DriftService {
     await _db!.customSelect('SELECT 1').get();
   }
 }
+

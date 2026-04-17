@@ -71,3 +71,4 @@ class AuthRepository {
     await _account.updateSession(sessionId: 'current');
   }
 }
+

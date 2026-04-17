@@ -45,3 +45,4 @@ class MapListConverter extends TypeConverter<List<Map<String, dynamic>>, String>
     return json.encode(value);
   }
 }
+

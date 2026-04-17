@@ -70,3 +70,4 @@ class EncryptedDateTimeConverter extends TypeConverter<DateTime, String> {
     return _stringConverter.toSql(iso);
   }
 }
+

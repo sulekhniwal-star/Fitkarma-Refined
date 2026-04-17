@@ -50,3 +50,4 @@ class BiometricService {
 class SecurityException extends AppException {
   SecurityException(String message) : super(message, 'SECURITY_ERROR');
 }
+

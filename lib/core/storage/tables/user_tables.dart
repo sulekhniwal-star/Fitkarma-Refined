@@ -27,3 +27,4 @@ class Users extends Table {
   @override
   Set<Column> get primaryKey => {id};
 }
+

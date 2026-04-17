@@ -75,3 +75,4 @@ class UserDao extends DatabaseAccessor<AppDatabase> with _$UserDaoMixin {
     )..where((t) => t.userId.equals(userId))).watch();
   }
 }
+

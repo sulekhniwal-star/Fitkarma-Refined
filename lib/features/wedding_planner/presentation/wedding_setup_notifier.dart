@@ -104,3 +104,4 @@ class WeddingSetupNotifier extends Notifier<WeddingSetupState> {
 final weddingSetupProvider = NotifierProvider<WeddingSetupNotifier, WeddingSetupState>(() {
   return WeddingSetupNotifier();
 });
+

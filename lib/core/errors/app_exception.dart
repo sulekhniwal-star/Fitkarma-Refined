@@ -11,3 +11,4 @@ class AppException implements Exception {
 class EncryptionException extends AppException {
   EncryptionException([String message = 'Decryption failed']) : super(message, 'ENCRYPTION_ERROR');
 }
+

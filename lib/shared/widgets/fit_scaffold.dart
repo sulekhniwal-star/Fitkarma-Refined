@@ -149,3 +149,4 @@ class FitScaffold extends ConsumerWidget {
     );
   }
 }
+

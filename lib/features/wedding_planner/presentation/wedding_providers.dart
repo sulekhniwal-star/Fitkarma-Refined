@@ -159,3 +159,4 @@ WeddingPlanRole _parseRole(String role) {
     default: return WeddingPlanRole.none;
   }
 }
+

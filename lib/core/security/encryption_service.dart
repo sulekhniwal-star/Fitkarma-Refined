@@ -79,3 +79,4 @@ class EncryptionService {
     return await decrypt(value, key);
   }
 }
+

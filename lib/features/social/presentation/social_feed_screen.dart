@@ -212,3 +212,4 @@ class _XPFloatAnimationState extends State<_XPFloatAnimation> with SingleTickerP
     );
   }
 }
+

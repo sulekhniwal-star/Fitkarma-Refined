@@ -21,3 +21,4 @@ final isOnlineProvider = Provider<bool>((ref) {
   final result = ref.watch(connectivityProvider).value ?? ConnectivityResult.none;
   return result.isOnline;
 });
+

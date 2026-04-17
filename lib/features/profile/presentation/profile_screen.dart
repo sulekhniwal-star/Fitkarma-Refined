@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:go_router/go_router.dart';
 import 'dart:io';
 
 import '../../../core/config/app_theme.dart';
+import '../../../shared/theme/app_colors.dart';
+import '../../../shared/theme/app_text_styles.dart';
 import '../../../shared/widgets/fit_scaffold.dart';
 import '../../../shared/widgets/abha_link_badge.dart';
 import '../../auth/domain/auth_providers.dart';
+import '../../wedding_planner/presentation/wedding_providers.dart';
+import '../../../shared/widgets/karma_level_card.dart';
+import '../../../shared/widgets/dosha_chart.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
@@ -451,7 +457,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               final earned = index < 5;
               final item = achievements[index];
               return _buildAchievementItem(
-                icon: item['icon'] as String,
+                icon: item['icon'] as IconData,
                 label: item['label'] as String?,
                 badge: item['badge'] as String?,
                 isEarned: earned,
@@ -465,7 +471,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   }
 
   Widget _buildAchievementItem({
-    required String icon,
+    required IconData icon,
     String? label,
     String? badge,
     required bool isEarned,
@@ -490,7 +496,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 : null,
           ),
           child: Icon(
-            _getIconData(icon),
+            icon,
             color: isEarned
                 ? AppColors.accent
                 : (isDark ? AppColorsDark.textMuted : Colors.grey.shade400),
@@ -526,28 +532,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     );
   }
 
-  IconData _getIconData(String iconName) {
-    switch (iconName) {
-      case 'emoji_events':
-        return Icons.emoji_events;
-      case 'fitness_center':
-        return Icons.fitness_center;
-      case 'restaurant':
-        return Icons.restaurant;
-      case 'directions_walk':
-        return Icons.directions_walk;
-      case 'spa':
-        return Icons.spa;
-      case 'local_fire_department':
-        return Icons.local_fire_department;
-      case 'workspace_premium':
-        return Icons.workspace_premium;
-      case 'lock':
-        return Icons.lock;
-      default:
-        return Icons.star;
-    }
-  }
 
   Widget _buildReferralCard(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -592,3 +576,4 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     );
   }
 }
+

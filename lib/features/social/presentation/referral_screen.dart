@@ -141,3 +141,4 @@ class _RewardInfo extends StatelessWidget {
     );
   }
 }
+

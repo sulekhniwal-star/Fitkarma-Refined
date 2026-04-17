@@ -23,3 +23,4 @@ class FoodDaoManager {
   $$MealPlansTableTableManager get mealPlans =>
       $$MealPlansTableTableManager(_db.attachedDatabase, _db.mealPlans);
 }
+

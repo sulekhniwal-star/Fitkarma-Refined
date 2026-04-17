@@ -233,3 +233,4 @@ class AppTheme {
     fontWeight: FontWeight.w500,
   );
 }
+

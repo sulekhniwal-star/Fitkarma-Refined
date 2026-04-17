@@ -36,3 +36,4 @@ final indianFrequentFoodsProvider = FutureProvider<List<Map<String, dynamic>>>((
     {'name': 'Mixed Veg', 'portion': '1 katori', 'emoji': '🥗', 'calories': 110},
   ];
 });
+

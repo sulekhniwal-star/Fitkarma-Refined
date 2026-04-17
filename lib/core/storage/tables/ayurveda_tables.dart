@@ -8,3 +8,4 @@ class AyurvedicRitualLogs extends Table {
   DateTimeColumn get completedAt => dateTime()();
   IntColumn get karmaAwarded => integer()();
 }
+

@@ -168,3 +168,4 @@ class _DoctorAppointmentsScreenState extends ConsumerState<DoctorAppointmentsScr
     );
   }
 }
+

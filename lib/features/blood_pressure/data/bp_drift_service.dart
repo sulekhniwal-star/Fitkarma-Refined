@@ -60,3 +60,4 @@ class BPDriftService {
     return decrypted;
   }
 }
+

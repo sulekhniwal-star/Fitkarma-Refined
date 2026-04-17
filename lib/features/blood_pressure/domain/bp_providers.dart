@@ -18,3 +18,4 @@ final latestBPProvider = Provider<Map<String, dynamic>?>((ref) {
   if (logs == null || logs.isEmpty) return null;
   return logs.first;
 });
+

@@ -43,3 +43,4 @@ class OcrService {
     _textRecognizer.close();
   }
 }
+

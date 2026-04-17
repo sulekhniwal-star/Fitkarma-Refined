@@ -81,3 +81,4 @@ class AppointmentsRepository {
 final appointmentsRepositoryProvider = Provider<AppointmentsRepository>((ref) {
   return AppointmentsRepository(db: DriftService.db);
 });
+

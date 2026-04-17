@@ -25,3 +25,4 @@ final healthDaoProvider = Provider((ref) => ref.watch(driftDbProvider).healthDao
 final userDaoProvider = Provider((ref) => ref.watch(driftDbProvider).userDao);
 final syncDaoProvider = Provider((ref) => ref.watch(driftDbProvider).syncDao);
 final ayurvedaDaoProvider = Provider((ref) => ref.watch(driftDbProvider).ayurvedaDao);
+

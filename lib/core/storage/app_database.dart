@@ -16,6 +16,8 @@ import 'daos/health_dao.dart';
 import 'daos/user_dao.dart';
 import 'daos/sync_dao.dart';
 import '../../features/ayurveda/data/ayurveda_dao.dart';
+import 'converters/json_converters.dart';
+import 'converters/encryption_converters.dart';
 
 part 'app_database.g.dart';
 
@@ -189,3 +191,4 @@ LazyDatabase _openConnection(String encryptionKey) {
     );
   });
 }
+

@@ -128,8 +128,8 @@ class _KarmaHero extends ConsumerWidget {
           const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            baseline: TextBaseline.alphabetic,
             crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
             children: [
               const Text('🪙', style: TextStyle(fontSize: 32)),
               const SizedBox(width: 12),
@@ -563,3 +563,4 @@ class _TrophyItem extends StatelessWidget {
     );
   }
 }
+

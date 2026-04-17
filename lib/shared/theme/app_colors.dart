@@ -25,6 +25,10 @@ abstract class AppColors {
   static const Color error = Color(0xFFF44336);
   static const Color rose = Color(0xFFE91E63);
 
+  // Surface & muted shades
+  static const Color primaryMuted = Color(0xFFFFE0D8);
+  static const Color surface0 = Color(0xFFF5F5F5);
+
   static const Color textPrimary = Color(0xFF1A1A2E);
   static const Color textSecondary = Color(0xFF6B6B8A);
   static const Color textMuted = Color(0xFFB0AECB);
@@ -74,10 +78,13 @@ abstract class AppColorsDark {
 
   static const Color primary = Color(0xFFFF7043);
   static const Color primarySurface = Color(0xFF2A1E1A);
+  static const Color primaryMuted = Color(0xFF3A2520);
 
   static const Color secondary = Color(0xFF5C59C4);
   static const Color secondaryDark = Color(0xFF3D3BA0);
   static const Color secondarySurface = Color(0xFF1E1D3A);
+
+  static const Color surface0 = Color(0xFF252535);
 
   static const Color accent = Color(0xFFFFD54F);
   static const Color accentLight = Color(0xFF2C2200);
@@ -93,3 +100,4 @@ abstract class AppColorsDark {
   static const Color warning = Color(0xFFFFA726);
   static const Color error = Color(0xFFEF5350);
 }
+

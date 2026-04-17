@@ -40,3 +40,4 @@ class BilingualLabel extends StatelessWidget {
     );
   }
 }
+

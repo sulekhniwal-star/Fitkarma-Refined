@@ -14,3 +14,4 @@ class InsightRatings extends Table {
   IntColumn get rating => integer()(); // 1 = Thumb up, -1 = Thumb down
   DateTimeColumn get ratedAt => dateTime()();
 }
+

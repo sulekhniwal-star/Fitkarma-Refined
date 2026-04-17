@@ -35,3 +35,4 @@ class FastingWindowRule extends InsightRule {
     return "Your eating window opens in 30 minutes. Prepare a hydrating first meal.";
   }
 }
+

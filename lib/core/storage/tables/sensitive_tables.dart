@@ -77,3 +77,4 @@ class DoctorAppointments extends Table {
   TextColumn get notesEncrypted => text().map(const EncryptedStringConverter('appointments')).nullable()();
   BoolColumn get reminderSent => boolean().withDefault(const Constant(false))();
 }
+

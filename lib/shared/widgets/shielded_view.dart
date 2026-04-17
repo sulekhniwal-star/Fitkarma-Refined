@@ -85,3 +85,4 @@ class _ShieldedViewState extends ConsumerState<ShieldedView> {
     );
   }
 }
+
