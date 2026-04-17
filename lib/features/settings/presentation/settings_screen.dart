@@ -7,6 +7,7 @@ import '../../../shared/theme/app_colors.dart';
 import '../../../shared/theme/app_text_styles.dart';
 import '../../../shared/widgets/encryption_badge.dart';
 import '../../../core/di/providers.dart';
+import '../../../core/security/security_providers.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
@@ -26,7 +27,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     final themeMode = ref.watch(themeProvider);
-    final securityState = ref.watch(securityNotifierProvider);
+    final securityState = ref.watch(securityProvider);
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
@@ -238,7 +239,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 onChanged: (val) async {
                   final canCheck = await ref.read(biometricServiceProvider).canAuthenticate();
                   if (canCheck) {
-                    await ref.read(securityNotifierProvider.notifier).setBiometricEnabled(val);
+                    await ref.read(securityProvider.notifier).setBiometricEnabled(val);
                   } else {
                     if (mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -613,7 +614,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 ],
               ),
             ),
-            ?trailing,
+            if (trailing != null) trailing,
           ],
         ),
       ),

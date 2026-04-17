@@ -32131,4 +32131,3 @@ class $AppDatabaseManager {
   $$AyurvedicRitualLogsTableTableManager get ayurvedicRitualLogs =>
       $$AyurvedicRitualLogsTableTableManager(_db, _db.ayurvedicRitualLogs);
 }
-

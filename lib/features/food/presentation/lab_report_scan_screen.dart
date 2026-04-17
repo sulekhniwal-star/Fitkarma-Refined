@@ -22,6 +22,7 @@ class _ExtractedValueState {
   _ExtractedValueState({
     required this.original,
     required this.currentValue,
+    this.isConfirmed = false,
   });
 }
 
@@ -68,6 +69,7 @@ class _LabReportScanScreenState extends ConsumerState<LabReportScanScreen> {
         _extractedValues = extraction.values.map((v) => _ExtractedValueState(
           original: v,
           currentValue: v.value,
+          isConfirmed: false,
         )).toList();
         _isProcessing = false;
       });
@@ -216,7 +218,7 @@ class _LabReportScanScreenState extends ConsumerState<LabReportScanScreen> {
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              colors: [Colors.black.withOpacity(0.4), Colors.transparent],
+              colors: [Colors.black.withValues(alpha: 0.4), Colors.transparent],
             ),
           ),
         ),

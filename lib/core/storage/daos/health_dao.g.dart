@@ -65,4 +65,3 @@ class HealthDaoManager {
   $$PeriodLogsTableTableManager get periodLogs =>
       $$PeriodLogsTableTableManager(_db.attachedDatabase, _db.periodLogs);
 }
-

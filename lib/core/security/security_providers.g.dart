@@ -33,7 +33,7 @@ final class SecurityNotifierProvider
   SecurityNotifier create() => SecurityNotifier();
 }
 
-String _$securityNotifierHash() => r'7603e47a65a1a88f133341fba017a9c92cf0e50f';
+String _$securityNotifierHash() => r'48e8df7efbe1f9a227830c8e0ab84b405f0425fc';
 
 abstract class _$SecurityNotifier extends $AsyncNotifier<SecurityState> {
   FutureOr<SecurityState> build();
@@ -52,4 +52,3 @@ abstract class _$SecurityNotifier extends $AsyncNotifier<SecurityState> {
     element.handleCreate(ref, build);
   }
 }
-

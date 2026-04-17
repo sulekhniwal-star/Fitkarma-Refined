@@ -207,4 +207,3 @@ final class FestivalDetailFamily extends $Family
   @override
   String toString() => r'festivalDetailProvider';
 }
-

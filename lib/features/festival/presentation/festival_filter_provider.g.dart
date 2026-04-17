@@ -61,4 +61,3 @@ abstract class _$FestivalRegionFilter extends $Notifier<String> {
     element.handleCreate(ref, build);
   }
 }
-

@@ -33,7 +33,7 @@ final class AyurvedaNotifierProvider
   AyurvedaNotifier create() => AyurvedaNotifier();
 }
 
-String _$ayurvedaNotifierHash() => r'84c56cfade5c8b5b1466adb07dd2741573bc31ca';
+String _$ayurvedaNotifierHash() => r'f9a3d1a6d4a6145316ea68e63876b275909f9e96';
 
 abstract class _$AyurvedaNotifier extends $AsyncNotifier<DoshaScore?> {
   FutureOr<DoshaScore?> build();
@@ -94,7 +94,7 @@ final class RitualHistoryProvider
   }
 }
 
-String _$ritualHistoryHash() => r'4ea107429d1b8371ba94bf328ae66315b365d3a1';
+String _$ritualHistoryHash() => r'4d17ef2df0a21620546919a5d4ecaf8683343b12';
 
 final class RitualHistoryFamily extends $Family
     with
@@ -193,4 +193,3 @@ abstract class _$QuizProgress extends $Notifier<Map<int, int>> {
     element.handleCreate(ref, build);
   }
 }
-

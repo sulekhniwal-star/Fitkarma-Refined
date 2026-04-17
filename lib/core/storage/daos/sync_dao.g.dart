@@ -36,4 +36,3 @@ class SyncDaoManager {
         _db.insightRatings,
       );
 }
-

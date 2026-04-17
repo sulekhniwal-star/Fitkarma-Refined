@@ -16,7 +16,7 @@ class WeddingPlannerHomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final profileAsync = ref.watch(weddingProfileProvider);
     final eventsAsync = ref.watch(weddingEventsProvider);
-    final nextEventAsync = ref.watch(nextWeddingEventProvider);
+    final nextEventAsync = ref.watch(weddingNextEventProvider);
     final planAsync = ref.watch(weddingTodaysPlanProvider);
     final phaseAsync = ref.watch(weddingPhaseProvider);
 

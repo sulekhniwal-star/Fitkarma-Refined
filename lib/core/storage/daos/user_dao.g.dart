@@ -42,4 +42,3 @@ class UserDaoManager {
         _db.nutritionGoals,
       );
 }
-

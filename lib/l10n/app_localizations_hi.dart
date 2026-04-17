@@ -443,4 +443,3 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get labelViewAll => 'View All';
 }
-

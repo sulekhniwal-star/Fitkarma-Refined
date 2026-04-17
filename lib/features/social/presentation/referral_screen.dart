@@ -16,15 +16,17 @@ class ReferralScreen extends ConsumerWidget {
       appBar: AppBar(title: const Text('Rewards & Referrals')),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
-        children: [
-          _buildRewardHero(),
-          const SizedBox(height: 32),
-          _buildReferralCard(context, referralCode),
-          const SizedBox(height: 32),
-          _buildLeaderboard(),
-          const SizedBox(height: 32),
-          _buildMilestones(),
-        ],
+        child: Column(
+          children: [
+            _buildRewardHero(),
+            const SizedBox(height: 32),
+            _buildReferralCard(context, referralCode),
+            const SizedBox(height: 32),
+            _buildLeaderboard(),
+            const SizedBox(height: 32),
+            _buildMilestones(),
+          ],
+        ),
       ),
     );
   }
@@ -78,7 +80,7 @@ class ReferralScreen extends ConsumerWidget {
               height: 50,
               child: ElevatedButton.icon(
                 onPressed: () => Share.share('Join me on FitKarma! Use my code $code to get 100 XP instantly.'),
-                icon: const Icon(Icons.whatsapp),
+                icon: const Icon(Icons.share),
                 label: const Text('SHARE VIA WHATSAPP'),
                 style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF25D366), foregroundColor: Colors.white),
               ),

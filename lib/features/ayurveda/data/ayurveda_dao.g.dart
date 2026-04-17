@@ -18,4 +18,3 @@ class AyurvedaDaoManager {
         _db.ayurvedicRitualLogs,
       );
 }
-

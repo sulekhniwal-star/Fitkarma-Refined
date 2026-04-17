@@ -28,9 +28,9 @@ class WeddingSetupScreen extends ConsumerWidget {
               : () => notifier.prevStep(),
         ),
         title: BilingualLabel(
-          englishText: 'Wedding Planner',
-          hindiText: 'विवाह योजनाकार',
-          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+          english: 'Wedding Planner',
+          hindi: 'विवाह योजनाकार',
+          englishStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
           hindiStyle: const TextStyle(fontSize: 11, color: AppColors.textSecondary),
         ),
         centerTitle: true,
