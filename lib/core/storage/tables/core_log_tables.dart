@@ -1,4 +1,6 @@
 import 'package:drift/drift.dart';
+import '../converters/json_converters.dart';
+import '../converters/encryption_converters.dart';
 
 @DataClassName('FoodLog')
 class FoodLogs extends Table {
@@ -43,7 +45,7 @@ class FoodItems extends Table {
   RealColumn get ironPer100g => real().nullable()();
   RealColumn get calciumPer100g => real().nullable()();
   BoolColumn get isIndian => boolean().withDefault(const Constant(false))();
-  TextColumn get servingSizes => text().nullable()(); // JSON
+  TextColumn get servingSizes => text().map(const JsonMapConverter()).nullable()(); // JSON
   TextColumn get source => text()(); // openfoodfacts, manual, etc.
 }
 
@@ -180,7 +182,7 @@ class MealPlans extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get userId => text()();
   DateTimeColumn get weekStart => dateTime()();
-  TextColumn get planData => text()(); // JSON
+  TextColumn get planData => text().map(const JsonMapConverter())(); // JSON
   TextColumn get planType => text()(); // standard, festival, wedding, etc.
   TextColumn get festivalKey => text().nullable()();
   TextColumn get generatedBy => text()(); // ai, user
@@ -192,8 +194,8 @@ class Recipes extends Table {
   TextColumn get userId => text()();
   TextColumn get title => text()();
   TextColumn get description => text().nullable()();
-  TextColumn get ingredients => text()(); // JSON
-  TextColumn get steps => text()(); // JSON
+  TextColumn get ingredients => text().map(const JsonMapConverter())(); // JSON
+  TextColumn get steps => text().map(const JsonMapConverter())(); // JSON
   IntColumn get servings => integer()();
   RealColumn get totalCalories => real()();
   RealColumn get proteinG => real().nullable()();

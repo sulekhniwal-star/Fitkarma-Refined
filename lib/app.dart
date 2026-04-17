@@ -3,17 +3,48 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'core/di/providers.dart';
-import 'shared/theme/app_theme.dart';
+import 'core/config/app_theme.dart';
+import 'core/security/security_providers.dart';
 
 /// The root widget of the FitKarma application.
-/// 
-/// Configures navigation via GoRouter, applies the design system themes, 
+///
+/// Configures navigation via GoRouter, applies the design system themes,
 /// and initializes support for 23 Indian locales.
-class FitKarmaApp extends ConsumerWidget {
+class FitKarmaApp extends ConsumerStatefulWidget {
   const FitKarmaApp({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<FitKarmaApp> createState() => _FitKarmaAppState();
+}
+
+class _FitKarmaAppState extends ConsumerState<FitKarmaApp>
+    with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // Notify SecurityNotifier of lifecycle changes to handle auto-lock
+    final securityNotifier = ref.read(securityProvider.notifier);
+
+    if (state == AppLifecycleState.resumed) {
+      securityNotifier.handleAppResumed();
+    } else if (state == AppLifecycleState.paused) {
+      securityNotifier.handleAppPaused();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final router = ref.watch(appRouter);
     final themeMode = ref.watch(themeProvider);
 
@@ -21,14 +52,13 @@ class FitKarmaApp extends ConsumerWidget {
       title: 'FitKarma',
       debugShowCheckedModeBanner: false,
       routerConfig: router,
-      
+
       // Theme Configuration
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: themeMode,
-      
+
       // Localization Configuration
-      // Supports English + 22 scheduled Indian languages
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,

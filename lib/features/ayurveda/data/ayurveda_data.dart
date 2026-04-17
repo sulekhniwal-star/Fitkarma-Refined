@@ -1,27 +1,27 @@
 import '../domain/dosha_calculator.dart';
 
 class AyurvedaData {
-  static const Map<Dosha, List<String>> dinacharya = {
+  static const Map<Dosha, List<Map<String, dynamic>>> dinacharya = {
     Dosha.vata: [
-      'Wake up before sunrise (Brahma Muhurta)',
-      'Drink warm water with ginger',
-      'Standard Abhyanga (warm sesame oil massage)',
-      'Subtle, grounding pranayama (Nadi Shodhana)',
-      'Warm, oily, cooked foods only',
+      {'label': 'Wake up before sunrise (Brahma Muhurta)', 'karma': 20, 'key': 'wakeup_vata'},
+      {'label': 'Drink warm water with ginger', 'karma': 5, 'key': 'water_vata'},
+      {'label': 'Standard Abhyanga (warm sesame oil)', 'karma': 15, 'key': 'oil_vata'},
+      {'label': 'Grounding Nadi Shodhana pranayama', 'karma': 10, 'key': 'breath_vata'},
+      {'label': 'Eat warm, oily, cooked foods', 'karma': 10, 'key': 'food_vata'},
     ],
     Dosha.pitta: [
-      'Wake up at sunrise',
-      'Drink room temperature water',
-      'Daily Abhyanga (cooling coconut/sunflower oil)',
-      'Sheetali pranayama (cooling breath)',
-      'Cooling, sweet, and bitter foods',
+      {'label': 'Wake up at sunrise', 'karma': 15, 'key': 'wakeup_pitta'},
+      {'label': 'Drink room temperature water', 'karma': 5, 'key': 'water_pitta'},
+      {'label': 'Cooling Abhyanga (coconut oil)', 'karma': 15, 'key': 'oil_pitta'},
+      {'label': 'Sheetali cooling pranayama', 'karma': 10, 'key': 'breath_pitta'},
+      {'label': 'Eat cooling, sweet/bitter foods', 'karma': 10, 'key': 'food_pitta'},
     ],
     Dosha.kapha: [
-      'Wake up before 6 AM',
-      'Drink warm water with honey and lemon',
-      'Dry massage (Udvartana) with herbal powder',
-      'Stimulating Kapalabhati pranayama',
-      'Light, warm, pungent, and astringent foods',
+      {'label': 'Wake up before 6 AM', 'karma': 20, 'key': 'wakeup_kapha'},
+      {'label': 'Warm water with honey and lemon', 'karma': 5, 'key': 'water_kapha'},
+      {'label': 'Dry Udvartana herbal massage', 'karma': 15, 'key': 'oil_kapha'},
+      {'label': 'Stimulating Kapalabhati pranayama', 'karma': 10, 'key': 'breath_kapha'},
+      {'label': 'Eat light, warm, pungent foods', 'karma': 10, 'key': 'food_kapha'},
     ],
   };
 

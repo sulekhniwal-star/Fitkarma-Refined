@@ -10,57 +10,20 @@
 ## 0. PROJECT BOOTSTRAP
 
 ### 0.1 Flutter Project Setup
-- [ ] `flutter create com.fitkarma.app` with bundle ID `com.fitkarma.app`
-- [ ] Set `minSdkVersion 23`, `targetSdkVersion 34` (Android)
+- [x] `flutter create com.fitkarma.app` with bundle ID `com.fitkarma.app`
+- [x] Set `minSdkVersion 23`, `targetSdkVersion 34` (Android)
 - [ ] Set iOS deployment target `iOS 14.0`
-- [ ] Add `.env`, `.env.staging`, `.env.prod` to `.gitignore`
-- [ ] Create `.env` file with all variables (see §23 of docs): `APPWRITE_ENDPOINT`, `APPWRITE_PROJECT_ID`, `APPWRITE_DATABASE_ID`, `YOUTUBE_API_KEY`, `RAZORPAY_KEY_ID`, `FITBIT_CLIENT_ID`, `GARMIN_CONSUMER_KEY`, `WHATSAPP_PHONE_NUMBER_ID`, `ABDM_CLIENT_ID`, `APPWRITE_CERT_FINGERPRINT`, `SENTRY_DSN`
-- [ ] Configure `flutter_dotenv` to load `.env` at startup
+- [x] Add `.env`, `.env.staging`, `.env.prod` to `.gitignore`
+- [x] Create `.env` file with all variables (see §23 of docs)
+- [x] Configure `flutter_dotenv` to load `.env` at startup
 
 ### 0.2 pubspec.yaml Dependencies
-Add all dependencies (exact versions from docs §23):
-- [ ] `flutter_riverpod: ^2.4.9`, `riverpod_annotation: ^2.3.3`
-- [ ] `drift: ^2.14.1`, `drift_flutter: ^0.1.0`, `sqlite3_flutter_libs: ^0.5.0`, `sqlcipher_flutter_libs: ^0.5.0`
-- [ ] `cryptography: ^2.7.0`, `crypto: ^3.0.3`
-- [ ] `appwrite: ^13.0.0`
-- [ ] `go_router: ^11.0.0`
-- [ ] `dio: ^5.4.0`, `http: ^1.1.0` (transitive only, never use directly)
-- [ ] `flutter_secure_storage: ^9.0.0`
-- [ ] `local_auth: ^2.1.7`
-- [ ] `flutter_jailbreak_detection: ^1.9.0`
-- [ ] `connectivity_plus: ^5.0.2`
-- [ ] `geolocator: ^10.1.0`
-- [ ] `flutter_map: ^6.1.0`, `flutter_map_tile_caching: ^9.0.0`
-- [ ] `youtube_player_flutter: ^8.1.2`
-- [ ] `google_mlkit_text_recognition: ^0.11.0`, `google_mlkit_object_detection: ^0.11.0`
-- [ ] `flutter_barcode_scanner: ^1.0.0`
-- [ ] `speech_to_text: ^6.3.0`
-- [ ] `health: ^9.0.0`
-- [ ] `fl_chart: ^0.66.0`
-- [ ] `shimmer: ^3.0.0`
-- [ ] `flutter_local_notifications: ^16.1.0`
-- [ ] `razorpay_flutter: ^1.3.7`
-- [ ] `home_widget: ^0.4.1`
-- [ ] `firebase_messaging: ^14.7.9` (FCM token only, no other Firebase)
-- [ ] `sentry_flutter: ^7.14.0`
-- [ ] `cached_network_image: ^3.3.1`
-- [ ] `image_picker: ^1.0.4`
-- [ ] `path_provider: ^2.1.1`, `path: ^1.9.0`
-- [ ] `pdf: ^3.10.0`
-- [ ] `flutter_quill: ^9.0.0`
-- [ ] `just_audio: ^0.9.0`
-- [ ] `workmanager: ^0.5.0`
-- [ ] `url_launcher: ^6.2.5`
-- [ ] `lottie: ^3.0.0`, `rive: ^0.12.0`
-- [ ] `google_fonts: ^6.1.0`
-- [ ] Dev: `riverpod_generator: ^2.3.9`, `drift_dev: ^2.14.1`, `build_runner: ^2.4.7`, `mockito: ^5.4.4`
+- [x] Add all dependencies (exact versions from docs §23)
 
 ### 0.3 Asset Configuration
-- [ ] Bundle `Plus Jakarta Sans` variable font as asset
-- [ ] Bundle `JetBrains Mono` variable font as asset
-- [ ] Add Lottie placeholders: `assets/lottie/confetti_orange.json`, `streak_fire.json`, `coin_burst.json`, `sync_check.json`, `error_state.json`
-- [ ] Add 20 empty-state Lottie files: `assets/lottie/empty_food_log.json`, `empty_search.json`, `empty_workout.json`, `empty_steps.json`, `empty_sleep.json`, `empty_mood.json`, `empty_bp.json`, `empty_glucose.json`, `empty_lab.json`, `empty_habits.json`, `empty_journal.json`, `empty_social.json`, `empty_challenges.json`, `empty_medication.json`, `empty_water.json`, `empty_records.json`, `empty_appointments.json`, `empty_rituals.json`, `empty_festivals.json`, `empty_generic.json`
-- [ ] Add Rive files: `assets/rive/logo_reveal.riv`, `assets/rive/levelup.riv`, `assets/rive/loading_rings.riv`
+- [/] Bundle fonts (Using package per user decision)
+- [ ] Add Lottie placeholders: 20+ required files
+- [x] Initialize directory structure for Lottie/Rive
 
 ---
 
@@ -146,74 +109,47 @@ feature/
 ## 2. CORE INFRASTRUCTURE
 
 ### 2.1 Design Token System
-- [ ] Create `lib/core/config/app_theme.dart` with full token set:
-  - **Dark mode tokens**: `bg0=#080810`, `bg1=#0F0F1A`, `bg2=#161625`, `surface0=#1C1C2E`, `surface1=#22223A`, `surface2=#2A2A45`, `glass=rgba(255,255,255,0.06)`, `glassBorder=rgba(255,255,255,0.10)`, `glassBlur=12px`
-  - **Primary**: `#FF6B35`, `primaryGlow=rgba(255,107,53,0.25)`, `primaryMuted=#FF6B3530`
-  - **Accent**: `#FFB547`, `accentGlow=rgba(255,181,71,0.20)`
-  - **Secondary**: `#7B6FF0`, `secondaryGlow=rgba(123,111,240,0.25)`
-  - **Teal**: `#00D4B4`, `tealGlow=rgba(0,212,180,0.20)`
-  - **Success**: `#4ADE80`, `successGlow=rgba(74,222,128,0.20)`
-  - **Warning**: `#FBBF24` · **Error**: `#F87171` · **Rose**: `#FB7185` · **Purple**: `#C084FC`
-  - **Text**: `textPrimary=#F1F0FF`, `textSecondary=#9B99CC`, `textMuted=#6B68A0`
-  - **Divider**: `rgba(255,255,255,0.08)`
-  - **Light mode tokens**: `bg0=#F7F0E8`, `bg1=#FDF6EC`, `surface0=#FFFFFF`, `surface1=#FFFAF5`, `glass=rgba(255,250,245,0.70)`, `glassBorder=rgba(255,107,53,0.15)`, `primary=#F4511E`, `primaryMuted=#FEE8E2`, `accent=#F59E0B`, `secondary=#5B50D4`, `teal=#0D9488`, `success=#22C55E`, `textPrimary=#1A1830`, `textSecondary=#6B6A96`, `textMuted=#B0AEC8`, `divider=rgba(26,24,48,0.07)`
-- [ ] Create `ThemeData` for dark mode (primary target) and light mode using tokens
-- [ ] **Hero gradients**: `heroDeep` (135° `#0A0818→#1E1850`), `heroSleep` (180° 3-stop), `heroFestival` (120° `#1A0A00→#3D1500`), `heroWedding` (135° `#1A1000→#3A2800`), `heroPrimary` (135° `#1A0800→#3D1100`)
-- [ ] Shape/radius tokens: `radiusSm=10`, `radiusMd=16`, `radiusLg=20`, `radiusXl=28`, `radiusFull=9999`
+- [x] Create `lib/core/config/app_theme.dart` with full token set
+- [x] Create `ThemeData` for dark mode (primary target) and light mode using tokens
+- [x] **Hero gradients** implementation
+- [x] Shape/radius tokens: `radiusSm=10`, `radiusMd=16`, `radiusLg=20`, `radiusXl=28`, `radiusFull=9999`
 
 ### 2.2 Typography System
-- [ ] Register `Plus Jakarta Sans` variable font family in `ThemeData`
-- [ ] Register `JetBrains Mono` as `monoFontFamily` (stats/metrics only)
-- [ ] Register `Noto Sans Devanagari` as system fallback for Hindi labels
-- [ ] Define all 17 named text styles: `heroDisplay` (72sp/800), `metricXL` (56sp/700), `metricLg` (40sp/700), `displayLg` (32sp/700), `displayMd` (28sp/600), `h1` (24sp/600), `h2` (20sp/600), `h3` (18sp/500), `h4` (16sp/500), `labelLg` (15sp/600), `labelMd` (13sp/500), `bodyLg` (16sp/400), `bodyMd` (14sp/400), `bodySm` (12sp/400), `monoXL` (48sp/700 JetBrains Mono), `monoLg` (28sp/600 JetBrains Mono), `caption` (11sp/400), `hindi` (12sp/500 Devanagari)
-- [ ] Enforce **Single Hero Typography Rule**: `heroDisplay` and `metricXL` must never appear simultaneously on the same screen
+- [x] Register `Plus Jakarta Sans` typography in `ThemeData`
+- [x] Register `JetBrains Mono` for stats/metrics
+- [x] Register `Noto Sans Devanagari` for Hindi labels
+- [x] Define all 17 named text styles
+- [ ] Enforce **Single Hero Typography Rule**
 
 ### 2.3 Device Tier System
-- [ ] Create `lib/core/config/device_tier.dart`:
-  ```dart
-  enum DeviceTier { low, mid, high }
-  // low: < 3GB RAM | mid: 3–6GB | high: 6GB+
-  ```
-- [ ] Implement `DeviceTierProvider` as a root-level Riverpod provider initialised at app start
-- [ ] Tier feature matrix:
-  - `BackdropFilter` blur: off(low) / cards-only(mid) / full(high)
-  - Ambient glow blobs: off(low) / 1-blob-50%-opacity(mid) / 3-blobs(high)
-  - Glow box-shadows: off(low) / hero-metric-only(mid) / all-allowed(high)
-  - Lottie: streak+confetti-only(low) / all(mid) / all+Rive(high)
-  - Rive: static-image(low) / splash-only(mid) / all(high)
-  - Spring physics: cross-fade(low) / standard-spring(mid) / full-physics(high)
-  - Per-digit CountUp: single-tween(low) / whole-number(mid) / per-digit(high)
-  - Ring glow: plain-stroke(low) / primary-ring-only(mid) / all-rings(high)
-  - Card surface: `surface1` solid(low) / `surface0`+border(mid) / full-glass(high)
+- [x] Create `lib/core/config/device_tier.dart` with `DeviceTier` enum and detection logic
+- [x] Implement `DeviceTierProvider` as root-level Riverpod provider
+- [x] Define Tier feature matrix extension
 
 ### 2.4 Motion & Animation System
-- [ ] Create 3 spring presets in a shared constants file:
-  - **Light spring**: `mass:1.0, stiffness:400, ratio:0.85` — chips, toggles
-  - **Standard spring**: `mass:1.0, stiffness:250, ratio:0.80` — cards, page routes
-  - **Dramatic spring**: `mass:1.0, stiffness:180, ratio:0.75` — hero entrances, level-up
-- [ ] Screen push/pop: shared axis vertical-slide + fade (320ms standard spring)
-- [ ] Bottom sheet reveal: slide up + opacity fade (280ms standard spring)
-- [ ] Tab switch: cross-fade + subtle 8px Y shift (220ms light spring)
-- [ ] Card tap feedback: scale `1.0→0.97` press, `0.97→1.0` release (80ms / 160ms)
-- [ ] FAB expand: scale-up + radial sub-button reveal (300ms dramatic spring)
-- [ ] Metric CountUp: per-digit spring (400ms standard spring)
-- [ ] Ring progress: arc draw easeOutCubic (600ms on mount)
-- [ ] Chip select: background + scale `0.95→1.02→1.0` (200ms light spring)
-- [ ] XP float animation: amber `+X XP` text floats 40px up + fades (500ms light spring)
-- [ ] **Reduce-motion**: all spring animations simplify to cross-fade when `AccessibilityFeatures.disableAnimations` is true
-- [ ] **Low-tier fallback**: cross-fade (not spring) on DeviceTier.low
+- [x] Create 3 spring presets in `lib/core/config/motion_presets.dart`
+- [ ] Standardize Screen push/pop animations
+- [ ] Standardize Bottom sheet reveal animations
+- [ ] Standardize Tab switch animations
+- [ ] Implement Card tap feedback (scale)
+- [ ] Implement FAB expand animations
+- [ ] Implement Metric CountUp (per-digit spring)
+- [ ] Implement Ring progress animations
+- [ ] Implement Chip select animations
+- [ ] Implement XP float animation
+- [ ] **Reduce-motion** support
+- [ ] **Low-tier fallback** (cross-fade)
 
 ### 2.5 Surface & Depth System (3 Planes)
-- [ ] Implement `GlassCard` widget: `ClipRRect + BackdropFilter(blur:12, saturate:180%) + Container(bg:rgba(255,255,255,0.05), border:rgba(255,255,255,0.10), radius:20)` — Tier-gated
-- [ ] Implement **Visual Calm Zone** enforcement: the following screens use zero glow, no blur, minimal animation regardless of tier: Settings, Journal, Emergency Card, Lab Reports Home, ABHA Account, Doctor Appointments, Subscription Plans, Onboarding Steps 1–3
-- [ ] **Glow Discipline**: only allowed on Hero metric, Primary CTA, Active ring fill, Active nav tab indicator, Encryption badge, ABHA linked status. Prohibited on: secondary cards, section headers, log entry rows, settings rows, any Calm Zone element
-- [ ] Light mode glass: `background:rgba(255,252,248,0.80)`, `border:rgba(244,81,30,0.12)`, `blur:12px MAX` (never 20px in light mode)
-- [ ] Ambient glow blobs for hero screens: 3 blobs (`rgba(123,111,240,0.20) 280px blur:80`, `rgba(255,107,53,0.15) 200px blur:60`, `rgba(0,212,180,0.10) 160px blur:50`) — Tier-gated
+- [x] Implement `GlassCard` widget with Tier-gating
+- [ ] Implement **Visual Calm Zone** enforcement
+- [ ] **Glow Discipline** enforcement
+- [ ] Implement Ambient glow blobs for hero screens (Tier-gated)
 
 ### 2.6 Scaffold Patterns
-- [ ] **Pattern A — Standard**: `bg1` background, transparent elevated app bar, 20px horizontal padding
-- [ ] **Pattern B — Immersive Hero**: `heroDeep` gradient (320px) + ambient blobs + transparent AppBar; body overlaps hero by 28px with `radiusXl` clip. `extendBodyBehindAppBar: true`
-- [ ] **Pattern C — Full-Bleed Immersive**: full-screen content (active workout, GPS); no AppBar; system overlay icons white
+- [x] **Pattern A — Standard**: `bg1` background, transparent elevated app bar, 20px horizontal padding
+- [x] **Pattern B — Immersive Hero**: `heroDeep` gradient (320px) + ambient blobs + transparent AppBar; body overlaps hero by 28px with `radiusXl` clip. `extendBodyBehindAppBar: true`
+- [x] **Pattern C — Full-Bleed Immersive**: full-screen content (active workout, GPS); no AppBar; system overlay icons white
 
 ---
 

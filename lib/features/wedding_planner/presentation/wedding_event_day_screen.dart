@@ -61,10 +61,8 @@ String _eventTitle(String key) {
       case 'sangeet': return 'Sangeet';
       case 'baraat': return 'Baraat';
       case 'vivah': return 'Wedding Day';
-      case 'reception': return 'Reception';
       default: return key.toUpperCase();
     }
-  }
 }
 
 class _EventOverviewCard extends StatelessWidget {
@@ -273,7 +271,8 @@ class _EventTipsCard extends StatelessWidget {
 }
 
 class _QuickLogCTA extends StatelessWidget {
-  const _QuickLogCTA();
+  final String eventKey;
+  const _QuickLogCTA({required this.eventKey});
 
   @override
   Widget build(BuildContext context) {

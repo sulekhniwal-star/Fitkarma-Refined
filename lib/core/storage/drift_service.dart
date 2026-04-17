@@ -26,10 +26,14 @@ class DriftService {
     // 2. Base64 encode for encryption pragma
     final keyB64 = base64Encode(masterKeyBytes);
 
-    // 3. Initialize the database
+    // 3. Pre-warm derivative keys for synchronous column-level encryption
+    final dataClasses = ['bp_glucose', 'period', 'journal', 'appointments'];
+    await Future.wait(dataClasses.map((c) => KeyManager.getKeyFor(c)));
+    
+    // 4. Initialize the database
     _db = AppDatabase(keyB64);
 
-    // 4. Pre-warm connection
+    // 5. Pre-warm connection
     await _db!.customSelect('SELECT 1').get();
   }
 }

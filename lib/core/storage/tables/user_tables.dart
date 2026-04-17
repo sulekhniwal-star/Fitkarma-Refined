@@ -17,6 +17,12 @@ class Users extends Table {
   IntColumn get weddingPrepWeeks => integer().nullable()(); // 1,2,4,8 or null
   TextColumn get weddingEvents => text().nullable()(); // JSON: ["haldi","mehendi",...]
   TextColumn get weddingPrimaryGoal => text().nullable()(); // tone_up|energised|manage_stress|manage_indulgence
+  
+  // Ayurveda fields
+  IntColumn get doshaVata => integer().nullable()();
+  IntColumn get doshaPitta => integer().nullable()();
+  IntColumn get doshaKapha => integer().nullable()();
+  TextColumn get dominantDosha => text().nullable()(); // vata|pitta|kapha
 
   @override
   Set<Column> get primaryKey => {id};

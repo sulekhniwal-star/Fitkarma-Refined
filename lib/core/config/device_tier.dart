@@ -4,30 +4,78 @@ import 'dart:io';
 
 enum DeviceTier { low, mid, high }
 
-final deviceTierProvider = StateProvider<DeviceTier>((ref) => DeviceTier.mid);
+extension DeviceTierX on DeviceTier {
+  bool get hasBlur => this != DeviceTier.low;
+  bool get hasAmbientGlow => this != DeviceTier.low;
+  bool get hasAdvancedGlow => this == DeviceTier.high;
+  bool get hasRive => this == DeviceTier.high;
+  bool get hasSpringPhysics => this != DeviceTier.low;
+  bool get hasPerDigitCountUp => this == DeviceTier.high;
+  bool get isGlassSurfacesEnabled => this == DeviceTier.high;
+
+  int get ambientGlowCount {
+    switch (this) {
+      case DeviceTier.low:
+        return 0;
+      case DeviceTier.mid:
+        return 1;
+      case DeviceTier.high:
+        return 3;
+    }
+  }
+
+  double get blurRadius {
+    switch (this) {
+      case DeviceTier.low:
+        return 0;
+      default:
+        return 12.0;
+    }
+  }
+}
+
+final deviceTierProvider = NotifierProvider<DeviceTierNotifier, DeviceTier>(
+  DeviceTierNotifier.new,
+);
+
+class DeviceTierNotifier extends Notifier<DeviceTier> {
+  @override
+  DeviceTier build() => DeviceTier.mid;
+
+  void setTier(DeviceTier tier) {
+    state = tier;
+  }
+}
 
 class DeviceTierService {
   static Future<DeviceTier> detectTier() async {
     final deviceInfo = DeviceInfoPlugin();
-    
-    if (Platform.isAndroid) {
-      final androidInfo = await deviceInfo.androidInfo;
-      // Note: Getting exact RAM in Android requires some native code or reading /proc/meminfo
-      // For now, we'll use a heuristic based on SDK version and model if possible,
-      // but a better way is to use system_info or a native channel.
-      // Assuming mid-tier for now as a safe default if detection is uncertain.
-      // In a real app, I'd implement a method to check physical memory.
-      
-      // Heuristic fallback:
-      // If we could get memory, it would be:
-      // low: < 3GB RAM | mid: 3–6GB | high: 6GB+
-      return DeviceTier.high; // Defaulting to high for development/testing if detection is complex
-    } else if (Platform.isIOS) {
-      final iosInfo = await deviceInfo.iosInfo;
-      // Similar logic for iOS
-      return DeviceTier.high;
+
+    try {
+      if (Platform.isAndroid) {
+        final androidInfo = await deviceInfo.androidInfo;
+        // In a real production app, we would use a native bridge to check physical RAM.
+        // For now, we'll use a heuristic: Android 12+ (SDK 31+) usually targets mid/high devices.
+        // This is a placeholder for actual RAM-based detection.
+        if (androidInfo.version.sdkInt < 28) return DeviceTier.low;
+        if (androidInfo.version.sdkInt < 32) return DeviceTier.mid;
+        return DeviceTier.high;
+      } else if (Platform.isIOS) {
+        final iosInfo = await deviceInfo.iosInfo;
+        // iPhones usually have good enough performance for mid-tier at least.
+        // iPhone 11 and above (iPhone12,1+) are high tier.
+        if (iosInfo.utsname.machine.contains('iPhone12') ||
+            iosInfo.utsname.machine.contains('iPhone13') ||
+            iosInfo.utsname.machine.contains('iPhone14') ||
+            iosInfo.utsname.machine.contains('iPhone15')) {
+          return DeviceTier.high;
+        }
+        return DeviceTier.mid;
+      }
+    } catch (e) {
+      return DeviceTier.mid;
     }
-    
+
     return DeviceTier.mid;
   }
 }

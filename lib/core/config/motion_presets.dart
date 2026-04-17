@@ -2,22 +2,22 @@ import 'package:flutter/physics.dart';
 
 class MotionPresets {
   // Spring presets
-  static const lightSpring = SpringDescription(
+  static final lightSpring = SpringDescription.withDampingRatio(
     mass: 1.0,
     stiffness: 400.0,
-    damping: 0.85, // Note: TODO said ratio: 0.85, roughly translates to damping
+    ratio: 0.85,
   );
 
-  static const standardSpring = SpringDescription(
+  static final standardSpring = SpringDescription.withDampingRatio(
     mass: 1.0,
     stiffness: 250.0,
-    damping: 0.80,
+    ratio: 0.80,
   );
 
-  static const dramaticSpring = SpringDescription(
+  static final dramaticSpring = SpringDescription.withDampingRatio(
     mass: 1.0,
     stiffness: 180.0,
-    damping: 0.75,
+    ratio: 0.75,
   );
 
   // Animation durations

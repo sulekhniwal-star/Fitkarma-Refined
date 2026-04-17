@@ -19,65 +19,42 @@ class FoodHomeScreen extends ConsumerWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final selectedMeal = ref.watch(selectedMealTabProvider);
 
-    return Scaffold(
-      backgroundColor: isDark ? AppColorsDark.background : AppColors.background,
-      appBar: AppBar(
-        title: const Text('Nutrition Log'),
-        actions: [
-          IconButton(icon: const Icon(Icons.calendar_today_outlined), onPressed: () {}),
-        ],
-      ),
-      body: Stack(
+    return FitScaffold(
+      title: 'Nutrition Log',
+      actions: [
+        IconButton(icon: const Icon(Icons.calendar_today_outlined), onPressed: () {}),
+      ],
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SingleChildScrollView(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // 1. Macro Summary
-                _buildMacroSummary(context, ref, isDark),
-                const SizedBox(height: 24),
+          // 1. Macro Summary
+          _buildMacroSummary(context, ref, isDark),
+          const SizedBox(height: 24),
 
-                // 2. Micronutrient Highlights
-                _buildMicronutrientSection(context, ref, isDark),
-                const SizedBox(height: 24),
+          // 2. Micronutrient Highlights
+          _buildMicronutrientSection(context, ref, isDark),
+          const SizedBox(height: 24),
 
-                // 3. Copy Yesterday Action
-                _buildCopyYesterdayBanner(context, ref, isDark),
-                const SizedBox(height: 24),
+          // 3. Copy Yesterday Action
+          _buildCopyYesterdayBanner(context, ref, isDark),
+          const SizedBox(height: 24),
 
-                // 4. Meal Logs
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('Meal Logs', style: AppTextStyles.h2(isDark)),
-                    const Text('Edit', style: TextStyle(color: AppColors.primary)),
-                  ],
-                ),
-                MealTabBar(
-                  selected: selectedMeal,
-                  onChanged: (type) => ref.read(selectedMealTabProvider.notifier).state = type,
-                ),
-                const SizedBox(height: 16),
-                _buildMealLogList(context, ref, selectedMeal, isDark),
-
-                const SizedBox(height: 80), // FAB Space
-              ],
-            ),
+          // 4. Meal Logs
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('Meal Logs', style: AppTheme.h2(context)),
+              Text('Edit', style: TextStyle(color: isDark ? AppTheme.primary : AppTheme.lPrimary)),
+            ],
           ),
-          
-          // Floating Action Button
-          Positioned(
-            bottom: 16,
-            right: 16,
-            child: QuickLogFAB(
-              onActions: {
-                QuickLogAction.food: () {},
-                QuickLogAction.water: () {},
-                // ...
-              },
-            ),
+          MealTabBar(
+            selected: selectedMeal,
+            onChanged: (type) => ref.read(selectedMealTabProvider.notifier).state = type,
           ),
+          const SizedBox(height: 16),
+          _buildMealLogList(context, ref, selectedMeal, isDark),
+
+          const SizedBox(height: 100), // Navigation avoidance
         ],
       ),
     );

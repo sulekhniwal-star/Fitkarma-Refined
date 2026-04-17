@@ -192,13 +192,13 @@ class AppTheme {
   static TextStyle displayLg(BuildContext context) => Theme.of(context).textTheme.headlineLarge!;
   static TextStyle displayMd(BuildContext context) => Theme.of(context).textTheme.displayMedium!;
   
-  static TextStyle metricXL(BuildContext context) => GoogleFonts.plusJakartaSans(
+  static TextStyle metricXL(BuildContext context) => GoogleFonts.jetBrainsMono(
     fontSize: 56,
     fontWeight: FontWeight.w700,
     color: Theme.of(context).textTheme.displayLarge?.color,
   );
   
-  static TextStyle metricLg(BuildContext context) => GoogleFonts.plusJakartaSans(
+  static TextStyle metricLg(BuildContext context) => GoogleFonts.jetBrainsMono(
     fontSize: 40,
     fontWeight: FontWeight.w700,
     color: Theme.of(context).textTheme.displayLarge?.color,

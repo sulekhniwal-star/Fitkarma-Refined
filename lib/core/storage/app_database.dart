@@ -10,6 +10,12 @@ import 'tables/sensitive_tables.dart';
 import 'tables/india_platform_tables.dart';
 import 'tables/insight_tables.dart';
 import 'tables/user_tables.dart';
+import 'tables/ayurveda_tables.dart';
+import 'daos/food_dao.dart';
+import 'daos/health_dao.dart';
+import 'daos/user_dao.dart';
+import 'daos/sync_dao.dart';
+import '../../features/ayurveda/data/ayurveda_dao.dart';
 
 part 'app_database.g.dart';
 
@@ -48,12 +54,19 @@ part 'app_database.g.dart';
   InsightRatings,
   Users,
   HeartRateLogs,
+  AyurvedicRitualLogs,
+], daos: [
+  FoodDao,
+  HealthDao,
+  UserDao,
+  SyncDao,
+  AyurvedaDao,
 ])
 class AppDatabase extends _$AppDatabase {
   AppDatabase(String encryptionKey) : super(_openConnection(encryptionKey));
 
   @override
-  int get schemaVersion => 13;
+  int get schemaVersion => 14;
 
   @override
   MigrationStrategy get migration {
@@ -141,6 +154,9 @@ class AppDatabase extends _$AppDatabase {
           await m.addColumn(users, users.weddingPrepWeeks);
           await m.addColumn(users, users.weddingEvents);
           await m.addColumn(users, users.weddingPrimaryGoal);
+        }
+        if (from < 14) {
+          await m.createTable(ayurvedicRitualLogs);
         }
       },
     );

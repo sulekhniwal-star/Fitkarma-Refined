@@ -1,12 +1,13 @@
 import 'package:drift/drift.dart';
+import '../converters/encryption_converters.dart';
 
 @DataClassName('BloodPressureLog')
 class BloodPressureLogs extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get userId => text()();
-  TextColumn get systolic => text()(); // Encrypted TextColumn
-  TextColumn get diastolic => text()(); // Encrypted TextColumn
-  TextColumn get pulse => text().nullable()(); // Encrypted TextColumn
+  TextColumn get systolic => text().map(const EncryptedStringConverter('bp_glucose'))(); 
+  TextColumn get diastolic => text().map(const EncryptedStringConverter('bp_glucose'))(); 
+  TextColumn get pulse => text().map(const EncryptedStringConverter('bp_glucose')).nullable()(); 
   DateTimeColumn get loggedAt => dateTime()();
   TextColumn get classification => text()(); // normal, high, etc.
   TextColumn get notes => text().nullable()();
@@ -19,12 +20,12 @@ class BloodPressureLogs extends Table {
 class GlucoseLogs extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get userId => text()();
-  TextColumn get glucoseMgdl => text()(); // Encrypted TextColumn
+  TextColumn get glucoseMgdl => text().map(const EncryptedStringConverter('bp_glucose'))(); 
   TextColumn get readingType => text()(); // fasting, post_meal, etc.
   TextColumn get foodLogId => text().nullable()();
   DateTimeColumn get loggedAt => dateTime()();
   TextColumn get classification => text()();
-  TextColumn get hba1cEstimate => text().nullable()(); // Encrypted TextColumn
+  TextColumn get hba1cEstimate => text().map(const EncryptedStringConverter('bp_glucose')).nullable()(); 
   TextColumn get notes => text().nullable()();
   TextColumn get source => text()();
   TextColumn get syncStatus => text().withDefault(const Constant('pending'))();
@@ -35,8 +36,8 @@ class GlucoseLogs extends Table {
 class Spo2Logs extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get userId => text()();
-  TextColumn get spo2Percent => text()(); // Encrypted TextColumn
-  TextColumn get pulse => text().nullable()(); // Encrypted TextColumn
+  TextColumn get spo2Percent => text().map(const EncryptedStringConverter('bp_glucose'))(); 
+  TextColumn get pulse => text().map(const EncryptedStringConverter('bp_glucose')).nullable()(); 
   DateTimeColumn get loggedAt => dateTime()();
   TextColumn get source => text()();
 }
@@ -45,11 +46,11 @@ class Spo2Logs extends Table {
 class PeriodLogs extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get userId => text()();
-  TextColumn get cycleStartEncrypted => text()(); // Encrypted DateTime string
-  TextColumn get cycleEndEncrypted => text().nullable()(); // Encrypted DateTime string
-  TextColumn get symptomsEncrypted => text().nullable()(); // Encrypted
-  TextColumn get flowIntensityEncrypted => text().nullable()(); // Encrypted
-  TextColumn get notesEncrypted => text().nullable()(); // Encrypted
+  TextColumn get cycleStartEncrypted => text().map(const EncryptedStringConverter('period'))(); 
+  TextColumn get cycleEndEncrypted => text().map(const EncryptedStringConverter('period')).nullable()(); 
+  TextColumn get symptomsEncrypted => text().map(const EncryptedStringConverter('period')).nullable()(); 
+  TextColumn get flowIntensityEncrypted => text().map(const EncryptedStringConverter('period')).nullable()(); 
+  TextColumn get notesEncrypted => text().map(const EncryptedStringConverter('period')).nullable()(); 
   TextColumn get syncStatus => text().nullable()();
   TextColumn get idempotencyKey => text().nullable()();
 }
@@ -58,7 +59,7 @@ class PeriodLogs extends Table {
 class JournalEntries extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get userId => text()();
-  TextColumn get contentEncrypted => text()(); // Encrypted TextColumn
+  TextColumn get contentEncrypted => text().map(const EncryptedStringConverter('journal'))(); 
   IntColumn get moodScore => integer().nullable()();
   TextColumn get tags => text().nullable()();
   TextColumn get promptUsed => text().nullable()();
@@ -70,9 +71,9 @@ class JournalEntries extends Table {
 class DoctorAppointments extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get userId => text()();
-  TextColumn get doctorNameEncrypted => text()(); // Encrypted TextColumn
-  TextColumn get specialityEncrypted => text().nullable()();
-  TextColumn get appointmentDtEncrypted => text()(); // Encrypted ISO string
-  TextColumn get notesEncrypted => text().nullable()();
+  TextColumn get doctorNameEncrypted => text().map(const EncryptedStringConverter('appointments'))(); 
+  TextColumn get specialityEncrypted => text().map(const EncryptedStringConverter('appointments')).nullable()();
+  TextColumn get appointmentDtEncrypted => text().map(const EncryptedStringConverter('appointments'))(); 
+  TextColumn get notesEncrypted => text().map(const EncryptedStringConverter('appointments')).nullable()();
   BoolColumn get reminderSent => boolean().withDefault(const Constant(false))();
 }

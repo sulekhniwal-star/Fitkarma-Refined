@@ -17,7 +17,6 @@ class SettingsScreen extends ConsumerStatefulWidget {
 
 class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   final LocalAuthentication _auth = LocalAuthentication();
-  bool _biometricEnabled = false;
   final double _fontSize = 1.0;
   bool _dyslexiaFont = false;
   bool _lowDataMode = false;
@@ -27,6 +26,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     final themeMode = ref.watch(themeProvider);
+    final securityState = ref.watch(securityNotifierProvider);
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
@@ -234,11 +234,17 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 icon: Icons.fingerprint,
                 label: 'Biometric Lock',
                 subtitle: 'Require fingerprint to open',
-                value: _biometricEnabled,
+                value: securityState.value?.isBiometricEnabled ?? false,
                 onChanged: (val) async {
-                  final canCheck = await _auth.canCheckBiometrics;
+                  final canCheck = await ref.read(biometricServiceProvider).canAuthenticate();
                   if (canCheck) {
-                    setState(() => _biometricEnabled = val);
+                    await ref.read(securityNotifierProvider.notifier).setBiometricEnabled(val);
+                  } else {
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Biometrics not supported or setup on this device')),
+                      );
+                    }
                   }
                 },
                 isDark: isDark,

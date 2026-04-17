@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../auth/domain/auth_providers.dart';
-import '../../../shared/theme/app_colors.dart';
+import '../../abha/data/abha_repository.dart';
+import '../domain/dashboard_providers.dart';
+import '../../../core/config/app_theme.dart';
+import '../../../shared/widgets/fit_scaffold.dart';
 import '../../../shared/widgets/activity_rings.dart';
 import '../../../shared/widgets/async_value_widget.dart';
 import '../../../shared/widgets/bilingual_label.dart';
@@ -14,8 +17,6 @@ import '../../../shared/widgets/meal_tab_bar.dart';
 import '../../../shared/widgets/quick_log_fab.dart';
 import '../../../shared/widgets/abha_link_badge.dart';
 import '../../../shared/widgets/wedding_countdown_card.dart';
-import '../../abha/data/abha_repository.dart';
-import '../domain/dashboard_providers.dart';
 
 /// The primary landing screen of the application.
 /// 
@@ -29,98 +30,52 @@ class DashboardScreen extends ConsumerWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final user = ref.watch(authStateProvider).value;
 
-    return Scaffold(
-      backgroundColor: isDark ? AppColorsDark.background : AppColors.background,
-      body: SafeArea(
-        child: Stack(
+    final karmaValue = ref.watch(karmaProvider);
+
+    return FitScaffold(
+      pattern: ScaffoldPattern.immersiveHero,
+      title: 'Dashboard',
+      heroContent: AsyncValueWidget<KarmaData>(
+        value: karmaValue,
+        loading: const SizedBox.shrink(),
+        data: (karma) => Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            RefreshIndicator(
-              onRefresh: () async {
-                ref.invalidate(todayStepsProvider);
-                ref.invalidate(todayCaloriesProvider);
-                ref.invalidate(latestInsightProvider);
-              },
-              child: SingleChildScrollView(
-                physics: const AlwaysScrollableScrollPhysics(),
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // 1. Header Row
-                    _buildHeader(context, ref, user, isDark),
-                    const SizedBox(height: 24),
-
-                    // 2. Promo Banner (Festival or Wedding)
-                    _buildPromoBanner(ref),
-                    const SizedBox(height: 16),
-
-                    // 3. Activity Rings
-                    _buildActivityRings(ref),
-                    const SizedBox(height: 24),
-
-                    // 4. AI Insight Section
-                    _buildInsightSection(ref),
-                    const SizedBox(height: 24),
-
-                    // 5. Meal Logging Segment
-                    _buildMealSection(ref, isDark),
-                    
-                    const SizedBox(height: 80), // Space for FAB
-                  ],
-                ),
-              ),
+            Text(
+              'Lvl ${karma.level}',
+              style: AppTheme.metricLg(context).copyWith(color: Colors.white),
             ),
-
-            // 7. Quick Log FAB
-            Positioned(
-              bottom: 16,
-              right: 16,
-              child: QuickLogFAB(
-                onActions: {
-                  QuickLogAction.food: () {},
-                  QuickLogAction.water: () {},
-                  QuickLogAction.mood: () {},
-                  QuickLogAction.workout: () {},
-                  QuickLogAction.bp: () {},
-                  QuickLogAction.glucose: () {},
-                },
+            const SizedBox(height: 8),
+            Text(
+              '${karma.currentXP} XP',
+              style: AppTheme.labelLg(context).copyWith(color: Colors.white70),
+            ),
+            const SizedBox(height: 16),
+            SizedBox(
+              width: 200,
+              child: LinearProgressIndicator(
+                value: (karma.currentXP % 1000) / 1000, 
+                backgroundColor: Colors.white24,
+                valueColor: const AlwaysStoppedAnimation(AppTheme.accent),
               ),
             ),
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildHeader(BuildContext context, WidgetRef ref, dynamic user, bool isDark) {
-    final karmaResult = ref.watch(karmaProvider);
-
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: isDark ? AppColorsDark.surface0 : Colors.white,
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.03), blurRadius: 10)],
-      ),
-      child: Stack(
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Positioned(
-            right: -10,
-            top: -10,
-            child: Opacity(
-              opacity: 0.1,
-              child: Image.asset('assets/images/ayurveda/kapha.png', width: 100),
-            ),
-          ),
+          // 1. Welcome Message
           Row(
             children: [
               CircleAvatar(
-                radius: 24,
-                backgroundColor: AppColors.primarySurface,
-                child: Text(user?.name.characters.first ?? 'U', style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.primary)),
+                radius: 20,
+                backgroundColor: isDark ? AppTheme.surface1 : AppTheme.lSurface1,
+                child: Text(user?.name.characters.first ?? 'U', 
+                  style: TextStyle(fontWeight: FontWeight.bold, 
+                  color: isDark ? AppTheme.primary : AppTheme.lPrimary)),
               ),
-              const SizedBox(width: 16),
+              const SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -129,52 +84,35 @@ class DashboardScreen extends ConsumerWidget {
                       english: 'Namaste, ${user?.name.split(' ').first ?? 'Friend'}',
                       hindi: 'नमस्ते, ${user?.name.split(' ').first ?? 'मित्र'}',
                     ),
-                    const SizedBox(height: 4),
                     _buildAbhaBadge(ref),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 8),
-              AsyncValueWidget<KarmaData>(
-                value: karmaResult,
-                loading: const SizedBox.shrink(),
-                data: (karma) => Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    _buildChip(
-                      label: '${karma.currentXP} XP',
-                      color: AppColors.primary,
-                      textColor: Colors.white,
-                    ),
-                    const SizedBox(height: 4),
-                    _buildChip(
-                      label: 'Lvl ${karma.level}',
-                      color: AppColors.accent,
-                      textColor: Colors.black87,
-                    ),
                   ],
                 ),
               ),
             ],
           ),
+          const SizedBox(height: 24),
+
+          // 2. Promo Banner (Festival or Wedding)
+          _buildPromoBanner(ref),
+          const SizedBox(height: 16),
+
+          // 3. Activity Rings
+          _buildActivityRings(ref),
+          const SizedBox(height: 24),
+
+          // 4. AI Insight Section
+          _buildInsightSection(ref),
+          const SizedBox(height: 24),
+
+          // 5. Meal Logging Segment
+          _buildMealSection(ref, isDark),
+          
+          const SizedBox(height: 40), 
         ],
       ),
     );
   }
 
-  Widget _buildChip({required String label, required Color color, required Color textColor}) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Text(
-        label,
-        style: TextStyle(color: textColor, fontSize: 10, fontWeight: FontWeight.bold),
-      ),
-    );
-  }
 
   Widget _buildAbhaBadge(WidgetRef ref) {
     final abhaStatus = ref.watch(abhaStatusProvider);
@@ -197,7 +135,7 @@ class DashboardScreen extends ConsumerWidget {
             festivalNameHi: fest.nameHi,
             daysRemaining: fest.daysRemaining,
             fastingType: fest.fastingType,
-            bannerColor: AppColors.primary,
+            bannerColor: isDark ? AppTheme.primary : AppTheme.lPrimary,
             onViewDietPlan: () {},
           );
         }
@@ -306,7 +244,7 @@ class DashboardScreen extends ConsumerWidget {
             IconButton(
               icon: const Icon(Icons.add_circle_outline),
               onPressed: () {},
-              color: AppColors.primary,
+            color: isDark ? AppTheme.primary : AppTheme.lPrimary,
             ),
           ],
         ),

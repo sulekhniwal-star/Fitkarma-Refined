@@ -1341,17 +1341,18 @@ class $FoodItemsTable extends FoodItems
     ),
     defaultValue: const Constant(false),
   );
-  static const VerificationMeta _servingSizesMeta = const VerificationMeta(
-    'servingSizes',
-  );
   @override
-  late final GeneratedColumn<String> servingSizes = GeneratedColumn<String>(
-    'serving_sizes',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
+  late final GeneratedColumnWithTypeConverter<Map<String, dynamic>?, String>
+  servingSizes =
+      GeneratedColumn<String>(
+        'serving_sizes',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      ).withConverter<Map<String, dynamic>?>(
+        $FoodItemsTable.$converterservingSizesn,
+      );
   static const VerificationMeta _sourceMeta = const VerificationMeta('source');
   @override
   late final GeneratedColumn<String> source = GeneratedColumn<String>(
@@ -1521,15 +1522,6 @@ class $FoodItemsTable extends FoodItems
         isIndian.isAcceptableOrUnknown(data['is_indian']!, _isIndianMeta),
       );
     }
-    if (data.containsKey('serving_sizes')) {
-      context.handle(
-        _servingSizesMeta,
-        servingSizes.isAcceptableOrUnknown(
-          data['serving_sizes']!,
-          _servingSizesMeta,
-        ),
-      );
-    }
     if (data.containsKey('source')) {
       context.handle(
         _sourceMeta,
@@ -1611,9 +1603,11 @@ class $FoodItemsTable extends FoodItems
         DriftSqlType.bool,
         data['${effectivePrefix}is_indian'],
       )!,
-      servingSizes: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}serving_sizes'],
+      servingSizes: $FoodItemsTable.$converterservingSizesn.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}serving_sizes'],
+        ),
       ),
       source: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
@@ -1626,6 +1620,11 @@ class $FoodItemsTable extends FoodItems
   $FoodItemsTable createAlias(String alias) {
     return $FoodItemsTable(attachedDatabase, alias);
   }
+
+  static TypeConverter<Map<String, dynamic>, String> $converterservingSizes =
+      const JsonMapConverter();
+  static TypeConverter<Map<String, dynamic>?, String?> $converterservingSizesn =
+      NullAwareTypeConverter.wrap($converterservingSizes);
 }
 
 class FoodItem extends DataClass implements Insertable<FoodItem> {
@@ -1645,7 +1644,7 @@ class FoodItem extends DataClass implements Insertable<FoodItem> {
   final double? ironPer100g;
   final double? calciumPer100g;
   final bool isIndian;
-  final String? servingSizes;
+  final Map<String, dynamic>? servingSizes;
   final String source;
   const FoodItem({
     required this.id,
@@ -1705,7 +1704,9 @@ class FoodItem extends DataClass implements Insertable<FoodItem> {
     }
     map['is_indian'] = Variable<bool>(isIndian);
     if (!nullToAbsent || servingSizes != null) {
-      map['serving_sizes'] = Variable<String>(servingSizes);
+      map['serving_sizes'] = Variable<String>(
+        $FoodItemsTable.$converterservingSizesn.toSql(servingSizes),
+      );
     }
     map['source'] = Variable<String>(source);
     return map;
@@ -1778,7 +1779,9 @@ class FoodItem extends DataClass implements Insertable<FoodItem> {
       ironPer100g: serializer.fromJson<double?>(json['ironPer100g']),
       calciumPer100g: serializer.fromJson<double?>(json['calciumPer100g']),
       isIndian: serializer.fromJson<bool>(json['isIndian']),
-      servingSizes: serializer.fromJson<String?>(json['servingSizes']),
+      servingSizes: serializer.fromJson<Map<String, dynamic>?>(
+        json['servingSizes'],
+      ),
       source: serializer.fromJson<String>(json['source']),
     );
   }
@@ -1802,7 +1805,7 @@ class FoodItem extends DataClass implements Insertable<FoodItem> {
       'ironPer100g': serializer.toJson<double?>(ironPer100g),
       'calciumPer100g': serializer.toJson<double?>(calciumPer100g),
       'isIndian': serializer.toJson<bool>(isIndian),
-      'servingSizes': serializer.toJson<String?>(servingSizes),
+      'servingSizes': serializer.toJson<Map<String, dynamic>?>(servingSizes),
       'source': serializer.toJson<String>(source),
     };
   }
@@ -1824,7 +1827,7 @@ class FoodItem extends DataClass implements Insertable<FoodItem> {
     Value<double?> ironPer100g = const Value.absent(),
     Value<double?> calciumPer100g = const Value.absent(),
     bool? isIndian,
-    Value<String?> servingSizes = const Value.absent(),
+    Value<Map<String, dynamic>?> servingSizes = const Value.absent(),
     String? source,
   }) => FoodItem(
     id: id ?? this.id,
@@ -1984,7 +1987,7 @@ class FoodItemsCompanion extends UpdateCompanion<FoodItem> {
   final Value<double?> ironPer100g;
   final Value<double?> calciumPer100g;
   final Value<bool> isIndian;
-  final Value<String?> servingSizes;
+  final Value<Map<String, dynamic>?> servingSizes;
   final Value<String> source;
   const FoodItemsCompanion({
     this.id = const Value.absent(),
@@ -2090,7 +2093,7 @@ class FoodItemsCompanion extends UpdateCompanion<FoodItem> {
     Value<double?>? ironPer100g,
     Value<double?>? calciumPer100g,
     Value<bool>? isIndian,
-    Value<String?>? servingSizes,
+    Value<Map<String, dynamic>?>? servingSizes,
     Value<String>? source,
   }) {
     return FoodItemsCompanion(
@@ -2167,7 +2170,9 @@ class FoodItemsCompanion extends UpdateCompanion<FoodItem> {
       map['is_indian'] = Variable<bool>(isIndian.value);
     }
     if (servingSizes.present) {
-      map['serving_sizes'] = Variable<String>(servingSizes.value);
+      map['serving_sizes'] = Variable<String>(
+        $FoodItemsTable.$converterservingSizesn.toSql(servingSizes.value),
+      );
     }
     if (source.present) {
       map['source'] = Variable<String>(source.value);
@@ -7802,17 +7807,15 @@ class $MealPlansTable extends MealPlans
     type: DriftSqlType.dateTime,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _planDataMeta = const VerificationMeta(
-    'planData',
-  );
   @override
-  late final GeneratedColumn<String> planData = GeneratedColumn<String>(
+  late final GeneratedColumnWithTypeConverter<Map<String, dynamic>, String>
+  planData = GeneratedColumn<String>(
     'plan_data',
     aliasedName,
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
-  );
+  ).withConverter<Map<String, dynamic>>($MealPlansTable.$converterplanData);
   static const VerificationMeta _planTypeMeta = const VerificationMeta(
     'planType',
   );
@@ -7887,14 +7890,6 @@ class $MealPlansTable extends MealPlans
     } else if (isInserting) {
       context.missing(_weekStartMeta);
     }
-    if (data.containsKey('plan_data')) {
-      context.handle(
-        _planDataMeta,
-        planData.isAcceptableOrUnknown(data['plan_data']!, _planDataMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_planDataMeta);
-    }
     if (data.containsKey('plan_type')) {
       context.handle(
         _planTypeMeta,
@@ -7944,10 +7939,12 @@ class $MealPlansTable extends MealPlans
         DriftSqlType.dateTime,
         data['${effectivePrefix}week_start'],
       )!,
-      planData: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}plan_data'],
-      )!,
+      planData: $MealPlansTable.$converterplanData.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}plan_data'],
+        )!,
+      ),
       planType: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}plan_type'],
@@ -7967,13 +7964,16 @@ class $MealPlansTable extends MealPlans
   $MealPlansTable createAlias(String alias) {
     return $MealPlansTable(attachedDatabase, alias);
   }
+
+  static TypeConverter<Map<String, dynamic>, String> $converterplanData =
+      const JsonMapConverter();
 }
 
 class MealPlan extends DataClass implements Insertable<MealPlan> {
   final int id;
   final String userId;
   final DateTime weekStart;
-  final String planData;
+  final Map<String, dynamic> planData;
   final String planType;
   final String? festivalKey;
   final String generatedBy;
@@ -7992,7 +7992,11 @@ class MealPlan extends DataClass implements Insertable<MealPlan> {
     map['id'] = Variable<int>(id);
     map['user_id'] = Variable<String>(userId);
     map['week_start'] = Variable<DateTime>(weekStart);
-    map['plan_data'] = Variable<String>(planData);
+    {
+      map['plan_data'] = Variable<String>(
+        $MealPlansTable.$converterplanData.toSql(planData),
+      );
+    }
     map['plan_type'] = Variable<String>(planType);
     if (!nullToAbsent || festivalKey != null) {
       map['festival_key'] = Variable<String>(festivalKey);
@@ -8024,7 +8028,7 @@ class MealPlan extends DataClass implements Insertable<MealPlan> {
       id: serializer.fromJson<int>(json['id']),
       userId: serializer.fromJson<String>(json['userId']),
       weekStart: serializer.fromJson<DateTime>(json['weekStart']),
-      planData: serializer.fromJson<String>(json['planData']),
+      planData: serializer.fromJson<Map<String, dynamic>>(json['planData']),
       planType: serializer.fromJson<String>(json['planType']),
       festivalKey: serializer.fromJson<String?>(json['festivalKey']),
       generatedBy: serializer.fromJson<String>(json['generatedBy']),
@@ -8037,7 +8041,7 @@ class MealPlan extends DataClass implements Insertable<MealPlan> {
       'id': serializer.toJson<int>(id),
       'userId': serializer.toJson<String>(userId),
       'weekStart': serializer.toJson<DateTime>(weekStart),
-      'planData': serializer.toJson<String>(planData),
+      'planData': serializer.toJson<Map<String, dynamic>>(planData),
       'planType': serializer.toJson<String>(planType),
       'festivalKey': serializer.toJson<String?>(festivalKey),
       'generatedBy': serializer.toJson<String>(generatedBy),
@@ -8048,7 +8052,7 @@ class MealPlan extends DataClass implements Insertable<MealPlan> {
     int? id,
     String? userId,
     DateTime? weekStart,
-    String? planData,
+    Map<String, dynamic>? planData,
     String? planType,
     Value<String?> festivalKey = const Value.absent(),
     String? generatedBy,
@@ -8118,7 +8122,7 @@ class MealPlansCompanion extends UpdateCompanion<MealPlan> {
   final Value<int> id;
   final Value<String> userId;
   final Value<DateTime> weekStart;
-  final Value<String> planData;
+  final Value<Map<String, dynamic>> planData;
   final Value<String> planType;
   final Value<String?> festivalKey;
   final Value<String> generatedBy;
@@ -8135,7 +8139,7 @@ class MealPlansCompanion extends UpdateCompanion<MealPlan> {
     this.id = const Value.absent(),
     required String userId,
     required DateTime weekStart,
-    required String planData,
+    required Map<String, dynamic> planData,
     required String planType,
     this.festivalKey = const Value.absent(),
     required String generatedBy,
@@ -8168,7 +8172,7 @@ class MealPlansCompanion extends UpdateCompanion<MealPlan> {
     Value<int>? id,
     Value<String>? userId,
     Value<DateTime>? weekStart,
-    Value<String>? planData,
+    Value<Map<String, dynamic>>? planData,
     Value<String>? planType,
     Value<String?>? festivalKey,
     Value<String>? generatedBy,
@@ -8197,7 +8201,9 @@ class MealPlansCompanion extends UpdateCompanion<MealPlan> {
       map['week_start'] = Variable<DateTime>(weekStart.value);
     }
     if (planData.present) {
-      map['plan_data'] = Variable<String>(planData.value);
+      map['plan_data'] = Variable<String>(
+        $MealPlansTable.$converterplanData.toSql(planData.value),
+      );
     }
     if (planType.present) {
       map['plan_type'] = Variable<String>(planType.value);
@@ -8273,26 +8279,24 @@ class $RecipesTable extends Recipes with TableInfo<$RecipesTable, Recipe> {
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _ingredientsMeta = const VerificationMeta(
-    'ingredients',
-  );
   @override
-  late final GeneratedColumn<String> ingredients = GeneratedColumn<String>(
+  late final GeneratedColumnWithTypeConverter<Map<String, dynamic>, String>
+  ingredients = GeneratedColumn<String>(
     'ingredients',
     aliasedName,
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
-  );
-  static const VerificationMeta _stepsMeta = const VerificationMeta('steps');
+  ).withConverter<Map<String, dynamic>>($RecipesTable.$converteringredients);
   @override
-  late final GeneratedColumn<String> steps = GeneratedColumn<String>(
+  late final GeneratedColumnWithTypeConverter<Map<String, dynamic>, String>
+  steps = GeneratedColumn<String>(
     'steps',
     aliasedName,
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
-  );
+  ).withConverter<Map<String, dynamic>>($RecipesTable.$convertersteps);
   static const VerificationMeta _servingsMeta = const VerificationMeta(
     'servings',
   );
@@ -8470,25 +8474,6 @@ class $RecipesTable extends Recipes with TableInfo<$RecipesTable, Recipe> {
         ),
       );
     }
-    if (data.containsKey('ingredients')) {
-      context.handle(
-        _ingredientsMeta,
-        ingredients.isAcceptableOrUnknown(
-          data['ingredients']!,
-          _ingredientsMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_ingredientsMeta);
-    }
-    if (data.containsKey('steps')) {
-      context.handle(
-        _stepsMeta,
-        steps.isAcceptableOrUnknown(data['steps']!, _stepsMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_stepsMeta);
-    }
     if (data.containsKey('servings')) {
       context.handle(
         _servingsMeta,
@@ -8593,14 +8578,18 @@ class $RecipesTable extends Recipes with TableInfo<$RecipesTable, Recipe> {
         DriftSqlType.string,
         data['${effectivePrefix}description'],
       ),
-      ingredients: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}ingredients'],
-      )!,
-      steps: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}steps'],
-      )!,
+      ingredients: $RecipesTable.$converteringredients.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}ingredients'],
+        )!,
+      ),
+      steps: $RecipesTable.$convertersteps.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}steps'],
+        )!,
+      ),
       servings: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}servings'],
@@ -8652,6 +8641,11 @@ class $RecipesTable extends Recipes with TableInfo<$RecipesTable, Recipe> {
   $RecipesTable createAlias(String alias) {
     return $RecipesTable(attachedDatabase, alias);
   }
+
+  static TypeConverter<Map<String, dynamic>, String> $converteringredients =
+      const JsonMapConverter();
+  static TypeConverter<Map<String, dynamic>, String> $convertersteps =
+      const JsonMapConverter();
 }
 
 class Recipe extends DataClass implements Insertable<Recipe> {
@@ -8659,8 +8653,8 @@ class Recipe extends DataClass implements Insertable<Recipe> {
   final String userId;
   final String title;
   final String? description;
-  final String ingredients;
-  final String steps;
+  final Map<String, dynamic> ingredients;
+  final Map<String, dynamic> steps;
   final int servings;
   final double totalCalories;
   final double? proteinG;
@@ -8700,8 +8694,16 @@ class Recipe extends DataClass implements Insertable<Recipe> {
     if (!nullToAbsent || description != null) {
       map['description'] = Variable<String>(description);
     }
-    map['ingredients'] = Variable<String>(ingredients);
-    map['steps'] = Variable<String>(steps);
+    {
+      map['ingredients'] = Variable<String>(
+        $RecipesTable.$converteringredients.toSql(ingredients),
+      );
+    }
+    {
+      map['steps'] = Variable<String>(
+        $RecipesTable.$convertersteps.toSql(steps),
+      );
+    }
     map['servings'] = Variable<int>(servings);
     map['total_calories'] = Variable<double>(totalCalories);
     if (!nullToAbsent || proteinG != null) {
@@ -8780,8 +8782,10 @@ class Recipe extends DataClass implements Insertable<Recipe> {
       userId: serializer.fromJson<String>(json['userId']),
       title: serializer.fromJson<String>(json['title']),
       description: serializer.fromJson<String?>(json['description']),
-      ingredients: serializer.fromJson<String>(json['ingredients']),
-      steps: serializer.fromJson<String>(json['steps']),
+      ingredients: serializer.fromJson<Map<String, dynamic>>(
+        json['ingredients'],
+      ),
+      steps: serializer.fromJson<Map<String, dynamic>>(json['steps']),
       servings: serializer.fromJson<int>(json['servings']),
       totalCalories: serializer.fromJson<double>(json['totalCalories']),
       proteinG: serializer.fromJson<double?>(json['proteinG']),
@@ -8803,8 +8807,8 @@ class Recipe extends DataClass implements Insertable<Recipe> {
       'userId': serializer.toJson<String>(userId),
       'title': serializer.toJson<String>(title),
       'description': serializer.toJson<String?>(description),
-      'ingredients': serializer.toJson<String>(ingredients),
-      'steps': serializer.toJson<String>(steps),
+      'ingredients': serializer.toJson<Map<String, dynamic>>(ingredients),
+      'steps': serializer.toJson<Map<String, dynamic>>(steps),
       'servings': serializer.toJson<int>(servings),
       'totalCalories': serializer.toJson<double>(totalCalories),
       'proteinG': serializer.toJson<double?>(proteinG),
@@ -8824,8 +8828,8 @@ class Recipe extends DataClass implements Insertable<Recipe> {
     String? userId,
     String? title,
     Value<String?> description = const Value.absent(),
-    String? ingredients,
-    String? steps,
+    Map<String, dynamic>? ingredients,
+    Map<String, dynamic>? steps,
     int? servings,
     double? totalCalories,
     Value<double?> proteinG = const Value.absent(),
@@ -8962,8 +8966,8 @@ class RecipesCompanion extends UpdateCompanion<Recipe> {
   final Value<String> userId;
   final Value<String> title;
   final Value<String?> description;
-  final Value<String> ingredients;
-  final Value<String> steps;
+  final Value<Map<String, dynamic>> ingredients;
+  final Value<Map<String, dynamic>> steps;
   final Value<int> servings;
   final Value<double> totalCalories;
   final Value<double?> proteinG;
@@ -8999,8 +9003,8 @@ class RecipesCompanion extends UpdateCompanion<Recipe> {
     required String userId,
     required String title,
     this.description = const Value.absent(),
-    required String ingredients,
-    required String steps,
+    required Map<String, dynamic> ingredients,
+    required Map<String, dynamic> steps,
     required int servings,
     required double totalCalories,
     this.proteinG = const Value.absent(),
@@ -9063,8 +9067,8 @@ class RecipesCompanion extends UpdateCompanion<Recipe> {
     Value<String>? userId,
     Value<String>? title,
     Value<String?>? description,
-    Value<String>? ingredients,
-    Value<String>? steps,
+    Value<Map<String, dynamic>>? ingredients,
+    Value<Map<String, dynamic>>? steps,
     Value<int>? servings,
     Value<double>? totalCalories,
     Value<double?>? proteinG,
@@ -9114,10 +9118,14 @@ class RecipesCompanion extends UpdateCompanion<Recipe> {
       map['description'] = Variable<String>(description.value);
     }
     if (ingredients.present) {
-      map['ingredients'] = Variable<String>(ingredients.value);
+      map['ingredients'] = Variable<String>(
+        $RecipesTable.$converteringredients.toSql(ingredients.value),
+      );
     }
     if (steps.present) {
-      map['steps'] = Variable<String>(steps.value);
+      map['steps'] = Variable<String>(
+        $RecipesTable.$convertersteps.toSql(steps.value),
+      );
     }
     if (servings.present) {
       map['servings'] = Variable<int>(servings.value);
@@ -11842,37 +11850,33 @@ class $BloodPressureLogsTable extends BloodPressureLogs
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _systolicMeta = const VerificationMeta(
-    'systolic',
-  );
   @override
-  late final GeneratedColumn<String> systolic = GeneratedColumn<String>(
-    'systolic',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _diastolicMeta = const VerificationMeta(
-    'diastolic',
-  );
+  late final GeneratedColumnWithTypeConverter<String, String> systolic =
+      GeneratedColumn<String>(
+        'systolic',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      ).withConverter<String>($BloodPressureLogsTable.$convertersystolic);
   @override
-  late final GeneratedColumn<String> diastolic = GeneratedColumn<String>(
-    'diastolic',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _pulseMeta = const VerificationMeta('pulse');
+  late final GeneratedColumnWithTypeConverter<String, String> diastolic =
+      GeneratedColumn<String>(
+        'diastolic',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      ).withConverter<String>($BloodPressureLogsTable.$converterdiastolic);
   @override
-  late final GeneratedColumn<String> pulse = GeneratedColumn<String>(
-    'pulse',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
+  late final GeneratedColumnWithTypeConverter<String?, String> pulse =
+      GeneratedColumn<String>(
+        'pulse',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      ).withConverter<String?>($BloodPressureLogsTable.$converterpulsen);
   static const VerificationMeta _loggedAtMeta = const VerificationMeta(
     'loggedAt',
   );
@@ -11973,28 +11977,6 @@ class $BloodPressureLogsTable extends BloodPressureLogs
     } else if (isInserting) {
       context.missing(_userIdMeta);
     }
-    if (data.containsKey('systolic')) {
-      context.handle(
-        _systolicMeta,
-        systolic.isAcceptableOrUnknown(data['systolic']!, _systolicMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_systolicMeta);
-    }
-    if (data.containsKey('diastolic')) {
-      context.handle(
-        _diastolicMeta,
-        diastolic.isAcceptableOrUnknown(data['diastolic']!, _diastolicMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_diastolicMeta);
-    }
-    if (data.containsKey('pulse')) {
-      context.handle(
-        _pulseMeta,
-        pulse.isAcceptableOrUnknown(data['pulse']!, _pulseMeta),
-      );
-    }
     if (data.containsKey('logged_at')) {
       context.handle(
         _loggedAtMeta,
@@ -12062,17 +12044,23 @@ class $BloodPressureLogsTable extends BloodPressureLogs
         DriftSqlType.string,
         data['${effectivePrefix}user_id'],
       )!,
-      systolic: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}systolic'],
-      )!,
-      diastolic: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}diastolic'],
-      )!,
-      pulse: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}pulse'],
+      systolic: $BloodPressureLogsTable.$convertersystolic.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}systolic'],
+        )!,
+      ),
+      diastolic: $BloodPressureLogsTable.$converterdiastolic.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}diastolic'],
+        )!,
+      ),
+      pulse: $BloodPressureLogsTable.$converterpulsen.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}pulse'],
+        ),
       ),
       loggedAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
@@ -12105,6 +12093,15 @@ class $BloodPressureLogsTable extends BloodPressureLogs
   $BloodPressureLogsTable createAlias(String alias) {
     return $BloodPressureLogsTable(attachedDatabase, alias);
   }
+
+  static TypeConverter<String, String> $convertersystolic =
+      const EncryptedStringConverter('bp_glucose');
+  static TypeConverter<String, String> $converterdiastolic =
+      const EncryptedStringConverter('bp_glucose');
+  static TypeConverter<String, String> $converterpulse =
+      const EncryptedStringConverter('bp_glucose');
+  static TypeConverter<String?, String?> $converterpulsen =
+      NullAwareTypeConverter.wrap($converterpulse);
 }
 
 class BloodPressureLog extends DataClass
@@ -12138,10 +12135,20 @@ class BloodPressureLog extends DataClass
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
     map['user_id'] = Variable<String>(userId);
-    map['systolic'] = Variable<String>(systolic);
-    map['diastolic'] = Variable<String>(diastolic);
+    {
+      map['systolic'] = Variable<String>(
+        $BloodPressureLogsTable.$convertersystolic.toSql(systolic),
+      );
+    }
+    {
+      map['diastolic'] = Variable<String>(
+        $BloodPressureLogsTable.$converterdiastolic.toSql(diastolic),
+      );
+    }
     if (!nullToAbsent || pulse != null) {
-      map['pulse'] = Variable<String>(pulse);
+      map['pulse'] = Variable<String>(
+        $BloodPressureLogsTable.$converterpulsen.toSql(pulse),
+      );
     }
     map['logged_at'] = Variable<DateTime>(loggedAt);
     map['classification'] = Variable<String>(classification);
@@ -12417,13 +12424,19 @@ class BloodPressureLogsCompanion extends UpdateCompanion<BloodPressureLog> {
       map['user_id'] = Variable<String>(userId.value);
     }
     if (systolic.present) {
-      map['systolic'] = Variable<String>(systolic.value);
+      map['systolic'] = Variable<String>(
+        $BloodPressureLogsTable.$convertersystolic.toSql(systolic.value),
+      );
     }
     if (diastolic.present) {
-      map['diastolic'] = Variable<String>(diastolic.value);
+      map['diastolic'] = Variable<String>(
+        $BloodPressureLogsTable.$converterdiastolic.toSql(diastolic.value),
+      );
     }
     if (pulse.present) {
-      map['pulse'] = Variable<String>(pulse.value);
+      map['pulse'] = Variable<String>(
+        $BloodPressureLogsTable.$converterpulsen.toSql(pulse.value),
+      );
     }
     if (loggedAt.present) {
       map['logged_at'] = Variable<DateTime>(loggedAt.value);
@@ -12493,17 +12506,15 @@ class $GlucoseLogsTable extends GlucoseLogs
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _glucoseMgdlMeta = const VerificationMeta(
-    'glucoseMgdl',
-  );
   @override
-  late final GeneratedColumn<String> glucoseMgdl = GeneratedColumn<String>(
-    'glucose_mgdl',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
+  late final GeneratedColumnWithTypeConverter<String, String> glucoseMgdl =
+      GeneratedColumn<String>(
+        'glucose_mgdl',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      ).withConverter<String>($GlucoseLogsTable.$converterglucoseMgdl);
   static const VerificationMeta _readingTypeMeta = const VerificationMeta(
     'readingType',
   );
@@ -12548,17 +12559,15 @@ class $GlucoseLogsTable extends GlucoseLogs
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _hba1cEstimateMeta = const VerificationMeta(
-    'hba1cEstimate',
-  );
   @override
-  late final GeneratedColumn<String> hba1cEstimate = GeneratedColumn<String>(
-    'hba1c_estimate',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
+  late final GeneratedColumnWithTypeConverter<String?, String> hba1cEstimate =
+      GeneratedColumn<String>(
+        'hba1c_estimate',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      ).withConverter<String?>($GlucoseLogsTable.$converterhba1cEstimaten);
   static const VerificationMeta _notesMeta = const VerificationMeta('notes');
   @override
   late final GeneratedColumn<String> notes = GeneratedColumn<String>(
@@ -12638,17 +12647,6 @@ class $GlucoseLogsTable extends GlucoseLogs
     } else if (isInserting) {
       context.missing(_userIdMeta);
     }
-    if (data.containsKey('glucose_mgdl')) {
-      context.handle(
-        _glucoseMgdlMeta,
-        glucoseMgdl.isAcceptableOrUnknown(
-          data['glucose_mgdl']!,
-          _glucoseMgdlMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_glucoseMgdlMeta);
-    }
     if (data.containsKey('reading_type')) {
       context.handle(
         _readingTypeMeta,
@@ -12684,15 +12682,6 @@ class $GlucoseLogsTable extends GlucoseLogs
       );
     } else if (isInserting) {
       context.missing(_classificationMeta);
-    }
-    if (data.containsKey('hba1c_estimate')) {
-      context.handle(
-        _hba1cEstimateMeta,
-        hba1cEstimate.isAcceptableOrUnknown(
-          data['hba1c_estimate']!,
-          _hba1cEstimateMeta,
-        ),
-      );
     }
     if (data.containsKey('notes')) {
       context.handle(
@@ -12742,10 +12731,12 @@ class $GlucoseLogsTable extends GlucoseLogs
         DriftSqlType.string,
         data['${effectivePrefix}user_id'],
       )!,
-      glucoseMgdl: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}glucose_mgdl'],
-      )!,
+      glucoseMgdl: $GlucoseLogsTable.$converterglucoseMgdl.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}glucose_mgdl'],
+        )!,
+      ),
       readingType: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}reading_type'],
@@ -12762,9 +12753,11 @@ class $GlucoseLogsTable extends GlucoseLogs
         DriftSqlType.string,
         data['${effectivePrefix}classification'],
       )!,
-      hba1cEstimate: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}hba1c_estimate'],
+      hba1cEstimate: $GlucoseLogsTable.$converterhba1cEstimaten.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}hba1c_estimate'],
+        ),
       ),
       notes: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
@@ -12789,6 +12782,13 @@ class $GlucoseLogsTable extends GlucoseLogs
   $GlucoseLogsTable createAlias(String alias) {
     return $GlucoseLogsTable(attachedDatabase, alias);
   }
+
+  static TypeConverter<String, String> $converterglucoseMgdl =
+      const EncryptedStringConverter('bp_glucose');
+  static TypeConverter<String, String> $converterhba1cEstimate =
+      const EncryptedStringConverter('bp_glucose');
+  static TypeConverter<String?, String?> $converterhba1cEstimaten =
+      NullAwareTypeConverter.wrap($converterhba1cEstimate);
 }
 
 class GlucoseLog extends DataClass implements Insertable<GlucoseLog> {
@@ -12823,7 +12823,11 @@ class GlucoseLog extends DataClass implements Insertable<GlucoseLog> {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
     map['user_id'] = Variable<String>(userId);
-    map['glucose_mgdl'] = Variable<String>(glucoseMgdl);
+    {
+      map['glucose_mgdl'] = Variable<String>(
+        $GlucoseLogsTable.$converterglucoseMgdl.toSql(glucoseMgdl),
+      );
+    }
     map['reading_type'] = Variable<String>(readingType);
     if (!nullToAbsent || foodLogId != null) {
       map['food_log_id'] = Variable<String>(foodLogId);
@@ -12831,7 +12835,9 @@ class GlucoseLog extends DataClass implements Insertable<GlucoseLog> {
     map['logged_at'] = Variable<DateTime>(loggedAt);
     map['classification'] = Variable<String>(classification);
     if (!nullToAbsent || hba1cEstimate != null) {
-      map['hba1c_estimate'] = Variable<String>(hba1cEstimate);
+      map['hba1c_estimate'] = Variable<String>(
+        $GlucoseLogsTable.$converterhba1cEstimaten.toSql(hba1cEstimate),
+      );
     }
     if (!nullToAbsent || notes != null) {
       map['notes'] = Variable<String>(notes);
@@ -13131,7 +13137,9 @@ class GlucoseLogsCompanion extends UpdateCompanion<GlucoseLog> {
       map['user_id'] = Variable<String>(userId.value);
     }
     if (glucoseMgdl.present) {
-      map['glucose_mgdl'] = Variable<String>(glucoseMgdl.value);
+      map['glucose_mgdl'] = Variable<String>(
+        $GlucoseLogsTable.$converterglucoseMgdl.toSql(glucoseMgdl.value),
+      );
     }
     if (readingType.present) {
       map['reading_type'] = Variable<String>(readingType.value);
@@ -13146,7 +13154,9 @@ class GlucoseLogsCompanion extends UpdateCompanion<GlucoseLog> {
       map['classification'] = Variable<String>(classification.value);
     }
     if (hba1cEstimate.present) {
-      map['hba1c_estimate'] = Variable<String>(hba1cEstimate.value);
+      map['hba1c_estimate'] = Variable<String>(
+        $GlucoseLogsTable.$converterhba1cEstimaten.toSql(hba1cEstimate.value),
+      );
     }
     if (notes.present) {
       map['notes'] = Variable<String>(notes.value);
@@ -13210,26 +13220,24 @@ class $Spo2LogsTable extends Spo2Logs with TableInfo<$Spo2LogsTable, Spo2Log> {
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _spo2PercentMeta = const VerificationMeta(
-    'spo2Percent',
-  );
   @override
-  late final GeneratedColumn<String> spo2Percent = GeneratedColumn<String>(
-    'spo2_percent',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _pulseMeta = const VerificationMeta('pulse');
+  late final GeneratedColumnWithTypeConverter<String, String> spo2Percent =
+      GeneratedColumn<String>(
+        'spo2_percent',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      ).withConverter<String>($Spo2LogsTable.$converterspo2Percent);
   @override
-  late final GeneratedColumn<String> pulse = GeneratedColumn<String>(
-    'pulse',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
+  late final GeneratedColumnWithTypeConverter<String?, String> pulse =
+      GeneratedColumn<String>(
+        'pulse',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      ).withConverter<String?>($Spo2LogsTable.$converterpulsen);
   static const VerificationMeta _loggedAtMeta = const VerificationMeta(
     'loggedAt',
   );
@@ -13282,23 +13290,6 @@ class $Spo2LogsTable extends Spo2Logs with TableInfo<$Spo2LogsTable, Spo2Log> {
     } else if (isInserting) {
       context.missing(_userIdMeta);
     }
-    if (data.containsKey('spo2_percent')) {
-      context.handle(
-        _spo2PercentMeta,
-        spo2Percent.isAcceptableOrUnknown(
-          data['spo2_percent']!,
-          _spo2PercentMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_spo2PercentMeta);
-    }
-    if (data.containsKey('pulse')) {
-      context.handle(
-        _pulseMeta,
-        pulse.isAcceptableOrUnknown(data['pulse']!, _pulseMeta),
-      );
-    }
     if (data.containsKey('logged_at')) {
       context.handle(
         _loggedAtMeta,
@@ -13332,13 +13323,17 @@ class $Spo2LogsTable extends Spo2Logs with TableInfo<$Spo2LogsTable, Spo2Log> {
         DriftSqlType.string,
         data['${effectivePrefix}user_id'],
       )!,
-      spo2Percent: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}spo2_percent'],
-      )!,
-      pulse: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}pulse'],
+      spo2Percent: $Spo2LogsTable.$converterspo2Percent.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}spo2_percent'],
+        )!,
+      ),
+      pulse: $Spo2LogsTable.$converterpulsen.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}pulse'],
+        ),
       ),
       loggedAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
@@ -13355,6 +13350,13 @@ class $Spo2LogsTable extends Spo2Logs with TableInfo<$Spo2LogsTable, Spo2Log> {
   $Spo2LogsTable createAlias(String alias) {
     return $Spo2LogsTable(attachedDatabase, alias);
   }
+
+  static TypeConverter<String, String> $converterspo2Percent =
+      const EncryptedStringConverter('bp_glucose');
+  static TypeConverter<String, String> $converterpulse =
+      const EncryptedStringConverter('bp_glucose');
+  static TypeConverter<String?, String?> $converterpulsen =
+      NullAwareTypeConverter.wrap($converterpulse);
 }
 
 class Spo2Log extends DataClass implements Insertable<Spo2Log> {
@@ -13377,9 +13379,15 @@ class Spo2Log extends DataClass implements Insertable<Spo2Log> {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
     map['user_id'] = Variable<String>(userId);
-    map['spo2_percent'] = Variable<String>(spo2Percent);
+    {
+      map['spo2_percent'] = Variable<String>(
+        $Spo2LogsTable.$converterspo2Percent.toSql(spo2Percent),
+      );
+    }
     if (!nullToAbsent || pulse != null) {
-      map['pulse'] = Variable<String>(pulse);
+      map['pulse'] = Variable<String>(
+        $Spo2LogsTable.$converterpulsen.toSql(pulse),
+      );
     }
     map['logged_at'] = Variable<DateTime>(loggedAt);
     map['source'] = Variable<String>(source);
@@ -13554,10 +13562,14 @@ class Spo2LogsCompanion extends UpdateCompanion<Spo2Log> {
       map['user_id'] = Variable<String>(userId.value);
     }
     if (spo2Percent.present) {
-      map['spo2_percent'] = Variable<String>(spo2Percent.value);
+      map['spo2_percent'] = Variable<String>(
+        $Spo2LogsTable.$converterspo2Percent.toSql(spo2Percent.value),
+      );
     }
     if (pulse.present) {
-      map['pulse'] = Variable<String>(pulse.value);
+      map['pulse'] = Variable<String>(
+        $Spo2LogsTable.$converterpulsen.toSql(pulse.value),
+      );
     }
     if (loggedAt.present) {
       map['logged_at'] = Variable<DateTime>(loggedAt.value);
@@ -13610,63 +13622,51 @@ class $PeriodLogsTable extends PeriodLogs
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _cycleStartEncryptedMeta =
-      const VerificationMeta('cycleStartEncrypted');
   @override
-  late final GeneratedColumn<String> cycleStartEncrypted =
-      GeneratedColumn<String>(
-        'cycle_start_encrypted',
-        aliasedName,
-        false,
-        type: DriftSqlType.string,
-        requiredDuringInsert: true,
-      );
-  static const VerificationMeta _cycleEndEncryptedMeta = const VerificationMeta(
-    'cycleEndEncrypted',
-  );
+  late final GeneratedColumnWithTypeConverter<String, String>
+  cycleStartEncrypted = GeneratedColumn<String>(
+    'cycle_start_encrypted',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  ).withConverter<String>($PeriodLogsTable.$convertercycleStartEncrypted);
   @override
-  late final GeneratedColumn<String> cycleEndEncrypted =
-      GeneratedColumn<String>(
-        'cycle_end_encrypted',
-        aliasedName,
-        true,
-        type: DriftSqlType.string,
-        requiredDuringInsert: false,
-      );
-  static const VerificationMeta _symptomsEncryptedMeta = const VerificationMeta(
-    'symptomsEncrypted',
-  );
-  @override
-  late final GeneratedColumn<String> symptomsEncrypted =
-      GeneratedColumn<String>(
-        'symptoms_encrypted',
-        aliasedName,
-        true,
-        type: DriftSqlType.string,
-        requiredDuringInsert: false,
-      );
-  static const VerificationMeta _flowIntensityEncryptedMeta =
-      const VerificationMeta('flowIntensityEncrypted');
-  @override
-  late final GeneratedColumn<String> flowIntensityEncrypted =
-      GeneratedColumn<String>(
-        'flow_intensity_encrypted',
-        aliasedName,
-        true,
-        type: DriftSqlType.string,
-        requiredDuringInsert: false,
-      );
-  static const VerificationMeta _notesEncryptedMeta = const VerificationMeta(
-    'notesEncrypted',
-  );
-  @override
-  late final GeneratedColumn<String> notesEncrypted = GeneratedColumn<String>(
-    'notes_encrypted',
+  late final GeneratedColumnWithTypeConverter<String?, String>
+  cycleEndEncrypted = GeneratedColumn<String>(
+    'cycle_end_encrypted',
     aliasedName,
     true,
     type: DriftSqlType.string,
     requiredDuringInsert: false,
-  );
+  ).withConverter<String?>($PeriodLogsTable.$convertercycleEndEncryptedn);
+  @override
+  late final GeneratedColumnWithTypeConverter<String?, String>
+  symptomsEncrypted = GeneratedColumn<String>(
+    'symptoms_encrypted',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  ).withConverter<String?>($PeriodLogsTable.$convertersymptomsEncryptedn);
+  @override
+  late final GeneratedColumnWithTypeConverter<String?, String>
+  flowIntensityEncrypted = GeneratedColumn<String>(
+    'flow_intensity_encrypted',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  ).withConverter<String?>($PeriodLogsTable.$converterflowIntensityEncryptedn);
+  @override
+  late final GeneratedColumnWithTypeConverter<String?, String> notesEncrypted =
+      GeneratedColumn<String>(
+        'notes_encrypted',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      ).withConverter<String?>($PeriodLogsTable.$converternotesEncryptedn);
   static const VerificationMeta _syncStatusMeta = const VerificationMeta(
     'syncStatus',
   );
@@ -13724,53 +13724,6 @@ class $PeriodLogsTable extends PeriodLogs
     } else if (isInserting) {
       context.missing(_userIdMeta);
     }
-    if (data.containsKey('cycle_start_encrypted')) {
-      context.handle(
-        _cycleStartEncryptedMeta,
-        cycleStartEncrypted.isAcceptableOrUnknown(
-          data['cycle_start_encrypted']!,
-          _cycleStartEncryptedMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_cycleStartEncryptedMeta);
-    }
-    if (data.containsKey('cycle_end_encrypted')) {
-      context.handle(
-        _cycleEndEncryptedMeta,
-        cycleEndEncrypted.isAcceptableOrUnknown(
-          data['cycle_end_encrypted']!,
-          _cycleEndEncryptedMeta,
-        ),
-      );
-    }
-    if (data.containsKey('symptoms_encrypted')) {
-      context.handle(
-        _symptomsEncryptedMeta,
-        symptomsEncrypted.isAcceptableOrUnknown(
-          data['symptoms_encrypted']!,
-          _symptomsEncryptedMeta,
-        ),
-      );
-    }
-    if (data.containsKey('flow_intensity_encrypted')) {
-      context.handle(
-        _flowIntensityEncryptedMeta,
-        flowIntensityEncrypted.isAcceptableOrUnknown(
-          data['flow_intensity_encrypted']!,
-          _flowIntensityEncryptedMeta,
-        ),
-      );
-    }
-    if (data.containsKey('notes_encrypted')) {
-      context.handle(
-        _notesEncryptedMeta,
-        notesEncrypted.isAcceptableOrUnknown(
-          data['notes_encrypted']!,
-          _notesEncryptedMeta,
-        ),
-      );
-    }
     if (data.containsKey('sync_status')) {
       context.handle(
         _syncStatusMeta,
@@ -13803,25 +13756,37 @@ class $PeriodLogsTable extends PeriodLogs
         DriftSqlType.string,
         data['${effectivePrefix}user_id'],
       )!,
-      cycleStartEncrypted: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}cycle_start_encrypted'],
-      )!,
-      cycleEndEncrypted: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}cycle_end_encrypted'],
+      cycleStartEncrypted: $PeriodLogsTable.$convertercycleStartEncrypted
+          .fromSql(
+            attachedDatabase.typeMapping.read(
+              DriftSqlType.string,
+              data['${effectivePrefix}cycle_start_encrypted'],
+            )!,
+          ),
+      cycleEndEncrypted: $PeriodLogsTable.$convertercycleEndEncryptedn.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}cycle_end_encrypted'],
+        ),
       ),
-      symptomsEncrypted: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}symptoms_encrypted'],
+      symptomsEncrypted: $PeriodLogsTable.$convertersymptomsEncryptedn.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}symptoms_encrypted'],
+        ),
       ),
-      flowIntensityEncrypted: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}flow_intensity_encrypted'],
-      ),
-      notesEncrypted: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}notes_encrypted'],
+      flowIntensityEncrypted: $PeriodLogsTable.$converterflowIntensityEncryptedn
+          .fromSql(
+            attachedDatabase.typeMapping.read(
+              DriftSqlType.string,
+              data['${effectivePrefix}flow_intensity_encrypted'],
+            ),
+          ),
+      notesEncrypted: $PeriodLogsTable.$converternotesEncryptedn.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}notes_encrypted'],
+        ),
       ),
       syncStatus: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
@@ -13838,6 +13803,25 @@ class $PeriodLogsTable extends PeriodLogs
   $PeriodLogsTable createAlias(String alias) {
     return $PeriodLogsTable(attachedDatabase, alias);
   }
+
+  static TypeConverter<String, String> $convertercycleStartEncrypted =
+      const EncryptedStringConverter('period');
+  static TypeConverter<String, String> $convertercycleEndEncrypted =
+      const EncryptedStringConverter('period');
+  static TypeConverter<String?, String?> $convertercycleEndEncryptedn =
+      NullAwareTypeConverter.wrap($convertercycleEndEncrypted);
+  static TypeConverter<String, String> $convertersymptomsEncrypted =
+      const EncryptedStringConverter('period');
+  static TypeConverter<String?, String?> $convertersymptomsEncryptedn =
+      NullAwareTypeConverter.wrap($convertersymptomsEncrypted);
+  static TypeConverter<String, String> $converterflowIntensityEncrypted =
+      const EncryptedStringConverter('period');
+  static TypeConverter<String?, String?> $converterflowIntensityEncryptedn =
+      NullAwareTypeConverter.wrap($converterflowIntensityEncrypted);
+  static TypeConverter<String, String> $converternotesEncrypted =
+      const EncryptedStringConverter('period');
+  static TypeConverter<String?, String?> $converternotesEncryptedn =
+      NullAwareTypeConverter.wrap($converternotesEncrypted);
 }
 
 class PeriodLog extends DataClass implements Insertable<PeriodLog> {
@@ -13866,20 +13850,34 @@ class PeriodLog extends DataClass implements Insertable<PeriodLog> {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
     map['user_id'] = Variable<String>(userId);
-    map['cycle_start_encrypted'] = Variable<String>(cycleStartEncrypted);
+    {
+      map['cycle_start_encrypted'] = Variable<String>(
+        $PeriodLogsTable.$convertercycleStartEncrypted.toSql(
+          cycleStartEncrypted,
+        ),
+      );
+    }
     if (!nullToAbsent || cycleEndEncrypted != null) {
-      map['cycle_end_encrypted'] = Variable<String>(cycleEndEncrypted);
+      map['cycle_end_encrypted'] = Variable<String>(
+        $PeriodLogsTable.$convertercycleEndEncryptedn.toSql(cycleEndEncrypted),
+      );
     }
     if (!nullToAbsent || symptomsEncrypted != null) {
-      map['symptoms_encrypted'] = Variable<String>(symptomsEncrypted);
+      map['symptoms_encrypted'] = Variable<String>(
+        $PeriodLogsTable.$convertersymptomsEncryptedn.toSql(symptomsEncrypted),
+      );
     }
     if (!nullToAbsent || flowIntensityEncrypted != null) {
       map['flow_intensity_encrypted'] = Variable<String>(
-        flowIntensityEncrypted,
+        $PeriodLogsTable.$converterflowIntensityEncryptedn.toSql(
+          flowIntensityEncrypted,
+        ),
       );
     }
     if (!nullToAbsent || notesEncrypted != null) {
-      map['notes_encrypted'] = Variable<String>(notesEncrypted);
+      map['notes_encrypted'] = Variable<String>(
+        $PeriodLogsTable.$converternotesEncryptedn.toSql(notesEncrypted),
+      );
     }
     if (!nullToAbsent || syncStatus != null) {
       map['sync_status'] = Variable<String>(syncStatus);
@@ -14156,22 +14154,36 @@ class PeriodLogsCompanion extends UpdateCompanion<PeriodLog> {
     }
     if (cycleStartEncrypted.present) {
       map['cycle_start_encrypted'] = Variable<String>(
-        cycleStartEncrypted.value,
+        $PeriodLogsTable.$convertercycleStartEncrypted.toSql(
+          cycleStartEncrypted.value,
+        ),
       );
     }
     if (cycleEndEncrypted.present) {
-      map['cycle_end_encrypted'] = Variable<String>(cycleEndEncrypted.value);
+      map['cycle_end_encrypted'] = Variable<String>(
+        $PeriodLogsTable.$convertercycleEndEncryptedn.toSql(
+          cycleEndEncrypted.value,
+        ),
+      );
     }
     if (symptomsEncrypted.present) {
-      map['symptoms_encrypted'] = Variable<String>(symptomsEncrypted.value);
+      map['symptoms_encrypted'] = Variable<String>(
+        $PeriodLogsTable.$convertersymptomsEncryptedn.toSql(
+          symptomsEncrypted.value,
+        ),
+      );
     }
     if (flowIntensityEncrypted.present) {
       map['flow_intensity_encrypted'] = Variable<String>(
-        flowIntensityEncrypted.value,
+        $PeriodLogsTable.$converterflowIntensityEncryptedn.toSql(
+          flowIntensityEncrypted.value,
+        ),
       );
     }
     if (notesEncrypted.present) {
-      map['notes_encrypted'] = Variable<String>(notesEncrypted.value);
+      map['notes_encrypted'] = Variable<String>(
+        $PeriodLogsTable.$converternotesEncryptedn.toSql(notesEncrypted.value),
+      );
     }
     if (syncStatus.present) {
       map['sync_status'] = Variable<String>(syncStatus.value);
@@ -14227,17 +14239,15 @@ class $JournalEntriesTable extends JournalEntries
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _contentEncryptedMeta = const VerificationMeta(
-    'contentEncrypted',
-  );
   @override
-  late final GeneratedColumn<String> contentEncrypted = GeneratedColumn<String>(
-    'content_encrypted',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
+  late final GeneratedColumnWithTypeConverter<String, String> contentEncrypted =
+      GeneratedColumn<String>(
+        'content_encrypted',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      ).withConverter<String>($JournalEntriesTable.$convertercontentEncrypted);
   static const VerificationMeta _moodScoreMeta = const VerificationMeta(
     'moodScore',
   );
@@ -14325,17 +14335,6 @@ class $JournalEntriesTable extends JournalEntries
     } else if (isInserting) {
       context.missing(_userIdMeta);
     }
-    if (data.containsKey('content_encrypted')) {
-      context.handle(
-        _contentEncryptedMeta,
-        contentEncrypted.isAcceptableOrUnknown(
-          data['content_encrypted']!,
-          _contentEncryptedMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_contentEncryptedMeta);
-    }
     if (data.containsKey('mood_score')) {
       context.handle(
         _moodScoreMeta,
@@ -14385,10 +14384,12 @@ class $JournalEntriesTable extends JournalEntries
         DriftSqlType.string,
         data['${effectivePrefix}user_id'],
       )!,
-      contentEncrypted: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}content_encrypted'],
-      )!,
+      contentEncrypted: $JournalEntriesTable.$convertercontentEncrypted.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}content_encrypted'],
+        )!,
+      ),
       moodScore: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}mood_score'],
@@ -14416,6 +14417,9 @@ class $JournalEntriesTable extends JournalEntries
   $JournalEntriesTable createAlias(String alias) {
     return $JournalEntriesTable(attachedDatabase, alias);
   }
+
+  static TypeConverter<String, String> $convertercontentEncrypted =
+      const EncryptedStringConverter('journal');
 }
 
 class JournalEntry extends DataClass implements Insertable<JournalEntry> {
@@ -14442,7 +14446,11 @@ class JournalEntry extends DataClass implements Insertable<JournalEntry> {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
     map['user_id'] = Variable<String>(userId);
-    map['content_encrypted'] = Variable<String>(contentEncrypted);
+    {
+      map['content_encrypted'] = Variable<String>(
+        $JournalEntriesTable.$convertercontentEncrypted.toSql(contentEncrypted),
+      );
+    }
     if (!nullToAbsent || moodScore != null) {
       map['mood_score'] = Variable<int>(moodScore);
     }
@@ -14672,7 +14680,11 @@ class JournalEntriesCompanion extends UpdateCompanion<JournalEntry> {
       map['user_id'] = Variable<String>(userId.value);
     }
     if (contentEncrypted.present) {
-      map['content_encrypted'] = Variable<String>(contentEncrypted.value);
+      map['content_encrypted'] = Variable<String>(
+        $JournalEntriesTable.$convertercontentEncrypted.toSql(
+          contentEncrypted.value,
+        ),
+      );
     }
     if (moodScore.present) {
       map['mood_score'] = Variable<int>(moodScore.value);
@@ -14736,50 +14748,53 @@ class $DoctorAppointmentsTable extends DoctorAppointments
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _doctorNameEncryptedMeta =
-      const VerificationMeta('doctorNameEncrypted');
   @override
-  late final GeneratedColumn<String> doctorNameEncrypted =
+  late final GeneratedColumnWithTypeConverter<String, String>
+  doctorNameEncrypted =
       GeneratedColumn<String>(
         'doctor_name_encrypted',
         aliasedName,
         false,
         type: DriftSqlType.string,
         requiredDuringInsert: true,
+      ).withConverter<String>(
+        $DoctorAppointmentsTable.$converterdoctorNameEncrypted,
       );
-  static const VerificationMeta _specialityEncryptedMeta =
-      const VerificationMeta('specialityEncrypted');
   @override
-  late final GeneratedColumn<String> specialityEncrypted =
+  late final GeneratedColumnWithTypeConverter<String?, String>
+  specialityEncrypted =
       GeneratedColumn<String>(
         'speciality_encrypted',
         aliasedName,
         true,
         type: DriftSqlType.string,
         requiredDuringInsert: false,
+      ).withConverter<String?>(
+        $DoctorAppointmentsTable.$converterspecialityEncryptedn,
       );
-  static const VerificationMeta _appointmentDtEncryptedMeta =
-      const VerificationMeta('appointmentDtEncrypted');
   @override
-  late final GeneratedColumn<String> appointmentDtEncrypted =
+  late final GeneratedColumnWithTypeConverter<String, String>
+  appointmentDtEncrypted =
       GeneratedColumn<String>(
         'appointment_dt_encrypted',
         aliasedName,
         false,
         type: DriftSqlType.string,
         requiredDuringInsert: true,
+      ).withConverter<String>(
+        $DoctorAppointmentsTable.$converterappointmentDtEncrypted,
       );
-  static const VerificationMeta _notesEncryptedMeta = const VerificationMeta(
-    'notesEncrypted',
-  );
   @override
-  late final GeneratedColumn<String> notesEncrypted = GeneratedColumn<String>(
-    'notes_encrypted',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
+  late final GeneratedColumnWithTypeConverter<String?, String> notesEncrypted =
+      GeneratedColumn<String>(
+        'notes_encrypted',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      ).withConverter<String?>(
+        $DoctorAppointmentsTable.$converternotesEncryptedn,
+      );
   static const VerificationMeta _reminderSentMeta = const VerificationMeta(
     'reminderSent',
   );
@@ -14828,46 +14843,6 @@ class $DoctorAppointmentsTable extends DoctorAppointments
     } else if (isInserting) {
       context.missing(_userIdMeta);
     }
-    if (data.containsKey('doctor_name_encrypted')) {
-      context.handle(
-        _doctorNameEncryptedMeta,
-        doctorNameEncrypted.isAcceptableOrUnknown(
-          data['doctor_name_encrypted']!,
-          _doctorNameEncryptedMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_doctorNameEncryptedMeta);
-    }
-    if (data.containsKey('speciality_encrypted')) {
-      context.handle(
-        _specialityEncryptedMeta,
-        specialityEncrypted.isAcceptableOrUnknown(
-          data['speciality_encrypted']!,
-          _specialityEncryptedMeta,
-        ),
-      );
-    }
-    if (data.containsKey('appointment_dt_encrypted')) {
-      context.handle(
-        _appointmentDtEncryptedMeta,
-        appointmentDtEncrypted.isAcceptableOrUnknown(
-          data['appointment_dt_encrypted']!,
-          _appointmentDtEncryptedMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_appointmentDtEncryptedMeta);
-    }
-    if (data.containsKey('notes_encrypted')) {
-      context.handle(
-        _notesEncryptedMeta,
-        notesEncrypted.isAcceptableOrUnknown(
-          data['notes_encrypted']!,
-          _notesEncryptedMeta,
-        ),
-      );
-    }
     if (data.containsKey('reminder_sent')) {
       context.handle(
         _reminderSentMeta,
@@ -14894,22 +14869,37 @@ class $DoctorAppointmentsTable extends DoctorAppointments
         DriftSqlType.string,
         data['${effectivePrefix}user_id'],
       )!,
-      doctorNameEncrypted: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}doctor_name_encrypted'],
-      )!,
-      specialityEncrypted: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}speciality_encrypted'],
-      ),
-      appointmentDtEncrypted: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}appointment_dt_encrypted'],
-      )!,
-      notesEncrypted: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}notes_encrypted'],
-      ),
+      doctorNameEncrypted: $DoctorAppointmentsTable
+          .$converterdoctorNameEncrypted
+          .fromSql(
+            attachedDatabase.typeMapping.read(
+              DriftSqlType.string,
+              data['${effectivePrefix}doctor_name_encrypted'],
+            )!,
+          ),
+      specialityEncrypted: $DoctorAppointmentsTable
+          .$converterspecialityEncryptedn
+          .fromSql(
+            attachedDatabase.typeMapping.read(
+              DriftSqlType.string,
+              data['${effectivePrefix}speciality_encrypted'],
+            ),
+          ),
+      appointmentDtEncrypted: $DoctorAppointmentsTable
+          .$converterappointmentDtEncrypted
+          .fromSql(
+            attachedDatabase.typeMapping.read(
+              DriftSqlType.string,
+              data['${effectivePrefix}appointment_dt_encrypted'],
+            )!,
+          ),
+      notesEncrypted: $DoctorAppointmentsTable.$converternotesEncryptedn
+          .fromSql(
+            attachedDatabase.typeMapping.read(
+              DriftSqlType.string,
+              data['${effectivePrefix}notes_encrypted'],
+            ),
+          ),
       reminderSent: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
         data['${effectivePrefix}reminder_sent'],
@@ -14921,6 +14911,19 @@ class $DoctorAppointmentsTable extends DoctorAppointments
   $DoctorAppointmentsTable createAlias(String alias) {
     return $DoctorAppointmentsTable(attachedDatabase, alias);
   }
+
+  static TypeConverter<String, String> $converterdoctorNameEncrypted =
+      const EncryptedStringConverter('appointments');
+  static TypeConverter<String, String> $converterspecialityEncrypted =
+      const EncryptedStringConverter('appointments');
+  static TypeConverter<String?, String?> $converterspecialityEncryptedn =
+      NullAwareTypeConverter.wrap($converterspecialityEncrypted);
+  static TypeConverter<String, String> $converterappointmentDtEncrypted =
+      const EncryptedStringConverter('appointments');
+  static TypeConverter<String, String> $converternotesEncrypted =
+      const EncryptedStringConverter('appointments');
+  static TypeConverter<String?, String?> $converternotesEncryptedn =
+      NullAwareTypeConverter.wrap($converternotesEncrypted);
 }
 
 class DoctorAppointment extends DataClass
@@ -14946,13 +14949,33 @@ class DoctorAppointment extends DataClass
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
     map['user_id'] = Variable<String>(userId);
-    map['doctor_name_encrypted'] = Variable<String>(doctorNameEncrypted);
-    if (!nullToAbsent || specialityEncrypted != null) {
-      map['speciality_encrypted'] = Variable<String>(specialityEncrypted);
+    {
+      map['doctor_name_encrypted'] = Variable<String>(
+        $DoctorAppointmentsTable.$converterdoctorNameEncrypted.toSql(
+          doctorNameEncrypted,
+        ),
+      );
     }
-    map['appointment_dt_encrypted'] = Variable<String>(appointmentDtEncrypted);
+    if (!nullToAbsent || specialityEncrypted != null) {
+      map['speciality_encrypted'] = Variable<String>(
+        $DoctorAppointmentsTable.$converterspecialityEncryptedn.toSql(
+          specialityEncrypted,
+        ),
+      );
+    }
+    {
+      map['appointment_dt_encrypted'] = Variable<String>(
+        $DoctorAppointmentsTable.$converterappointmentDtEncrypted.toSql(
+          appointmentDtEncrypted,
+        ),
+      );
+    }
     if (!nullToAbsent || notesEncrypted != null) {
-      map['notes_encrypted'] = Variable<String>(notesEncrypted);
+      map['notes_encrypted'] = Variable<String>(
+        $DoctorAppointmentsTable.$converternotesEncryptedn.toSql(
+          notesEncrypted,
+        ),
+      );
     }
     map['reminder_sent'] = Variable<bool>(reminderSent);
     return map;
@@ -15175,19 +15198,31 @@ class DoctorAppointmentsCompanion extends UpdateCompanion<DoctorAppointment> {
     }
     if (doctorNameEncrypted.present) {
       map['doctor_name_encrypted'] = Variable<String>(
-        doctorNameEncrypted.value,
+        $DoctorAppointmentsTable.$converterdoctorNameEncrypted.toSql(
+          doctorNameEncrypted.value,
+        ),
       );
     }
     if (specialityEncrypted.present) {
-      map['speciality_encrypted'] = Variable<String>(specialityEncrypted.value);
+      map['speciality_encrypted'] = Variable<String>(
+        $DoctorAppointmentsTable.$converterspecialityEncryptedn.toSql(
+          specialityEncrypted.value,
+        ),
+      );
     }
     if (appointmentDtEncrypted.present) {
       map['appointment_dt_encrypted'] = Variable<String>(
-        appointmentDtEncrypted.value,
+        $DoctorAppointmentsTable.$converterappointmentDtEncrypted.toSql(
+          appointmentDtEncrypted.value,
+        ),
       );
     }
     if (notesEncrypted.present) {
-      map['notes_encrypted'] = Variable<String>(notesEncrypted.value);
+      map['notes_encrypted'] = Variable<String>(
+        $DoctorAppointmentsTable.$converternotesEncryptedn.toSql(
+          notesEncrypted.value,
+        ),
+      );
     }
     if (reminderSent.present) {
       map['reminder_sent'] = Variable<bool>(reminderSent.value);
@@ -19881,6 +19916,50 @@ class $UsersTable extends Users with TableInfo<$UsersTable, LocalUser> {
         type: DriftSqlType.string,
         requiredDuringInsert: false,
       );
+  static const VerificationMeta _doshaVataMeta = const VerificationMeta(
+    'doshaVata',
+  );
+  @override
+  late final GeneratedColumn<int> doshaVata = GeneratedColumn<int>(
+    'dosha_vata',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _doshaPittaMeta = const VerificationMeta(
+    'doshaPitta',
+  );
+  @override
+  late final GeneratedColumn<int> doshaPitta = GeneratedColumn<int>(
+    'dosha_pitta',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _doshaKaphaMeta = const VerificationMeta(
+    'doshaKapha',
+  );
+  @override
+  late final GeneratedColumn<int> doshaKapha = GeneratedColumn<int>(
+    'dosha_kapha',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _dominantDoshaMeta = const VerificationMeta(
+    'dominantDosha',
+  );
+  @override
+  late final GeneratedColumn<String> dominantDosha = GeneratedColumn<String>(
+    'dominant_dosha',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -19896,6 +19975,10 @@ class $UsersTable extends Users with TableInfo<$UsersTable, LocalUser> {
     weddingPrepWeeks,
     weddingEvents,
     weddingPrimaryGoal,
+    doshaVata,
+    doshaPitta,
+    doshaKapha,
+    dominantDosha,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -20014,6 +20097,33 @@ class $UsersTable extends Users with TableInfo<$UsersTable, LocalUser> {
         ),
       );
     }
+    if (data.containsKey('dosha_vata')) {
+      context.handle(
+        _doshaVataMeta,
+        doshaVata.isAcceptableOrUnknown(data['dosha_vata']!, _doshaVataMeta),
+      );
+    }
+    if (data.containsKey('dosha_pitta')) {
+      context.handle(
+        _doshaPittaMeta,
+        doshaPitta.isAcceptableOrUnknown(data['dosha_pitta']!, _doshaPittaMeta),
+      );
+    }
+    if (data.containsKey('dosha_kapha')) {
+      context.handle(
+        _doshaKaphaMeta,
+        doshaKapha.isAcceptableOrUnknown(data['dosha_kapha']!, _doshaKaphaMeta),
+      );
+    }
+    if (data.containsKey('dominant_dosha')) {
+      context.handle(
+        _dominantDoshaMeta,
+        dominantDosha.isAcceptableOrUnknown(
+          data['dominant_dosha']!,
+          _dominantDoshaMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -20075,6 +20185,22 @@ class $UsersTable extends Users with TableInfo<$UsersTable, LocalUser> {
         DriftSqlType.string,
         data['${effectivePrefix}wedding_primary_goal'],
       ),
+      doshaVata: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}dosha_vata'],
+      ),
+      doshaPitta: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}dosha_pitta'],
+      ),
+      doshaKapha: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}dosha_kapha'],
+      ),
+      dominantDosha: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}dominant_dosha'],
+      ),
     );
   }
 
@@ -20098,6 +20224,10 @@ class LocalUser extends DataClass implements Insertable<LocalUser> {
   final int? weddingPrepWeeks;
   final String? weddingEvents;
   final String? weddingPrimaryGoal;
+  final int? doshaVata;
+  final int? doshaPitta;
+  final int? doshaKapha;
+  final String? dominantDosha;
   const LocalUser({
     required this.id,
     required this.email,
@@ -20112,6 +20242,10 @@ class LocalUser extends DataClass implements Insertable<LocalUser> {
     this.weddingPrepWeeks,
     this.weddingEvents,
     this.weddingPrimaryGoal,
+    this.doshaVata,
+    this.doshaPitta,
+    this.doshaKapha,
+    this.dominantDosha,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -20142,6 +20276,18 @@ class LocalUser extends DataClass implements Insertable<LocalUser> {
     }
     if (!nullToAbsent || weddingPrimaryGoal != null) {
       map['wedding_primary_goal'] = Variable<String>(weddingPrimaryGoal);
+    }
+    if (!nullToAbsent || doshaVata != null) {
+      map['dosha_vata'] = Variable<int>(doshaVata);
+    }
+    if (!nullToAbsent || doshaPitta != null) {
+      map['dosha_pitta'] = Variable<int>(doshaPitta);
+    }
+    if (!nullToAbsent || doshaKapha != null) {
+      map['dosha_kapha'] = Variable<int>(doshaKapha);
+    }
+    if (!nullToAbsent || dominantDosha != null) {
+      map['dominant_dosha'] = Variable<String>(dominantDosha);
     }
     return map;
   }
@@ -20175,6 +20321,18 @@ class LocalUser extends DataClass implements Insertable<LocalUser> {
       weddingPrimaryGoal: weddingPrimaryGoal == null && nullToAbsent
           ? const Value.absent()
           : Value(weddingPrimaryGoal),
+      doshaVata: doshaVata == null && nullToAbsent
+          ? const Value.absent()
+          : Value(doshaVata),
+      doshaPitta: doshaPitta == null && nullToAbsent
+          ? const Value.absent()
+          : Value(doshaPitta),
+      doshaKapha: doshaKapha == null && nullToAbsent
+          ? const Value.absent()
+          : Value(doshaKapha),
+      dominantDosha: dominantDosha == null && nullToAbsent
+          ? const Value.absent()
+          : Value(dominantDosha),
     );
   }
 
@@ -20205,6 +20363,10 @@ class LocalUser extends DataClass implements Insertable<LocalUser> {
       weddingPrimaryGoal: serializer.fromJson<String?>(
         json['weddingPrimaryGoal'],
       ),
+      doshaVata: serializer.fromJson<int?>(json['doshaVata']),
+      doshaPitta: serializer.fromJson<int?>(json['doshaPitta']),
+      doshaKapha: serializer.fromJson<int?>(json['doshaKapha']),
+      dominantDosha: serializer.fromJson<String?>(json['dominantDosha']),
     );
   }
   @override
@@ -20224,6 +20386,10 @@ class LocalUser extends DataClass implements Insertable<LocalUser> {
       'weddingPrepWeeks': serializer.toJson<int?>(weddingPrepWeeks),
       'weddingEvents': serializer.toJson<String?>(weddingEvents),
       'weddingPrimaryGoal': serializer.toJson<String?>(weddingPrimaryGoal),
+      'doshaVata': serializer.toJson<int?>(doshaVata),
+      'doshaPitta': serializer.toJson<int?>(doshaPitta),
+      'doshaKapha': serializer.toJson<int?>(doshaKapha),
+      'dominantDosha': serializer.toJson<String?>(dominantDosha),
     };
   }
 
@@ -20241,6 +20407,10 @@ class LocalUser extends DataClass implements Insertable<LocalUser> {
     Value<int?> weddingPrepWeeks = const Value.absent(),
     Value<String?> weddingEvents = const Value.absent(),
     Value<String?> weddingPrimaryGoal = const Value.absent(),
+    Value<int?> doshaVata = const Value.absent(),
+    Value<int?> doshaPitta = const Value.absent(),
+    Value<int?> doshaKapha = const Value.absent(),
+    Value<String?> dominantDosha = const Value.absent(),
   }) => LocalUser(
     id: id ?? this.id,
     email: email ?? this.email,
@@ -20267,6 +20437,12 @@ class LocalUser extends DataClass implements Insertable<LocalUser> {
     weddingPrimaryGoal: weddingPrimaryGoal.present
         ? weddingPrimaryGoal.value
         : this.weddingPrimaryGoal,
+    doshaVata: doshaVata.present ? doshaVata.value : this.doshaVata,
+    doshaPitta: doshaPitta.present ? doshaPitta.value : this.doshaPitta,
+    doshaKapha: doshaKapha.present ? doshaKapha.value : this.doshaKapha,
+    dominantDosha: dominantDosha.present
+        ? dominantDosha.value
+        : this.dominantDosha,
   );
   LocalUser copyWithCompanion(UsersCompanion data) {
     return LocalUser(
@@ -20303,6 +20479,16 @@ class LocalUser extends DataClass implements Insertable<LocalUser> {
       weddingPrimaryGoal: data.weddingPrimaryGoal.present
           ? data.weddingPrimaryGoal.value
           : this.weddingPrimaryGoal,
+      doshaVata: data.doshaVata.present ? data.doshaVata.value : this.doshaVata,
+      doshaPitta: data.doshaPitta.present
+          ? data.doshaPitta.value
+          : this.doshaPitta,
+      doshaKapha: data.doshaKapha.present
+          ? data.doshaKapha.value
+          : this.doshaKapha,
+      dominantDosha: data.dominantDosha.present
+          ? data.dominantDosha.value
+          : this.dominantDosha,
     );
   }
 
@@ -20321,7 +20507,11 @@ class LocalUser extends DataClass implements Insertable<LocalUser> {
           ..write('weddingEndDate: $weddingEndDate, ')
           ..write('weddingPrepWeeks: $weddingPrepWeeks, ')
           ..write('weddingEvents: $weddingEvents, ')
-          ..write('weddingPrimaryGoal: $weddingPrimaryGoal')
+          ..write('weddingPrimaryGoal: $weddingPrimaryGoal, ')
+          ..write('doshaVata: $doshaVata, ')
+          ..write('doshaPitta: $doshaPitta, ')
+          ..write('doshaKapha: $doshaKapha, ')
+          ..write('dominantDosha: $dominantDosha')
           ..write(')'))
         .toString();
   }
@@ -20341,6 +20531,10 @@ class LocalUser extends DataClass implements Insertable<LocalUser> {
     weddingPrepWeeks,
     weddingEvents,
     weddingPrimaryGoal,
+    doshaVata,
+    doshaPitta,
+    doshaKapha,
+    dominantDosha,
   );
   @override
   bool operator ==(Object other) =>
@@ -20358,7 +20552,11 @@ class LocalUser extends DataClass implements Insertable<LocalUser> {
           other.weddingEndDate == this.weddingEndDate &&
           other.weddingPrepWeeks == this.weddingPrepWeeks &&
           other.weddingEvents == this.weddingEvents &&
-          other.weddingPrimaryGoal == this.weddingPrimaryGoal);
+          other.weddingPrimaryGoal == this.weddingPrimaryGoal &&
+          other.doshaVata == this.doshaVata &&
+          other.doshaPitta == this.doshaPitta &&
+          other.doshaKapha == this.doshaKapha &&
+          other.dominantDosha == this.dominantDosha);
 }
 
 class UsersCompanion extends UpdateCompanion<LocalUser> {
@@ -20375,6 +20573,10 @@ class UsersCompanion extends UpdateCompanion<LocalUser> {
   final Value<int?> weddingPrepWeeks;
   final Value<String?> weddingEvents;
   final Value<String?> weddingPrimaryGoal;
+  final Value<int?> doshaVata;
+  final Value<int?> doshaPitta;
+  final Value<int?> doshaKapha;
+  final Value<String?> dominantDosha;
   final Value<int> rowid;
   const UsersCompanion({
     this.id = const Value.absent(),
@@ -20390,6 +20592,10 @@ class UsersCompanion extends UpdateCompanion<LocalUser> {
     this.weddingPrepWeeks = const Value.absent(),
     this.weddingEvents = const Value.absent(),
     this.weddingPrimaryGoal = const Value.absent(),
+    this.doshaVata = const Value.absent(),
+    this.doshaPitta = const Value.absent(),
+    this.doshaKapha = const Value.absent(),
+    this.dominantDosha = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   UsersCompanion.insert({
@@ -20406,6 +20612,10 @@ class UsersCompanion extends UpdateCompanion<LocalUser> {
     this.weddingPrepWeeks = const Value.absent(),
     this.weddingEvents = const Value.absent(),
     this.weddingPrimaryGoal = const Value.absent(),
+    this.doshaVata = const Value.absent(),
+    this.doshaPitta = const Value.absent(),
+    this.doshaKapha = const Value.absent(),
+    this.dominantDosha = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        email = Value(email),
@@ -20424,6 +20634,10 @@ class UsersCompanion extends UpdateCompanion<LocalUser> {
     Expression<int>? weddingPrepWeeks,
     Expression<String>? weddingEvents,
     Expression<String>? weddingPrimaryGoal,
+    Expression<int>? doshaVata,
+    Expression<int>? doshaPitta,
+    Expression<int>? doshaKapha,
+    Expression<String>? dominantDosha,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -20443,6 +20657,10 @@ class UsersCompanion extends UpdateCompanion<LocalUser> {
       if (weddingEvents != null) 'wedding_events': weddingEvents,
       if (weddingPrimaryGoal != null)
         'wedding_primary_goal': weddingPrimaryGoal,
+      if (doshaVata != null) 'dosha_vata': doshaVata,
+      if (doshaPitta != null) 'dosha_pitta': doshaPitta,
+      if (doshaKapha != null) 'dosha_kapha': doshaKapha,
+      if (dominantDosha != null) 'dominant_dosha': dominantDosha,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -20461,6 +20679,10 @@ class UsersCompanion extends UpdateCompanion<LocalUser> {
     Value<int?>? weddingPrepWeeks,
     Value<String?>? weddingEvents,
     Value<String?>? weddingPrimaryGoal,
+    Value<int?>? doshaVata,
+    Value<int?>? doshaPitta,
+    Value<int?>? doshaKapha,
+    Value<String?>? dominantDosha,
     Value<int>? rowid,
   }) {
     return UsersCompanion(
@@ -20477,6 +20699,10 @@ class UsersCompanion extends UpdateCompanion<LocalUser> {
       weddingPrepWeeks: weddingPrepWeeks ?? this.weddingPrepWeeks,
       weddingEvents: weddingEvents ?? this.weddingEvents,
       weddingPrimaryGoal: weddingPrimaryGoal ?? this.weddingPrimaryGoal,
+      doshaVata: doshaVata ?? this.doshaVata,
+      doshaPitta: doshaPitta ?? this.doshaPitta,
+      doshaKapha: doshaKapha ?? this.doshaKapha,
+      dominantDosha: dominantDosha ?? this.dominantDosha,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -20525,6 +20751,18 @@ class UsersCompanion extends UpdateCompanion<LocalUser> {
     if (weddingPrimaryGoal.present) {
       map['wedding_primary_goal'] = Variable<String>(weddingPrimaryGoal.value);
     }
+    if (doshaVata.present) {
+      map['dosha_vata'] = Variable<int>(doshaVata.value);
+    }
+    if (doshaPitta.present) {
+      map['dosha_pitta'] = Variable<int>(doshaPitta.value);
+    }
+    if (doshaKapha.present) {
+      map['dosha_kapha'] = Variable<int>(doshaKapha.value);
+    }
+    if (dominantDosha.present) {
+      map['dominant_dosha'] = Variable<String>(dominantDosha.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -20547,6 +20785,10 @@ class UsersCompanion extends UpdateCompanion<LocalUser> {
           ..write('weddingPrepWeeks: $weddingPrepWeeks, ')
           ..write('weddingEvents: $weddingEvents, ')
           ..write('weddingPrimaryGoal: $weddingPrimaryGoal, ')
+          ..write('doshaVata: $doshaVata, ')
+          ..write('doshaPitta: $doshaPitta, ')
+          ..write('doshaKapha: $doshaKapha, ')
+          ..write('dominantDosha: $dominantDosha, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -20893,6 +21135,368 @@ class HeartRateLogsCompanion extends UpdateCompanion<HeartRateLog> {
   }
 }
 
+class $AyurvedicRitualLogsTable extends AyurvedicRitualLogs
+    with TableInfo<$AyurvedicRitualLogsTable, AyurvedicRitualLog> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $AyurvedicRitualLogsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
+    'user_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _ritualKeyMeta = const VerificationMeta(
+    'ritualKey',
+  );
+  @override
+  late final GeneratedColumn<String> ritualKey = GeneratedColumn<String>(
+    'ritual_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _completedAtMeta = const VerificationMeta(
+    'completedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> completedAt = GeneratedColumn<DateTime>(
+    'completed_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _karmaAwardedMeta = const VerificationMeta(
+    'karmaAwarded',
+  );
+  @override
+  late final GeneratedColumn<int> karmaAwarded = GeneratedColumn<int>(
+    'karma_awarded',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    userId,
+    ritualKey,
+    completedAt,
+    karmaAwarded,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'ayurvedic_ritual_logs';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<AyurvedicRitualLog> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_userIdMeta);
+    }
+    if (data.containsKey('ritual_key')) {
+      context.handle(
+        _ritualKeyMeta,
+        ritualKey.isAcceptableOrUnknown(data['ritual_key']!, _ritualKeyMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_ritualKeyMeta);
+    }
+    if (data.containsKey('completed_at')) {
+      context.handle(
+        _completedAtMeta,
+        completedAt.isAcceptableOrUnknown(
+          data['completed_at']!,
+          _completedAtMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_completedAtMeta);
+    }
+    if (data.containsKey('karma_awarded')) {
+      context.handle(
+        _karmaAwardedMeta,
+        karmaAwarded.isAcceptableOrUnknown(
+          data['karma_awarded']!,
+          _karmaAwardedMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_karmaAwardedMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  AyurvedicRitualLog map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return AyurvedicRitualLog(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      userId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_id'],
+      )!,
+      ritualKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}ritual_key'],
+      )!,
+      completedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}completed_at'],
+      )!,
+      karmaAwarded: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}karma_awarded'],
+      )!,
+    );
+  }
+
+  @override
+  $AyurvedicRitualLogsTable createAlias(String alias) {
+    return $AyurvedicRitualLogsTable(attachedDatabase, alias);
+  }
+}
+
+class AyurvedicRitualLog extends DataClass
+    implements Insertable<AyurvedicRitualLog> {
+  final int id;
+  final String userId;
+  final String ritualKey;
+  final DateTime completedAt;
+  final int karmaAwarded;
+  const AyurvedicRitualLog({
+    required this.id,
+    required this.userId,
+    required this.ritualKey,
+    required this.completedAt,
+    required this.karmaAwarded,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['user_id'] = Variable<String>(userId);
+    map['ritual_key'] = Variable<String>(ritualKey);
+    map['completed_at'] = Variable<DateTime>(completedAt);
+    map['karma_awarded'] = Variable<int>(karmaAwarded);
+    return map;
+  }
+
+  AyurvedicRitualLogsCompanion toCompanion(bool nullToAbsent) {
+    return AyurvedicRitualLogsCompanion(
+      id: Value(id),
+      userId: Value(userId),
+      ritualKey: Value(ritualKey),
+      completedAt: Value(completedAt),
+      karmaAwarded: Value(karmaAwarded),
+    );
+  }
+
+  factory AyurvedicRitualLog.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return AyurvedicRitualLog(
+      id: serializer.fromJson<int>(json['id']),
+      userId: serializer.fromJson<String>(json['userId']),
+      ritualKey: serializer.fromJson<String>(json['ritualKey']),
+      completedAt: serializer.fromJson<DateTime>(json['completedAt']),
+      karmaAwarded: serializer.fromJson<int>(json['karmaAwarded']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'userId': serializer.toJson<String>(userId),
+      'ritualKey': serializer.toJson<String>(ritualKey),
+      'completedAt': serializer.toJson<DateTime>(completedAt),
+      'karmaAwarded': serializer.toJson<int>(karmaAwarded),
+    };
+  }
+
+  AyurvedicRitualLog copyWith({
+    int? id,
+    String? userId,
+    String? ritualKey,
+    DateTime? completedAt,
+    int? karmaAwarded,
+  }) => AyurvedicRitualLog(
+    id: id ?? this.id,
+    userId: userId ?? this.userId,
+    ritualKey: ritualKey ?? this.ritualKey,
+    completedAt: completedAt ?? this.completedAt,
+    karmaAwarded: karmaAwarded ?? this.karmaAwarded,
+  );
+  AyurvedicRitualLog copyWithCompanion(AyurvedicRitualLogsCompanion data) {
+    return AyurvedicRitualLog(
+      id: data.id.present ? data.id.value : this.id,
+      userId: data.userId.present ? data.userId.value : this.userId,
+      ritualKey: data.ritualKey.present ? data.ritualKey.value : this.ritualKey,
+      completedAt: data.completedAt.present
+          ? data.completedAt.value
+          : this.completedAt,
+      karmaAwarded: data.karmaAwarded.present
+          ? data.karmaAwarded.value
+          : this.karmaAwarded,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AyurvedicRitualLog(')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('ritualKey: $ritualKey, ')
+          ..write('completedAt: $completedAt, ')
+          ..write('karmaAwarded: $karmaAwarded')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, userId, ritualKey, completedAt, karmaAwarded);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is AyurvedicRitualLog &&
+          other.id == this.id &&
+          other.userId == this.userId &&
+          other.ritualKey == this.ritualKey &&
+          other.completedAt == this.completedAt &&
+          other.karmaAwarded == this.karmaAwarded);
+}
+
+class AyurvedicRitualLogsCompanion extends UpdateCompanion<AyurvedicRitualLog> {
+  final Value<int> id;
+  final Value<String> userId;
+  final Value<String> ritualKey;
+  final Value<DateTime> completedAt;
+  final Value<int> karmaAwarded;
+  const AyurvedicRitualLogsCompanion({
+    this.id = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.ritualKey = const Value.absent(),
+    this.completedAt = const Value.absent(),
+    this.karmaAwarded = const Value.absent(),
+  });
+  AyurvedicRitualLogsCompanion.insert({
+    this.id = const Value.absent(),
+    required String userId,
+    required String ritualKey,
+    required DateTime completedAt,
+    required int karmaAwarded,
+  }) : userId = Value(userId),
+       ritualKey = Value(ritualKey),
+       completedAt = Value(completedAt),
+       karmaAwarded = Value(karmaAwarded);
+  static Insertable<AyurvedicRitualLog> custom({
+    Expression<int>? id,
+    Expression<String>? userId,
+    Expression<String>? ritualKey,
+    Expression<DateTime>? completedAt,
+    Expression<int>? karmaAwarded,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (userId != null) 'user_id': userId,
+      if (ritualKey != null) 'ritual_key': ritualKey,
+      if (completedAt != null) 'completed_at': completedAt,
+      if (karmaAwarded != null) 'karma_awarded': karmaAwarded,
+    });
+  }
+
+  AyurvedicRitualLogsCompanion copyWith({
+    Value<int>? id,
+    Value<String>? userId,
+    Value<String>? ritualKey,
+    Value<DateTime>? completedAt,
+    Value<int>? karmaAwarded,
+  }) {
+    return AyurvedicRitualLogsCompanion(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      ritualKey: ritualKey ?? this.ritualKey,
+      completedAt: completedAt ?? this.completedAt,
+      karmaAwarded: karmaAwarded ?? this.karmaAwarded,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<String>(userId.value);
+    }
+    if (ritualKey.present) {
+      map['ritual_key'] = Variable<String>(ritualKey.value);
+    }
+    if (completedAt.present) {
+      map['completed_at'] = Variable<DateTime>(completedAt.value);
+    }
+    if (karmaAwarded.present) {
+      map['karma_awarded'] = Variable<int>(karmaAwarded.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AyurvedicRitualLogsCompanion(')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('ritualKey: $ritualKey, ')
+          ..write('completedAt: $completedAt, ')
+          ..write('karmaAwarded: $karmaAwarded')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -20942,6 +21546,12 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $InsightRatingsTable insightRatings = $InsightRatingsTable(this);
   late final $UsersTable users = $UsersTable(this);
   late final $HeartRateLogsTable heartRateLogs = $HeartRateLogsTable(this);
+  late final $AyurvedicRitualLogsTable ayurvedicRitualLogs =
+      $AyurvedicRitualLogsTable(this);
+  late final FoodDao foodDao = FoodDao(this as AppDatabase);
+  late final HealthDao healthDao = HealthDao(this as AppDatabase);
+  late final UserDao userDao = UserDao(this as AppDatabase);
+  late final SyncDao syncDao = SyncDao(this as AppDatabase);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -20981,6 +21591,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     insightRatings,
     users,
     heartRateLogs,
+    ayurvedicRitualLogs,
   ];
 }
 
@@ -21506,7 +22117,7 @@ typedef $$FoodItemsTableCreateCompanionBuilder =
       Value<double?> ironPer100g,
       Value<double?> calciumPer100g,
       Value<bool> isIndian,
-      Value<String?> servingSizes,
+      Value<Map<String, dynamic>?> servingSizes,
       required String source,
     });
 typedef $$FoodItemsTableUpdateCompanionBuilder =
@@ -21527,7 +22138,7 @@ typedef $$FoodItemsTableUpdateCompanionBuilder =
       Value<double?> ironPer100g,
       Value<double?> calciumPer100g,
       Value<bool> isIndian,
-      Value<String?> servingSizes,
+      Value<Map<String, dynamic>?> servingSizes,
       Value<String> source,
     });
 
@@ -21620,9 +22231,14 @@ class $$FoodItemsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get servingSizes => $composableBuilder(
+  ColumnWithTypeConverterFilters<
+    Map<String, dynamic>?,
+    Map<String, dynamic>,
+    String
+  >
+  get servingSizes => $composableBuilder(
     column: $table.servingSizes,
-    builder: (column) => ColumnFilters(column),
+    builder: (column) => ColumnWithTypeConverterFilters(column),
   );
 
   ColumnFilters<String> get source => $composableBuilder(
@@ -21808,7 +22424,8 @@ class $$FoodItemsTableAnnotationComposer
   GeneratedColumn<bool> get isIndian =>
       $composableBuilder(column: $table.isIndian, builder: (column) => column);
 
-  GeneratedColumn<String> get servingSizes => $composableBuilder(
+  GeneratedColumnWithTypeConverter<Map<String, dynamic>?, String>
+  get servingSizes => $composableBuilder(
     column: $table.servingSizes,
     builder: (column) => column,
   );
@@ -21861,7 +22478,8 @@ class $$FoodItemsTableTableManager
                 Value<double?> ironPer100g = const Value.absent(),
                 Value<double?> calciumPer100g = const Value.absent(),
                 Value<bool> isIndian = const Value.absent(),
-                Value<String?> servingSizes = const Value.absent(),
+                Value<Map<String, dynamic>?> servingSizes =
+                    const Value.absent(),
                 Value<String> source = const Value.absent(),
               }) => FoodItemsCompanion(
                 id: id,
@@ -21901,7 +22519,8 @@ class $$FoodItemsTableTableManager
                 Value<double?> ironPer100g = const Value.absent(),
                 Value<double?> calciumPer100g = const Value.absent(),
                 Value<bool> isIndian = const Value.absent(),
-                Value<String?> servingSizes = const Value.absent(),
+                Value<Map<String, dynamic>?> servingSizes =
+                    const Value.absent(),
                 required String source,
               }) => FoodItemsCompanion.insert(
                 id: id,
@@ -24635,7 +25254,7 @@ typedef $$MealPlansTableCreateCompanionBuilder =
       Value<int> id,
       required String userId,
       required DateTime weekStart,
-      required String planData,
+      required Map<String, dynamic> planData,
       required String planType,
       Value<String?> festivalKey,
       required String generatedBy,
@@ -24645,7 +25264,7 @@ typedef $$MealPlansTableUpdateCompanionBuilder =
       Value<int> id,
       Value<String> userId,
       Value<DateTime> weekStart,
-      Value<String> planData,
+      Value<Map<String, dynamic>> planData,
       Value<String> planType,
       Value<String?> festivalKey,
       Value<String> generatedBy,
@@ -24675,9 +25294,14 @@ class $$MealPlansTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get planData => $composableBuilder(
+  ColumnWithTypeConverterFilters<
+    Map<String, dynamic>,
+    Map<String, dynamic>,
+    String
+  >
+  get planData => $composableBuilder(
     column: $table.planData,
-    builder: (column) => ColumnFilters(column),
+    builder: (column) => ColumnWithTypeConverterFilters(column),
   );
 
   ColumnFilters<String> get planType => $composableBuilder(
@@ -24759,7 +25383,7 @@ class $$MealPlansTableAnnotationComposer
   GeneratedColumn<DateTime> get weekStart =>
       $composableBuilder(column: $table.weekStart, builder: (column) => column);
 
-  GeneratedColumn<String> get planData =>
+  GeneratedColumnWithTypeConverter<Map<String, dynamic>, String> get planData =>
       $composableBuilder(column: $table.planData, builder: (column) => column);
 
   GeneratedColumn<String> get planType =>
@@ -24807,7 +25431,7 @@ class $$MealPlansTableTableManager
                 Value<int> id = const Value.absent(),
                 Value<String> userId = const Value.absent(),
                 Value<DateTime> weekStart = const Value.absent(),
-                Value<String> planData = const Value.absent(),
+                Value<Map<String, dynamic>> planData = const Value.absent(),
                 Value<String> planType = const Value.absent(),
                 Value<String?> festivalKey = const Value.absent(),
                 Value<String> generatedBy = const Value.absent(),
@@ -24825,7 +25449,7 @@ class $$MealPlansTableTableManager
                 Value<int> id = const Value.absent(),
                 required String userId,
                 required DateTime weekStart,
-                required String planData,
+                required Map<String, dynamic> planData,
                 required String planType,
                 Value<String?> festivalKey = const Value.absent(),
                 required String generatedBy,
@@ -24866,8 +25490,8 @@ typedef $$RecipesTableCreateCompanionBuilder =
       required String userId,
       required String title,
       Value<String?> description,
-      required String ingredients,
-      required String steps,
+      required Map<String, dynamic> ingredients,
+      required Map<String, dynamic> steps,
       required int servings,
       required double totalCalories,
       Value<double?> proteinG,
@@ -24886,8 +25510,8 @@ typedef $$RecipesTableUpdateCompanionBuilder =
       Value<String> userId,
       Value<String> title,
       Value<String?> description,
-      Value<String> ingredients,
-      Value<String> steps,
+      Value<Map<String, dynamic>> ingredients,
+      Value<Map<String, dynamic>> steps,
       Value<int> servings,
       Value<double> totalCalories,
       Value<double?> proteinG,
@@ -24930,14 +25554,24 @@ class $$RecipesTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get ingredients => $composableBuilder(
+  ColumnWithTypeConverterFilters<
+    Map<String, dynamic>,
+    Map<String, dynamic>,
+    String
+  >
+  get ingredients => $composableBuilder(
     column: $table.ingredients,
-    builder: (column) => ColumnFilters(column),
+    builder: (column) => ColumnWithTypeConverterFilters(column),
   );
 
-  ColumnFilters<String> get steps => $composableBuilder(
+  ColumnWithTypeConverterFilters<
+    Map<String, dynamic>,
+    Map<String, dynamic>,
+    String
+  >
+  get steps => $composableBuilder(
     column: $table.steps,
-    builder: (column) => ColumnFilters(column),
+    builder: (column) => ColumnWithTypeConverterFilters(column),
   );
 
   ColumnFilters<int> get servings => $composableBuilder(
@@ -25114,12 +25748,13 @@ class $$RecipesTableAnnotationComposer
     builder: (column) => column,
   );
 
-  GeneratedColumn<String> get ingredients => $composableBuilder(
+  GeneratedColumnWithTypeConverter<Map<String, dynamic>, String>
+  get ingredients => $composableBuilder(
     column: $table.ingredients,
     builder: (column) => column,
   );
 
-  GeneratedColumn<String> get steps =>
+  GeneratedColumnWithTypeConverter<Map<String, dynamic>, String> get steps =>
       $composableBuilder(column: $table.steps, builder: (column) => column);
 
   GeneratedColumn<int> get servings =>
@@ -25194,8 +25829,8 @@ class $$RecipesTableTableManager
                 Value<String> userId = const Value.absent(),
                 Value<String> title = const Value.absent(),
                 Value<String?> description = const Value.absent(),
-                Value<String> ingredients = const Value.absent(),
-                Value<String> steps = const Value.absent(),
+                Value<Map<String, dynamic>> ingredients = const Value.absent(),
+                Value<Map<String, dynamic>> steps = const Value.absent(),
                 Value<int> servings = const Value.absent(),
                 Value<double> totalCalories = const Value.absent(),
                 Value<double?> proteinG = const Value.absent(),
@@ -25232,8 +25867,8 @@ class $$RecipesTableTableManager
                 required String userId,
                 required String title,
                 Value<String?> description = const Value.absent(),
-                required String ingredients,
-                required String steps,
+                required Map<String, dynamic> ingredients,
+                required Map<String, dynamic> steps,
                 required int servings,
                 required double totalCalories,
                 Value<double?> proteinG = const Value.absent(),
@@ -26682,20 +27317,23 @@ class $$BloodPressureLogsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get systolic => $composableBuilder(
-    column: $table.systolic,
-    builder: (column) => ColumnFilters(column),
-  );
+  ColumnWithTypeConverterFilters<String, String, String> get systolic =>
+      $composableBuilder(
+        column: $table.systolic,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 
-  ColumnFilters<String> get diastolic => $composableBuilder(
-    column: $table.diastolic,
-    builder: (column) => ColumnFilters(column),
-  );
+  ColumnWithTypeConverterFilters<String, String, String> get diastolic =>
+      $composableBuilder(
+        column: $table.diastolic,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 
-  ColumnFilters<String> get pulse => $composableBuilder(
-    column: $table.pulse,
-    builder: (column) => ColumnFilters(column),
-  );
+  ColumnWithTypeConverterFilters<String?, String, String> get pulse =>
+      $composableBuilder(
+        column: $table.pulse,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 
   ColumnFilters<DateTime> get loggedAt => $composableBuilder(
     column: $table.loggedAt,
@@ -26808,13 +27446,13 @@ class $$BloodPressureLogsTableAnnotationComposer
   GeneratedColumn<String> get userId =>
       $composableBuilder(column: $table.userId, builder: (column) => column);
 
-  GeneratedColumn<String> get systolic =>
+  GeneratedColumnWithTypeConverter<String, String> get systolic =>
       $composableBuilder(column: $table.systolic, builder: (column) => column);
 
-  GeneratedColumn<String> get diastolic =>
+  GeneratedColumnWithTypeConverter<String, String> get diastolic =>
       $composableBuilder(column: $table.diastolic, builder: (column) => column);
 
-  GeneratedColumn<String> get pulse =>
+  GeneratedColumnWithTypeConverter<String?, String> get pulse =>
       $composableBuilder(column: $table.pulse, builder: (column) => column);
 
   GeneratedColumn<DateTime> get loggedAt =>
@@ -27011,10 +27649,11 @@ class $$GlucoseLogsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get glucoseMgdl => $composableBuilder(
-    column: $table.glucoseMgdl,
-    builder: (column) => ColumnFilters(column),
-  );
+  ColumnWithTypeConverterFilters<String, String, String> get glucoseMgdl =>
+      $composableBuilder(
+        column: $table.glucoseMgdl,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 
   ColumnFilters<String> get readingType => $composableBuilder(
     column: $table.readingType,
@@ -27036,10 +27675,11 @@ class $$GlucoseLogsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get hba1cEstimate => $composableBuilder(
-    column: $table.hba1cEstimate,
-    builder: (column) => ColumnFilters(column),
-  );
+  ColumnWithTypeConverterFilters<String?, String, String> get hba1cEstimate =>
+      $composableBuilder(
+        column: $table.hba1cEstimate,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 
   ColumnFilters<String> get notes => $composableBuilder(
     column: $table.notes,
@@ -27147,10 +27787,11 @@ class $$GlucoseLogsTableAnnotationComposer
   GeneratedColumn<String> get userId =>
       $composableBuilder(column: $table.userId, builder: (column) => column);
 
-  GeneratedColumn<String> get glucoseMgdl => $composableBuilder(
-    column: $table.glucoseMgdl,
-    builder: (column) => column,
-  );
+  GeneratedColumnWithTypeConverter<String, String> get glucoseMgdl =>
+      $composableBuilder(
+        column: $table.glucoseMgdl,
+        builder: (column) => column,
+      );
 
   GeneratedColumn<String> get readingType => $composableBuilder(
     column: $table.readingType,
@@ -27168,10 +27809,11 @@ class $$GlucoseLogsTableAnnotationComposer
     builder: (column) => column,
   );
 
-  GeneratedColumn<String> get hba1cEstimate => $composableBuilder(
-    column: $table.hba1cEstimate,
-    builder: (column) => column,
-  );
+  GeneratedColumnWithTypeConverter<String?, String> get hba1cEstimate =>
+      $composableBuilder(
+        column: $table.hba1cEstimate,
+        builder: (column) => column,
+      );
 
   GeneratedColumn<String> get notes =>
       $composableBuilder(column: $table.notes, builder: (column) => column);
@@ -27338,15 +27980,17 @@ class $$Spo2LogsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get spo2Percent => $composableBuilder(
-    column: $table.spo2Percent,
-    builder: (column) => ColumnFilters(column),
-  );
+  ColumnWithTypeConverterFilters<String, String, String> get spo2Percent =>
+      $composableBuilder(
+        column: $table.spo2Percent,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 
-  ColumnFilters<String> get pulse => $composableBuilder(
-    column: $table.pulse,
-    builder: (column) => ColumnFilters(column),
-  );
+  ColumnWithTypeConverterFilters<String?, String, String> get pulse =>
+      $composableBuilder(
+        column: $table.pulse,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 
   ColumnFilters<DateTime> get loggedAt => $composableBuilder(
     column: $table.loggedAt,
@@ -27414,12 +28058,13 @@ class $$Spo2LogsTableAnnotationComposer
   GeneratedColumn<String> get userId =>
       $composableBuilder(column: $table.userId, builder: (column) => column);
 
-  GeneratedColumn<String> get spo2Percent => $composableBuilder(
-    column: $table.spo2Percent,
-    builder: (column) => column,
-  );
+  GeneratedColumnWithTypeConverter<String, String> get spo2Percent =>
+      $composableBuilder(
+        column: $table.spo2Percent,
+        builder: (column) => column,
+      );
 
-  GeneratedColumn<String> get pulse =>
+  GeneratedColumnWithTypeConverter<String?, String> get pulse =>
       $composableBuilder(column: $table.pulse, builder: (column) => column);
 
   GeneratedColumn<DateTime> get loggedAt =>
@@ -27553,30 +28198,35 @@ class $$PeriodLogsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get cycleStartEncrypted => $composableBuilder(
+  ColumnWithTypeConverterFilters<String, String, String>
+  get cycleStartEncrypted => $composableBuilder(
     column: $table.cycleStartEncrypted,
-    builder: (column) => ColumnFilters(column),
+    builder: (column) => ColumnWithTypeConverterFilters(column),
   );
 
-  ColumnFilters<String> get cycleEndEncrypted => $composableBuilder(
+  ColumnWithTypeConverterFilters<String?, String, String>
+  get cycleEndEncrypted => $composableBuilder(
     column: $table.cycleEndEncrypted,
-    builder: (column) => ColumnFilters(column),
+    builder: (column) => ColumnWithTypeConverterFilters(column),
   );
 
-  ColumnFilters<String> get symptomsEncrypted => $composableBuilder(
+  ColumnWithTypeConverterFilters<String?, String, String>
+  get symptomsEncrypted => $composableBuilder(
     column: $table.symptomsEncrypted,
-    builder: (column) => ColumnFilters(column),
+    builder: (column) => ColumnWithTypeConverterFilters(column),
   );
 
-  ColumnFilters<String> get flowIntensityEncrypted => $composableBuilder(
+  ColumnWithTypeConverterFilters<String?, String, String>
+  get flowIntensityEncrypted => $composableBuilder(
     column: $table.flowIntensityEncrypted,
-    builder: (column) => ColumnFilters(column),
+    builder: (column) => ColumnWithTypeConverterFilters(column),
   );
 
-  ColumnFilters<String> get notesEncrypted => $composableBuilder(
-    column: $table.notesEncrypted,
-    builder: (column) => ColumnFilters(column),
-  );
+  ColumnWithTypeConverterFilters<String?, String, String> get notesEncrypted =>
+      $composableBuilder(
+        column: $table.notesEncrypted,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 
   ColumnFilters<String> get syncStatus => $composableBuilder(
     column: $table.syncStatus,
@@ -27659,30 +28309,35 @@ class $$PeriodLogsTableAnnotationComposer
   GeneratedColumn<String> get userId =>
       $composableBuilder(column: $table.userId, builder: (column) => column);
 
-  GeneratedColumn<String> get cycleStartEncrypted => $composableBuilder(
-    column: $table.cycleStartEncrypted,
-    builder: (column) => column,
-  );
+  GeneratedColumnWithTypeConverter<String, String> get cycleStartEncrypted =>
+      $composableBuilder(
+        column: $table.cycleStartEncrypted,
+        builder: (column) => column,
+      );
 
-  GeneratedColumn<String> get cycleEndEncrypted => $composableBuilder(
-    column: $table.cycleEndEncrypted,
-    builder: (column) => column,
-  );
+  GeneratedColumnWithTypeConverter<String?, String> get cycleEndEncrypted =>
+      $composableBuilder(
+        column: $table.cycleEndEncrypted,
+        builder: (column) => column,
+      );
 
-  GeneratedColumn<String> get symptomsEncrypted => $composableBuilder(
-    column: $table.symptomsEncrypted,
-    builder: (column) => column,
-  );
+  GeneratedColumnWithTypeConverter<String?, String> get symptomsEncrypted =>
+      $composableBuilder(
+        column: $table.symptomsEncrypted,
+        builder: (column) => column,
+      );
 
-  GeneratedColumn<String> get flowIntensityEncrypted => $composableBuilder(
+  GeneratedColumnWithTypeConverter<String?, String>
+  get flowIntensityEncrypted => $composableBuilder(
     column: $table.flowIntensityEncrypted,
     builder: (column) => column,
   );
 
-  GeneratedColumn<String> get notesEncrypted => $composableBuilder(
-    column: $table.notesEncrypted,
-    builder: (column) => column,
-  );
+  GeneratedColumnWithTypeConverter<String?, String> get notesEncrypted =>
+      $composableBuilder(
+        column: $table.notesEncrypted,
+        builder: (column) => column,
+      );
 
   GeneratedColumn<String> get syncStatus => $composableBuilder(
     column: $table.syncStatus,
@@ -27832,10 +28487,11 @@ class $$JournalEntriesTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get contentEncrypted => $composableBuilder(
-    column: $table.contentEncrypted,
-    builder: (column) => ColumnFilters(column),
-  );
+  ColumnWithTypeConverterFilters<String, String, String> get contentEncrypted =>
+      $composableBuilder(
+        column: $table.contentEncrypted,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 
   ColumnFilters<int> get moodScore => $composableBuilder(
     column: $table.moodScore,
@@ -27928,10 +28584,11 @@ class $$JournalEntriesTableAnnotationComposer
   GeneratedColumn<String> get userId =>
       $composableBuilder(column: $table.userId, builder: (column) => column);
 
-  GeneratedColumn<String> get contentEncrypted => $composableBuilder(
-    column: $table.contentEncrypted,
-    builder: (column) => column,
-  );
+  GeneratedColumnWithTypeConverter<String, String> get contentEncrypted =>
+      $composableBuilder(
+        column: $table.contentEncrypted,
+        builder: (column) => column,
+      );
 
   GeneratedColumn<int> get moodScore =>
       $composableBuilder(column: $table.moodScore, builder: (column) => column);
@@ -28089,25 +28746,29 @@ class $$DoctorAppointmentsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get doctorNameEncrypted => $composableBuilder(
+  ColumnWithTypeConverterFilters<String, String, String>
+  get doctorNameEncrypted => $composableBuilder(
     column: $table.doctorNameEncrypted,
-    builder: (column) => ColumnFilters(column),
+    builder: (column) => ColumnWithTypeConverterFilters(column),
   );
 
-  ColumnFilters<String> get specialityEncrypted => $composableBuilder(
+  ColumnWithTypeConverterFilters<String?, String, String>
+  get specialityEncrypted => $composableBuilder(
     column: $table.specialityEncrypted,
-    builder: (column) => ColumnFilters(column),
+    builder: (column) => ColumnWithTypeConverterFilters(column),
   );
 
-  ColumnFilters<String> get appointmentDtEncrypted => $composableBuilder(
+  ColumnWithTypeConverterFilters<String, String, String>
+  get appointmentDtEncrypted => $composableBuilder(
     column: $table.appointmentDtEncrypted,
-    builder: (column) => ColumnFilters(column),
+    builder: (column) => ColumnWithTypeConverterFilters(column),
   );
 
-  ColumnFilters<String> get notesEncrypted => $composableBuilder(
-    column: $table.notesEncrypted,
-    builder: (column) => ColumnFilters(column),
-  );
+  ColumnWithTypeConverterFilters<String?, String, String> get notesEncrypted =>
+      $composableBuilder(
+        column: $table.notesEncrypted,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 
   ColumnFilters<bool> get reminderSent => $composableBuilder(
     column: $table.reminderSent,
@@ -28175,25 +28836,29 @@ class $$DoctorAppointmentsTableAnnotationComposer
   GeneratedColumn<String> get userId =>
       $composableBuilder(column: $table.userId, builder: (column) => column);
 
-  GeneratedColumn<String> get doctorNameEncrypted => $composableBuilder(
-    column: $table.doctorNameEncrypted,
-    builder: (column) => column,
-  );
+  GeneratedColumnWithTypeConverter<String, String> get doctorNameEncrypted =>
+      $composableBuilder(
+        column: $table.doctorNameEncrypted,
+        builder: (column) => column,
+      );
 
-  GeneratedColumn<String> get specialityEncrypted => $composableBuilder(
-    column: $table.specialityEncrypted,
-    builder: (column) => column,
-  );
+  GeneratedColumnWithTypeConverter<String?, String> get specialityEncrypted =>
+      $composableBuilder(
+        column: $table.specialityEncrypted,
+        builder: (column) => column,
+      );
 
-  GeneratedColumn<String> get appointmentDtEncrypted => $composableBuilder(
-    column: $table.appointmentDtEncrypted,
-    builder: (column) => column,
-  );
+  GeneratedColumnWithTypeConverter<String, String> get appointmentDtEncrypted =>
+      $composableBuilder(
+        column: $table.appointmentDtEncrypted,
+        builder: (column) => column,
+      );
 
-  GeneratedColumn<String> get notesEncrypted => $composableBuilder(
-    column: $table.notesEncrypted,
-    builder: (column) => column,
-  );
+  GeneratedColumnWithTypeConverter<String?, String> get notesEncrypted =>
+      $composableBuilder(
+        column: $table.notesEncrypted,
+        builder: (column) => column,
+      );
 
   GeneratedColumn<bool> get reminderSent => $composableBuilder(
     column: $table.reminderSent,
@@ -30550,6 +31215,10 @@ typedef $$UsersTableCreateCompanionBuilder =
       Value<int?> weddingPrepWeeks,
       Value<String?> weddingEvents,
       Value<String?> weddingPrimaryGoal,
+      Value<int?> doshaVata,
+      Value<int?> doshaPitta,
+      Value<int?> doshaKapha,
+      Value<String?> dominantDosha,
       Value<int> rowid,
     });
 typedef $$UsersTableUpdateCompanionBuilder =
@@ -30567,6 +31236,10 @@ typedef $$UsersTableUpdateCompanionBuilder =
       Value<int?> weddingPrepWeeks,
       Value<String?> weddingEvents,
       Value<String?> weddingPrimaryGoal,
+      Value<int?> doshaVata,
+      Value<int?> doshaPitta,
+      Value<int?> doshaKapha,
+      Value<String?> dominantDosha,
       Value<int> rowid,
     });
 
@@ -30640,6 +31313,26 @@ class $$UsersTableFilterComposer extends Composer<_$AppDatabase, $UsersTable> {
 
   ColumnFilters<String> get weddingPrimaryGoal => $composableBuilder(
     column: $table.weddingPrimaryGoal,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get doshaVata => $composableBuilder(
+    column: $table.doshaVata,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get doshaPitta => $composableBuilder(
+    column: $table.doshaPitta,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get doshaKapha => $composableBuilder(
+    column: $table.doshaKapha,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get dominantDosha => $composableBuilder(
+    column: $table.dominantDosha,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -30717,6 +31410,26 @@ class $$UsersTableOrderingComposer
     column: $table.weddingPrimaryGoal,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<int> get doshaVata => $composableBuilder(
+    column: $table.doshaVata,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get doshaPitta => $composableBuilder(
+    column: $table.doshaPitta,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get doshaKapha => $composableBuilder(
+    column: $table.doshaKapha,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get dominantDosha => $composableBuilder(
+    column: $table.dominantDosha,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$UsersTableAnnotationComposer
@@ -30786,6 +31499,24 @@ class $$UsersTableAnnotationComposer
     column: $table.weddingPrimaryGoal,
     builder: (column) => column,
   );
+
+  GeneratedColumn<int> get doshaVata =>
+      $composableBuilder(column: $table.doshaVata, builder: (column) => column);
+
+  GeneratedColumn<int> get doshaPitta => $composableBuilder(
+    column: $table.doshaPitta,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get doshaKapha => $composableBuilder(
+    column: $table.doshaKapha,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get dominantDosha => $composableBuilder(
+    column: $table.dominantDosha,
+    builder: (column) => column,
+  );
 }
 
 class $$UsersTableTableManager
@@ -30829,6 +31560,10 @@ class $$UsersTableTableManager
                 Value<int?> weddingPrepWeeks = const Value.absent(),
                 Value<String?> weddingEvents = const Value.absent(),
                 Value<String?> weddingPrimaryGoal = const Value.absent(),
+                Value<int?> doshaVata = const Value.absent(),
+                Value<int?> doshaPitta = const Value.absent(),
+                Value<int?> doshaKapha = const Value.absent(),
+                Value<String?> dominantDosha = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => UsersCompanion(
                 id: id,
@@ -30844,6 +31579,10 @@ class $$UsersTableTableManager
                 weddingPrepWeeks: weddingPrepWeeks,
                 weddingEvents: weddingEvents,
                 weddingPrimaryGoal: weddingPrimaryGoal,
+                doshaVata: doshaVata,
+                doshaPitta: doshaPitta,
+                doshaKapha: doshaKapha,
+                dominantDosha: dominantDosha,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -30861,6 +31600,10 @@ class $$UsersTableTableManager
                 Value<int?> weddingPrepWeeks = const Value.absent(),
                 Value<String?> weddingEvents = const Value.absent(),
                 Value<String?> weddingPrimaryGoal = const Value.absent(),
+                Value<int?> doshaVata = const Value.absent(),
+                Value<int?> doshaPitta = const Value.absent(),
+                Value<int?> doshaKapha = const Value.absent(),
+                Value<String?> dominantDosha = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => UsersCompanion.insert(
                 id: id,
@@ -30876,6 +31619,10 @@ class $$UsersTableTableManager
                 weddingPrepWeeks: weddingPrepWeeks,
                 weddingEvents: weddingEvents,
                 weddingPrimaryGoal: weddingPrimaryGoal,
+                doshaVata: doshaVata,
+                doshaPitta: doshaPitta,
+                doshaKapha: doshaKapha,
+                dominantDosha: dominantDosha,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -31094,6 +31841,220 @@ typedef $$HeartRateLogsTableProcessedTableManager =
       HeartRateLog,
       PrefetchHooks Function()
     >;
+typedef $$AyurvedicRitualLogsTableCreateCompanionBuilder =
+    AyurvedicRitualLogsCompanion Function({
+      Value<int> id,
+      required String userId,
+      required String ritualKey,
+      required DateTime completedAt,
+      required int karmaAwarded,
+    });
+typedef $$AyurvedicRitualLogsTableUpdateCompanionBuilder =
+    AyurvedicRitualLogsCompanion Function({
+      Value<int> id,
+      Value<String> userId,
+      Value<String> ritualKey,
+      Value<DateTime> completedAt,
+      Value<int> karmaAwarded,
+    });
+
+class $$AyurvedicRitualLogsTableFilterComposer
+    extends Composer<_$AppDatabase, $AyurvedicRitualLogsTable> {
+  $$AyurvedicRitualLogsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get ritualKey => $composableBuilder(
+    column: $table.ritualKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get completedAt => $composableBuilder(
+    column: $table.completedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get karmaAwarded => $composableBuilder(
+    column: $table.karmaAwarded,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$AyurvedicRitualLogsTableOrderingComposer
+    extends Composer<_$AppDatabase, $AyurvedicRitualLogsTable> {
+  $$AyurvedicRitualLogsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get ritualKey => $composableBuilder(
+    column: $table.ritualKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get completedAt => $composableBuilder(
+    column: $table.completedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get karmaAwarded => $composableBuilder(
+    column: $table.karmaAwarded,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$AyurvedicRitualLogsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $AyurvedicRitualLogsTable> {
+  $$AyurvedicRitualLogsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get userId =>
+      $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<String> get ritualKey =>
+      $composableBuilder(column: $table.ritualKey, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get completedAt => $composableBuilder(
+    column: $table.completedAt,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get karmaAwarded => $composableBuilder(
+    column: $table.karmaAwarded,
+    builder: (column) => column,
+  );
+}
+
+class $$AyurvedicRitualLogsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $AyurvedicRitualLogsTable,
+          AyurvedicRitualLog,
+          $$AyurvedicRitualLogsTableFilterComposer,
+          $$AyurvedicRitualLogsTableOrderingComposer,
+          $$AyurvedicRitualLogsTableAnnotationComposer,
+          $$AyurvedicRitualLogsTableCreateCompanionBuilder,
+          $$AyurvedicRitualLogsTableUpdateCompanionBuilder,
+          (
+            AyurvedicRitualLog,
+            BaseReferences<
+              _$AppDatabase,
+              $AyurvedicRitualLogsTable,
+              AyurvedicRitualLog
+            >,
+          ),
+          AyurvedicRitualLog,
+          PrefetchHooks Function()
+        > {
+  $$AyurvedicRitualLogsTableTableManager(
+    _$AppDatabase db,
+    $AyurvedicRitualLogsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$AyurvedicRitualLogsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$AyurvedicRitualLogsTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$AyurvedicRitualLogsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> userId = const Value.absent(),
+                Value<String> ritualKey = const Value.absent(),
+                Value<DateTime> completedAt = const Value.absent(),
+                Value<int> karmaAwarded = const Value.absent(),
+              }) => AyurvedicRitualLogsCompanion(
+                id: id,
+                userId: userId,
+                ritualKey: ritualKey,
+                completedAt: completedAt,
+                karmaAwarded: karmaAwarded,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String userId,
+                required String ritualKey,
+                required DateTime completedAt,
+                required int karmaAwarded,
+              }) => AyurvedicRitualLogsCompanion.insert(
+                id: id,
+                userId: userId,
+                ritualKey: ritualKey,
+                completedAt: completedAt,
+                karmaAwarded: karmaAwarded,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$AyurvedicRitualLogsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $AyurvedicRitualLogsTable,
+      AyurvedicRitualLog,
+      $$AyurvedicRitualLogsTableFilterComposer,
+      $$AyurvedicRitualLogsTableOrderingComposer,
+      $$AyurvedicRitualLogsTableAnnotationComposer,
+      $$AyurvedicRitualLogsTableCreateCompanionBuilder,
+      $$AyurvedicRitualLogsTableUpdateCompanionBuilder,
+      (
+        AyurvedicRitualLog,
+        BaseReferences<
+          _$AppDatabase,
+          $AyurvedicRitualLogsTable,
+          AyurvedicRitualLog
+        >,
+      ),
+      AyurvedicRitualLog,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -31166,4 +32127,6 @@ class $AppDatabaseManager {
       $$UsersTableTableManager(_db, _db.users);
   $$HeartRateLogsTableTableManager get heartRateLogs =>
       $$HeartRateLogsTableTableManager(_db, _db.heartRateLogs);
+  $$AyurvedicRitualLogsTableTableManager get ayurvedicRitualLogs =>
+      $$AyurvedicRitualLogsTableTableManager(_db, _db.ayurvedicRitualLogs);
 }

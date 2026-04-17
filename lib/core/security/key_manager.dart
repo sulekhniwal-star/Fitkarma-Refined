@@ -14,15 +14,18 @@ class KeyManager {
   static const _masterKeyStorageKey = 'master_key';
   static const _installUuidStorageKey = 'install_uuid';
   static const _saltStorageKey = 'kdf_salt';
+  static final Map<String, Uint8List> _subKeyCache = {};
+
+  static Uint8List? _cachedMasterKey;
 
   /// Derives or retrieves the master key.
-  /// 
-  /// Uses device ID and a unique install UUID as source material.
-  /// Derivation is performed via PBKDF2 with 200,000 iterations.
   static Future<Uint8List> getMasterKey() async {
+    if (_cachedMasterKey != null) return _cachedMasterKey!;
+
     final existingKey = await _storage.read(key: _masterKeyStorageKey);
     if (existingKey != null) {
-      return base64Decode(existingKey);
+      _cachedMasterKey = base64Decode(existingKey);
+      return _cachedMasterKey!;
     }
 
     // 1. Get Device ID and Install UUID
@@ -53,14 +56,24 @@ class KeyManager {
 
     // 4. Store and return
     await _storage.write(key: _masterKeyStorageKey, value: base64Encode(masterKey));
+    _cachedMasterKey = masterKey;
     return masterKey;
   }
 
-  /// Derives a cryptographically independent key for a specific data class.
+  /// Synchronously returns the cached master key.
   /// 
-  /// Uses HKDF-expand to derive sub-keys from the master key.
-  /// Valid [dataClass] values: 'bp_glucose', 'period', 'journal', 'appointments'.
+  /// Throws if [getMasterKey] has not been called and finished at least once.
+  static Uint8List getMasterKeySync() {
+    if (_cachedMasterKey == null) {
+      throw StateError('KeyManager.getMasterKey() must be called once before getMasterKeySync()');
+    }
+    return _cachedMasterKey!;
+  }
+
+  /// Derives a cryptographically independent key for a specific data class.
   static Future<Uint8List> getKeyFor(String dataClass) async {
+    if (_subKeyCache.containsKey(dataClass)) return _subKeyCache[dataClass]!;
+
     final validClasses = {'bp_glucose', 'period', 'journal', 'appointments'};
     if (!validClasses.contains(dataClass)) {
       throw ArgumentError('Invalid data class for key derivation: $dataClass');
@@ -68,10 +81,21 @@ class KeyManager {
 
     final masterKeyBytes = await getMasterKey();
     
-    return await deriveHkdf(
+    final key = await deriveHkdf(
       masterKeyBytes: masterKeyBytes,
       info: utf8.encode(dataClass),
     );
+
+    _subKeyCache[dataClass] = key;
+    return key;
+  }
+
+  /// Synchronously returns a cached sub-key.
+  static Uint8List getKeyForSync(String dataClass) {
+    if (!_subKeyCache.containsKey(dataClass)) {
+       throw StateError('KeyManager.getKeyFor("$dataClass") must be called once during init');
+    }
+    return _subKeyCache[dataClass]!;
   }
 
   /// Pure function for PBKDF2 derivation.

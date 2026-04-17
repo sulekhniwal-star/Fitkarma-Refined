@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import '../../../shared/theme/app_colors.dart';
-import '../../../shared/theme/app_text_styles.dart';
+
+import '../../../core/config/app_theme.dart';
+import '../../../shared/widgets/fit_scaffold.dart';
 import '../../../shared/widgets/abha_link_badge.dart';
-import '../../../shared/widgets/karma_level_card.dart';
-import '../../../shared/widgets/dosha_chart.dart';
 import '../../auth/domain/auth_providers.dart';
-import '../../wedding_planner/presentation/wedding_providers.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
@@ -34,106 +31,75 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     final user = ref.watch(authStateProvider).value;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return Scaffold(
-      backgroundColor: isDark ? AppColorsDark.background : AppColors.background,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            _buildHero(user),
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildKarmaLevelCard(),
-                  const SizedBox(height: 24),
-                  _buildDoshaCard(),
-                  const SizedBox(height: 24),
-                  _buildPersonalInfo(user),
-                  const SizedBox(height: 32),
-                  _buildABHASection(),
-                  const SizedBox(height: 32),
-                  _buildWeddingPlannerSection(context),
-                  const SizedBox(height: 32),
-                  _buildAchievementsSection(),
-                  const SizedBox(height: 32),
-                  _buildReferralCard(context),
-                  const SizedBox(height: 40),
-                ],
-              ),
-            ),
-          ],
-        ),
+    return FitScaffold(
+      pattern: ScaffoldPattern.immersiveHero,
+      title: 'Profile',
+      heroContent: _buildHeroContent(user),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildKarmaLevelCard(),
+          const SizedBox(height: 24),
+          _buildDoshaCard(),
+          const SizedBox(height: 24),
+          _buildPersonalInfo(user),
+          const SizedBox(height: 32),
+          _buildABHASection(),
+          const SizedBox(height: 32),
+          _buildWeddingPlannerSection(context),
+          const SizedBox(height: 32),
+          _buildAchievementsSection(),
+          const SizedBox(height: 32),
+          _buildReferralCard(context),
+          const SizedBox(height: 100), // Navigation avoidance
+        ],
       ),
     );
   }
 
-  Widget _buildHero(dynamic user) {
+  Widget _buildHeroContent(dynamic user) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(24, 60, 24, 40),
-      decoration: BoxDecoration(
-        gradient: isDark 
-          ? const LinearGradient(
-              colors: [Color(0xFF0A0818), Color(0xFF1E1850)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            )
-          : AppColors.heroGradient,
-        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(32)),
-      ),
-      child: Column(
-        children: [
-          GestureDetector(
-            onTap: _pickImage,
-            child: Container(
-              padding: const EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: isDark ? AppColorsDark.primary : AppColors.primary,
-                  width: 3,
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        GestureDetector(
+          onTap: _pickImage,
+          child: Container(
+            padding: const EdgeInsets.all(4),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: Colors.white, width: 2),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.white.withValues(alpha: 0.2),
+                  blurRadius: 15,
+                  spreadRadius: 2,
                 ),
-                boxShadow: [
-                  BoxShadow(
-                    color: (isDark ? AppColorsDark.primary : AppColors.primary)
-                        .withValues(alpha: 0.3),
-                    blurRadius: 16,
-                    spreadRadius: 2,
-                  ),
-                ],
-              ),
-              child: CircleAvatar(
-                radius: 40,
-                backgroundColor: Colors.white24,
-                backgroundImage: _imagePath != null 
-                    ? FileImage(File(_imagePath!)) 
-                    : const AssetImage('assets/images/profiles/avatar_male.png') as ImageProvider,
-                child: _imagePath == null
-                    ? Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: (isDark ? AppColorsDark.primary : AppColors.primary).withValues(alpha: 0.1),
-                        ),
-                      )
-                    : null,
-              ),
+              ],
+            ),
+            child: CircleAvatar(
+              radius: 40,
+              backgroundColor: Colors.white24,
+              backgroundImage: _imagePath != null
+                  ? FileImage(File(_imagePath!))
+                  : const AssetImage('assets/images/profiles/avatar_male.png')
+                        as ImageProvider,
             ),
           ),
-          const SizedBox(height: 16),
-          Text(
-            user?.name ?? 'Arjun Mehta',
-            style: AppTextStyles.h1(isDark).copyWith(color: Colors.white),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            user?.email ?? 'arjun@example.com',
-            style: AppTextStyles.bodyMedium(isDark).copyWith(color: Colors.white70),
-          ),
-        ],
-      ),
+        ),
+        const SizedBox(height: 16),
+        Text(
+          user?.name ?? 'FitKarma User',
+          style: AppTheme.metricLg(
+            context,
+          ).copyWith(color: Colors.white, fontSize: 32),
+        ),
+        Text(
+          user?.email ?? '',
+          style: AppTheme.labelMd(context).copyWith(color: Colors.white70),
+        ),
+      ],
     );
   }
 
@@ -172,10 +138,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 ),
               ),
               const SizedBox(width: 8),
-              Text(
-                'Ayurvedic Constitution',
-                style: AppTextStyles.h3(isDark),
-              ),
+              Text('Ayurvedic Constitution', style: AppTextStyles.h3(isDark)),
               const SizedBox(width: 4),
               Text(
                 'आयुर्वेदिक प्रकृति',
@@ -186,11 +149,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           const SizedBox(height: 16),
           const SizedBox(
             height: 160,
-            child: DoshaChart(
-              vataPct: 20,
-              pittaPct: 60,
-              kaphaPct: 20,
-            ),
+            child: DoshaChart(vataPct: 20, pittaPct: 60, kaphaPct: 20),
           ),
         ],
       ),
@@ -237,15 +196,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           ),
         ),
         const SizedBox(width: 8),
-        Text(
-          title.toUpperCase(),
-          style: AppTextStyles.sectionHeader(isDark),
-        ),
+        Text(title.toUpperCase(), style: AppTextStyles.sectionHeader(isDark)),
         const SizedBox(width: 4),
-        Text(
-          hindi,
-          style: AppTextStyles.caption(isDark),
-        ),
+        Text(hindi, style: AppTextStyles.caption(isDark)),
       ],
     );
   }
@@ -255,23 +208,23 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       padding: const EdgeInsets.only(bottom: 12),
       child: Row(
         children: [
-          Icon(icon, size: 20, color: isDark ? AppColorsDark.textSecondary : AppColors.textSecondary),
+          Icon(
+            icon,
+            size: 20,
+            color: isDark
+                ? AppColorsDark.textSecondary
+                : AppColors.textSecondary,
+          ),
           const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              label,
-              style: AppTextStyles.bodyMedium(isDark),
-            ),
-          ),
-          Text(
-            value,
-            style: AppTextStyles.labelLarge(isDark),
-          ),
+          Expanded(child: Text(label, style: AppTextStyles.bodyMedium(isDark))),
+          Text(value, style: AppTextStyles.labelLarge(isDark)),
           const SizedBox(width: 8),
           Icon(
             Icons.edit,
             size: 14,
-            color: isDark ? AppColorsDark.textSecondary : AppColors.textSecondary,
+            color: isDark
+                ? AppColorsDark.textSecondary
+                : AppColors.textSecondary,
           ),
         ],
       ),
@@ -300,15 +253,15 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 const SizedBox(height: 12),
                 Text(
                   'Linked',
-                  style: AppTextStyles.bodyMedium(isDark).copyWith(
-                    color: AppColors.success,
-                  ),
+                  style: AppTextStyles.bodyMedium(
+                    isDark,
+                  ).copyWith(color: AppColors.success),
                 ),
                 Text(
                   '12-3456-7890-1234',
-                  style: AppTextStyles.labelLarge(isDark).copyWith(
-                    fontFamily: 'monospace',
-                  ),
+                  style: AppTextStyles.labelLarge(
+                    isDark,
+                  ).copyWith(fontFamily: 'monospace'),
                 ),
               ],
             ),
@@ -340,7 +293,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   color: Colors.white.withValues(alpha: 0.2),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.celebration, color: Colors.white, size: 24),
+                child: const Icon(
+                  Icons.celebration,
+                  color: Colors.white,
+                  size: 24,
+                ),
               ),
               const SizedBox(width: 14),
               const Expanded(
@@ -391,7 +348,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        profile.role == 'none' ? 'Guest' : profile.role.toUpperCase(),
+                        profile.role == 'none'
+                            ? 'Guest'
+                            : profile.role.toUpperCase(),
                         style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
@@ -519,7 +478,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           decoration: BoxDecoration(
             color: isEarned
                 ? AppColors.accent.withValues(alpha: 0.15)
-                : (isDark ? AppColorsDark.surfaceVariant : Colors.grey.shade100),
+                : (isDark
+                      ? AppColorsDark.surfaceVariant
+                      : Colors.grey.shade100),
             shape: BoxShape.circle,
             border: isEarned
                 ? Border.all(
@@ -556,9 +517,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         else if (label != null)
           Text(
             label,
-            style: AppTextStyles.caption(isDark).copyWith(
-              fontSize: 9,
-            ),
+            style: AppTextStyles.caption(isDark).copyWith(fontSize: 9),
             textAlign: TextAlign.center,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
@@ -613,9 +572,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 ),
                 Text(
                   'Earn 500 XP for every successful join!',
-                  style: AppTextStyles.bodyMedium(isDark).copyWith(
-                    color: Colors.white70,
-                  ),
+                  style: AppTextStyles.bodyMedium(
+                    isDark,
+                  ).copyWith(color: Colors.white70),
                 ),
               ],
             ),

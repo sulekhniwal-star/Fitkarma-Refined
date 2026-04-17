@@ -1,22 +1,23 @@
 import 'dart:convert';
-import 'food_drift_service.dart';
 import 'food_aw_service.dart';
 import '../../../core/storage/app_database.dart';
+import '../../../core/storage/daos/food_dao.dart';
+import '../../../core/storage/daos/sync_dao.dart';
 import '../../../core/constants/api_endpoints.dart';
 
 class FoodRepository {
-  final FoodDriftService _drift;
+  final FoodDao _foodDao;
+  final SyncDao _syncDao;
   final FoodAwService _aw;
-  final AppDatabase _db;
 
-  FoodRepository(this._drift, this._aw, this._db);
+  FoodRepository(this._foodDao, this._syncDao, this._aw);
 
   /// Comprehensive food search: Local FTS5 -> Remote Appwrite -> External APIs.
   Future<List<Map<String, dynamic>>> search(String query) async {
     final results = <Map<String, dynamic>>[];
 
     // 1. Local FTS5 Search (Instant)
-    final localItems = await _drift.searchFoodFts(query);
+    final localItems = await _foodDao.searchFoodFts(query);
     results.addAll(localItems.map((i) => {
       'id': i.id,
       'name': i.name,
@@ -48,10 +49,10 @@ class FoodRepository {
   /// Logs a food entry locally and enqueues it for remote synchronization.
   Future<void> logFood(FoodLogsCompanion log) async {
     // 1. Local Persistence
-    final localId = await _drift.insertLog(log);
+    final localId = await _foodDao.insertLog(log);
 
     // 2. Synchronize to Cloud via Queue
-    await _db.into(_db.syncQueue).insert(
+    await _syncDao.enqueue(
       SyncQueueCompanion.insert(
         collection: AW.foodLogs,
         operation: 'create',
@@ -74,6 +75,6 @@ class FoodRepository {
 
   /// Copies yesterday's meals to today.
   Future<int> copyYesterday(String userId) async {
-    return await _drift.copyYesterdayMeals(userId);
+    return await _foodDao.copyYesterdayMeals(userId);
   }
 }

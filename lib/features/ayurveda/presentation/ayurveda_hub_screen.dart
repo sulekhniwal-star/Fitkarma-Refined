@@ -1,8 +1,11 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:go_router/go_router.dart';
 import '../domain/dosha_calculator.dart';
+import '../domain/ayurveda_providers.dart';
 import '../data/ayurveda_data.dart';
+import '../../../shared/theme/app_colors.dart';
+import '../../../shared/theme/app_text_styles.dart';
+import '../../../shared/widgets/glass_app_bar.dart';
 
 class AyurvedaHubScreen extends ConsumerStatefulWidget {
   const AyurvedaHubScreen({super.key});
@@ -25,8 +28,9 @@ class _AyurvedaHubScreenState extends ConsumerState<AyurvedaHubScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Ayurveda Hub'),
+      extendBodyBehindAppBar: true,
+      appBar: GlassAppBar(
+        title: 'Ayurveda Hub',
         actions: [
           IconButton(
             icon: const Icon(Icons.info_outline),
@@ -35,19 +39,31 @@ class _AyurvedaHubScreenState extends ConsumerState<AyurvedaHubScreen> {
         ],
       ),
       body: _pages[_currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (index) => setState(() => _currentIndex = index),
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: Colors.teal.shade700,
-        unselectedItemColor: Colors.grey,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Dosha'),
-          BottomNavigationBarItem(icon: Icon(Icons.wb_sunny), label: 'Rituals'),
-          BottomNavigationBarItem(icon: Icon(Icons.calendar_month), label: 'Seasons'),
-          BottomNavigationBarItem(icon: Icon(Icons.eco), label: 'Herbs'),
-        ],
+      bottomNavigationBar: Container(
+        padding: const EdgeInsets.only(bottom: 20, left: 24, right: 24),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(24),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+            child: BottomNavigationBar(
+              currentIndex: _currentIndex,
+              onTap: (index) => setState(() => _currentIndex = index),
+              type: BottomNavigationBarType.fixed,
+              backgroundColor: Colors.white.withValues(alpha: 0.05),
+              selectedItemColor: AppColors.primary,
+              unselectedItemColor: Colors.white.withValues(alpha: 0.4),
+              showSelectedLabels: true,
+              showUnselectedLabels: false,
+              items: const [
+                BottomNavigationBarItem(icon: Icon(Icons.home_rounded), label: 'Home'),
+                BottomNavigationBarItem(icon: Icon(Icons.person_outline_rounded), label: 'Dosha'),
+                BottomNavigationBarItem(icon: Icon(Icons.wb_sunny_outlined), label: 'Rituals'),
+                BottomNavigationBarItem(icon: Icon(Icons.calendar_month_outlined), label: 'Seasons'),
+                BottomNavigationBarItem(icon: Icon(Icons.eco_outlined), label: 'Herbs'),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -118,21 +134,21 @@ class _AyurvedaHome extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Icon(Icons.quiz, size: 32, color: Colors.teal),
+                const Icon(Icons.quiz_rounded, size: 32, color: AppColors.primary),
                 const SizedBox(height: 16),
-                const Text('Take the Prakriti Quiz', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                Text('Analyze your Prakriti', style: AppTextStyles.h2(false).copyWith(fontWeight: FontWeight.bold)),
                 const SizedBox(height: 8),
-                const Text('Identify your dominant Dosha and learn your natural constitution.', style: TextStyle(fontSize: 14)),
+                const Text('Identify your dominant Dosha and receive personalized lifestyle guidance.', style: TextStyle(fontSize: 14)),
                 const SizedBox(height: 24),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () => context.push('/ayurveda/quiz'),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.teal,
+                    backgroundColor: AppColors.primary,
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                   ),
-                  child: const Text('START QUIZ'),
+                  child: const Text('START ASSESSMENT'),
                 ),
               ],
             ),
@@ -152,21 +168,29 @@ class _AyurvedaHome extends StatelessWidget {
   }
 }
 
-class _DoshaProfile extends StatelessWidget {
-  const _DoshaProfile();
+class _DoshaProfile extends ConsumerWidget {
+  const _DoshaProfile({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    // Mock user dosha: Pitta dominant
-    final score = DoshaScore(vata: 4, pitta: 8, kapha: 3);
-    final dominant = score.dominant;
-    final percentages = score.percentages;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final securityState = ref.watch(ayurvedaNotifierProvider);
 
-    final doshaImg = {
-      Dosha.vata: 'assets/images/ayurveda/vata.png',
-      Dosha.pitta: 'assets/images/ayurveda/pitta.png',
-      Dosha.kapha: 'assets/images/ayurveda/kapha.png',
-    }[dominant]!;
+    return securityState.when(
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (e, s) => Center(child: Text('Error: $e')),
+      data: (score) {
+        if (score == null) {
+          return _buildEmptyState(context);
+        }
+
+        final dominant = score.dominant;
+        final percentages = score.percentages;
+
+        final doshaImg = {
+          Dosha.vata: 'assets/images/ayurveda/vata.png',
+          Dosha.pitta: 'assets/images/ayurveda/pitta.png',
+          Dosha.kapha: 'assets/images/ayurveda/kapha.png',
+        }[dominant]!;
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
@@ -211,35 +235,84 @@ class _DoshaProfile extends StatelessWidget {
         ],
       ),
     );
+      },
+    );
+  }
+
+  Widget _buildEmptyState(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.spa_outlined, size: 80, color: Colors.white.withValues(alpha: 0.2)),
+          const SizedBox(height: 24),
+          Text('Dosha Analysis Pending', style: AppTextStyles.h3(true)),
+          const SizedBox(height: 8),
+          const Text('Complete the Prakriti Quiz to see your profile.', style: TextStyle(color: Colors.grey)),
+          const SizedBox(height: 24),
+          ElevatedButton(
+            onPressed: () => context.push('/ayurveda/quiz'),
+            child: const Text('START QUIZ'),
+          ),
+        ],
+      ),
+    );
   }
 }
 
-class _DailyRituals extends StatelessWidget {
-  const _DailyRituals();
+class _DailyRituals extends ConsumerWidget {
+  const _DailyRituals({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final rituals = AyurvedaData.dinacharya[Dosha.pitta]!; // Mock
+  Widget build(BuildContext context, WidgetRef ref) {
+    final securityState = ref.watch(ayurvedaNotifierProvider);
+    final dominant = securityState.value?.dominant ?? Dosha.pitta; 
+    final rituals = AyurvedaData.dinacharya[dominant]!;
 
     return ListView(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.only(top: 100, left: 24, right: 24, bottom: 24),
       children: [
         Center(
-          child: Image.asset(
-            'assets/images/ayurveda/daily_rituals.png',
-            height: 180,
-            fit: BoxFit.contain,
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: AppColors.primary.withValues(alpha: 0.1),
+            ),
+            child: Icon(Icons.auto_awesome, color: AppColors.primary, size: 48),
           ),
         ),
         const SizedBox(height: 24),
-        const Text('Dinacharya', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-        const Text('Daily Rituals for Pitta Balance', style: TextStyle(color: Colors.grey)),
+        Text('Dinacharya', style: AppTextStyles.h2(true)),
+        Text('Daily Rituals for ${dominant.name.toUpperCase()} Balance', style: const TextStyle(color: Colors.grey)),
         const SizedBox(height: 24),
-        ...rituals.map((r) => CheckboxListTile(
-          value: false,
-          onChanged: (v) {},
-          title: Text(r),
-          controlAffinity: ListTileControlAffinity.leading,
+        ...rituals.map((r) => Card(
+          color: Colors.white.withValues(alpha: 0.05),
+          margin: const EdgeInsets.only(bottom: 12),
+          child: CheckboxListTile(
+            value: false, // In real app, track completion in separate state
+            onChanged: (v) {
+              if (v == true) {
+                HapticFeedback.lightImpact();
+                ref.read(userDaoProvider).addKarma(
+                  'current_user_id', 
+                  10, 
+                  'Ayurvedic Ritual', 
+                  'Completed $r'
+                );
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('✨ Karma Points Earned! +10'),
+                    duration: Duration(seconds: 1),
+                  ),
+                );
+              }
+            },
+            title: Text(r, style: const TextStyle(color: Colors.white)),
+            activeColor: AppColors.primary,
+            checkColor: Colors.black,
+            controlAffinity: ListTileControlAffinity.leading,
+          ),
         )),
       ],
     );
@@ -247,39 +320,92 @@ class _DailyRituals extends StatelessWidget {
 }
 
 class _SeasonalPlan extends StatelessWidget {
-  const _SeasonalPlan();
+  const _SeasonalPlan({super.key});
+
+  String _getVedicSeason() {
+    final month = DateTime.now().month;
+    // Strict Indian Vedic Season (Ritu) mapping
+    if (month == 3 || month == 4) return 'Vasanta (Spring)';
+    if (month == 5 || month == 6) return 'Grishma (Summer)';
+    if (month == 7 || month == 8) return 'Varsha (Monsoon)';
+    if (month == 9 || month == 10) return 'Sharad (Autumn)';
+    if (month == 11 || month == 12) return 'Hemanta (Late Autumn)';
+    return 'Shishira (Winter)'; // Jan-Feb
+  }
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      padding: const EdgeInsets.all(24),
-      itemCount: AyurvedaData.ritucharya.length,
-      itemBuilder: (context, index) {
-        final r = AyurvedaData.ritucharya[index];
-        return Card(
-          margin: const EdgeInsets.only(bottom: 16),
-          child: ExpansionTile(
-            title: Text(r['season'], style: const TextStyle(fontWeight: FontWeight.bold)),
-            subtitle: Text(r['months']),
-            leading: const Icon(Icons.eco_outlined, color: Colors.teal),
+    final currentSeason = _getVedicSeason();
+
+    return Column(
+      children: [
+        const SizedBox(height: 100),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+          child: Row(
             children: [
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Focus: ${r['focus']}', style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.teal)),
-                    const SizedBox(height: 8),
-                    Text('Food: ${r['foods']}'),
-                    const SizedBox(height: 4),
-                    Text('Activity: ${r['activities']}'),
-                  ],
-                ),
+              const Icon(Icons.stars, color: Colors.amber, size: 20),
+              const SizedBox(width: 8),
+              Text(
+                'CURRENT SEASON: ${currentSeason.toUpperCase()}',
+                style: AppTextStyles.labelSmall(true).copyWith(color: Colors.amber),
               ),
             ],
           ),
-        );
-      },
+        ),
+        Expanded(
+          child: ListView.builder(
+            padding: const EdgeInsets.all(24),
+            itemCount: AyurvedaData.ritucharya.length,
+            itemBuilder: (context, index) {
+              final r = AyurvedaData.ritucharya[index];
+              final isCurrent = r['season'] == currentSeason;
+
+              return Card(
+                elevation: isCurrent ? 8 : 0,
+                color: isCurrent ? AppColors.primary.withValues(alpha: 0.1) : Colors.white.withValues(alpha: 0.05),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  side: BorderSide(
+                    color: isCurrent ? AppColors.primary : Colors.white.withValues(alpha: 0.1),
+                    width: isCurrent ? 2 : 1,
+                  ),
+                ),
+                margin: const EdgeInsets.only(bottom: 16),
+                child: ExpansionTile(
+                  title: Text(
+                    r['season'],
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: isCurrent ? AppColors.primary : Colors.white,
+                    ),
+                  ),
+                  subtitle: Text(r['months'], style: TextStyle(color: Colors.white.withValues(alpha: 0.5))),
+                  leading: Icon(
+                    isCurrent ? Icons.wb_sunny : Icons.eco_outlined,
+                    color: isCurrent ? AppColors.primary : Colors.white.withValues(alpha: 0.4),
+                  ),
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Focus: ${r['focus']}', style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.primary)),
+                          const SizedBox(height: 8),
+                          Text('Food: ${r['foods']}', style: const TextStyle(color: Colors.white70)),
+                          const SizedBox(height: 4),
+                          Text('Activity: ${r['activities']}', style: const TextStyle(color: Colors.white70)),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 }

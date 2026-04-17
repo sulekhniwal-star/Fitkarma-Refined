@@ -5,10 +5,10 @@ import '../data/food_drift_service.dart';
 import '../data/food_aw_service.dart';
 
 final foodRepositoryProvider = Provider<FoodRepository>((ref) {
-  final db = ref.watch(driftDbProvider);
-  final drift = FoodDriftService(db);
+  final foodDao = ref.watch(foodDaoProvider);
+  final syncDao = ref.watch(syncDaoProvider);
   final aw = FoodAwService();
-  return FoodRepository(drift, aw, db);
+  return FoodRepository(foodDao, syncDao, aw);
 });
 
 /// Provider for searching food items with 300ms debounce (handled in UI).
