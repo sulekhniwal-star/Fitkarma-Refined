@@ -224,6 +224,14 @@ class _DailyRituals extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(24),
       children: [
+        Center(
+          child: Image.asset(
+            'assets/images/ayurveda/daily_rituals.png',
+            height: 180,
+            fit: BoxFit.contain,
+          ),
+        ),
+        const SizedBox(height: 24),
         const Text('Dinacharya', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
         const Text('Daily Rituals for Pitta Balance', style: TextStyle(color: Colors.grey)),
         const SizedBox(height: 24),
@@ -283,9 +291,28 @@ class _HerbalRemedies extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView.builder(
       padding: const EdgeInsets.all(24),
-      itemCount: AyurvedaData.remedies.length,
+      itemCount: AyurvedaData.remedies.length + 1,
       itemBuilder: (context, index) {
-        final h = AyurvedaData.remedies[index];
+        if (index == 0) {
+          return Column(
+            children: [
+              Center(
+                child: Image.asset(
+                  'assets/images/ayurveda/herbal_remedies.png',
+                  height: 180,
+                  fit: BoxFit.contain,
+                ),
+              ),
+              const SizedBox(height: 24),
+              const Align(
+                alignment: Alignment.centerLeft,
+                child: Text('Herbal Remedies', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+              ),
+              const SizedBox(height: 12),
+            ],
+          );
+        }
+        final h = AyurvedaData.remedies[index - 1];
         return Card(
           margin: const EdgeInsets.only(bottom: 12),
           child: ListTile(

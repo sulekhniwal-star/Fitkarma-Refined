@@ -78,11 +78,32 @@ class KarmaLevelCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 8),
-                Text(
-                  title,
-                  style: AppTextStyles.h1(true).copyWith(color: Colors.white),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          title,
+                          style: AppTextStyles.h1(true).copyWith(color: Colors.white),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          'Keep pushing for the next rank!',
+                          style: AppTextStyles.bodySmall(true).copyWith(color: Colors.white70),
+                        ),
+                      ],
+                    ),
+                    Image.asset(
+                      _getBadgeAsset(title),
+                      height: 60,
+                      fit: BoxFit.contain,
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 20),
                 // Progress Bar
                 LinearProgressIndicator(
                   value: progress,
@@ -115,5 +136,15 @@ class KarmaLevelCard extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  String _getBadgeAsset(String title) {
+    switch (title.toLowerCase()) {
+      case 'legend':
+        return 'assets/images/gamification/badge_legend.png';
+      case 'warrior':
+      default:
+        return 'assets/images/gamification/badge_warrior.png';
+    }
   }
 }

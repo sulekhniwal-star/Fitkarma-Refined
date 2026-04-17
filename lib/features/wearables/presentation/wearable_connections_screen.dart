@@ -56,6 +56,31 @@ class _WearableConnectionsScreenState extends ConsumerState<WearableConnectionsS
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
+          Center(
+            child: Image.asset(
+              'assets/images/system/device_sync.png',
+              height: 180,
+              fit: BoxFit.contain,
+            ),
+          ),
+          const SizedBox(height: 24),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Connect Your Devices',
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  'Sync your health data automatically',
+                  style: TextStyle(color: Colors.grey, fontSize: 14),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 24),
           _buildConnectionCard(
             name: 'Health Connect',
             icon: Icons.health_and_safety,

@@ -64,6 +64,8 @@ class _KarmaHubScreenState extends ConsumerState<KarmaHubScreen> with SingleTick
                         const SizedBox(height: 32),
                         const _ChallengeCarousel(),
                         const SizedBox(height: 32),
+                        const _TrophyCaseSection(),
+                        const SizedBox(height: 32),
                         _LeaderboardSection(tabController: _tabController),
                         const SizedBox(height: 32),
                         const _KarmaStoreSection(),
@@ -108,9 +110,20 @@ class _KarmaHero extends ConsumerWidget {
       padding: const EdgeInsets.fromLTRB(24, 60, 24, 20),
       child: Column(
         children: [
-          Text(
-            'Level 12 Warrior',
-            style: AppTextStyles.displayMedium(true).copyWith(color: Colors.white),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                'assets/images/gamification/badge_warrior.png',
+                height: 40,
+                fit: BoxFit.contain,
+              ),
+              const SizedBox(width: 12),
+              Text(
+                'Level 12 Warrior',
+                style: AppTextStyles.displayMedium(true).copyWith(color: Colors.white, fontSize: 24),
+              ),
+            ],
           ),
           const SizedBox(height: 16),
           Row(
@@ -438,6 +451,114 @@ class _StoreItem extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _TrophyCaseSection extends StatelessWidget {
+  const _TrophyCaseSection();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Your Achievements', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              Text('आपकी उपलब्धियां', style: TextStyle(fontSize: 11, color: Colors.grey)),
+            ],
+          ),
+        ),
+        const SizedBox(height: 16),
+        SizedBox(
+          height: 140,
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            children: const [
+              _TrophyItem(
+                name: '30 Day Streak',
+                assetPath: 'assets/images/gamification/streak_30_day.png',
+                date: 'Unlocked 2d ago',
+              ),
+              _TrophyItem(
+                name: 'Personal Best',
+                assetPath: 'assets/images/gamification/trophy_pr.png',
+                date: 'Unlocked 1w ago',
+              ),
+              _TrophyItem(
+                name: 'Legend Rank',
+                assetPath: 'assets/images/gamification/badge_legend.png',
+                date: 'In Progress (85%)',
+                isLocked: true,
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _TrophyItem extends StatelessWidget {
+  final String name;
+  final String assetPath;
+  final String date;
+  final bool isLocked;
+
+  const _TrophyItem({
+    required this.name,
+    required this.assetPath,
+    required this.date,
+    this.isLocked = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return Container(
+      width: 140,
+      margin: const EdgeInsets.only(right: 12),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: isDark ? AppColorsDark.surface : Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: isLocked ? (isDark ? Colors.white10 : Colors.grey.shade200) : AppColors.primary.withValues(alpha: 0.2),
+        ),
+      ),
+      child: Column(
+        children: [
+          Expanded(
+            child: Opacity(
+              opacity: isLocked ? 0.3 : 1.0,
+              child: Image.asset(
+                assetPath,
+                fit: BoxFit.contain,
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            name,
+            style: TextStyle(
+              fontWeight: FontWeight.bold, 
+              fontSize: 13,
+              color: isDark ? AppColorsDark.textPrimary : AppColors.textPrimary,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          Text(
+            date,
+            style: const TextStyle(fontSize: 10, color: Colors.grey),
+            textAlign: TextAlign.center,
+          ),
+        ],
       ),
     );
   }

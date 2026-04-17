@@ -154,28 +154,28 @@ class _Step1Role extends StatelessWidget {
               WeddingRoleChip(
                 label: 'Bride',
                 labelHi: 'दुल्हन',
-                imagePath: 'assets/images/wedding/role_bride.png',
+                imagePath: 'assets/images/wedding/Bridal.png',
                 isSelected: state.role == WeddingRole.bride,
                 onTap: () => notifier.setRole(WeddingRole.bride),
               ),
               WeddingRoleChip(
                 label: 'Groom',
                 labelHi: 'दूल्हा',
-                imagePath: 'assets/images/wedding/role_groom.png',
+                imagePath: 'assets/images/wedding/Groom.png',
                 isSelected: state.role == WeddingRole.groom,
                 onTap: () => notifier.setRole(WeddingRole.groom),
               ),
               WeddingRoleChip(
                 label: 'Guest',
                 labelHi: 'मेहमान',
-                imagePath: 'assets/images/wedding/role_guest.png',
+                imagePath: 'assets/images/wedding/Guest.png',
                 isSelected: state.role == WeddingRole.guest,
                 onTap: () => notifier.setRole(WeddingRole.guest),
               ),
               WeddingRoleChip(
                 label: 'Relative',
                 labelHi: 'रिश्तेदार',
-                imagePath: 'assets/images/wedding/role_relative.png',
+                imagePath: 'assets/images/wedding/Guest.png',
                 isSelected: state.role == WeddingRole.relative,
                 onTap: () => notifier.setRole(WeddingRole.relative),
               ),
@@ -396,9 +396,9 @@ class _Step3Events extends StatelessWidget {
   const _Step3Events({required this.state, required this.notifier});
 
   static const _events = [
-    {'key': 'haldi',     'en': 'Haldi',    'hi': 'हल्दी',    'icon': '🥣', 'color': 0xFFFFF9C4},
+    {'key': 'haldi',     'en': 'Haldi',    'hi': 'हल्दी',    'asset': 'assets/images/wedding/Haldi.png', 'color': 0xFFFFF9C4},
+    {'key': 'sangeet',   'en': 'Sangeet',  'hi': 'संगीत',    'asset': 'assets/images/wedding/Sangeet.png', 'color': 0xFFE3F2FD},
     {'key': 'mehendi',   'en': 'Mehendi',  'hi': 'मेहँदी',   'icon': '🎨', 'color': 0xFFE8F5E9},
-    {'key': 'sangeet',   'en': 'Sangeet',  'hi': 'संगीत',    'icon': '💃', 'color': 0xFFE3F2FD},
     {'key': 'baraat',    'en': 'Baraat',   'hi': 'बारात',    'icon': '🎺', 'color': 0xFFEDE7F6},
     {'key': 'vivah',     'en': 'Vivah',    'hi': 'विवाह',    'icon': '💍', 'color': 0xFFFCE4EC},
     {'key': 'reception', 'en': 'Reception','hi': 'रिसेप्शन', 'icon': '🥂', 'color': 0xFFE0F7FA},
@@ -447,7 +447,9 @@ class _Step3Events extends StatelessWidget {
                   ),
                   child: Row(
                     children: [
-                      Text(e['icon'] as String, style: const TextStyle(fontSize: 22)),
+                      e.containsKey('asset')
+                          ? Image.asset(e['asset'] as String, width: 28, height: 28, fit: BoxFit.contain)
+                          : Text(e['icon'] as String, style: const TextStyle(fontSize: 22)),
                       const SizedBox(width: 10),
                       Expanded(
                         child: Column(

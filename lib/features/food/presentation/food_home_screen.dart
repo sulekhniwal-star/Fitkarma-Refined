@@ -8,6 +8,7 @@ import '../../../shared/widgets/meal_tab_bar.dart';
 import '../../../shared/widgets/micronutrient_bar.dart';
 import '../../../shared/widgets/food_item_card.dart';
 import '../../../shared/widgets/quick_log_fab.dart';
+import '../../../shared/widgets/empty_state_widget.dart';
 import '../../dashboard/domain/dashboard_providers.dart';
 
 class FoodHomeScreen extends ConsumerWidget {
@@ -164,27 +165,40 @@ class FoodHomeScreen extends ConsumerWidget {
   }
 
   Widget _buildMealLogList(BuildContext context, WidgetRef ref, MealType type, bool isDark) {
+    // For now, let's assume we have logs if it's lunch/breakfast for demo
+    // In a real app, this would check a provider list.
+    
+    if (type == MealType.dinner || type == MealType.snacks) {
+      return FitKarmaEmptyState(
+        type: EmptyStateType.food,
+        hindiTitle: 'कोई भोजन लॉग नहीं',
+        subtitle: 'Log your ${type.name} to track your macros.',
+        onAction: () {},
+        actionLabel: 'LOG MEAL',
+      );
+    }
+
     String? asset;
-    if (type == MealType.breakfast) asset = 'assets/images/food/breakfast.png';
-    if (type == MealType.lunch) asset = 'assets/images/food/lunch.png';
+    if (type == MealType.breakfast) asset = 'assets/images/food/South Indian.png';
+    if (type == MealType.lunch) asset = 'assets/images/food/Healthy Thali.png';
 
     return Column(
       children: [
         FoodItemCard(
-          name: 'Healthy Thali / Meal',
-          nameHi: 'स्वस्थ भोजन',
-          portionInfo: '1 plate · 420 kcal',
+          name: type == MealType.lunch ? 'Healthy Thali / Meal' : 'Crispy Masala Dosa',
+          nameHi: type == MealType.lunch ? 'स्वस्थ भोजन' : 'मसाला डोसा',
+          portionInfo: type == MealType.lunch ? '1 plate · 420 kcal' : '1 plate · 340 kcal',
           assetPath: asset,
-          emoji: '🍱',
+          emoji: type == MealType.lunch ? '🍱' : '🍳',
           onAdd: () {},
         ),
-        FoodItemCard(
-          name: 'Poha with Sprouts',
-          nameHi: 'पोहा और अंकुरित अनाज',
-          portionInfo: '1 plate · 280 kcal',
-          emoji: '🥣',
-          onAdd: () {},
-        ),
+        if (type == MealType.breakfast)
+          const FoodItemCard(
+            name: 'Poha with Sprouts',
+            nameHi: 'पोहा और अंकुरित अनाज',
+            portionInfo: '1 plate · 280 kcal',
+            emoji: '🥣',
+          ),
       ],
     );
   }

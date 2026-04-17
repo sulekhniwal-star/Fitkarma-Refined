@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../features/auth/domain/auth_providers.dart';
 import '../../features/auth/presentation/login_screen.dart';
 import '../../features/auth/presentation/register_screen.dart';
-import '../../features/auth/presentation/onboarding/onboarding_screen.dart';
+import '../../features/onboarding/presentation/onboarding_flow_screen.dart';
 import '../../features/dashboard/presentation/dashboard_screen.dart';
 import '../../features/food/presentation/food_home_screen.dart';
 import '../../features/food/presentation/food_log_screen.dart';
@@ -207,7 +207,7 @@ final appRouter = Provider<GoRouter>((ref) {
       ),
       GoRoute(path: '/karma', builder: (context, state) => const KarmaHubScreen()),
       GoRoute(path: '/social', builder: (context, state) => const SocialFeedScreen()),
-      GoRoute(path: '/onboarding', builder: (context, state) => const OnboardingScreen()),
+      GoRoute(path: '/onboarding', builder: (context, state) => const OnboardingFlowScreen()),
       GoRoute(path: '/profile', builder: (context, state) => const ProfileScreen()),
       GoRoute(path: '/sleep', builder: (context, state) => const SleepTrackerScreen()),
       GoRoute(path: '/mood', builder: (context, state) => const MoodTrackerScreen()),

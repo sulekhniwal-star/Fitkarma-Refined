@@ -108,9 +108,16 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               child: CircleAvatar(
                 radius: 40,
                 backgroundColor: Colors.white24,
-                backgroundImage: _imagePath != null ? FileImage(File(_imagePath!)) : null,
+                backgroundImage: _imagePath != null 
+                    ? FileImage(File(_imagePath!)) 
+                    : const AssetImage('assets/images/profiles/avatar_male.png') as ImageProvider,
                 child: _imagePath == null
-                    ? Icon(Icons.camera_alt, color: Colors.white, size: 28)
+                    ? Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: (isDark ? AppColorsDark.primary : AppColors.primary).withValues(alpha: 0.1),
+                        ),
+                      )
                     : null,
               ),
             ),
