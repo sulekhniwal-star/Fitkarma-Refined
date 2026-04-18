@@ -207,7 +207,7 @@ class EmergencyCardScreen extends ConsumerWidget {
           IconButton(
             onPressed: () => launchUrl(Uri.parse('tel:$phone')),
             icon: Icon(Icons.phone, color: color),
-            style: IconButton.styleFrom(backgroundColor: color.withOpacity(0.1)),
+            style: IconButton.styleFrom(backgroundColor: color.withValues(alpha: 0.1)),
           ),
         ],
       ),

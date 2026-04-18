@@ -4,7 +4,6 @@ import '../../auth/domain/auth_providers.dart';
 import '../../../core/di/providers.dart';
 import '../domain/dosha_calculator.dart';
 import '../domain/prakriti_quiz.dart';
-import '../data/ayurveda_data.dart';
 import '../../../core/storage/app_database.dart';
 
 part 'ayurveda_providers.g.dart';

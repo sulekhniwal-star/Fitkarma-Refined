@@ -92,7 +92,7 @@ class _ActiveEventBanner extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: isToday ? Colors.white.withOpacity(0.2) : AppColors.weddingGoldStart.withOpacity(0.1),
+              color: isToday ? Colors.white.withValues(alpha: 0.2) : AppColors.weddingGoldStart.withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
             child: Icon(
@@ -228,7 +228,7 @@ class _TodaysMealSuggestions extends StatelessWidget {
                     Text(
                       plan.dietPhaseLabel,
                       style: TextStyle(
-                        color: Colors.white.withOpacity(0.8),
+                        color: Colors.white.withValues(alpha: 0.8),
                         fontSize: 12,
                       ),
                     ),
@@ -286,7 +286,7 @@ class _TodaysMealSuggestions extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.15),
+                color: Colors.white.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Row(
@@ -298,7 +298,7 @@ class _TodaysMealSuggestions extends StatelessWidget {
                     child: Text(
                       plan.tip,
                       style: TextStyle(
-                        color: Colors.white.withOpacity(0.9),
+                        color: Colors.white.withValues(alpha: 0.9),
                         fontSize: 12,
                         height: 1.3,
                       ),
@@ -371,7 +371,7 @@ class _QuickAddSection extends ConsumerWidget {
             labelStyle: const TextStyle(fontSize: 12),
             onPressed: () => _logItem(context, ref, item),
             backgroundColor: AppColors.surface,
-            side: BorderSide(color: AppColors.divider.withOpacity(0.5)),
+            side: BorderSide(color: AppColors.divider.withValues(alpha: 0.5)),
           );
         }).toList(),
       ),

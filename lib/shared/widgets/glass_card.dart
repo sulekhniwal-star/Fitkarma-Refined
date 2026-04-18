@@ -61,7 +61,7 @@ class GlassCard extends ConsumerWidget {
         borderRadius: BorderRadius.circular(borderRadius),
         boxShadow: tier == DeviceTier.high ? [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),

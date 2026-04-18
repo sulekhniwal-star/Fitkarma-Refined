@@ -166,7 +166,7 @@ class _FastingTrackerScreenState extends ConsumerState<FastingTrackerScreen> {
                   ),
                   Text(
                     'ELAPSED TIME',
-                    style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 12, letterSpacing: 1.2),
+                    style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontSize: 12, letterSpacing: 1.2),
                   ),
                   const SizedBox(height: 10),
                   Text(
@@ -192,7 +192,7 @@ class _FastingTrackerScreenState extends ConsumerState<FastingTrackerScreen> {
       margin: const EdgeInsets.symmetric(horizontal: 24),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
+        color: Colors.white.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: Colors.white12),
       ),
@@ -201,7 +201,7 @@ class _FastingTrackerScreenState extends ConsumerState<FastingTrackerScreen> {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: Colors.orange.withOpacity(0.2),
+              color: Colors.orange.withValues(alpha: 0.2),
               shape: BoxShape.circle,
             ),
             child: const Icon(Icons.bolt, color: Colors.orange),
@@ -218,7 +218,7 @@ class _FastingTrackerScreenState extends ConsumerState<FastingTrackerScreen> {
                 const SizedBox(height: 4),
                 Text(
                   FastingStageEngine.getStageDescription(stage),
-                  style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 13),
+                  style: TextStyle(color: Colors.white.withValues(alpha: 0.6), fontSize: 13),
                 ),
               ],
             ),

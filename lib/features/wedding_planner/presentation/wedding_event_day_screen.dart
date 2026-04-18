@@ -103,7 +103,7 @@ class _EventOverviewCard extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               'Celebrate with awareness and joy!',
-              style: TextStyle(color: Colors.white.withOpacity(0.9)),
+              style: TextStyle(color: Colors.white.withValues(alpha: 0.9)),
             ),
           ],
         ),
@@ -251,9 +251,9 @@ class _EventTipsCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFFB8860B).withOpacity(0.05),
+        color: const Color(0xFFB8860B).withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFB8860B).withOpacity(0.2)),
+        border: Border.all(color: const Color(0xFFB8860B).withValues(alpha: 0.2)),
       ),
       child: const Column(
         crossAxisAlignment: CrossAxisAlignment.start,

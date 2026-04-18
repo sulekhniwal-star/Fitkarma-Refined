@@ -26,7 +26,7 @@ class AmbientGlowBlobs extends ConsumerWidget {
           // Blob 2: Primary (Orange)
           _buildBlob(
             alignment: const Alignment(0.7, -0.4),
-            color: AppTheme.primary.withOpacity(0.15),
+            color: AppTheme.primary.withValues(alpha: 0.15),
             size: 200,
             blur: 60,
           ),
@@ -34,7 +34,7 @@ class AmbientGlowBlobs extends ConsumerWidget {
           // Blob 3: Teal
           _buildBlob(
             alignment: const Alignment(0.0, -0.8),
-            color: AppTheme.teal.withOpacity(0.10),
+            color: AppTheme.teal.withValues(alpha: 0.10),
             size: 160,
             blur: 50,
           ),

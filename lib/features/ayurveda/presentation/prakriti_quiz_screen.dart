@@ -30,7 +30,7 @@ class _PrakritiQuizScreenState extends ConsumerState<PrakritiQuizScreen> {
 
   void _finishQuiz() async {
     final result = ref.read(quizProgressProvider.notifier).calculateResult();
-    await ref.read(ayurvedaNotifierProvider.notifier).saveQuizResult(result);
+    await ref.read(ayurvedaProvider.notifier).saveQuizResult(result);
     if (mounted) Navigator.pop(context);
   }
 

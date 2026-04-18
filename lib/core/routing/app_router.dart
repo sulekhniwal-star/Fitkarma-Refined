@@ -21,14 +21,11 @@ import '../../features/profile/presentation/profile_screen.dart';
 import '../../shared/widgets/main_shell.dart';
 
 final appRouter = Provider<GoRouter>((ref) {
-  final authState = ref.watch(authStateProvider);
-  final isAuthenticated = authState.value != null;
-
   return GoRouter(
     initialLocation: '/',
     redirect: (context, state) {
       final authState = ref.read(authStateProvider);
-      final securityState = ref.read(securityNotifierProvider).value;
+      final securityState = ref.read(securityProvider).value;
       final isAuthenticated = authState.value != null;
 
       final isGoingToLogin = state.matchedLocation == '/login';

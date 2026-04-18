@@ -29,7 +29,7 @@ class _HealthReportsScreenState extends ConsumerState<HealthReportsScreen> {
         }),
       );
 
-      if (response.status == 'completed') {
+      if (response.status.name == 'completed') {
         final data = jsonDecode(response.responseBody);
         setState(() {
           _shareUrl = data['share_url'];

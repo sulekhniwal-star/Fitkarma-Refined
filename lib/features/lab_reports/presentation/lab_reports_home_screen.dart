@@ -94,7 +94,7 @@ class LabReportsHomeScreen extends ConsumerWidget {
                       ),
                       Text(
                         'Import glucose, BP, and more using OCR',
-                        style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 13),
+                        style: TextStyle(color: Colors.white.withValues(alpha: 0.8), fontSize: 13),
                       ),
                     ],
                   ),

@@ -2,18 +2,14 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:go_router/go_router.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:intl/intl.dart';
 import '../domain/dosha_calculator.dart';
 import '../domain/ayurveda_providers.dart';
 import '../data/ayurveda_data.dart';
 import '../../../shared/theme/app_colors.dart';
 import '../../../shared/theme/app_text_styles.dart';
 import '../../../shared/widgets/glass_app_bar.dart';
-import '../../../core/storage/daos/user_dao.dart';
-import '../../../shared/widgets/bottom_nav_bar.dart';
 
 class AyurvedaHubScreen extends ConsumerStatefulWidget {
   const AyurvedaHubScreen({super.key});
@@ -230,7 +226,7 @@ class _AyurvedaHome extends StatelessWidget {
 }
 
 class _DoshaProfile extends ConsumerWidget {
-  const _DoshaProfile({super.key});
+  const _DoshaProfile();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

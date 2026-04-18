@@ -46,7 +46,7 @@ class ABHALinkBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: isLinked ? Colors.green.withOpacity(0.1) : Colors.grey.withOpacity(0.1),
+        color: isLinked ? Colors.green.withValues(alpha: 0.1) : Colors.grey.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: isLinked ? Colors.green : Colors.grey),
       ),

@@ -137,7 +137,7 @@ void callbackDispatcher() {
 
       // Check connectivity
       final connectivityResult = await Connectivity().checkConnectivity();
-      if (connectivityResult == ConnectivityResult.none) {
+      if (connectivityResult.contains(ConnectivityResult.none)) {
         return Future.value(true);
       }
 

@@ -44,7 +44,7 @@ class WeddingRoleChip extends StatelessWidget {
           boxShadow: isSelected && isDark
               ? [
                   BoxShadow(
-                    color: AppColorsDark.primary.withOpacity(0.15),
+                    color: AppColorsDark.primary.withValues(alpha: 0.15),
                     blurRadius: 15,
                     spreadRadius: 1,
                   )

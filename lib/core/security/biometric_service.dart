@@ -35,11 +35,6 @@ class BiometricService {
     try {
       return await _auth.authenticate(
         localizedReason: reason,
-        options: AuthenticationOptions(
-          stickyAuth: stickyAuth,
-          biometricOnly: false, // Allows passcode fallback by default
-          useErrorDialogs: true,
-        ),
       );
     } catch (e) {
       throw SecurityException('Biometric authentication failed: ${e.toString()}');

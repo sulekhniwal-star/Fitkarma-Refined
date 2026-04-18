@@ -139,7 +139,7 @@ class _PeriodTrackerScreenState extends ConsumerState<PeriodTrackerScreen> {
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16),
-      color: phaseColor.withOpacity(0.1),
+      color: phaseColor.withValues(alpha: 0.1),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
         side: BorderSide(color: phaseColor, width: 1.5),
