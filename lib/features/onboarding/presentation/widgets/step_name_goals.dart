@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fitkarma/core/config/app_theme.dart';
 import '../../domain/onboarding_state.dart';
 import '../../domain/onboarding_providers.dart';
 
@@ -11,7 +12,13 @@ class StepNameGoals extends ConsumerStatefulWidget {
 }
 
 class _StepNameGoalsState extends ConsumerState<StepNameGoals> {
-  final TextEditingController _nameController = TextEditingController();
+  late TextEditingController _nameController;
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController = TextEditingController(text: ref.read(onboardingProvider).displayName);
+  }
 
   @override
   void dispose() {
@@ -22,19 +29,12 @@ class _StepNameGoalsState extends ConsumerState<StepNameGoals> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(onboardingProvider);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     
-    final textPrimary = isDark ? const Color(0xFFF1F0FF) : const Color(0xFF1A1830);
-    final textSecondary = isDark ? const Color(0xFF9B99CC) : const Color(0xFF6B6A96);
-    final primary = isDark ? const Color(0xFFFF6B35) : const Color(0xFFF4511E);
-    final surface = isDark ? const Color(0xFF1C1C2E) : Colors.white;
-    final divider = isDark ? const Color(0x33FFFFFF) : const Color(0x12000000);
-
     final goals = [
-      (OnboardingGoal.loseWeight, 'assets/images/goals/wellness.png', 'Lose Weight', 'वजन कम करें'),
-      (OnboardingGoal.gainMuscle, 'assets/images/goals/strength.png', 'Build Muscle', 'मांसपेशियां बढ़ाएं'),
-      (OnboardingGoal.maintain, 'assets/images/goals/wellness.png', 'Maintain', 'बनाए रखें'),
-      (OnboardingGoal.endurance, 'assets/images/goals/strength.png', 'Build Endurance', 'सहनशक्ति बढ़ाएं'),
+      (OnboardingGoal.loseWeight, Icons.monitor_weight_outlined, 'Lose Weight', 'वजन कम करें'),
+      (OnboardingGoal.gainMuscle, Icons.fitness_center_outlined, 'Build Muscle', 'मांसपेशियां बढ़ाएं'),
+      (OnboardingGoal.maintain, Icons.spa_outlined, 'Wellness', 'स्वस्थ रहें'),
+      (OnboardingGoal.endurance, Icons.directions_run_outlined, 'Endurance', 'सहनशक्ति बढ़ाएं'),
     ];
 
     return SingleChildScrollView(
@@ -43,85 +43,48 @@ class _StepNameGoalsState extends ConsumerState<StepNameGoals> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Welcome to FitKarma',
-            style: TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.bold,
-              color: textPrimary,
-            ),
+            'Who are you?',
+            style: AppTheme.displayMd(context),
           ),
-          const SizedBox(height: 4),
           Text(
-            'स्वागत है',
-            style: TextStyle(
-              fontSize: 14,
-              color: textSecondary,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Let\'s set up your personalized health journey',
-            style: TextStyle(
+            'आपका परिचय',
+            style: AppTheme.hindi(context).copyWith(
+              color: AppTheme.textSecondary,
               fontSize: 16,
-              color: textSecondary,
             ),
           ),
           const SizedBox(height: 32),
           
-          // Name input
           Text(
-            'What should we call you?',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: textPrimary,
-            ),
+            'Preferred Name',
+            style: AppTheme.labelMd(context),
           ),
           const SizedBox(height: 12),
           TextField(
             controller: _nameController,
-            onChanged: (value) {
-              ref.read(onboardingProvider.notifier).setDisplayName(value);
-            },
-            style: TextStyle(color: textPrimary),
+            onChanged: (value) => ref.read(onboardingProvider.notifier).setDisplayName(value),
+            style: AppTheme.bodyMd(context),
             decoration: InputDecoration(
-              hintText: 'Your name',
-              hintStyle: TextStyle(color: textSecondary),
+              hintText: 'e.g. Rahul',
               filled: true,
-              fillColor: surface,
+              fillColor: AppTheme.glass,
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(color: divider),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(color: divider),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(color: primary, width: 2),
+                borderRadius: BorderRadius.circular(AppTheme.radiusMd),
+                borderSide: BorderSide.none,
               ),
               contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
             ),
           ),
-          const SizedBox(height: 32),
+          const SizedBox(height: 40),
           
-          // Goal selection
           Text(
-            'What\'s your main goal?',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: textPrimary,
-            ),
+            'Your Primary Goal',
+            style: AppTheme.labelMd(context),
           ),
           const SizedBox(height: 4),
           Text(
             'आपका मुख्य लक्ष्य क्या है?',
-            style: TextStyle(
-              fontSize: 12,
-              color: textSecondary,
-            ),
+            style: AppTheme.caption(context),
           ),
           const SizedBox(height: 16),
           
@@ -135,37 +98,30 @@ class _StepNameGoalsState extends ConsumerState<StepNameGoals> {
             return Padding(
               padding: const EdgeInsets.only(bottom: 12),
               child: GestureDetector(
-                onTap: () {
-                  ref.read(onboardingProvider.notifier).setGoal(goal);
-                },
+                onTap: () => ref.read(onboardingProvider.notifier).setGoal(goal),
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 200),
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: isSelected 
-                        ? primary.withValues(alpha: 0.15) 
-                        : surface,
-                    borderRadius: BorderRadius.circular(16),
+                    color: isSelected ? AppTheme.primaryMuted : AppTheme.glass,
+                    borderRadius: BorderRadius.circular(AppTheme.radiusMd),
                     border: Border.all(
-                      color: isSelected ? primary : divider,
-                      width: isSelected ? 2 : 1,
+                      color: isSelected ? AppTheme.primary : AppTheme.glassBorder,
+                      width: 1.5,
                     ),
                   ),
                   child: Row(
                     children: [
                       Container(
-                        padding: const EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: isSelected 
-                              ? primary.withValues(alpha: 0.2) 
-                              : divider,
-                          borderRadius: BorderRadius.circular(12),
+                          color: isSelected ? AppTheme.primary : AppTheme.surface2,
+                          borderRadius: BorderRadius.circular(AppTheme.radiusSm),
                         ),
-                        child: Image.asset(
-                          goalData.$2,
-                          width: 24,
-                          height: 24,
-                          fit: BoxFit.contain,
+                        child: Icon(
+                          icon,
+                          color: isSelected ? Colors.white : AppTheme.textSecondary,
+                          size: 24,
                         ),
                       ),
                       const SizedBox(width: 16),
@@ -175,28 +131,19 @@ class _StepNameGoalsState extends ConsumerState<StepNameGoals> {
                           children: [
                             Text(
                               labelEn,
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w600,
-                                color: textPrimary,
+                              style: AppTheme.labelLg(context).copyWith(
+                                color: isSelected ? AppTheme.textPrimary : AppTheme.textPrimary.withValues(alpha: 0.8),
                               ),
                             ),
                             Text(
                               labelHi,
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: textSecondary,
-                              ),
+                              style: AppTheme.bodySm(context).copyWith(color: AppTheme.textSecondary),
                             ),
                           ],
                         ),
                       ),
                       if (isSelected)
-                        Icon(
-                          Icons.check_circle,
-                          color: primary,
-                          size: 24,
-                        ),
+                        const Icon(Icons.check_circle, color: AppTheme.primary, size: 24),
                     ],
                   ),
                 ),

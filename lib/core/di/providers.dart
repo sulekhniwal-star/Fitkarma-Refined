@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../storage/app_database.dart';
 
-export '../routing/app_router.dart';
+export '../router/app_router.dart';
 
 class ThemeNotifier extends Notifier<ThemeMode> {
   @override

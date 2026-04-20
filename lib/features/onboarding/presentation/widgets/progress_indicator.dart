@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fitkarma/core/config/app_theme.dart';
 
 class OnboardingProgressIndicator extends StatelessWidget {
   final int currentStep;
@@ -14,30 +15,33 @@ class OnboardingProgressIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-      child: Row(
-        children: List.generate(totalSteps, (index) {
-          final isCompleted = index < currentStep;
-          final isCurrent = index == currentStep;
-          
-          return Expanded(
-            child: Container(
-              height: 6,
-              margin: EdgeInsets.only(
-                left: index == 0 ? 0 : 2,
-                right: index == totalSteps - 1 ? 0 : 2,
-              ),
-              decoration: BoxDecoration(
-                color: isCompleted || isCurrent 
-                    ? primaryColor 
-                    : Colors.grey.withValues(alpha: 0.3),
-                borderRadius: BorderRadius.circular(3),
-              ),
+    return Row(
+      children: List.generate(totalSteps, (index) {
+        final isCompleted = index < currentStep;
+        final isCurrent = index == currentStep;
+        
+        return Expanded(
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 400),
+            curve: Curves.easeInOut,
+            height: 6,
+            margin: const EdgeInsets.symmetric(horizontal: 2),
+            decoration: BoxDecoration(
+              color: isCurrent 
+                  ? primaryColor 
+                  : (isCompleted ? primaryColor.withValues(alpha: 0.6) : AppTheme.surface2),
+              borderRadius: BorderRadius.circular(AppTheme.radiusFull),
+              boxShadow: isCurrent ? [
+                BoxShadow(
+                  color: primaryColor.withValues(alpha: 0.4),
+                  blurRadius: 8,
+                  spreadRadius: 1,
+                )
+              ] : null,
             ),
-          );
-        }),
-      ),
+          ),
+        );
+      }),
     );
   }
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fitkarma/core/config/app_theme.dart';
+import 'package:fitkarma/shared/widgets/glass_card.dart';
 import '../../domain/onboarding_state.dart';
 import '../../domain/onboarding_providers.dart';
 
@@ -9,29 +11,19 @@ class StepHealthConditions extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(onboardingProvider);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    
-    final textPrimary = isDark ? const Color(0xFFF1F0FF) : const Color(0xFF1A1830);
-    final textSecondary = isDark ? const Color(0xFF9B99CC) : const Color(0xFF6B6A96);
-    final primary = isDark ? const Color(0xFFFF6B35) : const Color(0xFFF4511E);
-    final surface = isDark ? const Color(0xFF1C1C2E) : Colors.white;
-    final divider = isDark ? const Color(0x33FFFFFF) : const Color(0x12000000);
-    final warning = isDark ? const Color(0xFFFBBF24) : const Color(0xFFF59E0B);
-    final error = isDark ? const Color(0xFFF87171) : const Color(0xFFEF4444);
     
     final conditions = [
       (ChronicCondition.diabetes, Icons.bloodtype_outlined, 'Diabetes', 'मधुमेह'),
       (ChronicCondition.hypertension, Icons.favorite_outline, 'Hypertension', 'उच्च रक्तचाप'),
-      (ChronicCondition.pcodPcos, Icons.woman_outlined, 'PCOD/PCOS', 'पॉलिसिस्टिक ओवरी सिंड्रोम'),
-      (ChronicCondition.hypothyroidism, Icons.medical_services_outlined, 'Hypothyroidism', 'थायरॉयड कमी'),
+      (ChronicCondition.pcodPcos, Icons.woman_outlined, 'PCOD/PCOS', 'पीसीओडी/पीसीओएस'),
+      (ChronicCondition.hypothyroidism, Icons.medical_services_outlined, 'Hypothyroidism', 'थायरॉयड'),
       (ChronicCondition.asthma, Icons.air_outlined, 'Asthma', 'दमा'),
     ];
     
     final permissions = [
-      ('steps', Icons.directions_walk, 'Steps & Activity', 'Track your daily steps and activity'),
-      ('heart', Icons.favorite, 'Heart Rate', 'Monitor your heart rate during workouts'),
-      ('sleep', Icons.bedtime, 'Sleep Data', 'Sync your sleep patterns'),
-      ('location', Icons.location_on, 'Location', 'GPS for outdoor activities'),
+      ('steps', Icons.directions_walk, 'Steps & Activity', 'Track your daily steps', 'दैनिक कदम ट्रैक करें'),
+      ('heart', Icons.favorite, 'Heart Rate', 'Monitor your heart rate', 'हृदय गति की निगरानी करें'),
+      ('sleep', Icons.bedtime, 'Sleep Data', 'Sync your sleep patterns', 'नींद के पैटर्न को सिंक करें'),
     ];
 
     return SingleChildScrollView(
@@ -41,111 +33,58 @@ class StepHealthConditions extends ConsumerWidget {
         children: [
           Text(
             'Health Conditions',
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: textPrimary,
-            ),
+            style: AppTheme.h1(context),
           ),
-          const SizedBox(height: 4),
           Text(
             'स्वास्थ्य की स्थिति',
-            style: TextStyle(
-              fontSize: 12,
-              color: textSecondary,
-            ),
+            style: AppTheme.hindi(context).copyWith(fontSize: 16, color: AppTheme.textSecondary),
           ),
-          const SizedBox(height: 8),
-          Text(
-            'This helps us personalize your experience',
-            style: TextStyle(
-              fontSize: 14,
-              color: textSecondary,
-            ),
-          ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 32),
           
-          // Conditions
           Text(
-            'Do you have any of these conditions?',
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: textPrimary,
-            ),
+            'Do you have any existing conditions?',
+            style: AppTheme.labelMd(context).copyWith(color: AppTheme.textSecondary),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 16),
+          
           ...conditions.map((conditionData) {
             final condition = conditionData.$1;
-            final icon = conditionData.$2;
-            final labelEn = conditionData.$3;
-            final labelHi = conditionData.$4;
             final isSelected = state.chronicConditions.contains(condition);
             
             return Padding(
               padding: const EdgeInsets.only(bottom: 12),
               child: GestureDetector(
-                onTap: () {
-                  ref.read(onboardingProvider.notifier).toggleChronicCondition(condition);
-                },
+                onTap: () => ref.read(onboardingProvider.notifier).toggleChronicCondition(condition),
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 200),
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: isSelected 
-                        ? warning.withValues(alpha: 0.15) 
-                        : surface,
-                    borderRadius: BorderRadius.circular(16),
+                    color: isSelected ? AppTheme.primaryMuted : AppTheme.glass,
+                    borderRadius: BorderRadius.circular(AppTheme.radiusMd),
                     border: Border.all(
-                      color: isSelected ? warning : divider,
+                      color: isSelected ? AppTheme.primary : AppTheme.glassBorder,
                       width: isSelected ? 2 : 1,
                     ),
                   ),
                   child: Row(
                     children: [
-                      Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: isSelected 
-                              ? warning.withValues(alpha: 0.2) 
-                              : divider,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Icon(
-                          icon,
-                          color: isSelected ? warning : textSecondary,
-                          size: 22,
-                        ),
+                      Icon(
+                        conditionData.$2,
+                        color: isSelected ? AppTheme.primary : AppTheme.textSecondary,
+                        size: 24,
                       ),
                       const SizedBox(width: 16),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              labelEn,
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w600,
-                                color: textPrimary,
-                              ),
-                            ),
-                            Text(
-                              labelHi,
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: textSecondary,
-                              ),
-                            ),
+                            Text(conditionData.$3, style: AppTheme.labelLg(context)),
+                            Text(conditionData.$4, style: AppTheme.bodySm(context).copyWith(color: AppTheme.textSecondary)),
                           ],
                         ),
                       ),
                       if (isSelected)
-                        Icon(
-                          Icons.check_circle,
-                          color: warning,
-                          size: 24,
-                        ),
+                        const Icon(Icons.check_circle, color: AppTheme.primary, size: 24),
                     ],
                   ),
                 ),
@@ -153,27 +92,22 @@ class StepHealthConditions extends ConsumerWidget {
             );
           }),
           
-          const SizedBox(height: 8),
+          const SizedBox(height: 12),
           
           // None option
           GestureDetector(
-            onTap: () {
-              ref.read(onboardingProvider.notifier).toggleChronicCondition(ChronicCondition.none);
-            },
+            onTap: () => ref.read(onboardingProvider.notifier).toggleChronicCondition(ChronicCondition.none),
             child: Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: state.chronicConditions.contains(ChronicCondition.none) || state.chronicConditions.isEmpty
-                    ? const Color(0xFF4ADE80).withValues(alpha: 0.15)
-                    : surface,
-                borderRadius: BorderRadius.circular(16),
+                    ? AppTheme.teal.withValues(alpha: 0.1)
+                    : AppTheme.glass,
+                borderRadius: BorderRadius.circular(AppTheme.radiusMd),
                 border: Border.all(
                   color: state.chronicConditions.contains(ChronicCondition.none) || state.chronicConditions.isEmpty
-                      ? const Color(0xFF4ADE80)
-                      : divider,
-                  width: state.chronicConditions.contains(ChronicCondition.none) || state.chronicConditions.isEmpty
-                      ? 2
-                      : 1,
+                      ? AppTheme.teal
+                      : AppTheme.divider,
                 ),
               ),
               child: Row(
@@ -183,147 +117,89 @@ class StepHealthConditions extends ConsumerWidget {
                         ? Icons.check_circle
                         : Icons.circle_outlined,
                     color: state.chronicConditions.contains(ChronicCondition.none) || state.chronicConditions.isEmpty
-                        ? const Color(0xFF4ADE80)
-                        : textSecondary,
+                        ? AppTheme.teal
+                        : AppTheme.textSecondary,
                   ),
                   const SizedBox(width: 12),
-                  Text(
-                    'None of the above',
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                      color: textPrimary,
-                    ),
-                  ),
+                  Text('None of the above', style: AppTheme.labelLg(context)),
                 ],
               ),
             ),
           ),
           
-          const SizedBox(height: 32),
+          const SizedBox(height: 48),
           
           // Permissions section
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: primary.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: primary.withValues(alpha: 0.3)),
-            ),
+          GlassCard(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   children: [
-                    Icon(Icons.shield_outlined, color: primary, size: 20),
-                    const SizedBox(width: 8),
-                    Text(
-                      'Permission Request',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: primary,
-                      ),
-                    ),
+                    const Icon(Icons.security_outlined, color: AppTheme.primary),
+                    const SizedBox(width: 12),
+                    Text('Data Sync Permissions', style: AppTheme.h3(context)),
                   ],
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Allow permissions to enable smart tracking. You can manage these anytime in Settings.',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: textSecondary,
-                  ),
+                  'Enable these for more accurate fitness tracking and personalized insights.',
+                  style: AppTheme.bodySm(context).copyWith(color: AppTheme.textSecondary),
                 ),
+                const SizedBox(height: 24),
+                
+                ...permissions.map((permData) {
+                  final permKey = permData.$1;
+                  final isGranted = state.requestedPermissions.contains(permKey);
+                  
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 16),
+                    child: Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: AppTheme.surface2,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Icon(permData.$2, color: AppTheme.textSecondary, size: 20),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(permData.$3, style: AppTheme.labelMd(context)),
+                              Text(permData.$5, style: AppTheme.caption(context).copyWith(color: AppTheme.textSecondary)),
+                            ],
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () => ref.read(onboardingProvider.notifier).addPermission(permKey),
+                          borderRadius: BorderRadius.circular(AppTheme.radiusFull),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            decoration: BoxDecoration(
+                              color: isGranted ? AppTheme.success.withValues(alpha: 0.1) : AppTheme.primary.withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(AppTheme.radiusFull),
+                              border: Border.all(color: isGranted ? AppTheme.success : AppTheme.primary),
+                            ),
+                            child: Text(
+                              isGranted ? 'Granted' : 'Allow',
+                              style: AppTheme.caption(context).copyWith(
+                                color: isGranted ? AppTheme.success : AppTheme.primary,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }),
               ],
             ),
           ),
-          const SizedBox(height: 16),
-          
-          ...permissions.map((permData) {
-            final permKey = permData.$1;
-            final icon = permData.$2;
-            final label = permData.$3;
-            final desc = permData.$4;
-            final isGranted = state.requestedPermissions.contains(permKey);
-            
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 12),
-              child: Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: surface,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: divider),
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: divider,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Icon(icon, color: textSecondary, size: 22),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            label,
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w600,
-                              color: textPrimary,
-                            ),
-                          ),
-                          Text(
-                            desc,
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: textSecondary,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        if (isGranted) {
-                          final newPerms = List<String>.from(state.requestedPermissions)..remove(permKey);
-                          ref.read(onboardingProvider.notifier).addPermission(permKey); // This toggles
-                        } else {
-                          ref.read(onboardingProvider.notifier).addPermission(permKey);
-                        }
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                        decoration: BoxDecoration(
-                          color: isGranted 
-                              ? const Color(0xFF4ADE80).withValues(alpha: 0.15)
-                              : primary.withValues(alpha: 0.15),
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(
-                            color: isGranted ? const Color(0xFF4ADE80) : primary,
-                          ),
-                        ),
-                        child: Text(
-                          isGranted ? 'Granted' : 'Allow',
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            color: isGranted ? const Color(0xFF4ADE80) : primary,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          }),
         ],
       ),
     );

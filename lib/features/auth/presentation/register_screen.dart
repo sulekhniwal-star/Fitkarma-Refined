@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../../shared/theme/app_colors.dart';
-import '../../../shared/theme/app_text_styles.dart';
-import '../../../shared/widgets/shimmer_loader.dart';
+import '../../../core/config/app_theme.dart';
+import '../../../shared/widgets/fit_scaffold.dart';
+import '../../../shared/widgets/glass_card.dart';
+import '../../../shared/widgets/ambient_glow_blobs.dart';
 import '../domain/auth_providers.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
@@ -33,7 +34,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     final password = _passwordController.text.trim();
 
     if (name.isEmpty || email.isEmpty || password.isEmpty) {
-      _showError('Please fill in all fields');
+      _showError('Please fill in all fields / कृपया सभी फ़ील्ड भरें');
       return;
     }
 
@@ -48,7 +49,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: AppColors.error,
+        backgroundColor: AppTheme.error,
         behavior: SnackBarBehavior.floating,
       ),
     );
@@ -57,88 +58,148 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authStateProvider);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Create Account'),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
+    
+    return FitScaffold(
+      pattern: ScaffoldPattern.immersiveHero,
+      heroHeight: 240,
+      heroBackground: Container(
+        decoration: const BoxDecoration(
+          gradient: AppTheme.heroPrimary,
+        ),
+        child: const AmbientGlowBlobs(),
       ),
-      body: authState.isLoading
-          ? const Center(child: ShimmerLoader())
-          : SingleChildScrollView(
-              padding: const EdgeInsets.all(24.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Start your journey',
-                    style: AppTextStyles.h1(isDark),
-                  ),
-                  Text(
-                    'अपनी यात्रा शुरू करें',
-                    style: AppTextStyles.sectionHeaderHindi(isDark),
-                  ),
-                  const SizedBox(height: 40),
-                  
-                  // Name
-                  TextField(
-                    controller: _nameController,
-                    decoration: const InputDecoration(
-                      labelText: 'Full Name',
-                      prefixIcon: Icon(Icons.person_outline),
+      heroContent: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(Icons.person_add_outlined, size: 64, color: Colors.white),
+          const SizedBox(height: 12),
+          Text(
+            'JOIN THE MOVEMENT',
+            style: AppTheme.headlineMedium(context).copyWith(
+              color: Colors.white,
+              letterSpacing: 2,
+            ),
+          ),
+        ],
+      ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Create Account',
+            style: AppTheme.displayMd(context),
+          ),
+          Text(
+            'अपनी यात्रा शुरू करें',
+            style: AppTheme.hindi(context).copyWith(
+              color: AppTheme.textSecondary,
+              fontSize: 16,
+            ),
+          ),
+          const SizedBox(height: 32),
+          
+          GlassCard(
+            child: Column(
+              children: [
+                TextField(
+                  controller: _nameController,
+                  style: AppTheme.bodyMd(context),
+                  decoration: InputDecoration(
+                    labelText: 'Full Name / नाम',
+                    labelStyle: AppTheme.labelMd(context),
+                    prefixIcon: const Icon(Icons.person_outline, size: 20),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(AppTheme.radiusMd),
                     ),
                   ),
-                  const SizedBox(height: 16),
-                  
-                  // Email
-                  TextField(
-                    controller: _emailController,
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: const InputDecoration(
-                      labelText: 'Email',
-                      prefixIcon: Icon(Icons.email_outlined),
+                ),
+                const SizedBox(height: 20),
+                TextField(
+                  controller: _emailController,
+                  keyboardType: TextInputType.emailAddress,
+                  style: AppTheme.bodyMd(context),
+                  decoration: InputDecoration(
+                    labelText: 'Email Address / ईमेल',
+                    labelStyle: AppTheme.labelMd(context),
+                    prefixIcon: const Icon(Icons.alternate_email, size: 20),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(AppTheme.radiusMd),
                     ),
                   ),
-                  const SizedBox(height: 16),
-                  
-                  // Password
-                  TextField(
-                    controller: _passwordController,
-                    obscureText: _obscurePassword,
-                    decoration: InputDecoration(
-                      labelText: 'Password',
-                      prefixIcon: const Icon(Icons.lock_outline),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _obscurePassword ? Icons.visibility_off : Icons.visibility,
-                        ),
-                        onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                ),
+                const SizedBox(height: 20),
+                TextField(
+                  controller: _passwordController,
+                  obscureText: _obscurePassword,
+                  style: AppTheme.bodyMd(context),
+                  decoration: InputDecoration(
+                    labelText: 'Password / पासवर्ड',
+                    labelStyle: AppTheme.labelMd(context),
+                    prefixIcon: const Icon(Icons.lock_outline, size: 20),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                        size: 20,
+                      ),
+                      onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(AppTheme.radiusMd),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 32),
+                
+                SizedBox(
+                  width: double.infinity,
+                  height: 56,
+                  child: ElevatedButton(
+                    onPressed: authState.isLoading ? null : _handleRegister,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppTheme.primary,
+                      foregroundColor: Colors.white,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(AppTheme.radiusMd),
                       ),
                     ),
+                    child: authState.isLoading
+                        ? const SizedBox(
+                            height: 24,
+                            width: 24,
+                            child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                          )
+                        : Text('CREATE ACCOUNT', style: AppTheme.labelLg(context)),
                   ),
-                  const SizedBox(height: 48),
-                  
-                  // Register Button
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: _handleRegister,
-                      child: const Text('Create Account'),
+                ),
+              ],
+            ),
+          ),
+          
+          const SizedBox(height: 32),
+          Center(
+            child: TextButton(
+              onPressed: () => context.pop(),
+              child: RichText(
+                text: TextSpan(
+                  text: "Already have an account? ",
+                  style: AppTheme.bodyMd(context).copyWith(color: AppTheme.textSecondary),
+                  children: [
+                    TextSpan(
+                      text: "Login",
+                      style: AppTheme.bodyMd(context).copyWith(
+                        color: AppTheme.primary,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 24),
-                  
-                  Center(
-                    child: TextButton(
-                      onPressed: () => context.pop(),
-                      child: const Text('Already have an account? Login'),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
+          ),
+          const SizedBox(height: 48),
+        ],
+      ),
     );
   }
 }

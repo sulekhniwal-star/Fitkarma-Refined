@@ -7,7 +7,6 @@ import '../../../shared/widgets/activity_rings.dart';
 import '../../../shared/widgets/meal_tab_bar.dart';
 import '../../../shared/widgets/micronutrient_bar.dart';
 import '../../../shared/widgets/food_item_card.dart';
-import '../../../shared/widgets/quick_log_fab.dart';
 import '../../../shared/widgets/empty_state_widget.dart';
 import '../../dashboard/domain/dashboard_providers.dart';
 

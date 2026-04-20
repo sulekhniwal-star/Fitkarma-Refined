@@ -1,10 +1,10 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../../shared/theme/app_colors.dart';
-import '../../../shared/theme/app_text_styles.dart';
-import '../../../shared/widgets/shimmer_loader.dart';
+import '../../../core/config/app_theme.dart';
+import '../../../shared/widgets/fit_scaffold.dart';
+import '../../../shared/widgets/glass_card.dart';
+import '../../../shared/widgets/ambient_glow_blobs.dart';
 import '../domain/auth_providers.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -31,7 +31,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final password = _passwordController.text.trim();
 
     if (email.isEmpty || password.isEmpty) {
-      _showError('Please enter your email and password');
+      _showError('Please enter your email and password / कृपया अपना ईमेल और पासवर्ड डालें');
       return;
     }
 
@@ -46,7 +46,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: AppColors.error,
+        backgroundColor: AppTheme.error,
         behavior: SnackBarBehavior.floating,
       ),
     );
@@ -57,122 +57,199 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final authState = ref.watch(authStateProvider);
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return Scaffold(
-      body: authState.isLoading
-          ? const Center(child: ShimmerLoader())
-          : SingleChildScrollView(
-              child: Column(
-                children: [
-                  // Hero Section
-                  Stack(
-                    children: [
-                      Container(
-                        height: 350,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: FileImage(
-                                // Absolute path from generation
-                                // Note: In production, this would be an asset
-                                File(r'C:\Users\sulek\.gemini\antigravity\brain\0b390528-bf81-4962-aa61-78af37d60a25\login_hero_yoga_1776079948878.png')),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                      Container(
-                        height: 350,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                              Colors.transparent,
-                              (isDark ? AppColorsDark.background : AppColors.background).withValues(alpha: 0.8),
-                              isDark ? AppColorsDark.background : AppColors.background,
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  // Login Form
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Welcome Home',
-                          style: AppTextStyles.displayMedium(isDark),
-                        ),
-                        Text(
-                          'पुनः आपका स्वागत है',
-                          style: AppTextStyles.sectionHeaderHindi(isDark),
-                        ),
-                        const SizedBox(height: 32),
-                        
-                        // Email
-                        TextField(
-                          controller: _emailController,
-                          keyboardType: TextInputType.emailAddress,
-                          decoration: const InputDecoration(
-                            labelText: 'Email',
-                            prefixIcon: Icon(Icons.email_outlined),
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        
-                        // Password
-                        TextField(
-                          controller: _passwordController,
-                          obscureText: _obscurePassword,
-                          decoration: InputDecoration(
-                            labelText: 'Password',
-                            prefixIcon: const Icon(Icons.lock_outline),
-                            suffixIcon: IconButton(
-                              icon: Icon(
-                                _obscurePassword ? Icons.visibility_off : Icons.visibility,
-                              ),
-                              onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 32),
-                        
-                        // Login Button
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: _handleLogin,
-                            child: const Text('Login'),
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        
-                        // Google Login
-                        SizedBox(
-                          width: double.infinity,
-                          child: OutlinedButton.icon(
-                            onPressed: () => ref.read(authStateProvider.notifier).loginWithGoogle(),
-                            icon: const Icon(Icons.g_mobiledata, size: 32),
-                            label: const Text('Continue with Google'),
-                          ),
-                        ),
-                        
-                        const SizedBox(height: 24),
-                        Center(
-                          child: TextButton(
-                            onPressed: () => context.push('/register'),
-                            child: const Text("Don't have an account? Register"),
-                          ),
-                        ),
-                        const SizedBox(height: 48),
-                      ],
+    return FitScaffold(
+      pattern: ScaffoldPattern.immersiveHero,
+      heroHeight: 300,
+      heroBackground: Container(
+        decoration: const BoxDecoration(
+          gradient: AppTheme.heroPrimary,
+        ),
+        child: const AmbientGlowBlobs(),
+      ),
+      heroContent: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(Icons.shield_outlined, size: 80, color: Colors.white),
+          const SizedBox(height: 16),
+          Text(
+            'FITKARMA',
+            style: AppTheme.displayLg(context).copyWith(
+              color: Colors.white,
+              letterSpacing: 4,
+            ),
+          ),
+          Text(
+            'फिटकर्मा',
+            style: AppTheme.hindi(context).copyWith(
+              color: Colors.white.withValues(alpha: 0.7),
+              fontSize: 18,
+            ),
+          ),
+        ],
+      ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Welcome back',
+            style: AppTheme.displayMd(context),
+          ),
+          Text(
+            'पुनः आपका स्वागत है',
+            style: AppTheme.hindi(context).copyWith(
+              color: AppTheme.textSecondary,
+              fontSize: 16,
+            ),
+          ),
+          const SizedBox(height: 32),
+          
+          GlassCard(
+            child: Column(
+              children: [
+                TextField(
+                  controller: _emailController,
+                  keyboardType: TextInputType.emailAddress,
+                  style: AppTheme.bodyMd(context),
+                  decoration: InputDecoration(
+                    labelText: 'Email Address / ईमेल',
+                    labelStyle: AppTheme.labelMd(context),
+                    prefixIcon: const Icon(Icons.alternate_email, size: 20),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(AppTheme.radiusMd),
                     ),
                   ),
-                ],
+                ),
+                const SizedBox(height: 20),
+                TextField(
+                  controller: _passwordController,
+                  obscureText: _obscurePassword,
+                  style: AppTheme.bodyMd(context),
+                  decoration: InputDecoration(
+                    labelText: 'Password / पासवर्ड',
+                    labelStyle: AppTheme.labelMd(context),
+                    prefixIcon: const Icon(Icons.lock_outline, size: 20),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                        size: 20,
+                      ),
+                      onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(AppTheme.radiusMd),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton(
+                    onPressed: () {}, // TODO: Forgot Password
+                    child: Text(
+                      'Forgot Password?',
+                      style: AppTheme.labelMd(context).copyWith(color: AppTheme.primary),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 24),
+                
+                SizedBox(
+                  width: double.infinity,
+                  height: 56,
+                  child: ElevatedButton(
+                    onPressed: authState.isLoading ? null : _handleLogin,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppTheme.primary,
+                      foregroundColor: Colors.white,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(AppTheme.radiusMd),
+                      ),
+                    ),
+                    child: authState.isLoading
+                        ? const SizedBox(
+                            height: 24,
+                            width: 24,
+                            child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                          )
+                        : Text('LOGIN / लॉग इन करें', style: AppTheme.labelLg(context)),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          
+          const SizedBox(height: 32),
+          Row(
+            children: [
+              const Expanded(child: Divider()),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Text('OR', style: AppTheme.caption(context)),
               ),
+              const Expanded(child: Divider()),
+            ],
+          ),
+          const SizedBox(height: 32),
+          
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: () {},
+                  icon: const Icon(Icons.g_mobiledata, size: 28),
+                  label: const Text('Google'),
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(AppTheme.radiusMd),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: () {},
+                  icon: const Icon(Icons.apple, size: 24),
+                  label: const Text('Apple'),
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(AppTheme.radiusMd),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          
+          const SizedBox(height: 48),
+          Center(
+            child: TextButton(
+              onPressed: () => context.push('/register'),
+              child: RichText(
+                text: TextSpan(
+                  text: "New here? ",
+                  style: AppTheme.bodyMd(context).copyWith(color: AppTheme.textSecondary),
+                  children: [
+                    TextSpan(
+                      text: "Create Account",
+                      style: AppTheme.bodyMd(context).copyWith(
+                        color: AppTheme.primary,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
             ),
     );
   }

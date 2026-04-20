@@ -1,12 +1,11 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../domain/prakriti_quiz.dart';
-import '../domain/ayurveda_providers.dart';
-import '../../../shared/theme/app_colors.dart';
-import '../../../shared/theme/app_text_styles.dart';
-import '../../../shared/theme/app_theme.dart';
+import 'package:fitkarma/core/config/app_theme.dart';
+import 'package:fitkarma/shared/widgets/fit_scaffold.dart';
+import 'package:fitkarma/features/ayurveda/domain/prakriti_quiz.dart';
+import 'package:fitkarma/features/ayurveda/domain/ayurveda_providers.dart';
+import 'dart:ui';
 
 class PrakritiQuizScreen extends ConsumerStatefulWidget {
   const PrakritiQuizScreen({super.key});
@@ -37,12 +36,11 @@ class _PrakritiQuizScreenState extends ConsumerState<PrakritiQuizScreen> {
   @override
   Widget build(BuildContext context) {
     final quizState = ref.watch(quizProgressProvider);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     final locale = Localizations.localeOf(context).languageCode;
     final isHindi = locale == 'hi';
 
-    return Scaffold(
-      backgroundColor: Colors.black, // Premium Dark Mode
+    return FitScaffold(
+      pattern: ScaffoldPattern.fullBleed,
       body: Stack(
         children: [
           // 1. Background Aura
@@ -53,7 +51,7 @@ class _PrakritiQuizScreenState extends ConsumerState<PrakritiQuizScreen> {
               width: 300,
               height: 300,
               decoration: BoxDecoration(
-                color: Colors.teal.withValues(alpha: 0.1),
+                color: AppTheme.teal.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: BackdropFilter(
@@ -82,8 +80,8 @@ class _PrakritiQuizScreenState extends ConsumerState<PrakritiQuizScreen> {
                           children: [
                             Text(
                               'PRAKRITI ASSESSMENT',
-                              style: AppTextStyles.caption(true).copyWith(
-                                color: Colors.teal,
+                              style: AppTheme.caption(context).copyWith(
+                                color: AppTheme.teal,
                                 letterSpacing: 2,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -94,7 +92,7 @@ class _PrakritiQuizScreenState extends ConsumerState<PrakritiQuizScreen> {
                               child: LinearProgressIndicator(
                                 value: (_currentPage + 1) / PrakritiQuizData.questions.length,
                                 backgroundColor: Colors.white.withValues(alpha: 0.1),
-                                valueColor: const AlwaysStoppedAnimation(Colors.teal),
+                                valueColor: const AlwaysStoppedAnimation(AppTheme.teal),
                                 minHeight: 4,
                               ),
                             ),
@@ -104,7 +102,7 @@ class _PrakritiQuizScreenState extends ConsumerState<PrakritiQuizScreen> {
                       const SizedBox(width: 16),
                       Text(
                         '${_currentPage + 1}/${PrakritiQuizData.questions.length}',
-                        style: AppTextStyles.labelLarge(true).copyWith(color: Colors.teal),
+                        style: AppTheme.labelMd(context).copyWith(color: Colors.amber),
                       ),
                     ],
                   ),
@@ -127,7 +125,7 @@ class _PrakritiQuizScreenState extends ConsumerState<PrakritiQuizScreen> {
                             const SizedBox(height: 20),
                             Text(
                               isHindi ? question.textHi : question.textEn,
-                              style: AppTextStyles.h2(true).copyWith(
+                              style: AppTheme.h2(context).copyWith(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
                                 height: 1.3,
@@ -184,7 +182,7 @@ class _PrakritiQuizScreenState extends ConsumerState<PrakritiQuizScreen> {
                         ElevatedButton(
                           onPressed: _finishQuiz,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.teal,
+                            backgroundColor: AppTheme.primary,
                             foregroundColor: Colors.white,
                             padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -222,15 +220,15 @@ class _QuizOptionCard extends StatelessWidget {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: isSelected ? Colors.teal.withValues(alpha: 0.2) : Colors.white.withValues(alpha: 0.05),
+          color: isSelected ? AppTheme.teal.withValues(alpha: 0.2) : Colors.white.withValues(alpha: 0.05),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: isSelected ? Colors.teal : Colors.white.withValues(alpha: 0.1),
+            color: isSelected ? AppTheme.teal : Colors.white.withValues(alpha: 0.1),
             width: 2,
           ),
           boxShadow: isSelected ? [
             BoxShadow(
-              color: Colors.teal.withValues(alpha: 0.3),
+              color: AppTheme.teal.withValues(alpha: 0.3),
               blurRadius: 20,
               spreadRadius: -5,
             )
@@ -241,14 +239,14 @@ class _QuizOptionCard extends StatelessWidget {
             Expanded(
               child: Text(
                 text,
-                style: AppTextStyles.bodyLarge(true).copyWith(
+                style: AppTheme.bodyLg(context).copyWith(
                   color: isSelected ? Colors.white : Colors.white.withValues(alpha: 0.7),
                   fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                 ),
               ),
             ),
             if (isSelected)
-              const Icon(Icons.check_circle, color: Colors.teal),
+              const Icon(Icons.check_circle, color: AppTheme.teal),
           ],
         ),
       ),

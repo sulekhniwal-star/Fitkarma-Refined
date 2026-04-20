@@ -179,6 +179,10 @@ class OnboardingNotifier extends Notifier<OnboardingState> {
   }
 }
 
+final abhaStatusProvider = Provider<String?>((ref) {
+  return ref.watch(onboardingProvider).abhaId;
+});
+
 // Dosha scoring for each quiz question (Vata, Pitta, Kapha)
 const List<List<List<int>>> doshaScores = [
   [[2, 0, 0], [0, 2, 0], [0, 0, 2]], // Q1: Digestion

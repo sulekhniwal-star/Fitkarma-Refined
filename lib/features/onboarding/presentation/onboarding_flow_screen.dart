@@ -2,14 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:fitkarma/features/onboarding/domain/onboarding_providers.dart';
-import 'package:fitkarma/features/onboarding/presentation/widgets/progress_indicator.dart';
-import 'package:fitkarma/features/onboarding/presentation/widgets/step_name_goals.dart';
-import 'package:fitkarma/features/onboarding/presentation/widgets/step_body_stats.dart';
-import 'package:fitkarma/features/onboarding/presentation/widgets/step_activity_level.dart';
-import 'package:fitkarma/features/onboarding/presentation/widgets/step_dosha_quiz.dart';
-import 'package:fitkarma/features/onboarding/presentation/widgets/step_health_conditions.dart';
-import 'package:fitkarma/features/onboarding/presentation/widgets/step_abha_wearables.dart';
+import 'package:fitkarma/core/config/app_theme.dart';
+import 'package:fitkarma/shared/widgets/fit_scaffold.dart';
+import 'package:fitkarma/shared/widgets/ambient_glow_blobs.dart';
+import '../domain/onboarding_providers.dart';
+import 'widgets/progress_indicator.dart';
+import 'widgets/step_name_goals.dart';
+import 'widgets/step_body_stats.dart';
+import 'widgets/step_activity_level.dart';
+import 'widgets/step_dosha_quiz.dart';
+import 'widgets/step_health_conditions.dart';
+import 'widgets/step_abha_wearables.dart';
 
 class OnboardingFlowScreen extends ConsumerStatefulWidget {
   const OnboardingFlowScreen({super.key});
@@ -30,41 +33,39 @@ class _OnboardingFlowScreenState extends ConsumerState<OnboardingFlowScreen> {
   void _nextStep() {
     final state = ref.read(onboardingProvider);
     
-    // Validate current step before proceeding
     String? errorMessage;
     switch (state.currentStep) {
       case 0:
-        if (state.displayName.isEmpty) {
-          errorMessage = 'Please enter your name';
+        if (state.displayName.trim().isEmpty) {
+          errorMessage = 'Please enter your name / कृपया अपना नाम लिखें';
         } else if (state.goal == null) {
-          errorMessage = 'Please select your goal';
+          errorMessage = 'Please select your goal / कृपया अपना लक्ष्य चुनें';
         }
         break;
       case 1:
-        // Body stats are optional, can always proceed
+        // Physique is optional
         break;
       case 2:
-        // Activity level has default, can always proceed
+        // Activity is optional
         break;
       case 3:
-        if (state.doshaAnswers.length < 12) {
-          errorMessage = 'Please answer all questions';
-        }
+        // Dosha quiz is optional but discouraged to skip
         break;
       case 4:
         // Health conditions are optional
         break;
       case 5:
-        // ABHA and wearables are optional
+        // ABHA/Wearables are optional
         break;
     }
     
     if (errorMessage != null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(errorMessage),
-          backgroundColor: const Color(0xFFF87171),
+          content: Text(errorMessage, style: AppTheme.labelMd(context).copyWith(color: Colors.white)),
+          backgroundColor: AppTheme.error,
           behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         ),
       );
       return;
@@ -73,8 +74,8 @@ class _OnboardingFlowScreenState extends ConsumerState<OnboardingFlowScreen> {
     if (state.currentStep < 5) {
       ref.read(onboardingProvider.notifier).nextStep();
       _pageController.nextPage(
-        duration: const Duration(milliseconds: 320),
-        curve: Curves.easeInOut,
+        duration: const Duration(milliseconds: 600),
+        curve: Curves.fastOutSlowIn,
       );
     } else {
       _completeOnboarding();
@@ -86,41 +87,43 @@ class _OnboardingFlowScreenState extends ConsumerState<OnboardingFlowScreen> {
     if (state.currentStep > 0) {
       ref.read(onboardingProvider.notifier).previousStep();
       _pageController.previousPage(
-        duration: const Duration(milliseconds: 320),
-        curve: Curves.easeInOut,
+        duration: const Duration(milliseconds: 600),
+        curve: Curves.fastOutSlowIn,
       );
     }
   }
 
   Future<void> _completeOnboarding() async {
-    final state = ref.read(onboardingProvider);
     final notifier = ref.read(onboardingProvider.notifier);
     notifier.complete();
     
-    // Award +50 XP for completing onboarding
-    // TODO: Integrate with karma provider
-    // await ref.read(karmaProvider.notifier).addXp(50, 'onboarding_complete');
-    
-    // Save user profile to Drift
-    // final profile = state.toUserProfile();
-    // await ref.read(userRepositoryProvider).saveProfile(profile);
-    
     if (mounted) {
+      HapticFeedback.heavyImpact();
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           content: Row(
             children: [
-              Icon(Icons.star, color: Colors.white),
-              SizedBox(width: 8),
-              Text('Welcome to FitKarma! +50 XP'),
+              const Icon(Icons.stars, color: AppTheme.accent),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Profile Complete!', style: AppTheme.labelLg(context).copyWith(color: Colors.white)),
+                    Text('+50 XP Earned', style: AppTheme.bodySm(context).copyWith(color: Colors.white70)),
+                  ],
+                ),
+              ),
             ],
           ),
-          backgroundColor: Color(0xFF4ADE80),
+          backgroundColor: AppTheme.success,
           behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppTheme.radiusMd)),
         ),
       );
       
-      await Future.delayed(const Duration(milliseconds: 500));
+      await Future.delayed(const Duration(milliseconds: 1000));
       if (mounted) {
         context.go('/home/dashboard');
       }
@@ -130,33 +133,32 @@ class _OnboardingFlowScreenState extends ConsumerState<OnboardingFlowScreen> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(onboardingProvider);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    
-    final background = isDark ? const Color(0xFF080810) : const Color(0xFFF7F0E8);
-    final primary = isDark ? const Color(0xFFFF6B35) : const Color(0xFFF4511E);
-    final textSecondary = isDark ? const Color(0xFF9B99CC) : const Color(0xFF6B6A96);
 
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: isDark 
-          ? SystemUiOverlayStyle.light.copyWith(statusBarColor: Colors.transparent)
-          : SystemUiOverlayStyle.dark.copyWith(statusBarColor: Colors.transparent),
-      child: Scaffold(
-        backgroundColor: background,
-        body: SafeArea(
-          child: Column(
+    return FitScaffold(
+      pattern: ScaffoldPattern.standard,
+      extendBodyBehindAppBar: true,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(100),
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
+            child: OnboardingProgressIndicator(
+              currentStep: state.currentStep,
+              totalSteps: 6,
+              primaryColor: AppTheme.primary,
+            ),
+          ),
+        ),
+      ),
+      body: Stack(
+        children: [
+          const AmbientGlowBlobs(),
+          Column(
             children: [
-              OnboardingProgressIndicator(
-                currentStep: state.currentStep,
-                totalSteps: 6,
-                primaryColor: primary,
-              ),
               Expanded(
                 child: PageView(
                   controller: _pageController,
                   physics: const NeverScrollableScrollPhysics(),
-                  onPageChanged: (index) {
-                    ref.read(onboardingProvider.notifier).goToStep(index);
-                  },
                   children: const [
                     StepNameGoals(),
                     StepBodyStats(),
@@ -167,41 +169,78 @@ class _OnboardingFlowScreenState extends ConsumerState<OnboardingFlowScreen> {
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(24),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    if (state.currentStep > 0)
-                      TextButton(
-                        onPressed: _previousStep,
-                        child: Text(
-                          'Back',
-                          style: TextStyle(color: textSecondary, fontSize: 16),
-                        ),
-                      )
-                    else
-                      const SizedBox(width: 80),
-                    ElevatedButton(
-                      onPressed: _nextStep,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: primary,
-                        minimumSize: const Size(140, 52),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        elevation: 0,
+            ],
+          ),
+        ],
+      ),
+      bottomNavigationBar: Container(
+        height: 120,
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              AppTheme.bg0.withValues(alpha: 0),
+              AppTheme.bg0.withValues(alpha: 0.9),
+              AppTheme.bg0,
+            ],
+          ),
+        ),
+        child: SafeArea(
+          child: Row(
+            children: [
+              if (state.currentStep > 0)
+                Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: _previousStep,
+                    borderRadius: BorderRadius.circular(AppTheme.radiusMd),
+                    child: Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: AppTheme.glass,
+                        borderRadius: BorderRadius.circular(AppTheme.radiusMd),
+                        border: Border.all(color: AppTheme.glassBorder),
                       ),
-                      child: Text(
-                        state.currentStep == 5 ? 'Get Started' : 'Continue',
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 16,
-                          color: Colors.white,
+                      child: const Icon(Icons.arrow_back, color: AppTheme.textPrimary),
+                    ),
+                  ),
+                ),
+              if (state.currentStep > 0) const SizedBox(width: 16),
+              Expanded(
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: _nextStep,
+                    borderRadius: BorderRadius.circular(AppTheme.radiusMd),
+                    child: Ink(
+                      padding: const EdgeInsets.symmetric(vertical: 18),
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [AppTheme.primary, Color(0xFFFF8555)],
+                        ),
+                        borderRadius: BorderRadius.circular(AppTheme.radiusMd),
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppTheme.primary.withValues(alpha: 0.3),
+                            blurRadius: 15,
+                            offset: const Offset(0, 5),
+                          )
+                        ],
+                      ),
+                      child: Center(
+                        child: Text(
+                          state.currentStep == 5 ? 'GET STARTED' : 'CONTINUE',
+                          style: AppTheme.labelLg(context).copyWith(
+                            color: Colors.white,
+                            letterSpacing: 1.2,
+                            fontWeight: FontWeight.w800,
+                          ),
                         ),
                       ),
                     ),
-                  ],
+                  ),
                 ),
               ),
             ],

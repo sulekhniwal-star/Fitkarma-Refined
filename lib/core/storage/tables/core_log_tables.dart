@@ -1,6 +1,5 @@
 import 'package:drift/drift.dart';
 import '../converters/json_converters.dart';
-import '../converters/encryption_converters.dart';
 
 @DataClassName('FoodLog')
 class FoodLogs extends Table {

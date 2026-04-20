@@ -1,15 +1,14 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:table_calendar/table_calendar.dart';
-import '../domain/dosha_calculator.dart';
-import '../domain/ayurveda_providers.dart';
-import '../data/ayurveda_data.dart';
-import '../../../shared/theme/app_colors.dart';
-import '../../../shared/theme/app_text_styles.dart';
-import '../../../shared/widgets/glass_app_bar.dart';
+import 'package:fitkarma/features/ayurveda/domain/dosha_calculator.dart';
+import 'package:fitkarma/features/ayurveda/domain/ayurveda_providers.dart';
+import 'package:fitkarma/features/ayurveda/data/ayurveda_data.dart';
+import 'package:fitkarma/core/config/app_theme.dart';
+import 'package:fitkarma/shared/widgets/glass_card.dart';
+import 'package:fitkarma/shared/widgets/fit_scaffold.dart';
 
 class AyurvedaHubScreen extends ConsumerStatefulWidget {
   const AyurvedaHubScreen({super.key});
@@ -31,56 +30,53 @@ class _AyurvedaHubScreenState extends ConsumerState<AyurvedaHubScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: GlassAppBar(
-        title: const Text('Ayurveda Hub'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.info_outline),
-            onPressed: () => _showDisclaimer(context),
-          ),
-        ],
-      ),
+    return FitScaffold(
+      pattern: ScaffoldPattern.standard,
+      title: 'Ayurveda Hub',
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.info_outline, color: AppTheme.textSecondary),
+          onPressed: () => _showDisclaimer(context),
+        ),
+      ],
       body: _pages[_currentIndex],
       bottomNavigationBar: Container(
-        padding: const EdgeInsets.only(bottom: 20, left: 24, right: 24),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(24),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-            child: BottomNavigationBar(
-              currentIndex: _currentIndex,
-              onTap: (index) => setState(() => _currentIndex = index),
-              type: BottomNavigationBarType.fixed,
-              backgroundColor: Colors.white.withValues(alpha: 0.05),
-              selectedItemColor: AppColors.primary,
-              unselectedItemColor: Colors.white.withValues(alpha: 0.4),
-              showSelectedLabels: true,
-              showUnselectedLabels: false,
-              items: const [
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.home_rounded),
-                  label: 'Home',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.person_outline_rounded),
-                  label: 'Dosha',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.wb_sunny_outlined),
-                  label: 'Rituals',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.calendar_month_outlined),
-                  label: 'Seasons',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.eco_outlined),
-                  label: 'Herbs',
-                ),
-              ],
-            ),
+        padding: const EdgeInsets.only(bottom: 24, left: 24, right: 24),
+        child: GlassCard(
+          borderRadius: 24,
+          child: BottomNavigationBar(
+            currentIndex: _currentIndex,
+            onTap: (index) => setState(() => _currentIndex = index),
+            type: BottomNavigationBarType.fixed,
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            selectedItemColor: AppTheme.primary,
+            unselectedItemColor: AppTheme.textMuted.withValues(alpha: 0.5),
+            showSelectedLabels: true,
+            showUnselectedLabels: false,
+            selectedLabelStyle: AppTheme.caption(context).copyWith(fontWeight: FontWeight.bold),
+            items: const [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home_rounded),
+                label: 'Home',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.person_outline_rounded),
+                label: 'Dosha',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.wb_sunny_outlined),
+                label: 'Rituals',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.calendar_month_outlined),
+                label: 'Seasons',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.eco_outlined),
+                label: 'Herbs',
+              ),
+            ],
           ),
         ),
       ),
@@ -91,15 +87,17 @@ class _AyurvedaHubScreenState extends ConsumerState<AyurvedaHubScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Disclaimer'),
-        content: const Text(
+        backgroundColor: AppTheme.bg2,
+        title: Text('Disclaimer', style: AppTheme.h3(context)),
+        content: Text(
           'Information provided is for educational purposes based on traditional Ayurvedic principles. '
           'It is NOT medical advice. Always consult a qualified practitioner before starting any supplement or diet change.',
+          style: AppTheme.bodyMd(context).copyWith(color: AppTheme.textSecondary),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('I Understand'),
+            child: Text('Understood', style: TextStyle(color: AppTheme.primary)),
           ),
         ],
       ),
@@ -176,15 +174,13 @@ class _AyurvedaHome extends StatelessWidget {
               children: [
                 const Icon(
                   Icons.quiz_rounded,
-                  size: 32,
-                  color: AppColors.primary,
+                  size: 40,
+                  color: AppTheme.primary,
                 ),
                 const SizedBox(height: 16),
                 Text(
                   'Analyze your Prakriti',
-                  style: AppTextStyles.h2(
-                    false,
-                  ).copyWith(fontWeight: FontWeight.bold),
+                  style: AppTheme.h2(context).copyWith(fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8),
                 const Text(
@@ -195,8 +191,8 @@ class _AyurvedaHome extends StatelessWidget {
                 ElevatedButton(
                   onPressed: () => context.push('/ayurveda/quiz'),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    foregroundColor: Colors.white,
+                  backgroundColor: AppTheme.primary,
+                  foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -361,7 +357,7 @@ class _DoshaProfile extends ConsumerWidget {
             color: Colors.white.withValues(alpha: 0.2),
           ),
           const SizedBox(height: 24),
-          Text('Dosha Analysis Pending', style: AppTextStyles.h3(true)),
+          Text('Dosha Analysis Pending', style: AppTheme.h3(context)),
           const SizedBox(height: 8),
           const Text(
             'Complete the Prakriti Quiz to see your profile.',
@@ -379,7 +375,7 @@ class _DoshaProfile extends ConsumerWidget {
 }
 
 class _DailyRituals extends ConsumerStatefulWidget {
-  const _DailyRituals({super.key});
+  const _DailyRituals();
 
   @override
   ConsumerState<_DailyRituals> createState() => _DailyRitualsState();
@@ -387,7 +383,7 @@ class _DailyRituals extends ConsumerStatefulWidget {
 
 class _DailyRitualsState extends ConsumerState<_DailyRituals> {
   DateTime _selectedDate = DateTime.now();
-  CalendarFormat _calendarFormat = CalendarFormat.week;
+  final CalendarFormat _calendarFormat = CalendarFormat.week;
 
   @override
   Widget build(BuildContext context) {
@@ -411,7 +407,7 @@ class _DailyRitualsState extends ConsumerState<_DailyRituals> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Dinacharya', style: AppTextStyles.h2(true)),
+                      Text('Dinacharya', style: AppTheme.h2(context)),
                       Text(
                         '${dominant.name.toUpperCase()} Balance Guidelines',
                         style: const TextStyle(color: Colors.grey),
@@ -428,14 +424,14 @@ class _DailyRitualsState extends ConsumerState<_DailyRituals> {
 
                 return Card(
                   color: isDone
-                      ? AppColors.primary.withValues(alpha: 0.1)
+                      ? AppTheme.primary.withValues(alpha: 0.1)
                       : Colors.white.withValues(alpha: 0.05),
                   margin: const EdgeInsets.only(bottom: 12),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
                     side: BorderSide(
                       color: isDone
-                          ? AppColors.primary.withValues(alpha: 0.3)
+                          ? AppTheme.primary.withValues(alpha: 0.3)
                           : Colors.white.withValues(alpha: 0.1),
                     ),
                   ),
@@ -457,7 +453,7 @@ class _DailyRitualsState extends ConsumerState<_DailyRituals> {
                         ? Text(
                             'Auspiciously Completed',
                             style: TextStyle(
-                              color: AppColors.primary,
+                              color: AppTheme.primary,
                               fontSize: 12,
                             ),
                           )
@@ -468,7 +464,7 @@ class _DailyRitualsState extends ConsumerState<_DailyRituals> {
                               fontSize: 12,
                             ),
                           ),
-                    activeColor: AppColors.primary,
+                    activeColor: AppTheme.primary,
                     checkColor: Colors.black,
                     controlAffinity: ListTileControlAffinity.leading,
                   ),
@@ -502,11 +498,11 @@ class _DailyRitualsState extends ConsumerState<_DailyRituals> {
         },
         calendarStyle: CalendarStyle(
           selectedDecoration: const BoxDecoration(
-            color: AppColors.primary,
+            color: AppTheme.primary,
             shape: BoxShape.circle,
           ),
           todayDecoration: BoxDecoration(
-            color: AppColors.primary.withValues(alpha: 0.2),
+            color: AppTheme.primary.withValues(alpha: 0.2),
             shape: BoxShape.circle,
           ),
           defaultTextStyle: const TextStyle(color: Colors.white),
@@ -550,7 +546,7 @@ class _DailyRitualsState extends ConsumerState<_DailyRituals> {
           ),
           Text(
             'DONE',
-            style: AppTextStyles.labelSmall(true).copyWith(fontSize: 8),
+            style: AppTheme.labelMd(context).copyWith(fontSize: 8),
           ),
         ],
       ),
@@ -580,7 +576,7 @@ class _DailyRitualsState extends ConsumerState<_DailyRituals> {
 }
 
 class _SeasonalPlan extends StatelessWidget {
-  const _SeasonalPlan({super.key});
+  const _SeasonalPlan();
 
   String _getVedicSeason() {
     final month = DateTime.now().month;
@@ -608,9 +604,7 @@ class _SeasonalPlan extends StatelessWidget {
               const SizedBox(width: 8),
               Text(
                 'CURRENT SEASON: ${currentSeason.toUpperCase()}',
-                style: AppTextStyles.labelSmall(
-                  true,
-                ).copyWith(color: Colors.amber),
+                style: AppTheme.labelMd(context).copyWith(color: Colors.amber),
               ),
             ],
           ),
@@ -626,13 +620,13 @@ class _SeasonalPlan extends StatelessWidget {
               return Card(
                 elevation: isCurrent ? 8 : 0,
                 color: isCurrent
-                    ? AppColors.primary.withValues(alpha: 0.1)
+                    ? AppTheme.primary.withValues(alpha: 0.1)
                     : Colors.white.withValues(alpha: 0.05),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                   side: BorderSide(
                     color: isCurrent
-                        ? AppColors.primary
+                        ? AppTheme.primary
                         : Colors.white.withValues(alpha: 0.1),
                     width: isCurrent ? 2 : 1,
                   ),
@@ -643,7 +637,7 @@ class _SeasonalPlan extends StatelessWidget {
                     r['season'],
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      color: isCurrent ? AppColors.primary : Colors.white,
+                      color: isCurrent ? AppTheme.primary : Colors.white,
                     ),
                   ),
                   subtitle: Text(
@@ -655,7 +649,7 @@ class _SeasonalPlan extends StatelessWidget {
                   leading: Icon(
                     isCurrent ? Icons.wb_sunny : Icons.eco_outlined,
                     color: isCurrent
-                        ? AppColors.primary
+                        ? AppTheme.primary
                         : Colors.white.withValues(alpha: 0.4),
                   ),
                   children: [
@@ -668,7 +662,7 @@ class _SeasonalPlan extends StatelessWidget {
                             'Focus: ${r['focus']}',
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
-                              color: AppColors.primary,
+                              color: AppTheme.primary,
                             ),
                           ),
                           const SizedBox(height: 8),

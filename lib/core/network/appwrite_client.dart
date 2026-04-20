@@ -1,4 +1,5 @@
 import 'package:appwrite/appwrite.dart';
+import 'package:http_certificate_pinning/http_certificate_pinning.dart';
 import '../constants/api_endpoints.dart';
 
 /// Singleton class to manage the Appwrite Client and its services.
@@ -24,36 +25,29 @@ class AppwriteClient {
   /// Initializes the Appwrite Client and all dependent services.
   /// This must be called in main() before runApp().
   static Future<void> initialize() async {
-    _client = Client()
-      ..setEndpoint(AW.endpoint)
-      ..setProject(AW.projectId)
-      ..setSelfSigned(status: false);
+    final endpoint = AW.endpoint;
+    final projectId = AW.projectId;
+    
+    // 1. Certificate Pinning Verification (MITM Security)
+    const fingerprint = String.fromEnvironment('APPWRITE_CERT_FINGERPRINT');
+    if (fingerprint.isNotEmpty) {
+      try {
+        await HttpCertificatePinning.check(
+          serverURL: endpoint,
+          sha256Fingerprints: [fingerprint],
+          timeout: 10,
+        );
+      } catch (e) {
+        // In a real premium app, we should handle this gracefully (e.g., show error screen)
+        // For development, we log and proceed if fingerprint is empty.
+        rethrow; // Blocking execution if pinning fails
+      }
+    }
 
-    /*
-     * --------------------------------------------------------------------------
-     * CERTIFICATE PINNING NOTE:
-     * --------------------------------------------------------------------------
-     * To further secure the connection against Man-in-the-Middle (MitM) attacks,
-     * implement certificate pinning here.
-     * 
-     * Options:
-     * 1. Use the 'http_certificate_pinning' package to verify the SHA-256 fingerprint
-     *    of the server's certificate.
-     * 2. Implement a custom security context via a native channel for Android (Network Security Config)
-     *    and iOS (TrustKit or similar).
-     * 
-     * Implementation example with http_certificate_pinning:
-     * try {
-     *   await HttpCertificatePinning.check(
-     *     serverURL: AW.endpoint,
-     *     sha256Fingerprints: [String.fromEnvironment('APPWRITE_CERT_FINGERPRINT')],
-     *     timeout: 10,
-     *   );
-     * } catch (e) {
-     *   // Handle verification failure (e.g., terminate app or show error)
-     * }
-     * --------------------------------------------------------------------------
-     */
+    _client = Client()
+      ..setEndpoint(endpoint)
+      ..setProject(projectId)
+      ..setSelfSigned(status: false);
 
     _account = Account(_client);
     _databases = Databases(_client);

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fitkarma/core/config/app_theme.dart';
+import 'package:fitkarma/shared/widgets/glass_card.dart';
 import '../../domain/onboarding_providers.dart';
 
 class StepAbhaWearables extends ConsumerStatefulWidget {
@@ -21,7 +23,6 @@ class _StepAbhaWearablesState extends ConsumerState<StepAbhaWearables> {
   }
 
   String _formatAbhaId(String input) {
-    // Format: XX-XXXX-XXXX-XXXX
     final digits = input.replaceAll(RegExp(r'\D'), '');
     if (digits.length <= 2) return digits;
     if (digits.length <= 6) return '${digits.substring(0, 2)}-${digits.substring(2)}';
@@ -36,7 +37,6 @@ class _StepAbhaWearablesState extends ConsumerState<StepAbhaWearables> {
       selection: TextSelection.collapsed(offset: formatted.length),
     );
     
-    // Auto-proceed to OTP when 14 digits entered
     if (formatted.replaceAll('-', '').length == 14 && !_showOtpField) {
       setState(() => _showOtpField = true);
     }
@@ -50,14 +50,12 @@ class _StepAbhaWearablesState extends ConsumerState<StepAbhaWearables> {
       _otpDigits[index] = value.isNotEmpty ? value[0] : '';
     });
     
-    // Check if all digits entered
     if (_otpDigits.every((d) => d.isNotEmpty)) {
       _verifyOtp();
     }
   }
 
   Future<void> _verifyOtp() async {
-    // Simulate OTP verification
     await Future.delayed(const Duration(seconds: 1));
     if (mounted) {
       ref.read(onboardingProvider.notifier).setAbhaLinked(true);
@@ -65,9 +63,16 @@ class _StepAbhaWearablesState extends ConsumerState<StepAbhaWearables> {
       
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('ABHA linked successfully! +100 XP'),
-          backgroundColor: const Color(0xFF4ADE80),
+          content: Row(
+            children: [
+              const Icon(Icons.verified, color: Colors.white),
+              const SizedBox(width: 12),
+              Text('ABHA linked successfully! +100 XP', style: AppTheme.labelMd(context).copyWith(color: Colors.white)),
+            ],
+          ),
+          backgroundColor: AppTheme.success,
           behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         ),
       );
     }
@@ -76,21 +81,12 @@ class _StepAbhaWearablesState extends ConsumerState<StepAbhaWearables> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(onboardingProvider);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     
-    final textPrimary = isDark ? const Color(0xFFF1F0FF) : const Color(0xFF1A1830);
-    final textSecondary = isDark ? const Color(0xFF9B99CC) : const Color(0xFF6B6A96);
-    final primary = isDark ? const Color(0xFFFF6B35) : const Color(0xFFF4511E);
-    final surface = isDark ? const Color(0xFF1C1C2E) : Colors.white;
-    final divider = isDark ? const Color(0x33FFFFFF) : const Color(0x12000000);
-    final warning = isDark ? const Color(0xFFFBBF24) : const Color(0xFFF59E0B);
-    final success = isDark ? const Color(0xFF4ADE80) : const Color(0xFF22C55E);
-
     final wearables = [
-      ('fitbit', 'Fitbit', 'Steps, Sleep, Heart Rate'),
-      ('garmin', 'Garmin', 'Steps, Sleep, HR, GPS Workouts'),
-      ('health_connect', 'Health Connect', 'All Android health data'),
-      ('healthkit', 'HealthKit', 'All iOS health data'),
+      ('fitbit', 'Fitbit', 'Steps, Sleep, Heart Rate', 'फिटबिट'),
+      ('garmin', 'Garmin', 'Steps, Sleep, HR, GPS', 'गार्मिन'),
+      ('health_connect', 'Health Connect', 'Android health data', 'हेल्थ कनेक्ट'),
+      ('healthkit', 'HealthKit', 'Apple health data', 'एप्पल हेल्थकिट'),
     ];
 
     return SingleChildScrollView(
@@ -98,47 +94,14 @@ class _StepAbhaWearablesState extends ConsumerState<StepAbhaWearables> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Text('Connect Health ID', style: AppTheme.h1(context)),
           Text(
-            'Connect Health ID',
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: textPrimary,
-            ),
+            'स्वास्थ्य पहचान पत्र जोड़ें',
+            style: AppTheme.hindi(context).copyWith(fontSize: 16, color: AppTheme.textSecondary),
           ),
-          const SizedBox(height: 4),
-          Text(
-            'स्वास्थ्य ID',
-            style: TextStyle(
-              fontSize: 12,
-              color: textSecondary,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Link your ABHA for seamless health records',
-            style: TextStyle(
-              fontSize: 14,
-              color: textSecondary,
-            ),
-          ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 32),
           
-          // ABHA Card
-          Container(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  warning.withValues(alpha: 0.15),
-                  warning.withValues(alpha: 0.05),
-                ],
-              ),
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: warning.withValues(alpha: 0.3)),
-            ),
+          GlassCard(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -147,130 +110,74 @@ class _StepAbhaWearablesState extends ConsumerState<StepAbhaWearables> {
                     Container(
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        color: warning.withValues(alpha: 0.2),
+                        color: AppTheme.warning.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: Icon(Icons.health_and_safety, color: warning, size: 24),
+                      child: const Icon(Icons.health_and_safety, color: AppTheme.warning, size: 24),
                     ),
-                    const SizedBox(width: 12),
+                    const SizedBox(width: 16),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            'ABHA Health ID',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              color: textPrimary,
-                            ),
-                          ),
-                          Text(
-                            'Ayushman Bharat Health Account',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: textSecondary,
-                            ),
-                          ),
+                          Text('ABHA Health ID', style: AppTheme.h2(context)),
+                          Text('Ayushman Bharat Health Account', style: AppTheme.caption(context).copyWith(color: AppTheme.textSecondary)),
                         ],
                       ),
                     ),
                     if (state.abhaLinked)
-                      Container(
-                        padding: const EdgeInsets.all(6),
-                        decoration: const BoxDecoration(
-                          color: Color(0xFF4ADE80),
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(Icons.check, color: Colors.white, size: 16),
-                      ),
+                      const Icon(Icons.check_circle, color: AppTheme.success, size: 28),
                   ],
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 24),
                 
                 if (!state.abhaLinked) ...[
-                  Text(
-                    'Enter your 14-digit ABHA ID',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: textSecondary,
-                    ),
-                  ),
+                  Text('14-digit ABHA ID', style: AppTheme.labelMd(context).copyWith(color: AppTheme.textSecondary)),
                   const SizedBox(height: 8),
                   TextField(
                     controller: _abhaController,
                     onChanged: _onAbhaInputChanged,
                     keyboardType: TextInputType.number,
                     maxLength: 19,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: textPrimary,
-                      letterSpacing: 2,
-                    ),
+                    style: AppTheme.monoLg(context).copyWith(letterSpacing: 4),
                     decoration: InputDecoration(
                       hintText: 'XX-XXXX-XXXX-XXXX',
-                      hintStyle: TextStyle(color: textSecondary),
+                      hintStyle: AppTheme.monoLg(context).copyWith(color: AppTheme.textMuted, letterSpacing: 4),
                       filled: true,
-                      fillColor: surface,
+                      fillColor: AppTheme.surface2.withValues(alpha: 0.5),
                       counterText: '',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: divider),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: divider),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: primary, width: 2),
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
                     ),
                   ),
                   
                   if (_showOtpField) ...[
-                    const SizedBox(height: 16),
-                    Text(
-                      'Enter 6-digit OTP sent to your registered mobile',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: textSecondary,
-                      ),
-                    ),
+                    const SizedBox(height: 24),
+                    Text('Verification OTP', style: AppTheme.labelMd(context).copyWith(color: AppTheme.textSecondary)),
                     const SizedBox(height: 12),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: List.generate(6, (index) {
                         return SizedBox(
-                          width: 45,
-                          height: 50,
+                          width: 48,
+                          height: 56,
                           child: TextField(
                             onChanged: (value) => _onOtpDigitChanged(index, value),
                             keyboardType: TextInputType.number,
                             maxLength: 1,
                             textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: textPrimary,
-                            ),
+                            style: AppTheme.h2(context).copyWith(fontWeight: FontWeight.bold),
                             decoration: InputDecoration(
                               counterText: '',
                               filled: true,
-                              fillColor: surface,
+                              fillColor: AppTheme.surface2,
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
-                                borderSide: BorderSide(color: divider),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: BorderSide(color: divider),
+                                borderSide: BorderSide.none,
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
-                                borderSide: BorderSide(color: primary, width: 2),
+                                borderSide: const BorderSide(color: AppTheme.primary, width: 2),
                               ),
                             ),
                           ),
@@ -280,200 +187,89 @@ class _StepAbhaWearablesState extends ConsumerState<StepAbhaWearables> {
                   ],
                 ] else ...[
                   Container(
-                    padding: const EdgeInsets.all(12),
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: success.withValues(alpha: 0.15),
+                      color: AppTheme.success.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: AppTheme.success.withValues(alpha: 0.3)),
                     ),
-                    child: Row(
+                    child: Column(
                       children: [
-                        Icon(Icons.check_circle, color: success, size: 20),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Text(
-                            'ABHA ${state.abhaId ?? ""} linked successfully',
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: success,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
+                        Text('Linked Successfully', style: AppTheme.labelLg(context).copyWith(color: AppTheme.success)),
+                        Text(state.abhaId ?? '', style: AppTheme.monoLg(context)),
                       ],
                     ),
                   ),
                 ],
-                
-                const SizedBox(height: 12),
-                Row(
-                  children: [
-                    Icon(Icons.lock_outline, size: 14, color: textSecondary),
-                    const SizedBox(width: 6),
-                    Expanded(
-                      child: Text(
-                        'Your health data is encrypted and stored securely',
-                        style: TextStyle(
-                          fontSize: 11,
-                          color: textSecondary,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
               ],
             ),
           ),
           
-          const SizedBox(height: 8),
-          
-          // Skip button
           if (!state.abhaLinked)
             Center(
               child: TextButton(
-                onPressed: () {
-                  ref.read(onboardingProvider.notifier).setAbhaLinked(false);
-                },
-                child: Text(
-                  'Skip for now',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: textSecondary,
-                  ),
-                ),
+                onPressed: () => ref.read(onboardingProvider.notifier).setAbhaLinked(false),
+                child: Text('Skip for now', style: AppTheme.labelMd(context).copyWith(color: AppTheme.textMuted)),
               ),
             ),
+            
+          const SizedBox(height: 40),
           
-          const SizedBox(height: 24),
-          
-          // XP Badge
-          if (state.abhaLinked)
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    const Color(0xFFFFB547),
-                    const Color(0xFFFF6B35),
-                  ],
-                ),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: const Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.star, color: Colors.white, size: 18),
-                  SizedBox(width: 6),
-                  Text(
-                    '+100 XP',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          
-          const SizedBox(height: 24),
-          
-          // Wearables Section
+          Text('Connect Wearable', style: AppTheme.h2(context)),
           Text(
-            'Connect Wearable',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-              color: textPrimary,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            'Sync your fitness device for automatic tracking',
-            style: TextStyle(
-              fontSize: 14,
-              color: textSecondary,
-            ),
+            'फिटनेस डिवाइस जोड़ें',
+            style: AppTheme.hindi(context).copyWith(fontSize: 14, color: AppTheme.textSecondary),
           ),
           const SizedBox(height: 16),
           
           ...wearables.map((wearableData) {
             final id = wearableData.$1;
-            final name = wearableData.$2;
-            final desc = wearableData.$3;
             final isConnected = state.wearableConnected && state.connectedWearableType == id;
             
             return Padding(
               padding: const EdgeInsets.only(bottom: 12),
               child: GestureDetector(
-                onTap: () {
-                  ref.read(onboardingProvider.notifier).setWearableConnected(!isConnected, id);
-                },
+                onTap: () => ref.read(onboardingProvider.notifier).setWearableConnected(!isConnected, id),
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 200),
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: isConnected 
-                        ? primary.withValues(alpha: 0.15) 
-                        : surface,
-                    borderRadius: BorderRadius.circular(16),
+                    color: isConnected ? AppTheme.primaryMuted : AppTheme.glass,
+                    borderRadius: BorderRadius.circular(AppTheme.radiusMd),
                     border: Border.all(
-                      color: isConnected ? primary : divider,
+                      color: isConnected ? AppTheme.primary : AppTheme.glassBorder,
                       width: isConnected ? 2 : 1,
                     ),
                   ),
                   child: Row(
                     children: [
-                      Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: isConnected 
-                              ? primary.withValues(alpha: 0.2) 
-                              : divider,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Icon(
-                          _getWearableIcon(id),
-                          color: isConnected ? primary : textSecondary,
-                          size: 24,
-                        ),
+                      Icon(
+                        _getWearableIcon(id),
+                        color: isConnected ? AppTheme.primary : AppTheme.textSecondary,
+                        size: 28,
                       ),
                       const SizedBox(width: 16),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              name,
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w600,
-                                color: textPrimary,
-                              ),
-                            ),
-                            Text(
-                              desc,
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: textSecondary,
-                              ),
-                            ),
+                            Text(wearableData.$2, style: AppTheme.labelLg(context)),
+                            Text(wearableData.$3, style: AppTheme.caption(context).copyWith(color: AppTheme.textSecondary)),
                           ],
                         ),
                       ),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                         decoration: BoxDecoration(
-                          color: isConnected 
-                              ? primary 
-                              : divider,
-                          borderRadius: BorderRadius.circular(20),
+                          color: isConnected ? AppTheme.primary : AppTheme.surface2,
+                          borderRadius: BorderRadius.circular(AppTheme.radiusFull),
                         ),
                         child: Text(
-                          isConnected ? 'Connected' : 'Connect',
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            color: isConnected ? Colors.white : textSecondary,
+                          isConnected ? 'CONNECTED' : 'CONNECT',
+                          style: AppTheme.caption(context).copyWith(
+                            color: isConnected ? Colors.white : AppTheme.textSecondary,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
@@ -485,26 +281,16 @@ class _StepAbhaWearablesState extends ConsumerState<StepAbhaWearables> {
           }),
           
           const SizedBox(height: 32),
-          
-          // Privacy Note
-          Container(
+          GlassCard(
             padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: surface,
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: divider),
-            ),
             child: Row(
               children: [
-                Icon(Icons.info_outline, color: textSecondary, size: 20),
+                const Icon(Icons.privacy_tip_outlined, color: AppTheme.textMuted, size: 20),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
-                    'Your data stays on your device. We never sell your personal information.',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: textSecondary,
-                    ),
+                    'Your data is encrypted and stays private. We focus on your security.',
+                    style: AppTheme.bodySm(context).copyWith(color: AppTheme.textMuted),
                   ),
                 ),
               ],
@@ -517,16 +303,11 @@ class _StepAbhaWearablesState extends ConsumerState<StepAbhaWearables> {
 
   IconData _getWearableIcon(String id) {
     switch (id) {
-      case 'fitbit':
-        return Icons.watch;
-      case 'garmin':
-        return Icons.directions_run;
-      case 'health_connect':
-        return Icons.android;
-      case 'healthkit':
-        return Icons.apple;
-      default:
-        return Icons.watch;
+      case 'fitbit': return Icons.watch;
+      case 'garmin': return Icons.directions_run;
+      case 'health_connect': return Icons.android;
+      case 'healthkit': return Icons.apple;
+      default: return Icons.watch;
     }
   }
 }

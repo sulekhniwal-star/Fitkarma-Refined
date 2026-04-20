@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fitkarma/core/config/app_theme.dart';
+import 'package:fitkarma/shared/widgets/glass_card.dart';
 import '../../domain/onboarding_state.dart';
 import '../../domain/onboarding_providers.dart';
 
@@ -10,13 +12,6 @@ class StepBodyStats extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(onboardingProvider);
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
-    final textPrimary = isDark ? const Color(0xFFF1F0FF) : const Color(0xFF1A1830);
-    final textSecondary = isDark ? const Color(0xFF9B99CC) : const Color(0xFF6B6A96);
-    final primary = isDark ? const Color(0xFFFF6B35) : const Color(0xFFF4511E);
-    final surface = isDark ? const Color(0xFF1C1C2E) : Colors.white;
-    final divider = isDark ? const Color(0x33FFFFFF) : const Color(0x12000000);
-    final error = isDark ? const Color(0xFFF87171) : const Color(0xFFEF4444);
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
@@ -24,32 +19,19 @@ class StepBodyStats extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'About You',
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: textPrimary,
-            ),
+            'Physique & Stats',
+            style: AppTheme.displayMd(context),
           ),
-          const SizedBox(height: 4),
           Text(
-            'आपके बारे में',
-            style: TextStyle(
-              fontSize: 12,
-              color: textSecondary,
+            'अपने शरीर के बारे में बताएं',
+            style: AppTheme.hindi(context).copyWith(
+              color: AppTheme.textSecondary,
+              fontSize: 16,
             ),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 32),
           
-          // Gender Selection
-          Text(
-            'Gender',
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: textPrimary,
-            ),
-          ),
+          Text('Gender', style: AppTheme.labelMd(context)),
           const SizedBox(height: 12),
           Row(
             children: Gender.values.where((g) => g != Gender.preferNotToSay).map((gender) {
@@ -57,32 +39,26 @@ class StepBodyStats extends ConsumerWidget {
               return Expanded(
                 child: Padding(
                   padding: EdgeInsets.only(
-                    right: gender != Gender.values.last ? 8 : 0,
+                    right: gender != Gender.male ? 8 : 0, // Simplified check for 3 items
                   ),
                   child: GestureDetector(
-                    onTap: () {
-                      ref.read(onboardingProvider.notifier).setGender(gender);
-                    },
+                    onTap: () => ref.read(onboardingProvider.notifier).setGender(gender),
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 200),
-                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      padding: const EdgeInsets.symmetric(vertical: 16),
                       decoration: BoxDecoration(
-                        color: isSelected 
-                            ? primary.withValues(alpha: 0.15) 
-                            : surface,
-                        borderRadius: BorderRadius.circular(12),
+                        color: isSelected ? AppTheme.primaryMuted : AppTheme.glass,
+                        borderRadius: BorderRadius.circular(AppTheme.radiusMd),
                         border: Border.all(
-                          color: isSelected ? primary : divider,
-                          width: isSelected ? 2 : 1,
+                          color: isSelected ? AppTheme.primary : AppTheme.glassBorder,
+                          width: 1.5,
                         ),
                       ),
                       child: Text(
                         gender.labelEn,
                         textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-                          color: isSelected ? primary : textPrimary,
+                        style: AppTheme.labelMd(context).copyWith(
+                          color: isSelected ? AppTheme.primary : AppTheme.textSecondary,
                         ),
                       ),
                     ),
@@ -91,17 +67,9 @@ class StepBodyStats extends ConsumerWidget {
               );
             }).toList(),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 32),
           
-          // Date of Birth
-          Text(
-            'Date of Birth',
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: textPrimary,
-            ),
-          ),
+          Text('Date of Birth', style: AppTheme.labelMd(context)),
           const SizedBox(height: 12),
           GestureDetector(
             onTap: () async {
@@ -111,16 +79,10 @@ class StepBodyStats extends ConsumerWidget {
                 initialDate: state.dateOfBirth ?? now.subtract(const Duration(days: 365 * 25)),
                 firstDate: DateTime(1920),
                 lastDate: now.subtract(const Duration(days: 365 * 10)),
-                builder: (context, child) {
-                  return Theme(
-                    data: Theme.of(context).copyWith(
-                      colorScheme: isDark 
-                          ? const ColorScheme.dark(primary: Color(0xFFFF6B35))
-                          : const ColorScheme.light(primary: Color(0xFFF4511E)),
-                    ),
-                    child: child!,
-                  );
-                },
+                builder: (context, child) => Theme(
+                  data: isDark ? AppTheme.darkTheme : AppTheme.lightTheme,
+                  child: child!,
+                ),
               );
               if (picked != null) {
                 ref.read(onboardingProvider.notifier).setDateOfBirth(picked);
@@ -129,203 +91,78 @@ class StepBodyStats extends ConsumerWidget {
             child: Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: surface,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: divider),
+                color: AppTheme.glass,
+                borderRadius: BorderRadius.circular(AppTheme.radiusMd),
+                border: Border.all(color: AppTheme.glassBorder),
               ),
               child: Row(
                 children: [
-                  Icon(
-                    Icons.calendar_today,
-                    color: textSecondary,
-                    size: 20,
-                  ),
+                  const Icon(Icons.calendar_today_outlined, size: 20, color: AppTheme.textSecondary),
                   const SizedBox(width: 12),
                   Text(
                     state.dateOfBirth != null
                         ? '${state.dateOfBirth!.day}/${state.dateOfBirth!.month}/${state.dateOfBirth!.year}'
-                        : 'Select date of birth',
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: state.dateOfBirth != null ? textPrimary : textSecondary,
+                        : 'Select Date',
+                    style: AppTheme.bodyMd(context).copyWith(
+                      color: state.dateOfBirth != null ? AppTheme.textPrimary : AppTheme.textSecondary,
                     ),
                   ),
                 ],
               ),
             ),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 32),
           
-          // Height
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Height',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: textPrimary,
-                ),
-              ),
-              Text(
-                '${state.heightCm.toInt()} cm',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: primary,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          SliderTheme(
-            data: SliderTheme.of(context).copyWith(
-              activeTrackColor: primary,
-              inactiveTrackColor: divider,
-              thumbColor: primary,
-              overlayColor: primary.withValues(alpha: 0.2),
-            ),
-            child: Slider(
-              value: state.heightCm,
-              min: 120,
-              max: 220,
-              onChanged: (value) {
-                ref.read(onboardingProvider.notifier).setHeight(value);
-              },
-            ),
-          ),
-          const SizedBox(height: 16),
-          
-          // Weight
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Weight',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: textPrimary,
-                ),
-              ),
-              Text(
-                '${state.weightKg.toInt()} kg',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: primary,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          SliderTheme(
-            data: SliderTheme.of(context).copyWith(
-              activeTrackColor: primary,
-              inactiveTrackColor: divider,
-              thumbColor: primary,
-              overlayColor: primary.withValues(alpha: 0.2),
-            ),
-            child: Slider(
-              value: state.weightKg,
-              min: 30,
-              max: 200,
-              onChanged: (value) {
-                ref.read(onboardingProvider.notifier).setWeight(value);
-              },
-            ),
+          _buildSlider(
+            context,
+            label: 'Height',
+            value: state.heightCm,
+            unit: 'cm',
+            min: 120,
+            max: 220,
+            onChanged: (v) => ref.read(onboardingProvider.notifier).setHeight(v),
           ),
           const SizedBox(height: 24),
-          
-          // Blood Group
-          Text(
-            'Blood Group (optional)',
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: textPrimary,
-            ),
+          _buildSlider(
+            context,
+            label: 'Weight',
+            value: state.weightKg,
+            unit: 'kg',
+            min: 30,
+            max: 200,
+            onChanged: (v) => ref.read(onboardingProvider.notifier).setWeight(v),
           ),
-          const SizedBox(height: 12),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: BloodGroup.values.map((group) {
-              final isSelected = state.bloodGroup == group;
-              return GestureDetector(
-                onTap: () {
-                  ref.read(onboardingProvider.notifier).setBloodGroup(group);
-                },
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                  decoration: BoxDecoration(
-                    color: isSelected 
-                        ? primary.withValues(alpha: 0.15) 
-                        : surface,
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                      color: isSelected ? primary : divider,
-                      width: isSelected ? 2 : 1,
-                    ),
-                  ),
-                  child: Text(
-                    group.label,
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-                      color: isSelected ? primary : textPrimary,
-                    ),
-                  ),
-                ),
-              );
-            }).toList(),
-          ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 40),
           
-          // BMI Display
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: surface,
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: divider),
-            ),
+          const Divider(height: 1, color: AppTheme.divider),
+          const SizedBox(height: 32),
+          
+          GlassCard(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'BMI',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: textSecondary,
-                      ),
-                    ),
+                    Text('Body Mass Index (BMI)', style: AppTheme.caption(context)),
                     Text(
                       _calculateBmi(state.heightCm, state.weightKg).toStringAsFixed(1),
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: textPrimary,
-                      ),
+                      style: AppTheme.displayMd(context).copyWith(color: AppTheme.primary),
                     ),
                   ],
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   decoration: BoxDecoration(
                     color: _getBmiColor(_calculateBmi(state.heightCm, state.weightKg)).withValues(alpha: 0.15),
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(AppTheme.radiusFull),
+                    border: Border.all(
+                      color: _getBmiColor(_calculateBmi(state.heightCm, state.weightKg)).withValues(alpha: 0.3),
+                    ),
                   ),
                   child: Text(
                     _getBmiCategory(_calculateBmi(state.heightCm, state.weightKg)),
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
+                    style: AppTheme.labelMd(context).copyWith(
                       color: _getBmiColor(_calculateBmi(state.heightCm, state.weightKg)),
                     ),
                   ),
@@ -338,6 +175,45 @@ class StepBodyStats extends ConsumerWidget {
     );
   }
 
+  Widget _buildSlider(
+    BuildContext context, {
+    required String label,
+    required double value,
+    required String unit,
+    required double min,
+    required double max,
+    required ValueChanged<double> onChanged,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(label, style: AppTheme.labelMd(context)),
+            Text('${value.toInt()} $unit', style: AppTheme.labelLg(context).copyWith(color: AppTheme.primary)),
+          ],
+        ),
+        const SizedBox(height: 8),
+        SliderTheme(
+          data: SliderTheme.of(context).copyWith(
+            activeTrackColor: AppTheme.primary,
+            inactiveTrackColor: AppTheme.surface2,
+            thumbColor: Colors.white,
+            overlayColor: AppTheme.primary.withValues(alpha: 0.1),
+            trackHeight: 6,
+          ),
+          child: Slider(
+            value: value,
+            min: min,
+            max: max,
+            onChanged: onChanged,
+          ),
+        ),
+      ],
+    );
+  }
+
   double _calculateBmi(double heightCm, double weightKg) {
     if (heightCm <= 0 || weightKg <= 0) return 0;
     final heightM = heightCm / 100;
@@ -345,10 +221,10 @@ class StepBodyStats extends ConsumerWidget {
   }
 
   Color _getBmiColor(double bmi) {
-    if (bmi < 18.5) return const Color(0xFFFBBF24); // Underweight - Warning
-    if (bmi < 25) return const Color(0xFF4ADE80); // Normal - Success
-    if (bmi < 30) return const Color(0xFFFBBF24); // Overweight - Warning
-    return const Color(0xFFF87171); // Obese - Error
+    if (bmi < 18.5) return AppTheme.warning;
+    if (bmi < 25) return AppTheme.success;
+    if (bmi < 30) return AppTheme.warning;
+    return AppTheme.error;
   }
 
   String _getBmiCategory(double bmi) {

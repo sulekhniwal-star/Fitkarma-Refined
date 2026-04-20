@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fitkarma/core/config/app_theme.dart';
+import 'package:fitkarma/shared/widgets/glass_card.dart';
 import '../../domain/onboarding_state.dart';
 import '../../domain/onboarding_providers.dart';
 
@@ -52,39 +54,12 @@ class _StepDoshaQuizState extends ConsumerState<StepDoshaQuiz> {
       ],
     },
     {
-      'question': 'How\'s your hair?',
-      'questionHi': 'आपके बाल कैसे हैं?',
-      'options': [
-        ('Thin, dry, curly or wavy', 'पतले, सूखे, घुंघराले या लहरदार'),
-        ('Thick, shiny, early greying', 'घने, चमकदार, जल्दी सफेद होते हैं'),
-        ('Thick, oily, prone to dandruff', 'मोटे, तेलीय, रूसी होती है'),
-      ],
-    },
-    {
       'question': 'How do you usually sleep?',
       'questionHi': 'आप आमतौर पर कैसे सोते हैं?',
       'options': [
         ('Light sleeper, often wake up', 'हल्की नींद, अक्सर जाग जाते हैं'),
         ('Sound sleeper, sleep deeply', 'गहरी नींद'),
         ('Heavy sleeper, hard to wake up', 'गहरी नींद, जागने में कठिनाई'),
-      ],
-    },
-    {
-      'question': 'How would you describe your mood?',
-      'questionHi': 'आप अपने मूड का वर्णन कैसे करेंगे?',
-      'options': [
-        ('Variable, anxious or worried', 'बदलावपूर्ण, चिंतित या परेशान'),
-        ('Intense, quick to anger or frustrate', 'तीव्र, जल्दी गुस्सा या निराशा'),
-        ('Calm, content, but can feel lazy', 'शांत, संतुष्ट, लेकिन आलसी लग सकता है'),
-      ],
-    },
-    {
-      'question': 'How\'s your tendency to gain or lose weight?',
-      'questionHi': 'वजन बढ़ने या घटने की प्रवृत्ति कैसी है?',
-      'options': [
-        ('Hard to gain, easy to lose', 'बढ़ना कठिन, घटना आसान'),
-        ('Easy to gain and lose quickly', 'बढ़ना और घटना दोनों आसान'),
-        ('Easy to gain, hard to lose', 'बढ़ना आसान, घटना कठिन'),
       ],
     },
     {
@@ -96,183 +71,77 @@ class _StepDoshaQuizState extends ConsumerState<StepDoshaQuiz> {
         ('Comfortable in most weather', 'अधिकांश मौसम में सहज'),
       ],
     },
-    {
-      'question': 'What\'s your appetite like?',
-      'questionHi': 'आपकी भूख कैसी होती है?',
-      'options': [
-        ('Variable, sometimes forget to eat', 'बदलावपूर्ण, कभी खाना भूल जाते हैं'),
-        ('Strong, need to eat frequently', 'मजबूत, बार-बार खाना चाहिए'),
-        ('Moderate, can skip meals easily', 'मध्यम, आसानी से भोजन छोड़ सकते हैं'),
-      ],
-    },
-    {
-      'question': 'How\'s your mind?',
-      'questionHi': 'आपका मन कैसा है?',
-      'options': [
-        ('Creative, but can overthink', 'सृजनात्मक, लेकिन ज्यादा सोच सकते हैं'),
-        ('Sharp, focused, determined', 'तेज, केंद्रित, दृढ़निश्चय'),
-        ('Calm, patient, but can be slow', 'शांत, धीरजवान, लेकिन धीमा हो सकता है'),
-      ],
-    },
-    {
-      'question': 'How do you prefer to exercise?',
-      'questionHi': 'आप व्यायाम कैसे करना पसंद करते हैं?',
-      'options': [
-        ('Light, gentle activities like yoga, walking', 'हल्की, धीमी गतिविधियां जैसे योग, चलना'),
-        ('Intense, competitive workouts', 'तीव्र, प्रतिस्पर्धी व्यायाम'),
-        ('Moderate, steady exercises', 'मध्यम, स्थिर व्यायाम'),
-      ],
-    },
   ];
 
   void _selectOption(int optionIndex) {
     ref.read(onboardingProvider.notifier).setDoshaAnswer(_currentQuestionIndex, optionIndex);
     
     if (_currentQuestionIndex < _questions.length - 1) {
-      setState(() {
-        _currentQuestionIndex++;
-      });
+      setState(() => _currentQuestionIndex++);
     } else {
-      // Calculate and show result
       ref.read(onboardingProvider.notifier).calculateDosha();
-      setState(() {
-        _showResult = true;
-      });
+      setState(() => _showResult = true);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(onboardingProvider);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     
-    final textPrimary = isDark ? const Color(0xFFF1F0FF) : const Color(0xFF1A1830);
-    final textSecondary = isDark ? const Color(0xFF9B99CC) : const Color(0xFF6B6A96);
-    final primary = isDark ? const Color(0xFFFF6B35) : const Color(0xFFF4511E);
-    final surface = isDark ? const Color(0xFF1C1C2E) : Colors.white;
-    final divider = isDark ? const Color(0x33FFFFFF) : const Color(0x12000000);
-    
-    final vataColor = const Color(0xFF7B6FF0);
-    final pittaColor = const Color(0xFFFF6B35);
-    final kaphaColor = const Color(0xFF00D4B4);
-
     if (_showResult || state.determinedDosha != null) {
       final dosha = state.determinedDosha ?? DoshaType.balanced;
+      final doshaColor = _getDoshaColor(dosha);
       
       return SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Column(
           children: [
-            const SizedBox(height: 40),
-            Container(
-              padding: const EdgeInsets.all(24),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    _getDoshaColor(dosha).withValues(alpha: 0.2),
-                    _getDoshaColor(dosha).withValues(alpha: 0.05),
-                  ],
-                ),
-                borderRadius: BorderRadius.circular(24),
-              ),
+            const SizedBox(height: 20),
+            GlassCard(
               child: Column(
                 children: [
-                  Image.asset(
-                    _getDoshaAsset(dosha),
-                    height: 120,
-                    fit: BoxFit.contain,
+                  Container(
+                    width: 80,
+                    height: 80,
+                    decoration: BoxDecoration(
+                      color: doshaColor.withValues(alpha: 0.2),
+                      shape: BoxShape.circle,
+                      border: Border.all(color: doshaColor.withValues(alpha: 0.5), width: 2),
+                    ),
+                    child: Icon(_getDoshaIcon(dosha), size: 40, color: doshaColor),
                   ),
                   const SizedBox(height: 16),
-                  Text(
-                    'Your Dosha',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: textSecondary,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
+                  Text('Your Dominant Prakriti', style: AppTheme.caption(context)),
                   Text(
                     dosha.labelEn,
-                    style: TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                      color: _getDoshaColor(dosha),
-                    ),
+                    style: AppTheme.displayMd(context).copyWith(color: doshaColor),
                   ),
                   Text(
                     dosha.labelHi,
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: textSecondary,
-                    ),
+                    style: AppTheme.hindi(context).copyWith(fontSize: 18, color: AppTheme.textSecondary),
                   ),
                   const SizedBox(height: 16),
                   Text(
                     _getDoshaDescription(dosha),
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: textSecondary,
-                    ),
+                    style: AppTheme.bodyMd(context).copyWith(color: AppTheme.textSecondary),
                     textAlign: TextAlign.center,
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 32),
             
-            // Dosha breakdown
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: surface,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: divider),
-              ),
+            GlassCard(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Your Elements',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: textPrimary,
-                    ),
-                  ),
+                  Text('Element Distribution', style: AppTheme.labelMd(context)),
+                  const SizedBox(height: 20),
+                  _buildDoshaBar(context, 'Vata', _calculateVataPercent(state.doshaAnswers).toDouble(), AppTheme.secondary),
                   const SizedBox(height: 16),
-                  _buildDoshaBar('Vata', _calculateVataPercent(state.doshaAnswers).toDouble(), vataColor, textSecondary),
-                  const SizedBox(height: 12),
-                  _buildDoshaBar('Pitta', _calculatePittaPercent(state.doshaAnswers).toDouble(), pittaColor, textSecondary),
-                  const SizedBox(height: 12),
-                  _buildDoshaBar('Kapha', _calculateKaphaPercent(state.doshaAnswers).toDouble(), kaphaColor, textSecondary),
-                ],
-              ),
-            ),
-            const SizedBox(height: 24),
-            
-            // Recommendation
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: primary.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: primary.withValues(alpha: 0.3)),
-              ),
-              child: Row(
-                children: [
-                  Icon(Icons.lightbulb_outline, color: primary),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      'This helps us personalize your diet, workouts, and lifestyle recommendations.',
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: textSecondary,
-                      ),
-                    ),
-                  ),
+                  _buildDoshaBar(context, 'Pitta', _calculatePittaPercent(state.doshaAnswers).toDouble(), AppTheme.primary),
+                  const SizedBox(height: 16),
+                  _buildDoshaBar(context, 'Kapha', _calculateKaphaPercent(state.doshaAnswers).toDouble(), AppTheme.teal),
                 ],
               ),
             ),
@@ -283,171 +152,139 @@ class _StepDoshaQuizState extends ConsumerState<StepDoshaQuiz> {
 
     final currentQuestion = _questions[_currentQuestionIndex];
     
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Discover Your Nature',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: textPrimary,
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                decoration: BoxDecoration(
-                  color: primary.withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Text(
-                  '${_currentQuestionIndex + 1}/${_questions.length}',
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    color: primary,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Body Type Quiz', style: AppTheme.labelMd(context)),
+                  Text(
+                    '${_currentQuestionIndex + 1}/${_questions.length}',
+                    style: AppTheme.labelMd(context).copyWith(color: AppTheme.primary),
                   ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(AppTheme.radiusFull),
+                child: LinearProgressIndicator(
+                  value: (_currentQuestionIndex + 1) / _questions.length,
+                  backgroundColor: AppTheme.surface2,
+                  valueColor: const AlwaysStoppedAnimation<Color>(AppTheme.primary),
+                  minHeight: 6,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 4),
-          Text(
-            'अपनी प्रकृति जानें',
-            style: TextStyle(
-              fontSize: 12,
-              color: textSecondary,
-            ),
-          ),
-          const SizedBox(height: 32),
-          
-          // Progress bar
-          ClipRRect(
-            borderRadius: BorderRadius.circular(4),
-            child: LinearProgressIndicator(
-              value: (_currentQuestionIndex + 1) / _questions.length,
-              backgroundColor: divider,
-              valueColor: AlwaysStoppedAnimation<Color>(primary),
-              minHeight: 6,
-            ),
-          ),
-          const SizedBox(height: 32),
-          
-          // Question
-          Text(
-            currentQuestion['question'] as String,
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-              color: textPrimary,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            currentQuestion['questionHi'] as String,
-            style: TextStyle(
-              fontSize: 14,
-              color: textSecondary,
-            ),
-          ),
-          const SizedBox(height: 24),
-          
-          // Options
-          ...List.generate((currentQuestion['options'] as List).length, (index) {
-            final option = (currentQuestion['options'] as List)[index] as (String, String);
-            final isSelected = state.doshaAnswers.length > _currentQuestionIndex && 
-                state.doshaAnswers[_currentQuestionIndex] == index;
-            
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 12),
-              child: GestureDetector(
-                onTap: () => _selectOption(index),
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: isSelected 
-                        ? primary.withValues(alpha: 0.15) 
-                        : surface,
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
-                      color: isSelected ? primary : divider,
-                      width: isSelected ? 2 : 1,
-                    ),
-                  ),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 24,
-                        height: 24,
+        ),
+        Expanded(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  currentQuestion['question'] as String,
+                  style: AppTheme.h1(context),
+                ),
+                Text(
+                  currentQuestion['questionHi'] as String,
+                  style: AppTheme.hindi(context).copyWith(fontSize: 16, color: AppTheme.textSecondary),
+                ),
+                const SizedBox(height: 32),
+                
+                ...List.generate((currentQuestion['options'] as List).length, (index) {
+                  final option = (currentQuestion['options'] as List)[index] as (String, String);
+                  final isCurrentlySelected = state.doshaAnswers.length > _currentQuestionIndex &&
+                      state.doshaAnswers[_currentQuestionIndex] == index;
+
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: GestureDetector(
+                      onTap: () => _selectOption(index),
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 200),
+                        padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
-                          shape: BoxShape.circle,
+                          color: isCurrentlySelected ? AppTheme.primaryMuted : AppTheme.glass,
+                          borderRadius: BorderRadius.circular(AppTheme.radiusMd),
                           border: Border.all(
-                            color: isSelected ? primary : textSecondary,
-                            width: 2,
+                            color: isCurrentlySelected ? AppTheme.primary : AppTheme.glassBorder,
+                            width: isCurrentlySelected ? 2 : 1,
                           ),
-                          color: isSelected ? primary : Colors.transparent,
                         ),
-                        child: isSelected 
-                            ? const Icon(Icons.check, size: 16, color: Colors.white)
-                            : null,
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        child: Row(
                           children: [
-                            Text(
-                              option.$1,
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w500,
-                                color: textPrimary,
+                            Container(
+                              width: 24,
+                              height: 24,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: isCurrentlySelected ? AppTheme.primary : AppTheme.textSecondary,
+                                  width: 2,
+                                ),
+                                color: isCurrentlySelected ? AppTheme.primary : Colors.transparent,
                               ),
+                              child: isCurrentlySelected
+                                  ? const Icon(Icons.check, size: 16, color: Colors.white)
+                                  : null,
                             ),
-                            Text(
-                              option.$2,
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: textSecondary,
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    option.$1,
+                                    style: AppTheme.labelLg(context).copyWith(
+                                      color: isCurrentlySelected ? AppTheme.textPrimary : AppTheme.textPrimary.withValues(alpha: 0.8),
+                                    ),
+                                  ),
+                                  Text(
+                                    option.$2,
+                                    style: AppTheme.bodySm(context).copyWith(color: AppTheme.textSecondary),
+                                  ),
+                                ],
                               ),
                             ),
                           ],
                         ),
                       ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          }),
-        ],
-      ),
+                    ),
+                  );
+                }),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 
-  Widget _buildDoshaBar(String label, double percent, Color color, Color textSecondary) {
+  Widget _buildDoshaBar(BuildContext context, String label, double percent, Color color) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(label, style: TextStyle(fontSize: 14, color: textSecondary)),
-            Text('${percent.toInt()}%', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: color)),
+            Text(label, style: AppTheme.bodyMd(context).copyWith(color: AppTheme.textSecondary)),
+            Text('${percent.toInt()}%', style: AppTheme.labelMd(context).copyWith(color: color)),
           ],
         ),
-        const SizedBox(height: 4),
+        const SizedBox(height: 6),
         ClipRRect(
-          borderRadius: BorderRadius.circular(4),
+          borderRadius: BorderRadius.circular(AppTheme.radiusFull),
           child: LinearProgressIndicator(
             value: percent / 100,
-            backgroundColor: color.withValues(alpha: 0.2),
+            backgroundColor: AppTheme.surface2,
             valueColor: AlwaysStoppedAnimation<Color>(color),
             minHeight: 8,
           ),
@@ -461,30 +298,14 @@ class _StepDoshaQuizState extends ConsumerState<StepDoshaQuiz> {
       case DoshaType.vata:
       case DoshaType.vataPitta:
       case DoshaType.vataKapha:
-        return const Color(0xFF7B6FF0);
+        return AppTheme.secondary;
       case DoshaType.pitta:
       case DoshaType.pittaKapha:
-        return const Color(0xFFFF6B35);
+        return AppTheme.primary;
       case DoshaType.kapha:
-        return const Color(0xFF00D4B4);
+        return AppTheme.teal;
       case DoshaType.balanced:
-        return const Color(0xFFFFB547);
-    }
-  }
-
-  String _getDoshaAsset(DoshaType dosha) {
-    switch (dosha) {
-      case DoshaType.vata:
-      case DoshaType.vataPitta:
-      case DoshaType.vataKapha:
-        return 'assets/images/ayurveda/vata.png';
-      case DoshaType.pitta:
-      case DoshaType.pittaKapha:
-        return 'assets/images/ayurveda/pitta.png';
-      case DoshaType.kapha:
-        return 'assets/images/ayurveda/kapha.png';
-      case DoshaType.balanced:
-        return 'assets/images/ayurveda/kapha.png';
+        return AppTheme.accent;
     }
   }
 
@@ -507,46 +328,33 @@ class _StepDoshaQuizState extends ConsumerState<StepDoshaQuiz> {
   String _getDoshaDescription(DoshaType dosha) {
     switch (dosha) {
       case DoshaType.vata:
-        return 'You have a light, creative energy. Focus on routine, warmth, and hydration for balance.';
+        return 'Light and creative energy. Focus on routine and warmth for balance.';
       case DoshaType.pitta:
-        return 'You have a strong, intense energy. Focus on cooling foods, moderation, and stress management.';
+        return 'Strong and intense energy. Focus on cooling foods and moderation.';
       case DoshaType.kapha:
-        return 'You have a steady, grounded energy. Focus on stimulation, movement, and light foods.';
-      case DoshaType.vataPitta:
-        return 'A blend of creative fire and controlled energy. Balance with routine and cooling practices.';
-      case DoshaType.vataKapha:
-        return 'A mix of creative lightness and grounded stability. Focus on consistent routine and activity.';
-      case DoshaType.pittaKapha:
-        return 'Strong energy with steady grounding. Balance intense heat with calming practices.';
+        return 'Steady and grounded energy. Focus on movement and light foods.';
       case DoshaType.balanced:
-        return 'Well-balanced constitution. Maintain harmony with diverse diet and varied exercise.';
+        return 'Harmonious constitution. Maintain balance with a varied routine.';
+      default:
+        return 'A unique combination of elements. We will tailor your journey accordingly.';
     }
   }
 
-int _calculateVataPercent(List<int> answers) {
+  int _calculateVataPercent(List<int> answers) {
     if (answers.isEmpty) return 33;
-    int vata = 0;
-    for (int i = 0; i < answers.length && i < _questions.length; i++) {
-      if (answers[i] == 0) vata++;
-    }
+    int vata = answers.where((a) => a == 0).length;
     return (vata / _questions.length * 100).round();
   }
 
   int _calculatePittaPercent(List<int> answers) {
     if (answers.isEmpty) return 33;
-    int pitta = 0;
-    for (int i = 0; i < answers.length && i < _questions.length; i++) {
-      if (answers[i] == 1) pitta++;
-    }
+    int pitta = answers.where((a) => a == 1).length;
     return (pitta / _questions.length * 100).round();
   }
 
   int _calculateKaphaPercent(List<int> answers) {
     if (answers.isEmpty) return 33;
-    int kapha = 0;
-    for (int i = 0; i < answers.length && i < _questions.length; i++) {
-      if (answers[i] == 2) kapha++;
-    }
+    int kapha = answers.where((a) => a == 2).length;
     return (kapha / _questions.length * 100).round();
   }
 }

@@ -1,7 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/di/providers.dart';
 import '../data/food_repository.dart';
-import '../data/food_drift_service.dart';
 import '../data/food_aw_service.dart';
 
 final foodRepositoryProvider = Provider<FoodRepository>((ref) {
