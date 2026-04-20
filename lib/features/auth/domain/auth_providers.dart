@@ -1,5 +1,7 @@
 import 'package:appwrite/models.dart' as models;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../core/di/providers.dart';
+import '../../../core/storage/app_database.dart';
 import '../data/auth_repository.dart';
 
 /// Simplified domain model for the authenticated user.
@@ -78,4 +80,12 @@ class AuthNotifier extends AsyncNotifier<AppUser?> {
 
 /// Global provider for the authentication state.
 final authStateProvider = AsyncNotifierProvider<AuthNotifier, AppUser?>(AuthNotifier.new);
+
+/// Provider for the local user profile from Drift.
+final userProfileProvider = StreamProvider<LocalUser?>((ref) {
+  final authUser = ref.watch(authStateProvider).value;
+  if (authUser == null) return Stream.value(null);
+  
+  return ref.watch(userDaoProvider).watchUser(authUser.id);
+});
 

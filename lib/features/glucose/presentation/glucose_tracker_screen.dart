@@ -4,9 +4,11 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
-import '../../../shared/theme/app_colors.dart';
-import '../../../shared/theme/app_text_styles.dart';
-import '../../../shared/widgets/encryption_badge.dart';
+import 'package:flutter/services.dart';
+import 'package:fitkarma/core/config/app_theme.dart';
+import 'package:fitkarma/shared/widgets/fit_scaffold.dart';
+import 'package:fitkarma/shared/widgets/glass_card.dart';
+import 'package:fitkarma/shared/widgets/encryption_badge.dart';
 import '../domain/glucose_providers.dart';
 
 class GlucoseTrackerScreen extends ConsumerWidget {
@@ -14,114 +16,126 @@ class GlucoseTrackerScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     final latest = ref.watch(latestGlucoseProvider);
     final logs = ref.watch(glucoseLogsProvider).value ?? [];
     final hba1c = ref.watch(hba1cEstimateProvider);
 
-    return Scaffold(
-      backgroundColor: isDark ? AppColorsDark.background : AppColors.background,
-      body: CustomScrollView(
-        slivers: [
-          _buildHeroHeader(context, latest, hba1c, isDark),
-          SliverPadding(
-            padding: const EdgeInsets.all(24),
-            sliver: SliverList(
-              delegate: SliverChildListDelegate([
-                _buildActionButtons(context, isDark),
-                const SizedBox(height: 32),
-                _buildTrendSection(logs, isDark),
-                const SizedBox(height: 32),
-                _buildHistorySection(logs, isDark),
-                const SizedBox(height: 100),
-              ]),
-            ),
-          ),
+    return FitScaffold(
+      pattern: ScaffoldPattern.immersiveHero,
+      title: 'Blood Glucose',
+      heroContent: _buildHeroContent(context, latest, hba1c),
+      body: Column(
+        children: [
+          _buildActionButtons(context),
+          const SizedBox(height: 32),
+          _buildTrendSection(context, logs),
+          const SizedBox(height: 32),
+          _buildHistorySection(context, logs),
+          const SizedBox(height: 100),
         ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showLogBottomSheet(context, ref),
-        backgroundColor: AppColors.primary,
+        backgroundColor: AppTheme.teal,
         child: const Icon(Icons.add, color: Colors.white),
       ),
     );
   }
 
-  Widget _buildHeroHeader(BuildContext context, Map<String, dynamic>? latest, double? hba1c, bool isDark) {
-    return SliverAppBar(
-      expandedHeight: 320,
-      pinned: true,
-      backgroundColor: Colors.teal,
-      flexibleSpace: FlexibleSpaceBar(
-        background: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [Colors.teal, Color(0xFF00796B)],
+  Widget _buildHeroContent(BuildContext context, Map<String, dynamic>? latest, double? hba1c) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const EncryptionBadge(),
+          const SizedBox(height: 16),
+          if (latest != null) ...[
+            Text(
+              '${latest['value']}',
+              style: AppTheme.h1(context).copyWith(fontSize: 80, color: Colors.white),
             ),
-          ),
-          child: SafeArea(
-            child: Column(
+            Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const EncryptionBadge(),
-                const SizedBox(height: 16),
-                if (latest != null) ...[
-                  Text(
-                    '${latest['value']}',
-                    style: AppTextStyles.displayLarge(true).copyWith(fontSize: 80, color: Colors.white),
-                  ),
-                  Text('mg/dL · ${latest['type']}', style: const TextStyle(color: Colors.white70)),
-                  const SizedBox(height: 24),
-                  if (hba1c != null)
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.2),
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: Colors.white30),
-                      ),
-                      child: Text(
-                        'Estimated HbA1c: ${hba1c.toStringAsFixed(1)}%',
-                        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                      ),
-                    )
-                  else
-                    const Text('log 30+ readings for HbA1c estimation', style: TextStyle(color: Colors.white54, fontSize: 10)),
-                ] else
-                  const Text('No glucose logs yet', style: TextStyle(color: Colors.white70)),
+                Text(
+                  'mg/dL',
+                  style: AppTheme.labelMd(context).copyWith(color: Colors.white70, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(width: 8),
+                Container(
+                  width: 4,
+                  height: 4,
+                  decoration: const BoxDecoration(color: Colors.white38, shape: BoxShape.circle),
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  '${latest['type']}'.toUpperCase(),
+                  style: AppTheme.labelMd(context).copyWith(color: AppTheme.teal.withValues(alpha: 0.8), letterSpacing: 1),
+                ),
               ],
             ),
-          ),
+            const SizedBox(height: 32),
+            if (hba1c != null)
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
+                ),
+                child: Column(
+                  children: [
+                    Text(
+                      'ESTIMATED HBA1C',
+                      style: AppTheme.labelMd(context).copyWith(color: Colors.white60, fontSize: 10, letterSpacing: 1.5),
+                    ),
+                    Text(
+                      '${hba1c.toStringAsFixed(1)}%',
+                      style: AppTheme.h3(context).copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              )
+            else
+              Text(
+                'LOG 30+ READINGS FOR HbA1C ESTIMATION',
+                style: AppTheme.labelMd(context).copyWith(color: Colors.white38, fontSize: 9, letterSpacing: 1),
+              ),
+          ] else
+            Text(
+              'No glucose logs recorded yet',
+              style: AppTheme.bodyMd(context).copyWith(color: Colors.white70),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildActionButtons(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      child: OutlinedButton.icon(
+        onPressed: () => context.push('/home/food/lab-scan'),
+        icon: const Icon(Icons.document_scanner_outlined, size: 20),
+        label: Text('SCAN LAB REPORT', style: AppTheme.labelMd(context).copyWith(letterSpacing: 1.2)),
+        style: OutlinedButton.styleFrom(
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          side: BorderSide(color: AppTheme.teal.withValues(alpha: 0.5)),
+          foregroundColor: AppTheme.teal,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         ),
       ),
-      title: const Text('Blood Glucose'),
     );
   }
 
-  Widget _buildActionButtons(BuildContext context, bool isDark) {
-    return Row(
-      children: [
-        Expanded(
-          child: OutlinedButton.icon(
-            onPressed: () => context.push('/home/food/lab-scan'),
-            icon: const Icon(Icons.document_scanner_outlined),
-            label: const Text('Import Lab Report'),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildTrendSection(List<Map<String, dynamic>> logs, bool isDark) {
+  Widget _buildTrendSection(BuildContext context, List<Map<String, dynamic>> logs) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Glucose Trend', style: AppTextStyles.h3(isDark)),
+        Text('Glucose Trend', style: AppTheme.h3(context)),
         const SizedBox(height: 24),
         SizedBox(
-          height: 200,
+          height: 220,
           child: LineChart(
             LineChartData(
               gridData: const FlGridData(show: false),
@@ -133,12 +147,27 @@ class GlucoseTrackerScreen extends ConsumerWidget {
                     return FlSpot(e.key.toDouble(), (e.value['value'] as double));
                   }).toList(),
                   isCurved: true,
-                  color: Colors.tealAccent,
-                  barWidth: 3,
+                  color: AppTheme.teal,
+                  barWidth: 4,
                   dotData: const FlDotData(show: false),
-                  belowBarData: BarAreaData(show: true, color: Colors.tealAccent.withValues(alpha: 0.1)),
+                  belowBarData: BarAreaData(
+                    show: true,
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        AppTheme.teal.withValues(alpha: 0.2),
+                        AppTheme.teal.withValues(alpha: 0.0),
+                      ],
+                    ),
+                  ),
                 ),
               ],
+              lineTouchData: LineTouchData(
+                touchTooltipData: LineTouchTooltipData(
+                  getTooltipColor: (spot) => AppTheme.bg2.withValues(alpha: 0.9),
+                ),
+              ),
             ),
           ),
         ),
@@ -146,18 +175,18 @@ class GlucoseTrackerScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildHistorySection(List<Map<String, dynamic>> logs, bool isDark) {
+  Widget _buildHistorySection(BuildContext context, List<Map<String, dynamic>> logs) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('History', style: AppTextStyles.h3(isDark)),
-        const SizedBox(height: 12),
-        ...logs.map((log) => _buildLogItem(log, isDark)),
+        Text('History Logs', style: AppTheme.h3(context)),
+        const SizedBox(height: 16),
+        ...logs.map((log) => _buildLogItem(context, log)),
       ],
     );
   }
 
-  Widget _buildLogItem(Map<String, dynamic> log, bool isDark) {
+  Widget _buildLogItem(BuildContext context, Map<String, dynamic> log) {
     final val = log['value'] as double;
     final type = log['type'] as String;
     
@@ -165,54 +194,93 @@ class GlucoseTrackerScreen extends ConsumerWidget {
     if (type == 'Fasting') {
       if (val >= 126) {
         statusColor = Colors.red;
-      } else if (val >= 100) statusColor = Colors.orange;
+      } else if (val >= 100) {
+        statusColor = Colors.orange;
+      }
     } else {
       if (val >= 200) {
         statusColor = Colors.red;
-      } else if (val >= 140) statusColor = Colors.orange;
+      } else if (val >= 140) {
+        statusColor = Colors.orange;
+      }
     }
 
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: isDark ? AppColorsDark.surface : Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.divider),
-      ),
-      child: Row(
-        children: [
-          CircleAvatar(
-            radius: 4,
-            backgroundColor: statusColor,
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: GlassCard(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            CircleAvatar(
+              radius: 5,
+              backgroundColor: statusColor,
+              child: Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(color: statusColor.withValues(alpha: 0.4), blurRadius: 6, spreadRadius: 1),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: '${log['value']}',
+                          style: AppTheme.h3(context).copyWith(color: Colors.white),
+                        ),
+                        TextSpan(
+                          text: ' mg/dL',
+                          style: AppTheme.bodySm(context).copyWith(color: AppTheme.textMuted),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Text(
+                    DateFormat('MMM dd, hh:mm a').format(log['loggedAt']),
+                    style: AppTheme.caption(context).copyWith(color: AppTheme.textMuted),
+                  ),
+                ],
+              ),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text('${log['value']} mg/dL', style: AppTextStyles.labelLarge(isDark)),
-                Text(DateFormat('MMM dd, hh:mm a').format(log['loggedAt']), style: AppTextStyles.caption(isDark)),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.05),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Text(
+                    type.toUpperCase(),
+                    style: AppTheme.labelMd(context).copyWith(fontSize: 8, color: Colors.white60, letterSpacing: 0.5),
+                  ),
+                ),
+                if (log['mealId'] != null) ...[
+                  const SizedBox(height: 4),
+                  const Icon(Icons.restaurant, size: 14, color: Colors.orange),
+                ],
               ],
             ),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(type, style: TextStyle(color: isDark ? Colors.white70 : Colors.black54, fontSize: 10)),
-              if (log['mealId'] != null)
-                const Icon(Icons.restaurant, size: 14, color: Colors.orange),
-            ],
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
   void _showLogBottomSheet(BuildContext context, WidgetRef ref) {
+    HapticFeedback.mediumImpact();
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      backgroundColor: Colors.transparent,
       builder: (context) => _GlucoseLogSheet(ref: ref),
     );
   }
@@ -234,7 +302,12 @@ class _GlucoseLogSheetState extends State<_GlucoseLogSheet> {
 
   Future<void> _save() async {
     final val = double.tryParse(_valController.text);
-    if (val == null) return;
+    if (val == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter a valid reading')),
+      );
+      return;
+    }
 
     await widget.ref.read(glucoseDriftServiceProvider).insertGlucoseLog(
       userId: 'current_user',
@@ -243,42 +316,119 @@ class _GlucoseLogSheetState extends State<_GlucoseLogSheet> {
     );
 
     widget.ref.invalidate(glucoseLogsProvider);
+    if (!mounted) return;
     Navigator.pop(context);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(24, 24, 24, 24 + MediaQuery.of(context).viewInsets.bottom),
+    return Container(
+      decoration: BoxDecoration(
+        color: AppTheme.bg2,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      padding: EdgeInsets.fromLTRB(28, 20, 28, 28 + MediaQuery.of(context).viewInsets.bottom),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Log Blood Glucose', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+          Center(
+            child: Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: Colors.white24,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+          ),
           const SizedBox(height: 24),
+          Text('Log Blood Glucose', style: AppTheme.h2(context)),
+          const SizedBox(height: 32),
+          Text(
+            'GLUCOSE READING (mg/dL)',
+            style: AppTheme.labelMd(context).copyWith(
+              color: AppTheme.teal.withValues(alpha: 0.8),
+              fontSize: 10,
+              letterSpacing: 1.5,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 8),
           TextField(
             controller: _valController,
             keyboardType: TextInputType.number,
-            decoration: const InputDecoration(labelText: 'Reading (mg/dL)', hintText: '100'),
+            style: AppTheme.h3(context).copyWith(color: Colors.white),
+            decoration: InputDecoration(
+              hintText: '100',
+              hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.2)),
+              prefixIcon: Icon(Icons.bloodtype, color: AppTheme.teal.withValues(alpha: 0.5), size: 20),
+              filled: true,
+              fillColor: Colors.white.withValues(alpha: 0.05),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide.none,
+              ),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            ),
           ),
           const SizedBox(height: 24),
-          Text('Reading Type', style: AppTextStyles.bodySmall(false)),
-          const SizedBox(height: 8),
+          Text(
+            'READING TYPE',
+            style: AppTheme.labelMd(context).copyWith(
+              color: Colors.white60,
+              fontSize: 10,
+              letterSpacing: 1.5,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 12),
           Wrap(
             spacing: 8,
+            runSpacing: 8,
             children: _types.map((t) {
               final isSelected = _selectedType == t;
-              return ChoiceChip(
-                label: Text(t),
-                selected: isSelected,
-                onSelected: (val) => setState(() => _selectedType = t),
+              return GestureDetector(
+                onTap: () => setState(() => _selectedType = t),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  decoration: BoxDecoration(
+                    color: isSelected ? AppTheme.teal.withValues(alpha: 0.2) : Colors.white.withValues(alpha: 0.05),
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      color: isSelected ? AppTheme.teal : Colors.transparent,
+                      width: 1,
+                    ),
+                  ),
+                  child: Text(
+                    t,
+                    style: AppTheme.bodySm(context).copyWith(
+                      color: isSelected ? AppTheme.teal : Colors.white70,
+                      fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                    ),
+                  ),
+                ),
               );
             }).toList(),
           ),
-          const SizedBox(height: 32),
+          const SizedBox(height: 40),
           SizedBox(
             width: double.infinity,
-            child: ElevatedButton(onPressed: _save, child: const Text('Save Reading')),
+            height: 56,
+            child: ElevatedButton(
+              onPressed: _save,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppTheme.teal,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                elevation: 0,
+              ),
+              child: Text(
+                'SAVE READING',
+                style: AppTheme.labelMd(context).copyWith(fontSize: 16, fontWeight: FontWeight.bold, letterSpacing: 1.2),
+              ),
+            ),
           ),
         ],
       ),

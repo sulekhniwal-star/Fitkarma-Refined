@@ -39,7 +39,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     }
 
     try {
-      await ref.read(authStateProvider.notifier).register(email, password, name);
+      await ref
+          .read(authStateProvider.notifier)
+          .register(email, password, name);
     } catch (e) {
       _showError(e.toString());
     }
@@ -58,14 +60,12 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authStateProvider);
-    
+
     return FitScaffold(
       pattern: ScaffoldPattern.immersiveHero,
       heroHeight: 240,
       heroBackground: Container(
-        decoration: const BoxDecoration(
-          gradient: AppTheme.heroPrimary,
-        ),
+        decoration: const BoxDecoration(gradient: AppTheme.heroPrimary),
         child: const AmbientGlowBlobs(),
       ),
       heroContent: Column(
@@ -75,29 +75,24 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
           const SizedBox(height: 12),
           Text(
             'JOIN THE MOVEMENT',
-            style: AppTheme.headlineMedium(context).copyWith(
-              color: Colors.white,
-              letterSpacing: 2,
-            ),
+            style: AppTheme.displayMd(
+              context,
+            ).copyWith(color: Colors.white, letterSpacing: 2),
           ),
         ],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Create Account',
-            style: AppTheme.displayMd(context),
-          ),
+          Text('Create Account', style: AppTheme.displayMd(context)),
           Text(
             'अपनी यात्रा शुरू करें',
-            style: AppTheme.hindi(context).copyWith(
-              color: AppTheme.textSecondary,
-              fontSize: 16,
-            ),
+            style: AppTheme.hindi(
+              context,
+            ).copyWith(color: AppTheme.textSecondary, fontSize: 16),
           ),
           const SizedBox(height: 32),
-          
+
           GlassCard(
             child: Column(
               children: [
@@ -138,10 +133,13 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     prefixIcon: const Icon(Icons.lock_outline, size: 20),
                     suffixIcon: IconButton(
                       icon: Icon(
-                        _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                        _obscurePassword
+                            ? Icons.visibility_off
+                            : Icons.visibility,
                         size: 20,
                       ),
-                      onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                      onPressed: () =>
+                          setState(() => _obscurePassword = !_obscurePassword),
                     ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(AppTheme.radiusMd),
@@ -149,7 +147,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   ),
                 ),
                 const SizedBox(height: 32),
-                
+
                 SizedBox(
                   width: double.infinity,
                   height: 56,
@@ -167,15 +165,21 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         ? const SizedBox(
                             height: 24,
                             width: 24,
-                            child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                            ),
                           )
-                        : Text('CREATE ACCOUNT', style: AppTheme.labelLg(context)),
+                        : Text(
+                            'CREATE ACCOUNT',
+                            style: AppTheme.labelLg(context),
+                          ),
                   ),
                 ),
               ],
             ),
           ),
-          
+
           const SizedBox(height: 32),
           Center(
             child: TextButton(
@@ -183,7 +187,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
               child: RichText(
                 text: TextSpan(
                   text: "Already have an account? ",
-                  style: AppTheme.bodyMd(context).copyWith(color: AppTheme.textSecondary),
+                  style: AppTheme.bodyMd(
+                    context,
+                  ).copyWith(color: AppTheme.textSecondary),
                   children: [
                     TextSpan(
                       text: "Login",
@@ -203,4 +209,3 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     );
   }
 }
-

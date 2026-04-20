@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../theme/app_colors.dart';
-import '../theme/app_text_styles.dart';
+import '../../core/config/app_theme.dart';
+import 'dart:ui';
 
 /// Actions available in the Quick Log Speed Dial.
 enum QuickLogAction { food, water, mood, workout, bp, glucose }
@@ -89,9 +89,6 @@ class _QuickLogFABState extends State<QuickLogFAB>
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final primaryColor = isDark ? AppColorsDark.primary : AppColors.primary;
-
     return Stack(
       alignment: Alignment.bottomRight,
       clipBehavior: Clip.none,
@@ -99,39 +96,51 @@ class _QuickLogFABState extends State<QuickLogFAB>
         // Scrim Overlay
         if (_isExpanded)
           Positioned.fill(
-              child: GestureDetector(
-            onTap: _toggle,
-            child: Container(
-              color: Colors.black.withValues(alpha: 0.5),
+            child: GestureDetector(
+              onTap: _toggle,
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                color: Colors.black.withValues(alpha: 0.6),
+              ),
             ),
-          )),
+          ),
 
         // Sub-buttons
         ...List.generate(_buttons.length, (index) {
           final button = _buttons[index];
-          return _buildStepChild(index, button, isDark);
+          return _buildStepChild(index, button);
         }),
 
         // Main FAB
-        FloatingActionButton(
-          onPressed: _toggle,
-          backgroundColor: primaryColor,
-          elevation: 4,
-          shape: const CircleBorder(),
-          child: AnimatedRotation(
-            turns: _isExpanded ? 0.125 : 0, // 45 degrees for X
-            duration: const Duration(milliseconds: 200),
-            child: const Icon(Icons.add, color: Colors.white, size: 32),
+        Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            boxShadow: [
+              if (_isExpanded)
+                BoxShadow(
+                  color: AppTheme.primary.withValues(alpha: 0.3),
+                  blurRadius: 20,
+                  spreadRadius: 5,
+                ),
+            ],
+          ),
+          child: FloatingActionButton(
+            onPressed: _toggle,
+            backgroundColor: AppTheme.primary,
+            elevation: 4,
+            shape: const CircleBorder(),
+            child: AnimatedRotation(
+              turns: _isExpanded ? 0.125 : 0, // 45 degrees for X
+              duration: const Duration(milliseconds: 250),
+              child: const Icon(Icons.add, color: Colors.white, size: 32),
+            ),
           ),
         ),
       ],
     );
   }
 
-  Widget _buildStepChild(int index, _QuickLogButtonData data, bool isDark) {
-    final primaryColor = isDark ? AppColorsDark.primary : AppColors.primary;
-    final surfaceColor = isDark ? AppColorsDark.surface : AppColors.surface;
-
+  Widget _buildStepChild(int index, _QuickLogButtonData data) {
     // Fixed distance from bottom for each button
     final double bottomMargin = 72.0 + (index * 56.0);
 
@@ -152,23 +161,29 @@ class _QuickLogFABState extends State<QuickLogFAB>
               mainAxisSize: MainAxisSize.min,
               children: [
                 if (animValue > 0.8)
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    margin: const EdgeInsets.only(right: 12),
-                    decoration: BoxDecoration(
-                      color: surfaceColor,
-                      borderRadius: BorderRadius.circular(8),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.1),
-                          blurRadius: 4,
-                          offset: const Offset(0, 2),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                        margin: const EdgeInsets.only(right: 12),
+                        decoration: BoxDecoration(
+                          color: AppTheme.surface0.withValues(alpha: 0.8),
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: Colors.white.withValues(alpha: 0.1),
+                            width: 1,
+                          ),
                         ),
-                      ],
-                    ),
-                    child: Text(
-                      data.label,
-                      style: AppTextStyles.labelLarge(isDark),
+                        child: Text(
+                          data.label,
+                          style: AppTheme.labelMd(context).copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 SizedBox(
@@ -180,11 +195,16 @@ class _QuickLogFABState extends State<QuickLogFAB>
                       _toggle();
                       widget.onActions[data.action]?.call();
                     },
-                    backgroundColor: surfaceColor,
+                    backgroundColor: AppTheme.bg2,
                     mini: true,
                     elevation: 2,
-                    shape: const CircleBorder(),
-                    child: Icon(data.icon, color: primaryColor, size: 20),
+                    shape: CircleBorder(
+                      side: BorderSide(
+                        color: AppTheme.primary.withValues(alpha: 0.3),
+                        width: 1,
+                      ),
+                    ),
+                    child: Icon(data.icon, color: AppTheme.primary, size: 20),
                   ),
                 ),
               ],

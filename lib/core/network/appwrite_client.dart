@@ -27,14 +27,15 @@ class AppwriteClient {
   static Future<void> initialize() async {
     final endpoint = AW.endpoint;
     final projectId = AW.projectId;
-    
+
     // 1. Certificate Pinning Verification (MITM Security)
     const fingerprint = String.fromEnvironment('APPWRITE_CERT_FINGERPRINT');
     if (fingerprint.isNotEmpty) {
       try {
         await HttpCertificatePinning.check(
           serverURL: endpoint,
-          sha256Fingerprints: [fingerprint],
+          sha: SHA.SHA256,
+          allowedSHAFingerprints: [fingerprint],
           timeout: 10,
         );
       } catch (e) {
@@ -56,4 +57,3 @@ class AppwriteClient {
     _functions = Functions(_client);
   }
 }
-

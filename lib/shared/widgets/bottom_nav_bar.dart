@@ -62,9 +62,10 @@ class FitKarmaBottomNav extends ConsumerWidget {
     
     return BottomAppBar(
       height: 80,
-      color: isDark ? AppTheme.surface0 : AppTheme.lSurface0,
+      padding: EdgeInsets.zero,
+      color: isDark ? AppTheme.bg1 : AppTheme.lBg1,
       shape: const CircularNotchedRectangle(),
-      notchMargin: 8,
+      notchMargin: 10,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
@@ -136,16 +137,18 @@ class _NavBarItem extends StatelessWidget {
               children: [
                 // Subtle Neutral Glow
                 if (isSelected)
-                  Container(
-                    width: 32,
-                    height: 32,
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 300),
+                    width: 44,
+                    height: 28,
                     decoration: BoxDecoration(
-                      shape: BoxShape.circle,
+                      color: activeColor.withValues(alpha: 0.15),
+                      borderRadius: BorderRadius.circular(16),
                       boxShadow: [
                         BoxShadow(
-                          color: isDark ? Colors.white10 : Colors.black.withValues(alpha: 0.05),
-                          blurRadius: 15,
-                          spreadRadius: 2,
+                          color: activeColor.withValues(alpha: 0.2),
+                          blurRadius: 10,
+                          spreadRadius: -2,
                         ),
                       ],
                     ),
@@ -159,19 +162,20 @@ class _NavBarItem extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             Text(
-              item.labelEn,
-              style: TextStyle(
-                fontSize: 10,
+              item.labelEn.toUpperCase(),
+              style: AppTheme.labelMd(context).copyWith(
+                fontSize: 9,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                 color: isSelected ? activeColor : inactiveColor,
+                letterSpacing: 0.5,
               ),
             ),
             Text(
               item.labelHi,
-              style: TextStyle(
+              style: AppTheme.hindi(context).copyWith(
                 fontSize: 9,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                color: isSelected ? activeColor.withValues(alpha: 0.8) : inactiveColor,
+                color: isSelected ? activeColor.withValues(alpha: 0.9) : inactiveColor.withValues(alpha: 0.7),
               ),
             ),
           ],

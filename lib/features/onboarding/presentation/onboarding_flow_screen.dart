@@ -94,8 +94,11 @@ class _OnboardingFlowScreenState extends ConsumerState<OnboardingFlowScreen> {
   }
 
   Future<void> _completeOnboarding() async {
+    final user = ref.read(authStateProvider).value;
+    if (user == null) return;
+    
     final notifier = ref.read(onboardingProvider.notifier);
-    notifier.complete();
+    await notifier.complete(user.id);
     
     if (mounted) {
       HapticFeedback.heavyImpact();

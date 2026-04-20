@@ -1,4 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:drift/drift.dart';
+import '../../../core/di/providers.dart';
+import '../../../core/storage/app_database.dart';
 import 'onboarding_state.dart';
 
 // Riverpod v3: Use NotifierProvider instead of deprecated StateNotifierProvider
@@ -142,8 +145,23 @@ class OnboardingNotifier extends Notifier<OnboardingState> {
     );
   }
 
-  void complete() {
+  Future<void> complete(String userId) async {
     state = state.copyWith(isComplete: true);
+    
+    final userDao = ref.read(userDaoProvider);
+    
+    // 1. Update onboardingCompleted flag
+    await (userDao.update(userDao.users)..where((t) => t.id.equals(userId))).write(
+      UsersCompanion(onboardingCompleted: const Value(true)),
+    );
+    
+    // 2. Award +50 XP as per TODO 9.2
+    await userDao.addKarma(
+      userId, 
+      50, 
+      'onboarding_complete', 
+      'Completed welcome journey',
+    );
   }
 
   double _calculateTdee(double height, double weight, Gender gender, ActivityLevel level) {

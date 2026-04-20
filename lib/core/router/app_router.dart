@@ -2,32 +2,65 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+// Auth & Core
 import '../../features/auth/domain/auth_providers.dart';
 import '../../features/auth/presentation/login_screen.dart';
 import '../../features/auth/presentation/register_screen.dart';
+import '../../features/auth/presentation/splash_screen.dart';
+import '../../features/auth/presentation/biomorphic_shield_screen.dart';
 import '../../features/onboarding/presentation/onboarding_flow_screen.dart';
 import '../../features/dashboard/presentation/dashboard_screen.dart';
+import '../../features/dashboard/presentation/activity_hub_screen.dart';
+import '../../features/profile/presentation/profile_screen.dart';
+import '../../shared/widgets/main_shell.dart';
+import '../security/security_providers.dart';
+
+// Feature Modules - Health
+import '../../features/blood_pressure/presentation/bp_tracker_screen.dart';
+import '../../features/glucose/presentation/glucose_tracker_screen.dart';
+import '../../features/fasting_tracker/presentation/fasting_tracker_screen.dart';
+import '../../features/period/presentation/period_tracker_screen.dart';
+
+// Feature Modules - Lifestyle
 import '../../features/food/presentation/food_home_screen.dart';
 import '../../features/food/presentation/food_log_screen.dart';
 import '../../features/food/presentation/wedding_meal_log_screen.dart';
 import '../../features/food/presentation/lab_report_scan_screen.dart';
-import '../../features/karma/presentation/karma_hub_screen.dart';
-import '../../features/settings/presentation/settings_screen.dart';
-import '../../features/auth/presentation/splash_screen.dart';
-import '../../features/auth/presentation/biomorphic_shield_screen.dart';
+import '../../features/steps/presentation/steps_home_screen.dart';
+import '../../features/workout/presentation/workout_home_screen.dart';
+import '../../features/sleep/presentation/sleep_tracker_screen.dart';
+import '../../features/mood/presentation/mood_tracker_screen.dart';
+import '../../features/habits/presentation/habit_tracker_screen.dart';
+
+// Feature Modules - Knowledge & Community
 import '../../features/ayurveda/presentation/ayurveda_hub_screen.dart';
 import '../../features/ayurveda/presentation/prakriti_quiz_screen.dart';
-import '../security/security_providers.dart';
-import '../../features/profile/presentation/profile_screen.dart';
-import '../../shared/widgets/main_shell.dart';
+import '../../features/karma/presentation/karma_hub_screen.dart';
+import '../../features/social/presentation/social_feed_screen.dart';
+import '../../features/social/presentation/community_groups_screen.dart';
+import '../../features/social/presentation/referral_screen.dart';
+
+// Feature Modules - Systems
+import '../../features/settings/presentation/settings_screen.dart';
+import '../../features/abha/presentation/abha_screen.dart';
+import '../../features/appointments/presentation/doctor_appointments_screen.dart';
+import '../../features/lab_reports/presentation/lab_reports_home_screen.dart';
+import '../../features/emergency/presentation/emergency_card_screen.dart';
+import '../../features/subscription/presentation/subscription_plans_screen.dart';
+import '../../features/wearables/presentation/wearable_connections_screen.dart';
+import '../../features/festival/presentation/festival_calendar_screen.dart';
+import '../../features/wedding_planner/presentation/wedding_planner_home_screen.dart';
 
 final appRouter = Provider<GoRouter>((ref) {
   return GoRouter(
     initialLocation: '/',
     redirect: (context, state) {
       final authState = ref.read(authStateProvider);
+      final userProfile = ref.read(userProfileProvider).value;
       final securityState = ref.read(securityProvider).value;
+      
       final isAuthenticated = authState.value != null;
+      final isOnboardingComplete = userProfile?.onboardingCompleted ?? false;
 
       final isGoingToLogin = state.matchedLocation == '/login';
       final isGoingToRegister = state.matchedLocation == '/register';
@@ -50,7 +83,12 @@ final appRouter = Provider<GoRouter>((ref) {
         return '/login';
       }
 
-      if (isAuthenticated && (isGoingToLogin || isGoingToRegister)) {
+      // 4. Onboarding Guard
+      if (isAuthenticated && !isOnboardingComplete && !isGoingToOnboarding && !isSplash) {
+        return '/onboarding';
+      }
+
+      if (isAuthenticated && (isGoingToLogin || isGoingToRegister || (isOnboardingComplete && isGoingToOnboarding))) {
         return '/home/dashboard';
       }
 
@@ -80,6 +118,7 @@ final appRouter = Provider<GoRouter>((ref) {
           return MainShell(navigationShell: navigationShell);
         },
         branches: [
+          // Branch 0: Dashboard
           StatefulShellBranch(
             routes: [
               GoRoute(
@@ -88,6 +127,7 @@ final appRouter = Provider<GoRouter>((ref) {
               ),
             ],
           ),
+          // Branch 1: Food
           StatefulShellBranch(
             routes: [
               GoRoute(
@@ -101,10 +141,6 @@ final appRouter = Provider<GoRouter>((ref) {
                     ),
                   ),
                   GoRoute(
-                    path: 'detail/:id',
-                    builder: (context, state) => _PlaceholderScreen(name: 'Food Detail: ${state.pathParameters['id']}'),
-                  ),
-                  GoRoute(
                     path: 'lab-scan',
                     builder: (context, state) => const LabReportScanScreen(),
                   ),
@@ -116,42 +152,36 @@ final appRouter = Provider<GoRouter>((ref) {
               ),
             ],
           ),
+          // Branch 2: Activity
           StatefulShellBranch(
             routes: [
               GoRoute(
-                path: '/home/workout',
-                builder: (context, state) => const _PlaceholderScreen(name: 'WorkoutHomeScreen'),
+                path: '/home/activity',
+                builder: (context, state) => const ActivityHubScreen(),
                 routes: [
                   GoRoute(
-                    path: ':id',
-                    builder: (context, state) => _PlaceholderScreen(name: 'Workout Detail: ${state.pathParameters['id']}'),
+                    path: 'steps',
+                    builder: (context, state) => const StepsHomeScreen(),
+                  ),
+                  GoRoute(
+                    path: 'workout',
+                    builder: (context, state) => const WorkoutHomeScreen(),
                     routes: [
                       GoRoute(
-                        path: 'active',
-                        builder: (context, state) => _PlaceholderScreen(name: 'Active Workout: ${state.pathParameters['id']}'),
+                        path: 'gps',
+                        builder: (context, state) => _PlaceholderScreen(name: 'GPS Workout'),
+                      ),
+                      GoRoute(
+                        path: ':id',
+                        builder: (context, state) => _PlaceholderScreen(name: 'Workout Detail: ${state.pathParameters['id']}'),
                       ),
                     ],
-                  ),
-                  GoRoute(
-                    path: 'gps',
-                    builder: (context, state) => const _PlaceholderScreen(name: 'GPS Workout'),
-                  ),
-                  GoRoute(
-                    path: 'custom',
-                    builder: (context, state) => const _PlaceholderScreen(name: 'Custom Workout'),
                   ),
                 ],
               ),
             ],
           ),
-          StatefulShellBranch(
-            routes: [
-              GoRoute(
-                path: '/home/steps',
-                builder: (context, state) => const _PlaceholderScreen(name: 'StepsHomeScreen'),
-              ),
-            ],
-          ),
+          // Branch 3: Profile
           StatefulShellBranch(
             routes: [
               GoRoute(
@@ -170,27 +200,42 @@ final appRouter = Provider<GoRouter>((ref) {
       GoRoute(path: '/ayurveda', builder: (context, state) => const AyurvedaHubScreen()),
       GoRoute(path: '/ayurveda/quiz', builder: (context, state) => const PrakritiQuizScreen()),
       
-      // Additional feature modules
-      GoRoute(path: '/blood-pressure', builder: (context, state) => const _PlaceholderScreen(name: 'BloodPressureScreen')),
-      GoRoute(path: '/glucose', builder: (context, state) => const _PlaceholderScreen(name: 'GlucoseScreen')),
-      GoRoute(path: '/spo2', builder: (context, state) => const _PlaceholderScreen(name: 'SpO2Screen')),
-      GoRoute(path: '/lab-reports', builder: (context, state) => const _PlaceholderScreen(name: 'LabReportsScreen')),
-      GoRoute(path: '/abha', builder: (context, state) => const _PlaceholderScreen(name: 'AbhaScreen')),
-      GoRoute(path: '/appointments', builder: (context, state) => const _PlaceholderScreen(name: 'AppointmentsScreen')),
-      GoRoute(path: '/fasting', builder: (context, state) => const _PlaceholderScreen(name: 'FastingTrackerScreen')),
-      GoRoute(path: '/meditations', builder: (context, state) => const _PlaceholderScreen(name: 'MeditationScreen')),
-      GoRoute(path: '/mood', builder: (context, state) => const _PlaceholderScreen(name: 'MoodTrackerScreen')),
-      GoRoute(path: '/journal', builder: (context, state) => const _PlaceholderScreen(name: 'JournalScreen')),
-      GoRoute(path: '/festival', builder: (context, state) => const _PlaceholderScreen(name: 'FestivalScreen')),
-      GoRoute(path: '/wedding', builder: (context, state) => const _PlaceholderScreen(name: 'WeddingPlannerScreen')),
+      // Health Trackers
+      GoRoute(path: '/blood-pressure', builder: (context, state) => const BPTrackerScreen()),
+      GoRoute(path: '/glucose', builder: (context, state) => const GlucoseTrackerScreen()),
+      GoRoute(path: '/fasting', builder: (context, state) => const FastingTrackerScreen()),
+      GoRoute(path: '/period', builder: (context, state) => const PeriodTrackerScreen()),
+      GoRoute(path: '/sleep', builder: (context, state) => const SleepTrackerScreen()),
+      GoRoute(path: '/mood', builder: (context, state) => const MoodTrackerScreen()),
+      GoRoute(path: '/habits', builder: (context, state) => const HabitTrackerScreen()),
+      
+      // Tools & Knowledge
+      GoRoute(path: '/lab-reports', builder: (context, state) => const LabReportsHomeScreen()),
+      GoRoute(path: '/abha', builder: (context, state) => const ABHAScreen()),
+      GoRoute(path: '/appointments', builder: (context, state) => const DoctorAppointmentsScreen()),
+      GoRoute(path: '/emergency', builder: (context, state) => const EmergencyCardScreen()),
+      GoRoute(path: '/festival', builder: (context, state) => const FestivalCalendarScreen()),
+      GoRoute(path: '/wedding', builder: (context, state) => const WeddingPlannerHomeScreen()),
+      
+      // Social & Account
+      GoRoute(path: '/social', builder: (context, state) => const SocialFeedScreen()),
+      GoRoute(path: '/social/groups', builder: (context, state) => const CommunityGroupsScreen()),
+      GoRoute(path: '/referral', builder: (context, state) => const ReferralScreen()),
+      GoRoute(path: '/subscription', builder: (context, state) => const SubscriptionPlansScreen()),
+      GoRoute(path: '/wearables', builder: (context, state) => const WearableConnectionsScreen()),
+      
+      // Secondary Workout/Steps top-level paths (for QuickLog or deep links)
+      GoRoute(path: '/home/steps', builder: (context, state) => const StepsHomeScreen()),
+      GoRoute(path: '/home/workout', builder: (context, state) => const WorkoutHomeScreen()),
+      GoRoute(path: '/home/workout/gps', builder: (context, state) => _PlaceholderScreen(name: 'GPS Workout')),
     ],
   );
 });
 
-// Temporary placeholder for unimplemented screens
+// Temporary placeholder for unimplemented sub-screens
 class _PlaceholderScreen extends StatelessWidget {
   final String name;
-  const _PlaceholderScreen({required this.name, super.key});
+  const _PlaceholderScreen({required this.name});
 
   @override
   Widget build(BuildContext context) {

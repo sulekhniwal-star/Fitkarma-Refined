@@ -31,7 +31,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final password = _passwordController.text.trim();
 
     if (email.isEmpty || password.isEmpty) {
-      _showError('Please enter your email and password / कृपया अपना ईमेल और पासवर्ड डालें');
+      _showError(
+        'Please enter your email and password / कृपया अपना ईमेल और पासवर्ड डालें',
+      );
       return;
     }
 
@@ -61,9 +63,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       pattern: ScaffoldPattern.immersiveHero,
       heroHeight: 300,
       heroBackground: Container(
-        decoration: const BoxDecoration(
-          gradient: AppTheme.heroPrimary,
-        ),
+        decoration: const BoxDecoration(gradient: AppTheme.heroPrimary),
         child: const AmbientGlowBlobs(),
       ),
       heroContent: Column(
@@ -73,10 +73,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           const SizedBox(height: 16),
           Text(
             'FITKARMA',
-            style: AppTheme.displayLg(context).copyWith(
-              color: Colors.white,
-              letterSpacing: 4,
-            ),
+            style: AppTheme.displayLg(
+              context,
+            ).copyWith(color: Colors.white, letterSpacing: 4),
           ),
           Text(
             'फिटकर्मा',
@@ -90,19 +89,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Welcome back',
-            style: AppTheme.displayMd(context),
-          ),
+          Text('Welcome back', style: AppTheme.displayMd(context)),
           Text(
             'पुनः आपका स्वागत है',
-            style: AppTheme.hindi(context).copyWith(
-              color: AppTheme.textSecondary,
-              fontSize: 16,
-            ),
+            style: AppTheme.hindi(
+              context,
+            ).copyWith(color: AppTheme.textSecondary, fontSize: 16),
           ),
           const SizedBox(height: 32),
-          
+
           GlassCard(
             child: Column(
               children: [
@@ -130,10 +125,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     prefixIcon: const Icon(Icons.lock_outline, size: 20),
                     suffixIcon: IconButton(
                       icon: Icon(
-                        _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                        _obscurePassword
+                            ? Icons.visibility_off
+                            : Icons.visibility,
                         size: 20,
                       ),
-                      onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                      onPressed: () =>
+                          setState(() => _obscurePassword = !_obscurePassword),
                     ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(AppTheme.radiusMd),
@@ -147,12 +145,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     onPressed: () {}, // TODO: Forgot Password
                     child: Text(
                       'Forgot Password?',
-                      style: AppTheme.labelMd(context).copyWith(color: AppTheme.primary),
+                      style: AppTheme.labelMd(
+                        context,
+                      ).copyWith(color: AppTheme.primary),
                     ),
                   ),
                 ),
                 const SizedBox(height: 24),
-                
+
                 SizedBox(
                   width: double.infinity,
                   height: 56,
@@ -170,15 +170,21 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         ? const SizedBox(
                             height: 24,
                             width: 24,
-                            child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                            ),
                           )
-                        : Text('LOGIN / लॉग इन करें', style: AppTheme.labelLg(context)),
+                        : Text(
+                            'LOGIN / लॉग इन करें',
+                            style: AppTheme.labelLg(context),
+                          ),
                   ),
                 ),
               ],
             ),
           ),
-          
+
           const SizedBox(height: 32),
           Row(
             children: [
@@ -191,7 +197,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             ],
           ),
           const SizedBox(height: 32),
-          
+
           Row(
             children: [
               Expanded(
@@ -223,7 +229,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               ),
             ],
           ),
-          
+
           const SizedBox(height: 48),
           Center(
             child: TextButton(
@@ -231,7 +237,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               child: RichText(
                 text: TextSpan(
                   text: "New here? ",
-                  style: AppTheme.bodyMd(context).copyWith(color: AppTheme.textSecondary),
+                  style: AppTheme.bodyMd(
+                    context,
+                  ).copyWith(color: AppTheme.textSecondary),
                   children: [
                     TextSpan(
                       text: "Create Account",
@@ -250,8 +258,3 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     );
   }
 }
-            ),
-    );
-  }
-}
-

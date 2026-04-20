@@ -11,11 +11,11 @@ class AppTheme {
   static const surface2 = Color(0xFF2A2A45);
   static const glass = Color(0x0FFFFFFF); // rgba(255,255,255,0.06)
   static const glassBorder = Color(0x1AFFFFFF); // rgba(255,255,255,0.10)
-  
+
   static const primary = Color(0xFFFF6B35);
   static const primaryGlow = Color(0x40FF6B35); // rgba(255,107,53,0.25)
   static const primaryMuted = Color(0x30FF6B35); // #FF6B3530
-  
+
   static const accent = Color(0xFFFFB547);
   static const secondary = Color(0xFF7B6FF0);
   static const teal = Color(0xFF00D4B4);
@@ -24,7 +24,7 @@ class AppTheme {
   static const error = Color(0xFFF87171);
   static const rose = Color(0xFFFB7185);
   static const purple = Color(0xFFC084FC);
-  
+
   static const textPrimary = Color(0xFFF1F0FF);
   static const textSecondary = Color(0xFF9B99CC);
   static const textMuted = Color(0xFF6B68A0);
@@ -37,14 +37,14 @@ class AppTheme {
   static const lSurface1 = Color(0xFFFFFAF5);
   static const lGlass = Color(0xB2FFFAF5); // rgba(255,250,245,0.70)
   static const lGlassBorder = Color(0x26F4511E); // rgba(244,81,30,0.15)
-  
+
   static const lPrimary = Color(0xFFF4511E);
   static const lPrimaryMuted = Color(0xFFFEE8E2);
   static const lAccent = Color(0xFFF59E0B);
   static const lSecondary = Color(0xFF5B50D4);
   static const lTeal = Color(0xFF0D9488);
   static const lSuccess = Color(0xFF22C55E);
-  
+
   static const lTextPrimary = Color(0xFF1A1830);
   static const lTextSecondary = Color(0xFF6B6A96);
   static const lTextMuted = Color(0xFFB0AEC8);
@@ -56,19 +56,19 @@ class AppTheme {
     end: Alignment(-0.707, 0.707),
     colors: [Color(0xFF0A0818), Color(0xFF1E1850)],
   );
-  
+
   static const heroFestival = LinearGradient(
     begin: Alignment(-0.5, -0.866),
     end: Alignment(0.5, 0.866),
     colors: [Color(0xFF1A0A00), Color(0xFF3D1500)],
   );
-  
+
   static const heroWedding = LinearGradient(
     begin: Alignment(0.707, -0.707),
     end: Alignment(-0.707, 0.707),
     colors: [Color(0xFF1A1000), Color(0xFF3A2800)],
   );
-  
+
   static const heroPrimary = LinearGradient(
     begin: Alignment(0.707, -0.707),
     end: Alignment(-0.707, 0.707),
@@ -188,49 +188,60 @@ class AppTheme {
   }
 
   // Named TextStyles as requested in §2.2
-  static TextStyle heroDisplay(BuildContext context) => Theme.of(context).textTheme.displayLarge!;
-  static TextStyle displayLg(BuildContext context) => Theme.of(context).textTheme.headlineLarge!;
-  static TextStyle displayMd(BuildContext context) => Theme.of(context).textTheme.displayMedium!;
-  
+  static TextStyle heroDisplay(BuildContext context) =>
+      Theme.of(context).textTheme.displayLarge!;
+  static TextStyle displayLg(BuildContext context) =>
+      Theme.of(context).textTheme.headlineLarge!;
+  static TextStyle displayMd(BuildContext context) =>
+      Theme.of(context).textTheme.displayMedium!;
+  static TextStyle headlineMedium(BuildContext context) =>
+      Theme.of(context).textTheme.headlineMedium!;
+
   static TextStyle metricXL(BuildContext context) => GoogleFonts.jetBrainsMono(
     fontSize: 56,
     fontWeight: FontWeight.w700,
     color: Theme.of(context).textTheme.displayLarge?.color,
   );
-  
+
   static TextStyle metricLg(BuildContext context) => GoogleFonts.jetBrainsMono(
     fontSize: 40,
     fontWeight: FontWeight.w700,
     color: Theme.of(context).textTheme.displayLarge?.color,
   );
 
-  static TextStyle h1(BuildContext context) => Theme.of(context).textTheme.displaySmall!;
-  static TextStyle h2(BuildContext context) => Theme.of(context).textTheme.headlineMedium!;
-  static TextStyle h3(BuildContext context) => Theme.of(context).textTheme.headlineSmall!;
-  static TextStyle h4(BuildContext context) => Theme.of(context).textTheme.titleLarge!;
-  
-  static TextStyle labelLg(BuildContext context) => Theme.of(context).textTheme.labelLarge!;
-  static TextStyle labelMd(BuildContext context) => Theme.of(context).textTheme.labelMedium!;
-  
-  static TextStyle bodyLg(BuildContext context) => Theme.of(context).textTheme.bodyLarge!;
-  static TextStyle bodyMd(BuildContext context) => Theme.of(context).textTheme.bodyMedium!;
-  static TextStyle bodySm(BuildContext context) => Theme.of(context).textTheme.bodySmall!;
-  
-  static TextStyle monoXL(BuildContext context) => GoogleFonts.jetBrainsMono(
-    fontSize: 48,
-    fontWeight: FontWeight.w700,
-  );
-  
-  static TextStyle monoLg(BuildContext context) => GoogleFonts.jetBrainsMono(
-    fontSize: 28,
-    fontWeight: FontWeight.w600,
-  );
-  
-  static TextStyle caption(BuildContext context) => Theme.of(context).textTheme.bodySmall!.copyWith(fontSize: 11);
-  
-  static TextStyle hindi(BuildContext context) => GoogleFonts.notoSansDevanagari(
-    fontSize: 12,
-    fontWeight: FontWeight.w500,
-  );
-}
+  static TextStyle h1(BuildContext context) =>
+      Theme.of(context).textTheme.displaySmall!;
+  static TextStyle h2(BuildContext context) =>
+      Theme.of(context).textTheme.headlineMedium!;
+  static TextStyle h3(BuildContext context) =>
+      Theme.of(context).textTheme.headlineSmall!;
+  static TextStyle h4(BuildContext context) =>
+      Theme.of(context).textTheme.titleLarge!;
 
+  static TextStyle labelLg(BuildContext context) =>
+      Theme.of(context).textTheme.labelLarge!;
+  static TextStyle labelMd(BuildContext context) =>
+      Theme.of(context).textTheme.labelMedium!;
+
+  static TextStyle bodyLg(BuildContext context) =>
+      Theme.of(context).textTheme.bodyLarge!;
+  static TextStyle bodyMd(BuildContext context) =>
+      Theme.of(context).textTheme.bodyMedium!;
+  static TextStyle bodySm(BuildContext context) =>
+      Theme.of(context).textTheme.bodySmall!;
+
+  static TextStyle monoXL(BuildContext context) =>
+      GoogleFonts.jetBrainsMono(fontSize: 48, fontWeight: FontWeight.w700);
+
+  static TextStyle monoLg(BuildContext context) =>
+      GoogleFonts.jetBrainsMono(fontSize: 28, fontWeight: FontWeight.w600);
+
+  static TextStyle monoSm(BuildContext context) =>
+      GoogleFonts.jetBrainsMono(fontSize: 10, fontWeight: FontWeight.bold);
+
+  static TextStyle caption(BuildContext context) =>
+      Theme.of(context).textTheme.bodySmall!.copyWith(fontSize: 11);
+
+  static TextStyle hindi(BuildContext context) =>
+      GoogleFonts.notoSansDevanagari(fontSize: 12, fontWeight: FontWeight.w500);
+}

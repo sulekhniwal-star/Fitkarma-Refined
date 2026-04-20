@@ -24,6 +24,18 @@ class UserDao extends DatabaseAccessor<AppDatabase> with _$UserDaoMixin {
     return (select(users)..where((t) => t.id.equals(userId))).getSingleOrNull();
   }
 
+  /// Watches the current user's profile.
+  Stream<LocalUser?> watchUser(String userId) {
+    return (select(users)..where((t) => t.id.equals(userId))).watchSingleOrNull();
+  }
+
+  /// Updates onboarding status.
+  Future<void> updateOnboardingStatus(String userId, bool completed) {
+    return (update(users)..where((t) => t.id.equals(userId))).write(
+      UsersCompanion(onboardingCompleted: Value(completed)),
+    );
+  }
+
   /// Watches the current user's karma balance.
   Stream<int> watchKarmaBalance(String userId) {
     return (select(users)..where((t) => t.id.equals(userId)))
