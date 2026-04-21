@@ -1,4 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../auth/domain/auth_providers.dart';
+import '../../nutrition/data/water_repository.dart';
 import '../../../shared/widgets/meal_tab_bar.dart';
 
 // --- Placeholder Models ---
@@ -45,7 +47,10 @@ final todayCaloriesProvider = FutureProvider<double>((ref) async {
 });
 
 final todayWaterProvider = FutureProvider<int>((ref) async {
-  return 6;
+  final userId = ref.watch(authStateProvider).value?.id;
+  if (userId == null) return 0;
+  final repo = ref.watch(waterRepositoryProvider);
+  return repo.getTotalDailyWater(userId, DateTime.now());
 });
 
 final todayActiveMinutesProvider = FutureProvider<int>((ref) async {

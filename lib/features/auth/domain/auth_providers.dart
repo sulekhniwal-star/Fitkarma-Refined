@@ -76,6 +76,10 @@ class AuthNotifier extends AsyncNotifier<AppUser?> {
       return AppUser.fromAppwrite(user);
     });
   }
+
+  Future<void> forgotPassword(String email) async {
+    await ref.read(authRepositoryProvider).sendPasswordReset(email);
+  }
 }
 
 /// Global provider for the authentication state.

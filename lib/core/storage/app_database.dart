@@ -57,6 +57,7 @@ part 'app_database.g.dart';
   Users,
   HeartRateLogs,
   AyurvedicRitualLogs,
+  WaterLogs,
 ], daos: [
   FoodDao,
   HealthDao,
@@ -68,7 +69,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(String encryptionKey) : super(_openConnection(encryptionKey));
 
   @override
-  int get schemaVersion => 15;
+  int get schemaVersion => 16;
 
   @override
   MigrationStrategy get migration {
@@ -162,6 +163,9 @@ class AppDatabase extends _$AppDatabase {
         }
         if (from < 15) {
           await m.addColumn(users, users.retainOcrText);
+        }
+        if (from < 16) {
+          await m.createTable(waterLogs);
         }
       },
     );

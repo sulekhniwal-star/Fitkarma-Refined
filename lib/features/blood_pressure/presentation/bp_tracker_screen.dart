@@ -10,6 +10,8 @@ import 'package:fitkarma/shared/widgets/glass_card.dart';
 import 'package:fitkarma/shared/widgets/encryption_badge.dart';
 import '../domain/bp_classifier.dart';
 import '../domain/bp_providers.dart';
+import '../../emergency/data/emergency_service.dart';
+import '../../auth/domain/auth_providers.dart';
 
 class BPTrackerScreen extends ConsumerWidget {
   const BPTrackerScreen({super.key});
@@ -327,7 +329,15 @@ class _BPLogSheetState extends State<_BPLogSheet> {
         actions: [
           TextButton(onPressed: () => Navigator.pop(context), child: const Text('Dismiss')),
           ElevatedButton(
-            onPressed: () {}, // TODO: Call emergency
+            onPressed: () {
+              final userId = widget.ref.read(authStateProvider).value?.id;
+              if (userId != null) {
+                widget.ref.read(emergencyServiceProvider).callEmergencyContact(userId);
+              } else {
+                widget.ref.read(emergencyServiceProvider).callPublicEmergency();
+              }
+              Navigator.pop(context);
+            },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
             child: const Text('CALL EMERGENCY', style: TextStyle(color: Colors.white)),
           ),

@@ -1,9 +1,11 @@
 import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'food_aw_service.dart';
 import '../../../core/storage/app_database.dart';
 import '../../../core/storage/daos/food_dao.dart';
 import '../../../core/storage/daos/sync_dao.dart';
 import '../../../core/constants/api_endpoints.dart';
+import '../../../core/network/sync_queue.dart'; // For generateIdempotencyKey
 
 class FoodRepository {
   final FoodDao _foodDao;
@@ -41,7 +43,24 @@ class FoodRepository {
       }
     }
 
-    // 3. TODO: OpenFoodFacts integration as last resort
+    // 3. OpenFoodFacts integration as last resort
+    if (results.length < 5) {
+      try {
+        final offUrl = Uri.parse('https://world.openfoodfacts.org/cgi/search.pl?search_terms=$query&search_simple=1&action=process&json=1&page_size=5');
+        final response = await http.get(offUrl);
+        if (response.statusCode == 200) {
+          final data = jsonDecode(response.body);
+          final products = data['products'] as List? ?? [];
+          results.addAll(products.map((p) => {
+            'id': p['_id'],
+            'name': p['product_name'] ?? 'Unknown',
+            'calories': (p['nutriments']?['energy-kcal_100g'] ?? 0).toDouble(),
+            'source': 'openfoodfacts',
+            'emoji': '🌐',
+          }));
+        }
+      } catch (_) {}
+    }
 
     return results;
   }

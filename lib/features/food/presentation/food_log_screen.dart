@@ -4,10 +4,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
+import 'package:drift/drift.dart' as drift;
 import '../../../shared/theme/app_colors.dart';
 import '../../../shared/theme/app_text_styles.dart';
 import '../../../shared/widgets/async_value_widget.dart';
 import '../../../shared/widgets/food_item_card.dart';
+import '../../../core/storage/app_database.dart';
+import '../../../core/network/sync_queue.dart';
+import '../../auth/domain/auth_providers.dart';
 import '../domain/food_providers.dart';
 
 class FoodLogScreen extends ConsumerStatefulWidget {
@@ -256,20 +260,21 @@ class _FoodLogScreenState extends ConsumerState<FoodLogScreen> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      builder: (context) => _PortionSelectorSheet(item: item),
+      builder: (context) => _PortionSelectorSheet(item: item, mealType: widget.mealType),
     );
   }
 }
 
-class _PortionSelectorSheet extends StatefulWidget {
+class _PortionSelectorSheet extends ConsumerStatefulWidget {
   final Map<String, dynamic> item;
-  const _PortionSelectorSheet({required this.item});
+  final String mealType;
+  const _PortionSelectorSheet({required this.item, required this.mealType});
 
   @override
-  State<_PortionSelectorSheet> createState() => _PortionSelectorSheetState();
+  ConsumerState<_PortionSelectorSheet> createState() => _PortionSelectorSheetState();
 }
 
-class _PortionSelectorSheetState extends State<_PortionSelectorSheet> {
+class _PortionSelectorSheetState extends ConsumerState<_PortionSelectorSheet> {
   double _quantity = 1.0;
   String _unit = 'katori';
 
@@ -327,12 +332,38 @@ class _PortionSelectorSheetState extends State<_PortionSelectorSheet> {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: () {
-                // TODO: Call repo.logFood()
-                Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Logged ${widget.item['name']}!')),
+              onPressed: () async {
+                final userId = ref.read(authStateProvider).value?.id;
+                if (userId == null) return;
+
+                final calories = (widget.item['calories'] ?? 100.0).toDouble() * _quantity;
+                final idempotencyKey = generateIdempotencyKey(userId, 'food_log', DateTime.now().toIso8601String());
+
+                await ref.read(foodRepositoryProvider).logFood(
+                  FoodLogsCompanion.insert(
+                    userId: userId,
+                    foodName: widget.item['name'],
+                    mealType: widget.mealType,
+                    quantityG: _quantity * 100, // Assuming unit is ~100g for now
+                    calories: calories,
+                    proteinG: 0, 
+                    carbsG: 0,
+                    fatG: 0,
+                    loggedAt: DateTime.now(),
+                    idempotencyKey: idempotencyKey,
+                  ),
                 );
+
+                if (mounted) {
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Logged ${widget.item['name']}! 🍽'),
+                      behavior: SnackBarBehavior.floating,
+                      backgroundColor: AppColors.primary,
+                    ),
+                  );
+                }
               },
               child: const Text('Confirm & Log'),
             ),

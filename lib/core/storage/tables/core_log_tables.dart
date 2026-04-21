@@ -244,6 +244,16 @@ class KarmaTransactions extends Table {
   IntColumn get balanceAfter => integer()();
   DateTimeColumn get createdAt => dateTime()();
 }
+@DataClassName('WaterLog')
+class WaterLogs extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get userId => text()();
+  IntColumn get amountMl => integer()();
+  DateTimeColumn get loggedAt => dateTime()();
+  TextColumn get syncStatus => text().withDefault(const Constant('pending'))();
+  TextColumn get idempotencyKey => text()();
+}
+
 @DataClassName('HeartRateLog')
 class HeartRateLogs extends Table {
   IntColumn get id => integer().autoIncrement()();

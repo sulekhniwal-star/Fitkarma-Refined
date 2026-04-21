@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fitkarma/features/festival/presentation/festival_providers.dart';
+import 'package:fitkarma/features/festival/data/festival_repository.dart';
+import 'package:fitkarma/features/festival/domain/festival_date_engine.dart';
 import 'package:fitkarma/features/festival/domain/festival_diet_plan.dart';
+import 'package:fitkarma/core/storage/drift_service.dart';
 
 import 'package:fitkarma/features/auth/domain/auth_providers.dart';
 import 'package:fitkarma/features/onboarding/domain/onboarding_providers.dart';
@@ -36,8 +39,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   void initState() {
     super.initState();
     // Trigger festival sync on startup
-    Future.microtask(() {
-      ref.read(syncFestivalsProvider);
+    Future.microtask(() async {
+      final db = DriftService.db;
+      final engine = FestivalDateEngine();
+      final repo = FestivalRepository(db: db, engine: engine);
+      await repo.syncAll();
       _triggerAbhaSync();
     });
   }
@@ -48,7 +54,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       final userId = ref.read(authStateProvider).value?.id;
       if (userId != null) {
         try {
-          final count = await ref.read(abhaRepositoryProvider).syncRecentRecords(userId);
+          final count = await ref
+              .read(abhaRepositoryProvider)
+              .syncRecentRecords(userId);
           if (count > 0 && mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(

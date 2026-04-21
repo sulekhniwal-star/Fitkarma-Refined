@@ -5,6 +5,8 @@ import '../../core/config/app_theme.dart';
 import '../../core/config/device_tier.dart';
 import '../../features/auth/domain/auth_providers.dart';
 import 'bilingual_label.dart';
+import 'abha_link_badge.dart';
+import '../../features/abha/data/abha_repository.dart';
 
 class SideDrawer extends ConsumerWidget {
   const SideDrawer({super.key});
@@ -37,7 +39,7 @@ class SideDrawer extends ConsumerWidget {
             child: Column(
               children: [
                 // Profile Header
-                _DrawerHeader(user: user, isDark: isDark),
+                _DrawerHeader(user: user, isDark: isDark, ref: ref),
                 
                 const Divider(height: 1),
 
@@ -115,8 +117,9 @@ class SideDrawer extends ConsumerWidget {
 class _DrawerHeader extends StatelessWidget {
   final dynamic user;
   final bool isDark;
+  final WidgetRef ref;
 
-  const _DrawerHeader({required this.user, required this.isDark});
+  const _DrawerHeader({required this.user, required this.isDark, required this.ref});
 
   @override
   Widget build(BuildContext context) {
@@ -154,6 +157,12 @@ class _DrawerHeader extends StatelessWidget {
                     fontSize: 12,
                     color: isDark ? AppTheme.textMuted : AppTheme.lTextSecondary,
                   ),
+                ),
+                const SizedBox(height: 8),
+                ref.watch(abhaStatusProvider).when(
+                  data: (data) => ABHALinkBadge(isLinked: data != null),
+                  loading: () => const SizedBox.shrink(),
+                  error: (_, __) => const SizedBox.shrink(),
                 ),
               ],
             ),

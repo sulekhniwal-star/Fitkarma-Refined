@@ -70,5 +70,13 @@ class AuthRepository {
   Future<void> refreshSession() async {
     await _account.updateSession(sessionId: 'current');
   }
+
+  /// Sends a password reset email.
+  Future<void> sendPasswordReset(String email) async {
+    await _account.createRecovery(
+      email: email,
+      url: 'https://fitkarma.app/reset-password',
+    );
+  }
 }
 

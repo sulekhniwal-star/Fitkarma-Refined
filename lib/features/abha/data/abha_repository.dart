@@ -7,6 +7,7 @@ import '../../../core/security/encryption_service.dart';
 import '../../../core/storage/drift_service.dart';
 import '../../../core/storage/app_database.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../blood_pressure/domain/bp_classifier.dart';
 import '../domain/abha_health_record.dart';
 import '../../lab_reports/domain/models/extraction_result.dart'; // For LabMarker
 
@@ -26,7 +27,7 @@ class AbhaRepository {
     final functions = AppwriteClient.functions;
 
     final response = await functions.createExecution(
-      functionId: 'core-engine', 
+      functionId: 'core-engine',
       body: jsonEncode({
         'action': 'abha-token-exchange',
         'abha_id': abhaId,
@@ -47,16 +48,23 @@ class AbhaRepository {
 
     // 2. Encrypt and store metadata in Drift
     final idEnc = await EncryptionService.encryptField(abhaId, dataClass);
-    final addrEnc = abhaAddress != null 
+    final addrEnc = abhaAddress != null
         ? await EncryptionService.encryptField(abhaAddress, dataClass)
         : null;
-    final nowEnc = await EncryptionService.encryptField(DateTime.now().toIso8601String(), dataClass);
+    final nowEnc = await EncryptionService.encryptField(
+      DateTime.now().toIso8601String(),
+      dataClass,
+    );
 
-    await db.into(db.abhaLinks).insert(
+    await db
+        .into(db.abhaLinks)
+        .insert(
           AbhaLinksCompanion.insert(
             userId: userId,
             abhaIdEncrypted: idEnc,
-            abhaAddressEncrypted: addrEnc != null ? Value(addrEnc) : const Value.absent(),
+            abhaAddressEncrypted: addrEnc != null
+                ? Value(addrEnc)
+                : const Value.absent(),
             linkedAtEncrypted: nowEnc,
             consentGranted: true,
           ),
@@ -69,10 +77,7 @@ class AbhaRepository {
 
     final response = await functions.createExecution(
       functionId: 'core-engine',
-      body: jsonEncode({
-        'action': 'abha-fetch-records',
-        'user_id': userId,
-      }),
+      body: jsonEncode({'action': 'abha-fetch-records', 'user_id': userId}),
     );
 
     if (response.status != 'completed') {
@@ -103,17 +108,22 @@ class AbhaRepository {
 
     if (importedCount > 0) {
       // Update last sync time
-      final nowEnc = await EncryptionService.encryptField(DateTime.now().toIso8601String(), dataClass);
-      await (db.update(db.abhaLinks)..where((t) => t.userId.equals(userId))).write(
-        AbhaLinksCompanion(lastSyncEncrypted: Value(nowEnc)),
+      final nowEnc = await EncryptionService.encryptField(
+        DateTime.now().toIso8601String(),
+        dataClass,
       );
+      await (db.update(db.abhaLinks)..where((t) => t.userId.equals(userId)))
+          .write(AbhaLinksCompanion(lastSyncEncrypted: Value(nowEnc)));
     }
 
     return importedCount;
   }
 
   /// Maps an ABHA record to the local health log tables.
-  Future<void> importHealthRecord(String userId, AbhaHealthRecord record) async {
+  Future<void> importHealthRecord(
+    String userId,
+    AbhaHealthRecord record,
+  ) async {
     switch (record.type) {
       case AbhaRecordType.bloodPressure:
         await _importBloodPressure(userId, record);
@@ -130,26 +140,45 @@ class AbhaRepository {
     }
   }
 
-  Future<void> _importBloodPressure(String userId, AbhaHealthRecord record) async {
+  Future<void> _importBloodPressure(
+    String userId,
+    AbhaHealthRecord record,
+  ) async {
     final sys = record.rawData['systolic'] as double?;
     final dia = record.rawData['diastolic'] as double?;
     final pulse = record.rawData['pulse'] as double?;
 
     if (sys != null && dia != null) {
-      final sysEnc = await EncryptionService.encryptField(sys.toString(), 'bp_glucose');
-      final diaEnc = await EncryptionService.encryptField(dia.toString(), 'bp_glucose');
-      final pulseEnc = pulse != null ? await EncryptionService.encryptField(pulse.toString(), 'bp_glucose') : null;
-
-      await db.into(db.bloodPressureLogs).insert(
-        BloodPressureLogsCompanion.insert(
-          userId: userId,
-          systolicEncrypted: sysEnc,
-          diastolicEncrypted: diaEnc,
-          pulseEncrypted: pulseEnc != null ? Value(pulseEnc) : const Value.absent(),
-          measuredAt: record.date,
-          source: const Value('abha'),
-        ),
+      final sysEnc = await EncryptionService.encryptField(
+        sys.toString(),
+        'bp_glucose',
       );
+      final diaEnc = await EncryptionService.encryptField(
+        dia.toString(),
+        'bp_glucose',
+      );
+      final pulseEnc = pulse != null
+          ? await EncryptionService.encryptField(pulse.toString(), 'bp_glucose')
+          : null;
+
+      final classification = BPClassifier.classify(
+        sys!.toInt(),
+        dia!.toInt(),
+      ).name;
+      await db
+          .into(db.bloodPressureLogs)
+          .insert(
+            BloodPressureLogsCompanion.insert(
+              userId: userId,
+              systolic: sysEnc,
+              diastolic: diaEnc,
+              pulse: pulseEnc != null ? Value(pulseEnc) : const Value.absent(),
+              loggedAt: record.date,
+              classification: classification,
+              source: 'abha',
+              idempotencyKey: '${userId}_bp_${record.date.toIso8601String()}',
+            ),
+          );
     }
   }
 
@@ -158,50 +187,96 @@ class AbhaRepository {
     final type = record.rawData['type'] as String? ?? 'fasting';
 
     if (value != null) {
-      final valEnc = await EncryptionService.encryptField(value.toString(), 'bp_glucose');
-      final typeEnc = await EncryptionService.encryptField(type, 'bp_glucose');
-
-      await db.into(db.glucoseLogs).insert(
-        GlucoseLogsCompanion.insert(
-          userId: userId,
-          valueEncrypted: valEnc,
-          typeEncrypted: typeEnc,
-          measuredAt: record.date,
-          source: const Value('abha'),
-        ),
+      final valEnc = await EncryptionService.encryptField(
+        value.toString(),
+        'bp_glucose',
       );
+
+      String classification;
+      if (type.toLowerCase().contains('fasting')) {
+        if (value < 70) {
+          classification = 'low';
+        } else if (value <= 100) {
+          classification = 'normal';
+        } else if (value <= 125) {
+          classification = 'prediabetic';
+        } else {
+          classification = 'diabetic';
+        }
+      } else {
+        if (value < 70) {
+          classification = 'low';
+        } else if (value <= 140) {
+          classification = 'normal';
+        } else if (value <= 180) {
+          classification = 'prediabetic';
+        } else {
+          classification = 'diabetic';
+        }
+      }
+
+      await db
+          .into(db.glucoseLogs)
+          .insert(
+            GlucoseLogsCompanion.insert(
+              userId: userId,
+              glucoseMgdl: valEnc,
+              readingType: type,
+              loggedAt: record.date,
+              classification: classification,
+              source: 'abha',
+              idempotencyKey:
+                  '${userId}_glucose_${record.date.toIso8601String()}',
+            ),
+          );
     }
   }
 
   Future<void> _importLabReport(String userId, AbhaHealthRecord record) async {
     // Lab reports from ABHA are imported as a summary in the LabReports table
     final metrics = Map<String, dynamic>.from(record.rawData['metrics'] ?? {});
-    
-    await db.into(db.labReports).insert(
-      LabReportsCompanion.insert(
-        userId: userId,
-        reportDate: record.date,
-        labName: Value(record.source),
-        extractedValues: jsonEncode(metrics),
-        confirmedByUser: const Value(true), // ABHA records are pre-verified
-        source: 'abha',
-        importedMetrics: Value(jsonEncode(metrics.keys.toList())),
-      ),
-    );
+
+    await db
+        .into(db.labReports)
+        .insert(
+          LabReportsCompanion.insert(
+            userId: userId,
+            reportDate: record.date,
+            labName: Value(record.source),
+            extractedValues: jsonEncode(metrics),
+            confirmedByUser: const Value(true), // ABHA records are pre-verified
+            source: 'abha',
+            importedMetrics: Value(jsonEncode(metrics.keys.toList())),
+          ),
+        );
   }
 
   /// Fetches Linked ABHA metadata.
   Future<AbhaLinkData?> getLink(String userId) async {
-    final link = await (db.select(db.abhaLinks)..where((t) => t.userId.equals(userId))).getSingleOrNull();
+    final link = await (db.select(
+      db.abhaLinks,
+    )..where((t) => t.userId.equals(userId))).getSingleOrNull();
     if (link == null) return null;
 
-    final id = await EncryptionService.decryptField(link.abhaIdEncrypted, dataClass);
-    final addr = link.abhaAddressEncrypted != null 
-        ? await EncryptionService.decryptField(link.abhaAddressEncrypted!, dataClass)
+    final id = await EncryptionService.decryptField(
+      link.abhaIdEncrypted,
+      dataClass,
+    );
+    final addr = link.abhaAddressEncrypted != null
+        ? await EncryptionService.decryptField(
+            link.abhaAddressEncrypted!,
+            dataClass,
+          )
         : null;
-    final date = await EncryptionService.decryptField(link.linkedAtEncrypted, dataClass);
-    final lastSyncStr = link.lastSyncEncrypted != null 
-        ? await EncryptionService.decryptField(link.lastSyncEncrypted!, dataClass)
+    final date = await EncryptionService.decryptField(
+      link.linkedAtEncrypted,
+      dataClass,
+    );
+    final lastSyncStr = link.lastSyncEncrypted != null
+        ? await EncryptionService.decryptField(
+            link.lastSyncEncrypted!,
+            dataClass,
+          )
         : null;
 
     return AbhaLinkData(
@@ -219,7 +294,12 @@ class AbhaLinkData {
   final DateTime linkedAt;
   final DateTime? lastSync;
 
-  AbhaLinkData({required this.id, this.address, required this.linkedAt, this.lastSync});
+  AbhaLinkData({
+    required this.id,
+    this.address,
+    required this.linkedAt,
+    this.lastSync,
+  });
 }
 
 final abhaRepositoryProvider = Provider<AbhaRepository>((ref) {
@@ -237,11 +317,12 @@ final abhaStatusProvider = FutureProvider<AbhaLinkData?>((ref) async {
   return repo.getLink(userId);
 });
 
-final abhaRecordsProvider = FutureProvider.autoDispose<List<AbhaHealthRecord>>((ref) async {
+final abhaRecordsProvider = FutureProvider.autoDispose<List<AbhaHealthRecord>>((
+  ref,
+) async {
   final repo = ref.watch(abhaRepositoryProvider);
   final authState = ref.watch(authStateProvider);
   final userId = authState.value?.id;
   if (userId == null) return [];
   return repo.fetchHealthRecords(userId);
 });
-

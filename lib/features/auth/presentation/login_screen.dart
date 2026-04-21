@@ -44,6 +44,33 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     }
   }
 
+  Future<void> _handleForgotPassword() async {
+    final email = _emailController.text.trim();
+    if (email.isEmpty) {
+      _showError(
+        'Please enter your email first / कृपया पहले अपना ईमेल दर्ज करें',
+      );
+      return;
+    }
+
+    try {
+      await ref.read(authStateProvider.notifier).forgotPassword(email);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'Reset link sent to your email! / रीसेट लिंक आपके ईमेल पर भेज दिया गया है!',
+            ),
+            backgroundColor: AppTheme.primary,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    } catch (e) {
+      _showError(e.toString());
+    }
+  }
+
   void _showError(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -142,7 +169,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
-                    onPressed: () {}, // TODO: Forgot Password
+                    onPressed: _handleForgotPassword,
                     child: Text(
                       'Forgot Password?',
                       style: AppTheme.labelMd(

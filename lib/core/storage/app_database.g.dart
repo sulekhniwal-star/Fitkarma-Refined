@@ -21551,6 +21551,409 @@ class AyurvedicRitualLogsCompanion extends UpdateCompanion<AyurvedicRitualLog> {
   }
 }
 
+class $WaterLogsTable extends WaterLogs
+    with TableInfo<$WaterLogsTable, WaterLog> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $WaterLogsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
+    'user_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _amountMlMeta = const VerificationMeta(
+    'amountMl',
+  );
+  @override
+  late final GeneratedColumn<int> amountMl = GeneratedColumn<int>(
+    'amount_ml',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _loggedAtMeta = const VerificationMeta(
+    'loggedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> loggedAt = GeneratedColumn<DateTime>(
+    'logged_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _syncStatusMeta = const VerificationMeta(
+    'syncStatus',
+  );
+  @override
+  late final GeneratedColumn<String> syncStatus = GeneratedColumn<String>(
+    'sync_status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('pending'),
+  );
+  static const VerificationMeta _idempotencyKeyMeta = const VerificationMeta(
+    'idempotencyKey',
+  );
+  @override
+  late final GeneratedColumn<String> idempotencyKey = GeneratedColumn<String>(
+    'idempotency_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    userId,
+    amountMl,
+    loggedAt,
+    syncStatus,
+    idempotencyKey,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'water_logs';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<WaterLog> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_userIdMeta);
+    }
+    if (data.containsKey('amount_ml')) {
+      context.handle(
+        _amountMlMeta,
+        amountMl.isAcceptableOrUnknown(data['amount_ml']!, _amountMlMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_amountMlMeta);
+    }
+    if (data.containsKey('logged_at')) {
+      context.handle(
+        _loggedAtMeta,
+        loggedAt.isAcceptableOrUnknown(data['logged_at']!, _loggedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_loggedAtMeta);
+    }
+    if (data.containsKey('sync_status')) {
+      context.handle(
+        _syncStatusMeta,
+        syncStatus.isAcceptableOrUnknown(data['sync_status']!, _syncStatusMeta),
+      );
+    }
+    if (data.containsKey('idempotency_key')) {
+      context.handle(
+        _idempotencyKeyMeta,
+        idempotencyKey.isAcceptableOrUnknown(
+          data['idempotency_key']!,
+          _idempotencyKeyMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_idempotencyKeyMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  WaterLog map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return WaterLog(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      userId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_id'],
+      )!,
+      amountMl: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}amount_ml'],
+      )!,
+      loggedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}logged_at'],
+      )!,
+      syncStatus: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sync_status'],
+      )!,
+      idempotencyKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}idempotency_key'],
+      )!,
+    );
+  }
+
+  @override
+  $WaterLogsTable createAlias(String alias) {
+    return $WaterLogsTable(attachedDatabase, alias);
+  }
+}
+
+class WaterLog extends DataClass implements Insertable<WaterLog> {
+  final int id;
+  final String userId;
+  final int amountMl;
+  final DateTime loggedAt;
+  final String syncStatus;
+  final String idempotencyKey;
+  const WaterLog({
+    required this.id,
+    required this.userId,
+    required this.amountMl,
+    required this.loggedAt,
+    required this.syncStatus,
+    required this.idempotencyKey,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['user_id'] = Variable<String>(userId);
+    map['amount_ml'] = Variable<int>(amountMl);
+    map['logged_at'] = Variable<DateTime>(loggedAt);
+    map['sync_status'] = Variable<String>(syncStatus);
+    map['idempotency_key'] = Variable<String>(idempotencyKey);
+    return map;
+  }
+
+  WaterLogsCompanion toCompanion(bool nullToAbsent) {
+    return WaterLogsCompanion(
+      id: Value(id),
+      userId: Value(userId),
+      amountMl: Value(amountMl),
+      loggedAt: Value(loggedAt),
+      syncStatus: Value(syncStatus),
+      idempotencyKey: Value(idempotencyKey),
+    );
+  }
+
+  factory WaterLog.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return WaterLog(
+      id: serializer.fromJson<int>(json['id']),
+      userId: serializer.fromJson<String>(json['userId']),
+      amountMl: serializer.fromJson<int>(json['amountMl']),
+      loggedAt: serializer.fromJson<DateTime>(json['loggedAt']),
+      syncStatus: serializer.fromJson<String>(json['syncStatus']),
+      idempotencyKey: serializer.fromJson<String>(json['idempotencyKey']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'userId': serializer.toJson<String>(userId),
+      'amountMl': serializer.toJson<int>(amountMl),
+      'loggedAt': serializer.toJson<DateTime>(loggedAt),
+      'syncStatus': serializer.toJson<String>(syncStatus),
+      'idempotencyKey': serializer.toJson<String>(idempotencyKey),
+    };
+  }
+
+  WaterLog copyWith({
+    int? id,
+    String? userId,
+    int? amountMl,
+    DateTime? loggedAt,
+    String? syncStatus,
+    String? idempotencyKey,
+  }) => WaterLog(
+    id: id ?? this.id,
+    userId: userId ?? this.userId,
+    amountMl: amountMl ?? this.amountMl,
+    loggedAt: loggedAt ?? this.loggedAt,
+    syncStatus: syncStatus ?? this.syncStatus,
+    idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+  );
+  WaterLog copyWithCompanion(WaterLogsCompanion data) {
+    return WaterLog(
+      id: data.id.present ? data.id.value : this.id,
+      userId: data.userId.present ? data.userId.value : this.userId,
+      amountMl: data.amountMl.present ? data.amountMl.value : this.amountMl,
+      loggedAt: data.loggedAt.present ? data.loggedAt.value : this.loggedAt,
+      syncStatus: data.syncStatus.present
+          ? data.syncStatus.value
+          : this.syncStatus,
+      idempotencyKey: data.idempotencyKey.present
+          ? data.idempotencyKey.value
+          : this.idempotencyKey,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('WaterLog(')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('amountMl: $amountMl, ')
+          ..write('loggedAt: $loggedAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('idempotencyKey: $idempotencyKey')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, userId, amountMl, loggedAt, syncStatus, idempotencyKey);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is WaterLog &&
+          other.id == this.id &&
+          other.userId == this.userId &&
+          other.amountMl == this.amountMl &&
+          other.loggedAt == this.loggedAt &&
+          other.syncStatus == this.syncStatus &&
+          other.idempotencyKey == this.idempotencyKey);
+}
+
+class WaterLogsCompanion extends UpdateCompanion<WaterLog> {
+  final Value<int> id;
+  final Value<String> userId;
+  final Value<int> amountMl;
+  final Value<DateTime> loggedAt;
+  final Value<String> syncStatus;
+  final Value<String> idempotencyKey;
+  const WaterLogsCompanion({
+    this.id = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.amountMl = const Value.absent(),
+    this.loggedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    this.idempotencyKey = const Value.absent(),
+  });
+  WaterLogsCompanion.insert({
+    this.id = const Value.absent(),
+    required String userId,
+    required int amountMl,
+    required DateTime loggedAt,
+    this.syncStatus = const Value.absent(),
+    required String idempotencyKey,
+  }) : userId = Value(userId),
+       amountMl = Value(amountMl),
+       loggedAt = Value(loggedAt),
+       idempotencyKey = Value(idempotencyKey);
+  static Insertable<WaterLog> custom({
+    Expression<int>? id,
+    Expression<String>? userId,
+    Expression<int>? amountMl,
+    Expression<DateTime>? loggedAt,
+    Expression<String>? syncStatus,
+    Expression<String>? idempotencyKey,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (userId != null) 'user_id': userId,
+      if (amountMl != null) 'amount_ml': amountMl,
+      if (loggedAt != null) 'logged_at': loggedAt,
+      if (syncStatus != null) 'sync_status': syncStatus,
+      if (idempotencyKey != null) 'idempotency_key': idempotencyKey,
+    });
+  }
+
+  WaterLogsCompanion copyWith({
+    Value<int>? id,
+    Value<String>? userId,
+    Value<int>? amountMl,
+    Value<DateTime>? loggedAt,
+    Value<String>? syncStatus,
+    Value<String>? idempotencyKey,
+  }) {
+    return WaterLogsCompanion(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      amountMl: amountMl ?? this.amountMl,
+      loggedAt: loggedAt ?? this.loggedAt,
+      syncStatus: syncStatus ?? this.syncStatus,
+      idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<String>(userId.value);
+    }
+    if (amountMl.present) {
+      map['amount_ml'] = Variable<int>(amountMl.value);
+    }
+    if (loggedAt.present) {
+      map['logged_at'] = Variable<DateTime>(loggedAt.value);
+    }
+    if (syncStatus.present) {
+      map['sync_status'] = Variable<String>(syncStatus.value);
+    }
+    if (idempotencyKey.present) {
+      map['idempotency_key'] = Variable<String>(idempotencyKey.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('WaterLogsCompanion(')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('amountMl: $amountMl, ')
+          ..write('loggedAt: $loggedAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('idempotencyKey: $idempotencyKey')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -21602,6 +22005,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $HeartRateLogsTable heartRateLogs = $HeartRateLogsTable(this);
   late final $AyurvedicRitualLogsTable ayurvedicRitualLogs =
       $AyurvedicRitualLogsTable(this);
+  late final $WaterLogsTable waterLogs = $WaterLogsTable(this);
   late final FoodDao foodDao = FoodDao(this as AppDatabase);
   late final HealthDao healthDao = HealthDao(this as AppDatabase);
   late final UserDao userDao = UserDao(this as AppDatabase);
@@ -21647,6 +22051,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     users,
     heartRateLogs,
     ayurvedicRitualLogs,
+    waterLogs,
   ];
 }
 
@@ -32131,6 +32536,217 @@ typedef $$AyurvedicRitualLogsTableProcessedTableManager =
       AyurvedicRitualLog,
       PrefetchHooks Function()
     >;
+typedef $$WaterLogsTableCreateCompanionBuilder =
+    WaterLogsCompanion Function({
+      Value<int> id,
+      required String userId,
+      required int amountMl,
+      required DateTime loggedAt,
+      Value<String> syncStatus,
+      required String idempotencyKey,
+    });
+typedef $$WaterLogsTableUpdateCompanionBuilder =
+    WaterLogsCompanion Function({
+      Value<int> id,
+      Value<String> userId,
+      Value<int> amountMl,
+      Value<DateTime> loggedAt,
+      Value<String> syncStatus,
+      Value<String> idempotencyKey,
+    });
+
+class $$WaterLogsTableFilterComposer
+    extends Composer<_$AppDatabase, $WaterLogsTable> {
+  $$WaterLogsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get amountMl => $composableBuilder(
+    column: $table.amountMl,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get loggedAt => $composableBuilder(
+    column: $table.loggedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$WaterLogsTableOrderingComposer
+    extends Composer<_$AppDatabase, $WaterLogsTable> {
+  $$WaterLogsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get amountMl => $composableBuilder(
+    column: $table.amountMl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get loggedAt => $composableBuilder(
+    column: $table.loggedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$WaterLogsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $WaterLogsTable> {
+  $$WaterLogsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get userId =>
+      $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<int> get amountMl =>
+      $composableBuilder(column: $table.amountMl, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get loggedAt =>
+      $composableBuilder(column: $table.loggedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => column,
+  );
+}
+
+class $$WaterLogsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $WaterLogsTable,
+          WaterLog,
+          $$WaterLogsTableFilterComposer,
+          $$WaterLogsTableOrderingComposer,
+          $$WaterLogsTableAnnotationComposer,
+          $$WaterLogsTableCreateCompanionBuilder,
+          $$WaterLogsTableUpdateCompanionBuilder,
+          (WaterLog, BaseReferences<_$AppDatabase, $WaterLogsTable, WaterLog>),
+          WaterLog,
+          PrefetchHooks Function()
+        > {
+  $$WaterLogsTableTableManager(_$AppDatabase db, $WaterLogsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$WaterLogsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$WaterLogsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$WaterLogsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> userId = const Value.absent(),
+                Value<int> amountMl = const Value.absent(),
+                Value<DateTime> loggedAt = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                Value<String> idempotencyKey = const Value.absent(),
+              }) => WaterLogsCompanion(
+                id: id,
+                userId: userId,
+                amountMl: amountMl,
+                loggedAt: loggedAt,
+                syncStatus: syncStatus,
+                idempotencyKey: idempotencyKey,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String userId,
+                required int amountMl,
+                required DateTime loggedAt,
+                Value<String> syncStatus = const Value.absent(),
+                required String idempotencyKey,
+              }) => WaterLogsCompanion.insert(
+                id: id,
+                userId: userId,
+                amountMl: amountMl,
+                loggedAt: loggedAt,
+                syncStatus: syncStatus,
+                idempotencyKey: idempotencyKey,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$WaterLogsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $WaterLogsTable,
+      WaterLog,
+      $$WaterLogsTableFilterComposer,
+      $$WaterLogsTableOrderingComposer,
+      $$WaterLogsTableAnnotationComposer,
+      $$WaterLogsTableCreateCompanionBuilder,
+      $$WaterLogsTableUpdateCompanionBuilder,
+      (WaterLog, BaseReferences<_$AppDatabase, $WaterLogsTable, WaterLog>),
+      WaterLog,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -32205,4 +32821,6 @@ class $AppDatabaseManager {
       $$HeartRateLogsTableTableManager(_db, _db.heartRateLogs);
   $$AyurvedicRitualLogsTableTableManager get ayurvedicRitualLogs =>
       $$AyurvedicRitualLogsTableTableManager(_db, _db.ayurvedicRitualLogs);
+  $$WaterLogsTableTableManager get waterLogs =>
+      $$WaterLogsTableTableManager(_db, _db.waterLogs);
 }
