@@ -7,6 +7,8 @@ import '../../../core/security/encryption_service.dart';
 import '../../../core/storage/drift_service.dart';
 import '../../../core/storage/app_database.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../domain/abha_health_record.dart';
+import '../../lab_reports/domain/models/extraction_result.dart'; // For LabMarker
 
 class AbhaRepository {
   final AppDatabase db;
@@ -61,6 +63,133 @@ class AbhaRepository {
         );
   }
 
+  /// Fetches health records from ABHA via Appwrite Function.
+  Future<List<AbhaHealthRecord>> fetchHealthRecords(String userId) async {
+    final functions = AppwriteClient.functions;
+
+    final response = await functions.createExecution(
+      functionId: 'core-engine',
+      body: jsonEncode({
+        'action': 'abha-fetch-records',
+        'user_id': userId,
+      }),
+    );
+
+    if (response.status != 'completed') {
+      throw Exception('Failed to fetch ABHA records: ${response.responseBody}');
+    }
+
+    final List<dynamic> data = jsonDecode(response.responseBody);
+    return data.map((json) => AbhaHealthRecord.fromJson(json)).toList();
+  }
+
+  /// High-level method for startup sync.
+  Future<int> syncRecentRecords(String userId) async {
+    final records = await fetchHealthRecords(userId);
+    int importedCount = 0;
+
+    // Filter for unimported records (in a real app, track sync timestamps)
+    final newRecords = records.where((r) => !r.isImported).toList();
+
+    for (final record in newRecords) {
+      try {
+        await importHealthRecord(userId, record);
+        importedCount++;
+      } catch (e) {
+        // Log individual import failures but continue
+        print('Failed to auto-import ABHA record ${record.id}: $e');
+      }
+    }
+
+    if (importedCount > 0) {
+      // Update last sync time
+      final nowEnc = await EncryptionService.encryptField(DateTime.now().toIso8601String(), dataClass);
+      await (db.update(db.abhaLinks)..where((t) => t.userId.equals(userId))).write(
+        AbhaLinksCompanion(lastSyncEncrypted: Value(nowEnc)),
+      );
+    }
+
+    return importedCount;
+  }
+
+  /// Maps an ABHA record to the local health log tables.
+  Future<void> importHealthRecord(String userId, AbhaHealthRecord record) async {
+    switch (record.type) {
+      case AbhaRecordType.bloodPressure:
+        await _importBloodPressure(userId, record);
+        break;
+      case AbhaRecordType.glucose:
+        await _importGlucose(userId, record);
+        break;
+      case AbhaRecordType.labReport:
+        await _importLabReport(userId, record);
+        break;
+      default:
+        // Prescription is just viewable, not auto-loggable yet
+        break;
+    }
+  }
+
+  Future<void> _importBloodPressure(String userId, AbhaHealthRecord record) async {
+    final sys = record.rawData['systolic'] as double?;
+    final dia = record.rawData['diastolic'] as double?;
+    final pulse = record.rawData['pulse'] as double?;
+
+    if (sys != null && dia != null) {
+      final sysEnc = await EncryptionService.encryptField(sys.toString(), 'bp_glucose');
+      final diaEnc = await EncryptionService.encryptField(dia.toString(), 'bp_glucose');
+      final pulseEnc = pulse != null ? await EncryptionService.encryptField(pulse.toString(), 'bp_glucose') : null;
+
+      await db.into(db.bloodPressureLogs).insert(
+        BloodPressureLogsCompanion.insert(
+          userId: userId,
+          systolicEncrypted: sysEnc,
+          diastolicEncrypted: diaEnc,
+          pulseEncrypted: pulseEnc != null ? Value(pulseEnc) : const Value.absent(),
+          measuredAt: record.date,
+          source: const Value('abha'),
+        ),
+      );
+    }
+  }
+
+  Future<void> _importGlucose(String userId, AbhaHealthRecord record) async {
+    final value = record.rawData['value'] as double?;
+    final type = record.rawData['type'] as String? ?? 'fasting';
+
+    if (value != null) {
+      final valEnc = await EncryptionService.encryptField(value.toString(), 'bp_glucose');
+      final typeEnc = await EncryptionService.encryptField(type, 'bp_glucose');
+
+      await db.into(db.glucoseLogs).insert(
+        GlucoseLogsCompanion.insert(
+          userId: userId,
+          valueEncrypted: valEnc,
+          typeEncrypted: typeEnc,
+          measuredAt: record.date,
+          source: const Value('abha'),
+        ),
+      );
+    }
+  }
+
+  Future<void> _importLabReport(String userId, AbhaHealthRecord record) async {
+    // Lab reports from ABHA are imported as a summary in the LabReports table
+    final metrics = Map<String, dynamic>.from(record.rawData['metrics'] ?? {});
+    
+    await db.into(db.labReports).insert(
+      LabReportsCompanion.insert(
+        userId: userId,
+        reportDate: record.date,
+        labName: Value(record.source),
+        extractedValues: jsonEncode(metrics),
+        confirmedByUser: const Value(true), // ABHA records are pre-verified
+        source: 'abha',
+        importedMetrics: Value(jsonEncode(metrics.keys.toList())),
+      ),
+    );
+  }
+
   /// Fetches Linked ABHA metadata.
   Future<AbhaLinkData?> getLink(String userId) async {
     final link = await (db.select(db.abhaLinks)..where((t) => t.userId.equals(userId))).getSingleOrNull();
@@ -106,5 +235,13 @@ final abhaStatusProvider = FutureProvider<AbhaLinkData?>((ref) async {
   final userId = authState.value?.id;
   if (userId == null) return null;
   return repo.getLink(userId);
+});
+
+final abhaRecordsProvider = FutureProvider.autoDispose<List<AbhaHealthRecord>>((ref) async {
+  final repo = ref.watch(abhaRepositoryProvider);
+  final authState = ref.watch(authStateProvider);
+  final userId = authState.value?.id;
+  if (userId == null) return [];
+  return repo.fetchHealthRecords(userId);
 });
 

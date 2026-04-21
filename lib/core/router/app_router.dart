@@ -25,7 +25,7 @@ import '../../features/period/presentation/period_tracker_screen.dart';
 import '../../features/food/presentation/food_home_screen.dart';
 import '../../features/food/presentation/food_log_screen.dart';
 import '../../features/food/presentation/wedding_meal_log_screen.dart';
-import '../../features/food/presentation/lab_report_scan_screen.dart';
+import '../../features/lab_reports/presentation/pages/lab_report_scan_screen.dart';
 import '../../features/steps/presentation/steps_home_screen.dart';
 import '../../features/workout/presentation/workout_home_screen.dart';
 import '../../features/sleep/presentation/sleep_tracker_screen.dart';

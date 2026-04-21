@@ -19960,6 +19960,21 @@ class $UsersTable extends Users with TableInfo<$UsersTable, LocalUser> {
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _retainOcrTextMeta = const VerificationMeta(
+    'retainOcrText',
+  );
+  @override
+  late final GeneratedColumn<bool> retainOcrText = GeneratedColumn<bool>(
+    'retain_ocr_text',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("retain_ocr_text" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -19979,6 +19994,7 @@ class $UsersTable extends Users with TableInfo<$UsersTable, LocalUser> {
     doshaPitta,
     doshaKapha,
     dominantDosha,
+    retainOcrText,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -20124,6 +20140,15 @@ class $UsersTable extends Users with TableInfo<$UsersTable, LocalUser> {
         ),
       );
     }
+    if (data.containsKey('retain_ocr_text')) {
+      context.handle(
+        _retainOcrTextMeta,
+        retainOcrText.isAcceptableOrUnknown(
+          data['retain_ocr_text']!,
+          _retainOcrTextMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -20201,6 +20226,10 @@ class $UsersTable extends Users with TableInfo<$UsersTable, LocalUser> {
         DriftSqlType.string,
         data['${effectivePrefix}dominant_dosha'],
       ),
+      retainOcrText: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}retain_ocr_text'],
+      )!,
     );
   }
 
@@ -20228,6 +20257,7 @@ class LocalUser extends DataClass implements Insertable<LocalUser> {
   final int? doshaPitta;
   final int? doshaKapha;
   final String? dominantDosha;
+  final bool retainOcrText;
   const LocalUser({
     required this.id,
     required this.email,
@@ -20246,6 +20276,7 @@ class LocalUser extends DataClass implements Insertable<LocalUser> {
     this.doshaPitta,
     this.doshaKapha,
     this.dominantDosha,
+    required this.retainOcrText,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -20289,6 +20320,7 @@ class LocalUser extends DataClass implements Insertable<LocalUser> {
     if (!nullToAbsent || dominantDosha != null) {
       map['dominant_dosha'] = Variable<String>(dominantDosha);
     }
+    map['retain_ocr_text'] = Variable<bool>(retainOcrText);
     return map;
   }
 
@@ -20333,6 +20365,7 @@ class LocalUser extends DataClass implements Insertable<LocalUser> {
       dominantDosha: dominantDosha == null && nullToAbsent
           ? const Value.absent()
           : Value(dominantDosha),
+      retainOcrText: Value(retainOcrText),
     );
   }
 
@@ -20367,6 +20400,7 @@ class LocalUser extends DataClass implements Insertable<LocalUser> {
       doshaPitta: serializer.fromJson<int?>(json['doshaPitta']),
       doshaKapha: serializer.fromJson<int?>(json['doshaKapha']),
       dominantDosha: serializer.fromJson<String?>(json['dominantDosha']),
+      retainOcrText: serializer.fromJson<bool>(json['retainOcrText']),
     );
   }
   @override
@@ -20390,6 +20424,7 @@ class LocalUser extends DataClass implements Insertable<LocalUser> {
       'doshaPitta': serializer.toJson<int?>(doshaPitta),
       'doshaKapha': serializer.toJson<int?>(doshaKapha),
       'dominantDosha': serializer.toJson<String?>(dominantDosha),
+      'retainOcrText': serializer.toJson<bool>(retainOcrText),
     };
   }
 
@@ -20411,6 +20446,7 @@ class LocalUser extends DataClass implements Insertable<LocalUser> {
     Value<int?> doshaPitta = const Value.absent(),
     Value<int?> doshaKapha = const Value.absent(),
     Value<String?> dominantDosha = const Value.absent(),
+    bool? retainOcrText,
   }) => LocalUser(
     id: id ?? this.id,
     email: email ?? this.email,
@@ -20443,6 +20479,7 @@ class LocalUser extends DataClass implements Insertable<LocalUser> {
     dominantDosha: dominantDosha.present
         ? dominantDosha.value
         : this.dominantDosha,
+    retainOcrText: retainOcrText ?? this.retainOcrText,
   );
   LocalUser copyWithCompanion(UsersCompanion data) {
     return LocalUser(
@@ -20489,6 +20526,9 @@ class LocalUser extends DataClass implements Insertable<LocalUser> {
       dominantDosha: data.dominantDosha.present
           ? data.dominantDosha.value
           : this.dominantDosha,
+      retainOcrText: data.retainOcrText.present
+          ? data.retainOcrText.value
+          : this.retainOcrText,
     );
   }
 
@@ -20511,7 +20551,8 @@ class LocalUser extends DataClass implements Insertable<LocalUser> {
           ..write('doshaVata: $doshaVata, ')
           ..write('doshaPitta: $doshaPitta, ')
           ..write('doshaKapha: $doshaKapha, ')
-          ..write('dominantDosha: $dominantDosha')
+          ..write('dominantDosha: $dominantDosha, ')
+          ..write('retainOcrText: $retainOcrText')
           ..write(')'))
         .toString();
   }
@@ -20535,6 +20576,7 @@ class LocalUser extends DataClass implements Insertable<LocalUser> {
     doshaPitta,
     doshaKapha,
     dominantDosha,
+    retainOcrText,
   );
   @override
   bool operator ==(Object other) =>
@@ -20556,7 +20598,8 @@ class LocalUser extends DataClass implements Insertable<LocalUser> {
           other.doshaVata == this.doshaVata &&
           other.doshaPitta == this.doshaPitta &&
           other.doshaKapha == this.doshaKapha &&
-          other.dominantDosha == this.dominantDosha);
+          other.dominantDosha == this.dominantDosha &&
+          other.retainOcrText == this.retainOcrText);
 }
 
 class UsersCompanion extends UpdateCompanion<LocalUser> {
@@ -20577,6 +20620,7 @@ class UsersCompanion extends UpdateCompanion<LocalUser> {
   final Value<int?> doshaPitta;
   final Value<int?> doshaKapha;
   final Value<String?> dominantDosha;
+  final Value<bool> retainOcrText;
   final Value<int> rowid;
   const UsersCompanion({
     this.id = const Value.absent(),
@@ -20596,6 +20640,7 @@ class UsersCompanion extends UpdateCompanion<LocalUser> {
     this.doshaPitta = const Value.absent(),
     this.doshaKapha = const Value.absent(),
     this.dominantDosha = const Value.absent(),
+    this.retainOcrText = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   UsersCompanion.insert({
@@ -20616,6 +20661,7 @@ class UsersCompanion extends UpdateCompanion<LocalUser> {
     this.doshaPitta = const Value.absent(),
     this.doshaKapha = const Value.absent(),
     this.dominantDosha = const Value.absent(),
+    this.retainOcrText = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        email = Value(email),
@@ -20638,6 +20684,7 @@ class UsersCompanion extends UpdateCompanion<LocalUser> {
     Expression<int>? doshaPitta,
     Expression<int>? doshaKapha,
     Expression<String>? dominantDosha,
+    Expression<bool>? retainOcrText,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -20661,6 +20708,7 @@ class UsersCompanion extends UpdateCompanion<LocalUser> {
       if (doshaPitta != null) 'dosha_pitta': doshaPitta,
       if (doshaKapha != null) 'dosha_kapha': doshaKapha,
       if (dominantDosha != null) 'dominant_dosha': dominantDosha,
+      if (retainOcrText != null) 'retain_ocr_text': retainOcrText,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -20683,6 +20731,7 @@ class UsersCompanion extends UpdateCompanion<LocalUser> {
     Value<int?>? doshaPitta,
     Value<int?>? doshaKapha,
     Value<String?>? dominantDosha,
+    Value<bool>? retainOcrText,
     Value<int>? rowid,
   }) {
     return UsersCompanion(
@@ -20703,6 +20752,7 @@ class UsersCompanion extends UpdateCompanion<LocalUser> {
       doshaPitta: doshaPitta ?? this.doshaPitta,
       doshaKapha: doshaKapha ?? this.doshaKapha,
       dominantDosha: dominantDosha ?? this.dominantDosha,
+      retainOcrText: retainOcrText ?? this.retainOcrText,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -20763,6 +20813,9 @@ class UsersCompanion extends UpdateCompanion<LocalUser> {
     if (dominantDosha.present) {
       map['dominant_dosha'] = Variable<String>(dominantDosha.value);
     }
+    if (retainOcrText.present) {
+      map['retain_ocr_text'] = Variable<bool>(retainOcrText.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -20789,6 +20842,7 @@ class UsersCompanion extends UpdateCompanion<LocalUser> {
           ..write('doshaPitta: $doshaPitta, ')
           ..write('doshaKapha: $doshaKapha, ')
           ..write('dominantDosha: $dominantDosha, ')
+          ..write('retainOcrText: $retainOcrText, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -31220,6 +31274,7 @@ typedef $$UsersTableCreateCompanionBuilder =
       Value<int?> doshaPitta,
       Value<int?> doshaKapha,
       Value<String?> dominantDosha,
+      Value<bool> retainOcrText,
       Value<int> rowid,
     });
 typedef $$UsersTableUpdateCompanionBuilder =
@@ -31241,6 +31296,7 @@ typedef $$UsersTableUpdateCompanionBuilder =
       Value<int?> doshaPitta,
       Value<int?> doshaKapha,
       Value<String?> dominantDosha,
+      Value<bool> retainOcrText,
       Value<int> rowid,
     });
 
@@ -31334,6 +31390,11 @@ class $$UsersTableFilterComposer extends Composer<_$AppDatabase, $UsersTable> {
 
   ColumnFilters<String> get dominantDosha => $composableBuilder(
     column: $table.dominantDosha,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get retainOcrText => $composableBuilder(
+    column: $table.retainOcrText,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -31431,6 +31492,11 @@ class $$UsersTableOrderingComposer
     column: $table.dominantDosha,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<bool> get retainOcrText => $composableBuilder(
+    column: $table.retainOcrText,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$UsersTableAnnotationComposer
@@ -31518,6 +31584,11 @@ class $$UsersTableAnnotationComposer
     column: $table.dominantDosha,
     builder: (column) => column,
   );
+
+  GeneratedColumn<bool> get retainOcrText => $composableBuilder(
+    column: $table.retainOcrText,
+    builder: (column) => column,
+  );
 }
 
 class $$UsersTableTableManager
@@ -31565,6 +31636,7 @@ class $$UsersTableTableManager
                 Value<int?> doshaPitta = const Value.absent(),
                 Value<int?> doshaKapha = const Value.absent(),
                 Value<String?> dominantDosha = const Value.absent(),
+                Value<bool> retainOcrText = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => UsersCompanion(
                 id: id,
@@ -31584,6 +31656,7 @@ class $$UsersTableTableManager
                 doshaPitta: doshaPitta,
                 doshaKapha: doshaKapha,
                 dominantDosha: dominantDosha,
+                retainOcrText: retainOcrText,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -31605,6 +31678,7 @@ class $$UsersTableTableManager
                 Value<int?> doshaPitta = const Value.absent(),
                 Value<int?> doshaKapha = const Value.absent(),
                 Value<String?> dominantDosha = const Value.absent(),
+                Value<bool> retainOcrText = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => UsersCompanion.insert(
                 id: id,
@@ -31624,6 +31698,7 @@ class $$UsersTableTableManager
                 doshaPitta: doshaPitta,
                 doshaKapha: doshaKapha,
                 dominantDosha: dominantDosha,
+                retainOcrText: retainOcrText,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0

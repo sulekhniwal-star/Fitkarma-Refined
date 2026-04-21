@@ -4,6 +4,8 @@ import '../data/abha_repository.dart';
 import '../../auth/domain/auth_providers.dart';
 import '../../../shared/widgets/abha_link_badge.dart';
 import '../../../shared/widgets/encryption_badge.dart';
+import '../domain/abha_health_record.dart';
+import '../../../shared/theme/app_colors.dart';
 
 class ABHAScreen extends ConsumerStatefulWidget {
   const ABHAScreen({super.key});
@@ -180,29 +182,156 @@ class _ABHAScreenState extends ConsumerState<ABHAScreen> {
           ),
         ),
         const SizedBox(height: 32),
-        const Align(
-          alignment: Alignment.centerLeft,
-          child: Text('Linked Records', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text('Linked Records', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            TextButton.icon(
+              onPressed: () => ref.refresh(abhaRecordsProvider),
+              icon: const Icon(Icons.sync, size: 18),
+              label: const Text('Refresh'),
+            ),
+          ],
         ),
         const SizedBox(height: 12),
-        _buildLinkedRecordItem('Blood Test Report', 'Apollo Clinics'),
-        _buildLinkedRecordItem('Prescription', 'Dr. Shruthi Sharma'),
+        Consumer(builder: (context, ref, _) {
+          final recordsAsync = ref.watch(abhaRecordsProvider);
+          return recordsAsync.when(
+            data: (records) {
+              if (records.isEmpty) {
+                return const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 40),
+                  child: Center(
+                    child: Text('No verified records found in ABHA.', style: TextStyle(color: Colors.grey)),
+                  ),
+                );
+              }
+              return ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: records.length,
+                itemBuilder: (context, i) => _buildLinkedRecordItem(records[i]),
+              );
+            },
+            loading: () => const Padding(
+              padding: EdgeInsets.symmetric(vertical: 40),
+              child: Center(child: CircularProgressIndicator()),
+            ),
+            error: (e, _) => Center(child: Text('Failed to load records: $e')),
+          );
+        }),
       ],
     );
   }
 
-  Widget _buildLinkedRecordItem(String title, String source) {
+  Widget _buildLinkedRecordItem(AbhaHealthRecord record) {
     return Card(
-      margin: const EdgeInsets.only(bottom: 8),
+      margin: const EdgeInsets.only(bottom: 12),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: ListTile(
-        title: Text(title),
-        subtitle: Text(source),
-        trailing: ElevatedButton(
-          onPressed: () {},
-          child: const Text('IMPORT'),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        leading: Container(
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: _getRecordColor(record.type).withValues(alpha: 0.1),
+            shape: BoxShape.circle,
+          ),
+          child: Icon(_getRecordIcon(record.type), color: _getRecordColor(record.type)),
         ),
+        title: Text(
+          _getRecordTitle(record.type),
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(record.source),
+            Text(
+              '${record.date.day} ${_getMonth(record.date.month)} ${record.date.year}',
+              style: const TextStyle(fontSize: 11, color: Colors.grey),
+            ),
+          ],
+        ),
+        trailing: record.isImported
+            ? const Icon(Icons.check_circle, color: Colors.green)
+            : ElevatedButton(
+                onPressed: () => _importRecord(record),
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size(80, 36),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                ),
+                child: const Text('IMPORT', style: TextStyle(fontSize: 11)),
+              ),
       ),
     );
+  }
+
+  IconData _getRecordIcon(AbhaRecordType type) {
+    switch (type) {
+      case AbhaRecordType.bloodPressure: return Icons.favorite_rounded;
+      case AbhaRecordType.glucose: return Icons.bloodtype_rounded;
+      case AbhaRecordType.labReport: return Icons.biotech_rounded;
+      case AbhaRecordType.prescription: return Icons.description_rounded;
+      default: return Icons.health_and_safety_rounded;
+    }
+  }
+
+  Color _getRecordColor(AbhaRecordType type) {
+    switch (type) {
+      case AbhaRecordType.bloodPressure: return Colors.red;
+      case AbhaRecordType.glucose: return Colors.orange;
+      case AbhaRecordType.labReport: return Colors.blue;
+      case AbhaRecordType.prescription: return Colors.teal;
+      default: return Colors.grey;
+    }
+  }
+
+  String _getRecordTitle(AbhaRecordType type) {
+    switch (type) {
+      case AbhaRecordType.bloodPressure: return 'Blood Pressure';
+      case AbhaRecordType.glucose: return 'Blood Glucose';
+      case AbhaRecordType.labReport: return 'Lab Report';
+      case AbhaRecordType.prescription: return 'Prescription';
+      default: return 'Health Record';
+    }
+  }
+
+  String _getMonth(int m) => ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][m-1];
+
+  Future<void> _importRecord(AbhaHealthRecord record) async {
+    setState(() => _isLoading = true);
+    try {
+      final userId = ref.read(authStateProvider).value?.id;
+      if (userId == null) return;
+
+      await ref.read(abhaRepositoryProvider).importHealthRecord(userId, record);
+      
+      // Force refresh records to show the "check" icon
+      ref.invalidate(abhaRecordsProvider);
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                const Icon(Icons.verified, color: Colors.white),
+                const SizedBox(width: 12),
+                Text('Imported ${record.type.name} to Health Log!'),
+              ],
+            ),
+            backgroundColor: AppColors.primary,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Import failed: $e')),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
   }
 
   Widget _buildConsentNote() {

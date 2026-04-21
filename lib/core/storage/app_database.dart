@@ -68,7 +68,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(String encryptionKey) : super(_openConnection(encryptionKey));
 
   @override
-  int get schemaVersion => 14;
+  int get schemaVersion => 15;
 
   @override
   MigrationStrategy get migration {
@@ -159,6 +159,9 @@ class AppDatabase extends _$AppDatabase {
         }
         if (from < 14) {
           await m.createTable(ayurvedicRitualLogs);
+        }
+        if (from < 15) {
+          await m.addColumn(users, users.retainOcrText);
         }
       },
     );

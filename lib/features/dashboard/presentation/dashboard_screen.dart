@@ -6,6 +6,7 @@ import 'package:fitkarma/features/festival/domain/festival_diet_plan.dart';
 import 'package:fitkarma/features/auth/domain/auth_providers.dart';
 import 'package:fitkarma/features/onboarding/domain/onboarding_providers.dart';
 import 'package:fitkarma/features/dashboard/domain/dashboard_providers.dart';
+import 'package:fitkarma/features/abha/data/abha_repository.dart';
 import 'package:fitkarma/core/config/app_theme.dart';
 import 'package:fitkarma/shared/widgets/fit_scaffold.dart';
 import 'package:fitkarma/shared/widgets/activity_rings.dart';
@@ -35,7 +36,32 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   void initState() {
     super.initState();
     // Trigger festival sync on startup
-    Future.microtask(() => ref.read(syncFestivalsProvider));
+    Future.microtask(() {
+      ref.read(syncFestivalsProvider);
+      _triggerAbhaSync();
+    });
+  }
+
+  void _triggerAbhaSync() async {
+    final status = await ref.read(abhaStatusProvider.future);
+    if (status != null) {
+      final userId = ref.read(authStateProvider).value?.id;
+      if (userId != null) {
+        try {
+          final count = await ref.read(abhaRepositoryProvider).syncRecentRecords(userId);
+          if (count > 0 && mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Synced $count new records from ABHA 🏥'),
+                behavior: SnackBarBehavior.floating,
+              ),
+            );
+          }
+        } catch (e) {
+          debugPrint('ABHA Sync Error: $e');
+        }
+      }
+    }
   }
 
   @override

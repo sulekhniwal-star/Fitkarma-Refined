@@ -23,6 +23,7 @@ class Users extends Table {
   IntColumn get doshaPitta => integer().nullable()();
   IntColumn get doshaKapha => integer().nullable()();
   TextColumn get dominantDosha => text().nullable()(); // vata|pitta|kapha
+  BoolColumn get retainOcrText => boolean().withDefault(const Constant(false))();
 
   @override
   Set<Column> get primaryKey => {id};
