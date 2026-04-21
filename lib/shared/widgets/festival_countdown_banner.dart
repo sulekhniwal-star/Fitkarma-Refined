@@ -1,5 +1,7 @@
-import 'package:flutter/material.dart';
 import '../theme/app_text_styles.dart';
+import '../../core/config/app_theme.dart';
+import '../../core/config/device_tier.dart';
+import 'dart:ui';
 
 /// A prominent banner for upcoming festivals with countdown and meal actions.
 class FestivalCountdownBanner extends StatelessWidget {
@@ -27,6 +29,59 @@ class FestivalCountdownBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final tier = DeviceTierService.getTier(context);
+
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(AppTheme.radiusXl),
+        child: Stack(
+          children: [
+            // 1. Background Surface (Tier-aware Glass)
+            if (tier.hasLayeredDepth)
+              BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: tier.blurRadius, sigmaY: tier.blurRadius),
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        bannerColor.withValues(alpha: tier.glassOpacity),
+                        bannerColor.withValues(alpha: tier.glassOpacity * 0.5),
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    border: Border.all(color: Colors.white.withValues(alpha: 0.1), width: 0.5),
+                  ),
+                ),
+              )
+            else
+              Container(
+                decoration: BoxDecoration(
+                  color: bannerColor.withValues(alpha: 0.9),
+                ),
+              ),
+
+            // 2. Decorative Glint (§2.3)
+            if (tier == DeviceTier.high)
+              Positioned(
+                top: -50,
+                right: -50,
+                child: Container(
+                  width: 150,
+                  height: 150,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: RadialGradient(
+                      colors: [Colors.white.withValues(alpha: 0.2), Colors.transparent],
+                    ),
+                  ),
+                ),
+              ),
+
+            // 3. Content
+            Padding(
+              padding: const EdgeInsets.all(20.0),
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -57,12 +112,19 @@ class FestivalCountdownBanner extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        festivalName,
-                        style: AppTextStyles.h2(true).copyWith(color: Colors.white),
+                        festivalName.toUpperCase(),
+                        style: AppTextStyles.h2(true).copyWith(
+                          color: Colors.white,
+                          letterSpacing: 2.0,
+                          fontWeight: FontWeight.w900,
+                        ),
                       ),
+                      const SizedBox(height: 4),
                       Text(
                         festivalNameHi,
-                        style: AppTextStyles.sectionHeaderHindi(true).copyWith(color: Colors.white70),
+                        style: AppTheme.sectionHi(context).copyWith(
+                          color: Colors.white.withValues(alpha: 0.8),
+                        ),
                       ),
                     ],
                   ),
@@ -76,13 +138,21 @@ class FestivalCountdownBanner extends StatelessWidget {
                   child: Column(
                     children: [
                       Text(
-                        daysRemaining.toString(),
-                        style: AppTextStyles.statLarge(true).copyWith(color: Colors.white),
+                        daysRemaining == 0 ? 'LIVE' : daysRemaining.toString(),
+                        style: AppTheme.monoLg(context).copyWith(
+                          color: Colors.white,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                      const Text(
-                        'DAYS',
-                        style: TextStyle(color: Colors.white70, fontSize: 8, fontWeight: FontWeight.bold),
-                      ),
+                      if (daysRemaining > 0)
+                        Text(
+                          'DAYS',
+                          style: AppTheme.labelSm(context).copyWith(
+                            color: Colors.white70,
+                            letterSpacing: 1.2,
+                          ),
+                        ),
                     ],
                   ),
                 ),
@@ -99,27 +169,47 @@ class FestivalCountdownBanner extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  child: ElevatedButton(
-                    onPressed: onViewDietPlan,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: bannerColor,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  child: Container(
+                    height: 48,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(AppTheme.radiusMd),
                     ),
-                    child: const Text('View Diet Plan'),
+                    child: InkWell(
+                      onPressed: onViewDietPlan,
+                      child: Center(
+                        child: Text(
+                          'VIEW DIET PLAN',
+                          style: AppTheme.labelLg(context).copyWith(
+                            color: bannerColor,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
                 if (onSpecialAction != null) ...[
-                  const SizedBox(width: 8),
+                  const SizedBox(width: 12),
                   Expanded(
-                    child: OutlinedButton(
-                      onPressed: onSpecialAction,
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        side: const BorderSide(color: Colors.white),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    child: Container(
+                      height: 48,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.white, width: 1.5),
+                        borderRadius: BorderRadius.circular(AppTheme.radiusMd),
                       ),
-                      child: Text(specialActionLabel ?? 'Action'),
+                      child: InkWell(
+                        onPressed: onSpecialAction,
+                        child: Center(
+                          child: Text(
+                            (specialActionLabel ?? 'ACTION').toUpperCase(),
+                            style: AppTheme.labelLg(context).copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ],

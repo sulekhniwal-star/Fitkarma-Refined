@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:system_info2/system_info2.dart';
 import 'dart:io';
 
 enum DeviceTier { low, mid, high }
@@ -11,7 +12,8 @@ extension DeviceTierX on DeviceTier {
   bool get hasRive => this == DeviceTier.high;
   bool get hasSpringPhysics => this != DeviceTier.low;
   bool get hasPerDigitCountUp => this == DeviceTier.high;
-  bool get isGlassSurfacesEnabled => this == DeviceTier.high;
+  bool get isGlassSurfacesEnabled => this != DeviceTier.low;
+  bool get hasLayeredDepth => this == DeviceTier.high;
 
   int get ambientGlowCount {
     switch (this) {
@@ -28,8 +30,21 @@ extension DeviceTierX on DeviceTier {
     switch (this) {
       case DeviceTier.low:
         return 0;
-      default:
+      case DeviceTier.mid:
+        return 8.0;
+      case DeviceTier.high:
         return 12.0;
+    }
+  }
+
+  double get glassOpacity {
+    switch (this) {
+      case DeviceTier.low:
+        return 0.95; // Almost opaque for performance
+      case DeviceTier.mid:
+        return 0.7;
+      case DeviceTier.high:
+        return 0.4;
     }
   }
 }
@@ -49,21 +64,38 @@ class DeviceTierNotifier extends Notifier<DeviceTier> {
 
 class DeviceTierService {
   static Future<DeviceTier> detectTier() async {
-    final deviceInfo = DeviceInfoPlugin();
+    try {
+      // Get physical RAM in MB
+      final ramBytes = SysInfo.getTotalPhysicalMemory();
+      final ramMB = ramBytes / (1024 * 1024);
 
+      // Detection based on RAM thresholds (§2.4a)
+      // High: > 6GB (6144 MB)
+      // Mid: 3GB - 6GB
+      // Low: < 3GB (3072 MB)
+      if (ramMB >= 6000) {
+        return DeviceTier.high;
+      } else if (ramMB >= 3000) {
+        return DeviceTier.mid;
+      } else {
+        return DeviceTier.low;
+      }
+    } catch (e) {
+      // Fallback to heuristic if RAM info fails
+      return _fallbackHeuristic();
+    }
+  }
+
+  static Future<DeviceTier> _fallbackHeuristic() async {
+    final deviceInfo = DeviceInfoPlugin();
     try {
       if (Platform.isAndroid) {
         final androidInfo = await deviceInfo.androidInfo;
-        // In a real production app, we would use a native bridge to check physical RAM.
-        // For now, we'll use a heuristic: Android 12+ (SDK 31+) usually targets mid/high devices.
-        // This is a placeholder for actual RAM-based detection.
         if (androidInfo.version.sdkInt < 28) return DeviceTier.low;
-        if (androidInfo.version.sdkInt < 32) return DeviceTier.mid;
+        if (androidInfo.version.sdkInt < 31) return DeviceTier.mid;
         return DeviceTier.high;
       } else if (Platform.isIOS) {
         final iosInfo = await deviceInfo.iosInfo;
-        // iPhones usually have good enough performance for mid-tier at least.
-        // iPhone 11 and above (iPhone12,1+) are high tier.
         if (iosInfo.utsname.machine.contains('iPhone12') ||
             iosInfo.utsname.machine.contains('iPhone13') ||
             iosInfo.utsname.machine.contains('iPhone14') ||
@@ -72,10 +104,7 @@ class DeviceTierService {
         }
         return DeviceTier.mid;
       }
-    } catch (e) {
-      return DeviceTier.mid;
-    }
-
+    } catch (_) {}
     return DeviceTier.mid;
   }
 }

@@ -50,28 +50,34 @@ class AppTheme {
   static const lTextMuted = Color(0xFFB0AEC8);
   static const lDivider = Color(0x121A1830); // rgba(26,24,48,0.07)
 
-  // Gradients
+  // Gradients (§2.4)
   static const heroDeep = LinearGradient(
-    begin: Alignment(0.707, -0.707),
-    end: Alignment(-0.707, 0.707),
+    begin: Alignment.topRight,
+    end: Alignment.bottomLeft,
     colors: [Color(0xFF0A0818), Color(0xFF1E1850)],
   );
 
+  static const heroSleep = LinearGradient(
+    begin: Alignment.topRight,
+    end: Alignment.bottomLeft,
+    colors: [Color(0xFF050510), Color(0xFF150A25)],
+  );
+
   static const heroFestival = LinearGradient(
-    begin: Alignment(-0.5, -0.866),
-    end: Alignment(0.5, 0.866),
+    begin: Alignment.topRight,
+    end: Alignment.bottomLeft,
     colors: [Color(0xFF1A0A00), Color(0xFF3D1500)],
   );
 
   static const heroWedding = LinearGradient(
-    begin: Alignment(0.707, -0.707),
-    end: Alignment(-0.707, 0.707),
+    begin: Alignment.topRight,
+    end: Alignment.bottomLeft,
     colors: [Color(0xFF1A1000), Color(0xFF3A2800)],
   );
 
   static const heroPrimary = LinearGradient(
-    begin: Alignment(0.707, -0.707),
-    end: Alignment(-0.707, 0.707),
+    begin: Alignment.topRight,
+    end: Alignment.bottomLeft,
     colors: [Color(0xFF1A0800), Color(0xFF3D1100)],
   );
 

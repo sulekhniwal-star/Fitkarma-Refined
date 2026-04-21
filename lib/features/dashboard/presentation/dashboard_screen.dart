@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fitkarma/features/festival/presentation/festival_providers.dart';
+import 'package:fitkarma/features/festival/domain/festival_diet_plan.dart';
 
 import 'package:fitkarma/features/auth/domain/auth_providers.dart';
 import 'package:fitkarma/features/onboarding/domain/onboarding_providers.dart';
@@ -18,6 +20,8 @@ import 'package:fitkarma/shared/widgets/abha_link_badge.dart';
 import 'package:fitkarma/shared/widgets/wedding_countdown_card.dart';
 import 'package:fitkarma/shared/widgets/ritucharya_card.dart';
 import 'package:fitkarma/shared/widgets/glass_card.dart';
+import 'package:fitkarma/shared/widgets/bento_card.dart';
+import 'package:fitkarma/shared/widgets/glowing_metric.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({super.key});
@@ -28,17 +32,32 @@ class DashboardScreen extends ConsumerStatefulWidget {
 
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   @override
+  void initState() {
+    super.initState();
+    // Trigger festival sync on startup
+    Future.microtask(() => ref.read(syncFestivalsProvider));
+  }
+
+  @override
   Widget build(BuildContext context) {
     final user = ref.watch(authStateProvider).value;
     final karmaValue = ref.watch(karmaProvider);
+    final currentFest = ref.watch(currentFestivalProvider).value;
 
     return FitScaffold(
       pattern: ScaffoldPattern.immersiveHero,
       title: 'Dashboard',
       heroHeight: 340,
+      heroBackground: currentFest != null
+          ? Container(
+              decoration: const BoxDecoration(gradient: AppTheme.heroFestival),
+            )
+          : null,
       heroContent: AsyncValueWidget<KarmaData>(
         value: karmaValue,
-        loading: const Center(child: CircularProgressIndicator(color: Colors.white24)),
+        loading: const Center(
+          child: CircularProgressIndicator(color: Colors.white24),
+        ),
         data: (karma) => _buildHeroContent(context, karma),
       ),
       body: Column(
@@ -53,7 +72,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           const SizedBox(height: 24),
 
           // 3. Promo Banner (Festival or Wedding)
-          _buildPromoBanner(ref),
+          _buildContextualBanner(ref, currentFest),
           const SizedBox(height: 24),
 
           // 4. Activity Bento Box
@@ -66,7 +85,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
           // 6. Food & Nutrition
           _buildMealSection(ref),
-          
+
           const SizedBox(height: 100), // Padding for BottomNav + FAB
         ],
       ),
@@ -77,80 +96,41 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const SizedBox(height: 40),
-        // Karma Badge Placeholder (Rive)
-        SizedBox(
-          height: 140,
-          width: 140,
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              // Glow Effect
-              Container(
-                width: 100,
-                height: 100,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppTheme.primary.withValues(alpha: 0.3),
-                      blurRadius: 40,
-                      spreadRadius: 10,
-                    ),
-                  ],
-                ),
-              ),
-              // Asset Fallback / Rive
-              const Icon(Icons.stars_rounded, size: 80, color: AppTheme.accent),
-              // Lottie overlay could be added here for celebration
-            ],
-          )
+        const SizedBox(height: 60),
+        // Karma Metric with Glow (§8)
+        GlowingMetric(
+          value: karma.level.toString(),
+          unit: 'LEVEL',
+          color: AppTheme.accent,
         ),
-        const SizedBox(height: 16),
-        Text(
-          'LEVEL ${karma.level}',
-          style: AppTheme.monoLg(context).copyWith(
-            color: Colors.white,
-            letterSpacing: 4.0,
-            fontWeight: FontWeight.w900,
-          ),
-        ),
+        const SizedBox(height: 12),
         Text(
           karma.title.toUpperCase(),
           style: AppTheme.caption(context).copyWith(
             color: AppTheme.accent.withValues(alpha: 0.8),
-            letterSpacing: 2.0,
-            fontWeight: FontWeight.bold,
+            letterSpacing: 4.0,
+            fontWeight: FontWeight.w900,
           ),
         ),
-        const SizedBox(height: 20),
-        // XP Progress
+        const SizedBox(height: 40),
+        // XP Progress - Slim, sleek version
         SizedBox(
-          width: 240,
+          width: 200,
           child: Column(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    '${karma.currentXP} XP',
-                    style: AppTheme.labelMd(context).copyWith(color: Colors.white70),
-                  ),
-                  Text(
-                    '${karma.nextLevelXP} XP',
-                    style: AppTheme.labelMd(context).copyWith(color: Colors.white38),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
               ClipRRect(
                 borderRadius: BorderRadius.circular(AppTheme.radiusFull),
                 child: LinearProgressIndicator(
                   value: karma.currentXP / karma.nextLevelXP,
-                  backgroundColor: Colors.white.withValues(alpha: 0.1),
+                  backgroundColor: Colors.white.withValues(alpha: 0.05),
                   valueColor: const AlwaysStoppedAnimation(AppTheme.primary),
-                  minHeight: 8,
+                  minHeight: 4,
                 ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                '${karma.currentXP} / ${karma.nextLevelXP} XP'.toUpperCase(),
+                style: AppTheme.monoSm(context).copyWith(color: Colors.white38),
               ),
             ],
           ),
@@ -170,13 +150,16 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             gradient: const LinearGradient(
               colors: [AppTheme.primary, AppTheme.accent],
             ),
-            border: Border.all(color: Colors.white.withValues(alpha: 0.2), width: 2),
+            border: Border.all(
+              color: Colors.white.withValues(alpha: 0.2),
+              width: 2,
+            ),
             boxShadow: [
               BoxShadow(
                 color: AppTheme.primary.withValues(alpha: 0.2),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
-              )
+              ),
             ],
           ),
           child: Center(
@@ -201,7 +184,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         ),
         IconButton(
           onPressed: () {},
-          icon: const Icon(Icons.notifications_none_rounded, color: AppTheme.textSecondary),
+          icon: const Icon(
+            Icons.notifications_none_rounded,
+            color: AppTheme.textSecondary,
+          ),
         ),
       ],
     );
@@ -216,24 +202,34 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const BilingualLabel(
-          english: 'Daily Activity',
-          hindi: 'दैनिक गतिविधि',
-        ),
+        const BilingualLabel(english: 'Daily Activity', hindi: 'दैनिक गतिविधि'),
         const SizedBox(height: 16),
         Row(
           children: [
             Expanded(
               flex: 2,
-              child: GlassCard(
-                height: 200,
-                child: Center(
-                  child: ActivityRingsWidget(
-                    rings: [
-                      RingData(progress: (steps / 10000).clamp(0, 1), color: AppTheme.primary, value: steps.toString(), label: 'Steps', goal: '10k'),
-                      RingData(progress: (calories / 2000).clamp(0, 1), color: AppTheme.accent, value: calories.toInt().toString(), label: 'Kcal', goal: '2k'),
-                    ],
-                  ),
+              child: BentoCard(
+                size: BentoSize.twoThird,
+                padding: const EdgeInsets.symmetric(vertical: 24),
+                child: ActivityRingsWidget(
+                  strokeWidth: 12,
+                  gap: 12,
+                  rings: [
+                    RingData(
+                      progress: (steps / 10000).clamp(0, 1),
+                      color: AppTheme.primary,
+                      value: steps.toString(),
+                      label: 'Steps',
+                      goal: '10k',
+                    ),
+                    RingData(
+                      progress: (calories / 2000).clamp(0, 1),
+                      color: AppTheme.accent,
+                      value: calories.toInt().toString(),
+                      label: 'Kcal',
+                      goal: '2k',
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -242,9 +238,19 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               flex: 1,
               child: Column(
                 children: [
-                  _buildStatMiniCard(Icons.water_drop_outlined, water.toString(), 'Cups', AppTheme.teal),
+                  _buildStatMiniCard(
+                    Icons.water_drop_outlined,
+                    water.toString(),
+                    'Cups',
+                    AppTheme.teal,
+                  ),
                   const SizedBox(height: 12),
-                  _buildStatMiniCard(Icons.timer_outlined, minutes.toString(), 'Min', AppTheme.purple),
+                  _buildStatMiniCard(
+                    Icons.timer_outlined,
+                    minutes.toString(),
+                    'Min',
+                    AppTheme.purple,
+                  ),
                 ],
               ),
             ),
@@ -254,17 +260,32 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     );
   }
 
-  Widget _buildStatMiniCard(IconData icon, String value, String unit, Color color) {
-    return GlassCard(
-      height: 94,
+  Widget _buildStatMiniCard(
+    IconData icon,
+    String value,
+    String unit,
+    Color color,
+  ) {
+    return BentoCard(
+      size: BentoSize.quarter,
       padding: const EdgeInsets.all(12),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(icon, color: color, size: 20),
           const SizedBox(height: 4),
-          Text(value, style: AppTheme.labelLg(context).copyWith(color: AppTheme.textPrimary)),
-          Text(unit, style: AppTheme.caption(context).copyWith(color: AppTheme.textMuted)),
+          Text(
+            value,
+            style: AppTheme.labelLg(
+              context,
+            ).copyWith(color: AppTheme.textPrimary),
+          ),
+          Text(
+            unit,
+            style: AppTheme.caption(
+              context,
+            ).copyWith(color: AppTheme.textMuted),
+          ),
         ],
       ),
     );
@@ -275,38 +296,37 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     return ABHALinkBadge(isLinked: abhaId != null);
   }
 
-  Widget _buildPromoBanner(WidgetRef ref) {
-    final festival = ref.watch(activeFestivalProvider);
-    final wedding = ref.watch(activeWeddingProvider);
+  Widget _buildContextualBanner(
+    WidgetRef ref,
+    FestivalCalendarEntry? festival,
+  ) {
+    if (festival != null) {
+      final now = DateTime.now();
+      final daysRemaining = festival.startDate.difference(now).inDays;
 
-    return festival.when(
-      data: (fest) {
-        if (fest != null) {
-          return FestivalCountdownBanner(
-            festivalName: fest.name,
-            festivalNameHi: fest.nameHi,
-            daysRemaining: fest.daysRemaining,
-            fastingType: fest.fastingType,
-            bannerColor: AppTheme.primary,
-            onViewDietPlan: () {},
+      return FestivalCountdownBanner(
+        festivalName: festival.nameEn,
+        festivalNameHi: festival.nameHi,
+        daysRemaining: daysRemaining < 0 ? 0 : daysRemaining,
+        fastingType: festival.fastingType ?? 'Normal',
+        bannerColor: AppTheme.primary,
+        onViewDietPlan: () {},
+      );
+    }
+
+    final wedding = ref.watch(activeWeddingProvider);
+    return wedding.when(
+      data: (wed) {
+        if (wed != null) {
+          return WeddingCountdownCard(
+            role: wed.role,
+            daysToWedding: wed.daysToWedding,
+            nextEventName: wed.nextEventName,
+            daysToNextEvent: wed.daysToNextEvent,
+            onViewPlan: () {},
           );
         }
-        return wedding.when(
-          data: (wed) {
-            if (wed != null) {
-              return WeddingCountdownCard(
-                role: wed.role,
-                daysToWedding: wed.daysToWedding,
-                nextEventName: wed.nextEventName,
-                daysToNextEvent: wed.daysToNextEvent,
-                onViewPlan: () {},
-              );
-            }
-            return const SizedBox.shrink();
-          },
-          loading: () => const SizedBox.shrink(),
-          error: (_, _) => const SizedBox.shrink(),
-        );
+        return const SizedBox.shrink();
       },
       loading: () => const SizedBox.shrink(),
       error: (_, _) => const SizedBox.shrink(),
@@ -315,30 +335,63 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
   Widget _buildInsightSection(WidgetRef ref) {
     final insight = ref.watch(latestInsightProvider);
+    final festival = ref.watch(currentFestivalProvider).value;
 
     return AsyncValueWidget<InsightOutput?>(
       value: insight,
       data: (output) {
-        if (output == null) return const SizedBox.shrink();
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const BilingualLabel(english: 'AI Insights', hindi: 'एआई अंतर्दृष्टि'),
+            const BilingualLabel(
+              english: 'AI Insights',
+              hindi: 'एआई अंतर्दृष्टि',
+            ),
             const SizedBox(height: 16),
-            if (output.isCorrelation)
-              CorrelationInsightCard(
-                message: output.message,
-                modules: const [],
-                onThumbsUp: () {},
-                onThumbsDown: () {},
-              )
-            else
-              InsightCard(
-                message: output.message,
-                onThumbsUp: () {},
-                onThumbsDown: () {},
-                onDismiss: () {},
+
+            // Festival Diet Insight (§9)
+            if (festival != null &&
+                DateTime.now().isAfter(
+                  festival.startDate.subtract(const Duration(days: 1)),
+                ))
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: BentoCard(
+                  size: BentoSize.fullWidth,
+                  padding: const EdgeInsets.all(16),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.auto_awesome, color: AppTheme.accent),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          festival.insightMessage,
+                          style: AppTheme.labelMd(
+                            context,
+                          ).copyWith(color: AppTheme.textPrimary),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
+
+            if (output != null) ...[
+              if (output.isCorrelation)
+                CorrelationInsightCard(
+                  message: output.message,
+                  modules: const [],
+                  onThumbsUp: () {},
+                  onThumbsDown: () {},
+                )
+              else
+                InsightCard(
+                  message: output.message,
+                  onThumbsUp: () {},
+                  onThumbsDown: () {},
+                  onDismiss: () {},
+                ),
+            ],
           ],
         );
       },
@@ -354,20 +407,21 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const BilingualLabel(
-              english: "Today's Meals",
-              hindi: "आज का खाना",
-            ),
+            const BilingualLabel(english: "Today's Meals", hindi: "आज का खाना"),
             TextButton(
               onPressed: () {},
-              child: Text('Add Meal', style: TextStyle(color: AppTheme.primary)),
+              child: Text(
+                'Add Meal',
+                style: TextStyle(color: AppTheme.primary),
+              ),
             ),
           ],
         ),
         const SizedBox(height: 8),
         MealTabBar(
           selected: selectedTab,
-          onChanged: (type) => ref.read(selectedMealTabProvider.notifier).setTab(type),
+          onChanged: (type) =>
+              ref.read(selectedMealTabProvider.notifier).setTab(type),
         ),
         const SizedBox(height: 16),
         FoodItemCard(

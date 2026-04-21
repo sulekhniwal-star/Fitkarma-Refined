@@ -45,7 +45,7 @@
             "name": "FitKarma Core Engine",
             "runtime": "node-18.0",
             "path": "functions/fitkarma-core-engine",
-            "entrypoint": "",
+            "entrypoint": "src/index.js",
             "execute": [],
             "enabled": true,
             "logging": true,
@@ -1577,15 +1577,6 @@
                     "max": 1.7976931348623157e+308
                 },
                 {
-                    "key": "pulse",
-                    "type": "integer",
-                    "required": false,
-                    "array": false,
-                    "default": null,
-                    "min": -9223372036854775808,
-                    "max": 9223372036854775807
-                },
-                {
                     "key": "logged_at",
                     "type": "datetime",
                     "required": true,
@@ -1606,6 +1597,15 @@
                         "health_connect",
                         "healthkit"
                     ]
+                },
+                {
+                    "key": "pulse",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "default": null,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807
                 }
             ],
             "indexes": [
@@ -2768,61 +2768,6 @@
             ]
         },
         {
-            "$id": "personal_records",
-            "$permissions": [],
-            "databaseId": "fitkarma-db",
-            "name": "personal_records",
-            "enabled": true,
-            "rowSecurity": false,
-            "columns": [
-                {
-                    "key": "user_id",
-                    "type": "string",
-                    "required": true,
-                    "array": false,
-                    "size": 36,
-                    "default": null,
-                    "encrypt": false
-                },
-                {
-                    "key": "exercise_name",
-                    "type": "string",
-                    "required": true,
-                    "array": false,
-                    "size": 255,
-                    "default": null,
-                    "encrypt": false
-                },
-                {
-                    "key": "record_value",
-                    "type": "double",
-                    "required": true,
-                    "array": false,
-                    "default": null,
-                    "min": -1.7976931348623157e+308,
-                    "max": 1.7976931348623157e+308
-                },
-                {
-                    "key": "unit",
-                    "type": "string",
-                    "required": true,
-                    "array": false,
-                    "size": 50,
-                    "default": null,
-                    "encrypt": false
-                },
-                {
-                    "key": "achieved_at",
-                    "type": "datetime",
-                    "required": true,
-                    "array": false,
-                    "default": null,
-                    "format": ""
-                }
-            ],
-            "indexes": []
-        },
-        {
             "$id": "workouts",
             "$permissions": [],
             "databaseId": "fitkarma-db",
@@ -3009,6 +2954,14 @@
                     "encrypt": false
                 },
                 {
+                    "key": "linked_at",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "default": null,
+                    "format": ""
+                },
+                {
                     "key": "abha_id",
                     "type": "string",
                     "required": true,
@@ -3027,14 +2980,6 @@
                     "encrypt": false
                 },
                 {
-                    "key": "linked_at",
-                    "type": "datetime",
-                    "required": true,
-                    "array": false,
-                    "default": null,
-                    "format": ""
-                },
-                {
                     "key": "consent_granted",
                     "type": "boolean",
                     "required": true,
@@ -3051,89 +2996,6 @@
                 }
             ],
             "indexes": []
-        },
-        {
-            "$id": "posts",
-            "$permissions": [],
-            "databaseId": "fitkarma-db",
-            "name": "posts",
-            "enabled": true,
-            "rowSecurity": false,
-            "columns": [
-                {
-                    "key": "user_id",
-                    "type": "string",
-                    "required": true,
-                    "array": false,
-                    "size": 36,
-                    "default": null,
-                    "encrypt": false
-                },
-                {
-                    "key": "content",
-                    "type": "string",
-                    "required": true,
-                    "array": false,
-                    "size": 2000,
-                    "default": null,
-                    "encrypt": false
-                },
-                {
-                    "key": "media_file_id",
-                    "type": "string",
-                    "required": false,
-                    "array": false,
-                    "size": 36,
-                    "default": null,
-                    "encrypt": false
-                },
-                {
-                    "key": "post_type",
-                    "type": "string",
-                    "required": true,
-                    "array": false,
-                    "default": null,
-                    "format": "enum",
-                    "elements": [
-                        "workout",
-                        "meal",
-                        "milestone",
-                        "general"
-                    ]
-                },
-                {
-                    "key": "likes_count",
-                    "type": "integer",
-                    "required": false,
-                    "array": false,
-                    "default": 0,
-                    "min": -9223372036854775808,
-                    "max": 9223372036854775807
-                },
-                {
-                    "key": "created_at",
-                    "type": "datetime",
-                    "required": true,
-                    "array": false,
-                    "default": null,
-                    "format": ""
-                }
-            ],
-            "indexes": [
-                {
-                    "key": "user_created_at",
-                    "type": "key",
-                    "status": "available",
-                    "columns": [
-                        "user_id",
-                        "created_at"
-                    ],
-                    "orders": [
-                        "ASC",
-                        "DESC"
-                    ]
-                }
-            ]
         },
         {
             "$id": "challenges",
@@ -3231,6 +3093,89 @@
             ]
         },
         {
+            "$id": "posts",
+            "$permissions": [],
+            "databaseId": "fitkarma-db",
+            "name": "posts",
+            "enabled": true,
+            "rowSecurity": false,
+            "columns": [
+                {
+                    "key": "user_id",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "content",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 2000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "media_file_id",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "post_type",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "default": null,
+                    "format": "enum",
+                    "elements": [
+                        "workout",
+                        "meal",
+                        "milestone",
+                        "general"
+                    ]
+                },
+                {
+                    "key": "likes_count",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "default": 0,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807
+                },
+                {
+                    "key": "created_at",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "default": null,
+                    "format": ""
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "user_created_at",
+                    "type": "key",
+                    "status": "available",
+                    "columns": [
+                        "user_id",
+                        "created_at"
+                    ],
+                    "orders": [
+                        "ASC",
+                        "DESC"
+                    ]
+                }
+            ]
+        },
+        {
             "$id": "subscriptions",
             "$permissions": [],
             "databaseId": "fitkarma-db",
@@ -3307,57 +3252,6 @@
                     "default": null,
                     "min": -1.7976931348623157e+308,
                     "max": 1.7976931348623157e+308
-                }
-            ],
-            "indexes": []
-        },
-        {
-            "$id": "family_groups",
-            "$permissions": [],
-            "databaseId": "fitkarma-db",
-            "name": "family_groups",
-            "enabled": true,
-            "rowSecurity": false,
-            "columns": [
-                {
-                    "key": "admin_id",
-                    "type": "string",
-                    "required": true,
-                    "array": false,
-                    "size": 36,
-                    "default": null,
-                    "encrypt": false
-                },
-                {
-                    "key": "name",
-                    "type": "string",
-                    "required": true,
-                    "array": false,
-                    "size": 255,
-                    "default": null,
-                    "encrypt": false
-                },
-                {
-                    "key": "members",
-                    "type": "string",
-                    "required": true,
-                    "array": false,
-                    "size": 1000,
-                    "default": null,
-                    "encrypt": false
-                },
-                {
-                    "key": "leaderboard_type",
-                    "type": "string",
-                    "required": true,
-                    "array": false,
-                    "default": null,
-                    "format": "enum",
-                    "elements": [
-                        "steps",
-                        "karma",
-                        "workouts"
-                    ]
                 }
             ],
             "indexes": []
@@ -3492,6 +3386,57 @@
                     ]
                 }
             ]
+        },
+        {
+            "$id": "family_groups",
+            "$permissions": [],
+            "databaseId": "fitkarma-db",
+            "name": "family_groups",
+            "enabled": true,
+            "rowSecurity": false,
+            "columns": [
+                {
+                    "key": "admin_id",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "name",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 255,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "members",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 1000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "leaderboard_type",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "default": null,
+                    "format": "enum",
+                    "elements": [
+                        "steps",
+                        "karma",
+                        "workouts"
+                    ]
+                }
+            ],
+            "indexes": []
         },
         {
             "$id": "remote_config",
@@ -3653,6 +3598,202 @@
                 }
             ],
             "indexes": []
+        },
+        {
+            "$id": "festival_calendar",
+            "$permissions": [],
+            "databaseId": "fitkarma-db",
+            "name": "festival_calendar",
+            "enabled": true,
+            "rowSecurity": false,
+            "columns": [
+                {
+                    "key": "festival_key",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 50,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "name_en",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 100,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "name_hi",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 100,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "year",
+                    "type": "integer",
+                    "required": true,
+                    "array": false,
+                    "default": null,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807
+                },
+                {
+                    "key": "start_date",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "default": null,
+                    "format": ""
+                },
+                {
+                    "key": "end_date",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "default": null,
+                    "format": ""
+                },
+                {
+                    "key": "calendar_system",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 50,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "diet_plan_type",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 50,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "region_codes",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 1000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "is_fasting_day",
+                    "type": "boolean",
+                    "required": true,
+                    "array": false,
+                    "default": false
+                },
+                {
+                    "key": "insight_message",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 500,
+                    "default": null,
+                    "encrypt": false
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "start_date_idx",
+                    "type": "key",
+                    "status": "available",
+                    "columns": [
+                        "start_date"
+                    ],
+                    "orders": [
+                        "ASC"
+                    ]
+                }
+            ]
+        },
+        {
+            "$id": "personal_records",
+            "$permissions": [],
+            "databaseId": "fitkarma-db",
+            "name": "personal_records",
+            "enabled": true,
+            "rowSecurity": false,
+            "columns": [
+                {
+                    "key": "user_id",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "exercise_name",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 100,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "value",
+                    "type": "double",
+                    "required": true,
+                    "array": false,
+                    "default": null,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308
+                },
+                {
+                    "key": "unit",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 20,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "logged_at",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "default": null,
+                    "format": ""
+                },
+                {
+                    "key": "proof_file_id",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "user_time",
+                    "type": "key",
+                    "status": "available",
+                    "columns": [
+                        "user_id",
+                        "logged_at"
+                    ],
+                    "orders": [
+                        "ASC",
+                        "DESC"
+                    ]
+                }
+            ]
         },
         {
             "$id": "sync_dead_letter",
