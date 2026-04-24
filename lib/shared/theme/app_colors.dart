@@ -1,37 +1,30 @@
 import 'package:flutter/material.dart';
 
 abstract class AppColors {
-  static const Color primary = Color(0xFFFF5722);
-  static const Color primaryLight = Color(0xFFFF8A65);
-  static const Color primarySurface = Color(0xFFFFF3EF);
+  // --- Light Mode Tokens ---
+  static const Color bg0 = Color(0xFFF7F0E8);
+  static const Color bg1 = Color(0xFFFDF6EC);
+  static const Color surface0 = Color(0xFFFFFFFF);
+  
+  static const Color primary = Color(0xFFF4511E);
+  static const Color primaryMuted = Color(0xFFFEE8E2);
+  static const Color accent = Color(0xFFF59E0B);
+  static const Color secondary = Color(0xFF5B50D4);
+  
+  static const Color teal = Color(0xFF0D9488);
+  static const Color success = Color(0xFF22C55E);
+  
+  static const Color textPrimary = Color(0xFF1A1830);
+  static const Color textSecondary = Color(0xFF6B6A96);
+  static const Color textMuted = Color(0xFF9B99CC);
 
-  static const Color secondary = Color(0xFF3F3D8F);
-  static const Color secondaryDark = Color(0xFF2C2A6B);
-  static const Color secondarySurface = Color(0xFFE8E7F6);
-
-  static const Color accent = Color(0xFFFFC107);
-  static const Color accentLight = Color(0xFFFFECB3);
-  static const Color accentDark = Color(0xFFFF8F00);
-
-  static const Color background = Color(0xFFFDF6EC);
-  static const Color surface = Color(0xFFFFFFFF);
-  static const Color surfaceVariant = Color(0xFFF5F5F5);
-
+  // Legacy/Shared
   static const Color divider = Color(0xFFEEE8E4);
-  static const Color success = Color(0xFF4CAF50);
-  static const Color teal = Color(0xFF009688);
-  static const Color purple = Color(0xFF9C27B0);
   static const Color warning = Color(0xFFFF9800);
   static const Color error = Color(0xFFF44336);
   static const Color rose = Color(0xFFE91E63);
-
-  // Surface & muted shades
-  static const Color primaryMuted = Color(0xFFFFE0D8);
-  static const Color surface0 = Color(0xFFF5F5F5);
-
-  static const Color textPrimary = Color(0xFF1A1A2E);
-  static const Color textSecondary = Color(0xFF6B6B8A);
-  static const Color textMuted = Color(0xFFB0AECB);
+  static const Color surface = Color(0xFFFFFFFF);
+  static const Color accentDark = Color(0xFFFF8F00);
 
   // Wedding Planner gold
   static const Color weddingGoldStart = Color(0xFFD4A017);
@@ -39,22 +32,17 @@ abstract class AppColors {
 
   // Named gradients
   static const LinearGradient heroGradient = LinearGradient(
-    colors: [Color(0xFF3F3D8F), Color(0xFF2C2A6B)],
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-  );
-  static const LinearGradient heroGradientDark = LinearGradient(
-    colors: [Color(0xFF1A1035), Color(0xFF2C2A6B)],
+    colors: [Color(0xFF5B50D4), Color(0xFF3D3BA0)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
   static const LinearGradient orangeGradient = LinearGradient(
-    colors: [Color(0xFFFF5722), Color(0xFFFF8A65)],
+    colors: [Color(0xFFF4511E), Color(0xFFFF8A65)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
   static const LinearGradient amberGradient = LinearGradient(
-    colors: [Color(0xFFFFC107), Color(0xFFFFD54F)],
+    colors: [Color(0xFFF59E0B), Color(0xFFFFD54F)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
@@ -63,41 +51,43 @@ abstract class AppColors {
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
-  static const LinearGradient sleepGradient = LinearGradient(
-    colors: [Color(0xFF1A1A3E), Color(0xFF2C2A6B), Color(0xFFFDF6EC)],
-    begin: Alignment.topCenter,
-    end: Alignment.bottomCenter,
-  );
 }
 
 abstract class AppColorsDark {
-  static const Color background = Color(0xFF121218);
-  static const Color surface = Color(0xFF1E1E2C);
-  static const Color surfaceVariant = Color(0xFF252535);
+  // --- Dark Mode Tokens ---
+  static const Color bg0 = Color(0xFF080810);
+  static const Color bg1 = Color(0xFF0F0F1A);
+  static const Color bg2 = Color(0xFF161625);
+  
+  static const Color surface0 = Color(0xFF1C1C2E);
+  static const Color surface1 = Color(0xFF22223A);
+  static const Color surface2 = Color(0xFF2A2A45);
+  
+  static const Color primary = Color(0xFFFF6B35);
+  static const Color accent = Color(0xFFFFB547);
+  static const Color secondary = Color(0xFF7B6FF0);
+  
+  static const Color teal = Color(0xFF00D4B4);
+  static const Color success = Color(0xFF4ADE80);
+  static const Color warning = Color(0xFFFBBF24);
+  static const Color error = Color(0xFFF87171);
+  static const Color rose = Color(0xFFFB7185);
+  static const Color purple = Color(0xFFC084FC);
+  
+  static const Color textPrimary = Color(0xFFF1F0FF);
+  static const Color textSecondary = Color(0xFF9B99CC);
+  static const Color textMuted = Color(0xFF6B68A0);
+
+  // Legacy/Alias
+  static const Color background = bg1;
+  static const Color surface = surface0;
   static const Color divider = Color(0xFF2C2C3E);
 
-  static const Color primary = Color(0xFFFF7043);
-  static const Color primarySurface = Color(0xFF2A1E1A);
-  static const Color primaryMuted = Color(0xFF3A2520);
-
-  static const Color secondary = Color(0xFF5C59C4);
-  static const Color secondaryDark = Color(0xFF3D3BA0);
-  static const Color secondarySurface = Color(0xFF1E1D3A);
-
-  static const Color surface0 = Color(0xFF252535);
-
-  static const Color accent = Color(0xFFFFD54F);
-  static const Color accentLight = Color(0xFF2C2200);
-  static const Color accentDark = Color(0xFFFFCA28);
-
-  static const Color textPrimary = Color(0xFFF0EEF8);
-  static const Color textSecondary = Color(0xFF9D9BBC);
-  static const Color textMuted = Color(0xFF4A4860);
-
-  static const Color success = Color(0xFF66BB6A);
-  static const Color teal = Color(0xFF26C6DA);
-  static const Color purple = Color(0xFFCE93D8);
-  static const Color warning = Color(0xFFFFA726);
-  static const Color error = Color(0xFFEF5350);
+  static const LinearGradient heroGradient = LinearGradient(
+    colors: [Color(0xFF0A0818), Color(0xFF1E1850)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
 }
+
 

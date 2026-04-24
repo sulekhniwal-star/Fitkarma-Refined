@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
 import 'festival_diet_badge.dart';
+import 'glass_card.dart';
 
 class FestivalCard extends StatelessWidget {
   final String title;
@@ -29,29 +30,24 @@ class FestivalCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    return GlassCard(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: isDark ? AppColorsDark.surface : AppColors.surface,
-        borderRadius: BorderRadius.circular(12),
-        border: isDark ? Border.all(color: AppColorsDark.divider) : null,
-        boxShadow: isDark
-            ? null
-            : [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.1),
-                  blurRadius: 4,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-      ),
+      onTap: onViewDietPlan,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Text(icon, style: const TextStyle(fontSize: 24)),
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: (isDark ? AppColorsDark.primary : AppColors.primary).withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                alignment: Alignment.center,
+                child: Text(icon, style: const TextStyle(fontSize: 24)),
+              ),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(
@@ -70,7 +66,7 @@ class FestivalCard extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 16),
           Row(
             children: [
               FestivalDietBadge(fastingType: fastingType),
@@ -78,7 +74,7 @@ class FestivalCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                 decoration: BoxDecoration(
-                  color: isDark ? AppColorsDark.secondarySurface : AppColors.secondarySurface,
+                  color: (isDark ? AppColorsDark.secondary : AppColors.secondary).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
@@ -90,15 +86,15 @@ class FestivalCard extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 20),
           Row(
             children: [
               Expanded(
                 child: OutlinedButton(
                   onPressed: onSetReminder,
                   style: OutlinedButton.styleFrom(
-                    foregroundColor: isDark ? AppColorsDark.primary : AppColors.primary,
-                    side: BorderSide(color: isDark ? AppColorsDark.primary : AppColors.primary),
+                    foregroundColor: isDark ? AppColorsDark.textPrimary : AppColors.textPrimary,
+                    side: BorderSide(color: isDark ? AppColorsDark.divider : AppColors.divider),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
                   child: const Text('Set Reminder'),
@@ -109,11 +105,12 @@ class FestivalCard extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: onViewDietPlan,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.teal, // Teal for diet plan as per spec or common sense
+                    backgroundColor: isDark ? AppColorsDark.primary : AppColors.primary,
                     foregroundColor: Colors.white,
+                    elevation: 0,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
-                  child: const Text('View Diet Plan'),
+                  child: const Text('View Plan'),
                 ),
               ),
             ],
@@ -123,4 +120,5 @@ class FestivalCard extends StatelessWidget {
     );
   }
 }
+
 

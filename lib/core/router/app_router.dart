@@ -49,7 +49,10 @@ import '../../features/emergency/presentation/emergency_card_screen.dart';
 import '../../features/subscription/presentation/subscription_plans_screen.dart';
 import '../../features/wearables/presentation/wearable_connections_screen.dart';
 import '../../features/festival/presentation/festival_calendar_screen.dart';
+import '../../features/festival/presentation/festival_diet_plan_screen.dart';
 import '../../features/wedding_planner/presentation/wedding_planner_home_screen.dart';
+import '../../features/wedding_planner/presentation/wedding_setup_screen.dart';
+import '../../features/wedding_planner/presentation/wedding_event_day_screen.dart';
 
 final appRouter = Provider<GoRouter>((ref) {
   return GoRouter(
@@ -214,8 +217,36 @@ final appRouter = Provider<GoRouter>((ref) {
       GoRoute(path: '/abha', builder: (context, state) => const ABHAScreen()),
       GoRoute(path: '/appointments', builder: (context, state) => const DoctorAppointmentsScreen()),
       GoRoute(path: '/emergency', builder: (context, state) => const EmergencyCardScreen()),
-      GoRoute(path: '/festival', builder: (context, state) => const FestivalCalendarScreen()),
-      GoRoute(path: '/wedding', builder: (context, state) => const WeddingPlannerHomeScreen()),
+      
+      GoRoute(
+        path: '/festival',
+        builder: (context, state) => const FestivalCalendarScreen(),
+        routes: [
+          GoRoute(
+            path: ':id/diet',
+            builder: (context, state) => FestivalDietPlanScreen(
+              festivalKey: state.pathParameters['id'] ?? '',
+            ),
+          ),
+        ],
+      ),
+      
+      GoRoute(
+        path: '/wedding-planner',
+        builder: (context, state) => const WeddingPlannerHomeScreen(),
+        routes: [
+          GoRoute(
+            path: 'setup',
+            builder: (context, state) => const WeddingSetupScreen(),
+          ),
+          GoRoute(
+            path: 'event/:id',
+            builder: (context, state) => WeddingEventDayScreen(
+              eventKey: state.pathParameters['id'] ?? '',
+            ),
+          ),
+        ],
+      ),
       
       // Social & Account
       GoRoute(path: '/social', builder: (context, state) => const SocialFeedScreen()),

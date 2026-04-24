@@ -5,7 +5,7 @@ import '../../../core/storage/app_database.dart';
 import '../../../core/storage/daos/food_dao.dart';
 import '../../../core/storage/daos/sync_dao.dart';
 import '../../../core/constants/api_endpoints.dart';
-import '../../../core/network/sync_queue.dart'; // For generateIdempotencyKey
+// For generateIdempotencyKey
 
 class FoodRepository {
   final FoodDao _foodDao;

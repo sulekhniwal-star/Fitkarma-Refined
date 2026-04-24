@@ -38,6 +38,7 @@ class AW {
   static const String labReports = String.fromEnvironment('COLLECTION_LAB_REPORTS', defaultValue: 'lab_reports');
   static const String abhaLinks = String.fromEnvironment('COLLECTION_ABHA', defaultValue: 'abha_links');
   static const String remoteConfig = String.fromEnvironment('COLLECTION_REMOTE_CONFIG', defaultValue: 'remote_config');
+  static const String waterLogs = String.fromEnvironment('COLLECTION_WATER_LOGS', defaultValue: 'water_logs');
   static const String syncDeadLetter = String.fromEnvironment('COLLECTION_DEAD_LETTER', defaultValue: 'sync_dead_letter');
 
   // Storage Buckets

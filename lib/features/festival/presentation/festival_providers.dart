@@ -1,37 +1,29 @@
-import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fitkarma/core/storage/drift_service.dart';
 import 'package:fitkarma/core/storage/app_database.dart';
 import 'package:drift/drift.dart';
 
 import 'festival_filter_provider.dart';
-
 import 'package:fitkarma/features/festival/data/festival_repository.dart';
 import 'package:fitkarma/features/festival/domain/festival_date_engine.dart';
 
-part 'festival_providers.g.dart';
-
-@riverpod
-FestivalDateEngine festivalDateEngine(Ref ref) {
+final festivalDateEngineProvider = Provider<FestivalDateEngine>((ref) {
   return FestivalDateEngine();
-}
+});
 
-@riverpod
- FestivalRepository festivalRepository(Ref ref) {
+final appDatabaseProvider = Provider<AppDatabase>((ref) {
+  return DriftService.db;
+});
+
+final festivalRepositoryProvider = Provider<FestivalRepository>((ref) {
   return FestivalRepository(
     db: ref.watch(appDatabaseProvider),
     engine: ref.watch(festivalDateEngineProvider),
   );
-}
-
-/// ✅ DATABASE PROVIDER
-@riverpod
-AppDatabase appDatabase(Ref ref) {
-  return DriftService.db;
-}
+});
 
 /// ✅ ACTIVE FESTIVALS
-@riverpod
-Future activeFestivals(Ref ref) async {
+final activeFestivalsProvider = FutureProvider<List<FestivalCalendarEntry>>((ref) async {
   final db = ref.watch(appDatabaseProvider);
 
   final now = DateTime.now();
@@ -45,12 +37,11 @@ Future activeFestivals(Ref ref) async {
           t.endDate.isBiggerOrEqualValue(todayStart),
     );
 
-  return query.get(); // List<FestivalCalendarEntry>
-}
+  return query.get();
+});
 
 /// ✅ UPCOMING FESTIVALS
-@riverpod
-Future upcomingFestivals(Ref ref) async {
+final upcomingFestivalsProvider = FutureProvider<List<FestivalCalendarEntry>>((ref) async {
   final db = ref.watch(appDatabaseProvider);
 
   final filter = ref.watch(festivalRegionFilterProvider);
@@ -64,32 +55,27 @@ Future upcomingFestivals(Ref ref) async {
     query.where((t) => t.religion.equals(filter.toLowerCase()));
   }
 
-  return query.get(); // List<FestivalCalendarEntry>
-}
+  return query.get();
+});
 
 /// ✅ FESTIVAL DETAIL
-@riverpod
-Future festivalDetail(
-  Ref ref,
-  String festivalKey,
-) async {
+final festivalDetailProvider = FutureProvider.family<FestivalCalendarEntry?, String>((ref, festivalKey) async {
   final db = ref.watch(appDatabaseProvider);
 
   final query = db.select(db.festivalCalendar)
     ..where((t) => t.festivalKey.equals(festivalKey));
 
-  return query.getSingleOrNull(); // FestivalCalendarEntry?
-}
+  return query.getSingleOrNull();
+});
+
 /// ✅ CURRENT ACTIVE / UPCOMING FESTIVAL
-@riverpod
-Future<FestivalCalendarEntry?> currentFestival(Ref ref) async {
+final currentFestivalProvider = FutureProvider<FestivalCalendarEntry?>((ref) async {
   final repo = ref.watch(festivalRepositoryProvider);
   return repo.getCurrentFestival();
-}
+});
 
-/// ✅ SYNC TRIGGER (Call on app startup)
-@riverpod
-Future<void> syncFestivals(Ref ref) async {
+/// ✅ SYNC TRIGGER
+final syncFestivalsProvider = FutureProvider<void>((ref) async {
   final repo = ref.watch(festivalRepositoryProvider);
   await repo.syncAll();
-}
+});

@@ -162,7 +162,7 @@ class _DrawerHeader extends StatelessWidget {
                 ref.watch(abhaStatusProvider).when(
                   data: (data) => ABHALinkBadge(isLinked: data != null),
                   loading: () => const SizedBox.shrink(),
-                  error: (_, __) => const SizedBox.shrink(),
+                  error: (_, _) => const SizedBox.shrink(),
                 ),
               ],
             ),

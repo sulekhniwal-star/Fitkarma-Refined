@@ -1,7 +1,9 @@
+import 'package:flutter/material.dart';
+import 'dart:ui';
+
 import '../theme/app_text_styles.dart';
 import '../../core/config/app_theme.dart';
 import '../../core/config/device_tier.dart';
-import 'dart:ui';
 
 /// A prominent banner for upcoming festivals with countdown and meal actions.
 class FestivalCountdownBanner extends StatelessWidget {
@@ -28,61 +30,6 @@ class FestivalCountdownBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final tier = DeviceTierService.getTier(context);
-
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(AppTheme.radiusXl),
-        child: Stack(
-          children: [
-            // 1. Background Surface (Tier-aware Glass)
-            if (tier.hasLayeredDepth)
-              BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: tier.blurRadius, sigmaY: tier.blurRadius),
-                child: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        bannerColor.withValues(alpha: tier.glassOpacity),
-                        bannerColor.withValues(alpha: tier.glassOpacity * 0.5),
-                      ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                    border: Border.all(color: Colors.white.withValues(alpha: 0.1), width: 0.5),
-                  ),
-                ),
-              )
-            else
-              Container(
-                decoration: BoxDecoration(
-                  color: bannerColor.withValues(alpha: 0.9),
-                ),
-              ),
-
-            // 2. Decorative Glint (§2.3)
-            if (tier == DeviceTier.high)
-              Positioned(
-                top: -50,
-                right: -50,
-                child: Container(
-                  width: 150,
-                  height: 150,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: RadialGradient(
-                      colors: [Colors.white.withValues(alpha: 0.2), Colors.transparent],
-                    ),
-                  ),
-                ),
-              ),
-
-            // 3. Content
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
@@ -122,7 +69,7 @@ class FestivalCountdownBanner extends StatelessWidget {
                       const SizedBox(height: 4),
                       Text(
                         festivalNameHi,
-                        style: AppTheme.sectionHi(context).copyWith(
+                        style: AppTheme.labelMd(context).copyWith(
                           color: Colors.white.withValues(alpha: 0.8),
                         ),
                       ),
@@ -148,7 +95,7 @@ class FestivalCountdownBanner extends StatelessWidget {
                       if (daysRemaining > 0)
                         Text(
                           'DAYS',
-                          style: AppTheme.labelSm(context).copyWith(
+                          style: AppTheme.labelMd(context).copyWith(
                             color: Colors.white70,
                             letterSpacing: 1.2,
                           ),
@@ -176,7 +123,7 @@ class FestivalCountdownBanner extends StatelessWidget {
                       borderRadius: BorderRadius.circular(AppTheme.radiusMd),
                     ),
                     child: InkWell(
-                      onPressed: onViewDietPlan,
+                      onTap: onViewDietPlan,
                       child: Center(
                         child: Text(
                           'VIEW DIET PLAN',
@@ -199,7 +146,7 @@ class FestivalCountdownBanner extends StatelessWidget {
                         borderRadius: BorderRadius.circular(AppTheme.radiusMd),
                       ),
                       child: InkWell(
-                        onPressed: onSpecialAction,
+                        onTap: onSpecialAction,
                         child: Center(
                           child: Text(
                             (specialActionLabel ?? 'ACTION').toUpperCase(),
@@ -250,4 +197,3 @@ class _FeaturePill extends StatelessWidget {
     );
   }
 }
-

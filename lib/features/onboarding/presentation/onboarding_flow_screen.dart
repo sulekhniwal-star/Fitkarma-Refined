@@ -6,6 +6,7 @@ import 'package:fitkarma/core/config/app_theme.dart';
 import 'package:fitkarma/shared/widgets/fit_scaffold.dart';
 import 'package:fitkarma/shared/widgets/ambient_glow_blobs.dart';
 import '../domain/onboarding_providers.dart';
+import 'package:fitkarma/features/auth/domain/auth_providers.dart';
 import 'widgets/progress_indicator.dart';
 import 'widgets/step_name_goals.dart';
 import 'widgets/step_body_stats.dart';

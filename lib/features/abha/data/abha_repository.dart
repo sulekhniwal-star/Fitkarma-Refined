@@ -162,8 +162,8 @@ class AbhaRepository {
           : null;
 
       final classification = BPClassifier.classify(
-        sys!.toInt(),
-        dia!.toInt(),
+        sys.toInt(),
+        dia.toInt(),
       ).name;
       await db
           .into(db.bloodPressureLogs)

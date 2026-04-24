@@ -2,9 +2,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../domain/festival_diet_plan.dart';
-import 'festival_providers.dart';
 import '../../../shared/widgets/async_value_widget.dart';
 import '../../../core/storage/app_database.dart';
+import 'festival_providers.dart';
+import '../../../shared/theme/app_colors.dart';
+import '../../../shared/theme/app_text_styles.dart';
+import '../../../shared/widgets/glass_card.dart';
 
 class FestivalDietPlanScreen extends ConsumerWidget {
   final String festivalKey;
@@ -14,58 +17,106 @@ class FestivalDietPlanScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final config = festivalDietConfigs[festivalKey];
     final detailAsync = ref.watch(festivalDetailProvider(festivalKey));
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     if (config == null) {
-      return const Scaffold(body: Center(child: Text('Diet plan not found.')));
+      return Scaffold(
+        backgroundColor: isDark ? AppColorsDark.bg0 : AppColors.bg0,
+        body: Center(child: Text('Diet plan not found.', style: AppTextStyles.body1(isDark))),
+      );
     }
 
     return AsyncValueWidget<FestivalCalendarEntry?>(
-  value: detailAsync as AsyncValue<FestivalCalendarEntry?>,
+      value: detailAsync,
       data: (detail) {
-        if (detail == null) return const Scaffold(body: Center(child: Text('Festival details not found.')));
+        if (detail == null) {
+          return Scaffold(
+            backgroundColor: isDark ? AppColorsDark.bg0 : AppColors.bg0,
+            body: Center(child: Text('Festival details not found.', style: AppTextStyles.body1(isDark))),
+          );
+        }
+
+        final heroColor = _getHeroColor(config.type, isDark);
 
         return Scaffold(
-          backgroundColor: _getHeroColor(config.type),
+          backgroundColor: isDark ? AppColorsDark.bg0 : AppColors.bg0,
           body: CustomScrollView(
+            physics: const BouncingScrollPhysics(),
             slivers: [
               SliverAppBar(
-                expandedHeight: 200,
+                expandedHeight: 220,
                 pinned: true,
+                stretch: true,
+                backgroundColor: isDark ? AppColorsDark.bg0 : AppColors.bg0,
+                elevation: 0,
                 flexibleSpace: FlexibleSpaceBar(
-                  title: Text(detail.nameEn),
-                  background: Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [Colors.black54, _getHeroColor(config.type)],
+                  centerTitle: false,
+                  titlePadding: const EdgeInsets.only(left: 56, bottom: 16),
+                  title: Text(
+                    detail.nameEn,
+                    style: AppTextStyles.h1(true).copyWith(fontSize: 20),
+                  ),
+                  background: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              heroColor,
+                              heroColor.withValues(alpha: 0.3),
+                            ],
+                          ),
+                        ),
                       ),
-                    ),
+                      Positioned(
+                        right: -20,
+                        bottom: -20,
+                        child: Opacity(
+                          opacity: 0.2,
+                          child: Text(
+                            festivalEmojis[festivalKey] ?? '✨',
+                            style: const TextStyle(fontSize: 180),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              Colors.transparent,
+                              isDark ? AppColorsDark.bg0 : AppColors.bg0,
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
               SliverToBoxAdapter(
-                child: Container(
+                child: Padding(
                   padding: const EdgeInsets.all(16),
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _FastingOverviewCard(config: config),
+                      _FastingOverviewCard(config: config, heroColor: heroColor),
                       const SizedBox(height: 24),
                       if (festivalKey == 'ramadan') 
                         _RamadanClocks(festival: detail),
                       if (festivalKey == 'karva_chauth') 
                         _MoonriseCountdown(festival: detail),
-                      const SizedBox(height: 24),
+                      if (festivalKey == 'ramadan' || festivalKey == 'karva_chauth')
+                        const SizedBox(height: 24),
                       if (config.forbiddenFoodIds != null || config.allowedFoodIds != null)
                         _FoodRestrictionsSection(config: config),
                       const SizedBox(height: 24),
                       const _MealPlanTabs(),
-                      const SizedBox(height: 80),
+                      const SizedBox(height: 100),
                     ],
                   ),
                 ),
@@ -74,59 +125,88 @@ class FestivalDietPlanScreen extends ConsumerWidget {
           ),
           floatingActionButton: FloatingActionButton.extended(
             onPressed: () {},
-            label: const Text('Quick Log'),
-            icon: const Icon(Icons.add),
+            backgroundColor: isDark ? AppColorsDark.primary : AppColors.primary,
+            foregroundColor: Colors.white,
+            label: Text('Quick Log Meal', style: AppTextStyles.labelLarge(true)),
+            icon: const Icon(Icons.add_task),
           ),
         );
       },
     );
   }
 
-  Color _getHeroColor(FestivalDietType type) {
+  Color _getHeroColor(FestivalDietType type, bool isDark) {
     switch (type) {
-      case FestivalDietType.nirjalaFast: return Colors.red.shade900;
-      case FestivalDietType.sattvicFast: return Colors.orange.shade700;
-      case FestivalDietType.rozaFast: return Colors.green.shade800;
-      case FestivalDietType.feastMode: return Colors.purple.shade700;
-      default: return Colors.blue.shade800;
+      case FestivalDietType.nirjalaFast: return isDark ? const Color(0xFF450A0A) : const Color(0xFF991B1B);
+      case FestivalDietType.sattvicFast: return isDark ? const Color(0xFF451A03) : const Color(0xFF9A3412);
+      case FestivalDietType.rozaFast: return isDark ? const Color(0xFF064E3B) : const Color(0xFF065F46);
+      case FestivalDietType.feastMode: return isDark ? const Color(0xFF4C1D95) : const Color(0xFF6D28D9);
+      default: return isDark ? AppColorsDark.secondary : AppColors.secondary;
     }
   }
 }
 
 class _FastingOverviewCard extends StatelessWidget {
   final FestivalDietConfig config;
-  const _FastingOverviewCard({required this.config});
+  final Color heroColor;
+  const _FastingOverviewCard({required this.config, required this.heroColor});
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 0,
-      color: Colors.grey.shade100,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Icon(Icons.info_outline, color: Theme.of(context).primaryColor),
-                const SizedBox(width: 8),
-                Text('Diet Profile: ${config.type.name}', 
-                  style: const TextStyle(fontWeight: FontWeight.bold)),
-              ],
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
+    return GlassCard(
+      padding: const EdgeInsets.all(20),
+      color: heroColor.withValues(alpha: 0.1),
+      borderColor: heroColor.withValues(alpha: 0.2),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.auto_awesome, color: heroColor, size: 20),
+              const SizedBox(width: 8),
+              Text(
+                'Diet Profile: ${config.type.name.toUpperCase()}', 
+                style: AppTextStyles.monoSm(isDark).copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: heroColor,
+                  letterSpacing: 1.1,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Text(
+            config.insightCardMessage,
+            style: AppTextStyles.body1(isDark).copyWith(height: 1.5),
+          ),
+          const SizedBox(height: 20),
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: (isDark ? Colors.black : Colors.white).withValues(alpha: 0.2),
+              borderRadius: BorderRadius.circular(16),
             ),
-            const SizedBox(height: 12),
-            Text(config.insightCardMessage),
-            const Divider(height: 24),
-            Row(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _StatItem(label: 'Budget', value: '${(config.calorieBudgetMultiplier * 100).toInt()}%', icon: Icons.straighten),
-                _StatItem(label: 'Exercise', value: config.suppressWorkoutIntensity ? 'Low' : 'Normal', icon: Icons.fitness_center),
+                _StatItem(
+                  label: 'Calorie Budget', 
+                  value: '${(config.calorieBudgetMultiplier * 100).toInt()}%', 
+                  icon: Icons.track_changes,
+                  color: heroColor,
+                ),
+                _StatItem(
+                  label: 'Workout Level', 
+                  value: config.suppressWorkoutIntensity ? 'LOW' : 'NORMAL', 
+                  icon: Icons.fitness_center,
+                  color: heroColor,
+                ),
               ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -136,15 +216,18 @@ class _StatItem extends StatelessWidget {
   final String label;
   final String value;
   final IconData icon;
-  const _StatItem({required this.label, required this.value, required this.icon});
+  final Color color;
+  const _StatItem({required this.label, required this.value, required this.icon, required this.color});
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Column(
       children: [
-        Icon(icon, size: 20, color: Colors.grey),
-        Text(value, style: const TextStyle(fontWeight: FontWeight.bold)),
-        Text(label, style: const TextStyle(fontSize: 10, color: Colors.grey)),
+        Icon(icon, size: 24, color: color.withValues(alpha: 0.7)),
+        const SizedBox(height: 4),
+        Text(value, style: AppTextStyles.monoLg(isDark).copyWith(fontSize: 18)),
+        Text(label, style: AppTextStyles.caption(isDark)),
       ],
     );
   }
@@ -156,60 +239,28 @@ class _FoodRestrictionsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Food Guidelines', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        Text('Dietary Guidelines', style: AppTextStyles.h2(isDark)),
         const SizedBox(height: 16),
         if (config.allowedFoodIds != null && config.allowedFoodIds!.isNotEmpty) ...[
-          const Row(
-            children: [
-              Icon(Icons.check_circle, color: Colors.green, size: 20),
-              SizedBox(width: 8),
-              Text('Recommended / Allowed', style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold)),
-            ],
+          _RestrictionList(
+            title: 'Recommended / Allowed',
+            items: config.allowedFoodIds!,
+            color: AppColors.success,
+            icon: Icons.check_circle_outline,
           ),
-          const SizedBox(height: 8),
-          GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              childAspectRatio: 2.5,
-              crossAxisSpacing: 8,
-              mainAxisSpacing: 8,
-            ),
-            itemCount: config.allowedFoodIds!.length,
-            itemBuilder: (context, index) => _FoodItemChip(
-              name: config.allowedFoodIds![index],
-              color: Colors.green,
-            ),
-          ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 16),
         ],
         if (config.forbiddenFoodIds != null && config.forbiddenFoodIds!.isNotEmpty) ...[
-          const Row(
-            children: [
-              Icon(Icons.cancel, color: Colors.red, size: 20),
-              SizedBox(width: 8),
-              Text('Restricted / Forbidden', style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
-            ],
-          ),
-          const SizedBox(height: 8),
-          GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              childAspectRatio: 2.5,
-              crossAxisSpacing: 8,
-              mainAxisSpacing: 8,
-            ),
-            itemCount: config.forbiddenFoodIds!.length,
-            itemBuilder: (context, index) => _FoodItemChip(
-              name: config.forbiddenFoodIds![index],
-              color: Colors.red,
-            ),
+          _RestrictionList(
+            title: 'Restricted / Forbidden',
+            items: config.forbiddenFoodIds!,
+            color: AppColors.error,
+            icon: Icons.block_flipped,
           ),
         ],
       ],
@@ -217,24 +268,59 @@ class _FoodRestrictionsSection extends StatelessWidget {
   }
 }
 
-class _FoodItemChip extends StatelessWidget {
-  final String name;
+class _RestrictionList extends StatelessWidget {
+  final String title;
+  final List<String> items;
   final Color color;
-  const _FoodItemChip({required this.name, required this.color});
+  final IconData icon;
+
+  const _RestrictionList({
+    required this.title,
+    required this.items,
+    required this.color,
+    required this.icon,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.05),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color.withValues(alpha: 0.2)),
-      ),
-      child: Text(
-        name.replaceAll('_', ' ').toUpperCase(),
-        style: TextStyle(color: color, fontSize: 10, fontWeight: FontWeight.bold),
-        textAlign: TextAlign.center,
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
+    return GlassCard(
+      padding: const EdgeInsets.all(16),
+      color: color.withValues(alpha: 0.05),
+      borderColor: color.withValues(alpha: 0.1),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(icon, color: color, size: 18),
+              const SizedBox(width: 8),
+              Text(title, style: AppTextStyles.labelLarge(isDark).copyWith(color: color)),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: items.map((item) => Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: color.withValues(alpha: 0.1)),
+              ),
+              child: Text(
+                item.replaceAll('_', ' ').toUpperCase(),
+                style: AppTextStyles.monoSm(isDark).copyWith(
+                  color: color, 
+                  fontWeight: FontWeight.bold,
+                  fontSize: 10,
+                ),
+              ),
+            )).toList(),
+          ),
+        ],
       ),
     );
   }
@@ -245,31 +331,39 @@ class _MealPlanTabs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 3,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const TabBar(
-            labelColor: Colors.black,
-            indicatorColor: Colors.orange,
-            tabs: [
-              Tab(text: 'Today'),
-              Tab(text: 'Tomorrow'),
-              Tab(text: 'Day 3'),
-            ],
-          ),
-          SizedBox(
-            height: 200,
-            child: TabBarView(
-              children: [
-                _MealList(day: 'Today'),
-                _MealList(day: 'Tomorrow'),
-                _MealList(day: 'Day 3'),
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
+    return GlassCard(
+      padding: EdgeInsets.zero,
+      child: DefaultTabController(
+        length: 3,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            TabBar(
+              labelColor: isDark ? AppColorsDark.primary : AppColors.primary,
+              unselectedLabelColor: isDark ? AppColorsDark.textSecondary : AppColors.textSecondary,
+              indicatorColor: isDark ? AppColorsDark.primary : AppColors.primary,
+              indicatorSize: TabBarIndicatorSize.label,
+              labelStyle: AppTextStyles.labelLarge(isDark),
+              tabs: const [
+                Tab(text: 'Today'),
+                Tab(text: 'Tomorrow'),
+                Tab(text: 'Day 3'),
               ],
             ),
-          ),
-        ],
+            SizedBox(
+              height: 240,
+              child: TabBarView(
+                children: [
+                  _MealList(day: 'Today'),
+                  _MealList(day: 'Tomorrow'),
+                  _MealList(day: 'Day 3'),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -281,13 +375,62 @@ class _MealList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return ListView(
+      padding: const EdgeInsets.symmetric(vertical: 8),
       physics: const NeverScrollableScrollPhysics(),
-      children: const [
-        ListTile(leading: Icon(Icons.breakfast_dining), title: Text('Morning Ritual'), subtitle: Text('Warm water with lemon & honey')),
-        ListTile(leading: Icon(Icons.lunch_dining), title: Text('Festive Lunch'), subtitle: Text('Baked Sabudana Vada + Curd')),
-        ListTile(leading: Icon(Icons.dinner_dining), title: Text('Evening Reset'), subtitle: Text('Mixed Fruit Bowl + Milk')),
+      children: [
+        _MealTile(
+          icon: Icons.wb_twilight, 
+          title: 'Morning Ritual', 
+          subtitle: 'Warm water with lemon & honey',
+          isDark: isDark,
+        ),
+        _MealTile(
+          icon: Icons.lunch_dining, 
+          title: 'Festive Lunch', 
+          subtitle: 'Baked Sabudana Vada + Curd',
+          isDark: isDark,
+        ),
+        _MealTile(
+          icon: Icons.nightlight_round, 
+          title: 'Evening Reset', 
+          subtitle: 'Mixed Fruit Bowl + Milk',
+          isDark: isDark,
+        ),
       ],
+    );
+  }
+}
+
+class _MealTile extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final bool isDark;
+
+  const _MealTile({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.isDark,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: (isDark ? AppColorsDark.primary : AppColors.primary).withValues(alpha: 0.1),
+          shape: BoxShape.circle,
+        ),
+        child: Icon(icon, color: isDark ? AppColorsDark.primary : AppColors.primary, size: 20),
+      ),
+      title: Text(title, style: AppTextStyles.labelLarge(isDark)),
+      subtitle: Text(subtitle, style: AppTextStyles.body2(isDark)),
+      trailing: Icon(Icons.add_circle_outline, color: isDark ? AppColorsDark.divider : AppColors.divider, size: 20),
     );
   }
 }
@@ -321,7 +464,6 @@ class _RamadanClocksState extends ConsumerState<_RamadanClocks> {
 
   @override
   Widget build(BuildContext context) {
-    // These would ideally come from an API or specific date engine
     final sehriTime = DateTime(_now.year, _now.month, _now.day, 4, 45);
     final iftarTime = DateTime(_now.year, _now.month, _now.day, 18, 52);
 
@@ -344,7 +486,7 @@ class _RamadanClocksState extends ConsumerState<_RamadanClocks> {
             label: 'Iftar Starts', 
             time: '06:52 PM', 
             countdown: _formatDuration(iftarRemaining),
-            color: Colors.orange,
+            color: AppColors.primary,
           ),
         ),
       ],
@@ -402,8 +544,6 @@ class _MoonriseCountdownState extends ConsumerState<_MoonriseCountdown> {
   }
 
   DateTime _computeMoonrise(DateTime date) {
-    // Simplified astronomical approximation for Delhi/Central India
-    // On Karva Chauth, moonrise is roughly 8:20 PM - 8:45 PM
     return DateTime(date.year, date.month, date.day, 20, 24);
   }
 
@@ -433,29 +573,37 @@ class _TimeBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: fullWidth ? double.infinity : null,
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
+    return GlassCard(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.05),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: color.withValues(alpha: 0.2)),
-      ),
+      color: color.withValues(alpha: 0.1),
+      borderColor: color.withValues(alpha: 0.2),
       child: Column(
         children: [
-          Text(label, style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.bold)),
+          Text(
+            label, 
+            style: AppTextStyles.monoSm(isDark).copyWith(color: color, fontWeight: FontWeight.bold),
+          ),
           const SizedBox(height: 8),
-          Text(time, style: TextStyle(color: color, fontSize: 24, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 4),
+          Text(
+            time, 
+            style: AppTextStyles.monoLg(isDark).copyWith(color: color, fontSize: 24),
+          ),
+          const SizedBox(height: 8),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(8),
+              color: color.withValues(alpha: 0.15),
+              borderRadius: BorderRadius.circular(10),
             ),
             child: Text(
               countdown, 
-              style: TextStyle(color: color, fontSize: 14, fontWeight: FontWeight.bold, fontFamily: 'monospace'),
+              style: AppTextStyles.monoSm(true).copyWith(
+                color: color, 
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+              ),
             ),
           ),
         ],
@@ -463,4 +611,28 @@ class _TimeBox extends StatelessWidget {
     );
   }
 }
+
+const Map<String, String> festivalEmojis = {
+  'navratri': '🔱',
+  'diwali': '🪔',
+  'holi': '🎨',
+  'karva_chauth': '🌙',
+  'ramadan': '🌙',
+  'eid_ul_fitr': '🌙',
+  'eid_ul_adha': '🕋',
+  'janmashtami': '🏺',
+  'shivaratri': '🔱',
+  'christmas': '🎄',
+  'ganesh_chaturthi': '🐘',
+  'raksha_bandhan': '🥨',
+  'guru_nanak_jayanti': '🕯️',
+  'onam': '🛶',
+  'pongal': '🥣',
+  'baisakhi': '🌾',
+  'lohri': '🔥',
+  'buddha_purnima': '☸️',
+  'republic_day': '🇮🇳',
+  'independence_day': '🇮🇳',
+};
+
 

@@ -16,7 +16,7 @@ class PdfConverterService {
         final pageImage = await page.render(
             width: page.width * 2, // Double resolution for better OCR
             height: page.height * 2,
-            format: PdfPageImageFormat.jpg,
+            format: PdfPageImageFormat.jpeg,
             quality: 100,
         );
 

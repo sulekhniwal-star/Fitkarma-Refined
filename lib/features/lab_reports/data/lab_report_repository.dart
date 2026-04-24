@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'package:drift/drift.dart';
-import '../../../core/storage/app_database.dart';
-import '../../../core/storage/tables/india_platform_tables.dart';
-import '../../../core/storage/tables/sensitive_tables.dart';
-import '../domain/models/extraction_result.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
+import '../../../core/storage/app_database.dart';
+import '../../../core/di/providers.dart';
+import '../domain/models/extraction_result.dart';
 
 class LabReportRepository {
   final AppDatabase _db;
@@ -18,8 +18,6 @@ class LabReportRepository {
     required LabReportExtraction extraction,
     required bool shouldRetainRawText,
   }) async {
-    final reportId = _uuid.v4();
-
     // 1. Save to LabReports table (metadata)
     final confirmedMetrics = extraction.markers
         .where((m) => m.isConfirmed)
@@ -106,10 +104,6 @@ class LabReportRepository {
     return 'normal';
   }
 }
-
-// Provider
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../core/di/providers.dart';
 
 final labReportRepositoryProvider = Provider<LabReportRepository>((ref) {
   final db = ref.watch(driftDbProvider);

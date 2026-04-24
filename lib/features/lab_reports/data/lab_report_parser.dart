@@ -90,8 +90,9 @@ class LabReportParser {
 
     // Extract Lab Name (Simple heuristic)
     String? labName;
-    if (lowerText.contains('dr lal pathlabs')) labName = 'Dr Lal PathLabs';
-    else if (lowerText.contains('srl diagnostics')) labName = 'SRL Diagnostics';
+    if (lowerText.contains('dr lal pathlabs')) {
+      labName = 'Dr Lal PathLabs';
+    } else if (lowerText.contains('srl diagnostics')) labName = 'SRL Diagnostics';
     else if (lowerText.contains('apollo diagnostics')) labName = 'Apollo Diagnostics';
     else if (lowerText.contains('thyrocare')) labName = 'Thyrocare';
 

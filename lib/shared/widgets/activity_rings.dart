@@ -1,7 +1,9 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../theme/app_colors.dart';
-import '../theme/app_text_styles.dart';
+import '../../core/config/device_tier.dart';
+import '../../core/config/app_theme.dart';
 
 /// Data model for a single activity ring.
 class RingData {
@@ -24,45 +26,83 @@ class RingData {
 /// 
 /// Renders up to four rings (Calories, Steps, Water, Active Minutes) with 
 /// individual progress indicators and stat labels.
-class ActivityRingsWidget extends StatelessWidget {
+class ActivityRingsWidget extends ConsumerWidget {
   final List<RingData> rings;
   final double strokeWidth;
   final double gap;
+  final bool showLabels;
 
   const ActivityRingsWidget({
     super.key,
     required this.rings,
-    this.strokeWidth = 10.0,
-    this.gap = 8.0,
+    this.strokeWidth = 12.0,
+    this.gap = 12.0,
+    this.showLabels = true,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final trackColor = isDark ? AppColorsDark.divider : AppColors.divider;
+    final tier = ref.watch(deviceTierProvider);
+
+    // Primary metric (outermost ring)
+    final primaryRing = rings.isNotEmpty ? rings.first : null;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         SizedBox(
-          width: 200,
-          height: 200,
-          child: CustomPaint(
-            painter: _RingsPainter(
-              rings: rings,
-              strokeWidth: strokeWidth,
-              gap: gap,
-              trackColor: trackColor,
-            ),
+          width: 240,
+          height: 240,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              // Center Metric (§2.25)
+              if (primaryRing != null)
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      primaryRing.value,
+                      style: AppTheme.metricLg(context).copyWith(
+                        color: isDark ? AppTheme.textPrimary : AppTheme.lTextPrimary,
+                      ),
+                    ),
+                    Text(
+                      primaryRing.label.toUpperCase(),
+                      style: AppTheme.caption(context).copyWith(
+                        color: AppTheme.textMuted,
+                        letterSpacing: 2,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              
+              // The Rings
+              CustomPaint(
+                size: const Size(240, 240),
+                painter: _RingsPainter(
+                  rings: rings,
+                  strokeWidth: strokeWidth,
+                  gap: gap,
+                  trackColor: trackColor,
+                  tier: tier,
+                ),
+              ),
+            ],
           ),
         ),
-        const SizedBox(height: 24),
-        Wrap(
-          spacing: 16,
-          runSpacing: 8,
-          alignment: WrapAlignment.center,
-          children: rings.map((ring) => _StatItem(ring: ring)).toList(),
-        ),
+        if (showLabels) ...[
+          const SizedBox(height: 32),
+          Wrap(
+            spacing: 20,
+            runSpacing: 12,
+            alignment: WrapAlignment.center,
+            children: rings.skip(1).map((ring) => _StatItem(ring: ring)).toList(),
+          ),
+        ],
       ],
     );
   }
@@ -73,12 +113,14 @@ class _RingsPainter extends CustomPainter {
   final double strokeWidth;
   final double gap;
   final Color trackColor;
+  final DeviceTier tier;
 
   _RingsPainter({
     required this.rings,
     required this.strokeWidth,
     required this.gap,
     required this.trackColor,
+    required this.tier,
   });
 
   @override
@@ -110,9 +152,14 @@ class _RingsPainter extends CustomPainter {
         ..strokeWidth = strokeWidth
         ..strokeCap = StrokeCap.round;
 
-      // Ensure we don't exceed 360 degrees, but allow subtle overflow visually?
-      // Usually rings represent 0 to 100%, but some designers like them to wrap.
-      // Here we cap at 0.999 to show the round cap properly at 100%.
+      // Add Glow if tier is mid/high and it's the primary or secondary ring
+      // Spec says: "glow only on primary ring (Tier: mid/high)"
+      if (tier != DeviceTier.low && i == 0) {
+        progressPaint.maskFilter = MaskFilter.blur(BlurStyle.normal, 8);
+        canvas.drawArc(rect, -pi / 2, 2 * pi * ring.progress.clamp(0.01, 0.999), false, progressPaint);
+        progressPaint.maskFilter = null; // Reset for sharp ring
+      }
+
       final sweepAngle = 2 * pi * ring.progress.clamp(0.01, 0.999);
       
       canvas.drawArc(
@@ -128,7 +175,8 @@ class _RingsPainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant _RingsPainter oldDelegate) {
     return oldDelegate.rings != rings || 
-           oldDelegate.trackColor != trackColor;
+           oldDelegate.trackColor != trackColor ||
+           oldDelegate.tier != tier;
   }
 }
 
@@ -154,16 +202,19 @@ class _StatItem extends StatelessWidget {
                 shape: BoxShape.circle,
               ),
             ),
-            const SizedBox(width: 4),
+            const SizedBox(width: 6),
             Text(
               ring.label,
-              style: AppTextStyles.caption(isDark),
+              style: AppTheme.bodySm(context).copyWith(color: AppTheme.textSecondary),
             ),
           ],
         ),
         Text(
-          '${ring.value}/${ring.goal}',
-          style: AppTextStyles.labelMedium(isDark),
+          ring.value,
+          style: AppTheme.labelLg(context).copyWith(
+            color: isDark ? AppTheme.textPrimary : AppTheme.lTextPrimary,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ],
     );

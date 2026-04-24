@@ -6,7 +6,7 @@ import 'bottom_nav_bar.dart';
 import 'side_drawer.dart';
 import 'quick_log_fab.dart';
 import 'bilingual_label.dart';
-import '../config/app_theme.dart';
+import '../../core/config/app_theme.dart';
 import '../../features/nutrition/data/water_repository.dart';
 import '../../features/auth/domain/auth_providers.dart';
 import '../../features/dashboard/domain/dashboard_providers.dart';

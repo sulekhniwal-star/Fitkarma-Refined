@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import '../domain/models/extraction_result.dart';
 import 'lab_report_parser.dart';
@@ -75,9 +76,6 @@ extension LabReportExtractionExtension on LabReportExtraction {
     }
 }
 
-// Provider
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 final labReportOcrServiceProvider = Provider<LabReportOcrService>((ref) {
   final service = LabReportOcrService();
   ref.onDispose(() => service.dispose());
@@ -85,4 +83,5 @@ final labReportOcrServiceProvider = Provider<LabReportOcrService>((ref) {
 });
 
 @Deprecated('Use labReportOcrServiceProvider instead')
+// ignore: deprecated_member_use_from_same_package
 final labReportOcrService = Provider((ref) => LabReportOcrService());

@@ -49,10 +49,25 @@ class BentoCard extends ConsumerWidget {
   }
 
   BentoSize _resolveSize(double screenWidth) {
-    // Min-width guard: If screen < 360dp, promote small cells (§2.5)
-    if (screenWidth < 360) {
-      if (size == BentoSize.quarter) return BentoSize.third;
-      if (size == BentoSize.third) return BentoSize.half;
+    const double minCellWidth = 80.0;
+    final availableWidth = screenWidth - 32; // Standard horizontal padding (§2.5)
+
+    // Promotion logic: if current size results in width < 80dp, move to next size
+    double currentWidth = availableWidth * _getWidthFactor(size);
+    
+    if (currentWidth < minCellWidth) {
+      switch (size) {
+        case BentoSize.quarter:
+          return BentoSize.third;
+        case BentoSize.third:
+          return BentoSize.half;
+        case BentoSize.half:
+          return BentoSize.twoThird;
+        case BentoSize.twoThird:
+          return BentoSize.full;
+        case BentoSize.full:
+          return BentoSize.full;
+      }
     }
     return size;
   }

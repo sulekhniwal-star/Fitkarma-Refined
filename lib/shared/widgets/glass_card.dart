@@ -1,92 +1,101 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import '../../core/config/app_theme.dart';
-import '../../core/config/device_tier.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../theme/app_colors.dart';
 
-class GlassCard extends ConsumerWidget {
+class GlassCard extends StatefulWidget {
   final Widget child;
-  final double? width;
-  final double? height;
-  final double borderRadius;
   final EdgeInsetsGeometry? padding;
-  final EdgeInsetsGeometry? margin;
-  final Color? color;
+  final double borderRadius;
   final double blur;
-  final double opacity;
-  final Border? border;
+  final Color? color;
+  final Color? borderColor;
+  final VoidCallback? onTap;
+  final bool animate;
 
   const GlassCard({
     super.key,
     required this.child,
-    this.width,
-    this.height,
-    this.borderRadius = AppTheme.radiusLg,
-    this.padding = const EdgeInsets.all(16),
-    this.margin,
+    this.padding,
+    this.borderRadius = 20,
+    this.blur = 12,
     this.color,
-    this.blur = 12.0,
-    this.opacity = 0.06,
-    this.border,
+    this.borderColor,
+    this.onTap,
+    this.animate = true,
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final tier = ref.watch(deviceTierProvider);
+  State<GlassCard> createState() => _GlassCardState();
+}
+
+class _GlassCardState extends State<GlassCard> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 150),
+    );
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.97).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     
-    // Low tier fallback: solid color instead of blur
-    if (tier == DeviceTier.low) {
-      return Container(
-        width: width,
-        height: height,
-        margin: margin,
-        padding: padding,
-        decoration: BoxDecoration(
-          color: color ?? (isDark ? AppTheme.surface1 : AppTheme.lSurface1),
-          borderRadius: BorderRadius.circular(borderRadius),
-          border: border ?? Border.all(
-            color: isDark ? AppTheme.divider : AppTheme.lDivider,
-          ),
-        ),
-        child: child,
-      );
-    }
+    final defaultColor = isDark 
+        ? Colors.white.withValues(alpha: 0.05) 
+        : Colors.white.withValues(alpha: 0.7);
+        
+    final defaultBorderColor = isDark 
+        ? Colors.white.withValues(alpha: 0.1) 
+        : AppColors.primary.withValues(alpha: 0.1);
 
-    return Container(
-      width: width,
-      height: height,
-      margin: margin,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(borderRadius),
-        boxShadow: tier == DeviceTier.high ? [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ] : null,
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(borderRadius),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
-          child: Container(
-            padding: padding,
-            decoration: BoxDecoration(
-              color: color ?? (isDark 
-                ? AppTheme.textPrimary.withOpacity(opacity) 
-                : AppTheme.lGlass),
-              borderRadius: BorderRadius.circular(borderRadius),
-              border: border ?? Border.all(
-                color: isDark ? AppTheme.glassBorder : AppTheme.lGlassBorder,
-              ),
+    Widget content = ClipRRect(
+      borderRadius: BorderRadius.circular(widget.borderRadius),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: widget.blur, sigmaY: widget.blur),
+        child: Container(
+          padding: widget.padding ?? const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: widget.color ?? defaultColor,
+            borderRadius: BorderRadius.circular(widget.borderRadius),
+            border: Border.all(
+              color: widget.borderColor ?? defaultBorderColor,
+              width: 1.5,
             ),
-            child: child,
           ),
+          child: widget.child,
         ),
       ),
     );
+
+    if (widget.onTap != null) {
+      return GestureDetector(
+        onTapDown: (_) => widget.animate ? _controller.forward() : null,
+        onTapUp: (_) {
+          if (widget.animate) _controller.reverse();
+          widget.onTap?.call();
+        },
+        onTapCancel: () => widget.animate ? _controller.reverse() : null,
+        child: ScaleTransition(
+          scale: _scaleAnimation,
+          child: content,
+        ),
+      );
+    }
+
+    return content;
   }
 }
-

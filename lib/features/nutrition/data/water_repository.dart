@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/storage/app_database.dart';
 import '../../../core/storage/drift_service.dart';
 import '../../../core/network/sync_queue.dart';
+import '../../../core/constants/api_endpoints.dart';
 
 class WaterRepository {
   final AppDatabase db;
@@ -18,7 +19,7 @@ class WaterRepository {
     final now = DateTime.now();
     final idempotencyKey = generateIdempotencyKey(userId, 'water', now.toIso8601String());
 
-    await db.into(db.waterLogs).insert(
+    final localId = await db.into(db.waterLogs).insert(
           WaterLogsCompanion.insert(
             userId: userId,
             amountMl: amountMl,
@@ -31,9 +32,9 @@ class WaterRepository {
     // Queue for background sync with Appwrite
     await db.into(db.syncQueue).insert(
           SyncQueueCompanion.insert(
-            userId: userId,
+            localId: localId.toString(),
             operation: 'create',
-            collection: 'water_logs',
+            collection: AW.waterLogs,
             payload: jsonEncode({
               'amount_ml': amountMl,
               'logged_at': now.toIso8601String(),
@@ -60,7 +61,7 @@ class WaterRepository {
   /// Returns the total water intake (in ml) for a specific user and date.
   Future<int> getTotalDailyWater(String userId, DateTime date) async {
     final logs = await getDailyWater(userId, date);
-    return logs.fold(0, (sum, log) => sum + log.amountMl);
+    return logs.fold<int>(0, (sum, log) => sum + log.amountMl);
   }
 
   /// Deletes a specific water log and handles sync cancellation if needed.

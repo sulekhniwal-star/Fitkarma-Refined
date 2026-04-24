@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:fitkarma/features/festival/presentation/festival_providers.dart';
 import 'package:fitkarma/features/festival/data/festival_repository.dart';
 import 'package:fitkarma/features/festival/domain/festival_date_engine.dart';
 import 'package:fitkarma/features/festival/domain/festival_diet_plan.dart';
 import 'package:fitkarma/core/storage/drift_service.dart';
+import 'package:fitkarma/core/storage/app_database.dart'
+    show FestivalCalendarEntry;
 
 import 'package:fitkarma/features/auth/domain/auth_providers.dart';
-import 'package:fitkarma/features/onboarding/domain/onboarding_providers.dart';
+import 'package:fitkarma/features/onboarding/domain/onboarding_providers.dart'
+    as onboarding;
 import 'package:fitkarma/features/dashboard/domain/dashboard_providers.dart';
 import 'package:fitkarma/features/abha/data/abha_repository.dart';
 import 'package:fitkarma/core/config/app_theme.dart';
@@ -26,6 +30,16 @@ import 'package:fitkarma/shared/widgets/ritucharya_card.dart';
 import 'package:fitkarma/shared/widgets/glass_card.dart';
 import 'package:fitkarma/shared/widgets/bento_card.dart';
 import 'package:fitkarma/shared/widgets/glowing_metric.dart';
+import 'package:fitkarma/shared/widgets/quick_log_fab.dart';
+
+final _currentFestivalProvider = FutureProvider<FestivalCalendarEntry?>((
+  ref,
+) async {
+  final db = DriftService.db;
+  final engine = FestivalDateEngine();
+  final repo = FestivalRepository(db: db, engine: engine);
+  return repo.getCurrentFestival();
+});
 
 class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({super.key});
@@ -75,45 +89,47 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(authStateProvider).value;
-    final karmaValue = ref.watch(karmaProvider);
-    final currentFest = ref.watch(currentFestivalProvider).value;
+    final currentFestAsync = ref.watch(_currentFestivalProvider);
+    final currentFest = currentFestAsync.whenOrNull(data: (data) => data);
 
     return FitScaffold(
       pattern: ScaffoldPattern.immersiveHero,
       title: 'Dashboard',
-      heroHeight: 340,
+      heroHeight: 320, // Strictly follow (§2.4a)
       heroBackground: currentFest != null
           ? Container(
               decoration: const BoxDecoration(gradient: AppTheme.heroFestival),
             )
           : null,
-      heroContent: AsyncValueWidget<KarmaData>(
-        value: karmaValue,
-        loading: const Center(
-          child: CircularProgressIndicator(color: Colors.white24),
-        ),
-        data: (karma) => _buildHeroContent(context, karma),
+      heroContent: _buildHeroContent(context, user),
+      floatingActionButton: QuickLogFAB(
+        onActions: {
+          QuickLogAction.food: () {},
+          QuickLogAction.water: () {},
+          QuickLogAction.mood: () {},
+          QuickLogAction.workout: () {},
+        },
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 1. Welcome & Stats Header
-          _buildUserHeader(context, user),
-          const SizedBox(height: 32),
+          // Row 1: Activity Row (Simple Stats §6.4)
+          _buildActivitySummary(ref),
+          const SizedBox(height: 24),
 
-          // 2. Seasonal Wellness (Ritucharya)
+          // Row 2: Secondary Metrics (Workout + Sleep §6.4)
+          _buildSecondaryMetrics(ref),
+          const SizedBox(height: 24),
+
+          // Row 3: Seasonal Wellness (Ritucharya)
           const RitucharyaCard(),
           const SizedBox(height: 24),
 
-          // 3. Promo Banner (Festival or Wedding)
+          // Row 4: Contextual (Festival)
           _buildContextualBanner(ref, currentFest),
           const SizedBox(height: 24),
 
-          // 4. Activity Bento Box
-          _buildActivityBento(ref),
-          const SizedBox(height: 32),
-
-          // 5. AI Insights
+          // 5. AI Insights (§9)
           _buildInsightSection(ref),
           const SizedBox(height: 32),
 
@@ -126,208 +142,184 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     );
   }
 
-  Widget _buildHeroContent(BuildContext context, KarmaData karma) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const SizedBox(height: 60),
-        // Karma Metric with Glow (§8)
-        GlowingMetric(
-          value: karma.level.toString(),
-          unit: 'LEVEL',
-          color: AppTheme.accent,
-        ),
-        const SizedBox(height: 12),
-        Text(
-          karma.title.toUpperCase(),
-          style: AppTheme.caption(context).copyWith(
-            color: AppTheme.accent.withValues(alpha: 0.8),
-            letterSpacing: 4.0,
-            fontWeight: FontWeight.w900,
-          ),
-        ),
-        const SizedBox(height: 40),
-        // XP Progress - Slim, sleek version
-        SizedBox(
-          width: 200,
-          child: Column(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(AppTheme.radiusFull),
-                child: LinearProgressIndicator(
-                  value: karma.currentXP / karma.nextLevelXP,
-                  backgroundColor: Colors.white.withValues(alpha: 0.05),
-                  valueColor: const AlwaysStoppedAnimation(AppTheme.primary),
-                  minHeight: 4,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                '${karma.currentXP} / ${karma.nextLevelXP} XP'.toUpperCase(),
-                style: AppTheme.monoSm(context).copyWith(color: Colors.white38),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildUserHeader(BuildContext context, dynamic user) {
-    return Row(
-      children: [
-        Container(
-          width: 54,
-          height: 54,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            gradient: const LinearGradient(
-              colors: [AppTheme.primary, AppTheme.accent],
-            ),
-            border: Border.all(
-              color: Colors.white.withValues(alpha: 0.2),
-              width: 2,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: AppTheme.primary.withValues(alpha: 0.2),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: Center(
-            child: Text(
-              user?.name.characters.first ?? 'U',
-              style: AppTheme.h3(context).copyWith(color: Colors.white),
-            ),
-          ),
-        ),
-        const SizedBox(width: 16),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              BilingualLabel(
-                english: 'Namaste, ${user?.name.split(' ').first ?? 'Friend'}',
-                hindi: 'नमस्ते, ${user?.name.split(' ').first ?? 'मित्र'}',
-              ),
-              _buildAbhaBadge(ref),
-            ],
-          ),
-        ),
-        IconButton(
-          onPressed: () {},
-          icon: const Icon(
-            Icons.notifications_none_rounded,
-            color: AppTheme.textSecondary,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildActivityBento(WidgetRef ref) {
+  Widget _buildHeroContent(BuildContext context, dynamic user) {
     final steps = ref.watch(todayStepsProvider).value ?? 0;
     final calories = ref.watch(todayCaloriesProvider).value ?? 0;
     final water = ref.watch(todayWaterProvider).value ?? 0;
     final minutes = ref.watch(todayActiveMinutesProvider).value ?? 0;
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const BilingualLabel(english: 'Daily Activity', hindi: 'दैनिक गतिविधि'),
-        const SizedBox(height: 16),
-        Row(
-          children: [
-            Expanded(
-              flex: 2,
-              child: BentoCard(
-                size: BentoSize.twoThird,
-                padding: const EdgeInsets.symmetric(vertical: 24),
-                child: ActivityRingsWidget(
-                  strokeWidth: 12,
-                  gap: 12,
-                  rings: [
-                    RingData(
-                      progress: (steps / 10000).clamp(0, 1),
-                      color: AppTheme.primary,
-                      value: steps.toString(),
-                      label: 'Steps',
-                      goal: '10k',
-                    ),
-                    RingData(
-                      progress: (calories / 2000).clamp(0, 1),
-                      color: AppTheme.accent,
-                      value: calories.toInt().toString(),
-                      label: 'Kcal',
-                      goal: '2k',
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              flex: 1,
-              child: Column(
+        const SizedBox(height: 48),
+        // Personalized Header - Above the Fold (§6.1)
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Row(
+            children: [
+              _buildAvatar(user),
+              const SizedBox(width: 16),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildStatMiniCard(
-                    Icons.water_drop_outlined,
-                    water.toString(),
-                    'Cups',
-                    AppTheme.teal,
+                  BilingualLabel(
+                    english: 'Namaste, ${user?.name.split(' ').first ?? 'Friend'}',
+                    hindi: 'नमस्ते, ${user?.name.split(' ').first ?? 'मित्र'}',
                   ),
-                  const SizedBox(height: 12),
-                  _buildStatMiniCard(
-                    Icons.timer_outlined,
-                    minutes.toString(),
-                    'Min',
-                    AppTheme.purple,
-                  ),
+                  _buildAbhaBadge(ref),
                 ],
               ),
+            ],
+          ),
+        ),
+        const Spacer(),
+        // The Visual Champion - L1 Hero Metric (§6.1)
+        ActivityRingsWidget(
+          showLabels: false, // Cleaner for Hero
+          rings: [
+            RingData(
+              progress: (steps / 10000).clamp(0, 1),
+              color: AppTheme.primary,
+              value: steps.toString(),
+              label: 'Steps',
+              goal: '10k',
+            ),
+            RingData(
+              progress: (calories / 2000).clamp(0, 1),
+              color: AppTheme.accent,
+              value: calories.toInt().toString(),
+              label: 'Kcal',
+              goal: '2k',
+            ),
+            RingData(
+              progress: (water / 10).clamp(0, 1),
+              color: AppTheme.teal,
+              value: water.toString(),
+              label: 'Water',
+              goal: '10',
+            ),
+            RingData(
+              progress: (minutes / 45).clamp(0, 1),
+              color: AppTheme.purple,
+              value: minutes.toString(),
+              label: 'Minutes',
+              goal: '45',
             ),
           ],
         ),
+        const SizedBox(height: 20),
       ],
     );
   }
 
-  Widget _buildStatMiniCard(
-    IconData icon,
-    String value,
-    String unit,
-    Color color,
-  ) {
+  Widget _buildAvatar(dynamic user) {
+    return Container(
+      width: 48,
+      height: 48,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: const LinearGradient(
+          colors: [AppTheme.primary, AppTheme.accent],
+        ),
+        border: Border.all(
+          color: Colors.white.withValues(alpha: 0.2),
+          width: 2,
+        ),
+      ),
+      child: Center(
+        child: Text(
+          user?.name.characters.first ?? 'U',
+          style: AppTheme.h3(context).copyWith(color: Colors.white),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildActivitySummary(WidgetRef ref) {
+    final steps = ref.watch(todayStepsProvider).value ?? 0;
+    final calories = ref.watch(todayCaloriesProvider).value ?? 0;
+    final karmaValue = ref.watch(karmaProvider).value;
+
     return BentoCard(
-      size: BentoSize.quarter,
-      padding: const EdgeInsets.all(12),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+      size: BentoSize.full,
+      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 24),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          Icon(icon, color: color, size: 20),
-          const SizedBox(height: 4),
-          Text(
-            value,
-            style: AppTheme.labelLg(
-              context,
-            ).copyWith(color: AppTheme.textPrimary),
-          ),
-          Text(
-            unit,
-            style: AppTheme.caption(
-              context,
-            ).copyWith(color: AppTheme.textMuted),
-          ),
+          _buildSimpleStat(Icons.directions_walk_rounded, steps.toString(), 'Steps', AppTheme.primary),
+          _buildSimpleStat(Icons.local_fire_department_rounded, calories.toInt().toString(), 'Kcal', AppTheme.accent),
+          _buildSimpleStat(Icons.emoji_events_rounded, '${karmaValue?.level ?? 0}', 'Level', AppTheme.warning),
         ],
       ),
     );
   }
 
+  Widget _buildSimpleStat(IconData icon, String value, String label, Color color) {
+    return Column(
+      children: [
+        Icon(icon, color: color, size: 24),
+        const SizedBox(height: 4),
+        Text(value, style: AppTheme.h3(context)),
+        Text(label, style: AppTheme.caption(context).copyWith(color: AppTheme.textMuted)),
+      ],
+    );
+  }
+
+  Widget _buildSecondaryMetrics(WidgetRef ref) {
+    return Row(
+      children: [
+        // Latest Workout half-card (§6.4)
+        Expanded(
+          child: BentoCard(
+            size: BentoSize.half,
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Icon(Icons.directions_run_rounded, color: AppTheme.primary, size: 20),
+                    Text('2h ago', style: AppTheme.caption(context).copyWith(color: AppTheme.textMuted)),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                Text('Yoga Flow', style: AppTheme.h4(context)),
+                Text('45 min · 320 kcal', style: AppTheme.bodySm(context).copyWith(color: AppTheme.textSecondary)),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(width: 12),
+        // Sleep half-card (§6.4)
+        Expanded(
+          child: BentoCard(
+            size: BentoSize.half,
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Icon(Icons.bedtime_rounded, color: AppTheme.secondary, size: 20),
+                    Text('Last Night', style: AppTheme.caption(context).copyWith(color: AppTheme.textMuted)),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                Text('7h 20m', style: AppTheme.h4(context)),
+                Text('92% Efficiency', style: AppTheme.bodySm(context).copyWith(color: AppTheme.textSecondary)),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _buildAbhaBadge(WidgetRef ref) {
-    final abhaId = ref.watch(abhaStatusProvider);
-    return ABHALinkBadge(isLinked: abhaId != null);
+    final status = ref.watch(abhaStatusProvider);
+    return ABHALinkBadge(isLinked: status.value != null);
   }
 
   Widget _buildContextualBanner(
@@ -344,7 +336,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         daysRemaining: daysRemaining < 0 ? 0 : daysRemaining,
         fastingType: festival.fastingType ?? 'Normal',
         bannerColor: AppTheme.primary,
-        onViewDietPlan: () {},
+        onViewDietPlan: () => context.push('/festival/${festival.festivalKey}/diet'),
       );
     }
 
@@ -357,7 +349,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             daysToWedding: wed.daysToWedding,
             nextEventName: wed.nextEventName,
             daysToNextEvent: wed.daysToNextEvent,
-            onViewPlan: () {},
+            onViewPlan: () => context.push('/wedding-planner'),
           );
         }
         return const SizedBox.shrink();
@@ -391,7 +383,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               Padding(
                 padding: const EdgeInsets.only(bottom: 16),
                 child: BentoCard(
-                  size: BentoSize.fullWidth,
+                  size: BentoSize.full,
                   padding: const EdgeInsets.all(16),
                   child: Row(
                     children: [
