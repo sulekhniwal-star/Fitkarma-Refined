@@ -56,6 +56,7 @@ class AppColorsDark {
   static const accentMuted         = Color(0x30FFB547);
   static const weddingGoldStart    = Color(0xFFD4AF37);
   static const weddingGoldGradient = AppGradients.heroWedding;
+  static const amberGradient       = AppGradients.heroPrimary;
   static const heroDeep            = AppGradients.heroDeep;
 }
 
@@ -94,6 +95,7 @@ class AppColorsLight {
   static const error               = Color(0xFFF87171);
   static const weddingGoldStart    = Color(0xFFD4AF37);
   static const weddingGoldGradient = AppGradients.heroWedding;
+  static const amberGradient       = AppGradients.heroPrimary;
   static const heroDeep            = AppGradients.heroDeepLight;
 }
 

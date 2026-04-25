@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:fitkarma/core/theme/app_colors.dart';
 import 'package:fitkarma/core/theme/app_typography.dart';
 
