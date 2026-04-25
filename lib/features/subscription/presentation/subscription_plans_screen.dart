@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../../shared/theme/app_colors.dart';
-import '../../../shared/theme/app_text_styles.dart';
+import 'package:fitkarma/core/theme/app_colors.dart';
+import 'package:fitkarma/core/theme/app_text_styles.dart';
 
 class SubscriptionPlansScreen extends ConsumerWidget {
   const SubscriptionPlansScreen({super.key});

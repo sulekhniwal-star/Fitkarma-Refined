@@ -8,8 +8,8 @@ class VerticalSlideTransition extends PageRouteBuilder {
       : super(
           transitionDuration: const Duration(milliseconds: 320),
           reverseTransitionDuration: const Duration(milliseconds: 280),
-          pageBuilder: (_, __, ___) => page,
-          transitionsBuilder: (_, animation, __, child) {
+          pageBuilder: (_, _, _) => page,
+          transitionsBuilder: (_, animation, _, child) {
             final slide = Tween<Offset>(
               begin: const Offset(0, 0.06),
               end: Offset.zero,

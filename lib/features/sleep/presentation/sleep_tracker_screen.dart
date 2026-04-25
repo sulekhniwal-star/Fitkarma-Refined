@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fl_chart/fl_chart.dart';
 
-import '../../../shared/theme/app_colors.dart';
-import '../../../shared/theme/app_text_styles.dart';
+import 'package:fitkarma/core/theme/app_colors.dart';
+import 'package:fitkarma/core/theme/app_text_styles.dart';
 import '../domain/sleep_providers.dart';
 import '../data/sleep_drift_service.dart';
 

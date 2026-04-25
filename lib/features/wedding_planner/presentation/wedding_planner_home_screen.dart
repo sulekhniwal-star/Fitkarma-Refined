@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'wedding_providers.dart';
 import '../domain/wedding_plan_rule.dart';
 import '../../festival/presentation/festival_providers.dart';
-import '../../../shared/theme/app_colors.dart';
+import 'package:fitkarma/core/theme/app_colors.dart';
 import '../../../shared/widgets/async_value_widget.dart';
 import '../../../shared/widgets/insight_card.dart';
 import '../../../core/storage/app_database.dart';

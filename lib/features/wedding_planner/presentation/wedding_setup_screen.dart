@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'wedding_setup_notifier.dart';
 import '../domain/wedding_setup_state.dart';
 import '../../festival/presentation/festival_providers.dart';
-import '../../../shared/theme/app_colors.dart';
+import 'package:fitkarma/core/theme/app_colors.dart';
 import '../../../shared/widgets/bilingual_label.dart';
 import '../../../shared/widgets/wedding_role_chip.dart';
 

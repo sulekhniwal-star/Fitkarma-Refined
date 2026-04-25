@@ -5,8 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'dart:io';
 
 import '../../../core/theme/app_theme.dart';
-import '../../../shared/theme/app_colors.dart';
-import '../../../shared/theme/app_text_styles.dart';
+import 'package:fitkarma/core/theme/app_colors.dart';
+import 'package:fitkarma/core/theme/app_text_styles.dart';
 import '../../../shared/widgets/fit_scaffold.dart';
 import '../../../shared/widgets/abha_link_badge.dart';
 import '../../auth/domain/auth_providers.dart';
@@ -124,10 +124,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: isDark ? AppColorsDark.surface : AppColors.surface,
+        color: isDark ? AppColorsDark.surface0 : AppColorsLight.surface0,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: isDark ? AppColorsDark.divider : AppColors.divider,
+          color: isDark ? AppColorsDark.divider : AppColorsLight.divider,
         ),
       ),
       child: Column(
@@ -243,10 +243,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: isDark ? AppColorsDark.surface : AppColors.surface,
+        color: isDark ? AppColorsDark.surface0 : AppColorsLight.surface0,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: isDark ? AppColorsDark.divider : AppColors.divider,
+          color: isDark ? AppColorsDark.divider : AppColorsLight.divider,
         ),
       ),
       child: Row(
@@ -285,7 +285,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        gradient: AppColors.weddingGoldGradient,
+        gradient: AppTheme.heroWedding,
         borderRadius: BorderRadius.circular(20),
       ),
       child: Column(
@@ -334,7 +334,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       onPressed: () => context.push('/wedding-planner/setup'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,
-                        foregroundColor: AppColors.weddingGoldStart,
+                        foregroundColor: AppColors.accent,
                         elevation: 0,
                       ),
                       child: const Text('Set Up Now'),
@@ -375,7 +375,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                         child: Text(
                           '$daysLeft days',
                           style: const TextStyle(
-                            color: AppColors.weddingGoldStart,
+                            color: AppColors.accent,
                             fontWeight: FontWeight.bold,
                             fontSize: 12,
                           ),
@@ -432,10 +432,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: isDark ? AppColorsDark.surface : AppColors.surface,
+        color: isDark ? AppColorsDark.surface0 : AppColorsLight.surface0,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: isDark ? AppColorsDark.divider : AppColors.divider,
+          color: isDark ? AppColorsDark.divider : AppColorsLight.divider,
         ),
       ),
       child: Column(
@@ -485,7 +485,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             color: isEarned
                 ? AppColors.accent.withValues(alpha: 0.15)
                 : (isDark
-                      ? AppColorsDark.surfaceVariant
+                      ? AppColorsDark.surface1
                       : Colors.grey.shade100),
             shape: BoxShape.circle,
             border: isEarned
@@ -539,7 +539,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        gradient: AppColors.amberGradient,
+        gradient: AppTheme.heroPrimary,
         borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
@@ -567,7 +567,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             onPressed: () => context.push('/referral'),
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.white,
-              foregroundColor: AppColors.accentDark,
+              foregroundColor: AppColors.primary,
             ),
             child: const Text('Share'),
           ),

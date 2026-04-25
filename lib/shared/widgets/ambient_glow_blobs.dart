@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/theme/app_colors.dart';
-import '../../core/theme/app_typography.dart';
+import '../../core/config/device_tier.dart';
 
 class AmbientGlowBlobs extends ConsumerWidget {
   const AmbientGlowBlobs({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final tier = ref.watch(deviceTierProvider);
     
     if (tier == DeviceTier.low) return const SizedBox.shrink();
@@ -17,7 +18,7 @@ class AmbientGlowBlobs extends ConsumerWidget {
         // Blob 1: Secondary (Purple/Blue)
         _buildBlob(
           alignment: const Alignment(-0.8, -0.6),
-          color: (isDark ? AppColorsDark.secondary : AppColorsLight.secondary).withOpacity(tier == DeviceTier.mid ? 0.05 : 0.20),
+          color: (isDark ? AppColorsDark.secondary : AppColorsLight.secondary).withValues(alpha: tier == DeviceTier.mid ? 0.05 : 0.20),
           size: 280,
           blur: 80,
         ),

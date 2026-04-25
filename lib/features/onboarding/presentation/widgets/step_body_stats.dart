@@ -80,7 +80,7 @@ class StepBodyStats extends ConsumerWidget {
                 firstDate: DateTime(1920),
                 lastDate: now.subtract(const Duration(days: 365 * 10)),
                 builder: (context, child) => Theme(
-                  data: isDark ? AppTheme.darkTheme : AppTheme.lightTheme,
+                  data: isDark ? AppTheme.dark() : AppTheme.light(),
                   child: child!,
                 ),
               );

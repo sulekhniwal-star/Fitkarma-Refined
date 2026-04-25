@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../wedding_planner/domain/wedding_plan_rule.dart';
 import '../../wedding_planner/presentation/wedding_providers.dart';
 import '../../../core/storage/app_database.dart';
-import '../../../shared/theme/app_colors.dart';
+import 'package:fitkarma/core/theme/app_colors.dart';
 import '../../../shared/widgets/async_value_widget.dart';
 import '../domain/food_providers.dart';
 

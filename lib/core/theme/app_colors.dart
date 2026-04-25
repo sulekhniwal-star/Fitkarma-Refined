@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'app_gradients.dart';
 
 /// Dark mode color palette — primary design target
 class AppColorsDark {
@@ -28,6 +29,7 @@ class AppColorsDark {
   // Secondary
   static const secondary      = Color(0xFF7B6FF0); // indigo — level badges
   static const secondaryGlow  = Color(0x407B6FF0);
+  static const secondaryMuted = Color(0x307B6FF0);
 
   // Semantic
   static const teal           = Color(0xFF00D4B4); // water / SpO2 / medication
@@ -46,6 +48,15 @@ class AppColorsDark {
 
   // Divider
   static const divider        = Color(0x14FFFFFF); // rgba(255,255,255,0.08)
+
+  // Legacy Aliases
+  static const background          = bg1;
+  static const surface             = surface0;
+  static const primarySurface      = surface1;
+  static const accentMuted         = Color(0x30FFB547);
+  static const weddingGoldStart    = Color(0xFFD4AF37);
+  static const weddingGoldGradient = AppGradients.heroWedding;
+  static const heroDeep            = AppGradients.heroDeep;
 }
 
 /// Light mode color palette
@@ -65,6 +76,7 @@ class AppColorsLight {
   static const primaryMuted   = Color(0xFFFEE8E2);
   static const accent         = Color(0xFFF59E0B);
   static const secondary      = Color(0xFF5B50D4);
+  static const secondaryMuted = Color(0xFFE0DDF7);
   static const teal           = Color(0xFF0D9488);
   static const success        = Color(0xFF22C55E);
 
@@ -72,4 +84,17 @@ class AppColorsLight {
   static const textSecondary  = Color(0xFF6B6A96);
   static const textMuted      = Color(0xFFB0AEC8);
   static const divider        = Color(0x121A1830);
+
+  // Legacy Aliases
+  static const background          = bg1;
+  static const surface             = surface0;
+  static const primarySurface      = surface1;
+  static const accentMuted         = Color(0xFFFEF3C7);
+  static const warning             = Color(0xFFFBBF24);
+  static const error               = Color(0xFFF87171);
+  static const weddingGoldStart    = Color(0xFFD4AF37);
+  static const weddingGoldGradient = AppGradients.heroWedding;
+  static const heroDeep            = AppGradients.heroDeepLight;
 }
+
+typedef AppColors = AppColorsDark;

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
 
 /// A prominent banner for upcoming festivals with countdown and meal actions.
