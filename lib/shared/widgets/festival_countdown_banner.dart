@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'dart:ui';
 
 import '../theme/app_text_styles.dart';
 import '../../core/config/app_theme.dart';
-import '../../core/config/device_tier.dart';
 
 /// A prominent banner for upcoming festivals with countdown and meal actions.
 class FestivalCountdownBanner extends StatelessWidget {

@@ -9,7 +9,7 @@ import '../../../core/storage/app_database.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../blood_pressure/domain/bp_classifier.dart';
 import '../domain/abha_health_record.dart';
-import '../../lab_reports/domain/models/extraction_result.dart'; // For LabMarker
+// For LabMarker
 
 class AbhaRepository {
   final AppDatabase db;

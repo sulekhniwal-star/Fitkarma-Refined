@@ -3,7 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'core/di/providers.dart';
-import 'core/config/app_theme.dart';
+import 'core/theme/app_theme.dart';
 import 'core/security/security_providers.dart';
 
 /// The root widget of the FitKarma application.
@@ -54,8 +54,8 @@ class _FitKarmaAppState extends ConsumerState<FitKarmaApp>
       routerConfig: router,
 
       // Theme Configuration
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
+      theme: AppTheme.light(),
+      darkTheme: AppTheme.dark(),
       themeMode: themeMode,
 
       // Localization Configuration

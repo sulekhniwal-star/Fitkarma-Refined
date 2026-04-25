@@ -4,14 +4,11 @@ import 'package:go_router/go_router.dart';
 import 'package:fitkarma/features/festival/presentation/festival_providers.dart';
 import 'package:fitkarma/features/festival/data/festival_repository.dart';
 import 'package:fitkarma/features/festival/domain/festival_date_engine.dart';
-import 'package:fitkarma/features/festival/domain/festival_diet_plan.dart';
 import 'package:fitkarma/core/storage/drift_service.dart';
 import 'package:fitkarma/core/storage/app_database.dart'
     show FestivalCalendarEntry;
 
 import 'package:fitkarma/features/auth/domain/auth_providers.dart';
-import 'package:fitkarma/features/onboarding/domain/onboarding_providers.dart'
-    as onboarding;
 import 'package:fitkarma/features/dashboard/domain/dashboard_providers.dart';
 import 'package:fitkarma/features/abha/data/abha_repository.dart';
 import 'package:fitkarma/core/config/app_theme.dart';
@@ -27,9 +24,7 @@ import 'package:fitkarma/shared/widgets/meal_tab_bar.dart';
 import 'package:fitkarma/shared/widgets/abha_link_badge.dart';
 import 'package:fitkarma/shared/widgets/wedding_countdown_card.dart';
 import 'package:fitkarma/shared/widgets/ritucharya_card.dart';
-import 'package:fitkarma/shared/widgets/glass_card.dart';
 import 'package:fitkarma/shared/widgets/bento_card.dart';
-import 'package:fitkarma/shared/widgets/glowing_metric.dart';
 import 'package:fitkarma/shared/widgets/quick_log_fab.dart';
 
 final _currentFestivalProvider = FutureProvider<FestivalCalendarEntry?>((
