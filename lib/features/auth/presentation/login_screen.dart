@@ -217,7 +217,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               const Expanded(child: Divider()),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Text('OR', style: AppTheme.caption(context)),
+                 child: Text('OR', style: AppTypography.caption(context)),
               ),
               const Expanded(child: Divider()),
             ],
