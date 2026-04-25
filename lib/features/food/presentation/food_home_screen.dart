@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/app_typography.dart';
+import '../../../core/theme/app_theme.dart';
 import '../../../shared/widgets/activity_rings.dart';
 import '../../../shared/widgets/meal_tab_bar.dart';
 import '../../../shared/widgets/micronutrient_bar.dart';
@@ -19,7 +18,7 @@ class FoodHomeScreen extends ConsumerWidget {
     final selectedMeal = ref.watch(selectedMealTabProvider);
 
     return Scaffold(
-      backgroundColor: isDark ? AppColorsDark.bg1 : AppColorsLight.bg1,
+      backgroundColor: AppTheme.bg1,
       appBar: AppBar(
         title: const Text('Nutrition Log'),
         actions: [
@@ -40,13 +39,13 @@ class FoodHomeScreen extends ConsumerWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Meal Logs', style: (isDark ? AppTypography.h2() : AppTypography.h2(color: AppColorsLight.textPrimary))),
-                Text('Edit', style: TextStyle(color: isDark ? AppColorsDark.primary : AppColorsLight.primary)),
+                Text('Meal Logs', style: AppTheme.h2(context)),
+                Text('Edit', style: TextStyle(color: AppTheme.primary)),
               ],
             ),
             MealTabBar(
               selected: selectedMeal,
-              onChanged: (type) => ref.read(selectedMealTabProvider.notifier).state = type,
+              onChanged: (type) => ref.read(selectedMealTabProvider.notifier).setTab(type),
             ),
             const SizedBox(height: 16),
             _buildMealLogList(context, ref, selectedMeal, isDark),
@@ -61,7 +60,7 @@ class FoodHomeScreen extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: isDark ? AppColorsDark.surface0 : AppColorsLight.surface0,
+        color: AppTheme.surface0,
         borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
@@ -82,10 +81,10 @@ class FoodHomeScreen extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('DAILY ENERGY', style: (isDark ? AppTypography.caption() : AppTypography.caption(color: AppColorsLight.textMuted))),
-                Text('1,840 kcal', style: (isDark ? AppTypography.monoLg() : AppTypography.monoLg(color: AppColorsLight.textPrimary))),
+                Text('DAILY ENERGY', style: AppTheme.caption(context)),
+                Text('1,840 kcal', style: AppTheme.monoLg(context)),
                 const SizedBox(height: 8),
-                Text('640 kcal remaining', style: (isDark ? AppTypography.bodySm() : AppTypography.bodySm(color: AppColorsLight.textMuted))),
+                Text('640 kcal remaining', style: AppTheme.bodySm(context)),
               ],
             ),
           ),
@@ -98,7 +97,7 @@ class FoodHomeScreen extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Micronutrients', style: (isDark ? AppTypography.h3() : AppTypography.h3(color: AppColorsLight.textPrimary))),
+        Text('Micronutrients', style: AppTheme.h3(context)),
         const SizedBox(height: 12),
         const MicronutrientBar(name: 'Vitamin D', current: 400, goal: 600, unit: ' IU'),
         const MicronutrientBar(name: 'Vitamin B12', current: 2.1, goal: 2.4, unit: ' mcg'),
@@ -111,26 +110,26 @@ class FoodHomeScreen extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isDark ? AppColorsDark.primaryMuted : AppColorsLight.primaryMuted,
+        color: AppTheme.primaryMuted,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: (isDark ? AppColorsDark.primary : AppColorsLight.primary).withValues(alpha: 0.3)),
+        border: Border.all(color: (AppTheme.primary).withValues(alpha: 0.3)),
       ),
       child: Row(
         children: [
-          const Icon(Icons.history_rounded, color: AppColors.primary),
+          const Icon(Icons.history_rounded, color: AppTheme.primary),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Repeat Yesterday?', style: AppTypography.labelLg(color: isDark ? AppColorsDark.textPrimary : AppColorsLight.textPrimary)),
-                Text('Add all meals from yesterday in one tap.', style: AppTypography.caption(color: isDark ? AppColorsDark.textMuted : AppColorsLight.textMuted)),
+                Text('Repeat Yesterday?', style: AppTheme.labelLg(context)),
+                Text('Add all meals from yesterday in one tap.', style: AppTheme.caption(context)),
               ],
             ),
           ),
           TextButton(
             onPressed: () {},
-            child: Text('COPY ALL', style: TextStyle(color: isDark ? AppColorsDark.primary : AppColorsLight.primary)),
+            child: Text('COPY ALL', style: TextStyle(color: AppTheme.primary)),
           ),
         ],
       ),

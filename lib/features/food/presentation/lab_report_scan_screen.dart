@@ -4,13 +4,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 
-import '../../../shared/theme/app_colors.dart';
-import '../../../shared/theme/app_text_styles.dart';
+import '../../../core/theme/app_theme.dart';
 import '../../../shared/widgets/shimmer_loader.dart';
 import '../../../shared/widgets/encryption_badge.dart';
 import '../../../shared/widgets/lab_value_row.dart';
 import '../../auth/domain/auth_providers.dart';
-import '../../blood_pressure/domain/bp_providers.dart';
 import '../../glucose/domain/glucose_providers.dart';
 import '../data/lab_report_ocr_service.dart';
 
@@ -75,9 +73,11 @@ class _LabReportScanScreenState extends ConsumerState<LabReportScanScreen> {
       });
     } catch (e) {
       setState(() => _isProcessing = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Failed to process image')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to process image')),
+        );
+      }
     }
   }
 
@@ -85,7 +85,6 @@ class _LabReportScanScreenState extends ConsumerState<LabReportScanScreen> {
     final auth = ref.read(authStateProvider).value;
     if (auth == null) return;
 
-    final bpService = ref.read(bpDriftServiceProvider);
     final glucoseService = ref.read(glucoseDriftServiceProvider);
 
     int count = 0;
@@ -109,15 +108,17 @@ class _LabReportScanScreenState extends ConsumerState<LabReportScanScreen> {
 
     if (count > 0) {
       if (mounted) {
-        Navigator.pop(context);
+        Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Succesfully imported $count values to health logs.')),
         );
       }
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please confirm at least one value to import.')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please confirm at least one value to import.')),
+        );
+      }
     }
   }
 
@@ -132,22 +133,21 @@ class _LabReportScanScreenState extends ConsumerState<LabReportScanScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColorsDark.background : AppColors.background,
+      backgroundColor: AppTheme.bg1,
       appBar: AppBar(
         title: const Text('Scan Lab Report'),
         backgroundColor: Colors.transparent,
         elevation: 0,
-        foregroundColor: isDark ? AppColorsDark.textPrimary : AppColors.textPrimary,
+        foregroundColor: AppTheme.textPrimary,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24.0),
         child: Column(
           children: [
             if (_image == null) ...[
-              _buildPickerOptions(isDark),
+              _buildPickerOptions(),
             ] else ...[
               _buildImagePreview(),
               const SizedBox(height: 24),
@@ -156,24 +156,24 @@ class _LabReportScanScreenState extends ConsumerState<LabReportScanScreen> {
               else if (_extractedValues.isEmpty)
                 const Center(child: Text('No health markers identified in this image.'))
               else
-                _buildResultsList(isDark),
+                _buildResultsList(),
             ],
             const SizedBox(height: 40),
-            _buildPrivacyNote(isDark),
+            _buildPrivacyNote(),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildPickerOptions(bool isDark) {
+  Widget _buildPickerOptions() {
     return Column(
       children: [
-        const Icon(Icons.description_outlined, size: 80, color: AppColors.primary),
+        const Icon(Icons.description_outlined, size: 80, color: AppTheme.primary),
         const SizedBox(height: 24),
         Text(
           'Digitize Your Reports',
-          style: AppTextStyles.h2(isDark),
+          style: AppTheme.h2(context),
         ),
         const SizedBox(height: 12),
         const Text(
@@ -240,21 +240,19 @@ class _LabReportScanScreenState extends ConsumerState<LabReportScanScreen> {
     );
   }
 
-  Widget _buildResultsList(bool isDark) {
+  Widget _buildResultsList() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Extracted Values', style: AppTextStyles.h3(isDark)),
+            Text('Extracted Values', style: AppTheme.h3(context)),
             const EncryptionBadge(),
           ],
         ),
         const SizedBox(height: 16),
-        ..._extractedValues.asMap().entries.map((entry) {
-          final i = entry.key;
-          final item = entry.value;
+        ..._extractedValues.map((item) {
           return LabValueRow(
             name: item.original.name,
             hindiName: _getHindiName(item.original.name),
@@ -272,7 +270,7 @@ class _LabReportScanScreenState extends ConsumerState<LabReportScanScreen> {
           child: ElevatedButton(
             onPressed: _importToHealthLogs,
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primary,
+              backgroundColor: AppTheme.primary,
               foregroundColor: Colors.white,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
               elevation: 0,
@@ -292,7 +290,7 @@ class _LabReportScanScreenState extends ConsumerState<LabReportScanScreen> {
     return '';
   }
 
-  Widget _buildPrivacyNote(bool isDark) {
+  Widget _buildPrivacyNote() {
     return Opacity(
       opacity: 0.7,
       child: Column(
@@ -300,7 +298,7 @@ class _LabReportScanScreenState extends ConsumerState<LabReportScanScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.security_rounded, size: 14, color: isDark ? AppColorsDark.textSecondary : AppColors.textSecondary),
+              Icon(Icons.security_rounded, size: 14, color: AppTheme.textSecondary),
               const SizedBox(width: 6),
               const Text('Privacy Protected', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
             ],
@@ -326,22 +324,21 @@ class _PickerCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     return GestureDetector(
       onTap: onTap,
       child: Container(
         height: 120,
         decoration: BoxDecoration(
-          color: isDark ? AppColorsDark.surface : Colors.white,
+          color: AppTheme.surface0,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: AppColors.divider),
+          border: Border.all(color: AppTheme.divider),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, color: AppColors.primary, size: 32),
+            Icon(icon, color: AppTheme.primary, size: 32),
             const SizedBox(height: 12),
-            Text(label, style: AppTextStyles.labelMedium(isDark)),
+            Text(label, style: AppTheme.labelMd(context)),
           ],
         ),
       ),

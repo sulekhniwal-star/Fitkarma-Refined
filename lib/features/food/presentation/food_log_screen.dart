@@ -4,8 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
-import '../../../core/theme/app_colors.dart';
-import '../../../shared/theme/app_text_styles.dart';
+import '../../../core/theme/app_theme.dart';
 import '../../../shared/widgets/async_value_widget.dart';
 import '../../../shared/widgets/food_item_card.dart';
 import '../../../core/storage/app_database.dart';
@@ -73,7 +72,6 @@ class _FoodLogScreenState extends ConsumerState<FoodLogScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     final searchResults = ref.watch(foodSearchProvider(_query));
 
     return Scaffold(
@@ -86,11 +84,11 @@ class _FoodLogScreenState extends ConsumerState<FoodLogScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // 1. Search Bar
-            _buildSearchBar(isDark),
+            _buildSearchBar(),
             const SizedBox(height: 24),
 
             if (_query.isNotEmpty) ...[
-              Text('Search Results', style: AppTextStyles.h3(isDark)),
+              Text('Search Results', style: AppTheme.h3(context)),
               AsyncValueWidget<List<Map<String, dynamic>>>(
                 value: searchResults,
                 data: (items) => ListView.builder(
@@ -110,19 +108,19 @@ class _FoodLogScreenState extends ConsumerState<FoodLogScreen> {
               ),
             ] else ...[
               // 2. Quick Actions
-              _buildQuickActions(context, isDark),
+              _buildQuickActions(context),
               const SizedBox(height: 32),
 
               // 3. Frequent Indian Portions
-              Text('Common Indian Portions', style: AppTextStyles.h3(isDark)),
+              Text('Common Indian Portions', style: AppTheme.h3(context)),
               const SizedBox(height: 12),
-              _buildFrequentGrid(ref, isDark),
+              _buildFrequentGrid(ref),
               const SizedBox(height: 32),
 
               // 4. Recent Logs
-              Text('Recently Logged', style: AppTextStyles.h3(isDark)),
+              Text('Recently Logged', style: AppTheme.h3(context)),
               const SizedBox(height: 12),
-              _buildRecentLogs(isDark),
+              _buildRecentLogs(),
             ],
           ],
         ),
@@ -130,10 +128,10 @@ class _FoodLogScreenState extends ConsumerState<FoodLogScreen> {
     );
   }
 
-  Widget _buildSearchBar(bool isDark) {
+  Widget _buildSearchBar() {
     return Container(
       decoration: BoxDecoration(
-        color: isDark ? AppColorsDark.surface : Colors.white,
+        color: AppTheme.surface0,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10),
@@ -144,7 +142,7 @@ class _FoodLogScreenState extends ConsumerState<FoodLogScreen> {
         onChanged: _onSearchChanged,
         decoration: InputDecoration(
           hintText: 'Search food or "2 chapatis"...',
-          hintStyle: TextStyle(color: isDark ? Colors.white54 : Colors.black54),
+          hintStyle: AppTheme.bodyMd(context).copyWith(color: AppTheme.textMuted),
           prefixIcon: const Icon(Icons.search),
           border: InputBorder.none,
           enabledBorder: InputBorder.none,
@@ -167,7 +165,7 @@ class _FoodLogScreenState extends ConsumerState<FoodLogScreen> {
     );
   }
 
-  Widget _buildQuickActions(BuildContext context, bool isDark) {
+  Widget _buildQuickActions(BuildContext context) {
     final actions = [
       {'label': 'Scan Label', 'icon': Icons.qr_code_scanner, 'route': '/home/food/scan'},
       {'label': 'Photo Log', 'icon': Icons.camera_alt_outlined, 'route': '/home/food/photo'},
@@ -180,19 +178,19 @@ class _FoodLogScreenState extends ConsumerState<FoodLogScreen> {
       runSpacing: 12,
       children: actions.map((a) {
         return ActionChip(
-          avatar: Icon(a['icon'] as IconData, size: 16, color: AppColors.primary),
+          avatar: Icon(a['icon'] as IconData, size: 16, color: AppTheme.primary),
           label: Text(a['label'] as String),
           onPressed: () {
             if (a['route'] != null) context.push(a['route'] as String);
           },
-          backgroundColor: isDark ? AppColorsDark.surface : AppColors.surface,
+          backgroundColor: AppTheme.surface0,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         );
       }).toList(),
     );
   }
 
-  Widget _buildFrequentGrid(WidgetRef ref, bool isDark) {
+  Widget _buildFrequentGrid(WidgetRef ref) {
     final frequent = ref.watch(indianFrequentFoodsProvider);
 
     return AsyncValueWidget<List<Map<String, dynamic>>>(
@@ -214,9 +212,9 @@ class _FoodLogScreenState extends ConsumerState<FoodLogScreen> {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               decoration: BoxDecoration(
-                color: isDark ? AppColorsDark.surface : Colors.white,
+                color: AppTheme.surface0,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppColors.divider.withValues(alpha: 0.5)),
+                border: Border.all(color: AppTheme.divider.withValues(alpha: 0.5)),
               ),
               child: Row(
                 children: [
@@ -227,8 +225,8 @@ class _FoodLogScreenState extends ConsumerState<FoodLogScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(item['name'], style: AppTextStyles.labelMedium(isDark), maxLines: 1),
-                        Text(item['portion'], style: AppTextStyles.caption(isDark)),
+                        Text(item['name'], style: AppTheme.labelMd(context), maxLines: 1),
+                        Text(item['portion'], style: AppTheme.caption(context)),
                       ],
                     ),
                   ),
@@ -241,7 +239,7 @@ class _FoodLogScreenState extends ConsumerState<FoodLogScreen> {
     );
   }
 
-  Widget _buildRecentLogs(bool isDark) {
+  Widget _buildRecentLogs() {
     return Column(
       children: [
         FoodItemCard(
@@ -279,7 +277,6 @@ class _PortionSelectorSheetState extends ConsumerState<_PortionSelectorSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Padding(
       padding: EdgeInsets.fromLTRB(24, 24, 24, 24 + MediaQuery.of(context).viewInsets.bottom),
@@ -295,20 +292,20 @@ class _PortionSelectorSheetState extends ConsumerState<_PortionSelectorSheet> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(widget.item['name'], style: AppTextStyles.h2(isDark)),
+                    Text(widget.item['name'], style: AppTheme.h2(context)),
                     Text('Approx. ${widget.item['calories']} kcal per unit',
-                        style: AppTextStyles.caption(isDark)),
+                        style: AppTheme.caption(context)),
                   ],
                 ),
               ),
             ],
           ),
           const SizedBox(height: 32),
-          Text('Select Portion', style: AppTextStyles.labelLarge(isDark)),
+          Text('Select Portion', style: AppTheme.labelLg(context)),
           const SizedBox(height: 16),
           Row(
             children: [
-              Text('${_quantity.toStringAsFixed(1)} ', style: AppTextStyles.h1(isDark)),
+              Text('${_quantity.toStringAsFixed(1)} ', style: AppTheme.h1(context)),
               const SizedBox(width: 8),
               DropdownButton<String>(
                 value: _unit,
@@ -324,7 +321,7 @@ class _PortionSelectorSheetState extends ConsumerState<_PortionSelectorSheet> {
             min: 0.5,
             max: 5.0,
             divisions: 9,
-            activeColor: AppColors.primary,
+            activeColor: AppTheme.primary,
             onChanged: (val) => setState(() => _quantity = val),
           ),
           const SizedBox(height: 32),
@@ -354,12 +351,12 @@ class _PortionSelectorSheetState extends ConsumerState<_PortionSelectorSheet> {
                 );
 
                 if (mounted) {
-                  Navigator.pop(context);
+                  Navigator.of(context).pop();
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text('Logged ${widget.item['name']}! 🍽'),
                       behavior: SnackBarBehavior.floating,
-                      backgroundColor: AppColors.primary,
+                      backgroundColor: AppTheme.primary,
                     ),
                   );
                 }

@@ -279,8 +279,6 @@ class _RestrictionList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    
     return GlassCard(
       padding: const EdgeInsets.all(16),
       color: color.withValues(alpha: 0.05),
@@ -327,8 +325,6 @@ class _MealPlanTabs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    
     return GlassCard(
       padding: EdgeInsets.zero,
       child: DefaultTabController(
@@ -628,5 +624,3 @@ const Map<String, String> festivalEmojis = {
   'republic_day': '🇮🇳',
   'independence_day': '🇮🇳',
 };
-
-

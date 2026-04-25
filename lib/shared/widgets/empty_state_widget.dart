@@ -1,5 +1,5 @@
-import '../../core/theme/app_colors.dart';
-import '../../core/theme/app_typography.dart';
+import 'package:flutter/material.dart';
+import '../../core/theme/app_theme.dart';
 
 enum EmptyStateType {
   food,
@@ -99,8 +99,6 @@ class FitKarmaEmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32.0),
@@ -117,8 +115,9 @@ class FitKarmaEmptyState extends StatelessWidget {
             if (hindiTitle != null) ...[
               Text(
                 hindiTitle!,
-                style: AppTypography.hindi(color: isDark ? AppColorsDark.primary : AppColorsLight.primary).copyWith(
+                style: AppTheme.hindi(context).copyWith(
                   fontWeight: FontWeight.bold,
+                  color: AppTheme.primary,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -126,14 +125,14 @@ class FitKarmaEmptyState extends StatelessWidget {
             ],
             Text(
               title ?? _defaultTitle,
-              style: (isDark ? AppTypography.h3() : AppTypography.h3(color: AppColorsLight.textPrimary)),
+              style: AppTheme.h3(context),
               textAlign: TextAlign.center,
             ),
             if (subtitle != null) ...[
               const SizedBox(height: 8),
               Text(
                 subtitle!,
-                style: (isDark ? AppTypography.bodySm() : AppTypography.bodySm(color: AppColorsLight.textMuted)),
+                style: AppTheme.bodySm(context),
                 textAlign: TextAlign.center,
               ),
             ],
@@ -142,6 +141,8 @@ class FitKarmaEmptyState extends StatelessWidget {
               ElevatedButton(
                 onPressed: onAction,
                 style: ElevatedButton.styleFrom(
+                  backgroundColor: AppTheme.primary,
+                  foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
@@ -154,4 +155,3 @@ class FitKarmaEmptyState extends StatelessWidget {
     );
   }
 }
-
