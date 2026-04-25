@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/config/device_tier.dart';
+import '../../core/providers/device_tier_provider.dart';
+
 
 class AmbientGlowBlobs extends ConsumerWidget {
   const AmbientGlowBlobs({super.key});

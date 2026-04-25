@@ -1,4 +1,5 @@
 import 'package:drift/drift.dart';
+import 'package:uuid/uuid.dart';
 import '../app_database.dart';
 import '../tables/core_log_tables.dart';
 import '../tables/sensitive_tables.dart';
@@ -24,6 +25,8 @@ part 'health_dao.g.dart';
 class HealthDao extends DatabaseAccessor<AppDatabase> with _$HealthDaoMixin {
   HealthDao(super.db);
 
+  final _uuid = const Uuid();
+
   /// Returns a stream of step logs for a specific date range.
   Stream<List<StepLog>> watchSteps(String userId, DateTime start, DateTime end) {
     return (select(stepLogs)
@@ -40,8 +43,15 @@ class HealthDao extends DatabaseAccessor<AppDatabase> with _$HealthDaoMixin {
   }
 
   /// Inserts or updates a body measurement.
-  Future<int> upsertWeight(BodyMeasurementsCompanion measurement) async {
-    return await into(bodyMeasurements).insert(measurement, mode: InsertMode.insertOrReplace);
+  Future<void> upsertWeight(BodyMeasurementsCompanion measurement) async {
+    var companion = measurement;
+    if (!companion.id.present) {
+      companion = companion.copyWith(
+        id: Value(_uuid.v4()),
+        idempotencyKey: Value(_uuid.v4()),
+      );
+    }
+    await into(bodyMeasurements).insert(companion, mode: InsertMode.insertOrReplace);
   }
 
   /// Fetches recent workout logs.
@@ -62,4 +72,3 @@ class HealthDao extends DatabaseAccessor<AppDatabase> with _$HealthDaoMixin {
         .watch();
   }
 }
-

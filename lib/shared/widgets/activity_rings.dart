@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
 import '../../core/config/device_tier.dart';
+import '../../core/providers/device_tier_provider.dart';
+
 /// Data model for a single activity ring.
 class RingData {
   final double progress; // 0.0 to 1.0

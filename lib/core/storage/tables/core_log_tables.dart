@@ -1,10 +1,9 @@
 import 'package:drift/drift.dart';
 import '../converters/json_converters.dart';
+import 'base_table.dart';
 
 @DataClassName('FoodLog')
-class FoodLogs extends Table {
-  IntColumn get id => integer().autoIncrement()();
-  TextColumn get userId => text()();
+class FoodLogs extends Table with Syncable {
   TextColumn get foodItemId => text().nullable()();
   TextColumn get recipeId => text().nullable()();
   TextColumn get foodName => text()();
@@ -21,15 +20,13 @@ class FoodLogs extends Table {
   RealColumn get calciumMg => real().nullable()();
   DateTimeColumn get loggedAt => dateTime()();
   TextColumn get logMethod => text().nullable()();
-  TextColumn get syncStatus => text().withDefault(const Constant('pending'))();
-  TextColumn get idempotencyKey => text()();
-  TextColumn get fieldVersions => text().nullable()();
 }
 
 @DataClassName('FoodItem')
-class FoodItems extends Table {
-  IntColumn get id => integer().autoIncrement()();
-  TextColumn get appwriteId => text().nullable()();
+class FoodItems extends Table with Syncable {
+  IntColumn get localRowId => integer().autoIncrement()(); // For FTS5 rowid
+  TextColumn get appwriteId => text().nullable()(); // Extra ref
+
   TextColumn get name => text()();
   TextColumn get nameLocal => text().nullable()();
   TextColumn get region => text().nullable()();
@@ -49,9 +46,7 @@ class FoodItems extends Table {
 }
 
 @DataClassName('WorkoutLog')
-class WorkoutLogs extends Table {
-  IntColumn get id => integer().autoIncrement()();
-  TextColumn get userId => text()();
+class WorkoutLogs extends Table with Syncable {
   TextColumn get workoutId => text().nullable()();
   TextColumn get title => text()();
   IntColumn get durationMin => integer()();
@@ -60,27 +55,19 @@ class WorkoutLogs extends Table {
   IntColumn get rpe => integer().nullable()();
   IntColumn get hrZone => integer().nullable()();
   DateTimeColumn get loggedAt => dateTime()();
-  TextColumn get syncStatus => text().withDefault(const Constant('pending'))();
-  TextColumn get idempotencyKey => text()();
 }
 
 @DataClassName('StepLog')
-class StepLogs extends Table {
-  IntColumn get id => integer().autoIncrement()();
-  TextColumn get userId => text()();
+class StepLogs extends Table with Syncable {
   DateTimeColumn get date => dateTime()();
   IntColumn get stepCount => integer()();
   RealColumn get distanceM => real().nullable()();
   RealColumn get caloriesBurned => real().nullable()();
   TextColumn get source => text()();
-  TextColumn get syncStatus => text().withDefault(const Constant('pending'))();
-  TextColumn get idempotencyKey => text()();
 }
 
 @DataClassName('SleepLog')
-class SleepLogs extends Table {
-  IntColumn get id => integer().autoIncrement()();
-  TextColumn get userId => text()();
+class SleepLogs extends Table with Syncable {
   DateTimeColumn get date => dateTime()();
   TextColumn get bedtime => text().withLength(min: 5, max: 5)();
   TextColumn get wakeTime => text().withLength(min: 5, max: 5)();
@@ -93,23 +80,17 @@ class SleepLogs extends Table {
 }
 
 @DataClassName('MoodLog')
-class MoodLogs extends Table {
-  IntColumn get id => integer().autoIncrement()();
-  TextColumn get userId => text()();
+class MoodLogs extends Table with Syncable {
   IntColumn get moodScore => integer()();
   IntColumn get energyLevel => integer().nullable()();
   IntColumn get stressLevel => integer().nullable()();
   TextColumn get tags => text().nullable()();
   TextColumn get notes => text().nullable()();
   DateTimeColumn get loggedAt => dateTime()();
-  TextColumn get syncStatus => text().withDefault(const Constant('pending'))();
-  TextColumn get idempotencyKey => text()();
 }
 
 @DataClassName('Medication')
-class Medications extends Table {
-  IntColumn get id => integer().autoIncrement()();
-  TextColumn get userId => text()();
+class Medications extends Table with Syncable {
   TextColumn get name => text()();
   TextColumn get dose => text()();
   TextColumn get frequency => text()();
@@ -121,9 +102,7 @@ class Medications extends Table {
 }
 
 @DataClassName('Habit')
-class Habits extends Table {
-  IntColumn get id => integer().autoIncrement()();
-  TextColumn get userId => text()();
+class Habits extends Table with Syncable {
   TextColumn get name => text()();
   TextColumn get icon => text()();
   IntColumn get targetCount => integer()();
@@ -137,18 +116,14 @@ class Habits extends Table {
 }
 
 @DataClassName('HabitCompletion')
-class HabitCompletions extends Table {
-  IntColumn get id => integer().autoIncrement()();
-  IntColumn get habitId => integer()();
+class HabitCompletions extends Table with Syncable {
+  IntColumn get habitId => integer()(); // Local Ref (might need to change to text if habits use text id)
   DateTimeColumn get date => dateTime()();
   IntColumn get count => integer()();
-  TextColumn get syncStatus => text().withDefault(const Constant('pending'))();
 }
 
 @DataClassName('BodyMeasurement')
-class BodyMeasurements extends Table {
-  IntColumn get id => integer().autoIncrement()();
-  TextColumn get userId => text()();
+class BodyMeasurements extends Table with Syncable {
   RealColumn get weightKg => real().nullable()();
   RealColumn get heightCm => real().nullable()();
   RealColumn get chestCm => real().nullable()();
@@ -162,9 +137,7 @@ class BodyMeasurements extends Table {
 }
 
 @DataClassName('FastingLog')
-class FastingLogs extends Table {
-  IntColumn get id => integer().autoIncrement()();
-  TextColumn get userId => text()();
+class FastingLogs extends Table with Syncable {
   TextColumn get protocol => text()();
   DateTimeColumn get fastStart => dateTime()();
   DateTimeColumn get fastEnd => dateTime().nullable()();
@@ -172,14 +145,10 @@ class FastingLogs extends Table {
   BoolColumn get completed => boolean().withDefault(const Constant(false))();
   DateTimeColumn get brokenAt => dateTime().nullable()();
   TextColumn get notes => text().nullable()();
-  TextColumn get syncStatus => text().withDefault(const Constant('pending'))();
-  TextColumn get idempotencyKey => text()();
 }
 
 @DataClassName('MealPlan')
-class MealPlans extends Table {
-  IntColumn get id => integer().autoIncrement()();
-  TextColumn get userId => text()();
+class MealPlans extends Table with Syncable {
   DateTimeColumn get weekStart => dateTime()();
   TextColumn get planData => text().map(const JsonMapConverter())(); // JSON
   TextColumn get planType => text()(); // standard, festival, wedding, etc.
@@ -188,9 +157,7 @@ class MealPlans extends Table {
 }
 
 @DataClassName('Recipe')
-class Recipes extends Table {
-  IntColumn get id => integer().autoIncrement()();
-  TextColumn get userId => text()();
+class Recipes extends Table with Syncable {
   TextColumn get title => text()();
   TextColumn get description => text().nullable()();
   TextColumn get ingredients => text().map(const JsonMapConverter())(); // JSON
@@ -209,9 +176,7 @@ class Recipes extends Table {
 }
 
 @DataClassName('PersonalRecord')
-class PersonalRecords extends Table {
-  IntColumn get id => integer().autoIncrement()();
-  TextColumn get userId => text()();
+class PersonalRecords extends Table with Syncable {
   TextColumn get exerciseName => text()();
   RealColumn get recordValue => real()();
   TextColumn get unit => text()();
@@ -219,9 +184,7 @@ class PersonalRecords extends Table {
 }
 
 @DataClassName('NutritionGoal')
-class NutritionGoals extends Table {
-  IntColumn get id => integer().autoIncrement()();
-  TextColumn get userId => text()();
+class NutritionGoals extends Table with Syncable {
   RealColumn get tdee => real()();
   RealColumn get calorieGoal => real()();
   RealColumn get proteinG => real()();
@@ -235,31 +198,22 @@ class NutritionGoals extends Table {
 }
 
 @DataClassName('KarmaTransaction')
-class KarmaTransactions extends Table {
-  IntColumn get id => integer().autoIncrement()();
-  TextColumn get userId => text()();
+class KarmaTransactions extends Table with Syncable {
   IntColumn get amount => integer()();
   TextColumn get action => text()();
   TextColumn get description => text().nullable()();
   IntColumn get balanceAfter => integer()();
-  DateTimeColumn get createdAt => dateTime()();
 }
+
 @DataClassName('WaterLog')
-class WaterLogs extends Table {
-  IntColumn get id => integer().autoIncrement()();
-  TextColumn get userId => text()();
+class WaterLogs extends Table with Syncable {
   IntColumn get amountMl => integer()();
   DateTimeColumn get loggedAt => dateTime()();
-  TextColumn get syncStatus => text().withDefault(const Constant('pending'))();
-  TextColumn get idempotencyKey => text()();
 }
 
 @DataClassName('HeartRateLog')
-class HeartRateLogs extends Table {
-  IntColumn get id => integer().autoIncrement()();
-  TextColumn get userId => text()();
+class HeartRateLogs extends Table with Syncable {
   IntColumn get bpm => integer()();
   DateTimeColumn get timestamp => dateTime()();
   TextColumn get source => text()(); // fitbit, garmin, health_connect, etc.
 }
-

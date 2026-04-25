@@ -1,8 +1,8 @@
 import 'package:drift/drift.dart';
+import 'base_table.dart';
 
 @DataClassName('LocalUser')
-class Users extends Table {
-  TextColumn get id => text()(); // Appwrite User ID
+class Users extends Table with Syncable {
   TextColumn get email => text()();
   TextColumn get name => text()();
   IntColumn get karmaTotal => integer().withDefault(const Constant(0))();
@@ -24,8 +24,4 @@ class Users extends Table {
   IntColumn get doshaKapha => integer().nullable()();
   TextColumn get dominantDosha => text().nullable()(); // vata|pitta|kapha
   BoolColumn get retainOcrText => boolean().withDefault(const Constant(false))();
-
-  @override
-  Set<Column> get primaryKey => {id};
 }
-

@@ -2,10 +2,12 @@ import 'package:health/health.dart';
 import '../../../core/storage/app_database.dart';
 import '../../../core/network/sync_queue.dart';
 import 'package:drift/drift.dart';
+import 'package:uuid/uuid.dart';
 
 class HealthConnectService {
   final AppDatabase db;
   final Health _health = Health();
+  final _uuid = const Uuid();
 
   HealthConnectService({required this.db});
 
@@ -41,6 +43,7 @@ class HealthConnectService {
         final idempotencyKey = generateIdempotencyKey(userId, 'steps', data.dateFrom.toIso8601String());
         await db.into(db.stepLogs).insertOnConflictUpdate(
           StepLogsCompanion.insert(
+            id: _uuid.v4(),
             userId: userId,
             date: data.dateFrom,
             stepCount: steps,
@@ -67,6 +70,7 @@ class HealthConnectService {
       
       await db.into(db.sleepLogs).insertOnConflictUpdate(
         SleepLogsCompanion.insert(
+          id: _uuid.v4(),
           userId: userId,
           date: data.dateFrom,
           bedtime: '${data.dateFrom.hour.toString().padLeft(2, '0')}:${data.dateFrom.minute.toString().padLeft(2, '0')}',
@@ -74,6 +78,8 @@ class HealthConnectService {
           durationMin: duration,
           qualityScore: 3, // Default mid
           source: 'health_connect',
+          idempotencyKey: _uuid.v4(),
+          syncStatus: const Value('pending'),
         ),
       );
     }
@@ -92,13 +98,15 @@ class HealthConnectService {
       
       await db.into(db.heartRateLogs).insert(
         HeartRateLogsCompanion.insert(
+          id: _uuid.v4(),
           userId: userId,
           bpm: bpm,
           timestamp: data.dateFrom,
           source: 'health_connect',
+          idempotencyKey: _uuid.v4(),
+          syncStatus: const Value('pending'),
         ),
       );
     }
   }
 }
-

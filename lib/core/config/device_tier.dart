@@ -1,4 +1,5 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+// lib/core/config/device_tier.dart
+
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:system_info2/system_info2.dart';
 import 'dart:io';
@@ -49,30 +50,12 @@ extension DeviceTierX on DeviceTier {
   }
 }
 
-final deviceTierProvider = NotifierProvider<DeviceTierNotifier, DeviceTier>(
-  DeviceTierNotifier.new,
-);
-
-class DeviceTierNotifier extends Notifier<DeviceTier> {
-  @override
-  DeviceTier build() => DeviceTier.mid;
-
-  void setTier(DeviceTier tier) {
-    state = tier;
-  }
-}
-
 class DeviceTierService {
   static Future<DeviceTier> detectTier() async {
     try {
-      // Get physical RAM in MB
       final ramBytes = SysInfo.getTotalPhysicalMemory();
       final ramMB = ramBytes / (1024 * 1024);
 
-      // Detection based on RAM thresholds (§2.4a)
-      // High: > 6GB (6144 MB)
-      // Mid: 3GB - 6GB
-      // Low: < 3GB (3072 MB)
       if (ramMB >= 6000) {
         return DeviceTier.high;
       } else if (ramMB >= 3000) {
@@ -81,7 +64,6 @@ class DeviceTierService {
         return DeviceTier.low;
       }
     } catch (e) {
-      // Fallback to heuristic if RAM info fails
       return _fallbackHeuristic();
     }
   }
@@ -108,4 +90,3 @@ class DeviceTierService {
     return DeviceTier.mid;
   }
 }
-

@@ -1,9 +1,8 @@
 import 'package:drift/drift.dart';
+import 'base_table.dart';
 
 @DataClassName('LabReport')
-class LabReports extends Table {
-  IntColumn get id => integer().autoIncrement()();
-  TextColumn get userId => text()();
+class LabReports extends Table with Syncable {
   DateTimeColumn get reportDate => dateTime()();
   TextColumn get labName => text().nullable()();
   TextColumn get extractedValues => text()(); // JSON string
@@ -14,9 +13,7 @@ class LabReports extends Table {
 }
 
 @DataClassName('AbhaLink')
-class AbhaLinks extends Table {
-  IntColumn get id => integer().autoIncrement()();
-  TextColumn get userId => text()();
+class AbhaLinks extends Table with Syncable {
   TextColumn get abhaIdEncrypted => text()();
   TextColumn get abhaAddressEncrypted => text().nullable()();
   TextColumn get linkedAtEncrypted => text()();
@@ -25,9 +22,7 @@ class AbhaLinks extends Table {
 }
 
 @DataClassName('EmergencyCard')
-class EmergencyCards extends Table {
-  IntColumn get id => integer().autoIncrement()();
-  TextColumn get userId => text()();
+class EmergencyCards extends Table with Syncable {
   TextColumn get name => text()();
   TextColumn get bloodGroup => text()();
   TextColumn get allergies => text().nullable()(); // JSON list
@@ -38,12 +33,10 @@ class EmergencyCards extends Table {
   TextColumn get doctorPhone => text().nullable()();
   TextColumn get insurancePolicy => text().nullable()();
   TextColumn get medicalNotes => text().nullable()();
-  DateTimeColumn get createdAt => dateTime()();
 }
 
 @DataClassName('FestivalCalendarEntry')
-class FestivalCalendar extends Table {
-  TextColumn get id => text()(); // e.g. 'navratri_2025_1'
+class FestivalCalendar extends Table with Syncable {
   TextColumn get festivalKey => text()(); // slug: 'navratri', 'diwali', 'ramadan'
   TextColumn get nameEn => text()();
   TextColumn get nameHi => text()();
@@ -64,14 +57,10 @@ class FestivalCalendar extends Table {
   TextColumn get karmaChallenge => text().nullable()();
   BoolColumn get computedDynamically => boolean().withDefault(const Constant(true))();
   DateTimeColumn get computedAt => dateTime()();
-
-  @override
-  Set<Column> get primaryKey => {id};
 }
 
 @DataClassName('RemoteConfigCacheEntry')
-class RemoteConfigCache extends Table {
-  IntColumn get id => integer().autoIncrement()();
+class RemoteConfigCache extends Table with Syncable {
   TextColumn get key => text()();
   TextColumn get value => text()(); // JSON or primitive string
   TextColumn get type => text()(); // boolean, string, json, integer
@@ -79,13 +68,10 @@ class RemoteConfigCache extends Table {
 }
 
 @DataClassName('WeddingEvent')
-class WeddingEvents extends Table {
-  IntColumn get id => integer().autoIncrement()();
-  TextColumn get userId => text()();
+class WeddingEvents extends Table with Syncable {
   TextColumn get eventKey => text()();
   TextColumn get eventName => text()();
   DateTimeColumn get date => dateTime()();
   TextColumn get description => text().nullable()();
   BoolColumn get isMainEvent => boolean().withDefault(const Constant(false))();
 }
-

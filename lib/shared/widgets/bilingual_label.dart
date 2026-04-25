@@ -30,12 +30,16 @@ class BilingualLabel extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Text(
-          english,
-          style: englishStyle ?? (isDark ? AppTypography.h3() : AppTypography.h3(color: AppColorsLight.textPrimary)),
+          english.toUpperCase(),
+          style: englishStyle ?? (isDark ? AppTypography.labelMd() : AppTypography.labelMd(color: AppColorsLight.textSecondary)).copyWith(
+            letterSpacing: 1.2,
+          ),
         ),
         Text(
           hindi,
-          style: hindiStyle ?? (isDark ? AppTypography.hindi() : AppTypography.hindi(color: AppColorsLight.textSecondary)),
+          style: hindiStyle ?? (isDark ? AppTypography.hindi() : AppTypography.hindi(color: AppColorsLight.textPrimary)).copyWith(
+            fontSize: 14, // 15% larger than default 12
+          ),
         ),
       ],
     );

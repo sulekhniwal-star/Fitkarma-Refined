@@ -1,4 +1,5 @@
 import 'package:drift/drift.dart';
+import 'package:uuid/uuid.dart';
 import '../app_database.dart';
 import '../tables/user_tables.dart';
 import '../tables/india_platform_tables.dart';
@@ -19,6 +20,8 @@ part 'user_dao.g.dart';
 class UserDao extends DatabaseAccessor<AppDatabase> with _$UserDaoMixin {
   UserDao(super.db);
 
+  final _uuid = const Uuid();
+
   /// Returns the current user's profile.
   Future<LocalUser?> getUser(String userId) {
     return (select(users)..where((t) => t.id.equals(userId))).getSingleOrNull();
@@ -32,7 +35,11 @@ class UserDao extends DatabaseAccessor<AppDatabase> with _$UserDaoMixin {
   /// Updates onboarding status.
   Future<void> updateOnboardingStatus(String userId, bool completed) {
     return (update(users)..where((t) => t.id.equals(userId))).write(
-      UsersCompanion(onboardingCompleted: Value(completed)),
+      UsersCompanion(
+        onboardingCompleted: Value(completed),
+        updatedAt: Value(DateTime.now()),
+        syncStatus: const Value('pending'),
+      ),
     );
   }
 
@@ -58,26 +65,44 @@ class UserDao extends DatabaseAccessor<AppDatabase> with _$UserDaoMixin {
 
       // 1. Update User balance
       await (update(users)..where((t) => t.id.equals(userId))).write(
-        UsersCompanion(karmaTotal: Value(newBalance)),
+        UsersCompanion(
+          karmaTotal: Value(newBalance),
+          updatedAt: Value(DateTime.now()),
+          syncStatus: const Value('pending'),
+        ),
       );
 
       // 2. Record Transaction
+      final id = _uuid.v4();
       await into(karmaTransactions).insert(
         KarmaTransactionsCompanion.insert(
+          id: id,
           userId: userId,
           amount: amount,
           action: action,
           description: Value(description),
           balanceAfter: newBalance,
           createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+          idempotencyKey: _uuid.v4(),
+          syncStatus: const Value('pending'),
         ),
       );
     });
   }
 
   /// Upserts ABHA link details.
-  Future<int> upsertAbha(AbhaLinksCompanion abha) {
-    return into(abhaLinks).insert(abha, mode: InsertMode.insertOrReplace);
+  Future<void> upsertAbha(AbhaLinksCompanion abha) async {
+    // If id is not provided, generate one
+    var companion = abha;
+    if (companion.id.present == false) {
+       companion = companion.copyWith(
+         id: Value(_uuid.v4()),
+         idempotencyKey: Value(_uuid.v4()),
+         syncStatus: const Value('pending'),
+       );
+    }
+    await into(abhaLinks).insert(companion, mode: InsertMode.insertOrReplace);
   }
 
   /// Fetches emergency contact cards.
@@ -87,4 +112,3 @@ class UserDao extends DatabaseAccessor<AppDatabase> with _$UserDaoMixin {
     )..where((t) => t.userId.equals(userId))).watch();
   }
 }
-

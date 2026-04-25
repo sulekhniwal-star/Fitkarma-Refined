@@ -1,28 +1,19 @@
+// lib/shared/widgets/bottom_nav_bar.dart
+
+import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
+import '../../core/theme/app_spacing.dart';
+import '../../core/config/device_tier.dart';
+import '../../core/config/user_experience_stage.dart';
+import '../../core/providers/device_tier_provider.dart';
+import '../../core/providers/ux_stage_provider.dart';
 
-/// Model representing a single item in the bottom navigation bar.
-class BottomNavItem {
-  final IconData outlinedIcon;
-  final IconData filledIcon;
-  final String labelEn;
-  final String labelHi;
-
-  const BottomNavItem({
-    required this.outlinedIcon,
-    required this.filledIcon,
-    required this.labelEn,
-    required this.labelHi,
-  });
-}
-
-/// A custom bilingual bottom navigation bar for FitKarma with a center notch.
 class FitKarmaBottomNav extends ConsumerWidget {
   final int currentIndex;
-  final ValueChanged<int> onTap;
+  final void Function(int) onTap;
 
   const FitKarmaBottomNav({
     super.key,
@@ -30,160 +21,130 @@ class FitKarmaBottomNav extends ConsumerWidget {
     required this.onTap,
   });
 
-  static const List<BottomNavItem> items = [
-    BottomNavItem(
-      outlinedIcon: Icons.home_outlined,
-      filledIcon: Icons.home,
-      labelEn: 'Home',
-      labelHi: 'होम',
-    ),
-    BottomNavItem(
-      outlinedIcon: Icons.restaurant_outlined,
-      filledIcon: Icons.restaurant,
-      labelEn: 'Food',
-      labelHi: 'खाना',
-    ),
-    BottomNavItem(
-      outlinedIcon: Icons.directions_walk_outlined,
-      filledIcon: Icons.directions_walk,
-      labelEn: 'Activity',
-      labelHi: 'एक्टिविटी',
-    ),
-    BottomNavItem(
-      outlinedIcon: Icons.person_outline,
-      filledIcon: Icons.person,
-      labelEn: 'Profile',
-      labelHi: 'प्रोफाइल',
-    ),
+  static const _tabs = [
+    (icon: Icons.home_outlined,         filled: Icons.home,           en: 'Home',    hi: 'मुख्यपृष्ठ', route: '/home/dashboard'),
+    (icon: Icons.restaurant_outlined,   filled: Icons.restaurant,     en: 'Food',    hi: 'खाना',       route: '/home/food'),
+    (icon: Icons.fitness_center_outlined, filled: Icons.fitness_center, en: 'Workout', hi: 'वर्कआउट',  route: '/home/workout'),
+    (icon: Icons.directions_walk_outlined, filled: Icons.directions_walk, en: 'Steps', hi: 'कदम',      route: '/home/steps'),
+    (icon: Icons.person_outline,        filled: Icons.person,         en: 'Me',      hi: 'मैं',        route: '/profile'),
   ];
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final stage = ref.watch(uxStageProvider);
+    final showAllLabels = stage == UXStage.firstWeek;
+    final tier = ref.watch(deviceTierProvider);
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
-    return BottomAppBar(
-      height: 80,
-      padding: EdgeInsets.zero,
-      color: isDark ? AppColorsDark.bg1 : AppColorsLight.bg1,
-      shape: const CircularNotchedRectangle(),
-      notchMargin: 10,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          _NavBarItem(
-            item: items[0],
-            isSelected: currentIndex == 0,
-            onTap: () => _handleTap(0),
-            isDark: isDark,
-          ),
-          _NavBarItem(
-            item: items[1],
-            isSelected: currentIndex == 1,
-            onTap: () => _handleTap(1),
-            isDark: isDark,
-          ),
-          const SizedBox(width: 48), // Notch space
-          _NavBarItem(
-            item: items[2],
-            isSelected: currentIndex == 2,
-            onTap: () => _handleTap(2),
-            isDark: isDark,
-          ),
-          _NavBarItem(
-            item: items[3],
-            isSelected: currentIndex == 3,
-            onTap: () => _handleTap(3),
-            isDark: isDark,
-          ),
-        ],
-      ),
-    );
-  }
 
-  void _handleTap(int index) {
-    HapticFeedback.lightImpact();
-    onTap(index);
-  }
-}
-
-class _NavBarItem extends StatelessWidget {
-  final BottomNavItem item;
-  final bool isSelected;
-  final VoidCallback onTap;
-  final bool isDark;
-
-  const _NavBarItem({
-    required this.item,
-    required this.isSelected,
-    required this.onTap,
-    required this.isDark,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final activeColor = isDark ? AppColorsDark.primary : AppColorsLight.primary;
-    final inactiveColor = isDark ? AppColorsDark.textMuted : AppColorsLight.textMuted;
-    
-    return Expanded(
-      child: InkWell(
-        onTap: onTap,
-        splashColor: Colors.transparent,
-        highlightColor: Colors.transparent,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Stack(
-              alignment: Alignment.center,
-              children: [
-                // Subtle Neutral Glow
-                if (isSelected)
-                  AnimatedContainer(
-                    duration: const Duration(milliseconds: 300),
-                    width: 44,
-                    height: 28,
-                    decoration: BoxDecoration(
-                      color: activeColor.withValues(alpha: 0.15),
-                      borderRadius: BorderRadius.circular(16),
-                      boxShadow: [
-                        BoxShadow(
-                          color: activeColor.withValues(alpha: 0.2),
-                          blurRadius: 10,
-                          spreadRadius: -2,
-                        ),
-                      ],
-                    ),
-                  ),
-                Icon(
-                  isSelected ? item.filledIcon : item.outlinedIcon,
-                  color: isSelected ? activeColor : inactiveColor,
-                  size: 24,
+    return Padding(
+      padding: EdgeInsets.fromLTRB(16, 0, 16,
+          MediaQuery.of(context).padding.bottom + 12),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(AppRadius.full),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(
+            sigmaX: tier.blurRadius > 0 ? 16 : 0,
+            sigmaY: tier.blurRadius > 0 ? 16 : 0,
+          ),
+          child: Container(
+            height: 64,
+            decoration: BoxDecoration(
+              color: isDark
+                  ? AppColorsDark.surface1.withOpacity(tier.isGlassSurfacesEnabled ? 0.9 : 1.0)
+                  : AppColorsLight.surface1.withOpacity(tier.isGlassSurfacesEnabled ? 0.9 : 1.0),
+              borderRadius: BorderRadius.circular(AppRadius.full),
+              border: Border.all(
+                color: isDark ? AppColorsDark.glassBorder : AppColorsLight.glassBorder,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.3),
+                  blurRadius: 32,
+                  offset: const Offset(0, 8),
                 ),
               ],
             ),
-            const SizedBox(height: 4),
-            Text(
-              item.labelEn.toUpperCase(),
-              style: (isDark ? AppTypography.labelMd() : AppTypography.labelMd(color: activeColor)).copyWith(
-                fontSize: 9,
-                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                color: isSelected ? activeColor : inactiveColor,
-                letterSpacing: 0.5,
-              ),
+            child: Row(
+              children: List.generate(_tabs.length, (i) {
+                final tab = _tabs[i];
+                final isActive = currentIndex == i;
+                return Expanded(
+                  child: _NavTab(
+                    icon: isActive ? tab.filled : tab.icon,
+                    label: tab.en,
+                    hindiLabel: tab.hi,
+                    isActive: isActive,
+                    showLabel: isActive || showAllLabels,
+                    showGlow: tier.hasAdvancedGlow,
+                    onTap: () => onTap(i),
+                  ),
+                );
+              }),
             ),
-            Text(
-              item.labelHi,
-              style: AppTypography.hindi(
-                color: isSelected ? activeColor.withValues(alpha: 0.9) : inactiveColor.withValues(alpha: 0.7)
-              ).copyWith(
-                fontSize: 9,
-                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
   }
 }
 
+class _NavTab extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final String hindiLabel;
+  final bool isActive;
+  final bool showLabel;
+  final bool showGlow;
+  final VoidCallback onTap;
+
+  const _NavTab({
+    required this.icon,
+    required this.label,
+    required this.hindiLabel,
+    required this.isActive,
+    required this.showLabel,
+    required this.showGlow,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final activeColor = isDark ? AppColorsDark.primary : AppColorsLight.primary;
+    final inactiveColor = isDark ? AppColorsDark.textMuted : AppColorsLight.textMuted;
+
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            icon,
+            color: isActive ? activeColor : inactiveColor,
+            size: 24,
+            shadows: isActive && showGlow
+                ? [Shadow(color: activeColor.withOpacity(0.5), blurRadius: 10)]
+                : null,
+          ),
+          if (showLabel) ...[
+            const SizedBox(height: 2),
+            Text(
+              label,
+              style: AppTypography.labelMd(
+                color: isActive ? activeColor : inactiveColor,
+              ).copyWith(fontSize: 10, fontWeight: isActive ? FontWeight.w600 : FontWeight.w400),
+            ),
+            if (isActive)
+              Text(
+                hindiLabel,
+                style: AppTypography.hindi(
+                  color: isActive ? activeColor : inactiveColor,
+                ).copyWith(fontSize: 9),
+              ),
+          ],
+        ],
+      ),
+    );
+  }
+}

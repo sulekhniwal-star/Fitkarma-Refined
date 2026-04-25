@@ -10,16 +10,12 @@ class $FoodLogsTable extends FoodLogs with TableInfo<$FoodLogsTable, FoodLog> {
   $FoodLogsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
     'id',
     aliasedName,
     false,
-    hasAutoIncrement: true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
   );
   static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
   @override
@@ -29,6 +25,64 @@ class $FoodLogsTable extends FoodLogs with TableInfo<$FoodLogsTable, FoodLog> {
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _syncStatusMeta = const VerificationMeta(
+    'syncStatus',
+  );
+  @override
+  late final GeneratedColumn<String> syncStatus = GeneratedColumn<String>(
+    'sync_status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('pending'),
+  );
+  static const VerificationMeta _idempotencyKeyMeta = const VerificationMeta(
+    'idempotencyKey',
+  );
+  @override
+  late final GeneratedColumn<String> idempotencyKey = GeneratedColumn<String>(
+    'idempotency_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _fieldVersionsMeta = const VerificationMeta(
+    'fieldVersions',
+  );
+  @override
+  late final GeneratedColumn<String> fieldVersions = GeneratedColumn<String>(
+    'field_versions',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
   );
   static const VerificationMeta _foodItemIdMeta = const VerificationMeta(
     'foodItemId',
@@ -198,44 +252,15 @@ class $FoodLogsTable extends FoodLogs with TableInfo<$FoodLogsTable, FoodLog> {
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _syncStatusMeta = const VerificationMeta(
-    'syncStatus',
-  );
-  @override
-  late final GeneratedColumn<String> syncStatus = GeneratedColumn<String>(
-    'sync_status',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-    defaultValue: const Constant('pending'),
-  );
-  static const VerificationMeta _idempotencyKeyMeta = const VerificationMeta(
-    'idempotencyKey',
-  );
-  @override
-  late final GeneratedColumn<String> idempotencyKey = GeneratedColumn<String>(
-    'idempotency_key',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _fieldVersionsMeta = const VerificationMeta(
-    'fieldVersions',
-  );
-  @override
-  late final GeneratedColumn<String> fieldVersions = GeneratedColumn<String>(
-    'field_versions',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
     userId,
+    createdAt,
+    updatedAt,
+    syncStatus,
+    idempotencyKey,
+    fieldVersions,
     foodItemId,
     recipeId,
     foodName,
@@ -252,9 +277,6 @@ class $FoodLogsTable extends FoodLogs with TableInfo<$FoodLogsTable, FoodLog> {
     calciumMg,
     loggedAt,
     logMethod,
-    syncStatus,
-    idempotencyKey,
-    fieldVersions,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -270,6 +292,8 @@ class $FoodLogsTable extends FoodLogs with TableInfo<$FoodLogsTable, FoodLog> {
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
     }
     if (data.containsKey('user_id')) {
       context.handle(
@@ -278,6 +302,44 @@ class $FoodLogsTable extends FoodLogs with TableInfo<$FoodLogsTable, FoodLog> {
       );
     } else if (isInserting) {
       context.missing(_userIdMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    if (data.containsKey('sync_status')) {
+      context.handle(
+        _syncStatusMeta,
+        syncStatus.isAcceptableOrUnknown(data['sync_status']!, _syncStatusMeta),
+      );
+    }
+    if (data.containsKey('idempotency_key')) {
+      context.handle(
+        _idempotencyKeyMeta,
+        idempotencyKey.isAcceptableOrUnknown(
+          data['idempotency_key']!,
+          _idempotencyKeyMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_idempotencyKeyMeta);
+    }
+    if (data.containsKey('field_versions')) {
+      context.handle(
+        _fieldVersionsMeta,
+        fieldVersions.isAcceptableOrUnknown(
+          data['field_versions']!,
+          _fieldVersionsMeta,
+        ),
+      );
     }
     if (data.containsKey('food_item_id')) {
       context.handle(
@@ -400,32 +462,6 @@ class $FoodLogsTable extends FoodLogs with TableInfo<$FoodLogsTable, FoodLog> {
         logMethod.isAcceptableOrUnknown(data['log_method']!, _logMethodMeta),
       );
     }
-    if (data.containsKey('sync_status')) {
-      context.handle(
-        _syncStatusMeta,
-        syncStatus.isAcceptableOrUnknown(data['sync_status']!, _syncStatusMeta),
-      );
-    }
-    if (data.containsKey('idempotency_key')) {
-      context.handle(
-        _idempotencyKeyMeta,
-        idempotencyKey.isAcceptableOrUnknown(
-          data['idempotency_key']!,
-          _idempotencyKeyMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_idempotencyKeyMeta);
-    }
-    if (data.containsKey('field_versions')) {
-      context.handle(
-        _fieldVersionsMeta,
-        fieldVersions.isAcceptableOrUnknown(
-          data['field_versions']!,
-          _fieldVersionsMeta,
-        ),
-      );
-    }
     return context;
   }
 
@@ -436,13 +472,33 @@ class $FoodLogsTable extends FoodLogs with TableInfo<$FoodLogsTable, FoodLog> {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return FoodLog(
       id: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
+        DriftSqlType.string,
         data['${effectivePrefix}id'],
       )!,
       userId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}user_id'],
       )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      syncStatus: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sync_status'],
+      )!,
+      idempotencyKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}idempotency_key'],
+      )!,
+      fieldVersions: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}field_versions'],
+      ),
       foodItemId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}food_item_id'],
@@ -507,18 +563,6 @@ class $FoodLogsTable extends FoodLogs with TableInfo<$FoodLogsTable, FoodLog> {
         DriftSqlType.string,
         data['${effectivePrefix}log_method'],
       ),
-      syncStatus: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}sync_status'],
-      )!,
-      idempotencyKey: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}idempotency_key'],
-      )!,
-      fieldVersions: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}field_versions'],
-      ),
     );
   }
 
@@ -529,8 +573,13 @@ class $FoodLogsTable extends FoodLogs with TableInfo<$FoodLogsTable, FoodLog> {
 }
 
 class FoodLog extends DataClass implements Insertable<FoodLog> {
-  final int id;
+  final String id;
   final String userId;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final String syncStatus;
+  final String idempotencyKey;
+  final String? fieldVersions;
   final String? foodItemId;
   final String? recipeId;
   final String foodName;
@@ -547,12 +596,14 @@ class FoodLog extends DataClass implements Insertable<FoodLog> {
   final double? calciumMg;
   final DateTime loggedAt;
   final String? logMethod;
-  final String syncStatus;
-  final String idempotencyKey;
-  final String? fieldVersions;
   const FoodLog({
     required this.id,
     required this.userId,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.syncStatus,
+    required this.idempotencyKey,
+    this.fieldVersions,
     this.foodItemId,
     this.recipeId,
     required this.foodName,
@@ -569,15 +620,19 @@ class FoodLog extends DataClass implements Insertable<FoodLog> {
     this.calciumMg,
     required this.loggedAt,
     this.logMethod,
-    required this.syncStatus,
-    required this.idempotencyKey,
-    this.fieldVersions,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
+    map['id'] = Variable<String>(id);
     map['user_id'] = Variable<String>(userId);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['sync_status'] = Variable<String>(syncStatus);
+    map['idempotency_key'] = Variable<String>(idempotencyKey);
+    if (!nullToAbsent || fieldVersions != null) {
+      map['field_versions'] = Variable<String>(fieldVersions);
+    }
     if (!nullToAbsent || foodItemId != null) {
       map['food_item_id'] = Variable<String>(foodItemId);
     }
@@ -610,11 +665,6 @@ class FoodLog extends DataClass implements Insertable<FoodLog> {
     if (!nullToAbsent || logMethod != null) {
       map['log_method'] = Variable<String>(logMethod);
     }
-    map['sync_status'] = Variable<String>(syncStatus);
-    map['idempotency_key'] = Variable<String>(idempotencyKey);
-    if (!nullToAbsent || fieldVersions != null) {
-      map['field_versions'] = Variable<String>(fieldVersions);
-    }
     return map;
   }
 
@@ -622,6 +672,13 @@ class FoodLog extends DataClass implements Insertable<FoodLog> {
     return FoodLogsCompanion(
       id: Value(id),
       userId: Value(userId),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      syncStatus: Value(syncStatus),
+      idempotencyKey: Value(idempotencyKey),
+      fieldVersions: fieldVersions == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fieldVersions),
       foodItemId: foodItemId == null && nullToAbsent
           ? const Value.absent()
           : Value(foodItemId),
@@ -654,11 +711,6 @@ class FoodLog extends DataClass implements Insertable<FoodLog> {
       logMethod: logMethod == null && nullToAbsent
           ? const Value.absent()
           : Value(logMethod),
-      syncStatus: Value(syncStatus),
-      idempotencyKey: Value(idempotencyKey),
-      fieldVersions: fieldVersions == null && nullToAbsent
-          ? const Value.absent()
-          : Value(fieldVersions),
     );
   }
 
@@ -668,8 +720,13 @@ class FoodLog extends DataClass implements Insertable<FoodLog> {
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return FoodLog(
-      id: serializer.fromJson<int>(json['id']),
+      id: serializer.fromJson<String>(json['id']),
       userId: serializer.fromJson<String>(json['userId']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      syncStatus: serializer.fromJson<String>(json['syncStatus']),
+      idempotencyKey: serializer.fromJson<String>(json['idempotencyKey']),
+      fieldVersions: serializer.fromJson<String?>(json['fieldVersions']),
       foodItemId: serializer.fromJson<String?>(json['foodItemId']),
       recipeId: serializer.fromJson<String?>(json['recipeId']),
       foodName: serializer.fromJson<String>(json['foodName']),
@@ -686,17 +743,19 @@ class FoodLog extends DataClass implements Insertable<FoodLog> {
       calciumMg: serializer.fromJson<double?>(json['calciumMg']),
       loggedAt: serializer.fromJson<DateTime>(json['loggedAt']),
       logMethod: serializer.fromJson<String?>(json['logMethod']),
-      syncStatus: serializer.fromJson<String>(json['syncStatus']),
-      idempotencyKey: serializer.fromJson<String>(json['idempotencyKey']),
-      fieldVersions: serializer.fromJson<String?>(json['fieldVersions']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
+      'id': serializer.toJson<String>(id),
       'userId': serializer.toJson<String>(userId),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'syncStatus': serializer.toJson<String>(syncStatus),
+      'idempotencyKey': serializer.toJson<String>(idempotencyKey),
+      'fieldVersions': serializer.toJson<String?>(fieldVersions),
       'foodItemId': serializer.toJson<String?>(foodItemId),
       'recipeId': serializer.toJson<String?>(recipeId),
       'foodName': serializer.toJson<String>(foodName),
@@ -713,15 +772,17 @@ class FoodLog extends DataClass implements Insertable<FoodLog> {
       'calciumMg': serializer.toJson<double?>(calciumMg),
       'loggedAt': serializer.toJson<DateTime>(loggedAt),
       'logMethod': serializer.toJson<String?>(logMethod),
-      'syncStatus': serializer.toJson<String>(syncStatus),
-      'idempotencyKey': serializer.toJson<String>(idempotencyKey),
-      'fieldVersions': serializer.toJson<String?>(fieldVersions),
     };
   }
 
   FoodLog copyWith({
-    int? id,
+    String? id,
     String? userId,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    String? syncStatus,
+    String? idempotencyKey,
+    Value<String?> fieldVersions = const Value.absent(),
     Value<String?> foodItemId = const Value.absent(),
     Value<String?> recipeId = const Value.absent(),
     String? foodName,
@@ -738,12 +799,16 @@ class FoodLog extends DataClass implements Insertable<FoodLog> {
     Value<double?> calciumMg = const Value.absent(),
     DateTime? loggedAt,
     Value<String?> logMethod = const Value.absent(),
-    String? syncStatus,
-    String? idempotencyKey,
-    Value<String?> fieldVersions = const Value.absent(),
   }) => FoodLog(
     id: id ?? this.id,
     userId: userId ?? this.userId,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    syncStatus: syncStatus ?? this.syncStatus,
+    idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+    fieldVersions: fieldVersions.present
+        ? fieldVersions.value
+        : this.fieldVersions,
     foodItemId: foodItemId.present ? foodItemId.value : this.foodItemId,
     recipeId: recipeId.present ? recipeId.value : this.recipeId,
     foodName: foodName ?? this.foodName,
@@ -762,16 +827,22 @@ class FoodLog extends DataClass implements Insertable<FoodLog> {
     calciumMg: calciumMg.present ? calciumMg.value : this.calciumMg,
     loggedAt: loggedAt ?? this.loggedAt,
     logMethod: logMethod.present ? logMethod.value : this.logMethod,
-    syncStatus: syncStatus ?? this.syncStatus,
-    idempotencyKey: idempotencyKey ?? this.idempotencyKey,
-    fieldVersions: fieldVersions.present
-        ? fieldVersions.value
-        : this.fieldVersions,
   );
   FoodLog copyWithCompanion(FoodLogsCompanion data) {
     return FoodLog(
       id: data.id.present ? data.id.value : this.id,
       userId: data.userId.present ? data.userId.value : this.userId,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      syncStatus: data.syncStatus.present
+          ? data.syncStatus.value
+          : this.syncStatus,
+      idempotencyKey: data.idempotencyKey.present
+          ? data.idempotencyKey.value
+          : this.idempotencyKey,
+      fieldVersions: data.fieldVersions.present
+          ? data.fieldVersions.value
+          : this.fieldVersions,
       foodItemId: data.foodItemId.present
           ? data.foodItemId.value
           : this.foodItemId,
@@ -794,15 +865,6 @@ class FoodLog extends DataClass implements Insertable<FoodLog> {
       calciumMg: data.calciumMg.present ? data.calciumMg.value : this.calciumMg,
       loggedAt: data.loggedAt.present ? data.loggedAt.value : this.loggedAt,
       logMethod: data.logMethod.present ? data.logMethod.value : this.logMethod,
-      syncStatus: data.syncStatus.present
-          ? data.syncStatus.value
-          : this.syncStatus,
-      idempotencyKey: data.idempotencyKey.present
-          ? data.idempotencyKey.value
-          : this.idempotencyKey,
-      fieldVersions: data.fieldVersions.present
-          ? data.fieldVersions.value
-          : this.fieldVersions,
     );
   }
 
@@ -811,6 +873,11 @@ class FoodLog extends DataClass implements Insertable<FoodLog> {
     return (StringBuffer('FoodLog(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('fieldVersions: $fieldVersions, ')
           ..write('foodItemId: $foodItemId, ')
           ..write('recipeId: $recipeId, ')
           ..write('foodName: $foodName, ')
@@ -826,10 +893,7 @@ class FoodLog extends DataClass implements Insertable<FoodLog> {
           ..write('ironMg: $ironMg, ')
           ..write('calciumMg: $calciumMg, ')
           ..write('loggedAt: $loggedAt, ')
-          ..write('logMethod: $logMethod, ')
-          ..write('syncStatus: $syncStatus, ')
-          ..write('idempotencyKey: $idempotencyKey, ')
-          ..write('fieldVersions: $fieldVersions')
+          ..write('logMethod: $logMethod')
           ..write(')'))
         .toString();
   }
@@ -838,6 +902,11 @@ class FoodLog extends DataClass implements Insertable<FoodLog> {
   int get hashCode => Object.hashAll([
     id,
     userId,
+    createdAt,
+    updatedAt,
+    syncStatus,
+    idempotencyKey,
+    fieldVersions,
     foodItemId,
     recipeId,
     foodName,
@@ -854,9 +923,6 @@ class FoodLog extends DataClass implements Insertable<FoodLog> {
     calciumMg,
     loggedAt,
     logMethod,
-    syncStatus,
-    idempotencyKey,
-    fieldVersions,
   ]);
   @override
   bool operator ==(Object other) =>
@@ -864,6 +930,11 @@ class FoodLog extends DataClass implements Insertable<FoodLog> {
       (other is FoodLog &&
           other.id == this.id &&
           other.userId == this.userId &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.syncStatus == this.syncStatus &&
+          other.idempotencyKey == this.idempotencyKey &&
+          other.fieldVersions == this.fieldVersions &&
           other.foodItemId == this.foodItemId &&
           other.recipeId == this.recipeId &&
           other.foodName == this.foodName &&
@@ -879,15 +950,17 @@ class FoodLog extends DataClass implements Insertable<FoodLog> {
           other.ironMg == this.ironMg &&
           other.calciumMg == this.calciumMg &&
           other.loggedAt == this.loggedAt &&
-          other.logMethod == this.logMethod &&
-          other.syncStatus == this.syncStatus &&
-          other.idempotencyKey == this.idempotencyKey &&
-          other.fieldVersions == this.fieldVersions);
+          other.logMethod == this.logMethod);
 }
 
 class FoodLogsCompanion extends UpdateCompanion<FoodLog> {
-  final Value<int> id;
+  final Value<String> id;
   final Value<String> userId;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<String> syncStatus;
+  final Value<String> idempotencyKey;
+  final Value<String?> fieldVersions;
   final Value<String?> foodItemId;
   final Value<String?> recipeId;
   final Value<String> foodName;
@@ -904,12 +977,15 @@ class FoodLogsCompanion extends UpdateCompanion<FoodLog> {
   final Value<double?> calciumMg;
   final Value<DateTime> loggedAt;
   final Value<String?> logMethod;
-  final Value<String> syncStatus;
-  final Value<String> idempotencyKey;
-  final Value<String?> fieldVersions;
+  final Value<int> rowid;
   const FoodLogsCompanion({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    this.idempotencyKey = const Value.absent(),
+    this.fieldVersions = const Value.absent(),
     this.foodItemId = const Value.absent(),
     this.recipeId = const Value.absent(),
     this.foodName = const Value.absent(),
@@ -926,13 +1002,16 @@ class FoodLogsCompanion extends UpdateCompanion<FoodLog> {
     this.calciumMg = const Value.absent(),
     this.loggedAt = const Value.absent(),
     this.logMethod = const Value.absent(),
-    this.syncStatus = const Value.absent(),
-    this.idempotencyKey = const Value.absent(),
-    this.fieldVersions = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   FoodLogsCompanion.insert({
-    this.id = const Value.absent(),
+    required String id,
     required String userId,
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    required String idempotencyKey,
+    this.fieldVersions = const Value.absent(),
     this.foodItemId = const Value.absent(),
     this.recipeId = const Value.absent(),
     required String foodName,
@@ -949,10 +1028,10 @@ class FoodLogsCompanion extends UpdateCompanion<FoodLog> {
     this.calciumMg = const Value.absent(),
     required DateTime loggedAt,
     this.logMethod = const Value.absent(),
-    this.syncStatus = const Value.absent(),
-    required String idempotencyKey,
-    this.fieldVersions = const Value.absent(),
-  }) : userId = Value(userId),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       userId = Value(userId),
+       idempotencyKey = Value(idempotencyKey),
        foodName = Value(foodName),
        mealType = Value(mealType),
        quantityG = Value(quantityG),
@@ -960,11 +1039,15 @@ class FoodLogsCompanion extends UpdateCompanion<FoodLog> {
        proteinG = Value(proteinG),
        carbsG = Value(carbsG),
        fatG = Value(fatG),
-       loggedAt = Value(loggedAt),
-       idempotencyKey = Value(idempotencyKey);
+       loggedAt = Value(loggedAt);
   static Insertable<FoodLog> custom({
-    Expression<int>? id,
+    Expression<String>? id,
     Expression<String>? userId,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<String>? syncStatus,
+    Expression<String>? idempotencyKey,
+    Expression<String>? fieldVersions,
     Expression<String>? foodItemId,
     Expression<String>? recipeId,
     Expression<String>? foodName,
@@ -981,13 +1064,16 @@ class FoodLogsCompanion extends UpdateCompanion<FoodLog> {
     Expression<double>? calciumMg,
     Expression<DateTime>? loggedAt,
     Expression<String>? logMethod,
-    Expression<String>? syncStatus,
-    Expression<String>? idempotencyKey,
-    Expression<String>? fieldVersions,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (userId != null) 'user_id': userId,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (syncStatus != null) 'sync_status': syncStatus,
+      if (idempotencyKey != null) 'idempotency_key': idempotencyKey,
+      if (fieldVersions != null) 'field_versions': fieldVersions,
       if (foodItemId != null) 'food_item_id': foodItemId,
       if (recipeId != null) 'recipe_id': recipeId,
       if (foodName != null) 'food_name': foodName,
@@ -1004,15 +1090,18 @@ class FoodLogsCompanion extends UpdateCompanion<FoodLog> {
       if (calciumMg != null) 'calcium_mg': calciumMg,
       if (loggedAt != null) 'logged_at': loggedAt,
       if (logMethod != null) 'log_method': logMethod,
-      if (syncStatus != null) 'sync_status': syncStatus,
-      if (idempotencyKey != null) 'idempotency_key': idempotencyKey,
-      if (fieldVersions != null) 'field_versions': fieldVersions,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
   FoodLogsCompanion copyWith({
-    Value<int>? id,
+    Value<String>? id,
     Value<String>? userId,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<String>? syncStatus,
+    Value<String>? idempotencyKey,
+    Value<String?>? fieldVersions,
     Value<String?>? foodItemId,
     Value<String?>? recipeId,
     Value<String>? foodName,
@@ -1029,13 +1118,16 @@ class FoodLogsCompanion extends UpdateCompanion<FoodLog> {
     Value<double?>? calciumMg,
     Value<DateTime>? loggedAt,
     Value<String?>? logMethod,
-    Value<String>? syncStatus,
-    Value<String>? idempotencyKey,
-    Value<String?>? fieldVersions,
+    Value<int>? rowid,
   }) {
     return FoodLogsCompanion(
       id: id ?? this.id,
       userId: userId ?? this.userId,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      syncStatus: syncStatus ?? this.syncStatus,
+      idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+      fieldVersions: fieldVersions ?? this.fieldVersions,
       foodItemId: foodItemId ?? this.foodItemId,
       recipeId: recipeId ?? this.recipeId,
       foodName: foodName ?? this.foodName,
@@ -1052,9 +1144,7 @@ class FoodLogsCompanion extends UpdateCompanion<FoodLog> {
       calciumMg: calciumMg ?? this.calciumMg,
       loggedAt: loggedAt ?? this.loggedAt,
       logMethod: logMethod ?? this.logMethod,
-      syncStatus: syncStatus ?? this.syncStatus,
-      idempotencyKey: idempotencyKey ?? this.idempotencyKey,
-      fieldVersions: fieldVersions ?? this.fieldVersions,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -1062,10 +1152,25 @@ class FoodLogsCompanion extends UpdateCompanion<FoodLog> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (id.present) {
-      map['id'] = Variable<int>(id.value);
+      map['id'] = Variable<String>(id.value);
     }
     if (userId.present) {
       map['user_id'] = Variable<String>(userId.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (syncStatus.present) {
+      map['sync_status'] = Variable<String>(syncStatus.value);
+    }
+    if (idempotencyKey.present) {
+      map['idempotency_key'] = Variable<String>(idempotencyKey.value);
+    }
+    if (fieldVersions.present) {
+      map['field_versions'] = Variable<String>(fieldVersions.value);
     }
     if (foodItemId.present) {
       map['food_item_id'] = Variable<String>(foodItemId.value);
@@ -1115,14 +1220,8 @@ class FoodLogsCompanion extends UpdateCompanion<FoodLog> {
     if (logMethod.present) {
       map['log_method'] = Variable<String>(logMethod.value);
     }
-    if (syncStatus.present) {
-      map['sync_status'] = Variable<String>(syncStatus.value);
-    }
-    if (idempotencyKey.present) {
-      map['idempotency_key'] = Variable<String>(idempotencyKey.value);
-    }
-    if (fieldVersions.present) {
-      map['field_versions'] = Variable<String>(fieldVersions.value);
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
     }
     return map;
   }
@@ -1132,6 +1231,11 @@ class FoodLogsCompanion extends UpdateCompanion<FoodLog> {
     return (StringBuffer('FoodLogsCompanion(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('fieldVersions: $fieldVersions, ')
           ..write('foodItemId: $foodItemId, ')
           ..write('recipeId: $recipeId, ')
           ..write('foodName: $foodName, ')
@@ -1148,9 +1252,7 @@ class FoodLogsCompanion extends UpdateCompanion<FoodLog> {
           ..write('calciumMg: $calciumMg, ')
           ..write('loggedAt: $loggedAt, ')
           ..write('logMethod: $logMethod, ')
-          ..write('syncStatus: $syncStatus, ')
-          ..write('idempotencyKey: $idempotencyKey, ')
-          ..write('fieldVersions: $fieldVersions')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -1164,16 +1266,79 @@ class $FoodItemsTable extends FoodItems
   $FoodItemsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
     'id',
     aliasedName,
     false,
-    hasAutoIncrement: true,
-    type: DriftSqlType.int,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
+    'user_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
     requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _syncStatusMeta = const VerificationMeta(
+    'syncStatus',
+  );
+  @override
+  late final GeneratedColumn<String> syncStatus = GeneratedColumn<String>(
+    'sync_status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('pending'),
+  );
+  static const VerificationMeta _idempotencyKeyMeta = const VerificationMeta(
+    'idempotencyKey',
+  );
+  @override
+  late final GeneratedColumn<String> idempotencyKey = GeneratedColumn<String>(
+    'idempotency_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _fieldVersionsMeta = const VerificationMeta(
+    'fieldVersions',
+  );
+  @override
+  late final GeneratedColumn<String> fieldVersions = GeneratedColumn<String>(
+    'field_versions',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
   );
   static const VerificationMeta _appwriteIdMeta = const VerificationMeta(
     'appwriteId',
@@ -1365,6 +1530,12 @@ class $FoodItemsTable extends FoodItems
   @override
   List<GeneratedColumn> get $columns => [
     id,
+    userId,
+    createdAt,
+    updatedAt,
+    syncStatus,
+    idempotencyKey,
+    fieldVersions,
     appwriteId,
     name,
     nameLocal,
@@ -1397,6 +1568,54 @@ class $FoodItemsTable extends FoodItems
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_userIdMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    if (data.containsKey('sync_status')) {
+      context.handle(
+        _syncStatusMeta,
+        syncStatus.isAcceptableOrUnknown(data['sync_status']!, _syncStatusMeta),
+      );
+    }
+    if (data.containsKey('idempotency_key')) {
+      context.handle(
+        _idempotencyKeyMeta,
+        idempotencyKey.isAcceptableOrUnknown(
+          data['idempotency_key']!,
+          _idempotencyKeyMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_idempotencyKeyMeta);
+    }
+    if (data.containsKey('field_versions')) {
+      context.handle(
+        _fieldVersionsMeta,
+        fieldVersions.isAcceptableOrUnknown(
+          data['field_versions']!,
+          _fieldVersionsMeta,
+        ),
+      );
     }
     if (data.containsKey('appwrite_id')) {
       context.handle(
@@ -1540,9 +1759,33 @@ class $FoodItemsTable extends FoodItems
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return FoodItem(
       id: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
+        DriftSqlType.string,
         data['${effectivePrefix}id'],
       )!,
+      userId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_id'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      syncStatus: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sync_status'],
+      )!,
+      idempotencyKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}idempotency_key'],
+      )!,
+      fieldVersions: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}field_versions'],
+      ),
       appwriteId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}appwrite_id'],
@@ -1628,7 +1871,13 @@ class $FoodItemsTable extends FoodItems
 }
 
 class FoodItem extends DataClass implements Insertable<FoodItem> {
-  final int id;
+  final String id;
+  final String userId;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final String syncStatus;
+  final String idempotencyKey;
+  final String? fieldVersions;
   final String? appwriteId;
   final String name;
   final String? nameLocal;
@@ -1648,6 +1897,12 @@ class FoodItem extends DataClass implements Insertable<FoodItem> {
   final String source;
   const FoodItem({
     required this.id,
+    required this.userId,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.syncStatus,
+    required this.idempotencyKey,
+    this.fieldVersions,
     this.appwriteId,
     required this.name,
     this.nameLocal,
@@ -1669,7 +1924,15 @@ class FoodItem extends DataClass implements Insertable<FoodItem> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
+    map['id'] = Variable<String>(id);
+    map['user_id'] = Variable<String>(userId);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['sync_status'] = Variable<String>(syncStatus);
+    map['idempotency_key'] = Variable<String>(idempotencyKey);
+    if (!nullToAbsent || fieldVersions != null) {
+      map['field_versions'] = Variable<String>(fieldVersions);
+    }
     if (!nullToAbsent || appwriteId != null) {
       map['appwrite_id'] = Variable<String>(appwriteId);
     }
@@ -1715,6 +1978,14 @@ class FoodItem extends DataClass implements Insertable<FoodItem> {
   FoodItemsCompanion toCompanion(bool nullToAbsent) {
     return FoodItemsCompanion(
       id: Value(id),
+      userId: Value(userId),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      syncStatus: Value(syncStatus),
+      idempotencyKey: Value(idempotencyKey),
+      fieldVersions: fieldVersions == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fieldVersions),
       appwriteId: appwriteId == null && nullToAbsent
           ? const Value.absent()
           : Value(appwriteId),
@@ -1761,7 +2032,13 @@ class FoodItem extends DataClass implements Insertable<FoodItem> {
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return FoodItem(
-      id: serializer.fromJson<int>(json['id']),
+      id: serializer.fromJson<String>(json['id']),
+      userId: serializer.fromJson<String>(json['userId']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      syncStatus: serializer.fromJson<String>(json['syncStatus']),
+      idempotencyKey: serializer.fromJson<String>(json['idempotencyKey']),
+      fieldVersions: serializer.fromJson<String?>(json['fieldVersions']),
       appwriteId: serializer.fromJson<String?>(json['appwriteId']),
       name: serializer.fromJson<String>(json['name']),
       nameLocal: serializer.fromJson<String?>(json['nameLocal']),
@@ -1789,7 +2066,13 @@ class FoodItem extends DataClass implements Insertable<FoodItem> {
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
+      'id': serializer.toJson<String>(id),
+      'userId': serializer.toJson<String>(userId),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'syncStatus': serializer.toJson<String>(syncStatus),
+      'idempotencyKey': serializer.toJson<String>(idempotencyKey),
+      'fieldVersions': serializer.toJson<String?>(fieldVersions),
       'appwriteId': serializer.toJson<String?>(appwriteId),
       'name': serializer.toJson<String>(name),
       'nameLocal': serializer.toJson<String?>(nameLocal),
@@ -1811,7 +2094,13 @@ class FoodItem extends DataClass implements Insertable<FoodItem> {
   }
 
   FoodItem copyWith({
-    int? id,
+    String? id,
+    String? userId,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    String? syncStatus,
+    String? idempotencyKey,
+    Value<String?> fieldVersions = const Value.absent(),
     Value<String?> appwriteId = const Value.absent(),
     String? name,
     Value<String?> nameLocal = const Value.absent(),
@@ -1831,6 +2120,14 @@ class FoodItem extends DataClass implements Insertable<FoodItem> {
     String? source,
   }) => FoodItem(
     id: id ?? this.id,
+    userId: userId ?? this.userId,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    syncStatus: syncStatus ?? this.syncStatus,
+    idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+    fieldVersions: fieldVersions.present
+        ? fieldVersions.value
+        : this.fieldVersions,
     appwriteId: appwriteId.present ? appwriteId.value : this.appwriteId,
     name: name ?? this.name,
     nameLocal: nameLocal.present ? nameLocal.value : this.nameLocal,
@@ -1858,6 +2155,18 @@ class FoodItem extends DataClass implements Insertable<FoodItem> {
   FoodItem copyWithCompanion(FoodItemsCompanion data) {
     return FoodItem(
       id: data.id.present ? data.id.value : this.id,
+      userId: data.userId.present ? data.userId.value : this.userId,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      syncStatus: data.syncStatus.present
+          ? data.syncStatus.value
+          : this.syncStatus,
+      idempotencyKey: data.idempotencyKey.present
+          ? data.idempotencyKey.value
+          : this.idempotencyKey,
+      fieldVersions: data.fieldVersions.present
+          ? data.fieldVersions.value
+          : this.fieldVersions,
       appwriteId: data.appwriteId.present
           ? data.appwriteId.value
           : this.appwriteId,
@@ -1904,6 +2213,12 @@ class FoodItem extends DataClass implements Insertable<FoodItem> {
   String toString() {
     return (StringBuffer('FoodItem(')
           ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('fieldVersions: $fieldVersions, ')
           ..write('appwriteId: $appwriteId, ')
           ..write('name: $name, ')
           ..write('nameLocal: $nameLocal, ')
@@ -1926,8 +2241,14 @@ class FoodItem extends DataClass implements Insertable<FoodItem> {
   }
 
   @override
-  int get hashCode => Object.hash(
+  int get hashCode => Object.hashAll([
     id,
+    userId,
+    createdAt,
+    updatedAt,
+    syncStatus,
+    idempotencyKey,
+    fieldVersions,
     appwriteId,
     name,
     nameLocal,
@@ -1945,12 +2266,18 @@ class FoodItem extends DataClass implements Insertable<FoodItem> {
     isIndian,
     servingSizes,
     source,
-  );
+  ]);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is FoodItem &&
           other.id == this.id &&
+          other.userId == this.userId &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.syncStatus == this.syncStatus &&
+          other.idempotencyKey == this.idempotencyKey &&
+          other.fieldVersions == this.fieldVersions &&
           other.appwriteId == this.appwriteId &&
           other.name == this.name &&
           other.nameLocal == this.nameLocal &&
@@ -1971,7 +2298,13 @@ class FoodItem extends DataClass implements Insertable<FoodItem> {
 }
 
 class FoodItemsCompanion extends UpdateCompanion<FoodItem> {
-  final Value<int> id;
+  final Value<String> id;
+  final Value<String> userId;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<String> syncStatus;
+  final Value<String> idempotencyKey;
+  final Value<String?> fieldVersions;
   final Value<String?> appwriteId;
   final Value<String> name;
   final Value<String?> nameLocal;
@@ -1989,8 +2322,15 @@ class FoodItemsCompanion extends UpdateCompanion<FoodItem> {
   final Value<bool> isIndian;
   final Value<Map<String, dynamic>?> servingSizes;
   final Value<String> source;
+  final Value<int> rowid;
   const FoodItemsCompanion({
     this.id = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    this.idempotencyKey = const Value.absent(),
+    this.fieldVersions = const Value.absent(),
     this.appwriteId = const Value.absent(),
     this.name = const Value.absent(),
     this.nameLocal = const Value.absent(),
@@ -2008,9 +2348,16 @@ class FoodItemsCompanion extends UpdateCompanion<FoodItem> {
     this.isIndian = const Value.absent(),
     this.servingSizes = const Value.absent(),
     this.source = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   FoodItemsCompanion.insert({
-    this.id = const Value.absent(),
+    required String id,
+    required String userId,
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    required String idempotencyKey,
+    this.fieldVersions = const Value.absent(),
     this.appwriteId = const Value.absent(),
     required String name,
     this.nameLocal = const Value.absent(),
@@ -2028,14 +2375,24 @@ class FoodItemsCompanion extends UpdateCompanion<FoodItem> {
     this.isIndian = const Value.absent(),
     this.servingSizes = const Value.absent(),
     required String source,
-  }) : name = Value(name),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       userId = Value(userId),
+       idempotencyKey = Value(idempotencyKey),
+       name = Value(name),
        caloriesPer100g = Value(caloriesPer100g),
        proteinPer100g = Value(proteinPer100g),
        carbsPer100g = Value(carbsPer100g),
        fatPer100g = Value(fatPer100g),
        source = Value(source);
   static Insertable<FoodItem> custom({
-    Expression<int>? id,
+    Expression<String>? id,
+    Expression<String>? userId,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<String>? syncStatus,
+    Expression<String>? idempotencyKey,
+    Expression<String>? fieldVersions,
     Expression<String>? appwriteId,
     Expression<String>? name,
     Expression<String>? nameLocal,
@@ -2053,9 +2410,16 @@ class FoodItemsCompanion extends UpdateCompanion<FoodItem> {
     Expression<bool>? isIndian,
     Expression<String>? servingSizes,
     Expression<String>? source,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
+      if (userId != null) 'user_id': userId,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (syncStatus != null) 'sync_status': syncStatus,
+      if (idempotencyKey != null) 'idempotency_key': idempotencyKey,
+      if (fieldVersions != null) 'field_versions': fieldVersions,
       if (appwriteId != null) 'appwrite_id': appwriteId,
       if (name != null) 'name': name,
       if (nameLocal != null) 'name_local': nameLocal,
@@ -2073,11 +2437,18 @@ class FoodItemsCompanion extends UpdateCompanion<FoodItem> {
       if (isIndian != null) 'is_indian': isIndian,
       if (servingSizes != null) 'serving_sizes': servingSizes,
       if (source != null) 'source': source,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
   FoodItemsCompanion copyWith({
-    Value<int>? id,
+    Value<String>? id,
+    Value<String>? userId,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<String>? syncStatus,
+    Value<String>? idempotencyKey,
+    Value<String?>? fieldVersions,
     Value<String?>? appwriteId,
     Value<String>? name,
     Value<String?>? nameLocal,
@@ -2095,9 +2466,16 @@ class FoodItemsCompanion extends UpdateCompanion<FoodItem> {
     Value<bool>? isIndian,
     Value<Map<String, dynamic>?>? servingSizes,
     Value<String>? source,
+    Value<int>? rowid,
   }) {
     return FoodItemsCompanion(
       id: id ?? this.id,
+      userId: userId ?? this.userId,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      syncStatus: syncStatus ?? this.syncStatus,
+      idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+      fieldVersions: fieldVersions ?? this.fieldVersions,
       appwriteId: appwriteId ?? this.appwriteId,
       name: name ?? this.name,
       nameLocal: nameLocal ?? this.nameLocal,
@@ -2115,6 +2493,7 @@ class FoodItemsCompanion extends UpdateCompanion<FoodItem> {
       isIndian: isIndian ?? this.isIndian,
       servingSizes: servingSizes ?? this.servingSizes,
       source: source ?? this.source,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -2122,7 +2501,25 @@ class FoodItemsCompanion extends UpdateCompanion<FoodItem> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (id.present) {
-      map['id'] = Variable<int>(id.value);
+      map['id'] = Variable<String>(id.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<String>(userId.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (syncStatus.present) {
+      map['sync_status'] = Variable<String>(syncStatus.value);
+    }
+    if (idempotencyKey.present) {
+      map['idempotency_key'] = Variable<String>(idempotencyKey.value);
+    }
+    if (fieldVersions.present) {
+      map['field_versions'] = Variable<String>(fieldVersions.value);
     }
     if (appwriteId.present) {
       map['appwrite_id'] = Variable<String>(appwriteId.value);
@@ -2177,6 +2574,9 @@ class FoodItemsCompanion extends UpdateCompanion<FoodItem> {
     if (source.present) {
       map['source'] = Variable<String>(source.value);
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
@@ -2184,6 +2584,12 @@ class FoodItemsCompanion extends UpdateCompanion<FoodItem> {
   String toString() {
     return (StringBuffer('FoodItemsCompanion(')
           ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('fieldVersions: $fieldVersions, ')
           ..write('appwriteId: $appwriteId, ')
           ..write('name: $name, ')
           ..write('nameLocal: $nameLocal, ')
@@ -2200,7 +2606,8 @@ class FoodItemsCompanion extends UpdateCompanion<FoodItem> {
           ..write('calciumPer100g: $calciumPer100g, ')
           ..write('isIndian: $isIndian, ')
           ..write('servingSizes: $servingSizes, ')
-          ..write('source: $source')
+          ..write('source: $source, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -2214,16 +2621,12 @@ class $WorkoutLogsTable extends WorkoutLogs
   $WorkoutLogsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
     'id',
     aliasedName,
     false,
-    hasAutoIncrement: true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
   );
   static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
   @override
@@ -2233,6 +2636,64 @@ class $WorkoutLogsTable extends WorkoutLogs
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _syncStatusMeta = const VerificationMeta(
+    'syncStatus',
+  );
+  @override
+  late final GeneratedColumn<String> syncStatus = GeneratedColumn<String>(
+    'sync_status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('pending'),
+  );
+  static const VerificationMeta _idempotencyKeyMeta = const VerificationMeta(
+    'idempotencyKey',
+  );
+  @override
+  late final GeneratedColumn<String> idempotencyKey = GeneratedColumn<String>(
+    'idempotency_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _fieldVersionsMeta = const VerificationMeta(
+    'fieldVersions',
+  );
+  @override
+  late final GeneratedColumn<String> fieldVersions = GeneratedColumn<String>(
+    'field_versions',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
   );
   static const VerificationMeta _workoutIdMeta = const VerificationMeta(
     'workoutId',
@@ -2316,33 +2777,15 @@ class $WorkoutLogsTable extends WorkoutLogs
     type: DriftSqlType.dateTime,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _syncStatusMeta = const VerificationMeta(
-    'syncStatus',
-  );
-  @override
-  late final GeneratedColumn<String> syncStatus = GeneratedColumn<String>(
-    'sync_status',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-    defaultValue: const Constant('pending'),
-  );
-  static const VerificationMeta _idempotencyKeyMeta = const VerificationMeta(
-    'idempotencyKey',
-  );
-  @override
-  late final GeneratedColumn<String> idempotencyKey = GeneratedColumn<String>(
-    'idempotency_key',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
     userId,
+    createdAt,
+    updatedAt,
+    syncStatus,
+    idempotencyKey,
+    fieldVersions,
     workoutId,
     title,
     durationMin,
@@ -2351,8 +2794,6 @@ class $WorkoutLogsTable extends WorkoutLogs
     rpe,
     hrZone,
     loggedAt,
-    syncStatus,
-    idempotencyKey,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -2368,6 +2809,8 @@ class $WorkoutLogsTable extends WorkoutLogs
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
     }
     if (data.containsKey('user_id')) {
       context.handle(
@@ -2376,6 +2819,44 @@ class $WorkoutLogsTable extends WorkoutLogs
       );
     } else if (isInserting) {
       context.missing(_userIdMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    if (data.containsKey('sync_status')) {
+      context.handle(
+        _syncStatusMeta,
+        syncStatus.isAcceptableOrUnknown(data['sync_status']!, _syncStatusMeta),
+      );
+    }
+    if (data.containsKey('idempotency_key')) {
+      context.handle(
+        _idempotencyKeyMeta,
+        idempotencyKey.isAcceptableOrUnknown(
+          data['idempotency_key']!,
+          _idempotencyKeyMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_idempotencyKeyMeta);
+    }
+    if (data.containsKey('field_versions')) {
+      context.handle(
+        _fieldVersionsMeta,
+        fieldVersions.isAcceptableOrUnknown(
+          data['field_versions']!,
+          _fieldVersionsMeta,
+        ),
+      );
     }
     if (data.containsKey('workout_id')) {
       context.handle(
@@ -2437,23 +2918,6 @@ class $WorkoutLogsTable extends WorkoutLogs
     } else if (isInserting) {
       context.missing(_loggedAtMeta);
     }
-    if (data.containsKey('sync_status')) {
-      context.handle(
-        _syncStatusMeta,
-        syncStatus.isAcceptableOrUnknown(data['sync_status']!, _syncStatusMeta),
-      );
-    }
-    if (data.containsKey('idempotency_key')) {
-      context.handle(
-        _idempotencyKeyMeta,
-        idempotencyKey.isAcceptableOrUnknown(
-          data['idempotency_key']!,
-          _idempotencyKeyMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_idempotencyKeyMeta);
-    }
     return context;
   }
 
@@ -2464,13 +2928,33 @@ class $WorkoutLogsTable extends WorkoutLogs
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return WorkoutLog(
       id: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
+        DriftSqlType.string,
         data['${effectivePrefix}id'],
       )!,
       userId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}user_id'],
       )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      syncStatus: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sync_status'],
+      )!,
+      idempotencyKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}idempotency_key'],
+      )!,
+      fieldVersions: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}field_versions'],
+      ),
       workoutId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}workout_id'],
@@ -2503,14 +2987,6 @@ class $WorkoutLogsTable extends WorkoutLogs
         DriftSqlType.dateTime,
         data['${effectivePrefix}logged_at'],
       )!,
-      syncStatus: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}sync_status'],
-      )!,
-      idempotencyKey: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}idempotency_key'],
-      )!,
     );
   }
 
@@ -2521,8 +2997,13 @@ class $WorkoutLogsTable extends WorkoutLogs
 }
 
 class WorkoutLog extends DataClass implements Insertable<WorkoutLog> {
-  final int id;
+  final String id;
   final String userId;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final String syncStatus;
+  final String idempotencyKey;
+  final String? fieldVersions;
   final String? workoutId;
   final String title;
   final int durationMin;
@@ -2531,11 +3012,14 @@ class WorkoutLog extends DataClass implements Insertable<WorkoutLog> {
   final int? rpe;
   final int? hrZone;
   final DateTime loggedAt;
-  final String syncStatus;
-  final String idempotencyKey;
   const WorkoutLog({
     required this.id,
     required this.userId,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.syncStatus,
+    required this.idempotencyKey,
+    this.fieldVersions,
     this.workoutId,
     required this.title,
     required this.durationMin,
@@ -2544,14 +3028,19 @@ class WorkoutLog extends DataClass implements Insertable<WorkoutLog> {
     this.rpe,
     this.hrZone,
     required this.loggedAt,
-    required this.syncStatus,
-    required this.idempotencyKey,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
+    map['id'] = Variable<String>(id);
     map['user_id'] = Variable<String>(userId);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['sync_status'] = Variable<String>(syncStatus);
+    map['idempotency_key'] = Variable<String>(idempotencyKey);
+    if (!nullToAbsent || fieldVersions != null) {
+      map['field_versions'] = Variable<String>(fieldVersions);
+    }
     if (!nullToAbsent || workoutId != null) {
       map['workout_id'] = Variable<String>(workoutId);
     }
@@ -2570,8 +3059,6 @@ class WorkoutLog extends DataClass implements Insertable<WorkoutLog> {
       map['hr_zone'] = Variable<int>(hrZone);
     }
     map['logged_at'] = Variable<DateTime>(loggedAt);
-    map['sync_status'] = Variable<String>(syncStatus);
-    map['idempotency_key'] = Variable<String>(idempotencyKey);
     return map;
   }
 
@@ -2579,6 +3066,13 @@ class WorkoutLog extends DataClass implements Insertable<WorkoutLog> {
     return WorkoutLogsCompanion(
       id: Value(id),
       userId: Value(userId),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      syncStatus: Value(syncStatus),
+      idempotencyKey: Value(idempotencyKey),
+      fieldVersions: fieldVersions == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fieldVersions),
       workoutId: workoutId == null && nullToAbsent
           ? const Value.absent()
           : Value(workoutId),
@@ -2595,8 +3089,6 @@ class WorkoutLog extends DataClass implements Insertable<WorkoutLog> {
           ? const Value.absent()
           : Value(hrZone),
       loggedAt: Value(loggedAt),
-      syncStatus: Value(syncStatus),
-      idempotencyKey: Value(idempotencyKey),
     );
   }
 
@@ -2606,8 +3098,13 @@ class WorkoutLog extends DataClass implements Insertable<WorkoutLog> {
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return WorkoutLog(
-      id: serializer.fromJson<int>(json['id']),
+      id: serializer.fromJson<String>(json['id']),
       userId: serializer.fromJson<String>(json['userId']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      syncStatus: serializer.fromJson<String>(json['syncStatus']),
+      idempotencyKey: serializer.fromJson<String>(json['idempotencyKey']),
+      fieldVersions: serializer.fromJson<String?>(json['fieldVersions']),
       workoutId: serializer.fromJson<String?>(json['workoutId']),
       title: serializer.fromJson<String>(json['title']),
       durationMin: serializer.fromJson<int>(json['durationMin']),
@@ -2616,16 +3113,19 @@ class WorkoutLog extends DataClass implements Insertable<WorkoutLog> {
       rpe: serializer.fromJson<int?>(json['rpe']),
       hrZone: serializer.fromJson<int?>(json['hrZone']),
       loggedAt: serializer.fromJson<DateTime>(json['loggedAt']),
-      syncStatus: serializer.fromJson<String>(json['syncStatus']),
-      idempotencyKey: serializer.fromJson<String>(json['idempotencyKey']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
+      'id': serializer.toJson<String>(id),
       'userId': serializer.toJson<String>(userId),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'syncStatus': serializer.toJson<String>(syncStatus),
+      'idempotencyKey': serializer.toJson<String>(idempotencyKey),
+      'fieldVersions': serializer.toJson<String?>(fieldVersions),
       'workoutId': serializer.toJson<String?>(workoutId),
       'title': serializer.toJson<String>(title),
       'durationMin': serializer.toJson<int>(durationMin),
@@ -2634,14 +3134,17 @@ class WorkoutLog extends DataClass implements Insertable<WorkoutLog> {
       'rpe': serializer.toJson<int?>(rpe),
       'hrZone': serializer.toJson<int?>(hrZone),
       'loggedAt': serializer.toJson<DateTime>(loggedAt),
-      'syncStatus': serializer.toJson<String>(syncStatus),
-      'idempotencyKey': serializer.toJson<String>(idempotencyKey),
     };
   }
 
   WorkoutLog copyWith({
-    int? id,
+    String? id,
     String? userId,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    String? syncStatus,
+    String? idempotencyKey,
+    Value<String?> fieldVersions = const Value.absent(),
     Value<String?> workoutId = const Value.absent(),
     String? title,
     int? durationMin,
@@ -2650,11 +3153,16 @@ class WorkoutLog extends DataClass implements Insertable<WorkoutLog> {
     Value<int?> rpe = const Value.absent(),
     Value<int?> hrZone = const Value.absent(),
     DateTime? loggedAt,
-    String? syncStatus,
-    String? idempotencyKey,
   }) => WorkoutLog(
     id: id ?? this.id,
     userId: userId ?? this.userId,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    syncStatus: syncStatus ?? this.syncStatus,
+    idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+    fieldVersions: fieldVersions.present
+        ? fieldVersions.value
+        : this.fieldVersions,
     workoutId: workoutId.present ? workoutId.value : this.workoutId,
     title: title ?? this.title,
     durationMin: durationMin ?? this.durationMin,
@@ -2665,13 +3173,22 @@ class WorkoutLog extends DataClass implements Insertable<WorkoutLog> {
     rpe: rpe.present ? rpe.value : this.rpe,
     hrZone: hrZone.present ? hrZone.value : this.hrZone,
     loggedAt: loggedAt ?? this.loggedAt,
-    syncStatus: syncStatus ?? this.syncStatus,
-    idempotencyKey: idempotencyKey ?? this.idempotencyKey,
   );
   WorkoutLog copyWithCompanion(WorkoutLogsCompanion data) {
     return WorkoutLog(
       id: data.id.present ? data.id.value : this.id,
       userId: data.userId.present ? data.userId.value : this.userId,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      syncStatus: data.syncStatus.present
+          ? data.syncStatus.value
+          : this.syncStatus,
+      idempotencyKey: data.idempotencyKey.present
+          ? data.idempotencyKey.value
+          : this.idempotencyKey,
+      fieldVersions: data.fieldVersions.present
+          ? data.fieldVersions.value
+          : this.fieldVersions,
       workoutId: data.workoutId.present ? data.workoutId.value : this.workoutId,
       title: data.title.present ? data.title.value : this.title,
       durationMin: data.durationMin.present
@@ -2684,12 +3201,6 @@ class WorkoutLog extends DataClass implements Insertable<WorkoutLog> {
       rpe: data.rpe.present ? data.rpe.value : this.rpe,
       hrZone: data.hrZone.present ? data.hrZone.value : this.hrZone,
       loggedAt: data.loggedAt.present ? data.loggedAt.value : this.loggedAt,
-      syncStatus: data.syncStatus.present
-          ? data.syncStatus.value
-          : this.syncStatus,
-      idempotencyKey: data.idempotencyKey.present
-          ? data.idempotencyKey.value
-          : this.idempotencyKey,
     );
   }
 
@@ -2698,6 +3209,11 @@ class WorkoutLog extends DataClass implements Insertable<WorkoutLog> {
     return (StringBuffer('WorkoutLog(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('fieldVersions: $fieldVersions, ')
           ..write('workoutId: $workoutId, ')
           ..write('title: $title, ')
           ..write('durationMin: $durationMin, ')
@@ -2705,9 +3221,7 @@ class WorkoutLog extends DataClass implements Insertable<WorkoutLog> {
           ..write('category: $category, ')
           ..write('rpe: $rpe, ')
           ..write('hrZone: $hrZone, ')
-          ..write('loggedAt: $loggedAt, ')
-          ..write('syncStatus: $syncStatus, ')
-          ..write('idempotencyKey: $idempotencyKey')
+          ..write('loggedAt: $loggedAt')
           ..write(')'))
         .toString();
   }
@@ -2716,6 +3230,11 @@ class WorkoutLog extends DataClass implements Insertable<WorkoutLog> {
   int get hashCode => Object.hash(
     id,
     userId,
+    createdAt,
+    updatedAt,
+    syncStatus,
+    idempotencyKey,
+    fieldVersions,
     workoutId,
     title,
     durationMin,
@@ -2724,8 +3243,6 @@ class WorkoutLog extends DataClass implements Insertable<WorkoutLog> {
     rpe,
     hrZone,
     loggedAt,
-    syncStatus,
-    idempotencyKey,
   );
   @override
   bool operator ==(Object other) =>
@@ -2733,6 +3250,11 @@ class WorkoutLog extends DataClass implements Insertable<WorkoutLog> {
       (other is WorkoutLog &&
           other.id == this.id &&
           other.userId == this.userId &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.syncStatus == this.syncStatus &&
+          other.idempotencyKey == this.idempotencyKey &&
+          other.fieldVersions == this.fieldVersions &&
           other.workoutId == this.workoutId &&
           other.title == this.title &&
           other.durationMin == this.durationMin &&
@@ -2740,14 +3262,17 @@ class WorkoutLog extends DataClass implements Insertable<WorkoutLog> {
           other.category == this.category &&
           other.rpe == this.rpe &&
           other.hrZone == this.hrZone &&
-          other.loggedAt == this.loggedAt &&
-          other.syncStatus == this.syncStatus &&
-          other.idempotencyKey == this.idempotencyKey);
+          other.loggedAt == this.loggedAt);
 }
 
 class WorkoutLogsCompanion extends UpdateCompanion<WorkoutLog> {
-  final Value<int> id;
+  final Value<String> id;
   final Value<String> userId;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<String> syncStatus;
+  final Value<String> idempotencyKey;
+  final Value<String?> fieldVersions;
   final Value<String?> workoutId;
   final Value<String> title;
   final Value<int> durationMin;
@@ -2756,11 +3281,15 @@ class WorkoutLogsCompanion extends UpdateCompanion<WorkoutLog> {
   final Value<int?> rpe;
   final Value<int?> hrZone;
   final Value<DateTime> loggedAt;
-  final Value<String> syncStatus;
-  final Value<String> idempotencyKey;
+  final Value<int> rowid;
   const WorkoutLogsCompanion({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    this.idempotencyKey = const Value.absent(),
+    this.fieldVersions = const Value.absent(),
     this.workoutId = const Value.absent(),
     this.title = const Value.absent(),
     this.durationMin = const Value.absent(),
@@ -2769,12 +3298,16 @@ class WorkoutLogsCompanion extends UpdateCompanion<WorkoutLog> {
     this.rpe = const Value.absent(),
     this.hrZone = const Value.absent(),
     this.loggedAt = const Value.absent(),
-    this.syncStatus = const Value.absent(),
-    this.idempotencyKey = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   WorkoutLogsCompanion.insert({
-    this.id = const Value.absent(),
+    required String id,
     required String userId,
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    required String idempotencyKey,
+    this.fieldVersions = const Value.absent(),
     this.workoutId = const Value.absent(),
     required String title,
     required int durationMin,
@@ -2783,16 +3316,21 @@ class WorkoutLogsCompanion extends UpdateCompanion<WorkoutLog> {
     this.rpe = const Value.absent(),
     this.hrZone = const Value.absent(),
     required DateTime loggedAt,
-    this.syncStatus = const Value.absent(),
-    required String idempotencyKey,
-  }) : userId = Value(userId),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       userId = Value(userId),
+       idempotencyKey = Value(idempotencyKey),
        title = Value(title),
        durationMin = Value(durationMin),
-       loggedAt = Value(loggedAt),
-       idempotencyKey = Value(idempotencyKey);
+       loggedAt = Value(loggedAt);
   static Insertable<WorkoutLog> custom({
-    Expression<int>? id,
+    Expression<String>? id,
     Expression<String>? userId,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<String>? syncStatus,
+    Expression<String>? idempotencyKey,
+    Expression<String>? fieldVersions,
     Expression<String>? workoutId,
     Expression<String>? title,
     Expression<int>? durationMin,
@@ -2801,12 +3339,16 @@ class WorkoutLogsCompanion extends UpdateCompanion<WorkoutLog> {
     Expression<int>? rpe,
     Expression<int>? hrZone,
     Expression<DateTime>? loggedAt,
-    Expression<String>? syncStatus,
-    Expression<String>? idempotencyKey,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (userId != null) 'user_id': userId,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (syncStatus != null) 'sync_status': syncStatus,
+      if (idempotencyKey != null) 'idempotency_key': idempotencyKey,
+      if (fieldVersions != null) 'field_versions': fieldVersions,
       if (workoutId != null) 'workout_id': workoutId,
       if (title != null) 'title': title,
       if (durationMin != null) 'duration_min': durationMin,
@@ -2815,14 +3357,18 @@ class WorkoutLogsCompanion extends UpdateCompanion<WorkoutLog> {
       if (rpe != null) 'rpe': rpe,
       if (hrZone != null) 'hr_zone': hrZone,
       if (loggedAt != null) 'logged_at': loggedAt,
-      if (syncStatus != null) 'sync_status': syncStatus,
-      if (idempotencyKey != null) 'idempotency_key': idempotencyKey,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
   WorkoutLogsCompanion copyWith({
-    Value<int>? id,
+    Value<String>? id,
     Value<String>? userId,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<String>? syncStatus,
+    Value<String>? idempotencyKey,
+    Value<String?>? fieldVersions,
     Value<String?>? workoutId,
     Value<String>? title,
     Value<int>? durationMin,
@@ -2831,12 +3377,16 @@ class WorkoutLogsCompanion extends UpdateCompanion<WorkoutLog> {
     Value<int?>? rpe,
     Value<int?>? hrZone,
     Value<DateTime>? loggedAt,
-    Value<String>? syncStatus,
-    Value<String>? idempotencyKey,
+    Value<int>? rowid,
   }) {
     return WorkoutLogsCompanion(
       id: id ?? this.id,
       userId: userId ?? this.userId,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      syncStatus: syncStatus ?? this.syncStatus,
+      idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+      fieldVersions: fieldVersions ?? this.fieldVersions,
       workoutId: workoutId ?? this.workoutId,
       title: title ?? this.title,
       durationMin: durationMin ?? this.durationMin,
@@ -2845,8 +3395,7 @@ class WorkoutLogsCompanion extends UpdateCompanion<WorkoutLog> {
       rpe: rpe ?? this.rpe,
       hrZone: hrZone ?? this.hrZone,
       loggedAt: loggedAt ?? this.loggedAt,
-      syncStatus: syncStatus ?? this.syncStatus,
-      idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -2854,10 +3403,25 @@ class WorkoutLogsCompanion extends UpdateCompanion<WorkoutLog> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (id.present) {
-      map['id'] = Variable<int>(id.value);
+      map['id'] = Variable<String>(id.value);
     }
     if (userId.present) {
       map['user_id'] = Variable<String>(userId.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (syncStatus.present) {
+      map['sync_status'] = Variable<String>(syncStatus.value);
+    }
+    if (idempotencyKey.present) {
+      map['idempotency_key'] = Variable<String>(idempotencyKey.value);
+    }
+    if (fieldVersions.present) {
+      map['field_versions'] = Variable<String>(fieldVersions.value);
     }
     if (workoutId.present) {
       map['workout_id'] = Variable<String>(workoutId.value);
@@ -2883,11 +3447,8 @@ class WorkoutLogsCompanion extends UpdateCompanion<WorkoutLog> {
     if (loggedAt.present) {
       map['logged_at'] = Variable<DateTime>(loggedAt.value);
     }
-    if (syncStatus.present) {
-      map['sync_status'] = Variable<String>(syncStatus.value);
-    }
-    if (idempotencyKey.present) {
-      map['idempotency_key'] = Variable<String>(idempotencyKey.value);
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
     }
     return map;
   }
@@ -2897,6 +3458,11 @@ class WorkoutLogsCompanion extends UpdateCompanion<WorkoutLog> {
     return (StringBuffer('WorkoutLogsCompanion(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('fieldVersions: $fieldVersions, ')
           ..write('workoutId: $workoutId, ')
           ..write('title: $title, ')
           ..write('durationMin: $durationMin, ')
@@ -2905,8 +3471,7 @@ class WorkoutLogsCompanion extends UpdateCompanion<WorkoutLog> {
           ..write('rpe: $rpe, ')
           ..write('hrZone: $hrZone, ')
           ..write('loggedAt: $loggedAt, ')
-          ..write('syncStatus: $syncStatus, ')
-          ..write('idempotencyKey: $idempotencyKey')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -2919,16 +3484,12 @@ class $StepLogsTable extends StepLogs with TableInfo<$StepLogsTable, StepLog> {
   $StepLogsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
     'id',
     aliasedName,
     false,
-    hasAutoIncrement: true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
   );
   static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
   @override
@@ -2938,6 +3499,64 @@ class $StepLogsTable extends StepLogs with TableInfo<$StepLogsTable, StepLog> {
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _syncStatusMeta = const VerificationMeta(
+    'syncStatus',
+  );
+  @override
+  late final GeneratedColumn<String> syncStatus = GeneratedColumn<String>(
+    'sync_status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('pending'),
+  );
+  static const VerificationMeta _idempotencyKeyMeta = const VerificationMeta(
+    'idempotencyKey',
+  );
+  @override
+  late final GeneratedColumn<String> idempotencyKey = GeneratedColumn<String>(
+    'idempotency_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _fieldVersionsMeta = const VerificationMeta(
+    'fieldVersions',
+  );
+  @override
+  late final GeneratedColumn<String> fieldVersions = GeneratedColumn<String>(
+    'field_versions',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
   );
   static const VerificationMeta _dateMeta = const VerificationMeta('date');
   @override
@@ -2990,40 +3609,20 @@ class $StepLogsTable extends StepLogs with TableInfo<$StepLogsTable, StepLog> {
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _syncStatusMeta = const VerificationMeta(
-    'syncStatus',
-  );
-  @override
-  late final GeneratedColumn<String> syncStatus = GeneratedColumn<String>(
-    'sync_status',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-    defaultValue: const Constant('pending'),
-  );
-  static const VerificationMeta _idempotencyKeyMeta = const VerificationMeta(
-    'idempotencyKey',
-  );
-  @override
-  late final GeneratedColumn<String> idempotencyKey = GeneratedColumn<String>(
-    'idempotency_key',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
     userId,
+    createdAt,
+    updatedAt,
+    syncStatus,
+    idempotencyKey,
+    fieldVersions,
     date,
     stepCount,
     distanceM,
     caloriesBurned,
     source,
-    syncStatus,
-    idempotencyKey,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -3039,6 +3638,8 @@ class $StepLogsTable extends StepLogs with TableInfo<$StepLogsTable, StepLog> {
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
     }
     if (data.containsKey('user_id')) {
       context.handle(
@@ -3047,6 +3648,44 @@ class $StepLogsTable extends StepLogs with TableInfo<$StepLogsTable, StepLog> {
       );
     } else if (isInserting) {
       context.missing(_userIdMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    if (data.containsKey('sync_status')) {
+      context.handle(
+        _syncStatusMeta,
+        syncStatus.isAcceptableOrUnknown(data['sync_status']!, _syncStatusMeta),
+      );
+    }
+    if (data.containsKey('idempotency_key')) {
+      context.handle(
+        _idempotencyKeyMeta,
+        idempotencyKey.isAcceptableOrUnknown(
+          data['idempotency_key']!,
+          _idempotencyKeyMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_idempotencyKeyMeta);
+    }
+    if (data.containsKey('field_versions')) {
+      context.handle(
+        _fieldVersionsMeta,
+        fieldVersions.isAcceptableOrUnknown(
+          data['field_versions']!,
+          _fieldVersionsMeta,
+        ),
+      );
     }
     if (data.containsKey('date')) {
       context.handle(
@@ -3087,23 +3726,6 @@ class $StepLogsTable extends StepLogs with TableInfo<$StepLogsTable, StepLog> {
     } else if (isInserting) {
       context.missing(_sourceMeta);
     }
-    if (data.containsKey('sync_status')) {
-      context.handle(
-        _syncStatusMeta,
-        syncStatus.isAcceptableOrUnknown(data['sync_status']!, _syncStatusMeta),
-      );
-    }
-    if (data.containsKey('idempotency_key')) {
-      context.handle(
-        _idempotencyKeyMeta,
-        idempotencyKey.isAcceptableOrUnknown(
-          data['idempotency_key']!,
-          _idempotencyKeyMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_idempotencyKeyMeta);
-    }
     return context;
   }
 
@@ -3114,13 +3736,33 @@ class $StepLogsTable extends StepLogs with TableInfo<$StepLogsTable, StepLog> {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return StepLog(
       id: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
+        DriftSqlType.string,
         data['${effectivePrefix}id'],
       )!,
       userId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}user_id'],
       )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      syncStatus: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sync_status'],
+      )!,
+      idempotencyKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}idempotency_key'],
+      )!,
+      fieldVersions: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}field_versions'],
+      ),
       date: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}date'],
@@ -3141,14 +3783,6 @@ class $StepLogsTable extends StepLogs with TableInfo<$StepLogsTable, StepLog> {
         DriftSqlType.string,
         data['${effectivePrefix}source'],
       )!,
-      syncStatus: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}sync_status'],
-      )!,
-      idempotencyKey: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}idempotency_key'],
-      )!,
     );
   }
 
@@ -3159,31 +3793,44 @@ class $StepLogsTable extends StepLogs with TableInfo<$StepLogsTable, StepLog> {
 }
 
 class StepLog extends DataClass implements Insertable<StepLog> {
-  final int id;
+  final String id;
   final String userId;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final String syncStatus;
+  final String idempotencyKey;
+  final String? fieldVersions;
   final DateTime date;
   final int stepCount;
   final double? distanceM;
   final double? caloriesBurned;
   final String source;
-  final String syncStatus;
-  final String idempotencyKey;
   const StepLog({
     required this.id,
     required this.userId,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.syncStatus,
+    required this.idempotencyKey,
+    this.fieldVersions,
     required this.date,
     required this.stepCount,
     this.distanceM,
     this.caloriesBurned,
     required this.source,
-    required this.syncStatus,
-    required this.idempotencyKey,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
+    map['id'] = Variable<String>(id);
     map['user_id'] = Variable<String>(userId);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['sync_status'] = Variable<String>(syncStatus);
+    map['idempotency_key'] = Variable<String>(idempotencyKey);
+    if (!nullToAbsent || fieldVersions != null) {
+      map['field_versions'] = Variable<String>(fieldVersions);
+    }
     map['date'] = Variable<DateTime>(date);
     map['step_count'] = Variable<int>(stepCount);
     if (!nullToAbsent || distanceM != null) {
@@ -3193,8 +3840,6 @@ class StepLog extends DataClass implements Insertable<StepLog> {
       map['calories_burned'] = Variable<double>(caloriesBurned);
     }
     map['source'] = Variable<String>(source);
-    map['sync_status'] = Variable<String>(syncStatus);
-    map['idempotency_key'] = Variable<String>(idempotencyKey);
     return map;
   }
 
@@ -3202,6 +3847,13 @@ class StepLog extends DataClass implements Insertable<StepLog> {
     return StepLogsCompanion(
       id: Value(id),
       userId: Value(userId),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      syncStatus: Value(syncStatus),
+      idempotencyKey: Value(idempotencyKey),
+      fieldVersions: fieldVersions == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fieldVersions),
       date: Value(date),
       stepCount: Value(stepCount),
       distanceM: distanceM == null && nullToAbsent
@@ -3211,8 +3863,6 @@ class StepLog extends DataClass implements Insertable<StepLog> {
           ? const Value.absent()
           : Value(caloriesBurned),
       source: Value(source),
-      syncStatus: Value(syncStatus),
-      idempotencyKey: Value(idempotencyKey),
     );
   }
 
@@ -3222,46 +3872,62 @@ class StepLog extends DataClass implements Insertable<StepLog> {
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return StepLog(
-      id: serializer.fromJson<int>(json['id']),
+      id: serializer.fromJson<String>(json['id']),
       userId: serializer.fromJson<String>(json['userId']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      syncStatus: serializer.fromJson<String>(json['syncStatus']),
+      idempotencyKey: serializer.fromJson<String>(json['idempotencyKey']),
+      fieldVersions: serializer.fromJson<String?>(json['fieldVersions']),
       date: serializer.fromJson<DateTime>(json['date']),
       stepCount: serializer.fromJson<int>(json['stepCount']),
       distanceM: serializer.fromJson<double?>(json['distanceM']),
       caloriesBurned: serializer.fromJson<double?>(json['caloriesBurned']),
       source: serializer.fromJson<String>(json['source']),
-      syncStatus: serializer.fromJson<String>(json['syncStatus']),
-      idempotencyKey: serializer.fromJson<String>(json['idempotencyKey']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
+      'id': serializer.toJson<String>(id),
       'userId': serializer.toJson<String>(userId),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'syncStatus': serializer.toJson<String>(syncStatus),
+      'idempotencyKey': serializer.toJson<String>(idempotencyKey),
+      'fieldVersions': serializer.toJson<String?>(fieldVersions),
       'date': serializer.toJson<DateTime>(date),
       'stepCount': serializer.toJson<int>(stepCount),
       'distanceM': serializer.toJson<double?>(distanceM),
       'caloriesBurned': serializer.toJson<double?>(caloriesBurned),
       'source': serializer.toJson<String>(source),
-      'syncStatus': serializer.toJson<String>(syncStatus),
-      'idempotencyKey': serializer.toJson<String>(idempotencyKey),
     };
   }
 
   StepLog copyWith({
-    int? id,
+    String? id,
     String? userId,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    String? syncStatus,
+    String? idempotencyKey,
+    Value<String?> fieldVersions = const Value.absent(),
     DateTime? date,
     int? stepCount,
     Value<double?> distanceM = const Value.absent(),
     Value<double?> caloriesBurned = const Value.absent(),
     String? source,
-    String? syncStatus,
-    String? idempotencyKey,
   }) => StepLog(
     id: id ?? this.id,
     userId: userId ?? this.userId,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    syncStatus: syncStatus ?? this.syncStatus,
+    idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+    fieldVersions: fieldVersions.present
+        ? fieldVersions.value
+        : this.fieldVersions,
     date: date ?? this.date,
     stepCount: stepCount ?? this.stepCount,
     distanceM: distanceM.present ? distanceM.value : this.distanceM,
@@ -3269,13 +3935,22 @@ class StepLog extends DataClass implements Insertable<StepLog> {
         ? caloriesBurned.value
         : this.caloriesBurned,
     source: source ?? this.source,
-    syncStatus: syncStatus ?? this.syncStatus,
-    idempotencyKey: idempotencyKey ?? this.idempotencyKey,
   );
   StepLog copyWithCompanion(StepLogsCompanion data) {
     return StepLog(
       id: data.id.present ? data.id.value : this.id,
       userId: data.userId.present ? data.userId.value : this.userId,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      syncStatus: data.syncStatus.present
+          ? data.syncStatus.value
+          : this.syncStatus,
+      idempotencyKey: data.idempotencyKey.present
+          ? data.idempotencyKey.value
+          : this.idempotencyKey,
+      fieldVersions: data.fieldVersions.present
+          ? data.fieldVersions.value
+          : this.fieldVersions,
       date: data.date.present ? data.date.value : this.date,
       stepCount: data.stepCount.present ? data.stepCount.value : this.stepCount,
       distanceM: data.distanceM.present ? data.distanceM.value : this.distanceM,
@@ -3283,12 +3958,6 @@ class StepLog extends DataClass implements Insertable<StepLog> {
           ? data.caloriesBurned.value
           : this.caloriesBurned,
       source: data.source.present ? data.source.value : this.source,
-      syncStatus: data.syncStatus.present
-          ? data.syncStatus.value
-          : this.syncStatus,
-      idempotencyKey: data.idempotencyKey.present
-          ? data.idempotencyKey.value
-          : this.idempotencyKey,
     );
   }
 
@@ -3297,13 +3966,16 @@ class StepLog extends DataClass implements Insertable<StepLog> {
     return (StringBuffer('StepLog(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('fieldVersions: $fieldVersions, ')
           ..write('date: $date, ')
           ..write('stepCount: $stepCount, ')
           ..write('distanceM: $distanceM, ')
           ..write('caloriesBurned: $caloriesBurned, ')
-          ..write('source: $source, ')
-          ..write('syncStatus: $syncStatus, ')
-          ..write('idempotencyKey: $idempotencyKey')
+          ..write('source: $source')
           ..write(')'))
         .toString();
   }
@@ -3312,13 +3984,16 @@ class StepLog extends DataClass implements Insertable<StepLog> {
   int get hashCode => Object.hash(
     id,
     userId,
+    createdAt,
+    updatedAt,
+    syncStatus,
+    idempotencyKey,
+    fieldVersions,
     date,
     stepCount,
     distanceM,
     caloriesBurned,
     source,
-    syncStatus,
-    idempotencyKey,
   );
   @override
   bool operator ==(Object other) =>
@@ -3326,96 +4001,128 @@ class StepLog extends DataClass implements Insertable<StepLog> {
       (other is StepLog &&
           other.id == this.id &&
           other.userId == this.userId &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.syncStatus == this.syncStatus &&
+          other.idempotencyKey == this.idempotencyKey &&
+          other.fieldVersions == this.fieldVersions &&
           other.date == this.date &&
           other.stepCount == this.stepCount &&
           other.distanceM == this.distanceM &&
           other.caloriesBurned == this.caloriesBurned &&
-          other.source == this.source &&
-          other.syncStatus == this.syncStatus &&
-          other.idempotencyKey == this.idempotencyKey);
+          other.source == this.source);
 }
 
 class StepLogsCompanion extends UpdateCompanion<StepLog> {
-  final Value<int> id;
+  final Value<String> id;
   final Value<String> userId;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<String> syncStatus;
+  final Value<String> idempotencyKey;
+  final Value<String?> fieldVersions;
   final Value<DateTime> date;
   final Value<int> stepCount;
   final Value<double?> distanceM;
   final Value<double?> caloriesBurned;
   final Value<String> source;
-  final Value<String> syncStatus;
-  final Value<String> idempotencyKey;
+  final Value<int> rowid;
   const StepLogsCompanion({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    this.idempotencyKey = const Value.absent(),
+    this.fieldVersions = const Value.absent(),
     this.date = const Value.absent(),
     this.stepCount = const Value.absent(),
     this.distanceM = const Value.absent(),
     this.caloriesBurned = const Value.absent(),
     this.source = const Value.absent(),
-    this.syncStatus = const Value.absent(),
-    this.idempotencyKey = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   StepLogsCompanion.insert({
-    this.id = const Value.absent(),
+    required String id,
     required String userId,
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    required String idempotencyKey,
+    this.fieldVersions = const Value.absent(),
     required DateTime date,
     required int stepCount,
     this.distanceM = const Value.absent(),
     this.caloriesBurned = const Value.absent(),
     required String source,
-    this.syncStatus = const Value.absent(),
-    required String idempotencyKey,
-  }) : userId = Value(userId),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       userId = Value(userId),
+       idempotencyKey = Value(idempotencyKey),
        date = Value(date),
        stepCount = Value(stepCount),
-       source = Value(source),
-       idempotencyKey = Value(idempotencyKey);
+       source = Value(source);
   static Insertable<StepLog> custom({
-    Expression<int>? id,
+    Expression<String>? id,
     Expression<String>? userId,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<String>? syncStatus,
+    Expression<String>? idempotencyKey,
+    Expression<String>? fieldVersions,
     Expression<DateTime>? date,
     Expression<int>? stepCount,
     Expression<double>? distanceM,
     Expression<double>? caloriesBurned,
     Expression<String>? source,
-    Expression<String>? syncStatus,
-    Expression<String>? idempotencyKey,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (userId != null) 'user_id': userId,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (syncStatus != null) 'sync_status': syncStatus,
+      if (idempotencyKey != null) 'idempotency_key': idempotencyKey,
+      if (fieldVersions != null) 'field_versions': fieldVersions,
       if (date != null) 'date': date,
       if (stepCount != null) 'step_count': stepCount,
       if (distanceM != null) 'distance_m': distanceM,
       if (caloriesBurned != null) 'calories_burned': caloriesBurned,
       if (source != null) 'source': source,
-      if (syncStatus != null) 'sync_status': syncStatus,
-      if (idempotencyKey != null) 'idempotency_key': idempotencyKey,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
   StepLogsCompanion copyWith({
-    Value<int>? id,
+    Value<String>? id,
     Value<String>? userId,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<String>? syncStatus,
+    Value<String>? idempotencyKey,
+    Value<String?>? fieldVersions,
     Value<DateTime>? date,
     Value<int>? stepCount,
     Value<double?>? distanceM,
     Value<double?>? caloriesBurned,
     Value<String>? source,
-    Value<String>? syncStatus,
-    Value<String>? idempotencyKey,
+    Value<int>? rowid,
   }) {
     return StepLogsCompanion(
       id: id ?? this.id,
       userId: userId ?? this.userId,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      syncStatus: syncStatus ?? this.syncStatus,
+      idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+      fieldVersions: fieldVersions ?? this.fieldVersions,
       date: date ?? this.date,
       stepCount: stepCount ?? this.stepCount,
       distanceM: distanceM ?? this.distanceM,
       caloriesBurned: caloriesBurned ?? this.caloriesBurned,
       source: source ?? this.source,
-      syncStatus: syncStatus ?? this.syncStatus,
-      idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -3423,10 +4130,25 @@ class StepLogsCompanion extends UpdateCompanion<StepLog> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (id.present) {
-      map['id'] = Variable<int>(id.value);
+      map['id'] = Variable<String>(id.value);
     }
     if (userId.present) {
       map['user_id'] = Variable<String>(userId.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (syncStatus.present) {
+      map['sync_status'] = Variable<String>(syncStatus.value);
+    }
+    if (idempotencyKey.present) {
+      map['idempotency_key'] = Variable<String>(idempotencyKey.value);
+    }
+    if (fieldVersions.present) {
+      map['field_versions'] = Variable<String>(fieldVersions.value);
     }
     if (date.present) {
       map['date'] = Variable<DateTime>(date.value);
@@ -3443,11 +4165,8 @@ class StepLogsCompanion extends UpdateCompanion<StepLog> {
     if (source.present) {
       map['source'] = Variable<String>(source.value);
     }
-    if (syncStatus.present) {
-      map['sync_status'] = Variable<String>(syncStatus.value);
-    }
-    if (idempotencyKey.present) {
-      map['idempotency_key'] = Variable<String>(idempotencyKey.value);
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
     }
     return map;
   }
@@ -3457,13 +4176,17 @@ class StepLogsCompanion extends UpdateCompanion<StepLog> {
     return (StringBuffer('StepLogsCompanion(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('fieldVersions: $fieldVersions, ')
           ..write('date: $date, ')
           ..write('stepCount: $stepCount, ')
           ..write('distanceM: $distanceM, ')
           ..write('caloriesBurned: $caloriesBurned, ')
           ..write('source: $source, ')
-          ..write('syncStatus: $syncStatus, ')
-          ..write('idempotencyKey: $idempotencyKey')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -3477,16 +4200,12 @@ class $SleepLogsTable extends SleepLogs
   $SleepLogsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
     'id',
     aliasedName,
     false,
-    hasAutoIncrement: true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
   );
   static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
   @override
@@ -3496,6 +4215,64 @@ class $SleepLogsTable extends SleepLogs
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _syncStatusMeta = const VerificationMeta(
+    'syncStatus',
+  );
+  @override
+  late final GeneratedColumn<String> syncStatus = GeneratedColumn<String>(
+    'sync_status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('pending'),
+  );
+  static const VerificationMeta _idempotencyKeyMeta = const VerificationMeta(
+    'idempotencyKey',
+  );
+  @override
+  late final GeneratedColumn<String> idempotencyKey = GeneratedColumn<String>(
+    'idempotency_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _fieldVersionsMeta = const VerificationMeta(
+    'fieldVersions',
+  );
+  @override
+  late final GeneratedColumn<String> fieldVersions = GeneratedColumn<String>(
+    'field_versions',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
   );
   static const VerificationMeta _dateMeta = const VerificationMeta('date');
   @override
@@ -3602,6 +4379,11 @@ class $SleepLogsTable extends SleepLogs
   List<GeneratedColumn> get $columns => [
     id,
     userId,
+    createdAt,
+    updatedAt,
+    syncStatus,
+    idempotencyKey,
+    fieldVersions,
     date,
     bedtime,
     wakeTime,
@@ -3626,6 +4408,8 @@ class $SleepLogsTable extends SleepLogs
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
     }
     if (data.containsKey('user_id')) {
       context.handle(
@@ -3634,6 +4418,44 @@ class $SleepLogsTable extends SleepLogs
       );
     } else if (isInserting) {
       context.missing(_userIdMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    if (data.containsKey('sync_status')) {
+      context.handle(
+        _syncStatusMeta,
+        syncStatus.isAcceptableOrUnknown(data['sync_status']!, _syncStatusMeta),
+      );
+    }
+    if (data.containsKey('idempotency_key')) {
+      context.handle(
+        _idempotencyKeyMeta,
+        idempotencyKey.isAcceptableOrUnknown(
+          data['idempotency_key']!,
+          _idempotencyKeyMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_idempotencyKeyMeta);
+    }
+    if (data.containsKey('field_versions')) {
+      context.handle(
+        _fieldVersionsMeta,
+        fieldVersions.isAcceptableOrUnknown(
+          data['field_versions']!,
+          _fieldVersionsMeta,
+        ),
+      );
     }
     if (data.containsKey('date')) {
       context.handle(
@@ -3723,13 +4545,33 @@ class $SleepLogsTable extends SleepLogs
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return SleepLog(
       id: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
+        DriftSqlType.string,
         data['${effectivePrefix}id'],
       )!,
       userId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}user_id'],
       )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      syncStatus: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sync_status'],
+      )!,
+      idempotencyKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}idempotency_key'],
+      )!,
+      fieldVersions: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}field_versions'],
+      ),
       date: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}date'],
@@ -3776,8 +4618,13 @@ class $SleepLogsTable extends SleepLogs
 }
 
 class SleepLog extends DataClass implements Insertable<SleepLog> {
-  final int id;
+  final String id;
   final String userId;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final String syncStatus;
+  final String idempotencyKey;
+  final String? fieldVersions;
   final DateTime date;
   final String bedtime;
   final String wakeTime;
@@ -3790,6 +4637,11 @@ class SleepLog extends DataClass implements Insertable<SleepLog> {
   const SleepLog({
     required this.id,
     required this.userId,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.syncStatus,
+    required this.idempotencyKey,
+    this.fieldVersions,
     required this.date,
     required this.bedtime,
     required this.wakeTime,
@@ -3803,8 +4655,15 @@ class SleepLog extends DataClass implements Insertable<SleepLog> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
+    map['id'] = Variable<String>(id);
     map['user_id'] = Variable<String>(userId);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['sync_status'] = Variable<String>(syncStatus);
+    map['idempotency_key'] = Variable<String>(idempotencyKey);
+    if (!nullToAbsent || fieldVersions != null) {
+      map['field_versions'] = Variable<String>(fieldVersions);
+    }
     map['date'] = Variable<DateTime>(date);
     map['bedtime'] = Variable<String>(bedtime);
     map['wake_time'] = Variable<String>(wakeTime);
@@ -3827,6 +4686,13 @@ class SleepLog extends DataClass implements Insertable<SleepLog> {
     return SleepLogsCompanion(
       id: Value(id),
       userId: Value(userId),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      syncStatus: Value(syncStatus),
+      idempotencyKey: Value(idempotencyKey),
+      fieldVersions: fieldVersions == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fieldVersions),
       date: Value(date),
       bedtime: Value(bedtime),
       wakeTime: Value(wakeTime),
@@ -3851,8 +4717,13 @@ class SleepLog extends DataClass implements Insertable<SleepLog> {
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return SleepLog(
-      id: serializer.fromJson<int>(json['id']),
+      id: serializer.fromJson<String>(json['id']),
       userId: serializer.fromJson<String>(json['userId']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      syncStatus: serializer.fromJson<String>(json['syncStatus']),
+      idempotencyKey: serializer.fromJson<String>(json['idempotencyKey']),
+      fieldVersions: serializer.fromJson<String?>(json['fieldVersions']),
       date: serializer.fromJson<DateTime>(json['date']),
       bedtime: serializer.fromJson<String>(json['bedtime']),
       wakeTime: serializer.fromJson<String>(json['wakeTime']),
@@ -3868,8 +4739,13 @@ class SleepLog extends DataClass implements Insertable<SleepLog> {
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
+      'id': serializer.toJson<String>(id),
       'userId': serializer.toJson<String>(userId),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'syncStatus': serializer.toJson<String>(syncStatus),
+      'idempotencyKey': serializer.toJson<String>(idempotencyKey),
+      'fieldVersions': serializer.toJson<String?>(fieldVersions),
       'date': serializer.toJson<DateTime>(date),
       'bedtime': serializer.toJson<String>(bedtime),
       'wakeTime': serializer.toJson<String>(wakeTime),
@@ -3883,8 +4759,13 @@ class SleepLog extends DataClass implements Insertable<SleepLog> {
   }
 
   SleepLog copyWith({
-    int? id,
+    String? id,
     String? userId,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    String? syncStatus,
+    String? idempotencyKey,
+    Value<String?> fieldVersions = const Value.absent(),
     DateTime? date,
     String? bedtime,
     String? wakeTime,
@@ -3897,6 +4778,13 @@ class SleepLog extends DataClass implements Insertable<SleepLog> {
   }) => SleepLog(
     id: id ?? this.id,
     userId: userId ?? this.userId,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    syncStatus: syncStatus ?? this.syncStatus,
+    idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+    fieldVersions: fieldVersions.present
+        ? fieldVersions.value
+        : this.fieldVersions,
     date: date ?? this.date,
     bedtime: bedtime ?? this.bedtime,
     wakeTime: wakeTime ?? this.wakeTime,
@@ -3911,6 +4799,17 @@ class SleepLog extends DataClass implements Insertable<SleepLog> {
     return SleepLog(
       id: data.id.present ? data.id.value : this.id,
       userId: data.userId.present ? data.userId.value : this.userId,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      syncStatus: data.syncStatus.present
+          ? data.syncStatus.value
+          : this.syncStatus,
+      idempotencyKey: data.idempotencyKey.present
+          ? data.idempotencyKey.value
+          : this.idempotencyKey,
+      fieldVersions: data.fieldVersions.present
+          ? data.fieldVersions.value
+          : this.fieldVersions,
       date: data.date.present ? data.date.value : this.date,
       bedtime: data.bedtime.present ? data.bedtime.value : this.bedtime,
       wakeTime: data.wakeTime.present ? data.wakeTime.value : this.wakeTime,
@@ -3936,6 +4835,11 @@ class SleepLog extends DataClass implements Insertable<SleepLog> {
     return (StringBuffer('SleepLog(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('fieldVersions: $fieldVersions, ')
           ..write('date: $date, ')
           ..write('bedtime: $bedtime, ')
           ..write('wakeTime: $wakeTime, ')
@@ -3953,6 +4857,11 @@ class SleepLog extends DataClass implements Insertable<SleepLog> {
   int get hashCode => Object.hash(
     id,
     userId,
+    createdAt,
+    updatedAt,
+    syncStatus,
+    idempotencyKey,
+    fieldVersions,
     date,
     bedtime,
     wakeTime,
@@ -3969,6 +4878,11 @@ class SleepLog extends DataClass implements Insertable<SleepLog> {
       (other is SleepLog &&
           other.id == this.id &&
           other.userId == this.userId &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.syncStatus == this.syncStatus &&
+          other.idempotencyKey == this.idempotencyKey &&
+          other.fieldVersions == this.fieldVersions &&
           other.date == this.date &&
           other.bedtime == this.bedtime &&
           other.wakeTime == this.wakeTime &&
@@ -3981,8 +4895,13 @@ class SleepLog extends DataClass implements Insertable<SleepLog> {
 }
 
 class SleepLogsCompanion extends UpdateCompanion<SleepLog> {
-  final Value<int> id;
+  final Value<String> id;
   final Value<String> userId;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<String> syncStatus;
+  final Value<String> idempotencyKey;
+  final Value<String?> fieldVersions;
   final Value<DateTime> date;
   final Value<String> bedtime;
   final Value<String> wakeTime;
@@ -3992,9 +4911,15 @@ class SleepLogsCompanion extends UpdateCompanion<SleepLog> {
   final Value<int?> sleepDebtMin;
   final Value<String?> notes;
   final Value<String> source;
+  final Value<int> rowid;
   const SleepLogsCompanion({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    this.idempotencyKey = const Value.absent(),
+    this.fieldVersions = const Value.absent(),
     this.date = const Value.absent(),
     this.bedtime = const Value.absent(),
     this.wakeTime = const Value.absent(),
@@ -4004,10 +4929,16 @@ class SleepLogsCompanion extends UpdateCompanion<SleepLog> {
     this.sleepDebtMin = const Value.absent(),
     this.notes = const Value.absent(),
     this.source = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   SleepLogsCompanion.insert({
-    this.id = const Value.absent(),
+    required String id,
     required String userId,
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    required String idempotencyKey,
+    this.fieldVersions = const Value.absent(),
     required DateTime date,
     required String bedtime,
     required String wakeTime,
@@ -4017,7 +4948,10 @@ class SleepLogsCompanion extends UpdateCompanion<SleepLog> {
     this.sleepDebtMin = const Value.absent(),
     this.notes = const Value.absent(),
     required String source,
-  }) : userId = Value(userId),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       userId = Value(userId),
+       idempotencyKey = Value(idempotencyKey),
        date = Value(date),
        bedtime = Value(bedtime),
        wakeTime = Value(wakeTime),
@@ -4025,8 +4959,13 @@ class SleepLogsCompanion extends UpdateCompanion<SleepLog> {
        qualityScore = Value(qualityScore),
        source = Value(source);
   static Insertable<SleepLog> custom({
-    Expression<int>? id,
+    Expression<String>? id,
     Expression<String>? userId,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<String>? syncStatus,
+    Expression<String>? idempotencyKey,
+    Expression<String>? fieldVersions,
     Expression<DateTime>? date,
     Expression<String>? bedtime,
     Expression<String>? wakeTime,
@@ -4036,10 +4975,16 @@ class SleepLogsCompanion extends UpdateCompanion<SleepLog> {
     Expression<int>? sleepDebtMin,
     Expression<String>? notes,
     Expression<String>? source,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (userId != null) 'user_id': userId,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (syncStatus != null) 'sync_status': syncStatus,
+      if (idempotencyKey != null) 'idempotency_key': idempotencyKey,
+      if (fieldVersions != null) 'field_versions': fieldVersions,
       if (date != null) 'date': date,
       if (bedtime != null) 'bedtime': bedtime,
       if (wakeTime != null) 'wake_time': wakeTime,
@@ -4049,12 +4994,18 @@ class SleepLogsCompanion extends UpdateCompanion<SleepLog> {
       if (sleepDebtMin != null) 'sleep_debt_min': sleepDebtMin,
       if (notes != null) 'notes': notes,
       if (source != null) 'source': source,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
   SleepLogsCompanion copyWith({
-    Value<int>? id,
+    Value<String>? id,
     Value<String>? userId,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<String>? syncStatus,
+    Value<String>? idempotencyKey,
+    Value<String?>? fieldVersions,
     Value<DateTime>? date,
     Value<String>? bedtime,
     Value<String>? wakeTime,
@@ -4064,10 +5015,16 @@ class SleepLogsCompanion extends UpdateCompanion<SleepLog> {
     Value<int?>? sleepDebtMin,
     Value<String?>? notes,
     Value<String>? source,
+    Value<int>? rowid,
   }) {
     return SleepLogsCompanion(
       id: id ?? this.id,
       userId: userId ?? this.userId,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      syncStatus: syncStatus ?? this.syncStatus,
+      idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+      fieldVersions: fieldVersions ?? this.fieldVersions,
       date: date ?? this.date,
       bedtime: bedtime ?? this.bedtime,
       wakeTime: wakeTime ?? this.wakeTime,
@@ -4077,6 +5034,7 @@ class SleepLogsCompanion extends UpdateCompanion<SleepLog> {
       sleepDebtMin: sleepDebtMin ?? this.sleepDebtMin,
       notes: notes ?? this.notes,
       source: source ?? this.source,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -4084,10 +5042,25 @@ class SleepLogsCompanion extends UpdateCompanion<SleepLog> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (id.present) {
-      map['id'] = Variable<int>(id.value);
+      map['id'] = Variable<String>(id.value);
     }
     if (userId.present) {
       map['user_id'] = Variable<String>(userId.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (syncStatus.present) {
+      map['sync_status'] = Variable<String>(syncStatus.value);
+    }
+    if (idempotencyKey.present) {
+      map['idempotency_key'] = Variable<String>(idempotencyKey.value);
+    }
+    if (fieldVersions.present) {
+      map['field_versions'] = Variable<String>(fieldVersions.value);
     }
     if (date.present) {
       map['date'] = Variable<DateTime>(date.value);
@@ -4116,6 +5089,9 @@ class SleepLogsCompanion extends UpdateCompanion<SleepLog> {
     if (source.present) {
       map['source'] = Variable<String>(source.value);
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
@@ -4124,6 +5100,11 @@ class SleepLogsCompanion extends UpdateCompanion<SleepLog> {
     return (StringBuffer('SleepLogsCompanion(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('fieldVersions: $fieldVersions, ')
           ..write('date: $date, ')
           ..write('bedtime: $bedtime, ')
           ..write('wakeTime: $wakeTime, ')
@@ -4132,7 +5113,8 @@ class SleepLogsCompanion extends UpdateCompanion<SleepLog> {
           ..write('deepSleepMin: $deepSleepMin, ')
           ..write('sleepDebtMin: $sleepDebtMin, ')
           ..write('notes: $notes, ')
-          ..write('source: $source')
+          ..write('source: $source, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -4145,16 +5127,12 @@ class $MoodLogsTable extends MoodLogs with TableInfo<$MoodLogsTable, MoodLog> {
   $MoodLogsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
     'id',
     aliasedName,
     false,
-    hasAutoIncrement: true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
   );
   static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
   @override
@@ -4164,6 +5142,64 @@ class $MoodLogsTable extends MoodLogs with TableInfo<$MoodLogsTable, MoodLog> {
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _syncStatusMeta = const VerificationMeta(
+    'syncStatus',
+  );
+  @override
+  late final GeneratedColumn<String> syncStatus = GeneratedColumn<String>(
+    'sync_status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('pending'),
+  );
+  static const VerificationMeta _idempotencyKeyMeta = const VerificationMeta(
+    'idempotencyKey',
+  );
+  @override
+  late final GeneratedColumn<String> idempotencyKey = GeneratedColumn<String>(
+    'idempotency_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _fieldVersionsMeta = const VerificationMeta(
+    'fieldVersions',
+  );
+  @override
+  late final GeneratedColumn<String> fieldVersions = GeneratedColumn<String>(
+    'field_versions',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
   );
   static const VerificationMeta _moodScoreMeta = const VerificationMeta(
     'moodScore',
@@ -4227,41 +5263,21 @@ class $MoodLogsTable extends MoodLogs with TableInfo<$MoodLogsTable, MoodLog> {
     type: DriftSqlType.dateTime,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _syncStatusMeta = const VerificationMeta(
-    'syncStatus',
-  );
-  @override
-  late final GeneratedColumn<String> syncStatus = GeneratedColumn<String>(
-    'sync_status',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-    defaultValue: const Constant('pending'),
-  );
-  static const VerificationMeta _idempotencyKeyMeta = const VerificationMeta(
-    'idempotencyKey',
-  );
-  @override
-  late final GeneratedColumn<String> idempotencyKey = GeneratedColumn<String>(
-    'idempotency_key',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
     userId,
+    createdAt,
+    updatedAt,
+    syncStatus,
+    idempotencyKey,
+    fieldVersions,
     moodScore,
     energyLevel,
     stressLevel,
     tags,
     notes,
     loggedAt,
-    syncStatus,
-    idempotencyKey,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -4277,6 +5293,8 @@ class $MoodLogsTable extends MoodLogs with TableInfo<$MoodLogsTable, MoodLog> {
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
     }
     if (data.containsKey('user_id')) {
       context.handle(
@@ -4285,6 +5303,44 @@ class $MoodLogsTable extends MoodLogs with TableInfo<$MoodLogsTable, MoodLog> {
       );
     } else if (isInserting) {
       context.missing(_userIdMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    if (data.containsKey('sync_status')) {
+      context.handle(
+        _syncStatusMeta,
+        syncStatus.isAcceptableOrUnknown(data['sync_status']!, _syncStatusMeta),
+      );
+    }
+    if (data.containsKey('idempotency_key')) {
+      context.handle(
+        _idempotencyKeyMeta,
+        idempotencyKey.isAcceptableOrUnknown(
+          data['idempotency_key']!,
+          _idempotencyKeyMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_idempotencyKeyMeta);
+    }
+    if (data.containsKey('field_versions')) {
+      context.handle(
+        _fieldVersionsMeta,
+        fieldVersions.isAcceptableOrUnknown(
+          data['field_versions']!,
+          _fieldVersionsMeta,
+        ),
+      );
     }
     if (data.containsKey('mood_score')) {
       context.handle(
@@ -4332,23 +5388,6 @@ class $MoodLogsTable extends MoodLogs with TableInfo<$MoodLogsTable, MoodLog> {
     } else if (isInserting) {
       context.missing(_loggedAtMeta);
     }
-    if (data.containsKey('sync_status')) {
-      context.handle(
-        _syncStatusMeta,
-        syncStatus.isAcceptableOrUnknown(data['sync_status']!, _syncStatusMeta),
-      );
-    }
-    if (data.containsKey('idempotency_key')) {
-      context.handle(
-        _idempotencyKeyMeta,
-        idempotencyKey.isAcceptableOrUnknown(
-          data['idempotency_key']!,
-          _idempotencyKeyMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_idempotencyKeyMeta);
-    }
     return context;
   }
 
@@ -4359,13 +5398,33 @@ class $MoodLogsTable extends MoodLogs with TableInfo<$MoodLogsTable, MoodLog> {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return MoodLog(
       id: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
+        DriftSqlType.string,
         data['${effectivePrefix}id'],
       )!,
       userId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}user_id'],
       )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      syncStatus: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sync_status'],
+      )!,
+      idempotencyKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}idempotency_key'],
+      )!,
+      fieldVersions: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}field_versions'],
+      ),
       moodScore: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}mood_score'],
@@ -4390,14 +5449,6 @@ class $MoodLogsTable extends MoodLogs with TableInfo<$MoodLogsTable, MoodLog> {
         DriftSqlType.dateTime,
         data['${effectivePrefix}logged_at'],
       )!,
-      syncStatus: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}sync_status'],
-      )!,
-      idempotencyKey: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}idempotency_key'],
-      )!,
     );
   }
 
@@ -4408,33 +5459,46 @@ class $MoodLogsTable extends MoodLogs with TableInfo<$MoodLogsTable, MoodLog> {
 }
 
 class MoodLog extends DataClass implements Insertable<MoodLog> {
-  final int id;
+  final String id;
   final String userId;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final String syncStatus;
+  final String idempotencyKey;
+  final String? fieldVersions;
   final int moodScore;
   final int? energyLevel;
   final int? stressLevel;
   final String? tags;
   final String? notes;
   final DateTime loggedAt;
-  final String syncStatus;
-  final String idempotencyKey;
   const MoodLog({
     required this.id,
     required this.userId,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.syncStatus,
+    required this.idempotencyKey,
+    this.fieldVersions,
     required this.moodScore,
     this.energyLevel,
     this.stressLevel,
     this.tags,
     this.notes,
     required this.loggedAt,
-    required this.syncStatus,
-    required this.idempotencyKey,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
+    map['id'] = Variable<String>(id);
     map['user_id'] = Variable<String>(userId);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['sync_status'] = Variable<String>(syncStatus);
+    map['idempotency_key'] = Variable<String>(idempotencyKey);
+    if (!nullToAbsent || fieldVersions != null) {
+      map['field_versions'] = Variable<String>(fieldVersions);
+    }
     map['mood_score'] = Variable<int>(moodScore);
     if (!nullToAbsent || energyLevel != null) {
       map['energy_level'] = Variable<int>(energyLevel);
@@ -4449,8 +5513,6 @@ class MoodLog extends DataClass implements Insertable<MoodLog> {
       map['notes'] = Variable<String>(notes);
     }
     map['logged_at'] = Variable<DateTime>(loggedAt);
-    map['sync_status'] = Variable<String>(syncStatus);
-    map['idempotency_key'] = Variable<String>(idempotencyKey);
     return map;
   }
 
@@ -4458,6 +5520,13 @@ class MoodLog extends DataClass implements Insertable<MoodLog> {
     return MoodLogsCompanion(
       id: Value(id),
       userId: Value(userId),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      syncStatus: Value(syncStatus),
+      idempotencyKey: Value(idempotencyKey),
+      fieldVersions: fieldVersions == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fieldVersions),
       moodScore: Value(moodScore),
       energyLevel: energyLevel == null && nullToAbsent
           ? const Value.absent()
@@ -4470,8 +5539,6 @@ class MoodLog extends DataClass implements Insertable<MoodLog> {
           ? const Value.absent()
           : Value(notes),
       loggedAt: Value(loggedAt),
-      syncStatus: Value(syncStatus),
-      idempotencyKey: Value(idempotencyKey),
     );
   }
 
@@ -4481,62 +5548,87 @@ class MoodLog extends DataClass implements Insertable<MoodLog> {
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return MoodLog(
-      id: serializer.fromJson<int>(json['id']),
+      id: serializer.fromJson<String>(json['id']),
       userId: serializer.fromJson<String>(json['userId']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      syncStatus: serializer.fromJson<String>(json['syncStatus']),
+      idempotencyKey: serializer.fromJson<String>(json['idempotencyKey']),
+      fieldVersions: serializer.fromJson<String?>(json['fieldVersions']),
       moodScore: serializer.fromJson<int>(json['moodScore']),
       energyLevel: serializer.fromJson<int?>(json['energyLevel']),
       stressLevel: serializer.fromJson<int?>(json['stressLevel']),
       tags: serializer.fromJson<String?>(json['tags']),
       notes: serializer.fromJson<String?>(json['notes']),
       loggedAt: serializer.fromJson<DateTime>(json['loggedAt']),
-      syncStatus: serializer.fromJson<String>(json['syncStatus']),
-      idempotencyKey: serializer.fromJson<String>(json['idempotencyKey']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
+      'id': serializer.toJson<String>(id),
       'userId': serializer.toJson<String>(userId),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'syncStatus': serializer.toJson<String>(syncStatus),
+      'idempotencyKey': serializer.toJson<String>(idempotencyKey),
+      'fieldVersions': serializer.toJson<String?>(fieldVersions),
       'moodScore': serializer.toJson<int>(moodScore),
       'energyLevel': serializer.toJson<int?>(energyLevel),
       'stressLevel': serializer.toJson<int?>(stressLevel),
       'tags': serializer.toJson<String?>(tags),
       'notes': serializer.toJson<String?>(notes),
       'loggedAt': serializer.toJson<DateTime>(loggedAt),
-      'syncStatus': serializer.toJson<String>(syncStatus),
-      'idempotencyKey': serializer.toJson<String>(idempotencyKey),
     };
   }
 
   MoodLog copyWith({
-    int? id,
+    String? id,
     String? userId,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    String? syncStatus,
+    String? idempotencyKey,
+    Value<String?> fieldVersions = const Value.absent(),
     int? moodScore,
     Value<int?> energyLevel = const Value.absent(),
     Value<int?> stressLevel = const Value.absent(),
     Value<String?> tags = const Value.absent(),
     Value<String?> notes = const Value.absent(),
     DateTime? loggedAt,
-    String? syncStatus,
-    String? idempotencyKey,
   }) => MoodLog(
     id: id ?? this.id,
     userId: userId ?? this.userId,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    syncStatus: syncStatus ?? this.syncStatus,
+    idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+    fieldVersions: fieldVersions.present
+        ? fieldVersions.value
+        : this.fieldVersions,
     moodScore: moodScore ?? this.moodScore,
     energyLevel: energyLevel.present ? energyLevel.value : this.energyLevel,
     stressLevel: stressLevel.present ? stressLevel.value : this.stressLevel,
     tags: tags.present ? tags.value : this.tags,
     notes: notes.present ? notes.value : this.notes,
     loggedAt: loggedAt ?? this.loggedAt,
-    syncStatus: syncStatus ?? this.syncStatus,
-    idempotencyKey: idempotencyKey ?? this.idempotencyKey,
   );
   MoodLog copyWithCompanion(MoodLogsCompanion data) {
     return MoodLog(
       id: data.id.present ? data.id.value : this.id,
       userId: data.userId.present ? data.userId.value : this.userId,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      syncStatus: data.syncStatus.present
+          ? data.syncStatus.value
+          : this.syncStatus,
+      idempotencyKey: data.idempotencyKey.present
+          ? data.idempotencyKey.value
+          : this.idempotencyKey,
+      fieldVersions: data.fieldVersions.present
+          ? data.fieldVersions.value
+          : this.fieldVersions,
       moodScore: data.moodScore.present ? data.moodScore.value : this.moodScore,
       energyLevel: data.energyLevel.present
           ? data.energyLevel.value
@@ -4547,12 +5639,6 @@ class MoodLog extends DataClass implements Insertable<MoodLog> {
       tags: data.tags.present ? data.tags.value : this.tags,
       notes: data.notes.present ? data.notes.value : this.notes,
       loggedAt: data.loggedAt.present ? data.loggedAt.value : this.loggedAt,
-      syncStatus: data.syncStatus.present
-          ? data.syncStatus.value
-          : this.syncStatus,
-      idempotencyKey: data.idempotencyKey.present
-          ? data.idempotencyKey.value
-          : this.idempotencyKey,
     );
   }
 
@@ -4561,14 +5647,17 @@ class MoodLog extends DataClass implements Insertable<MoodLog> {
     return (StringBuffer('MoodLog(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('fieldVersions: $fieldVersions, ')
           ..write('moodScore: $moodScore, ')
           ..write('energyLevel: $energyLevel, ')
           ..write('stressLevel: $stressLevel, ')
           ..write('tags: $tags, ')
           ..write('notes: $notes, ')
-          ..write('loggedAt: $loggedAt, ')
-          ..write('syncStatus: $syncStatus, ')
-          ..write('idempotencyKey: $idempotencyKey')
+          ..write('loggedAt: $loggedAt')
           ..write(')'))
         .toString();
   }
@@ -4577,14 +5666,17 @@ class MoodLog extends DataClass implements Insertable<MoodLog> {
   int get hashCode => Object.hash(
     id,
     userId,
+    createdAt,
+    updatedAt,
+    syncStatus,
+    idempotencyKey,
+    fieldVersions,
     moodScore,
     energyLevel,
     stressLevel,
     tags,
     notes,
     loggedAt,
-    syncStatus,
-    idempotencyKey,
   );
   @override
   bool operator ==(Object other) =>
@@ -4592,103 +5684,135 @@ class MoodLog extends DataClass implements Insertable<MoodLog> {
       (other is MoodLog &&
           other.id == this.id &&
           other.userId == this.userId &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.syncStatus == this.syncStatus &&
+          other.idempotencyKey == this.idempotencyKey &&
+          other.fieldVersions == this.fieldVersions &&
           other.moodScore == this.moodScore &&
           other.energyLevel == this.energyLevel &&
           other.stressLevel == this.stressLevel &&
           other.tags == this.tags &&
           other.notes == this.notes &&
-          other.loggedAt == this.loggedAt &&
-          other.syncStatus == this.syncStatus &&
-          other.idempotencyKey == this.idempotencyKey);
+          other.loggedAt == this.loggedAt);
 }
 
 class MoodLogsCompanion extends UpdateCompanion<MoodLog> {
-  final Value<int> id;
+  final Value<String> id;
   final Value<String> userId;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<String> syncStatus;
+  final Value<String> idempotencyKey;
+  final Value<String?> fieldVersions;
   final Value<int> moodScore;
   final Value<int?> energyLevel;
   final Value<int?> stressLevel;
   final Value<String?> tags;
   final Value<String?> notes;
   final Value<DateTime> loggedAt;
-  final Value<String> syncStatus;
-  final Value<String> idempotencyKey;
+  final Value<int> rowid;
   const MoodLogsCompanion({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    this.idempotencyKey = const Value.absent(),
+    this.fieldVersions = const Value.absent(),
     this.moodScore = const Value.absent(),
     this.energyLevel = const Value.absent(),
     this.stressLevel = const Value.absent(),
     this.tags = const Value.absent(),
     this.notes = const Value.absent(),
     this.loggedAt = const Value.absent(),
-    this.syncStatus = const Value.absent(),
-    this.idempotencyKey = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   MoodLogsCompanion.insert({
-    this.id = const Value.absent(),
+    required String id,
     required String userId,
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    required String idempotencyKey,
+    this.fieldVersions = const Value.absent(),
     required int moodScore,
     this.energyLevel = const Value.absent(),
     this.stressLevel = const Value.absent(),
     this.tags = const Value.absent(),
     this.notes = const Value.absent(),
     required DateTime loggedAt,
-    this.syncStatus = const Value.absent(),
-    required String idempotencyKey,
-  }) : userId = Value(userId),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       userId = Value(userId),
+       idempotencyKey = Value(idempotencyKey),
        moodScore = Value(moodScore),
-       loggedAt = Value(loggedAt),
-       idempotencyKey = Value(idempotencyKey);
+       loggedAt = Value(loggedAt);
   static Insertable<MoodLog> custom({
-    Expression<int>? id,
+    Expression<String>? id,
     Expression<String>? userId,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<String>? syncStatus,
+    Expression<String>? idempotencyKey,
+    Expression<String>? fieldVersions,
     Expression<int>? moodScore,
     Expression<int>? energyLevel,
     Expression<int>? stressLevel,
     Expression<String>? tags,
     Expression<String>? notes,
     Expression<DateTime>? loggedAt,
-    Expression<String>? syncStatus,
-    Expression<String>? idempotencyKey,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (userId != null) 'user_id': userId,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (syncStatus != null) 'sync_status': syncStatus,
+      if (idempotencyKey != null) 'idempotency_key': idempotencyKey,
+      if (fieldVersions != null) 'field_versions': fieldVersions,
       if (moodScore != null) 'mood_score': moodScore,
       if (energyLevel != null) 'energy_level': energyLevel,
       if (stressLevel != null) 'stress_level': stressLevel,
       if (tags != null) 'tags': tags,
       if (notes != null) 'notes': notes,
       if (loggedAt != null) 'logged_at': loggedAt,
-      if (syncStatus != null) 'sync_status': syncStatus,
-      if (idempotencyKey != null) 'idempotency_key': idempotencyKey,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
   MoodLogsCompanion copyWith({
-    Value<int>? id,
+    Value<String>? id,
     Value<String>? userId,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<String>? syncStatus,
+    Value<String>? idempotencyKey,
+    Value<String?>? fieldVersions,
     Value<int>? moodScore,
     Value<int?>? energyLevel,
     Value<int?>? stressLevel,
     Value<String?>? tags,
     Value<String?>? notes,
     Value<DateTime>? loggedAt,
-    Value<String>? syncStatus,
-    Value<String>? idempotencyKey,
+    Value<int>? rowid,
   }) {
     return MoodLogsCompanion(
       id: id ?? this.id,
       userId: userId ?? this.userId,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      syncStatus: syncStatus ?? this.syncStatus,
+      idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+      fieldVersions: fieldVersions ?? this.fieldVersions,
       moodScore: moodScore ?? this.moodScore,
       energyLevel: energyLevel ?? this.energyLevel,
       stressLevel: stressLevel ?? this.stressLevel,
       tags: tags ?? this.tags,
       notes: notes ?? this.notes,
       loggedAt: loggedAt ?? this.loggedAt,
-      syncStatus: syncStatus ?? this.syncStatus,
-      idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -4696,10 +5820,25 @@ class MoodLogsCompanion extends UpdateCompanion<MoodLog> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (id.present) {
-      map['id'] = Variable<int>(id.value);
+      map['id'] = Variable<String>(id.value);
     }
     if (userId.present) {
       map['user_id'] = Variable<String>(userId.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (syncStatus.present) {
+      map['sync_status'] = Variable<String>(syncStatus.value);
+    }
+    if (idempotencyKey.present) {
+      map['idempotency_key'] = Variable<String>(idempotencyKey.value);
+    }
+    if (fieldVersions.present) {
+      map['field_versions'] = Variable<String>(fieldVersions.value);
     }
     if (moodScore.present) {
       map['mood_score'] = Variable<int>(moodScore.value);
@@ -4719,11 +5858,8 @@ class MoodLogsCompanion extends UpdateCompanion<MoodLog> {
     if (loggedAt.present) {
       map['logged_at'] = Variable<DateTime>(loggedAt.value);
     }
-    if (syncStatus.present) {
-      map['sync_status'] = Variable<String>(syncStatus.value);
-    }
-    if (idempotencyKey.present) {
-      map['idempotency_key'] = Variable<String>(idempotencyKey.value);
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
     }
     return map;
   }
@@ -4733,14 +5869,18 @@ class MoodLogsCompanion extends UpdateCompanion<MoodLog> {
     return (StringBuffer('MoodLogsCompanion(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('fieldVersions: $fieldVersions, ')
           ..write('moodScore: $moodScore, ')
           ..write('energyLevel: $energyLevel, ')
           ..write('stressLevel: $stressLevel, ')
           ..write('tags: $tags, ')
           ..write('notes: $notes, ')
           ..write('loggedAt: $loggedAt, ')
-          ..write('syncStatus: $syncStatus, ')
-          ..write('idempotencyKey: $idempotencyKey')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -4754,16 +5894,12 @@ class $MedicationsTable extends Medications
   $MedicationsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
     'id',
     aliasedName,
     false,
-    hasAutoIncrement: true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
   );
   static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
   @override
@@ -4773,6 +5909,64 @@ class $MedicationsTable extends Medications
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _syncStatusMeta = const VerificationMeta(
+    'syncStatus',
+  );
+  @override
+  late final GeneratedColumn<String> syncStatus = GeneratedColumn<String>(
+    'sync_status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('pending'),
+  );
+  static const VerificationMeta _idempotencyKeyMeta = const VerificationMeta(
+    'idempotencyKey',
+  );
+  @override
+  late final GeneratedColumn<String> idempotencyKey = GeneratedColumn<String>(
+    'idempotency_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _fieldVersionsMeta = const VerificationMeta(
+    'fieldVersions',
+  );
+  @override
+  late final GeneratedColumn<String> fieldVersions = GeneratedColumn<String>(
+    'field_versions',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
   );
   static const VerificationMeta _nameMeta = const VerificationMeta('name');
   @override
@@ -4866,6 +6060,11 @@ class $MedicationsTable extends Medications
   List<GeneratedColumn> get $columns => [
     id,
     userId,
+    createdAt,
+    updatedAt,
+    syncStatus,
+    idempotencyKey,
+    fieldVersions,
     name,
     dose,
     frequency,
@@ -4889,6 +6088,8 @@ class $MedicationsTable extends Medications
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
     }
     if (data.containsKey('user_id')) {
       context.handle(
@@ -4897,6 +6098,44 @@ class $MedicationsTable extends Medications
       );
     } else if (isInserting) {
       context.missing(_userIdMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    if (data.containsKey('sync_status')) {
+      context.handle(
+        _syncStatusMeta,
+        syncStatus.isAcceptableOrUnknown(data['sync_status']!, _syncStatusMeta),
+      );
+    }
+    if (data.containsKey('idempotency_key')) {
+      context.handle(
+        _idempotencyKeyMeta,
+        idempotencyKey.isAcceptableOrUnknown(
+          data['idempotency_key']!,
+          _idempotencyKeyMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_idempotencyKeyMeta);
+    }
+    if (data.containsKey('field_versions')) {
+      context.handle(
+        _fieldVersionsMeta,
+        fieldVersions.isAcceptableOrUnknown(
+          data['field_versions']!,
+          _fieldVersionsMeta,
+        ),
+      );
     }
     if (data.containsKey('name')) {
       context.handle(
@@ -4970,13 +6209,33 @@ class $MedicationsTable extends Medications
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return Medication(
       id: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
+        DriftSqlType.string,
         data['${effectivePrefix}id'],
       )!,
       userId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}user_id'],
       )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      syncStatus: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sync_status'],
+      )!,
+      idempotencyKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}idempotency_key'],
+      )!,
+      fieldVersions: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}field_versions'],
+      ),
       name: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}name'],
@@ -5019,8 +6278,13 @@ class $MedicationsTable extends Medications
 }
 
 class Medication extends DataClass implements Insertable<Medication> {
-  final int id;
+  final String id;
   final String userId;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final String syncStatus;
+  final String idempotencyKey;
+  final String? fieldVersions;
   final String name;
   final String dose;
   final String frequency;
@@ -5032,6 +6296,11 @@ class Medication extends DataClass implements Insertable<Medication> {
   const Medication({
     required this.id,
     required this.userId,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.syncStatus,
+    required this.idempotencyKey,
+    this.fieldVersions,
     required this.name,
     required this.dose,
     required this.frequency,
@@ -5044,8 +6313,15 @@ class Medication extends DataClass implements Insertable<Medication> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
+    map['id'] = Variable<String>(id);
     map['user_id'] = Variable<String>(userId);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['sync_status'] = Variable<String>(syncStatus);
+    map['idempotency_key'] = Variable<String>(idempotencyKey);
+    if (!nullToAbsent || fieldVersions != null) {
+      map['field_versions'] = Variable<String>(fieldVersions);
+    }
     map['name'] = Variable<String>(name);
     map['dose'] = Variable<String>(dose);
     map['frequency'] = Variable<String>(frequency);
@@ -5067,6 +6343,13 @@ class Medication extends DataClass implements Insertable<Medication> {
     return MedicationsCompanion(
       id: Value(id),
       userId: Value(userId),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      syncStatus: Value(syncStatus),
+      idempotencyKey: Value(idempotencyKey),
+      fieldVersions: fieldVersions == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fieldVersions),
       name: Value(name),
       dose: Value(dose),
       frequency: Value(frequency),
@@ -5090,8 +6373,13 @@ class Medication extends DataClass implements Insertable<Medication> {
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return Medication(
-      id: serializer.fromJson<int>(json['id']),
+      id: serializer.fromJson<String>(json['id']),
       userId: serializer.fromJson<String>(json['userId']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      syncStatus: serializer.fromJson<String>(json['syncStatus']),
+      idempotencyKey: serializer.fromJson<String>(json['idempotencyKey']),
+      fieldVersions: serializer.fromJson<String?>(json['fieldVersions']),
       name: serializer.fromJson<String>(json['name']),
       dose: serializer.fromJson<String>(json['dose']),
       frequency: serializer.fromJson<String>(json['frequency']),
@@ -5106,8 +6394,13 @@ class Medication extends DataClass implements Insertable<Medication> {
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
+      'id': serializer.toJson<String>(id),
       'userId': serializer.toJson<String>(userId),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'syncStatus': serializer.toJson<String>(syncStatus),
+      'idempotencyKey': serializer.toJson<String>(idempotencyKey),
+      'fieldVersions': serializer.toJson<String?>(fieldVersions),
       'name': serializer.toJson<String>(name),
       'dose': serializer.toJson<String>(dose),
       'frequency': serializer.toJson<String>(frequency),
@@ -5120,8 +6413,13 @@ class Medication extends DataClass implements Insertable<Medication> {
   }
 
   Medication copyWith({
-    int? id,
+    String? id,
     String? userId,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    String? syncStatus,
+    String? idempotencyKey,
+    Value<String?> fieldVersions = const Value.absent(),
     String? name,
     String? dose,
     String? frequency,
@@ -5133,6 +6431,13 @@ class Medication extends DataClass implements Insertable<Medication> {
   }) => Medication(
     id: id ?? this.id,
     userId: userId ?? this.userId,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    syncStatus: syncStatus ?? this.syncStatus,
+    idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+    fieldVersions: fieldVersions.present
+        ? fieldVersions.value
+        : this.fieldVersions,
     name: name ?? this.name,
     dose: dose ?? this.dose,
     frequency: frequency ?? this.frequency,
@@ -5148,6 +6453,17 @@ class Medication extends DataClass implements Insertable<Medication> {
     return Medication(
       id: data.id.present ? data.id.value : this.id,
       userId: data.userId.present ? data.userId.value : this.userId,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      syncStatus: data.syncStatus.present
+          ? data.syncStatus.value
+          : this.syncStatus,
+      idempotencyKey: data.idempotencyKey.present
+          ? data.idempotencyKey.value
+          : this.idempotencyKey,
+      fieldVersions: data.fieldVersions.present
+          ? data.fieldVersions.value
+          : this.fieldVersions,
       name: data.name.present ? data.name.value : this.name,
       dose: data.dose.present ? data.dose.value : this.dose,
       frequency: data.frequency.present ? data.frequency.value : this.frequency,
@@ -5170,6 +6486,11 @@ class Medication extends DataClass implements Insertable<Medication> {
     return (StringBuffer('Medication(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('fieldVersions: $fieldVersions, ')
           ..write('name: $name, ')
           ..write('dose: $dose, ')
           ..write('frequency: $frequency, ')
@@ -5186,6 +6507,11 @@ class Medication extends DataClass implements Insertable<Medication> {
   int get hashCode => Object.hash(
     id,
     userId,
+    createdAt,
+    updatedAt,
+    syncStatus,
+    idempotencyKey,
+    fieldVersions,
     name,
     dose,
     frequency,
@@ -5201,6 +6527,11 @@ class Medication extends DataClass implements Insertable<Medication> {
       (other is Medication &&
           other.id == this.id &&
           other.userId == this.userId &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.syncStatus == this.syncStatus &&
+          other.idempotencyKey == this.idempotencyKey &&
+          other.fieldVersions == this.fieldVersions &&
           other.name == this.name &&
           other.dose == this.dose &&
           other.frequency == this.frequency &&
@@ -5212,8 +6543,13 @@ class Medication extends DataClass implements Insertable<Medication> {
 }
 
 class MedicationsCompanion extends UpdateCompanion<Medication> {
-  final Value<int> id;
+  final Value<String> id;
   final Value<String> userId;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<String> syncStatus;
+  final Value<String> idempotencyKey;
+  final Value<String?> fieldVersions;
   final Value<String> name;
   final Value<String> dose;
   final Value<String> frequency;
@@ -5222,9 +6558,15 @@ class MedicationsCompanion extends UpdateCompanion<Medication> {
   final Value<DateTime?> refillDate;
   final Value<String?> pharmacyLink;
   final Value<bool> isActive;
+  final Value<int> rowid;
   const MedicationsCompanion({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    this.idempotencyKey = const Value.absent(),
+    this.fieldVersions = const Value.absent(),
     this.name = const Value.absent(),
     this.dose = const Value.absent(),
     this.frequency = const Value.absent(),
@@ -5233,10 +6575,16 @@ class MedicationsCompanion extends UpdateCompanion<Medication> {
     this.refillDate = const Value.absent(),
     this.pharmacyLink = const Value.absent(),
     this.isActive = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   MedicationsCompanion.insert({
-    this.id = const Value.absent(),
+    required String id,
     required String userId,
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    required String idempotencyKey,
+    this.fieldVersions = const Value.absent(),
     required String name,
     required String dose,
     required String frequency,
@@ -5245,14 +6593,22 @@ class MedicationsCompanion extends UpdateCompanion<Medication> {
     this.refillDate = const Value.absent(),
     this.pharmacyLink = const Value.absent(),
     this.isActive = const Value.absent(),
-  }) : userId = Value(userId),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       userId = Value(userId),
+       idempotencyKey = Value(idempotencyKey),
        name = Value(name),
        dose = Value(dose),
        frequency = Value(frequency),
        category = Value(category);
   static Insertable<Medication> custom({
-    Expression<int>? id,
+    Expression<String>? id,
     Expression<String>? userId,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<String>? syncStatus,
+    Expression<String>? idempotencyKey,
+    Expression<String>? fieldVersions,
     Expression<String>? name,
     Expression<String>? dose,
     Expression<String>? frequency,
@@ -5261,10 +6617,16 @@ class MedicationsCompanion extends UpdateCompanion<Medication> {
     Expression<DateTime>? refillDate,
     Expression<String>? pharmacyLink,
     Expression<bool>? isActive,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (userId != null) 'user_id': userId,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (syncStatus != null) 'sync_status': syncStatus,
+      if (idempotencyKey != null) 'idempotency_key': idempotencyKey,
+      if (fieldVersions != null) 'field_versions': fieldVersions,
       if (name != null) 'name': name,
       if (dose != null) 'dose': dose,
       if (frequency != null) 'frequency': frequency,
@@ -5273,12 +6635,18 @@ class MedicationsCompanion extends UpdateCompanion<Medication> {
       if (refillDate != null) 'refill_date': refillDate,
       if (pharmacyLink != null) 'pharmacy_link': pharmacyLink,
       if (isActive != null) 'is_active': isActive,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
   MedicationsCompanion copyWith({
-    Value<int>? id,
+    Value<String>? id,
     Value<String>? userId,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<String>? syncStatus,
+    Value<String>? idempotencyKey,
+    Value<String?>? fieldVersions,
     Value<String>? name,
     Value<String>? dose,
     Value<String>? frequency,
@@ -5287,10 +6655,16 @@ class MedicationsCompanion extends UpdateCompanion<Medication> {
     Value<DateTime?>? refillDate,
     Value<String?>? pharmacyLink,
     Value<bool>? isActive,
+    Value<int>? rowid,
   }) {
     return MedicationsCompanion(
       id: id ?? this.id,
       userId: userId ?? this.userId,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      syncStatus: syncStatus ?? this.syncStatus,
+      idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+      fieldVersions: fieldVersions ?? this.fieldVersions,
       name: name ?? this.name,
       dose: dose ?? this.dose,
       frequency: frequency ?? this.frequency,
@@ -5299,6 +6673,7 @@ class MedicationsCompanion extends UpdateCompanion<Medication> {
       refillDate: refillDate ?? this.refillDate,
       pharmacyLink: pharmacyLink ?? this.pharmacyLink,
       isActive: isActive ?? this.isActive,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -5306,10 +6681,25 @@ class MedicationsCompanion extends UpdateCompanion<Medication> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (id.present) {
-      map['id'] = Variable<int>(id.value);
+      map['id'] = Variable<String>(id.value);
     }
     if (userId.present) {
       map['user_id'] = Variable<String>(userId.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (syncStatus.present) {
+      map['sync_status'] = Variable<String>(syncStatus.value);
+    }
+    if (idempotencyKey.present) {
+      map['idempotency_key'] = Variable<String>(idempotencyKey.value);
+    }
+    if (fieldVersions.present) {
+      map['field_versions'] = Variable<String>(fieldVersions.value);
     }
     if (name.present) {
       map['name'] = Variable<String>(name.value);
@@ -5335,6 +6725,9 @@ class MedicationsCompanion extends UpdateCompanion<Medication> {
     if (isActive.present) {
       map['is_active'] = Variable<bool>(isActive.value);
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
@@ -5343,6 +6736,11 @@ class MedicationsCompanion extends UpdateCompanion<Medication> {
     return (StringBuffer('MedicationsCompanion(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('fieldVersions: $fieldVersions, ')
           ..write('name: $name, ')
           ..write('dose: $dose, ')
           ..write('frequency: $frequency, ')
@@ -5350,7 +6748,8 @@ class MedicationsCompanion extends UpdateCompanion<Medication> {
           ..write('reminderTimes: $reminderTimes, ')
           ..write('refillDate: $refillDate, ')
           ..write('pharmacyLink: $pharmacyLink, ')
-          ..write('isActive: $isActive')
+          ..write('isActive: $isActive, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -5363,16 +6762,12 @@ class $HabitsTable extends Habits with TableInfo<$HabitsTable, Habit> {
   $HabitsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
     'id',
     aliasedName,
     false,
-    hasAutoIncrement: true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
   );
   static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
   @override
@@ -5382,6 +6777,64 @@ class $HabitsTable extends Habits with TableInfo<$HabitsTable, Habit> {
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _syncStatusMeta = const VerificationMeta(
+    'syncStatus',
+  );
+  @override
+  late final GeneratedColumn<String> syncStatus = GeneratedColumn<String>(
+    'sync_status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('pending'),
+  );
+  static const VerificationMeta _idempotencyKeyMeta = const VerificationMeta(
+    'idempotencyKey',
+  );
+  @override
+  late final GeneratedColumn<String> idempotencyKey = GeneratedColumn<String>(
+    'idempotency_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _fieldVersionsMeta = const VerificationMeta(
+    'fieldVersions',
+  );
+  @override
+  late final GeneratedColumn<String> fieldVersions = GeneratedColumn<String>(
+    'field_versions',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
   );
   static const VerificationMeta _nameMeta = const VerificationMeta('name');
   @override
@@ -5500,6 +6953,11 @@ class $HabitsTable extends Habits with TableInfo<$HabitsTable, Habit> {
   List<GeneratedColumn> get $columns => [
     id,
     userId,
+    createdAt,
+    updatedAt,
+    syncStatus,
+    idempotencyKey,
+    fieldVersions,
     name,
     icon,
     targetCount,
@@ -5525,6 +6983,8 @@ class $HabitsTable extends Habits with TableInfo<$HabitsTable, Habit> {
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
     }
     if (data.containsKey('user_id')) {
       context.handle(
@@ -5533,6 +6993,44 @@ class $HabitsTable extends Habits with TableInfo<$HabitsTable, Habit> {
       );
     } else if (isInserting) {
       context.missing(_userIdMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    if (data.containsKey('sync_status')) {
+      context.handle(
+        _syncStatusMeta,
+        syncStatus.isAcceptableOrUnknown(data['sync_status']!, _syncStatusMeta),
+      );
+    }
+    if (data.containsKey('idempotency_key')) {
+      context.handle(
+        _idempotencyKeyMeta,
+        idempotencyKey.isAcceptableOrUnknown(
+          data['idempotency_key']!,
+          _idempotencyKeyMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_idempotencyKeyMeta);
+    }
+    if (data.containsKey('field_versions')) {
+      context.handle(
+        _fieldVersionsMeta,
+        fieldVersions.isAcceptableOrUnknown(
+          data['field_versions']!,
+          _fieldVersionsMeta,
+        ),
+      );
     }
     if (data.containsKey('name')) {
       context.handle(
@@ -5629,13 +7127,33 @@ class $HabitsTable extends Habits with TableInfo<$HabitsTable, Habit> {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return Habit(
       id: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
+        DriftSqlType.string,
         data['${effectivePrefix}id'],
       )!,
       userId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}user_id'],
       )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      syncStatus: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sync_status'],
+      )!,
+      idempotencyKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}idempotency_key'],
+      )!,
+      fieldVersions: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}field_versions'],
+      ),
       name: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}name'],
@@ -5686,8 +7204,13 @@ class $HabitsTable extends Habits with TableInfo<$HabitsTable, Habit> {
 }
 
 class Habit extends DataClass implements Insertable<Habit> {
-  final int id;
+  final String id;
   final String userId;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final String syncStatus;
+  final String idempotencyKey;
+  final String? fieldVersions;
   final String name;
   final String icon;
   final int targetCount;
@@ -5701,6 +7224,11 @@ class Habit extends DataClass implements Insertable<Habit> {
   const Habit({
     required this.id,
     required this.userId,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.syncStatus,
+    required this.idempotencyKey,
+    this.fieldVersions,
     required this.name,
     required this.icon,
     required this.targetCount,
@@ -5715,8 +7243,15 @@ class Habit extends DataClass implements Insertable<Habit> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
+    map['id'] = Variable<String>(id);
     map['user_id'] = Variable<String>(userId);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['sync_status'] = Variable<String>(syncStatus);
+    map['idempotency_key'] = Variable<String>(idempotencyKey);
+    if (!nullToAbsent || fieldVersions != null) {
+      map['field_versions'] = Variable<String>(fieldVersions);
+    }
     map['name'] = Variable<String>(name);
     map['icon'] = Variable<String>(icon);
     map['target_count'] = Variable<int>(targetCount);
@@ -5736,6 +7271,13 @@ class Habit extends DataClass implements Insertable<Habit> {
     return HabitsCompanion(
       id: Value(id),
       userId: Value(userId),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      syncStatus: Value(syncStatus),
+      idempotencyKey: Value(idempotencyKey),
+      fieldVersions: fieldVersions == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fieldVersions),
       name: Value(name),
       icon: Value(icon),
       targetCount: Value(targetCount),
@@ -5757,8 +7299,13 @@ class Habit extends DataClass implements Insertable<Habit> {
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return Habit(
-      id: serializer.fromJson<int>(json['id']),
+      id: serializer.fromJson<String>(json['id']),
       userId: serializer.fromJson<String>(json['userId']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      syncStatus: serializer.fromJson<String>(json['syncStatus']),
+      idempotencyKey: serializer.fromJson<String>(json['idempotencyKey']),
+      fieldVersions: serializer.fromJson<String?>(json['fieldVersions']),
       name: serializer.fromJson<String>(json['name']),
       icon: serializer.fromJson<String>(json['icon']),
       targetCount: serializer.fromJson<int>(json['targetCount']),
@@ -5775,8 +7322,13 @@ class Habit extends DataClass implements Insertable<Habit> {
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
+      'id': serializer.toJson<String>(id),
       'userId': serializer.toJson<String>(userId),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'syncStatus': serializer.toJson<String>(syncStatus),
+      'idempotencyKey': serializer.toJson<String>(idempotencyKey),
+      'fieldVersions': serializer.toJson<String?>(fieldVersions),
       'name': serializer.toJson<String>(name),
       'icon': serializer.toJson<String>(icon),
       'targetCount': serializer.toJson<int>(targetCount),
@@ -5791,8 +7343,13 @@ class Habit extends DataClass implements Insertable<Habit> {
   }
 
   Habit copyWith({
-    int? id,
+    String? id,
     String? userId,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    String? syncStatus,
+    String? idempotencyKey,
+    Value<String?> fieldVersions = const Value.absent(),
     String? name,
     String? icon,
     int? targetCount,
@@ -5806,6 +7363,13 @@ class Habit extends DataClass implements Insertable<Habit> {
   }) => Habit(
     id: id ?? this.id,
     userId: userId ?? this.userId,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    syncStatus: syncStatus ?? this.syncStatus,
+    idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+    fieldVersions: fieldVersions.present
+        ? fieldVersions.value
+        : this.fieldVersions,
     name: name ?? this.name,
     icon: icon ?? this.icon,
     targetCount: targetCount ?? this.targetCount,
@@ -5821,6 +7385,17 @@ class Habit extends DataClass implements Insertable<Habit> {
     return Habit(
       id: data.id.present ? data.id.value : this.id,
       userId: data.userId.present ? data.userId.value : this.userId,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      syncStatus: data.syncStatus.present
+          ? data.syncStatus.value
+          : this.syncStatus,
+      idempotencyKey: data.idempotencyKey.present
+          ? data.idempotencyKey.value
+          : this.idempotencyKey,
+      fieldVersions: data.fieldVersions.present
+          ? data.fieldVersions.value
+          : this.fieldVersions,
       name: data.name.present ? data.name.value : this.name,
       icon: data.icon.present ? data.icon.value : this.icon,
       targetCount: data.targetCount.present
@@ -5849,6 +7424,11 @@ class Habit extends DataClass implements Insertable<Habit> {
     return (StringBuffer('Habit(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('fieldVersions: $fieldVersions, ')
           ..write('name: $name, ')
           ..write('icon: $icon, ')
           ..write('targetCount: $targetCount, ')
@@ -5867,6 +7447,11 @@ class Habit extends DataClass implements Insertable<Habit> {
   int get hashCode => Object.hash(
     id,
     userId,
+    createdAt,
+    updatedAt,
+    syncStatus,
+    idempotencyKey,
+    fieldVersions,
     name,
     icon,
     targetCount,
@@ -5884,6 +7469,11 @@ class Habit extends DataClass implements Insertable<Habit> {
       (other is Habit &&
           other.id == this.id &&
           other.userId == this.userId &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.syncStatus == this.syncStatus &&
+          other.idempotencyKey == this.idempotencyKey &&
+          other.fieldVersions == this.fieldVersions &&
           other.name == this.name &&
           other.icon == this.icon &&
           other.targetCount == this.targetCount &&
@@ -5897,8 +7487,13 @@ class Habit extends DataClass implements Insertable<Habit> {
 }
 
 class HabitsCompanion extends UpdateCompanion<Habit> {
-  final Value<int> id;
+  final Value<String> id;
   final Value<String> userId;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<String> syncStatus;
+  final Value<String> idempotencyKey;
+  final Value<String?> fieldVersions;
   final Value<String> name;
   final Value<String> icon;
   final Value<int> targetCount;
@@ -5909,9 +7504,15 @@ class HabitsCompanion extends UpdateCompanion<Habit> {
   final Value<bool> streakRecoveryUsed;
   final Value<String?> reminderTime;
   final Value<bool> isPreset;
+  final Value<int> rowid;
   const HabitsCompanion({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    this.idempotencyKey = const Value.absent(),
+    this.fieldVersions = const Value.absent(),
     this.name = const Value.absent(),
     this.icon = const Value.absent(),
     this.targetCount = const Value.absent(),
@@ -5922,10 +7523,16 @@ class HabitsCompanion extends UpdateCompanion<Habit> {
     this.streakRecoveryUsed = const Value.absent(),
     this.reminderTime = const Value.absent(),
     this.isPreset = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   HabitsCompanion.insert({
-    this.id = const Value.absent(),
+    required String id,
     required String userId,
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    required String idempotencyKey,
+    this.fieldVersions = const Value.absent(),
     required String name,
     required String icon,
     required int targetCount,
@@ -5936,15 +7543,23 @@ class HabitsCompanion extends UpdateCompanion<Habit> {
     this.streakRecoveryUsed = const Value.absent(),
     this.reminderTime = const Value.absent(),
     this.isPreset = const Value.absent(),
-  }) : userId = Value(userId),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       userId = Value(userId),
+       idempotencyKey = Value(idempotencyKey),
        name = Value(name),
        icon = Value(icon),
        targetCount = Value(targetCount),
        unit = Value(unit),
        frequency = Value(frequency);
   static Insertable<Habit> custom({
-    Expression<int>? id,
+    Expression<String>? id,
     Expression<String>? userId,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<String>? syncStatus,
+    Expression<String>? idempotencyKey,
+    Expression<String>? fieldVersions,
     Expression<String>? name,
     Expression<String>? icon,
     Expression<int>? targetCount,
@@ -5955,10 +7570,16 @@ class HabitsCompanion extends UpdateCompanion<Habit> {
     Expression<bool>? streakRecoveryUsed,
     Expression<String>? reminderTime,
     Expression<bool>? isPreset,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (userId != null) 'user_id': userId,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (syncStatus != null) 'sync_status': syncStatus,
+      if (idempotencyKey != null) 'idempotency_key': idempotencyKey,
+      if (fieldVersions != null) 'field_versions': fieldVersions,
       if (name != null) 'name': name,
       if (icon != null) 'icon': icon,
       if (targetCount != null) 'target_count': targetCount,
@@ -5970,12 +7591,18 @@ class HabitsCompanion extends UpdateCompanion<Habit> {
         'streak_recovery_used': streakRecoveryUsed,
       if (reminderTime != null) 'reminder_time': reminderTime,
       if (isPreset != null) 'is_preset': isPreset,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
   HabitsCompanion copyWith({
-    Value<int>? id,
+    Value<String>? id,
     Value<String>? userId,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<String>? syncStatus,
+    Value<String>? idempotencyKey,
+    Value<String?>? fieldVersions,
     Value<String>? name,
     Value<String>? icon,
     Value<int>? targetCount,
@@ -5986,10 +7613,16 @@ class HabitsCompanion extends UpdateCompanion<Habit> {
     Value<bool>? streakRecoveryUsed,
     Value<String?>? reminderTime,
     Value<bool>? isPreset,
+    Value<int>? rowid,
   }) {
     return HabitsCompanion(
       id: id ?? this.id,
       userId: userId ?? this.userId,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      syncStatus: syncStatus ?? this.syncStatus,
+      idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+      fieldVersions: fieldVersions ?? this.fieldVersions,
       name: name ?? this.name,
       icon: icon ?? this.icon,
       targetCount: targetCount ?? this.targetCount,
@@ -6000,6 +7633,7 @@ class HabitsCompanion extends UpdateCompanion<Habit> {
       streakRecoveryUsed: streakRecoveryUsed ?? this.streakRecoveryUsed,
       reminderTime: reminderTime ?? this.reminderTime,
       isPreset: isPreset ?? this.isPreset,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -6007,10 +7641,25 @@ class HabitsCompanion extends UpdateCompanion<Habit> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (id.present) {
-      map['id'] = Variable<int>(id.value);
+      map['id'] = Variable<String>(id.value);
     }
     if (userId.present) {
       map['user_id'] = Variable<String>(userId.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (syncStatus.present) {
+      map['sync_status'] = Variable<String>(syncStatus.value);
+    }
+    if (idempotencyKey.present) {
+      map['idempotency_key'] = Variable<String>(idempotencyKey.value);
+    }
+    if (fieldVersions.present) {
+      map['field_versions'] = Variable<String>(fieldVersions.value);
     }
     if (name.present) {
       map['name'] = Variable<String>(name.value);
@@ -6042,6 +7691,9 @@ class HabitsCompanion extends UpdateCompanion<Habit> {
     if (isPreset.present) {
       map['is_preset'] = Variable<bool>(isPreset.value);
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
@@ -6050,6 +7702,11 @@ class HabitsCompanion extends UpdateCompanion<Habit> {
     return (StringBuffer('HabitsCompanion(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('fieldVersions: $fieldVersions, ')
           ..write('name: $name, ')
           ..write('icon: $icon, ')
           ..write('targetCount: $targetCount, ')
@@ -6059,7 +7716,8 @@ class HabitsCompanion extends UpdateCompanion<Habit> {
           ..write('longestStreak: $longestStreak, ')
           ..write('streakRecoveryUsed: $streakRecoveryUsed, ')
           ..write('reminderTime: $reminderTime, ')
-          ..write('isPreset: $isPreset')
+          ..write('isPreset: $isPreset, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -6073,16 +7731,79 @@ class $HabitCompletionsTable extends HabitCompletions
   $HabitCompletionsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
     'id',
     aliasedName,
     false,
-    hasAutoIncrement: true,
-    type: DriftSqlType.int,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
+    'user_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
     requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _syncStatusMeta = const VerificationMeta(
+    'syncStatus',
+  );
+  @override
+  late final GeneratedColumn<String> syncStatus = GeneratedColumn<String>(
+    'sync_status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('pending'),
+  );
+  static const VerificationMeta _idempotencyKeyMeta = const VerificationMeta(
+    'idempotencyKey',
+  );
+  @override
+  late final GeneratedColumn<String> idempotencyKey = GeneratedColumn<String>(
+    'idempotency_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _fieldVersionsMeta = const VerificationMeta(
+    'fieldVersions',
+  );
+  @override
+  late final GeneratedColumn<String> fieldVersions = GeneratedColumn<String>(
+    'field_versions',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
   );
   static const VerificationMeta _habitIdMeta = const VerificationMeta(
     'habitId',
@@ -6113,20 +7834,19 @@ class $HabitCompletionsTable extends HabitCompletions
     type: DriftSqlType.int,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _syncStatusMeta = const VerificationMeta(
-    'syncStatus',
-  );
   @override
-  late final GeneratedColumn<String> syncStatus = GeneratedColumn<String>(
-    'sync_status',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-    defaultValue: const Constant('pending'),
-  );
-  @override
-  List<GeneratedColumn> get $columns => [id, habitId, date, count, syncStatus];
+  List<GeneratedColumn> get $columns => [
+    id,
+    userId,
+    createdAt,
+    updatedAt,
+    syncStatus,
+    idempotencyKey,
+    fieldVersions,
+    habitId,
+    date,
+    count,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -6141,6 +7861,54 @@ class $HabitCompletionsTable extends HabitCompletions
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_userIdMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    if (data.containsKey('sync_status')) {
+      context.handle(
+        _syncStatusMeta,
+        syncStatus.isAcceptableOrUnknown(data['sync_status']!, _syncStatusMeta),
+      );
+    }
+    if (data.containsKey('idempotency_key')) {
+      context.handle(
+        _idempotencyKeyMeta,
+        idempotencyKey.isAcceptableOrUnknown(
+          data['idempotency_key']!,
+          _idempotencyKeyMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_idempotencyKeyMeta);
+    }
+    if (data.containsKey('field_versions')) {
+      context.handle(
+        _fieldVersionsMeta,
+        fieldVersions.isAcceptableOrUnknown(
+          data['field_versions']!,
+          _fieldVersionsMeta,
+        ),
+      );
     }
     if (data.containsKey('habit_id')) {
       context.handle(
@@ -6166,12 +7934,6 @@ class $HabitCompletionsTable extends HabitCompletions
     } else if (isInserting) {
       context.missing(_countMeta);
     }
-    if (data.containsKey('sync_status')) {
-      context.handle(
-        _syncStatusMeta,
-        syncStatus.isAcceptableOrUnknown(data['sync_status']!, _syncStatusMeta),
-      );
-    }
     return context;
   }
 
@@ -6182,9 +7944,33 @@ class $HabitCompletionsTable extends HabitCompletions
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return HabitCompletion(
       id: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
+        DriftSqlType.string,
         data['${effectivePrefix}id'],
       )!,
+      userId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_id'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      syncStatus: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sync_status'],
+      )!,
+      idempotencyKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}idempotency_key'],
+      )!,
+      fieldVersions: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}field_versions'],
+      ),
       habitId: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}habit_id'],
@@ -6197,10 +7983,6 @@ class $HabitCompletionsTable extends HabitCompletions
         DriftSqlType.int,
         data['${effectivePrefix}count'],
       )!,
-      syncStatus: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}sync_status'],
-      )!,
     );
   }
 
@@ -6211,36 +7993,60 @@ class $HabitCompletionsTable extends HabitCompletions
 }
 
 class HabitCompletion extends DataClass implements Insertable<HabitCompletion> {
-  final int id;
+  final String id;
+  final String userId;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final String syncStatus;
+  final String idempotencyKey;
+  final String? fieldVersions;
   final int habitId;
   final DateTime date;
   final int count;
-  final String syncStatus;
   const HabitCompletion({
     required this.id,
+    required this.userId,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.syncStatus,
+    required this.idempotencyKey,
+    this.fieldVersions,
     required this.habitId,
     required this.date,
     required this.count,
-    required this.syncStatus,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
+    map['id'] = Variable<String>(id);
+    map['user_id'] = Variable<String>(userId);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['sync_status'] = Variable<String>(syncStatus);
+    map['idempotency_key'] = Variable<String>(idempotencyKey);
+    if (!nullToAbsent || fieldVersions != null) {
+      map['field_versions'] = Variable<String>(fieldVersions);
+    }
     map['habit_id'] = Variable<int>(habitId);
     map['date'] = Variable<DateTime>(date);
     map['count'] = Variable<int>(count);
-    map['sync_status'] = Variable<String>(syncStatus);
     return map;
   }
 
   HabitCompletionsCompanion toCompanion(bool nullToAbsent) {
     return HabitCompletionsCompanion(
       id: Value(id),
+      userId: Value(userId),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      syncStatus: Value(syncStatus),
+      idempotencyKey: Value(idempotencyKey),
+      fieldVersions: fieldVersions == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fieldVersions),
       habitId: Value(habitId),
       date: Value(date),
       count: Value(count),
-      syncStatus: Value(syncStatus),
     );
   }
 
@@ -6250,47 +8056,78 @@ class HabitCompletion extends DataClass implements Insertable<HabitCompletion> {
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return HabitCompletion(
-      id: serializer.fromJson<int>(json['id']),
+      id: serializer.fromJson<String>(json['id']),
+      userId: serializer.fromJson<String>(json['userId']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      syncStatus: serializer.fromJson<String>(json['syncStatus']),
+      idempotencyKey: serializer.fromJson<String>(json['idempotencyKey']),
+      fieldVersions: serializer.fromJson<String?>(json['fieldVersions']),
       habitId: serializer.fromJson<int>(json['habitId']),
       date: serializer.fromJson<DateTime>(json['date']),
       count: serializer.fromJson<int>(json['count']),
-      syncStatus: serializer.fromJson<String>(json['syncStatus']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
+      'id': serializer.toJson<String>(id),
+      'userId': serializer.toJson<String>(userId),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'syncStatus': serializer.toJson<String>(syncStatus),
+      'idempotencyKey': serializer.toJson<String>(idempotencyKey),
+      'fieldVersions': serializer.toJson<String?>(fieldVersions),
       'habitId': serializer.toJson<int>(habitId),
       'date': serializer.toJson<DateTime>(date),
       'count': serializer.toJson<int>(count),
-      'syncStatus': serializer.toJson<String>(syncStatus),
     };
   }
 
   HabitCompletion copyWith({
-    int? id,
+    String? id,
+    String? userId,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    String? syncStatus,
+    String? idempotencyKey,
+    Value<String?> fieldVersions = const Value.absent(),
     int? habitId,
     DateTime? date,
     int? count,
-    String? syncStatus,
   }) => HabitCompletion(
     id: id ?? this.id,
+    userId: userId ?? this.userId,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    syncStatus: syncStatus ?? this.syncStatus,
+    idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+    fieldVersions: fieldVersions.present
+        ? fieldVersions.value
+        : this.fieldVersions,
     habitId: habitId ?? this.habitId,
     date: date ?? this.date,
     count: count ?? this.count,
-    syncStatus: syncStatus ?? this.syncStatus,
   );
   HabitCompletion copyWithCompanion(HabitCompletionsCompanion data) {
     return HabitCompletion(
       id: data.id.present ? data.id.value : this.id,
-      habitId: data.habitId.present ? data.habitId.value : this.habitId,
-      date: data.date.present ? data.date.value : this.date,
-      count: data.count.present ? data.count.value : this.count,
+      userId: data.userId.present ? data.userId.value : this.userId,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
       syncStatus: data.syncStatus.present
           ? data.syncStatus.value
           : this.syncStatus,
+      idempotencyKey: data.idempotencyKey.present
+          ? data.idempotencyKey.value
+          : this.idempotencyKey,
+      fieldVersions: data.fieldVersions.present
+          ? data.fieldVersions.value
+          : this.fieldVersions,
+      habitId: data.habitId.present ? data.habitId.value : this.habitId,
+      date: data.date.present ? data.date.value : this.date,
+      count: data.count.present ? data.count.value : this.count,
     );
   }
 
@@ -6298,78 +8135,144 @@ class HabitCompletion extends DataClass implements Insertable<HabitCompletion> {
   String toString() {
     return (StringBuffer('HabitCompletion(')
           ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('fieldVersions: $fieldVersions, ')
           ..write('habitId: $habitId, ')
           ..write('date: $date, ')
-          ..write('count: $count, ')
-          ..write('syncStatus: $syncStatus')
+          ..write('count: $count')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, habitId, date, count, syncStatus);
+  int get hashCode => Object.hash(
+    id,
+    userId,
+    createdAt,
+    updatedAt,
+    syncStatus,
+    idempotencyKey,
+    fieldVersions,
+    habitId,
+    date,
+    count,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is HabitCompletion &&
           other.id == this.id &&
+          other.userId == this.userId &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.syncStatus == this.syncStatus &&
+          other.idempotencyKey == this.idempotencyKey &&
+          other.fieldVersions == this.fieldVersions &&
           other.habitId == this.habitId &&
           other.date == this.date &&
-          other.count == this.count &&
-          other.syncStatus == this.syncStatus);
+          other.count == this.count);
 }
 
 class HabitCompletionsCompanion extends UpdateCompanion<HabitCompletion> {
-  final Value<int> id;
+  final Value<String> id;
+  final Value<String> userId;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<String> syncStatus;
+  final Value<String> idempotencyKey;
+  final Value<String?> fieldVersions;
   final Value<int> habitId;
   final Value<DateTime> date;
   final Value<int> count;
-  final Value<String> syncStatus;
+  final Value<int> rowid;
   const HabitCompletionsCompanion({
     this.id = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    this.idempotencyKey = const Value.absent(),
+    this.fieldVersions = const Value.absent(),
     this.habitId = const Value.absent(),
     this.date = const Value.absent(),
     this.count = const Value.absent(),
-    this.syncStatus = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   HabitCompletionsCompanion.insert({
-    this.id = const Value.absent(),
+    required String id,
+    required String userId,
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    required String idempotencyKey,
+    this.fieldVersions = const Value.absent(),
     required int habitId,
     required DateTime date,
     required int count,
-    this.syncStatus = const Value.absent(),
-  }) : habitId = Value(habitId),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       userId = Value(userId),
+       idempotencyKey = Value(idempotencyKey),
+       habitId = Value(habitId),
        date = Value(date),
        count = Value(count);
   static Insertable<HabitCompletion> custom({
-    Expression<int>? id,
+    Expression<String>? id,
+    Expression<String>? userId,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<String>? syncStatus,
+    Expression<String>? idempotencyKey,
+    Expression<String>? fieldVersions,
     Expression<int>? habitId,
     Expression<DateTime>? date,
     Expression<int>? count,
-    Expression<String>? syncStatus,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
+      if (userId != null) 'user_id': userId,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (syncStatus != null) 'sync_status': syncStatus,
+      if (idempotencyKey != null) 'idempotency_key': idempotencyKey,
+      if (fieldVersions != null) 'field_versions': fieldVersions,
       if (habitId != null) 'habit_id': habitId,
       if (date != null) 'date': date,
       if (count != null) 'count': count,
-      if (syncStatus != null) 'sync_status': syncStatus,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
   HabitCompletionsCompanion copyWith({
-    Value<int>? id,
+    Value<String>? id,
+    Value<String>? userId,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<String>? syncStatus,
+    Value<String>? idempotencyKey,
+    Value<String?>? fieldVersions,
     Value<int>? habitId,
     Value<DateTime>? date,
     Value<int>? count,
-    Value<String>? syncStatus,
+    Value<int>? rowid,
   }) {
     return HabitCompletionsCompanion(
       id: id ?? this.id,
+      userId: userId ?? this.userId,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      syncStatus: syncStatus ?? this.syncStatus,
+      idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+      fieldVersions: fieldVersions ?? this.fieldVersions,
       habitId: habitId ?? this.habitId,
       date: date ?? this.date,
       count: count ?? this.count,
-      syncStatus: syncStatus ?? this.syncStatus,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -6377,7 +8280,25 @@ class HabitCompletionsCompanion extends UpdateCompanion<HabitCompletion> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (id.present) {
-      map['id'] = Variable<int>(id.value);
+      map['id'] = Variable<String>(id.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<String>(userId.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (syncStatus.present) {
+      map['sync_status'] = Variable<String>(syncStatus.value);
+    }
+    if (idempotencyKey.present) {
+      map['idempotency_key'] = Variable<String>(idempotencyKey.value);
+    }
+    if (fieldVersions.present) {
+      map['field_versions'] = Variable<String>(fieldVersions.value);
     }
     if (habitId.present) {
       map['habit_id'] = Variable<int>(habitId.value);
@@ -6388,8 +8309,8 @@ class HabitCompletionsCompanion extends UpdateCompanion<HabitCompletion> {
     if (count.present) {
       map['count'] = Variable<int>(count.value);
     }
-    if (syncStatus.present) {
-      map['sync_status'] = Variable<String>(syncStatus.value);
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
     }
     return map;
   }
@@ -6398,10 +8319,16 @@ class HabitCompletionsCompanion extends UpdateCompanion<HabitCompletion> {
   String toString() {
     return (StringBuffer('HabitCompletionsCompanion(')
           ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('fieldVersions: $fieldVersions, ')
           ..write('habitId: $habitId, ')
           ..write('date: $date, ')
           ..write('count: $count, ')
-          ..write('syncStatus: $syncStatus')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -6415,16 +8342,12 @@ class $BodyMeasurementsTable extends BodyMeasurements
   $BodyMeasurementsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
     'id',
     aliasedName,
     false,
-    hasAutoIncrement: true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
   );
   static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
   @override
@@ -6434,6 +8357,64 @@ class $BodyMeasurementsTable extends BodyMeasurements
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _syncStatusMeta = const VerificationMeta(
+    'syncStatus',
+  );
+  @override
+  late final GeneratedColumn<String> syncStatus = GeneratedColumn<String>(
+    'sync_status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('pending'),
+  );
+  static const VerificationMeta _idempotencyKeyMeta = const VerificationMeta(
+    'idempotencyKey',
+  );
+  @override
+  late final GeneratedColumn<String> idempotencyKey = GeneratedColumn<String>(
+    'idempotency_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _fieldVersionsMeta = const VerificationMeta(
+    'fieldVersions',
+  );
+  @override
+  late final GeneratedColumn<String> fieldVersions = GeneratedColumn<String>(
+    'field_versions',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
   );
   static const VerificationMeta _weightKgMeta = const VerificationMeta(
     'weightKg',
@@ -6543,6 +8524,11 @@ class $BodyMeasurementsTable extends BodyMeasurements
   List<GeneratedColumn> get $columns => [
     id,
     userId,
+    createdAt,
+    updatedAt,
+    syncStatus,
+    idempotencyKey,
+    fieldVersions,
     weightKg,
     heightCm,
     chestCm,
@@ -6568,6 +8554,8 @@ class $BodyMeasurementsTable extends BodyMeasurements
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
     }
     if (data.containsKey('user_id')) {
       context.handle(
@@ -6576,6 +8564,44 @@ class $BodyMeasurementsTable extends BodyMeasurements
       );
     } else if (isInserting) {
       context.missing(_userIdMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    if (data.containsKey('sync_status')) {
+      context.handle(
+        _syncStatusMeta,
+        syncStatus.isAcceptableOrUnknown(data['sync_status']!, _syncStatusMeta),
+      );
+    }
+    if (data.containsKey('idempotency_key')) {
+      context.handle(
+        _idempotencyKeyMeta,
+        idempotencyKey.isAcceptableOrUnknown(
+          data['idempotency_key']!,
+          _idempotencyKeyMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_idempotencyKeyMeta);
+    }
+    if (data.containsKey('field_versions')) {
+      context.handle(
+        _fieldVersionsMeta,
+        fieldVersions.isAcceptableOrUnknown(
+          data['field_versions']!,
+          _fieldVersionsMeta,
+        ),
+      );
     }
     if (data.containsKey('weight_kg')) {
       context.handle(
@@ -6652,13 +8678,33 @@ class $BodyMeasurementsTable extends BodyMeasurements
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return BodyMeasurement(
       id: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
+        DriftSqlType.string,
         data['${effectivePrefix}id'],
       )!,
       userId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}user_id'],
       )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      syncStatus: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sync_status'],
+      )!,
+      idempotencyKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}idempotency_key'],
+      )!,
+      fieldVersions: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}field_versions'],
+      ),
       weightKg: attachedDatabase.typeMapping.read(
         DriftSqlType.double,
         data['${effectivePrefix}weight_kg'],
@@ -6709,8 +8755,13 @@ class $BodyMeasurementsTable extends BodyMeasurements
 }
 
 class BodyMeasurement extends DataClass implements Insertable<BodyMeasurement> {
-  final int id;
+  final String id;
   final String userId;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final String syncStatus;
+  final String idempotencyKey;
+  final String? fieldVersions;
   final double? weightKg;
   final double? heightCm;
   final double? chestCm;
@@ -6724,6 +8775,11 @@ class BodyMeasurement extends DataClass implements Insertable<BodyMeasurement> {
   const BodyMeasurement({
     required this.id,
     required this.userId,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.syncStatus,
+    required this.idempotencyKey,
+    this.fieldVersions,
     this.weightKg,
     this.heightCm,
     this.chestCm,
@@ -6738,8 +8794,15 @@ class BodyMeasurement extends DataClass implements Insertable<BodyMeasurement> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
+    map['id'] = Variable<String>(id);
     map['user_id'] = Variable<String>(userId);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['sync_status'] = Variable<String>(syncStatus);
+    map['idempotency_key'] = Variable<String>(idempotencyKey);
+    if (!nullToAbsent || fieldVersions != null) {
+      map['field_versions'] = Variable<String>(fieldVersions);
+    }
     if (!nullToAbsent || weightKg != null) {
       map['weight_kg'] = Variable<double>(weightKg);
     }
@@ -6775,6 +8838,13 @@ class BodyMeasurement extends DataClass implements Insertable<BodyMeasurement> {
     return BodyMeasurementsCompanion(
       id: Value(id),
       userId: Value(userId),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      syncStatus: Value(syncStatus),
+      idempotencyKey: Value(idempotencyKey),
+      fieldVersions: fieldVersions == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fieldVersions),
       weightKg: weightKg == null && nullToAbsent
           ? const Value.absent()
           : Value(weightKg),
@@ -6810,8 +8880,13 @@ class BodyMeasurement extends DataClass implements Insertable<BodyMeasurement> {
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return BodyMeasurement(
-      id: serializer.fromJson<int>(json['id']),
+      id: serializer.fromJson<String>(json['id']),
       userId: serializer.fromJson<String>(json['userId']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      syncStatus: serializer.fromJson<String>(json['syncStatus']),
+      idempotencyKey: serializer.fromJson<String>(json['idempotencyKey']),
+      fieldVersions: serializer.fromJson<String?>(json['fieldVersions']),
       weightKg: serializer.fromJson<double?>(json['weightKg']),
       heightCm: serializer.fromJson<double?>(json['heightCm']),
       chestCm: serializer.fromJson<double?>(json['chestCm']),
@@ -6828,8 +8903,13 @@ class BodyMeasurement extends DataClass implements Insertable<BodyMeasurement> {
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
+      'id': serializer.toJson<String>(id),
       'userId': serializer.toJson<String>(userId),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'syncStatus': serializer.toJson<String>(syncStatus),
+      'idempotencyKey': serializer.toJson<String>(idempotencyKey),
+      'fieldVersions': serializer.toJson<String?>(fieldVersions),
       'weightKg': serializer.toJson<double?>(weightKg),
       'heightCm': serializer.toJson<double?>(heightCm),
       'chestCm': serializer.toJson<double?>(chestCm),
@@ -6844,8 +8924,13 @@ class BodyMeasurement extends DataClass implements Insertable<BodyMeasurement> {
   }
 
   BodyMeasurement copyWith({
-    int? id,
+    String? id,
     String? userId,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    String? syncStatus,
+    String? idempotencyKey,
+    Value<String?> fieldVersions = const Value.absent(),
     Value<double?> weightKg = const Value.absent(),
     Value<double?> heightCm = const Value.absent(),
     Value<double?> chestCm = const Value.absent(),
@@ -6859,6 +8944,13 @@ class BodyMeasurement extends DataClass implements Insertable<BodyMeasurement> {
   }) => BodyMeasurement(
     id: id ?? this.id,
     userId: userId ?? this.userId,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    syncStatus: syncStatus ?? this.syncStatus,
+    idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+    fieldVersions: fieldVersions.present
+        ? fieldVersions.value
+        : this.fieldVersions,
     weightKg: weightKg.present ? weightKg.value : this.weightKg,
     heightCm: heightCm.present ? heightCm.value : this.heightCm,
     chestCm: chestCm.present ? chestCm.value : this.chestCm,
@@ -6874,6 +8966,17 @@ class BodyMeasurement extends DataClass implements Insertable<BodyMeasurement> {
     return BodyMeasurement(
       id: data.id.present ? data.id.value : this.id,
       userId: data.userId.present ? data.userId.value : this.userId,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      syncStatus: data.syncStatus.present
+          ? data.syncStatus.value
+          : this.syncStatus,
+      idempotencyKey: data.idempotencyKey.present
+          ? data.idempotencyKey.value
+          : this.idempotencyKey,
+      fieldVersions: data.fieldVersions.present
+          ? data.fieldVersions.value
+          : this.fieldVersions,
       weightKg: data.weightKg.present ? data.weightKg.value : this.weightKg,
       heightCm: data.heightCm.present ? data.heightCm.value : this.heightCm,
       chestCm: data.chestCm.present ? data.chestCm.value : this.chestCm,
@@ -6896,6 +8999,11 @@ class BodyMeasurement extends DataClass implements Insertable<BodyMeasurement> {
     return (StringBuffer('BodyMeasurement(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('fieldVersions: $fieldVersions, ')
           ..write('weightKg: $weightKg, ')
           ..write('heightCm: $heightCm, ')
           ..write('chestCm: $chestCm, ')
@@ -6914,6 +9022,11 @@ class BodyMeasurement extends DataClass implements Insertable<BodyMeasurement> {
   int get hashCode => Object.hash(
     id,
     userId,
+    createdAt,
+    updatedAt,
+    syncStatus,
+    idempotencyKey,
+    fieldVersions,
     weightKg,
     heightCm,
     chestCm,
@@ -6931,6 +9044,11 @@ class BodyMeasurement extends DataClass implements Insertable<BodyMeasurement> {
       (other is BodyMeasurement &&
           other.id == this.id &&
           other.userId == this.userId &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.syncStatus == this.syncStatus &&
+          other.idempotencyKey == this.idempotencyKey &&
+          other.fieldVersions == this.fieldVersions &&
           other.weightKg == this.weightKg &&
           other.heightCm == this.heightCm &&
           other.chestCm == this.chestCm &&
@@ -6944,8 +9062,13 @@ class BodyMeasurement extends DataClass implements Insertable<BodyMeasurement> {
 }
 
 class BodyMeasurementsCompanion extends UpdateCompanion<BodyMeasurement> {
-  final Value<int> id;
+  final Value<String> id;
   final Value<String> userId;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<String> syncStatus;
+  final Value<String> idempotencyKey;
+  final Value<String?> fieldVersions;
   final Value<double?> weightKg;
   final Value<double?> heightCm;
   final Value<double?> chestCm;
@@ -6956,9 +9079,15 @@ class BodyMeasurementsCompanion extends UpdateCompanion<BodyMeasurement> {
   final Value<double?> bodyFatPct;
   final Value<double?> bmi;
   final Value<DateTime> measuredAt;
+  final Value<int> rowid;
   const BodyMeasurementsCompanion({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    this.idempotencyKey = const Value.absent(),
+    this.fieldVersions = const Value.absent(),
     this.weightKg = const Value.absent(),
     this.heightCm = const Value.absent(),
     this.chestCm = const Value.absent(),
@@ -6969,10 +9098,16 @@ class BodyMeasurementsCompanion extends UpdateCompanion<BodyMeasurement> {
     this.bodyFatPct = const Value.absent(),
     this.bmi = const Value.absent(),
     this.measuredAt = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   BodyMeasurementsCompanion.insert({
-    this.id = const Value.absent(),
+    required String id,
     required String userId,
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    required String idempotencyKey,
+    this.fieldVersions = const Value.absent(),
     this.weightKg = const Value.absent(),
     this.heightCm = const Value.absent(),
     this.chestCm = const Value.absent(),
@@ -6983,11 +9118,19 @@ class BodyMeasurementsCompanion extends UpdateCompanion<BodyMeasurement> {
     this.bodyFatPct = const Value.absent(),
     this.bmi = const Value.absent(),
     required DateTime measuredAt,
-  }) : userId = Value(userId),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       userId = Value(userId),
+       idempotencyKey = Value(idempotencyKey),
        measuredAt = Value(measuredAt);
   static Insertable<BodyMeasurement> custom({
-    Expression<int>? id,
+    Expression<String>? id,
     Expression<String>? userId,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<String>? syncStatus,
+    Expression<String>? idempotencyKey,
+    Expression<String>? fieldVersions,
     Expression<double>? weightKg,
     Expression<double>? heightCm,
     Expression<double>? chestCm,
@@ -6998,10 +9141,16 @@ class BodyMeasurementsCompanion extends UpdateCompanion<BodyMeasurement> {
     Expression<double>? bodyFatPct,
     Expression<double>? bmi,
     Expression<DateTime>? measuredAt,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (userId != null) 'user_id': userId,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (syncStatus != null) 'sync_status': syncStatus,
+      if (idempotencyKey != null) 'idempotency_key': idempotencyKey,
+      if (fieldVersions != null) 'field_versions': fieldVersions,
       if (weightKg != null) 'weight_kg': weightKg,
       if (heightCm != null) 'height_cm': heightCm,
       if (chestCm != null) 'chest_cm': chestCm,
@@ -7012,12 +9161,18 @@ class BodyMeasurementsCompanion extends UpdateCompanion<BodyMeasurement> {
       if (bodyFatPct != null) 'body_fat_pct': bodyFatPct,
       if (bmi != null) 'bmi': bmi,
       if (measuredAt != null) 'measured_at': measuredAt,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
   BodyMeasurementsCompanion copyWith({
-    Value<int>? id,
+    Value<String>? id,
     Value<String>? userId,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<String>? syncStatus,
+    Value<String>? idempotencyKey,
+    Value<String?>? fieldVersions,
     Value<double?>? weightKg,
     Value<double?>? heightCm,
     Value<double?>? chestCm,
@@ -7028,10 +9183,16 @@ class BodyMeasurementsCompanion extends UpdateCompanion<BodyMeasurement> {
     Value<double?>? bodyFatPct,
     Value<double?>? bmi,
     Value<DateTime>? measuredAt,
+    Value<int>? rowid,
   }) {
     return BodyMeasurementsCompanion(
       id: id ?? this.id,
       userId: userId ?? this.userId,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      syncStatus: syncStatus ?? this.syncStatus,
+      idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+      fieldVersions: fieldVersions ?? this.fieldVersions,
       weightKg: weightKg ?? this.weightKg,
       heightCm: heightCm ?? this.heightCm,
       chestCm: chestCm ?? this.chestCm,
@@ -7042,6 +9203,7 @@ class BodyMeasurementsCompanion extends UpdateCompanion<BodyMeasurement> {
       bodyFatPct: bodyFatPct ?? this.bodyFatPct,
       bmi: bmi ?? this.bmi,
       measuredAt: measuredAt ?? this.measuredAt,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -7049,10 +9211,25 @@ class BodyMeasurementsCompanion extends UpdateCompanion<BodyMeasurement> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (id.present) {
-      map['id'] = Variable<int>(id.value);
+      map['id'] = Variable<String>(id.value);
     }
     if (userId.present) {
       map['user_id'] = Variable<String>(userId.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (syncStatus.present) {
+      map['sync_status'] = Variable<String>(syncStatus.value);
+    }
+    if (idempotencyKey.present) {
+      map['idempotency_key'] = Variable<String>(idempotencyKey.value);
+    }
+    if (fieldVersions.present) {
+      map['field_versions'] = Variable<String>(fieldVersions.value);
     }
     if (weightKg.present) {
       map['weight_kg'] = Variable<double>(weightKg.value);
@@ -7084,6 +9261,9 @@ class BodyMeasurementsCompanion extends UpdateCompanion<BodyMeasurement> {
     if (measuredAt.present) {
       map['measured_at'] = Variable<DateTime>(measuredAt.value);
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
@@ -7092,6 +9272,11 @@ class BodyMeasurementsCompanion extends UpdateCompanion<BodyMeasurement> {
     return (StringBuffer('BodyMeasurementsCompanion(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('fieldVersions: $fieldVersions, ')
           ..write('weightKg: $weightKg, ')
           ..write('heightCm: $heightCm, ')
           ..write('chestCm: $chestCm, ')
@@ -7101,7 +9286,8 @@ class BodyMeasurementsCompanion extends UpdateCompanion<BodyMeasurement> {
           ..write('thighsCm: $thighsCm, ')
           ..write('bodyFatPct: $bodyFatPct, ')
           ..write('bmi: $bmi, ')
-          ..write('measuredAt: $measuredAt')
+          ..write('measuredAt: $measuredAt, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -7115,16 +9301,12 @@ class $FastingLogsTable extends FastingLogs
   $FastingLogsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
     'id',
     aliasedName,
     false,
-    hasAutoIncrement: true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
   );
   static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
   @override
@@ -7134,6 +9316,64 @@ class $FastingLogsTable extends FastingLogs
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _syncStatusMeta = const VerificationMeta(
+    'syncStatus',
+  );
+  @override
+  late final GeneratedColumn<String> syncStatus = GeneratedColumn<String>(
+    'sync_status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('pending'),
+  );
+  static const VerificationMeta _idempotencyKeyMeta = const VerificationMeta(
+    'idempotencyKey',
+  );
+  @override
+  late final GeneratedColumn<String> idempotencyKey = GeneratedColumn<String>(
+    'idempotency_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _fieldVersionsMeta = const VerificationMeta(
+    'fieldVersions',
+  );
+  @override
+  late final GeneratedColumn<String> fieldVersions = GeneratedColumn<String>(
+    'field_versions',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
   );
   static const VerificationMeta _protocolMeta = const VerificationMeta(
     'protocol',
@@ -7214,33 +9454,15 @@ class $FastingLogsTable extends FastingLogs
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _syncStatusMeta = const VerificationMeta(
-    'syncStatus',
-  );
-  @override
-  late final GeneratedColumn<String> syncStatus = GeneratedColumn<String>(
-    'sync_status',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-    defaultValue: const Constant('pending'),
-  );
-  static const VerificationMeta _idempotencyKeyMeta = const VerificationMeta(
-    'idempotencyKey',
-  );
-  @override
-  late final GeneratedColumn<String> idempotencyKey = GeneratedColumn<String>(
-    'idempotency_key',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
     userId,
+    createdAt,
+    updatedAt,
+    syncStatus,
+    idempotencyKey,
+    fieldVersions,
     protocol,
     fastStart,
     fastEnd,
@@ -7248,8 +9470,6 @@ class $FastingLogsTable extends FastingLogs
     completed,
     brokenAt,
     notes,
-    syncStatus,
-    idempotencyKey,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -7265,6 +9485,8 @@ class $FastingLogsTable extends FastingLogs
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
     }
     if (data.containsKey('user_id')) {
       context.handle(
@@ -7273,6 +9495,44 @@ class $FastingLogsTable extends FastingLogs
       );
     } else if (isInserting) {
       context.missing(_userIdMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    if (data.containsKey('sync_status')) {
+      context.handle(
+        _syncStatusMeta,
+        syncStatus.isAcceptableOrUnknown(data['sync_status']!, _syncStatusMeta),
+      );
+    }
+    if (data.containsKey('idempotency_key')) {
+      context.handle(
+        _idempotencyKeyMeta,
+        idempotencyKey.isAcceptableOrUnknown(
+          data['idempotency_key']!,
+          _idempotencyKeyMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_idempotencyKeyMeta);
+    }
+    if (data.containsKey('field_versions')) {
+      context.handle(
+        _fieldVersionsMeta,
+        fieldVersions.isAcceptableOrUnknown(
+          data['field_versions']!,
+          _fieldVersionsMeta,
+        ),
+      );
     }
     if (data.containsKey('protocol')) {
       context.handle(
@@ -7325,23 +9585,6 @@ class $FastingLogsTable extends FastingLogs
         notes.isAcceptableOrUnknown(data['notes']!, _notesMeta),
       );
     }
-    if (data.containsKey('sync_status')) {
-      context.handle(
-        _syncStatusMeta,
-        syncStatus.isAcceptableOrUnknown(data['sync_status']!, _syncStatusMeta),
-      );
-    }
-    if (data.containsKey('idempotency_key')) {
-      context.handle(
-        _idempotencyKeyMeta,
-        idempotencyKey.isAcceptableOrUnknown(
-          data['idempotency_key']!,
-          _idempotencyKeyMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_idempotencyKeyMeta);
-    }
     return context;
   }
 
@@ -7352,13 +9595,33 @@ class $FastingLogsTable extends FastingLogs
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return FastingLog(
       id: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
+        DriftSqlType.string,
         data['${effectivePrefix}id'],
       )!,
       userId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}user_id'],
       )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      syncStatus: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sync_status'],
+      )!,
+      idempotencyKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}idempotency_key'],
+      )!,
+      fieldVersions: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}field_versions'],
+      ),
       protocol: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}protocol'],
@@ -7387,14 +9650,6 @@ class $FastingLogsTable extends FastingLogs
         DriftSqlType.string,
         data['${effectivePrefix}notes'],
       ),
-      syncStatus: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}sync_status'],
-      )!,
-      idempotencyKey: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}idempotency_key'],
-      )!,
     );
   }
 
@@ -7405,8 +9660,13 @@ class $FastingLogsTable extends FastingLogs
 }
 
 class FastingLog extends DataClass implements Insertable<FastingLog> {
-  final int id;
+  final String id;
   final String userId;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final String syncStatus;
+  final String idempotencyKey;
+  final String? fieldVersions;
   final String protocol;
   final DateTime fastStart;
   final DateTime? fastEnd;
@@ -7414,11 +9674,14 @@ class FastingLog extends DataClass implements Insertable<FastingLog> {
   final bool completed;
   final DateTime? brokenAt;
   final String? notes;
-  final String syncStatus;
-  final String idempotencyKey;
   const FastingLog({
     required this.id,
     required this.userId,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.syncStatus,
+    required this.idempotencyKey,
+    this.fieldVersions,
     required this.protocol,
     required this.fastStart,
     this.fastEnd,
@@ -7426,14 +9689,19 @@ class FastingLog extends DataClass implements Insertable<FastingLog> {
     required this.completed,
     this.brokenAt,
     this.notes,
-    required this.syncStatus,
-    required this.idempotencyKey,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
+    map['id'] = Variable<String>(id);
     map['user_id'] = Variable<String>(userId);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['sync_status'] = Variable<String>(syncStatus);
+    map['idempotency_key'] = Variable<String>(idempotencyKey);
+    if (!nullToAbsent || fieldVersions != null) {
+      map['field_versions'] = Variable<String>(fieldVersions);
+    }
     map['protocol'] = Variable<String>(protocol);
     map['fast_start'] = Variable<DateTime>(fastStart);
     if (!nullToAbsent || fastEnd != null) {
@@ -7447,8 +9715,6 @@ class FastingLog extends DataClass implements Insertable<FastingLog> {
     if (!nullToAbsent || notes != null) {
       map['notes'] = Variable<String>(notes);
     }
-    map['sync_status'] = Variable<String>(syncStatus);
-    map['idempotency_key'] = Variable<String>(idempotencyKey);
     return map;
   }
 
@@ -7456,6 +9722,13 @@ class FastingLog extends DataClass implements Insertable<FastingLog> {
     return FastingLogsCompanion(
       id: Value(id),
       userId: Value(userId),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      syncStatus: Value(syncStatus),
+      idempotencyKey: Value(idempotencyKey),
+      fieldVersions: fieldVersions == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fieldVersions),
       protocol: Value(protocol),
       fastStart: Value(fastStart),
       fastEnd: fastEnd == null && nullToAbsent
@@ -7469,8 +9742,6 @@ class FastingLog extends DataClass implements Insertable<FastingLog> {
       notes: notes == null && nullToAbsent
           ? const Value.absent()
           : Value(notes),
-      syncStatus: Value(syncStatus),
-      idempotencyKey: Value(idempotencyKey),
     );
   }
 
@@ -7480,8 +9751,13 @@ class FastingLog extends DataClass implements Insertable<FastingLog> {
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return FastingLog(
-      id: serializer.fromJson<int>(json['id']),
+      id: serializer.fromJson<String>(json['id']),
       userId: serializer.fromJson<String>(json['userId']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      syncStatus: serializer.fromJson<String>(json['syncStatus']),
+      idempotencyKey: serializer.fromJson<String>(json['idempotencyKey']),
+      fieldVersions: serializer.fromJson<String?>(json['fieldVersions']),
       protocol: serializer.fromJson<String>(json['protocol']),
       fastStart: serializer.fromJson<DateTime>(json['fastStart']),
       fastEnd: serializer.fromJson<DateTime?>(json['fastEnd']),
@@ -7491,16 +9767,19 @@ class FastingLog extends DataClass implements Insertable<FastingLog> {
       completed: serializer.fromJson<bool>(json['completed']),
       brokenAt: serializer.fromJson<DateTime?>(json['brokenAt']),
       notes: serializer.fromJson<String?>(json['notes']),
-      syncStatus: serializer.fromJson<String>(json['syncStatus']),
-      idempotencyKey: serializer.fromJson<String>(json['idempotencyKey']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
+      'id': serializer.toJson<String>(id),
       'userId': serializer.toJson<String>(userId),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'syncStatus': serializer.toJson<String>(syncStatus),
+      'idempotencyKey': serializer.toJson<String>(idempotencyKey),
+      'fieldVersions': serializer.toJson<String?>(fieldVersions),
       'protocol': serializer.toJson<String>(protocol),
       'fastStart': serializer.toJson<DateTime>(fastStart),
       'fastEnd': serializer.toJson<DateTime?>(fastEnd),
@@ -7508,14 +9787,17 @@ class FastingLog extends DataClass implements Insertable<FastingLog> {
       'completed': serializer.toJson<bool>(completed),
       'brokenAt': serializer.toJson<DateTime?>(brokenAt),
       'notes': serializer.toJson<String?>(notes),
-      'syncStatus': serializer.toJson<String>(syncStatus),
-      'idempotencyKey': serializer.toJson<String>(idempotencyKey),
     };
   }
 
   FastingLog copyWith({
-    int? id,
+    String? id,
     String? userId,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    String? syncStatus,
+    String? idempotencyKey,
+    Value<String?> fieldVersions = const Value.absent(),
     String? protocol,
     DateTime? fastStart,
     Value<DateTime?> fastEnd = const Value.absent(),
@@ -7523,11 +9805,16 @@ class FastingLog extends DataClass implements Insertable<FastingLog> {
     bool? completed,
     Value<DateTime?> brokenAt = const Value.absent(),
     Value<String?> notes = const Value.absent(),
-    String? syncStatus,
-    String? idempotencyKey,
   }) => FastingLog(
     id: id ?? this.id,
     userId: userId ?? this.userId,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    syncStatus: syncStatus ?? this.syncStatus,
+    idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+    fieldVersions: fieldVersions.present
+        ? fieldVersions.value
+        : this.fieldVersions,
     protocol: protocol ?? this.protocol,
     fastStart: fastStart ?? this.fastStart,
     fastEnd: fastEnd.present ? fastEnd.value : this.fastEnd,
@@ -7535,13 +9822,22 @@ class FastingLog extends DataClass implements Insertable<FastingLog> {
     completed: completed ?? this.completed,
     brokenAt: brokenAt.present ? brokenAt.value : this.brokenAt,
     notes: notes.present ? notes.value : this.notes,
-    syncStatus: syncStatus ?? this.syncStatus,
-    idempotencyKey: idempotencyKey ?? this.idempotencyKey,
   );
   FastingLog copyWithCompanion(FastingLogsCompanion data) {
     return FastingLog(
       id: data.id.present ? data.id.value : this.id,
       userId: data.userId.present ? data.userId.value : this.userId,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      syncStatus: data.syncStatus.present
+          ? data.syncStatus.value
+          : this.syncStatus,
+      idempotencyKey: data.idempotencyKey.present
+          ? data.idempotencyKey.value
+          : this.idempotencyKey,
+      fieldVersions: data.fieldVersions.present
+          ? data.fieldVersions.value
+          : this.fieldVersions,
       protocol: data.protocol.present ? data.protocol.value : this.protocol,
       fastStart: data.fastStart.present ? data.fastStart.value : this.fastStart,
       fastEnd: data.fastEnd.present ? data.fastEnd.value : this.fastEnd,
@@ -7551,12 +9847,6 @@ class FastingLog extends DataClass implements Insertable<FastingLog> {
       completed: data.completed.present ? data.completed.value : this.completed,
       brokenAt: data.brokenAt.present ? data.brokenAt.value : this.brokenAt,
       notes: data.notes.present ? data.notes.value : this.notes,
-      syncStatus: data.syncStatus.present
-          ? data.syncStatus.value
-          : this.syncStatus,
-      idempotencyKey: data.idempotencyKey.present
-          ? data.idempotencyKey.value
-          : this.idempotencyKey,
     );
   }
 
@@ -7565,15 +9855,18 @@ class FastingLog extends DataClass implements Insertable<FastingLog> {
     return (StringBuffer('FastingLog(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('fieldVersions: $fieldVersions, ')
           ..write('protocol: $protocol, ')
           ..write('fastStart: $fastStart, ')
           ..write('fastEnd: $fastEnd, ')
           ..write('targetDurationHours: $targetDurationHours, ')
           ..write('completed: $completed, ')
           ..write('brokenAt: $brokenAt, ')
-          ..write('notes: $notes, ')
-          ..write('syncStatus: $syncStatus, ')
-          ..write('idempotencyKey: $idempotencyKey')
+          ..write('notes: $notes')
           ..write(')'))
         .toString();
   }
@@ -7582,6 +9875,11 @@ class FastingLog extends DataClass implements Insertable<FastingLog> {
   int get hashCode => Object.hash(
     id,
     userId,
+    createdAt,
+    updatedAt,
+    syncStatus,
+    idempotencyKey,
+    fieldVersions,
     protocol,
     fastStart,
     fastEnd,
@@ -7589,8 +9887,6 @@ class FastingLog extends DataClass implements Insertable<FastingLog> {
     completed,
     brokenAt,
     notes,
-    syncStatus,
-    idempotencyKey,
   );
   @override
   bool operator ==(Object other) =>
@@ -7598,20 +9894,28 @@ class FastingLog extends DataClass implements Insertable<FastingLog> {
       (other is FastingLog &&
           other.id == this.id &&
           other.userId == this.userId &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.syncStatus == this.syncStatus &&
+          other.idempotencyKey == this.idempotencyKey &&
+          other.fieldVersions == this.fieldVersions &&
           other.protocol == this.protocol &&
           other.fastStart == this.fastStart &&
           other.fastEnd == this.fastEnd &&
           other.targetDurationHours == this.targetDurationHours &&
           other.completed == this.completed &&
           other.brokenAt == this.brokenAt &&
-          other.notes == this.notes &&
-          other.syncStatus == this.syncStatus &&
-          other.idempotencyKey == this.idempotencyKey);
+          other.notes == this.notes);
 }
 
 class FastingLogsCompanion extends UpdateCompanion<FastingLog> {
-  final Value<int> id;
+  final Value<String> id;
   final Value<String> userId;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<String> syncStatus;
+  final Value<String> idempotencyKey;
+  final Value<String?> fieldVersions;
   final Value<String> protocol;
   final Value<DateTime> fastStart;
   final Value<DateTime?> fastEnd;
@@ -7619,11 +9923,15 @@ class FastingLogsCompanion extends UpdateCompanion<FastingLog> {
   final Value<bool> completed;
   final Value<DateTime?> brokenAt;
   final Value<String?> notes;
-  final Value<String> syncStatus;
-  final Value<String> idempotencyKey;
+  final Value<int> rowid;
   const FastingLogsCompanion({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    this.idempotencyKey = const Value.absent(),
+    this.fieldVersions = const Value.absent(),
     this.protocol = const Value.absent(),
     this.fastStart = const Value.absent(),
     this.fastEnd = const Value.absent(),
@@ -7631,12 +9939,16 @@ class FastingLogsCompanion extends UpdateCompanion<FastingLog> {
     this.completed = const Value.absent(),
     this.brokenAt = const Value.absent(),
     this.notes = const Value.absent(),
-    this.syncStatus = const Value.absent(),
-    this.idempotencyKey = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   FastingLogsCompanion.insert({
-    this.id = const Value.absent(),
+    required String id,
     required String userId,
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    required String idempotencyKey,
+    this.fieldVersions = const Value.absent(),
     required String protocol,
     required DateTime fastStart,
     this.fastEnd = const Value.absent(),
@@ -7644,16 +9956,21 @@ class FastingLogsCompanion extends UpdateCompanion<FastingLog> {
     this.completed = const Value.absent(),
     this.brokenAt = const Value.absent(),
     this.notes = const Value.absent(),
-    this.syncStatus = const Value.absent(),
-    required String idempotencyKey,
-  }) : userId = Value(userId),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       userId = Value(userId),
+       idempotencyKey = Value(idempotencyKey),
        protocol = Value(protocol),
        fastStart = Value(fastStart),
-       targetDurationHours = Value(targetDurationHours),
-       idempotencyKey = Value(idempotencyKey);
+       targetDurationHours = Value(targetDurationHours);
   static Insertable<FastingLog> custom({
-    Expression<int>? id,
+    Expression<String>? id,
     Expression<String>? userId,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<String>? syncStatus,
+    Expression<String>? idempotencyKey,
+    Expression<String>? fieldVersions,
     Expression<String>? protocol,
     Expression<DateTime>? fastStart,
     Expression<DateTime>? fastEnd,
@@ -7661,12 +9978,16 @@ class FastingLogsCompanion extends UpdateCompanion<FastingLog> {
     Expression<bool>? completed,
     Expression<DateTime>? brokenAt,
     Expression<String>? notes,
-    Expression<String>? syncStatus,
-    Expression<String>? idempotencyKey,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (userId != null) 'user_id': userId,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (syncStatus != null) 'sync_status': syncStatus,
+      if (idempotencyKey != null) 'idempotency_key': idempotencyKey,
+      if (fieldVersions != null) 'field_versions': fieldVersions,
       if (protocol != null) 'protocol': protocol,
       if (fastStart != null) 'fast_start': fastStart,
       if (fastEnd != null) 'fast_end': fastEnd,
@@ -7675,14 +9996,18 @@ class FastingLogsCompanion extends UpdateCompanion<FastingLog> {
       if (completed != null) 'completed': completed,
       if (brokenAt != null) 'broken_at': brokenAt,
       if (notes != null) 'notes': notes,
-      if (syncStatus != null) 'sync_status': syncStatus,
-      if (idempotencyKey != null) 'idempotency_key': idempotencyKey,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
   FastingLogsCompanion copyWith({
-    Value<int>? id,
+    Value<String>? id,
     Value<String>? userId,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<String>? syncStatus,
+    Value<String>? idempotencyKey,
+    Value<String?>? fieldVersions,
     Value<String>? protocol,
     Value<DateTime>? fastStart,
     Value<DateTime?>? fastEnd,
@@ -7690,12 +10015,16 @@ class FastingLogsCompanion extends UpdateCompanion<FastingLog> {
     Value<bool>? completed,
     Value<DateTime?>? brokenAt,
     Value<String?>? notes,
-    Value<String>? syncStatus,
-    Value<String>? idempotencyKey,
+    Value<int>? rowid,
   }) {
     return FastingLogsCompanion(
       id: id ?? this.id,
       userId: userId ?? this.userId,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      syncStatus: syncStatus ?? this.syncStatus,
+      idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+      fieldVersions: fieldVersions ?? this.fieldVersions,
       protocol: protocol ?? this.protocol,
       fastStart: fastStart ?? this.fastStart,
       fastEnd: fastEnd ?? this.fastEnd,
@@ -7703,8 +10032,7 @@ class FastingLogsCompanion extends UpdateCompanion<FastingLog> {
       completed: completed ?? this.completed,
       brokenAt: brokenAt ?? this.brokenAt,
       notes: notes ?? this.notes,
-      syncStatus: syncStatus ?? this.syncStatus,
-      idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -7712,10 +10040,25 @@ class FastingLogsCompanion extends UpdateCompanion<FastingLog> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (id.present) {
-      map['id'] = Variable<int>(id.value);
+      map['id'] = Variable<String>(id.value);
     }
     if (userId.present) {
       map['user_id'] = Variable<String>(userId.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (syncStatus.present) {
+      map['sync_status'] = Variable<String>(syncStatus.value);
+    }
+    if (idempotencyKey.present) {
+      map['idempotency_key'] = Variable<String>(idempotencyKey.value);
+    }
+    if (fieldVersions.present) {
+      map['field_versions'] = Variable<String>(fieldVersions.value);
     }
     if (protocol.present) {
       map['protocol'] = Variable<String>(protocol.value);
@@ -7740,11 +10083,8 @@ class FastingLogsCompanion extends UpdateCompanion<FastingLog> {
     if (notes.present) {
       map['notes'] = Variable<String>(notes.value);
     }
-    if (syncStatus.present) {
-      map['sync_status'] = Variable<String>(syncStatus.value);
-    }
-    if (idempotencyKey.present) {
-      map['idempotency_key'] = Variable<String>(idempotencyKey.value);
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
     }
     return map;
   }
@@ -7754,6 +10094,11 @@ class FastingLogsCompanion extends UpdateCompanion<FastingLog> {
     return (StringBuffer('FastingLogsCompanion(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('fieldVersions: $fieldVersions, ')
           ..write('protocol: $protocol, ')
           ..write('fastStart: $fastStart, ')
           ..write('fastEnd: $fastEnd, ')
@@ -7761,8 +10106,7 @@ class FastingLogsCompanion extends UpdateCompanion<FastingLog> {
           ..write('completed: $completed, ')
           ..write('brokenAt: $brokenAt, ')
           ..write('notes: $notes, ')
-          ..write('syncStatus: $syncStatus, ')
-          ..write('idempotencyKey: $idempotencyKey')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -7776,16 +10120,12 @@ class $MealPlansTable extends MealPlans
   $MealPlansTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
     'id',
     aliasedName,
     false,
-    hasAutoIncrement: true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
   );
   static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
   @override
@@ -7795,6 +10135,64 @@ class $MealPlansTable extends MealPlans
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _syncStatusMeta = const VerificationMeta(
+    'syncStatus',
+  );
+  @override
+  late final GeneratedColumn<String> syncStatus = GeneratedColumn<String>(
+    'sync_status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('pending'),
+  );
+  static const VerificationMeta _idempotencyKeyMeta = const VerificationMeta(
+    'idempotencyKey',
+  );
+  @override
+  late final GeneratedColumn<String> idempotencyKey = GeneratedColumn<String>(
+    'idempotency_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _fieldVersionsMeta = const VerificationMeta(
+    'fieldVersions',
+  );
+  @override
+  late final GeneratedColumn<String> fieldVersions = GeneratedColumn<String>(
+    'field_versions',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
   );
   static const VerificationMeta _weekStartMeta = const VerificationMeta(
     'weekStart',
@@ -7853,6 +10251,11 @@ class $MealPlansTable extends MealPlans
   List<GeneratedColumn> get $columns => [
     id,
     userId,
+    createdAt,
+    updatedAt,
+    syncStatus,
+    idempotencyKey,
+    fieldVersions,
     weekStart,
     planData,
     planType,
@@ -7873,6 +10276,8 @@ class $MealPlansTable extends MealPlans
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
     }
     if (data.containsKey('user_id')) {
       context.handle(
@@ -7881,6 +10286,44 @@ class $MealPlansTable extends MealPlans
       );
     } else if (isInserting) {
       context.missing(_userIdMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    if (data.containsKey('sync_status')) {
+      context.handle(
+        _syncStatusMeta,
+        syncStatus.isAcceptableOrUnknown(data['sync_status']!, _syncStatusMeta),
+      );
+    }
+    if (data.containsKey('idempotency_key')) {
+      context.handle(
+        _idempotencyKeyMeta,
+        idempotencyKey.isAcceptableOrUnknown(
+          data['idempotency_key']!,
+          _idempotencyKeyMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_idempotencyKeyMeta);
+    }
+    if (data.containsKey('field_versions')) {
+      context.handle(
+        _fieldVersionsMeta,
+        fieldVersions.isAcceptableOrUnknown(
+          data['field_versions']!,
+          _fieldVersionsMeta,
+        ),
+      );
     }
     if (data.containsKey('week_start')) {
       context.handle(
@@ -7928,13 +10371,33 @@ class $MealPlansTable extends MealPlans
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return MealPlan(
       id: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
+        DriftSqlType.string,
         data['${effectivePrefix}id'],
       )!,
       userId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}user_id'],
       )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      syncStatus: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sync_status'],
+      )!,
+      idempotencyKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}idempotency_key'],
+      )!,
+      fieldVersions: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}field_versions'],
+      ),
       weekStart: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}week_start'],
@@ -7970,8 +10433,13 @@ class $MealPlansTable extends MealPlans
 }
 
 class MealPlan extends DataClass implements Insertable<MealPlan> {
-  final int id;
+  final String id;
   final String userId;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final String syncStatus;
+  final String idempotencyKey;
+  final String? fieldVersions;
   final DateTime weekStart;
   final Map<String, dynamic> planData;
   final String planType;
@@ -7980,6 +10448,11 @@ class MealPlan extends DataClass implements Insertable<MealPlan> {
   const MealPlan({
     required this.id,
     required this.userId,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.syncStatus,
+    required this.idempotencyKey,
+    this.fieldVersions,
     required this.weekStart,
     required this.planData,
     required this.planType,
@@ -7989,8 +10462,15 @@ class MealPlan extends DataClass implements Insertable<MealPlan> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
+    map['id'] = Variable<String>(id);
     map['user_id'] = Variable<String>(userId);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['sync_status'] = Variable<String>(syncStatus);
+    map['idempotency_key'] = Variable<String>(idempotencyKey);
+    if (!nullToAbsent || fieldVersions != null) {
+      map['field_versions'] = Variable<String>(fieldVersions);
+    }
     map['week_start'] = Variable<DateTime>(weekStart);
     {
       map['plan_data'] = Variable<String>(
@@ -8009,6 +10489,13 @@ class MealPlan extends DataClass implements Insertable<MealPlan> {
     return MealPlansCompanion(
       id: Value(id),
       userId: Value(userId),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      syncStatus: Value(syncStatus),
+      idempotencyKey: Value(idempotencyKey),
+      fieldVersions: fieldVersions == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fieldVersions),
       weekStart: Value(weekStart),
       planData: Value(planData),
       planType: Value(planType),
@@ -8025,8 +10512,13 @@ class MealPlan extends DataClass implements Insertable<MealPlan> {
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return MealPlan(
-      id: serializer.fromJson<int>(json['id']),
+      id: serializer.fromJson<String>(json['id']),
       userId: serializer.fromJson<String>(json['userId']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      syncStatus: serializer.fromJson<String>(json['syncStatus']),
+      idempotencyKey: serializer.fromJson<String>(json['idempotencyKey']),
+      fieldVersions: serializer.fromJson<String?>(json['fieldVersions']),
       weekStart: serializer.fromJson<DateTime>(json['weekStart']),
       planData: serializer.fromJson<Map<String, dynamic>>(json['planData']),
       planType: serializer.fromJson<String>(json['planType']),
@@ -8038,8 +10530,13 @@ class MealPlan extends DataClass implements Insertable<MealPlan> {
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
+      'id': serializer.toJson<String>(id),
       'userId': serializer.toJson<String>(userId),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'syncStatus': serializer.toJson<String>(syncStatus),
+      'idempotencyKey': serializer.toJson<String>(idempotencyKey),
+      'fieldVersions': serializer.toJson<String?>(fieldVersions),
       'weekStart': serializer.toJson<DateTime>(weekStart),
       'planData': serializer.toJson<Map<String, dynamic>>(planData),
       'planType': serializer.toJson<String>(planType),
@@ -8049,8 +10546,13 @@ class MealPlan extends DataClass implements Insertable<MealPlan> {
   }
 
   MealPlan copyWith({
-    int? id,
+    String? id,
     String? userId,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    String? syncStatus,
+    String? idempotencyKey,
+    Value<String?> fieldVersions = const Value.absent(),
     DateTime? weekStart,
     Map<String, dynamic>? planData,
     String? planType,
@@ -8059,6 +10561,13 @@ class MealPlan extends DataClass implements Insertable<MealPlan> {
   }) => MealPlan(
     id: id ?? this.id,
     userId: userId ?? this.userId,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    syncStatus: syncStatus ?? this.syncStatus,
+    idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+    fieldVersions: fieldVersions.present
+        ? fieldVersions.value
+        : this.fieldVersions,
     weekStart: weekStart ?? this.weekStart,
     planData: planData ?? this.planData,
     planType: planType ?? this.planType,
@@ -8069,6 +10578,17 @@ class MealPlan extends DataClass implements Insertable<MealPlan> {
     return MealPlan(
       id: data.id.present ? data.id.value : this.id,
       userId: data.userId.present ? data.userId.value : this.userId,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      syncStatus: data.syncStatus.present
+          ? data.syncStatus.value
+          : this.syncStatus,
+      idempotencyKey: data.idempotencyKey.present
+          ? data.idempotencyKey.value
+          : this.idempotencyKey,
+      fieldVersions: data.fieldVersions.present
+          ? data.fieldVersions.value
+          : this.fieldVersions,
       weekStart: data.weekStart.present ? data.weekStart.value : this.weekStart,
       planData: data.planData.present ? data.planData.value : this.planData,
       planType: data.planType.present ? data.planType.value : this.planType,
@@ -8086,6 +10606,11 @@ class MealPlan extends DataClass implements Insertable<MealPlan> {
     return (StringBuffer('MealPlan(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('fieldVersions: $fieldVersions, ')
           ..write('weekStart: $weekStart, ')
           ..write('planData: $planData, ')
           ..write('planType: $planType, ')
@@ -8099,6 +10624,11 @@ class MealPlan extends DataClass implements Insertable<MealPlan> {
   int get hashCode => Object.hash(
     id,
     userId,
+    createdAt,
+    updatedAt,
+    syncStatus,
+    idempotencyKey,
+    fieldVersions,
     weekStart,
     planData,
     planType,
@@ -8111,6 +10641,11 @@ class MealPlan extends DataClass implements Insertable<MealPlan> {
       (other is MealPlan &&
           other.id == this.id &&
           other.userId == this.userId &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.syncStatus == this.syncStatus &&
+          other.idempotencyKey == this.idempotencyKey &&
+          other.fieldVersions == this.fieldVersions &&
           other.weekStart == this.weekStart &&
           other.planData == this.planData &&
           other.planType == this.planType &&
@@ -8119,72 +10654,116 @@ class MealPlan extends DataClass implements Insertable<MealPlan> {
 }
 
 class MealPlansCompanion extends UpdateCompanion<MealPlan> {
-  final Value<int> id;
+  final Value<String> id;
   final Value<String> userId;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<String> syncStatus;
+  final Value<String> idempotencyKey;
+  final Value<String?> fieldVersions;
   final Value<DateTime> weekStart;
   final Value<Map<String, dynamic>> planData;
   final Value<String> planType;
   final Value<String?> festivalKey;
   final Value<String> generatedBy;
+  final Value<int> rowid;
   const MealPlansCompanion({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    this.idempotencyKey = const Value.absent(),
+    this.fieldVersions = const Value.absent(),
     this.weekStart = const Value.absent(),
     this.planData = const Value.absent(),
     this.planType = const Value.absent(),
     this.festivalKey = const Value.absent(),
     this.generatedBy = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   MealPlansCompanion.insert({
-    this.id = const Value.absent(),
+    required String id,
     required String userId,
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    required String idempotencyKey,
+    this.fieldVersions = const Value.absent(),
     required DateTime weekStart,
     required Map<String, dynamic> planData,
     required String planType,
     this.festivalKey = const Value.absent(),
     required String generatedBy,
-  }) : userId = Value(userId),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       userId = Value(userId),
+       idempotencyKey = Value(idempotencyKey),
        weekStart = Value(weekStart),
        planData = Value(planData),
        planType = Value(planType),
        generatedBy = Value(generatedBy);
   static Insertable<MealPlan> custom({
-    Expression<int>? id,
+    Expression<String>? id,
     Expression<String>? userId,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<String>? syncStatus,
+    Expression<String>? idempotencyKey,
+    Expression<String>? fieldVersions,
     Expression<DateTime>? weekStart,
     Expression<String>? planData,
     Expression<String>? planType,
     Expression<String>? festivalKey,
     Expression<String>? generatedBy,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (userId != null) 'user_id': userId,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (syncStatus != null) 'sync_status': syncStatus,
+      if (idempotencyKey != null) 'idempotency_key': idempotencyKey,
+      if (fieldVersions != null) 'field_versions': fieldVersions,
       if (weekStart != null) 'week_start': weekStart,
       if (planData != null) 'plan_data': planData,
       if (planType != null) 'plan_type': planType,
       if (festivalKey != null) 'festival_key': festivalKey,
       if (generatedBy != null) 'generated_by': generatedBy,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
   MealPlansCompanion copyWith({
-    Value<int>? id,
+    Value<String>? id,
     Value<String>? userId,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<String>? syncStatus,
+    Value<String>? idempotencyKey,
+    Value<String?>? fieldVersions,
     Value<DateTime>? weekStart,
     Value<Map<String, dynamic>>? planData,
     Value<String>? planType,
     Value<String?>? festivalKey,
     Value<String>? generatedBy,
+    Value<int>? rowid,
   }) {
     return MealPlansCompanion(
       id: id ?? this.id,
       userId: userId ?? this.userId,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      syncStatus: syncStatus ?? this.syncStatus,
+      idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+      fieldVersions: fieldVersions ?? this.fieldVersions,
       weekStart: weekStart ?? this.weekStart,
       planData: planData ?? this.planData,
       planType: planType ?? this.planType,
       festivalKey: festivalKey ?? this.festivalKey,
       generatedBy: generatedBy ?? this.generatedBy,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -8192,10 +10771,25 @@ class MealPlansCompanion extends UpdateCompanion<MealPlan> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (id.present) {
-      map['id'] = Variable<int>(id.value);
+      map['id'] = Variable<String>(id.value);
     }
     if (userId.present) {
       map['user_id'] = Variable<String>(userId.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (syncStatus.present) {
+      map['sync_status'] = Variable<String>(syncStatus.value);
+    }
+    if (idempotencyKey.present) {
+      map['idempotency_key'] = Variable<String>(idempotencyKey.value);
+    }
+    if (fieldVersions.present) {
+      map['field_versions'] = Variable<String>(fieldVersions.value);
     }
     if (weekStart.present) {
       map['week_start'] = Variable<DateTime>(weekStart.value);
@@ -8214,6 +10808,9 @@ class MealPlansCompanion extends UpdateCompanion<MealPlan> {
     if (generatedBy.present) {
       map['generated_by'] = Variable<String>(generatedBy.value);
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
@@ -8222,11 +10819,17 @@ class MealPlansCompanion extends UpdateCompanion<MealPlan> {
     return (StringBuffer('MealPlansCompanion(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('fieldVersions: $fieldVersions, ')
           ..write('weekStart: $weekStart, ')
           ..write('planData: $planData, ')
           ..write('planType: $planType, ')
           ..write('festivalKey: $festivalKey, ')
-          ..write('generatedBy: $generatedBy')
+          ..write('generatedBy: $generatedBy, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -8239,16 +10842,12 @@ class $RecipesTable extends Recipes with TableInfo<$RecipesTable, Recipe> {
   $RecipesTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
     'id',
     aliasedName,
     false,
-    hasAutoIncrement: true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
   );
   static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
   @override
@@ -8258,6 +10857,64 @@ class $RecipesTable extends Recipes with TableInfo<$RecipesTable, Recipe> {
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _syncStatusMeta = const VerificationMeta(
+    'syncStatus',
+  );
+  @override
+  late final GeneratedColumn<String> syncStatus = GeneratedColumn<String>(
+    'sync_status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('pending'),
+  );
+  static const VerificationMeta _idempotencyKeyMeta = const VerificationMeta(
+    'idempotencyKey',
+  );
+  @override
+  late final GeneratedColumn<String> idempotencyKey = GeneratedColumn<String>(
+    'idempotency_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _fieldVersionsMeta = const VerificationMeta(
+    'fieldVersions',
+  );
+  @override
+  late final GeneratedColumn<String> fieldVersions = GeneratedColumn<String>(
+    'field_versions',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
   );
   static const VerificationMeta _titleMeta = const VerificationMeta('title');
   @override
@@ -8418,6 +11075,11 @@ class $RecipesTable extends Recipes with TableInfo<$RecipesTable, Recipe> {
   List<GeneratedColumn> get $columns => [
     id,
     userId,
+    createdAt,
+    updatedAt,
+    syncStatus,
+    idempotencyKey,
+    fieldVersions,
     title,
     description,
     ingredients,
@@ -8448,6 +11110,8 @@ class $RecipesTable extends Recipes with TableInfo<$RecipesTable, Recipe> {
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
     }
     if (data.containsKey('user_id')) {
       context.handle(
@@ -8456,6 +11120,44 @@ class $RecipesTable extends Recipes with TableInfo<$RecipesTable, Recipe> {
       );
     } else if (isInserting) {
       context.missing(_userIdMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    if (data.containsKey('sync_status')) {
+      context.handle(
+        _syncStatusMeta,
+        syncStatus.isAcceptableOrUnknown(data['sync_status']!, _syncStatusMeta),
+      );
+    }
+    if (data.containsKey('idempotency_key')) {
+      context.handle(
+        _idempotencyKeyMeta,
+        idempotencyKey.isAcceptableOrUnknown(
+          data['idempotency_key']!,
+          _idempotencyKeyMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_idempotencyKeyMeta);
+    }
+    if (data.containsKey('field_versions')) {
+      context.handle(
+        _fieldVersionsMeta,
+        fieldVersions.isAcceptableOrUnknown(
+          data['field_versions']!,
+          _fieldVersionsMeta,
+        ),
+      );
     }
     if (data.containsKey('title')) {
       context.handle(
@@ -8563,13 +11265,33 @@ class $RecipesTable extends Recipes with TableInfo<$RecipesTable, Recipe> {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return Recipe(
       id: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
+        DriftSqlType.string,
         data['${effectivePrefix}id'],
       )!,
       userId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}user_id'],
       )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      syncStatus: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sync_status'],
+      )!,
+      idempotencyKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}idempotency_key'],
+      )!,
+      fieldVersions: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}field_versions'],
+      ),
       title: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}title'],
@@ -8649,8 +11371,13 @@ class $RecipesTable extends Recipes with TableInfo<$RecipesTable, Recipe> {
 }
 
 class Recipe extends DataClass implements Insertable<Recipe> {
-  final int id;
+  final String id;
   final String userId;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final String syncStatus;
+  final String idempotencyKey;
+  final String? fieldVersions;
   final String title;
   final String? description;
   final Map<String, dynamic> ingredients;
@@ -8669,6 +11396,11 @@ class Recipe extends DataClass implements Insertable<Recipe> {
   const Recipe({
     required this.id,
     required this.userId,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.syncStatus,
+    required this.idempotencyKey,
+    this.fieldVersions,
     required this.title,
     this.description,
     required this.ingredients,
@@ -8688,8 +11420,15 @@ class Recipe extends DataClass implements Insertable<Recipe> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
+    map['id'] = Variable<String>(id);
     map['user_id'] = Variable<String>(userId);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['sync_status'] = Variable<String>(syncStatus);
+    map['idempotency_key'] = Variable<String>(idempotencyKey);
+    if (!nullToAbsent || fieldVersions != null) {
+      map['field_versions'] = Variable<String>(fieldVersions);
+    }
     map['title'] = Variable<String>(title);
     if (!nullToAbsent || description != null) {
       map['description'] = Variable<String>(description);
@@ -8738,6 +11477,13 @@ class Recipe extends DataClass implements Insertable<Recipe> {
     return RecipesCompanion(
       id: Value(id),
       userId: Value(userId),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      syncStatus: Value(syncStatus),
+      idempotencyKey: Value(idempotencyKey),
+      fieldVersions: fieldVersions == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fieldVersions),
       title: Value(title),
       description: description == null && nullToAbsent
           ? const Value.absent()
@@ -8778,8 +11524,13 @@ class Recipe extends DataClass implements Insertable<Recipe> {
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return Recipe(
-      id: serializer.fromJson<int>(json['id']),
+      id: serializer.fromJson<String>(json['id']),
       userId: serializer.fromJson<String>(json['userId']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      syncStatus: serializer.fromJson<String>(json['syncStatus']),
+      idempotencyKey: serializer.fromJson<String>(json['idempotencyKey']),
+      fieldVersions: serializer.fromJson<String?>(json['fieldVersions']),
       title: serializer.fromJson<String>(json['title']),
       description: serializer.fromJson<String?>(json['description']),
       ingredients: serializer.fromJson<Map<String, dynamic>>(
@@ -8803,8 +11554,13 @@ class Recipe extends DataClass implements Insertable<Recipe> {
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
+      'id': serializer.toJson<String>(id),
       'userId': serializer.toJson<String>(userId),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'syncStatus': serializer.toJson<String>(syncStatus),
+      'idempotencyKey': serializer.toJson<String>(idempotencyKey),
+      'fieldVersions': serializer.toJson<String?>(fieldVersions),
       'title': serializer.toJson<String>(title),
       'description': serializer.toJson<String?>(description),
       'ingredients': serializer.toJson<Map<String, dynamic>>(ingredients),
@@ -8824,8 +11580,13 @@ class Recipe extends DataClass implements Insertable<Recipe> {
   }
 
   Recipe copyWith({
-    int? id,
+    String? id,
     String? userId,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    String? syncStatus,
+    String? idempotencyKey,
+    Value<String?> fieldVersions = const Value.absent(),
     String? title,
     Value<String?> description = const Value.absent(),
     Map<String, dynamic>? ingredients,
@@ -8844,6 +11605,13 @@ class Recipe extends DataClass implements Insertable<Recipe> {
   }) => Recipe(
     id: id ?? this.id,
     userId: userId ?? this.userId,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    syncStatus: syncStatus ?? this.syncStatus,
+    idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+    fieldVersions: fieldVersions.present
+        ? fieldVersions.value
+        : this.fieldVersions,
     title: title ?? this.title,
     description: description.present ? description.value : this.description,
     ingredients: ingredients ?? this.ingredients,
@@ -8866,6 +11634,17 @@ class Recipe extends DataClass implements Insertable<Recipe> {
     return Recipe(
       id: data.id.present ? data.id.value : this.id,
       userId: data.userId.present ? data.userId.value : this.userId,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      syncStatus: data.syncStatus.present
+          ? data.syncStatus.value
+          : this.syncStatus,
+      idempotencyKey: data.idempotencyKey.present
+          ? data.idempotencyKey.value
+          : this.idempotencyKey,
+      fieldVersions: data.fieldVersions.present
+          ? data.fieldVersions.value
+          : this.fieldVersions,
       title: data.title.present ? data.title.value : this.title,
       description: data.description.present
           ? data.description.value
@@ -8899,6 +11678,11 @@ class Recipe extends DataClass implements Insertable<Recipe> {
     return (StringBuffer('Recipe(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('fieldVersions: $fieldVersions, ')
           ..write('title: $title, ')
           ..write('description: $description, ')
           ..write('ingredients: $ingredients, ')
@@ -8919,9 +11703,14 @@ class Recipe extends DataClass implements Insertable<Recipe> {
   }
 
   @override
-  int get hashCode => Object.hash(
+  int get hashCode => Object.hashAll([
     id,
     userId,
+    createdAt,
+    updatedAt,
+    syncStatus,
+    idempotencyKey,
+    fieldVersions,
     title,
     description,
     ingredients,
@@ -8937,13 +11726,18 @@ class Recipe extends DataClass implements Insertable<Recipe> {
     b12Mcg,
     cuisineRegion,
     isPublic,
-  );
+  ]);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is Recipe &&
           other.id == this.id &&
           other.userId == this.userId &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.syncStatus == this.syncStatus &&
+          other.idempotencyKey == this.idempotencyKey &&
+          other.fieldVersions == this.fieldVersions &&
           other.title == this.title &&
           other.description == this.description &&
           other.ingredients == this.ingredients &&
@@ -8962,8 +11756,13 @@ class Recipe extends DataClass implements Insertable<Recipe> {
 }
 
 class RecipesCompanion extends UpdateCompanion<Recipe> {
-  final Value<int> id;
+  final Value<String> id;
   final Value<String> userId;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<String> syncStatus;
+  final Value<String> idempotencyKey;
+  final Value<String?> fieldVersions;
   final Value<String> title;
   final Value<String?> description;
   final Value<Map<String, dynamic>> ingredients;
@@ -8979,9 +11778,15 @@ class RecipesCompanion extends UpdateCompanion<Recipe> {
   final Value<double?> b12Mcg;
   final Value<String?> cuisineRegion;
   final Value<bool> isPublic;
+  final Value<int> rowid;
   const RecipesCompanion({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    this.idempotencyKey = const Value.absent(),
+    this.fieldVersions = const Value.absent(),
     this.title = const Value.absent(),
     this.description = const Value.absent(),
     this.ingredients = const Value.absent(),
@@ -8997,10 +11802,16 @@ class RecipesCompanion extends UpdateCompanion<Recipe> {
     this.b12Mcg = const Value.absent(),
     this.cuisineRegion = const Value.absent(),
     this.isPublic = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   RecipesCompanion.insert({
-    this.id = const Value.absent(),
+    required String id,
     required String userId,
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    required String idempotencyKey,
+    this.fieldVersions = const Value.absent(),
     required String title,
     this.description = const Value.absent(),
     required Map<String, dynamic> ingredients,
@@ -9016,15 +11827,23 @@ class RecipesCompanion extends UpdateCompanion<Recipe> {
     this.b12Mcg = const Value.absent(),
     this.cuisineRegion = const Value.absent(),
     this.isPublic = const Value.absent(),
-  }) : userId = Value(userId),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       userId = Value(userId),
+       idempotencyKey = Value(idempotencyKey),
        title = Value(title),
        ingredients = Value(ingredients),
        steps = Value(steps),
        servings = Value(servings),
        totalCalories = Value(totalCalories);
   static Insertable<Recipe> custom({
-    Expression<int>? id,
+    Expression<String>? id,
     Expression<String>? userId,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<String>? syncStatus,
+    Expression<String>? idempotencyKey,
+    Expression<String>? fieldVersions,
     Expression<String>? title,
     Expression<String>? description,
     Expression<String>? ingredients,
@@ -9040,10 +11859,16 @@ class RecipesCompanion extends UpdateCompanion<Recipe> {
     Expression<double>? b12Mcg,
     Expression<String>? cuisineRegion,
     Expression<bool>? isPublic,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (userId != null) 'user_id': userId,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (syncStatus != null) 'sync_status': syncStatus,
+      if (idempotencyKey != null) 'idempotency_key': idempotencyKey,
+      if (fieldVersions != null) 'field_versions': fieldVersions,
       if (title != null) 'title': title,
       if (description != null) 'description': description,
       if (ingredients != null) 'ingredients': ingredients,
@@ -9059,12 +11884,18 @@ class RecipesCompanion extends UpdateCompanion<Recipe> {
       if (b12Mcg != null) 'b12_mcg': b12Mcg,
       if (cuisineRegion != null) 'cuisine_region': cuisineRegion,
       if (isPublic != null) 'is_public': isPublic,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
   RecipesCompanion copyWith({
-    Value<int>? id,
+    Value<String>? id,
     Value<String>? userId,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<String>? syncStatus,
+    Value<String>? idempotencyKey,
+    Value<String?>? fieldVersions,
     Value<String>? title,
     Value<String?>? description,
     Value<Map<String, dynamic>>? ingredients,
@@ -9080,10 +11911,16 @@ class RecipesCompanion extends UpdateCompanion<Recipe> {
     Value<double?>? b12Mcg,
     Value<String?>? cuisineRegion,
     Value<bool>? isPublic,
+    Value<int>? rowid,
   }) {
     return RecipesCompanion(
       id: id ?? this.id,
       userId: userId ?? this.userId,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      syncStatus: syncStatus ?? this.syncStatus,
+      idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+      fieldVersions: fieldVersions ?? this.fieldVersions,
       title: title ?? this.title,
       description: description ?? this.description,
       ingredients: ingredients ?? this.ingredients,
@@ -9099,6 +11936,7 @@ class RecipesCompanion extends UpdateCompanion<Recipe> {
       b12Mcg: b12Mcg ?? this.b12Mcg,
       cuisineRegion: cuisineRegion ?? this.cuisineRegion,
       isPublic: isPublic ?? this.isPublic,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -9106,10 +11944,25 @@ class RecipesCompanion extends UpdateCompanion<Recipe> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (id.present) {
-      map['id'] = Variable<int>(id.value);
+      map['id'] = Variable<String>(id.value);
     }
     if (userId.present) {
       map['user_id'] = Variable<String>(userId.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (syncStatus.present) {
+      map['sync_status'] = Variable<String>(syncStatus.value);
+    }
+    if (idempotencyKey.present) {
+      map['idempotency_key'] = Variable<String>(idempotencyKey.value);
+    }
+    if (fieldVersions.present) {
+      map['field_versions'] = Variable<String>(fieldVersions.value);
     }
     if (title.present) {
       map['title'] = Variable<String>(title.value);
@@ -9160,6 +12013,9 @@ class RecipesCompanion extends UpdateCompanion<Recipe> {
     if (isPublic.present) {
       map['is_public'] = Variable<bool>(isPublic.value);
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
@@ -9168,6 +12024,11 @@ class RecipesCompanion extends UpdateCompanion<Recipe> {
     return (StringBuffer('RecipesCompanion(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('fieldVersions: $fieldVersions, ')
           ..write('title: $title, ')
           ..write('description: $description, ')
           ..write('ingredients: $ingredients, ')
@@ -9182,7 +12043,8 @@ class RecipesCompanion extends UpdateCompanion<Recipe> {
           ..write('calciumMg: $calciumMg, ')
           ..write('b12Mcg: $b12Mcg, ')
           ..write('cuisineRegion: $cuisineRegion, ')
-          ..write('isPublic: $isPublic')
+          ..write('isPublic: $isPublic, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -9196,16 +12058,12 @@ class $PersonalRecordsTable extends PersonalRecords
   $PersonalRecordsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
     'id',
     aliasedName,
     false,
-    hasAutoIncrement: true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
   );
   static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
   @override
@@ -9215,6 +12073,64 @@ class $PersonalRecordsTable extends PersonalRecords
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _syncStatusMeta = const VerificationMeta(
+    'syncStatus',
+  );
+  @override
+  late final GeneratedColumn<String> syncStatus = GeneratedColumn<String>(
+    'sync_status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('pending'),
+  );
+  static const VerificationMeta _idempotencyKeyMeta = const VerificationMeta(
+    'idempotencyKey',
+  );
+  @override
+  late final GeneratedColumn<String> idempotencyKey = GeneratedColumn<String>(
+    'idempotency_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _fieldVersionsMeta = const VerificationMeta(
+    'fieldVersions',
+  );
+  @override
+  late final GeneratedColumn<String> fieldVersions = GeneratedColumn<String>(
+    'field_versions',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
   );
   static const VerificationMeta _exerciseNameMeta = const VerificationMeta(
     'exerciseName',
@@ -9262,6 +12178,11 @@ class $PersonalRecordsTable extends PersonalRecords
   List<GeneratedColumn> get $columns => [
     id,
     userId,
+    createdAt,
+    updatedAt,
+    syncStatus,
+    idempotencyKey,
+    fieldVersions,
     exerciseName,
     recordValue,
     unit,
@@ -9281,6 +12202,8 @@ class $PersonalRecordsTable extends PersonalRecords
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
     }
     if (data.containsKey('user_id')) {
       context.handle(
@@ -9289,6 +12212,44 @@ class $PersonalRecordsTable extends PersonalRecords
       );
     } else if (isInserting) {
       context.missing(_userIdMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    if (data.containsKey('sync_status')) {
+      context.handle(
+        _syncStatusMeta,
+        syncStatus.isAcceptableOrUnknown(data['sync_status']!, _syncStatusMeta),
+      );
+    }
+    if (data.containsKey('idempotency_key')) {
+      context.handle(
+        _idempotencyKeyMeta,
+        idempotencyKey.isAcceptableOrUnknown(
+          data['idempotency_key']!,
+          _idempotencyKeyMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_idempotencyKeyMeta);
+    }
+    if (data.containsKey('field_versions')) {
+      context.handle(
+        _fieldVersionsMeta,
+        fieldVersions.isAcceptableOrUnknown(
+          data['field_versions']!,
+          _fieldVersionsMeta,
+        ),
+      );
     }
     if (data.containsKey('exercise_name')) {
       context.handle(
@@ -9338,13 +12299,33 @@ class $PersonalRecordsTable extends PersonalRecords
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return PersonalRecord(
       id: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
+        DriftSqlType.string,
         data['${effectivePrefix}id'],
       )!,
       userId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}user_id'],
       )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      syncStatus: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sync_status'],
+      )!,
+      idempotencyKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}idempotency_key'],
+      )!,
+      fieldVersions: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}field_versions'],
+      ),
       exerciseName: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}exercise_name'],
@@ -9371,8 +12352,13 @@ class $PersonalRecordsTable extends PersonalRecords
 }
 
 class PersonalRecord extends DataClass implements Insertable<PersonalRecord> {
-  final int id;
+  final String id;
   final String userId;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final String syncStatus;
+  final String idempotencyKey;
+  final String? fieldVersions;
   final String exerciseName;
   final double recordValue;
   final String unit;
@@ -9380,6 +12366,11 @@ class PersonalRecord extends DataClass implements Insertable<PersonalRecord> {
   const PersonalRecord({
     required this.id,
     required this.userId,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.syncStatus,
+    required this.idempotencyKey,
+    this.fieldVersions,
     required this.exerciseName,
     required this.recordValue,
     required this.unit,
@@ -9388,8 +12379,15 @@ class PersonalRecord extends DataClass implements Insertable<PersonalRecord> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
+    map['id'] = Variable<String>(id);
     map['user_id'] = Variable<String>(userId);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['sync_status'] = Variable<String>(syncStatus);
+    map['idempotency_key'] = Variable<String>(idempotencyKey);
+    if (!nullToAbsent || fieldVersions != null) {
+      map['field_versions'] = Variable<String>(fieldVersions);
+    }
     map['exercise_name'] = Variable<String>(exerciseName);
     map['record_value'] = Variable<double>(recordValue);
     map['unit'] = Variable<String>(unit);
@@ -9401,6 +12399,13 @@ class PersonalRecord extends DataClass implements Insertable<PersonalRecord> {
     return PersonalRecordsCompanion(
       id: Value(id),
       userId: Value(userId),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      syncStatus: Value(syncStatus),
+      idempotencyKey: Value(idempotencyKey),
+      fieldVersions: fieldVersions == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fieldVersions),
       exerciseName: Value(exerciseName),
       recordValue: Value(recordValue),
       unit: Value(unit),
@@ -9414,8 +12419,13 @@ class PersonalRecord extends DataClass implements Insertable<PersonalRecord> {
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return PersonalRecord(
-      id: serializer.fromJson<int>(json['id']),
+      id: serializer.fromJson<String>(json['id']),
       userId: serializer.fromJson<String>(json['userId']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      syncStatus: serializer.fromJson<String>(json['syncStatus']),
+      idempotencyKey: serializer.fromJson<String>(json['idempotencyKey']),
+      fieldVersions: serializer.fromJson<String?>(json['fieldVersions']),
       exerciseName: serializer.fromJson<String>(json['exerciseName']),
       recordValue: serializer.fromJson<double>(json['recordValue']),
       unit: serializer.fromJson<String>(json['unit']),
@@ -9426,8 +12436,13 @@ class PersonalRecord extends DataClass implements Insertable<PersonalRecord> {
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
+      'id': serializer.toJson<String>(id),
       'userId': serializer.toJson<String>(userId),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'syncStatus': serializer.toJson<String>(syncStatus),
+      'idempotencyKey': serializer.toJson<String>(idempotencyKey),
+      'fieldVersions': serializer.toJson<String?>(fieldVersions),
       'exerciseName': serializer.toJson<String>(exerciseName),
       'recordValue': serializer.toJson<double>(recordValue),
       'unit': serializer.toJson<String>(unit),
@@ -9436,8 +12451,13 @@ class PersonalRecord extends DataClass implements Insertable<PersonalRecord> {
   }
 
   PersonalRecord copyWith({
-    int? id,
+    String? id,
     String? userId,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    String? syncStatus,
+    String? idempotencyKey,
+    Value<String?> fieldVersions = const Value.absent(),
     String? exerciseName,
     double? recordValue,
     String? unit,
@@ -9445,6 +12465,13 @@ class PersonalRecord extends DataClass implements Insertable<PersonalRecord> {
   }) => PersonalRecord(
     id: id ?? this.id,
     userId: userId ?? this.userId,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    syncStatus: syncStatus ?? this.syncStatus,
+    idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+    fieldVersions: fieldVersions.present
+        ? fieldVersions.value
+        : this.fieldVersions,
     exerciseName: exerciseName ?? this.exerciseName,
     recordValue: recordValue ?? this.recordValue,
     unit: unit ?? this.unit,
@@ -9454,6 +12481,17 @@ class PersonalRecord extends DataClass implements Insertable<PersonalRecord> {
     return PersonalRecord(
       id: data.id.present ? data.id.value : this.id,
       userId: data.userId.present ? data.userId.value : this.userId,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      syncStatus: data.syncStatus.present
+          ? data.syncStatus.value
+          : this.syncStatus,
+      idempotencyKey: data.idempotencyKey.present
+          ? data.idempotencyKey.value
+          : this.idempotencyKey,
+      fieldVersions: data.fieldVersions.present
+          ? data.fieldVersions.value
+          : this.fieldVersions,
       exerciseName: data.exerciseName.present
           ? data.exerciseName.value
           : this.exerciseName,
@@ -9472,6 +12510,11 @@ class PersonalRecord extends DataClass implements Insertable<PersonalRecord> {
     return (StringBuffer('PersonalRecord(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('fieldVersions: $fieldVersions, ')
           ..write('exerciseName: $exerciseName, ')
           ..write('recordValue: $recordValue, ')
           ..write('unit: $unit, ')
@@ -9481,14 +12524,30 @@ class PersonalRecord extends DataClass implements Insertable<PersonalRecord> {
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, userId, exerciseName, recordValue, unit, achievedAt);
+  int get hashCode => Object.hash(
+    id,
+    userId,
+    createdAt,
+    updatedAt,
+    syncStatus,
+    idempotencyKey,
+    fieldVersions,
+    exerciseName,
+    recordValue,
+    unit,
+    achievedAt,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is PersonalRecord &&
           other.id == this.id &&
           other.userId == this.userId &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.syncStatus == this.syncStatus &&
+          other.idempotencyKey == this.idempotencyKey &&
+          other.fieldVersions == this.fieldVersions &&
           other.exerciseName == this.exerciseName &&
           other.recordValue == this.recordValue &&
           other.unit == this.unit &&
@@ -9496,65 +12555,109 @@ class PersonalRecord extends DataClass implements Insertable<PersonalRecord> {
 }
 
 class PersonalRecordsCompanion extends UpdateCompanion<PersonalRecord> {
-  final Value<int> id;
+  final Value<String> id;
   final Value<String> userId;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<String> syncStatus;
+  final Value<String> idempotencyKey;
+  final Value<String?> fieldVersions;
   final Value<String> exerciseName;
   final Value<double> recordValue;
   final Value<String> unit;
   final Value<DateTime> achievedAt;
+  final Value<int> rowid;
   const PersonalRecordsCompanion({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    this.idempotencyKey = const Value.absent(),
+    this.fieldVersions = const Value.absent(),
     this.exerciseName = const Value.absent(),
     this.recordValue = const Value.absent(),
     this.unit = const Value.absent(),
     this.achievedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   PersonalRecordsCompanion.insert({
-    this.id = const Value.absent(),
+    required String id,
     required String userId,
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    required String idempotencyKey,
+    this.fieldVersions = const Value.absent(),
     required String exerciseName,
     required double recordValue,
     required String unit,
     required DateTime achievedAt,
-  }) : userId = Value(userId),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       userId = Value(userId),
+       idempotencyKey = Value(idempotencyKey),
        exerciseName = Value(exerciseName),
        recordValue = Value(recordValue),
        unit = Value(unit),
        achievedAt = Value(achievedAt);
   static Insertable<PersonalRecord> custom({
-    Expression<int>? id,
+    Expression<String>? id,
     Expression<String>? userId,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<String>? syncStatus,
+    Expression<String>? idempotencyKey,
+    Expression<String>? fieldVersions,
     Expression<String>? exerciseName,
     Expression<double>? recordValue,
     Expression<String>? unit,
     Expression<DateTime>? achievedAt,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (userId != null) 'user_id': userId,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (syncStatus != null) 'sync_status': syncStatus,
+      if (idempotencyKey != null) 'idempotency_key': idempotencyKey,
+      if (fieldVersions != null) 'field_versions': fieldVersions,
       if (exerciseName != null) 'exercise_name': exerciseName,
       if (recordValue != null) 'record_value': recordValue,
       if (unit != null) 'unit': unit,
       if (achievedAt != null) 'achieved_at': achievedAt,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
   PersonalRecordsCompanion copyWith({
-    Value<int>? id,
+    Value<String>? id,
     Value<String>? userId,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<String>? syncStatus,
+    Value<String>? idempotencyKey,
+    Value<String?>? fieldVersions,
     Value<String>? exerciseName,
     Value<double>? recordValue,
     Value<String>? unit,
     Value<DateTime>? achievedAt,
+    Value<int>? rowid,
   }) {
     return PersonalRecordsCompanion(
       id: id ?? this.id,
       userId: userId ?? this.userId,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      syncStatus: syncStatus ?? this.syncStatus,
+      idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+      fieldVersions: fieldVersions ?? this.fieldVersions,
       exerciseName: exerciseName ?? this.exerciseName,
       recordValue: recordValue ?? this.recordValue,
       unit: unit ?? this.unit,
       achievedAt: achievedAt ?? this.achievedAt,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -9562,10 +12665,25 @@ class PersonalRecordsCompanion extends UpdateCompanion<PersonalRecord> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (id.present) {
-      map['id'] = Variable<int>(id.value);
+      map['id'] = Variable<String>(id.value);
     }
     if (userId.present) {
       map['user_id'] = Variable<String>(userId.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (syncStatus.present) {
+      map['sync_status'] = Variable<String>(syncStatus.value);
+    }
+    if (idempotencyKey.present) {
+      map['idempotency_key'] = Variable<String>(idempotencyKey.value);
+    }
+    if (fieldVersions.present) {
+      map['field_versions'] = Variable<String>(fieldVersions.value);
     }
     if (exerciseName.present) {
       map['exercise_name'] = Variable<String>(exerciseName.value);
@@ -9579,6 +12697,9 @@ class PersonalRecordsCompanion extends UpdateCompanion<PersonalRecord> {
     if (achievedAt.present) {
       map['achieved_at'] = Variable<DateTime>(achievedAt.value);
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
@@ -9587,10 +12708,16 @@ class PersonalRecordsCompanion extends UpdateCompanion<PersonalRecord> {
     return (StringBuffer('PersonalRecordsCompanion(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('fieldVersions: $fieldVersions, ')
           ..write('exerciseName: $exerciseName, ')
           ..write('recordValue: $recordValue, ')
           ..write('unit: $unit, ')
-          ..write('achievedAt: $achievedAt')
+          ..write('achievedAt: $achievedAt, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -9604,16 +12731,12 @@ class $NutritionGoalsTable extends NutritionGoals
   $NutritionGoalsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
     'id',
     aliasedName,
     false,
-    hasAutoIncrement: true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
   );
   static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
   @override
@@ -9623,6 +12746,64 @@ class $NutritionGoalsTable extends NutritionGoals
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _syncStatusMeta = const VerificationMeta(
+    'syncStatus',
+  );
+  @override
+  late final GeneratedColumn<String> syncStatus = GeneratedColumn<String>(
+    'sync_status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('pending'),
+  );
+  static const VerificationMeta _idempotencyKeyMeta = const VerificationMeta(
+    'idempotencyKey',
+  );
+  @override
+  late final GeneratedColumn<String> idempotencyKey = GeneratedColumn<String>(
+    'idempotency_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _fieldVersionsMeta = const VerificationMeta(
+    'fieldVersions',
+  );
+  @override
+  late final GeneratedColumn<String> fieldVersions = GeneratedColumn<String>(
+    'field_versions',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
   );
   static const VerificationMeta _tdeeMeta = const VerificationMeta('tdee');
   @override
@@ -9728,6 +12909,11 @@ class $NutritionGoalsTable extends NutritionGoals
   List<GeneratedColumn> get $columns => [
     id,
     userId,
+    createdAt,
+    updatedAt,
+    syncStatus,
+    idempotencyKey,
+    fieldVersions,
     tdee,
     calorieGoal,
     proteinG,
@@ -9753,6 +12939,8 @@ class $NutritionGoalsTable extends NutritionGoals
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
     }
     if (data.containsKey('user_id')) {
       context.handle(
@@ -9761,6 +12949,44 @@ class $NutritionGoalsTable extends NutritionGoals
       );
     } else if (isInserting) {
       context.missing(_userIdMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    if (data.containsKey('sync_status')) {
+      context.handle(
+        _syncStatusMeta,
+        syncStatus.isAcceptableOrUnknown(data['sync_status']!, _syncStatusMeta),
+      );
+    }
+    if (data.containsKey('idempotency_key')) {
+      context.handle(
+        _idempotencyKeyMeta,
+        idempotencyKey.isAcceptableOrUnknown(
+          data['idempotency_key']!,
+          _idempotencyKeyMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_idempotencyKeyMeta);
+    }
+    if (data.containsKey('field_versions')) {
+      context.handle(
+        _fieldVersionsMeta,
+        fieldVersions.isAcceptableOrUnknown(
+          data['field_versions']!,
+          _fieldVersionsMeta,
+        ),
+      );
     }
     if (data.containsKey('tdee')) {
       context.handle(
@@ -9847,13 +13073,33 @@ class $NutritionGoalsTable extends NutritionGoals
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return NutritionGoal(
       id: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
+        DriftSqlType.string,
         data['${effectivePrefix}id'],
       )!,
       userId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}user_id'],
       )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      syncStatus: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sync_status'],
+      )!,
+      idempotencyKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}idempotency_key'],
+      )!,
+      fieldVersions: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}field_versions'],
+      ),
       tdee: attachedDatabase.typeMapping.read(
         DriftSqlType.double,
         data['${effectivePrefix}tdee'],
@@ -9904,8 +13150,13 @@ class $NutritionGoalsTable extends NutritionGoals
 }
 
 class NutritionGoal extends DataClass implements Insertable<NutritionGoal> {
-  final int id;
+  final String id;
   final String userId;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final String syncStatus;
+  final String idempotencyKey;
+  final String? fieldVersions;
   final double tdee;
   final double calorieGoal;
   final double proteinG;
@@ -9919,6 +13170,11 @@ class NutritionGoal extends DataClass implements Insertable<NutritionGoal> {
   const NutritionGoal({
     required this.id,
     required this.userId,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.syncStatus,
+    required this.idempotencyKey,
+    this.fieldVersions,
     required this.tdee,
     required this.calorieGoal,
     required this.proteinG,
@@ -9933,8 +13189,15 @@ class NutritionGoal extends DataClass implements Insertable<NutritionGoal> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
+    map['id'] = Variable<String>(id);
     map['user_id'] = Variable<String>(userId);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['sync_status'] = Variable<String>(syncStatus);
+    map['idempotency_key'] = Variable<String>(idempotencyKey);
+    if (!nullToAbsent || fieldVersions != null) {
+      map['field_versions'] = Variable<String>(fieldVersions);
+    }
     map['tdee'] = Variable<double>(tdee);
     map['calorie_goal'] = Variable<double>(calorieGoal);
     map['protein_g'] = Variable<double>(proteinG);
@@ -9960,6 +13223,13 @@ class NutritionGoal extends DataClass implements Insertable<NutritionGoal> {
     return NutritionGoalsCompanion(
       id: Value(id),
       userId: Value(userId),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      syncStatus: Value(syncStatus),
+      idempotencyKey: Value(idempotencyKey),
+      fieldVersions: fieldVersions == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fieldVersions),
       tdee: Value(tdee),
       calorieGoal: Value(calorieGoal),
       proteinG: Value(proteinG),
@@ -9987,8 +13257,13 @@ class NutritionGoal extends DataClass implements Insertable<NutritionGoal> {
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return NutritionGoal(
-      id: serializer.fromJson<int>(json['id']),
+      id: serializer.fromJson<String>(json['id']),
       userId: serializer.fromJson<String>(json['userId']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      syncStatus: serializer.fromJson<String>(json['syncStatus']),
+      idempotencyKey: serializer.fromJson<String>(json['idempotencyKey']),
+      fieldVersions: serializer.fromJson<String?>(json['fieldVersions']),
       tdee: serializer.fromJson<double>(json['tdee']),
       calorieGoal: serializer.fromJson<double>(json['calorieGoal']),
       proteinG: serializer.fromJson<double>(json['proteinG']),
@@ -10005,8 +13280,13 @@ class NutritionGoal extends DataClass implements Insertable<NutritionGoal> {
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
+      'id': serializer.toJson<String>(id),
       'userId': serializer.toJson<String>(userId),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'syncStatus': serializer.toJson<String>(syncStatus),
+      'idempotencyKey': serializer.toJson<String>(idempotencyKey),
+      'fieldVersions': serializer.toJson<String?>(fieldVersions),
       'tdee': serializer.toJson<double>(tdee),
       'calorieGoal': serializer.toJson<double>(calorieGoal),
       'proteinG': serializer.toJson<double>(proteinG),
@@ -10021,8 +13301,13 @@ class NutritionGoal extends DataClass implements Insertable<NutritionGoal> {
   }
 
   NutritionGoal copyWith({
-    int? id,
+    String? id,
     String? userId,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    String? syncStatus,
+    String? idempotencyKey,
+    Value<String?> fieldVersions = const Value.absent(),
     double? tdee,
     double? calorieGoal,
     double? proteinG,
@@ -10036,6 +13321,13 @@ class NutritionGoal extends DataClass implements Insertable<NutritionGoal> {
   }) => NutritionGoal(
     id: id ?? this.id,
     userId: userId ?? this.userId,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    syncStatus: syncStatus ?? this.syncStatus,
+    idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+    fieldVersions: fieldVersions.present
+        ? fieldVersions.value
+        : this.fieldVersions,
     tdee: tdee ?? this.tdee,
     calorieGoal: calorieGoal ?? this.calorieGoal,
     proteinG: proteinG ?? this.proteinG,
@@ -10051,6 +13343,17 @@ class NutritionGoal extends DataClass implements Insertable<NutritionGoal> {
     return NutritionGoal(
       id: data.id.present ? data.id.value : this.id,
       userId: data.userId.present ? data.userId.value : this.userId,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      syncStatus: data.syncStatus.present
+          ? data.syncStatus.value
+          : this.syncStatus,
+      idempotencyKey: data.idempotencyKey.present
+          ? data.idempotencyKey.value
+          : this.idempotencyKey,
+      fieldVersions: data.fieldVersions.present
+          ? data.fieldVersions.value
+          : this.fieldVersions,
       tdee: data.tdee.present ? data.tdee.value : this.tdee,
       calorieGoal: data.calorieGoal.present
           ? data.calorieGoal.value
@@ -10071,6 +13374,11 @@ class NutritionGoal extends DataClass implements Insertable<NutritionGoal> {
     return (StringBuffer('NutritionGoal(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('fieldVersions: $fieldVersions, ')
           ..write('tdee: $tdee, ')
           ..write('calorieGoal: $calorieGoal, ')
           ..write('proteinG: $proteinG, ')
@@ -10089,6 +13397,11 @@ class NutritionGoal extends DataClass implements Insertable<NutritionGoal> {
   int get hashCode => Object.hash(
     id,
     userId,
+    createdAt,
+    updatedAt,
+    syncStatus,
+    idempotencyKey,
+    fieldVersions,
     tdee,
     calorieGoal,
     proteinG,
@@ -10106,6 +13419,11 @@ class NutritionGoal extends DataClass implements Insertable<NutritionGoal> {
       (other is NutritionGoal &&
           other.id == this.id &&
           other.userId == this.userId &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.syncStatus == this.syncStatus &&
+          other.idempotencyKey == this.idempotencyKey &&
+          other.fieldVersions == this.fieldVersions &&
           other.tdee == this.tdee &&
           other.calorieGoal == this.calorieGoal &&
           other.proteinG == this.proteinG &&
@@ -10119,8 +13437,13 @@ class NutritionGoal extends DataClass implements Insertable<NutritionGoal> {
 }
 
 class NutritionGoalsCompanion extends UpdateCompanion<NutritionGoal> {
-  final Value<int> id;
+  final Value<String> id;
   final Value<String> userId;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<String> syncStatus;
+  final Value<String> idempotencyKey;
+  final Value<String?> fieldVersions;
   final Value<double> tdee;
   final Value<double> calorieGoal;
   final Value<double> proteinG;
@@ -10131,9 +13454,15 @@ class NutritionGoalsCompanion extends UpdateCompanion<NutritionGoal> {
   final Value<double?> b12Mcg;
   final Value<double?> ironMg;
   final Value<double?> calciumMg;
+  final Value<int> rowid;
   const NutritionGoalsCompanion({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    this.idempotencyKey = const Value.absent(),
+    this.fieldVersions = const Value.absent(),
     this.tdee = const Value.absent(),
     this.calorieGoal = const Value.absent(),
     this.proteinG = const Value.absent(),
@@ -10144,10 +13473,16 @@ class NutritionGoalsCompanion extends UpdateCompanion<NutritionGoal> {
     this.b12Mcg = const Value.absent(),
     this.ironMg = const Value.absent(),
     this.calciumMg = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   NutritionGoalsCompanion.insert({
-    this.id = const Value.absent(),
+    required String id,
     required String userId,
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    required String idempotencyKey,
+    this.fieldVersions = const Value.absent(),
     required double tdee,
     required double calorieGoal,
     required double proteinG,
@@ -10158,7 +13493,10 @@ class NutritionGoalsCompanion extends UpdateCompanion<NutritionGoal> {
     this.b12Mcg = const Value.absent(),
     this.ironMg = const Value.absent(),
     this.calciumMg = const Value.absent(),
-  }) : userId = Value(userId),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       userId = Value(userId),
+       idempotencyKey = Value(idempotencyKey),
        tdee = Value(tdee),
        calorieGoal = Value(calorieGoal),
        proteinG = Value(proteinG),
@@ -10166,8 +13504,13 @@ class NutritionGoalsCompanion extends UpdateCompanion<NutritionGoal> {
        fatG = Value(fatG),
        goalType = Value(goalType);
   static Insertable<NutritionGoal> custom({
-    Expression<int>? id,
+    Expression<String>? id,
     Expression<String>? userId,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<String>? syncStatus,
+    Expression<String>? idempotencyKey,
+    Expression<String>? fieldVersions,
     Expression<double>? tdee,
     Expression<double>? calorieGoal,
     Expression<double>? proteinG,
@@ -10178,10 +13521,16 @@ class NutritionGoalsCompanion extends UpdateCompanion<NutritionGoal> {
     Expression<double>? b12Mcg,
     Expression<double>? ironMg,
     Expression<double>? calciumMg,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (userId != null) 'user_id': userId,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (syncStatus != null) 'sync_status': syncStatus,
+      if (idempotencyKey != null) 'idempotency_key': idempotencyKey,
+      if (fieldVersions != null) 'field_versions': fieldVersions,
       if (tdee != null) 'tdee': tdee,
       if (calorieGoal != null) 'calorie_goal': calorieGoal,
       if (proteinG != null) 'protein_g': proteinG,
@@ -10192,12 +13541,18 @@ class NutritionGoalsCompanion extends UpdateCompanion<NutritionGoal> {
       if (b12Mcg != null) 'b12_mcg': b12Mcg,
       if (ironMg != null) 'iron_mg': ironMg,
       if (calciumMg != null) 'calcium_mg': calciumMg,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
   NutritionGoalsCompanion copyWith({
-    Value<int>? id,
+    Value<String>? id,
     Value<String>? userId,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<String>? syncStatus,
+    Value<String>? idempotencyKey,
+    Value<String?>? fieldVersions,
     Value<double>? tdee,
     Value<double>? calorieGoal,
     Value<double>? proteinG,
@@ -10208,10 +13563,16 @@ class NutritionGoalsCompanion extends UpdateCompanion<NutritionGoal> {
     Value<double?>? b12Mcg,
     Value<double?>? ironMg,
     Value<double?>? calciumMg,
+    Value<int>? rowid,
   }) {
     return NutritionGoalsCompanion(
       id: id ?? this.id,
       userId: userId ?? this.userId,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      syncStatus: syncStatus ?? this.syncStatus,
+      idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+      fieldVersions: fieldVersions ?? this.fieldVersions,
       tdee: tdee ?? this.tdee,
       calorieGoal: calorieGoal ?? this.calorieGoal,
       proteinG: proteinG ?? this.proteinG,
@@ -10222,6 +13583,7 @@ class NutritionGoalsCompanion extends UpdateCompanion<NutritionGoal> {
       b12Mcg: b12Mcg ?? this.b12Mcg,
       ironMg: ironMg ?? this.ironMg,
       calciumMg: calciumMg ?? this.calciumMg,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -10229,10 +13591,25 @@ class NutritionGoalsCompanion extends UpdateCompanion<NutritionGoal> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (id.present) {
-      map['id'] = Variable<int>(id.value);
+      map['id'] = Variable<String>(id.value);
     }
     if (userId.present) {
       map['user_id'] = Variable<String>(userId.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (syncStatus.present) {
+      map['sync_status'] = Variable<String>(syncStatus.value);
+    }
+    if (idempotencyKey.present) {
+      map['idempotency_key'] = Variable<String>(idempotencyKey.value);
+    }
+    if (fieldVersions.present) {
+      map['field_versions'] = Variable<String>(fieldVersions.value);
     }
     if (tdee.present) {
       map['tdee'] = Variable<double>(tdee.value);
@@ -10264,6 +13641,9 @@ class NutritionGoalsCompanion extends UpdateCompanion<NutritionGoal> {
     if (calciumMg.present) {
       map['calcium_mg'] = Variable<double>(calciumMg.value);
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
@@ -10272,6 +13652,11 @@ class NutritionGoalsCompanion extends UpdateCompanion<NutritionGoal> {
     return (StringBuffer('NutritionGoalsCompanion(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('fieldVersions: $fieldVersions, ')
           ..write('tdee: $tdee, ')
           ..write('calorieGoal: $calorieGoal, ')
           ..write('proteinG: $proteinG, ')
@@ -10281,7 +13666,8 @@ class NutritionGoalsCompanion extends UpdateCompanion<NutritionGoal> {
           ..write('vitDMcg: $vitDMcg, ')
           ..write('b12Mcg: $b12Mcg, ')
           ..write('ironMg: $ironMg, ')
-          ..write('calciumMg: $calciumMg')
+          ..write('calciumMg: $calciumMg, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -10295,16 +13681,12 @@ class $KarmaTransactionsTable extends KarmaTransactions
   $KarmaTransactionsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
     'id',
     aliasedName,
     false,
-    hasAutoIncrement: true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
   );
   static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
   @override
@@ -10314,6 +13696,64 @@ class $KarmaTransactionsTable extends KarmaTransactions
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _syncStatusMeta = const VerificationMeta(
+    'syncStatus',
+  );
+  @override
+  late final GeneratedColumn<String> syncStatus = GeneratedColumn<String>(
+    'sync_status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('pending'),
+  );
+  static const VerificationMeta _idempotencyKeyMeta = const VerificationMeta(
+    'idempotencyKey',
+  );
+  @override
+  late final GeneratedColumn<String> idempotencyKey = GeneratedColumn<String>(
+    'idempotency_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _fieldVersionsMeta = const VerificationMeta(
+    'fieldVersions',
+  );
+  @override
+  late final GeneratedColumn<String> fieldVersions = GeneratedColumn<String>(
+    'field_versions',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
   );
   static const VerificationMeta _amountMeta = const VerificationMeta('amount');
   @override
@@ -10355,26 +13795,19 @@ class $KarmaTransactionsTable extends KarmaTransactions
     type: DriftSqlType.int,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _createdAtMeta = const VerificationMeta(
-    'createdAt',
-  );
-  @override
-  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
-    'created_at',
-    aliasedName,
-    false,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: true,
-  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
     userId,
+    createdAt,
+    updatedAt,
+    syncStatus,
+    idempotencyKey,
+    fieldVersions,
     amount,
     action,
     description,
     balanceAfter,
-    createdAt,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -10390,6 +13823,8 @@ class $KarmaTransactionsTable extends KarmaTransactions
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
     }
     if (data.containsKey('user_id')) {
       context.handle(
@@ -10398,6 +13833,44 @@ class $KarmaTransactionsTable extends KarmaTransactions
       );
     } else if (isInserting) {
       context.missing(_userIdMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    if (data.containsKey('sync_status')) {
+      context.handle(
+        _syncStatusMeta,
+        syncStatus.isAcceptableOrUnknown(data['sync_status']!, _syncStatusMeta),
+      );
+    }
+    if (data.containsKey('idempotency_key')) {
+      context.handle(
+        _idempotencyKeyMeta,
+        idempotencyKey.isAcceptableOrUnknown(
+          data['idempotency_key']!,
+          _idempotencyKeyMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_idempotencyKeyMeta);
+    }
+    if (data.containsKey('field_versions')) {
+      context.handle(
+        _fieldVersionsMeta,
+        fieldVersions.isAcceptableOrUnknown(
+          data['field_versions']!,
+          _fieldVersionsMeta,
+        ),
+      );
     }
     if (data.containsKey('amount')) {
       context.handle(
@@ -10435,14 +13908,6 @@ class $KarmaTransactionsTable extends KarmaTransactions
     } else if (isInserting) {
       context.missing(_balanceAfterMeta);
     }
-    if (data.containsKey('created_at')) {
-      context.handle(
-        _createdAtMeta,
-        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_createdAtMeta);
-    }
     return context;
   }
 
@@ -10453,13 +13918,33 @@ class $KarmaTransactionsTable extends KarmaTransactions
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return KarmaTransaction(
       id: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
+        DriftSqlType.string,
         data['${effectivePrefix}id'],
       )!,
       userId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}user_id'],
       )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      syncStatus: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sync_status'],
+      )!,
+      idempotencyKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}idempotency_key'],
+      )!,
+      fieldVersions: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}field_versions'],
+      ),
       amount: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}amount'],
@@ -10476,10 +13961,6 @@ class $KarmaTransactionsTable extends KarmaTransactions
         DriftSqlType.int,
         data['${effectivePrefix}balance_after'],
       )!,
-      createdAt: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}created_at'],
-      )!,
     );
   }
 
@@ -10491,34 +13972,48 @@ class $KarmaTransactionsTable extends KarmaTransactions
 
 class KarmaTransaction extends DataClass
     implements Insertable<KarmaTransaction> {
-  final int id;
+  final String id;
   final String userId;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final String syncStatus;
+  final String idempotencyKey;
+  final String? fieldVersions;
   final int amount;
   final String action;
   final String? description;
   final int balanceAfter;
-  final DateTime createdAt;
   const KarmaTransaction({
     required this.id,
     required this.userId,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.syncStatus,
+    required this.idempotencyKey,
+    this.fieldVersions,
     required this.amount,
     required this.action,
     this.description,
     required this.balanceAfter,
-    required this.createdAt,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
+    map['id'] = Variable<String>(id);
     map['user_id'] = Variable<String>(userId);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['sync_status'] = Variable<String>(syncStatus);
+    map['idempotency_key'] = Variable<String>(idempotencyKey);
+    if (!nullToAbsent || fieldVersions != null) {
+      map['field_versions'] = Variable<String>(fieldVersions);
+    }
     map['amount'] = Variable<int>(amount);
     map['action'] = Variable<String>(action);
     if (!nullToAbsent || description != null) {
       map['description'] = Variable<String>(description);
     }
     map['balance_after'] = Variable<int>(balanceAfter);
-    map['created_at'] = Variable<DateTime>(createdAt);
     return map;
   }
 
@@ -10526,13 +14021,19 @@ class KarmaTransaction extends DataClass
     return KarmaTransactionsCompanion(
       id: Value(id),
       userId: Value(userId),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      syncStatus: Value(syncStatus),
+      idempotencyKey: Value(idempotencyKey),
+      fieldVersions: fieldVersions == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fieldVersions),
       amount: Value(amount),
       action: Value(action),
       description: description == null && nullToAbsent
           ? const Value.absent()
           : Value(description),
       balanceAfter: Value(balanceAfter),
-      createdAt: Value(createdAt),
     );
   }
 
@@ -10542,50 +14043,79 @@ class KarmaTransaction extends DataClass
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return KarmaTransaction(
-      id: serializer.fromJson<int>(json['id']),
+      id: serializer.fromJson<String>(json['id']),
       userId: serializer.fromJson<String>(json['userId']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      syncStatus: serializer.fromJson<String>(json['syncStatus']),
+      idempotencyKey: serializer.fromJson<String>(json['idempotencyKey']),
+      fieldVersions: serializer.fromJson<String?>(json['fieldVersions']),
       amount: serializer.fromJson<int>(json['amount']),
       action: serializer.fromJson<String>(json['action']),
       description: serializer.fromJson<String?>(json['description']),
       balanceAfter: serializer.fromJson<int>(json['balanceAfter']),
-      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
+      'id': serializer.toJson<String>(id),
       'userId': serializer.toJson<String>(userId),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'syncStatus': serializer.toJson<String>(syncStatus),
+      'idempotencyKey': serializer.toJson<String>(idempotencyKey),
+      'fieldVersions': serializer.toJson<String?>(fieldVersions),
       'amount': serializer.toJson<int>(amount),
       'action': serializer.toJson<String>(action),
       'description': serializer.toJson<String?>(description),
       'balanceAfter': serializer.toJson<int>(balanceAfter),
-      'createdAt': serializer.toJson<DateTime>(createdAt),
     };
   }
 
   KarmaTransaction copyWith({
-    int? id,
+    String? id,
     String? userId,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    String? syncStatus,
+    String? idempotencyKey,
+    Value<String?> fieldVersions = const Value.absent(),
     int? amount,
     String? action,
     Value<String?> description = const Value.absent(),
     int? balanceAfter,
-    DateTime? createdAt,
   }) => KarmaTransaction(
     id: id ?? this.id,
     userId: userId ?? this.userId,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    syncStatus: syncStatus ?? this.syncStatus,
+    idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+    fieldVersions: fieldVersions.present
+        ? fieldVersions.value
+        : this.fieldVersions,
     amount: amount ?? this.amount,
     action: action ?? this.action,
     description: description.present ? description.value : this.description,
     balanceAfter: balanceAfter ?? this.balanceAfter,
-    createdAt: createdAt ?? this.createdAt,
   );
   KarmaTransaction copyWithCompanion(KarmaTransactionsCompanion data) {
     return KarmaTransaction(
       id: data.id.present ? data.id.value : this.id,
       userId: data.userId.present ? data.userId.value : this.userId,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      syncStatus: data.syncStatus.present
+          ? data.syncStatus.value
+          : this.syncStatus,
+      idempotencyKey: data.idempotencyKey.present
+          ? data.idempotencyKey.value
+          : this.idempotencyKey,
+      fieldVersions: data.fieldVersions.present
+          ? data.fieldVersions.value
+          : this.fieldVersions,
       amount: data.amount.present ? data.amount.value : this.amount,
       action: data.action.present ? data.action.value : this.action,
       description: data.description.present
@@ -10594,7 +14124,6 @@ class KarmaTransaction extends DataClass
       balanceAfter: data.balanceAfter.present
           ? data.balanceAfter.value
           : this.balanceAfter,
-      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
     );
   }
 
@@ -10603,11 +14132,15 @@ class KarmaTransaction extends DataClass
     return (StringBuffer('KarmaTransaction(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('fieldVersions: $fieldVersions, ')
           ..write('amount: $amount, ')
           ..write('action: $action, ')
           ..write('description: $description, ')
-          ..write('balanceAfter: $balanceAfter, ')
-          ..write('createdAt: $createdAt')
+          ..write('balanceAfter: $balanceAfter')
           ..write(')'))
         .toString();
   }
@@ -10616,11 +14149,15 @@ class KarmaTransaction extends DataClass
   int get hashCode => Object.hash(
     id,
     userId,
+    createdAt,
+    updatedAt,
+    syncStatus,
+    idempotencyKey,
+    fieldVersions,
     amount,
     action,
     description,
     balanceAfter,
-    createdAt,
   );
   @override
   bool operator ==(Object other) =>
@@ -10628,80 +14165,120 @@ class KarmaTransaction extends DataClass
       (other is KarmaTransaction &&
           other.id == this.id &&
           other.userId == this.userId &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.syncStatus == this.syncStatus &&
+          other.idempotencyKey == this.idempotencyKey &&
+          other.fieldVersions == this.fieldVersions &&
           other.amount == this.amount &&
           other.action == this.action &&
           other.description == this.description &&
-          other.balanceAfter == this.balanceAfter &&
-          other.createdAt == this.createdAt);
+          other.balanceAfter == this.balanceAfter);
 }
 
 class KarmaTransactionsCompanion extends UpdateCompanion<KarmaTransaction> {
-  final Value<int> id;
+  final Value<String> id;
   final Value<String> userId;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<String> syncStatus;
+  final Value<String> idempotencyKey;
+  final Value<String?> fieldVersions;
   final Value<int> amount;
   final Value<String> action;
   final Value<String?> description;
   final Value<int> balanceAfter;
-  final Value<DateTime> createdAt;
+  final Value<int> rowid;
   const KarmaTransactionsCompanion({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    this.idempotencyKey = const Value.absent(),
+    this.fieldVersions = const Value.absent(),
     this.amount = const Value.absent(),
     this.action = const Value.absent(),
     this.description = const Value.absent(),
     this.balanceAfter = const Value.absent(),
-    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   KarmaTransactionsCompanion.insert({
-    this.id = const Value.absent(),
+    required String id,
     required String userId,
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    required String idempotencyKey,
+    this.fieldVersions = const Value.absent(),
     required int amount,
     required String action,
     this.description = const Value.absent(),
     required int balanceAfter,
-    required DateTime createdAt,
-  }) : userId = Value(userId),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       userId = Value(userId),
+       idempotencyKey = Value(idempotencyKey),
        amount = Value(amount),
        action = Value(action),
-       balanceAfter = Value(balanceAfter),
-       createdAt = Value(createdAt);
+       balanceAfter = Value(balanceAfter);
   static Insertable<KarmaTransaction> custom({
-    Expression<int>? id,
+    Expression<String>? id,
     Expression<String>? userId,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<String>? syncStatus,
+    Expression<String>? idempotencyKey,
+    Expression<String>? fieldVersions,
     Expression<int>? amount,
     Expression<String>? action,
     Expression<String>? description,
     Expression<int>? balanceAfter,
-    Expression<DateTime>? createdAt,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (userId != null) 'user_id': userId,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (syncStatus != null) 'sync_status': syncStatus,
+      if (idempotencyKey != null) 'idempotency_key': idempotencyKey,
+      if (fieldVersions != null) 'field_versions': fieldVersions,
       if (amount != null) 'amount': amount,
       if (action != null) 'action': action,
       if (description != null) 'description': description,
       if (balanceAfter != null) 'balance_after': balanceAfter,
-      if (createdAt != null) 'created_at': createdAt,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
   KarmaTransactionsCompanion copyWith({
-    Value<int>? id,
+    Value<String>? id,
     Value<String>? userId,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<String>? syncStatus,
+    Value<String>? idempotencyKey,
+    Value<String?>? fieldVersions,
     Value<int>? amount,
     Value<String>? action,
     Value<String?>? description,
     Value<int>? balanceAfter,
-    Value<DateTime>? createdAt,
+    Value<int>? rowid,
   }) {
     return KarmaTransactionsCompanion(
       id: id ?? this.id,
       userId: userId ?? this.userId,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      syncStatus: syncStatus ?? this.syncStatus,
+      idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+      fieldVersions: fieldVersions ?? this.fieldVersions,
       amount: amount ?? this.amount,
       action: action ?? this.action,
       description: description ?? this.description,
       balanceAfter: balanceAfter ?? this.balanceAfter,
-      createdAt: createdAt ?? this.createdAt,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -10709,10 +14286,25 @@ class KarmaTransactionsCompanion extends UpdateCompanion<KarmaTransaction> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (id.present) {
-      map['id'] = Variable<int>(id.value);
+      map['id'] = Variable<String>(id.value);
     }
     if (userId.present) {
       map['user_id'] = Variable<String>(userId.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (syncStatus.present) {
+      map['sync_status'] = Variable<String>(syncStatus.value);
+    }
+    if (idempotencyKey.present) {
+      map['idempotency_key'] = Variable<String>(idempotencyKey.value);
+    }
+    if (fieldVersions.present) {
+      map['field_versions'] = Variable<String>(fieldVersions.value);
     }
     if (amount.present) {
       map['amount'] = Variable<int>(amount.value);
@@ -10726,8 +14318,8 @@ class KarmaTransactionsCompanion extends UpdateCompanion<KarmaTransaction> {
     if (balanceAfter.present) {
       map['balance_after'] = Variable<int>(balanceAfter.value);
     }
-    if (createdAt.present) {
-      map['created_at'] = Variable<DateTime>(createdAt.value);
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
     }
     return map;
   }
@@ -10737,11 +14329,16 @@ class KarmaTransactionsCompanion extends UpdateCompanion<KarmaTransaction> {
     return (StringBuffer('KarmaTransactionsCompanion(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('fieldVersions: $fieldVersions, ')
           ..write('amount: $amount, ')
           ..write('action: $action, ')
           ..write('description: $description, ')
           ..write('balanceAfter: $balanceAfter, ')
-          ..write('createdAt: $createdAt')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -11830,16 +15427,12 @@ class $BloodPressureLogsTable extends BloodPressureLogs
   $BloodPressureLogsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
     'id',
     aliasedName,
     false,
-    hasAutoIncrement: true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
   );
   static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
   @override
@@ -11849,6 +15442,64 @@ class $BloodPressureLogsTable extends BloodPressureLogs
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _syncStatusMeta = const VerificationMeta(
+    'syncStatus',
+  );
+  @override
+  late final GeneratedColumn<String> syncStatus = GeneratedColumn<String>(
+    'sync_status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('pending'),
+  );
+  static const VerificationMeta _idempotencyKeyMeta = const VerificationMeta(
+    'idempotencyKey',
+  );
+  @override
+  late final GeneratedColumn<String> idempotencyKey = GeneratedColumn<String>(
+    'idempotency_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _fieldVersionsMeta = const VerificationMeta(
+    'fieldVersions',
+  );
+  @override
+  late final GeneratedColumn<String> fieldVersions = GeneratedColumn<String>(
+    'field_versions',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
   );
   @override
   late final GeneratedColumnWithTypeConverter<String, String> systolic =
@@ -11917,33 +15568,15 @@ class $BloodPressureLogsTable extends BloodPressureLogs
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _syncStatusMeta = const VerificationMeta(
-    'syncStatus',
-  );
-  @override
-  late final GeneratedColumn<String> syncStatus = GeneratedColumn<String>(
-    'sync_status',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-    defaultValue: const Constant('pending'),
-  );
-  static const VerificationMeta _idempotencyKeyMeta = const VerificationMeta(
-    'idempotencyKey',
-  );
-  @override
-  late final GeneratedColumn<String> idempotencyKey = GeneratedColumn<String>(
-    'idempotency_key',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
     userId,
+    createdAt,
+    updatedAt,
+    syncStatus,
+    idempotencyKey,
+    fieldVersions,
     systolic,
     diastolic,
     pulse,
@@ -11951,8 +15584,6 @@ class $BloodPressureLogsTable extends BloodPressureLogs
     classification,
     notes,
     source,
-    syncStatus,
-    idempotencyKey,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -11968,6 +15599,8 @@ class $BloodPressureLogsTable extends BloodPressureLogs
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
     }
     if (data.containsKey('user_id')) {
       context.handle(
@@ -11976,6 +15609,44 @@ class $BloodPressureLogsTable extends BloodPressureLogs
       );
     } else if (isInserting) {
       context.missing(_userIdMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    if (data.containsKey('sync_status')) {
+      context.handle(
+        _syncStatusMeta,
+        syncStatus.isAcceptableOrUnknown(data['sync_status']!, _syncStatusMeta),
+      );
+    }
+    if (data.containsKey('idempotency_key')) {
+      context.handle(
+        _idempotencyKeyMeta,
+        idempotencyKey.isAcceptableOrUnknown(
+          data['idempotency_key']!,
+          _idempotencyKeyMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_idempotencyKeyMeta);
+    }
+    if (data.containsKey('field_versions')) {
+      context.handle(
+        _fieldVersionsMeta,
+        fieldVersions.isAcceptableOrUnknown(
+          data['field_versions']!,
+          _fieldVersionsMeta,
+        ),
+      );
     }
     if (data.containsKey('logged_at')) {
       context.handle(
@@ -12010,23 +15681,6 @@ class $BloodPressureLogsTable extends BloodPressureLogs
     } else if (isInserting) {
       context.missing(_sourceMeta);
     }
-    if (data.containsKey('sync_status')) {
-      context.handle(
-        _syncStatusMeta,
-        syncStatus.isAcceptableOrUnknown(data['sync_status']!, _syncStatusMeta),
-      );
-    }
-    if (data.containsKey('idempotency_key')) {
-      context.handle(
-        _idempotencyKeyMeta,
-        idempotencyKey.isAcceptableOrUnknown(
-          data['idempotency_key']!,
-          _idempotencyKeyMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_idempotencyKeyMeta);
-    }
     return context;
   }
 
@@ -12037,13 +15691,33 @@ class $BloodPressureLogsTable extends BloodPressureLogs
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return BloodPressureLog(
       id: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
+        DriftSqlType.string,
         data['${effectivePrefix}id'],
       )!,
       userId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}user_id'],
       )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      syncStatus: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sync_status'],
+      )!,
+      idempotencyKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}idempotency_key'],
+      )!,
+      fieldVersions: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}field_versions'],
+      ),
       systolic: $BloodPressureLogsTable.$convertersystolic.fromSql(
         attachedDatabase.typeMapping.read(
           DriftSqlType.string,
@@ -12078,14 +15752,6 @@ class $BloodPressureLogsTable extends BloodPressureLogs
         DriftSqlType.string,
         data['${effectivePrefix}source'],
       )!,
-      syncStatus: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}sync_status'],
-      )!,
-      idempotencyKey: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}idempotency_key'],
-      )!,
     );
   }
 
@@ -12106,8 +15772,13 @@ class $BloodPressureLogsTable extends BloodPressureLogs
 
 class BloodPressureLog extends DataClass
     implements Insertable<BloodPressureLog> {
-  final int id;
+  final String id;
   final String userId;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final String syncStatus;
+  final String idempotencyKey;
+  final String? fieldVersions;
   final String systolic;
   final String diastolic;
   final String? pulse;
@@ -12115,11 +15786,14 @@ class BloodPressureLog extends DataClass
   final String classification;
   final String? notes;
   final String source;
-  final String syncStatus;
-  final String idempotencyKey;
   const BloodPressureLog({
     required this.id,
     required this.userId,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.syncStatus,
+    required this.idempotencyKey,
+    this.fieldVersions,
     required this.systolic,
     required this.diastolic,
     this.pulse,
@@ -12127,14 +15801,19 @@ class BloodPressureLog extends DataClass
     required this.classification,
     this.notes,
     required this.source,
-    required this.syncStatus,
-    required this.idempotencyKey,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
+    map['id'] = Variable<String>(id);
     map['user_id'] = Variable<String>(userId);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['sync_status'] = Variable<String>(syncStatus);
+    map['idempotency_key'] = Variable<String>(idempotencyKey);
+    if (!nullToAbsent || fieldVersions != null) {
+      map['field_versions'] = Variable<String>(fieldVersions);
+    }
     {
       map['systolic'] = Variable<String>(
         $BloodPressureLogsTable.$convertersystolic.toSql(systolic),
@@ -12156,8 +15835,6 @@ class BloodPressureLog extends DataClass
       map['notes'] = Variable<String>(notes);
     }
     map['source'] = Variable<String>(source);
-    map['sync_status'] = Variable<String>(syncStatus);
-    map['idempotency_key'] = Variable<String>(idempotencyKey);
     return map;
   }
 
@@ -12165,6 +15842,13 @@ class BloodPressureLog extends DataClass
     return BloodPressureLogsCompanion(
       id: Value(id),
       userId: Value(userId),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      syncStatus: Value(syncStatus),
+      idempotencyKey: Value(idempotencyKey),
+      fieldVersions: fieldVersions == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fieldVersions),
       systolic: Value(systolic),
       diastolic: Value(diastolic),
       pulse: pulse == null && nullToAbsent
@@ -12176,8 +15860,6 @@ class BloodPressureLog extends DataClass
           ? const Value.absent()
           : Value(notes),
       source: Value(source),
-      syncStatus: Value(syncStatus),
-      idempotencyKey: Value(idempotencyKey),
     );
   }
 
@@ -12187,8 +15869,13 @@ class BloodPressureLog extends DataClass
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return BloodPressureLog(
-      id: serializer.fromJson<int>(json['id']),
+      id: serializer.fromJson<String>(json['id']),
       userId: serializer.fromJson<String>(json['userId']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      syncStatus: serializer.fromJson<String>(json['syncStatus']),
+      idempotencyKey: serializer.fromJson<String>(json['idempotencyKey']),
+      fieldVersions: serializer.fromJson<String?>(json['fieldVersions']),
       systolic: serializer.fromJson<String>(json['systolic']),
       diastolic: serializer.fromJson<String>(json['diastolic']),
       pulse: serializer.fromJson<String?>(json['pulse']),
@@ -12196,16 +15883,19 @@ class BloodPressureLog extends DataClass
       classification: serializer.fromJson<String>(json['classification']),
       notes: serializer.fromJson<String?>(json['notes']),
       source: serializer.fromJson<String>(json['source']),
-      syncStatus: serializer.fromJson<String>(json['syncStatus']),
-      idempotencyKey: serializer.fromJson<String>(json['idempotencyKey']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
+      'id': serializer.toJson<String>(id),
       'userId': serializer.toJson<String>(userId),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'syncStatus': serializer.toJson<String>(syncStatus),
+      'idempotencyKey': serializer.toJson<String>(idempotencyKey),
+      'fieldVersions': serializer.toJson<String?>(fieldVersions),
       'systolic': serializer.toJson<String>(systolic),
       'diastolic': serializer.toJson<String>(diastolic),
       'pulse': serializer.toJson<String?>(pulse),
@@ -12213,14 +15903,17 @@ class BloodPressureLog extends DataClass
       'classification': serializer.toJson<String>(classification),
       'notes': serializer.toJson<String?>(notes),
       'source': serializer.toJson<String>(source),
-      'syncStatus': serializer.toJson<String>(syncStatus),
-      'idempotencyKey': serializer.toJson<String>(idempotencyKey),
     };
   }
 
   BloodPressureLog copyWith({
-    int? id,
+    String? id,
     String? userId,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    String? syncStatus,
+    String? idempotencyKey,
+    Value<String?> fieldVersions = const Value.absent(),
     String? systolic,
     String? diastolic,
     Value<String?> pulse = const Value.absent(),
@@ -12228,11 +15921,16 @@ class BloodPressureLog extends DataClass
     String? classification,
     Value<String?> notes = const Value.absent(),
     String? source,
-    String? syncStatus,
-    String? idempotencyKey,
   }) => BloodPressureLog(
     id: id ?? this.id,
     userId: userId ?? this.userId,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    syncStatus: syncStatus ?? this.syncStatus,
+    idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+    fieldVersions: fieldVersions.present
+        ? fieldVersions.value
+        : this.fieldVersions,
     systolic: systolic ?? this.systolic,
     diastolic: diastolic ?? this.diastolic,
     pulse: pulse.present ? pulse.value : this.pulse,
@@ -12240,13 +15938,22 @@ class BloodPressureLog extends DataClass
     classification: classification ?? this.classification,
     notes: notes.present ? notes.value : this.notes,
     source: source ?? this.source,
-    syncStatus: syncStatus ?? this.syncStatus,
-    idempotencyKey: idempotencyKey ?? this.idempotencyKey,
   );
   BloodPressureLog copyWithCompanion(BloodPressureLogsCompanion data) {
     return BloodPressureLog(
       id: data.id.present ? data.id.value : this.id,
       userId: data.userId.present ? data.userId.value : this.userId,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      syncStatus: data.syncStatus.present
+          ? data.syncStatus.value
+          : this.syncStatus,
+      idempotencyKey: data.idempotencyKey.present
+          ? data.idempotencyKey.value
+          : this.idempotencyKey,
+      fieldVersions: data.fieldVersions.present
+          ? data.fieldVersions.value
+          : this.fieldVersions,
       systolic: data.systolic.present ? data.systolic.value : this.systolic,
       diastolic: data.diastolic.present ? data.diastolic.value : this.diastolic,
       pulse: data.pulse.present ? data.pulse.value : this.pulse,
@@ -12256,12 +15963,6 @@ class BloodPressureLog extends DataClass
           : this.classification,
       notes: data.notes.present ? data.notes.value : this.notes,
       source: data.source.present ? data.source.value : this.source,
-      syncStatus: data.syncStatus.present
-          ? data.syncStatus.value
-          : this.syncStatus,
-      idempotencyKey: data.idempotencyKey.present
-          ? data.idempotencyKey.value
-          : this.idempotencyKey,
     );
   }
 
@@ -12270,15 +15971,18 @@ class BloodPressureLog extends DataClass
     return (StringBuffer('BloodPressureLog(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('fieldVersions: $fieldVersions, ')
           ..write('systolic: $systolic, ')
           ..write('diastolic: $diastolic, ')
           ..write('pulse: $pulse, ')
           ..write('loggedAt: $loggedAt, ')
           ..write('classification: $classification, ')
           ..write('notes: $notes, ')
-          ..write('source: $source, ')
-          ..write('syncStatus: $syncStatus, ')
-          ..write('idempotencyKey: $idempotencyKey')
+          ..write('source: $source')
           ..write(')'))
         .toString();
   }
@@ -12287,6 +15991,11 @@ class BloodPressureLog extends DataClass
   int get hashCode => Object.hash(
     id,
     userId,
+    createdAt,
+    updatedAt,
+    syncStatus,
+    idempotencyKey,
+    fieldVersions,
     systolic,
     diastolic,
     pulse,
@@ -12294,8 +16003,6 @@ class BloodPressureLog extends DataClass
     classification,
     notes,
     source,
-    syncStatus,
-    idempotencyKey,
   );
   @override
   bool operator ==(Object other) =>
@@ -12303,20 +16010,28 @@ class BloodPressureLog extends DataClass
       (other is BloodPressureLog &&
           other.id == this.id &&
           other.userId == this.userId &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.syncStatus == this.syncStatus &&
+          other.idempotencyKey == this.idempotencyKey &&
+          other.fieldVersions == this.fieldVersions &&
           other.systolic == this.systolic &&
           other.diastolic == this.diastolic &&
           other.pulse == this.pulse &&
           other.loggedAt == this.loggedAt &&
           other.classification == this.classification &&
           other.notes == this.notes &&
-          other.source == this.source &&
-          other.syncStatus == this.syncStatus &&
-          other.idempotencyKey == this.idempotencyKey);
+          other.source == this.source);
 }
 
 class BloodPressureLogsCompanion extends UpdateCompanion<BloodPressureLog> {
-  final Value<int> id;
+  final Value<String> id;
   final Value<String> userId;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<String> syncStatus;
+  final Value<String> idempotencyKey;
+  final Value<String?> fieldVersions;
   final Value<String> systolic;
   final Value<String> diastolic;
   final Value<String?> pulse;
@@ -12324,11 +16039,15 @@ class BloodPressureLogsCompanion extends UpdateCompanion<BloodPressureLog> {
   final Value<String> classification;
   final Value<String?> notes;
   final Value<String> source;
-  final Value<String> syncStatus;
-  final Value<String> idempotencyKey;
+  final Value<int> rowid;
   const BloodPressureLogsCompanion({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    this.idempotencyKey = const Value.absent(),
+    this.fieldVersions = const Value.absent(),
     this.systolic = const Value.absent(),
     this.diastolic = const Value.absent(),
     this.pulse = const Value.absent(),
@@ -12336,12 +16055,16 @@ class BloodPressureLogsCompanion extends UpdateCompanion<BloodPressureLog> {
     this.classification = const Value.absent(),
     this.notes = const Value.absent(),
     this.source = const Value.absent(),
-    this.syncStatus = const Value.absent(),
-    this.idempotencyKey = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   BloodPressureLogsCompanion.insert({
-    this.id = const Value.absent(),
+    required String id,
     required String userId,
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    required String idempotencyKey,
+    this.fieldVersions = const Value.absent(),
     required String systolic,
     required String diastolic,
     this.pulse = const Value.absent(),
@@ -12349,18 +16072,23 @@ class BloodPressureLogsCompanion extends UpdateCompanion<BloodPressureLog> {
     required String classification,
     this.notes = const Value.absent(),
     required String source,
-    this.syncStatus = const Value.absent(),
-    required String idempotencyKey,
-  }) : userId = Value(userId),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       userId = Value(userId),
+       idempotencyKey = Value(idempotencyKey),
        systolic = Value(systolic),
        diastolic = Value(diastolic),
        loggedAt = Value(loggedAt),
        classification = Value(classification),
-       source = Value(source),
-       idempotencyKey = Value(idempotencyKey);
+       source = Value(source);
   static Insertable<BloodPressureLog> custom({
-    Expression<int>? id,
+    Expression<String>? id,
     Expression<String>? userId,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<String>? syncStatus,
+    Expression<String>? idempotencyKey,
+    Expression<String>? fieldVersions,
     Expression<String>? systolic,
     Expression<String>? diastolic,
     Expression<String>? pulse,
@@ -12368,12 +16096,16 @@ class BloodPressureLogsCompanion extends UpdateCompanion<BloodPressureLog> {
     Expression<String>? classification,
     Expression<String>? notes,
     Expression<String>? source,
-    Expression<String>? syncStatus,
-    Expression<String>? idempotencyKey,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (userId != null) 'user_id': userId,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (syncStatus != null) 'sync_status': syncStatus,
+      if (idempotencyKey != null) 'idempotency_key': idempotencyKey,
+      if (fieldVersions != null) 'field_versions': fieldVersions,
       if (systolic != null) 'systolic': systolic,
       if (diastolic != null) 'diastolic': diastolic,
       if (pulse != null) 'pulse': pulse,
@@ -12381,14 +16113,18 @@ class BloodPressureLogsCompanion extends UpdateCompanion<BloodPressureLog> {
       if (classification != null) 'classification': classification,
       if (notes != null) 'notes': notes,
       if (source != null) 'source': source,
-      if (syncStatus != null) 'sync_status': syncStatus,
-      if (idempotencyKey != null) 'idempotency_key': idempotencyKey,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
   BloodPressureLogsCompanion copyWith({
-    Value<int>? id,
+    Value<String>? id,
     Value<String>? userId,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<String>? syncStatus,
+    Value<String>? idempotencyKey,
+    Value<String?>? fieldVersions,
     Value<String>? systolic,
     Value<String>? diastolic,
     Value<String?>? pulse,
@@ -12396,12 +16132,16 @@ class BloodPressureLogsCompanion extends UpdateCompanion<BloodPressureLog> {
     Value<String>? classification,
     Value<String?>? notes,
     Value<String>? source,
-    Value<String>? syncStatus,
-    Value<String>? idempotencyKey,
+    Value<int>? rowid,
   }) {
     return BloodPressureLogsCompanion(
       id: id ?? this.id,
       userId: userId ?? this.userId,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      syncStatus: syncStatus ?? this.syncStatus,
+      idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+      fieldVersions: fieldVersions ?? this.fieldVersions,
       systolic: systolic ?? this.systolic,
       diastolic: diastolic ?? this.diastolic,
       pulse: pulse ?? this.pulse,
@@ -12409,8 +16149,7 @@ class BloodPressureLogsCompanion extends UpdateCompanion<BloodPressureLog> {
       classification: classification ?? this.classification,
       notes: notes ?? this.notes,
       source: source ?? this.source,
-      syncStatus: syncStatus ?? this.syncStatus,
-      idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -12418,10 +16157,25 @@ class BloodPressureLogsCompanion extends UpdateCompanion<BloodPressureLog> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (id.present) {
-      map['id'] = Variable<int>(id.value);
+      map['id'] = Variable<String>(id.value);
     }
     if (userId.present) {
       map['user_id'] = Variable<String>(userId.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (syncStatus.present) {
+      map['sync_status'] = Variable<String>(syncStatus.value);
+    }
+    if (idempotencyKey.present) {
+      map['idempotency_key'] = Variable<String>(idempotencyKey.value);
+    }
+    if (fieldVersions.present) {
+      map['field_versions'] = Variable<String>(fieldVersions.value);
     }
     if (systolic.present) {
       map['systolic'] = Variable<String>(
@@ -12450,11 +16204,8 @@ class BloodPressureLogsCompanion extends UpdateCompanion<BloodPressureLog> {
     if (source.present) {
       map['source'] = Variable<String>(source.value);
     }
-    if (syncStatus.present) {
-      map['sync_status'] = Variable<String>(syncStatus.value);
-    }
-    if (idempotencyKey.present) {
-      map['idempotency_key'] = Variable<String>(idempotencyKey.value);
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
     }
     return map;
   }
@@ -12464,6 +16215,11 @@ class BloodPressureLogsCompanion extends UpdateCompanion<BloodPressureLog> {
     return (StringBuffer('BloodPressureLogsCompanion(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('fieldVersions: $fieldVersions, ')
           ..write('systolic: $systolic, ')
           ..write('diastolic: $diastolic, ')
           ..write('pulse: $pulse, ')
@@ -12471,8 +16227,7 @@ class BloodPressureLogsCompanion extends UpdateCompanion<BloodPressureLog> {
           ..write('classification: $classification, ')
           ..write('notes: $notes, ')
           ..write('source: $source, ')
-          ..write('syncStatus: $syncStatus, ')
-          ..write('idempotencyKey: $idempotencyKey')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -12486,16 +16241,12 @@ class $GlucoseLogsTable extends GlucoseLogs
   $GlucoseLogsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
     'id',
     aliasedName,
     false,
-    hasAutoIncrement: true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
   );
   static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
   @override
@@ -12505,6 +16256,64 @@ class $GlucoseLogsTable extends GlucoseLogs
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _syncStatusMeta = const VerificationMeta(
+    'syncStatus',
+  );
+  @override
+  late final GeneratedColumn<String> syncStatus = GeneratedColumn<String>(
+    'sync_status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('pending'),
+  );
+  static const VerificationMeta _idempotencyKeyMeta = const VerificationMeta(
+    'idempotencyKey',
+  );
+  @override
+  late final GeneratedColumn<String> idempotencyKey = GeneratedColumn<String>(
+    'idempotency_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _fieldVersionsMeta = const VerificationMeta(
+    'fieldVersions',
+  );
+  @override
+  late final GeneratedColumn<String> fieldVersions = GeneratedColumn<String>(
+    'field_versions',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
   );
   @override
   late final GeneratedColumnWithTypeConverter<String, String> glucoseMgdl =
@@ -12586,33 +16395,15 @@ class $GlucoseLogsTable extends GlucoseLogs
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _syncStatusMeta = const VerificationMeta(
-    'syncStatus',
-  );
-  @override
-  late final GeneratedColumn<String> syncStatus = GeneratedColumn<String>(
-    'sync_status',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-    defaultValue: const Constant('pending'),
-  );
-  static const VerificationMeta _idempotencyKeyMeta = const VerificationMeta(
-    'idempotencyKey',
-  );
-  @override
-  late final GeneratedColumn<String> idempotencyKey = GeneratedColumn<String>(
-    'idempotency_key',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
     userId,
+    createdAt,
+    updatedAt,
+    syncStatus,
+    idempotencyKey,
+    fieldVersions,
     glucoseMgdl,
     readingType,
     foodLogId,
@@ -12621,8 +16412,6 @@ class $GlucoseLogsTable extends GlucoseLogs
     hba1cEstimate,
     notes,
     source,
-    syncStatus,
-    idempotencyKey,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -12638,6 +16427,8 @@ class $GlucoseLogsTable extends GlucoseLogs
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
     }
     if (data.containsKey('user_id')) {
       context.handle(
@@ -12646,6 +16437,44 @@ class $GlucoseLogsTable extends GlucoseLogs
       );
     } else if (isInserting) {
       context.missing(_userIdMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    if (data.containsKey('sync_status')) {
+      context.handle(
+        _syncStatusMeta,
+        syncStatus.isAcceptableOrUnknown(data['sync_status']!, _syncStatusMeta),
+      );
+    }
+    if (data.containsKey('idempotency_key')) {
+      context.handle(
+        _idempotencyKeyMeta,
+        idempotencyKey.isAcceptableOrUnknown(
+          data['idempotency_key']!,
+          _idempotencyKeyMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_idempotencyKeyMeta);
+    }
+    if (data.containsKey('field_versions')) {
+      context.handle(
+        _fieldVersionsMeta,
+        fieldVersions.isAcceptableOrUnknown(
+          data['field_versions']!,
+          _fieldVersionsMeta,
+        ),
+      );
     }
     if (data.containsKey('reading_type')) {
       context.handle(
@@ -12697,23 +16526,6 @@ class $GlucoseLogsTable extends GlucoseLogs
     } else if (isInserting) {
       context.missing(_sourceMeta);
     }
-    if (data.containsKey('sync_status')) {
-      context.handle(
-        _syncStatusMeta,
-        syncStatus.isAcceptableOrUnknown(data['sync_status']!, _syncStatusMeta),
-      );
-    }
-    if (data.containsKey('idempotency_key')) {
-      context.handle(
-        _idempotencyKeyMeta,
-        idempotencyKey.isAcceptableOrUnknown(
-          data['idempotency_key']!,
-          _idempotencyKeyMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_idempotencyKeyMeta);
-    }
     return context;
   }
 
@@ -12724,13 +16536,33 @@ class $GlucoseLogsTable extends GlucoseLogs
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return GlucoseLog(
       id: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
+        DriftSqlType.string,
         data['${effectivePrefix}id'],
       )!,
       userId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}user_id'],
       )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      syncStatus: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sync_status'],
+      )!,
+      idempotencyKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}idempotency_key'],
+      )!,
+      fieldVersions: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}field_versions'],
+      ),
       glucoseMgdl: $GlucoseLogsTable.$converterglucoseMgdl.fromSql(
         attachedDatabase.typeMapping.read(
           DriftSqlType.string,
@@ -12767,14 +16599,6 @@ class $GlucoseLogsTable extends GlucoseLogs
         DriftSqlType.string,
         data['${effectivePrefix}source'],
       )!,
-      syncStatus: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}sync_status'],
-      )!,
-      idempotencyKey: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}idempotency_key'],
-      )!,
     );
   }
 
@@ -12792,8 +16616,13 @@ class $GlucoseLogsTable extends GlucoseLogs
 }
 
 class GlucoseLog extends DataClass implements Insertable<GlucoseLog> {
-  final int id;
+  final String id;
   final String userId;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final String syncStatus;
+  final String idempotencyKey;
+  final String? fieldVersions;
   final String glucoseMgdl;
   final String readingType;
   final String? foodLogId;
@@ -12802,11 +16631,14 @@ class GlucoseLog extends DataClass implements Insertable<GlucoseLog> {
   final String? hba1cEstimate;
   final String? notes;
   final String source;
-  final String syncStatus;
-  final String idempotencyKey;
   const GlucoseLog({
     required this.id,
     required this.userId,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.syncStatus,
+    required this.idempotencyKey,
+    this.fieldVersions,
     required this.glucoseMgdl,
     required this.readingType,
     this.foodLogId,
@@ -12815,14 +16647,19 @@ class GlucoseLog extends DataClass implements Insertable<GlucoseLog> {
     this.hba1cEstimate,
     this.notes,
     required this.source,
-    required this.syncStatus,
-    required this.idempotencyKey,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
+    map['id'] = Variable<String>(id);
     map['user_id'] = Variable<String>(userId);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['sync_status'] = Variable<String>(syncStatus);
+    map['idempotency_key'] = Variable<String>(idempotencyKey);
+    if (!nullToAbsent || fieldVersions != null) {
+      map['field_versions'] = Variable<String>(fieldVersions);
+    }
     {
       map['glucose_mgdl'] = Variable<String>(
         $GlucoseLogsTable.$converterglucoseMgdl.toSql(glucoseMgdl),
@@ -12843,8 +16680,6 @@ class GlucoseLog extends DataClass implements Insertable<GlucoseLog> {
       map['notes'] = Variable<String>(notes);
     }
     map['source'] = Variable<String>(source);
-    map['sync_status'] = Variable<String>(syncStatus);
-    map['idempotency_key'] = Variable<String>(idempotencyKey);
     return map;
   }
 
@@ -12852,6 +16687,13 @@ class GlucoseLog extends DataClass implements Insertable<GlucoseLog> {
     return GlucoseLogsCompanion(
       id: Value(id),
       userId: Value(userId),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      syncStatus: Value(syncStatus),
+      idempotencyKey: Value(idempotencyKey),
+      fieldVersions: fieldVersions == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fieldVersions),
       glucoseMgdl: Value(glucoseMgdl),
       readingType: Value(readingType),
       foodLogId: foodLogId == null && nullToAbsent
@@ -12866,8 +16708,6 @@ class GlucoseLog extends DataClass implements Insertable<GlucoseLog> {
           ? const Value.absent()
           : Value(notes),
       source: Value(source),
-      syncStatus: Value(syncStatus),
-      idempotencyKey: Value(idempotencyKey),
     );
   }
 
@@ -12877,8 +16717,13 @@ class GlucoseLog extends DataClass implements Insertable<GlucoseLog> {
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return GlucoseLog(
-      id: serializer.fromJson<int>(json['id']),
+      id: serializer.fromJson<String>(json['id']),
       userId: serializer.fromJson<String>(json['userId']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      syncStatus: serializer.fromJson<String>(json['syncStatus']),
+      idempotencyKey: serializer.fromJson<String>(json['idempotencyKey']),
+      fieldVersions: serializer.fromJson<String?>(json['fieldVersions']),
       glucoseMgdl: serializer.fromJson<String>(json['glucoseMgdl']),
       readingType: serializer.fromJson<String>(json['readingType']),
       foodLogId: serializer.fromJson<String?>(json['foodLogId']),
@@ -12887,16 +16732,19 @@ class GlucoseLog extends DataClass implements Insertable<GlucoseLog> {
       hba1cEstimate: serializer.fromJson<String?>(json['hba1cEstimate']),
       notes: serializer.fromJson<String?>(json['notes']),
       source: serializer.fromJson<String>(json['source']),
-      syncStatus: serializer.fromJson<String>(json['syncStatus']),
-      idempotencyKey: serializer.fromJson<String>(json['idempotencyKey']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
+      'id': serializer.toJson<String>(id),
       'userId': serializer.toJson<String>(userId),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'syncStatus': serializer.toJson<String>(syncStatus),
+      'idempotencyKey': serializer.toJson<String>(idempotencyKey),
+      'fieldVersions': serializer.toJson<String?>(fieldVersions),
       'glucoseMgdl': serializer.toJson<String>(glucoseMgdl),
       'readingType': serializer.toJson<String>(readingType),
       'foodLogId': serializer.toJson<String?>(foodLogId),
@@ -12905,14 +16753,17 @@ class GlucoseLog extends DataClass implements Insertable<GlucoseLog> {
       'hba1cEstimate': serializer.toJson<String?>(hba1cEstimate),
       'notes': serializer.toJson<String?>(notes),
       'source': serializer.toJson<String>(source),
-      'syncStatus': serializer.toJson<String>(syncStatus),
-      'idempotencyKey': serializer.toJson<String>(idempotencyKey),
     };
   }
 
   GlucoseLog copyWith({
-    int? id,
+    String? id,
     String? userId,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    String? syncStatus,
+    String? idempotencyKey,
+    Value<String?> fieldVersions = const Value.absent(),
     String? glucoseMgdl,
     String? readingType,
     Value<String?> foodLogId = const Value.absent(),
@@ -12921,11 +16772,16 @@ class GlucoseLog extends DataClass implements Insertable<GlucoseLog> {
     Value<String?> hba1cEstimate = const Value.absent(),
     Value<String?> notes = const Value.absent(),
     String? source,
-    String? syncStatus,
-    String? idempotencyKey,
   }) => GlucoseLog(
     id: id ?? this.id,
     userId: userId ?? this.userId,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    syncStatus: syncStatus ?? this.syncStatus,
+    idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+    fieldVersions: fieldVersions.present
+        ? fieldVersions.value
+        : this.fieldVersions,
     glucoseMgdl: glucoseMgdl ?? this.glucoseMgdl,
     readingType: readingType ?? this.readingType,
     foodLogId: foodLogId.present ? foodLogId.value : this.foodLogId,
@@ -12936,13 +16792,22 @@ class GlucoseLog extends DataClass implements Insertable<GlucoseLog> {
         : this.hba1cEstimate,
     notes: notes.present ? notes.value : this.notes,
     source: source ?? this.source,
-    syncStatus: syncStatus ?? this.syncStatus,
-    idempotencyKey: idempotencyKey ?? this.idempotencyKey,
   );
   GlucoseLog copyWithCompanion(GlucoseLogsCompanion data) {
     return GlucoseLog(
       id: data.id.present ? data.id.value : this.id,
       userId: data.userId.present ? data.userId.value : this.userId,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      syncStatus: data.syncStatus.present
+          ? data.syncStatus.value
+          : this.syncStatus,
+      idempotencyKey: data.idempotencyKey.present
+          ? data.idempotencyKey.value
+          : this.idempotencyKey,
+      fieldVersions: data.fieldVersions.present
+          ? data.fieldVersions.value
+          : this.fieldVersions,
       glucoseMgdl: data.glucoseMgdl.present
           ? data.glucoseMgdl.value
           : this.glucoseMgdl,
@@ -12959,12 +16824,6 @@ class GlucoseLog extends DataClass implements Insertable<GlucoseLog> {
           : this.hba1cEstimate,
       notes: data.notes.present ? data.notes.value : this.notes,
       source: data.source.present ? data.source.value : this.source,
-      syncStatus: data.syncStatus.present
-          ? data.syncStatus.value
-          : this.syncStatus,
-      idempotencyKey: data.idempotencyKey.present
-          ? data.idempotencyKey.value
-          : this.idempotencyKey,
     );
   }
 
@@ -12973,6 +16832,11 @@ class GlucoseLog extends DataClass implements Insertable<GlucoseLog> {
     return (StringBuffer('GlucoseLog(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('fieldVersions: $fieldVersions, ')
           ..write('glucoseMgdl: $glucoseMgdl, ')
           ..write('readingType: $readingType, ')
           ..write('foodLogId: $foodLogId, ')
@@ -12980,9 +16844,7 @@ class GlucoseLog extends DataClass implements Insertable<GlucoseLog> {
           ..write('classification: $classification, ')
           ..write('hba1cEstimate: $hba1cEstimate, ')
           ..write('notes: $notes, ')
-          ..write('source: $source, ')
-          ..write('syncStatus: $syncStatus, ')
-          ..write('idempotencyKey: $idempotencyKey')
+          ..write('source: $source')
           ..write(')'))
         .toString();
   }
@@ -12991,6 +16853,11 @@ class GlucoseLog extends DataClass implements Insertable<GlucoseLog> {
   int get hashCode => Object.hash(
     id,
     userId,
+    createdAt,
+    updatedAt,
+    syncStatus,
+    idempotencyKey,
+    fieldVersions,
     glucoseMgdl,
     readingType,
     foodLogId,
@@ -12999,8 +16866,6 @@ class GlucoseLog extends DataClass implements Insertable<GlucoseLog> {
     hba1cEstimate,
     notes,
     source,
-    syncStatus,
-    idempotencyKey,
   );
   @override
   bool operator ==(Object other) =>
@@ -13008,6 +16873,11 @@ class GlucoseLog extends DataClass implements Insertable<GlucoseLog> {
       (other is GlucoseLog &&
           other.id == this.id &&
           other.userId == this.userId &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.syncStatus == this.syncStatus &&
+          other.idempotencyKey == this.idempotencyKey &&
+          other.fieldVersions == this.fieldVersions &&
           other.glucoseMgdl == this.glucoseMgdl &&
           other.readingType == this.readingType &&
           other.foodLogId == this.foodLogId &&
@@ -13015,14 +16885,17 @@ class GlucoseLog extends DataClass implements Insertable<GlucoseLog> {
           other.classification == this.classification &&
           other.hba1cEstimate == this.hba1cEstimate &&
           other.notes == this.notes &&
-          other.source == this.source &&
-          other.syncStatus == this.syncStatus &&
-          other.idempotencyKey == this.idempotencyKey);
+          other.source == this.source);
 }
 
 class GlucoseLogsCompanion extends UpdateCompanion<GlucoseLog> {
-  final Value<int> id;
+  final Value<String> id;
   final Value<String> userId;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<String> syncStatus;
+  final Value<String> idempotencyKey;
+  final Value<String?> fieldVersions;
   final Value<String> glucoseMgdl;
   final Value<String> readingType;
   final Value<String?> foodLogId;
@@ -13031,11 +16904,15 @@ class GlucoseLogsCompanion extends UpdateCompanion<GlucoseLog> {
   final Value<String?> hba1cEstimate;
   final Value<String?> notes;
   final Value<String> source;
-  final Value<String> syncStatus;
-  final Value<String> idempotencyKey;
+  final Value<int> rowid;
   const GlucoseLogsCompanion({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    this.idempotencyKey = const Value.absent(),
+    this.fieldVersions = const Value.absent(),
     this.glucoseMgdl = const Value.absent(),
     this.readingType = const Value.absent(),
     this.foodLogId = const Value.absent(),
@@ -13044,12 +16921,16 @@ class GlucoseLogsCompanion extends UpdateCompanion<GlucoseLog> {
     this.hba1cEstimate = const Value.absent(),
     this.notes = const Value.absent(),
     this.source = const Value.absent(),
-    this.syncStatus = const Value.absent(),
-    this.idempotencyKey = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   GlucoseLogsCompanion.insert({
-    this.id = const Value.absent(),
+    required String id,
     required String userId,
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    required String idempotencyKey,
+    this.fieldVersions = const Value.absent(),
     required String glucoseMgdl,
     required String readingType,
     this.foodLogId = const Value.absent(),
@@ -13058,18 +16939,23 @@ class GlucoseLogsCompanion extends UpdateCompanion<GlucoseLog> {
     this.hba1cEstimate = const Value.absent(),
     this.notes = const Value.absent(),
     required String source,
-    this.syncStatus = const Value.absent(),
-    required String idempotencyKey,
-  }) : userId = Value(userId),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       userId = Value(userId),
+       idempotencyKey = Value(idempotencyKey),
        glucoseMgdl = Value(glucoseMgdl),
        readingType = Value(readingType),
        loggedAt = Value(loggedAt),
        classification = Value(classification),
-       source = Value(source),
-       idempotencyKey = Value(idempotencyKey);
+       source = Value(source);
   static Insertable<GlucoseLog> custom({
-    Expression<int>? id,
+    Expression<String>? id,
     Expression<String>? userId,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<String>? syncStatus,
+    Expression<String>? idempotencyKey,
+    Expression<String>? fieldVersions,
     Expression<String>? glucoseMgdl,
     Expression<String>? readingType,
     Expression<String>? foodLogId,
@@ -13078,12 +16964,16 @@ class GlucoseLogsCompanion extends UpdateCompanion<GlucoseLog> {
     Expression<String>? hba1cEstimate,
     Expression<String>? notes,
     Expression<String>? source,
-    Expression<String>? syncStatus,
-    Expression<String>? idempotencyKey,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (userId != null) 'user_id': userId,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (syncStatus != null) 'sync_status': syncStatus,
+      if (idempotencyKey != null) 'idempotency_key': idempotencyKey,
+      if (fieldVersions != null) 'field_versions': fieldVersions,
       if (glucoseMgdl != null) 'glucose_mgdl': glucoseMgdl,
       if (readingType != null) 'reading_type': readingType,
       if (foodLogId != null) 'food_log_id': foodLogId,
@@ -13092,14 +16982,18 @@ class GlucoseLogsCompanion extends UpdateCompanion<GlucoseLog> {
       if (hba1cEstimate != null) 'hba1c_estimate': hba1cEstimate,
       if (notes != null) 'notes': notes,
       if (source != null) 'source': source,
-      if (syncStatus != null) 'sync_status': syncStatus,
-      if (idempotencyKey != null) 'idempotency_key': idempotencyKey,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
   GlucoseLogsCompanion copyWith({
-    Value<int>? id,
+    Value<String>? id,
     Value<String>? userId,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<String>? syncStatus,
+    Value<String>? idempotencyKey,
+    Value<String?>? fieldVersions,
     Value<String>? glucoseMgdl,
     Value<String>? readingType,
     Value<String?>? foodLogId,
@@ -13108,12 +17002,16 @@ class GlucoseLogsCompanion extends UpdateCompanion<GlucoseLog> {
     Value<String?>? hba1cEstimate,
     Value<String?>? notes,
     Value<String>? source,
-    Value<String>? syncStatus,
-    Value<String>? idempotencyKey,
+    Value<int>? rowid,
   }) {
     return GlucoseLogsCompanion(
       id: id ?? this.id,
       userId: userId ?? this.userId,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      syncStatus: syncStatus ?? this.syncStatus,
+      idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+      fieldVersions: fieldVersions ?? this.fieldVersions,
       glucoseMgdl: glucoseMgdl ?? this.glucoseMgdl,
       readingType: readingType ?? this.readingType,
       foodLogId: foodLogId ?? this.foodLogId,
@@ -13122,8 +17020,7 @@ class GlucoseLogsCompanion extends UpdateCompanion<GlucoseLog> {
       hba1cEstimate: hba1cEstimate ?? this.hba1cEstimate,
       notes: notes ?? this.notes,
       source: source ?? this.source,
-      syncStatus: syncStatus ?? this.syncStatus,
-      idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -13131,10 +17028,25 @@ class GlucoseLogsCompanion extends UpdateCompanion<GlucoseLog> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (id.present) {
-      map['id'] = Variable<int>(id.value);
+      map['id'] = Variable<String>(id.value);
     }
     if (userId.present) {
       map['user_id'] = Variable<String>(userId.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (syncStatus.present) {
+      map['sync_status'] = Variable<String>(syncStatus.value);
+    }
+    if (idempotencyKey.present) {
+      map['idempotency_key'] = Variable<String>(idempotencyKey.value);
+    }
+    if (fieldVersions.present) {
+      map['field_versions'] = Variable<String>(fieldVersions.value);
     }
     if (glucoseMgdl.present) {
       map['glucose_mgdl'] = Variable<String>(
@@ -13164,11 +17076,8 @@ class GlucoseLogsCompanion extends UpdateCompanion<GlucoseLog> {
     if (source.present) {
       map['source'] = Variable<String>(source.value);
     }
-    if (syncStatus.present) {
-      map['sync_status'] = Variable<String>(syncStatus.value);
-    }
-    if (idempotencyKey.present) {
-      map['idempotency_key'] = Variable<String>(idempotencyKey.value);
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
     }
     return map;
   }
@@ -13178,6 +17087,11 @@ class GlucoseLogsCompanion extends UpdateCompanion<GlucoseLog> {
     return (StringBuffer('GlucoseLogsCompanion(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('fieldVersions: $fieldVersions, ')
           ..write('glucoseMgdl: $glucoseMgdl, ')
           ..write('readingType: $readingType, ')
           ..write('foodLogId: $foodLogId, ')
@@ -13186,8 +17100,7 @@ class GlucoseLogsCompanion extends UpdateCompanion<GlucoseLog> {
           ..write('hba1cEstimate: $hba1cEstimate, ')
           ..write('notes: $notes, ')
           ..write('source: $source, ')
-          ..write('syncStatus: $syncStatus, ')
-          ..write('idempotencyKey: $idempotencyKey')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -13200,16 +17113,12 @@ class $Spo2LogsTable extends Spo2Logs with TableInfo<$Spo2LogsTable, Spo2Log> {
   $Spo2LogsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
     'id',
     aliasedName,
     false,
-    hasAutoIncrement: true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
   );
   static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
   @override
@@ -13219,6 +17128,64 @@ class $Spo2LogsTable extends Spo2Logs with TableInfo<$Spo2LogsTable, Spo2Log> {
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _syncStatusMeta = const VerificationMeta(
+    'syncStatus',
+  );
+  @override
+  late final GeneratedColumn<String> syncStatus = GeneratedColumn<String>(
+    'sync_status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('pending'),
+  );
+  static const VerificationMeta _idempotencyKeyMeta = const VerificationMeta(
+    'idempotencyKey',
+  );
+  @override
+  late final GeneratedColumn<String> idempotencyKey = GeneratedColumn<String>(
+    'idempotency_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _fieldVersionsMeta = const VerificationMeta(
+    'fieldVersions',
+  );
+  @override
+  late final GeneratedColumn<String> fieldVersions = GeneratedColumn<String>(
+    'field_versions',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
   );
   @override
   late final GeneratedColumnWithTypeConverter<String, String> spo2Percent =
@@ -13262,6 +17229,11 @@ class $Spo2LogsTable extends Spo2Logs with TableInfo<$Spo2LogsTable, Spo2Log> {
   List<GeneratedColumn> get $columns => [
     id,
     userId,
+    createdAt,
+    updatedAt,
+    syncStatus,
+    idempotencyKey,
+    fieldVersions,
     spo2Percent,
     pulse,
     loggedAt,
@@ -13281,6 +17253,8 @@ class $Spo2LogsTable extends Spo2Logs with TableInfo<$Spo2LogsTable, Spo2Log> {
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
     }
     if (data.containsKey('user_id')) {
       context.handle(
@@ -13289,6 +17263,44 @@ class $Spo2LogsTable extends Spo2Logs with TableInfo<$Spo2LogsTable, Spo2Log> {
       );
     } else if (isInserting) {
       context.missing(_userIdMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    if (data.containsKey('sync_status')) {
+      context.handle(
+        _syncStatusMeta,
+        syncStatus.isAcceptableOrUnknown(data['sync_status']!, _syncStatusMeta),
+      );
+    }
+    if (data.containsKey('idempotency_key')) {
+      context.handle(
+        _idempotencyKeyMeta,
+        idempotencyKey.isAcceptableOrUnknown(
+          data['idempotency_key']!,
+          _idempotencyKeyMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_idempotencyKeyMeta);
+    }
+    if (data.containsKey('field_versions')) {
+      context.handle(
+        _fieldVersionsMeta,
+        fieldVersions.isAcceptableOrUnknown(
+          data['field_versions']!,
+          _fieldVersionsMeta,
+        ),
+      );
     }
     if (data.containsKey('logged_at')) {
       context.handle(
@@ -13316,13 +17328,33 @@ class $Spo2LogsTable extends Spo2Logs with TableInfo<$Spo2LogsTable, Spo2Log> {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return Spo2Log(
       id: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
+        DriftSqlType.string,
         data['${effectivePrefix}id'],
       )!,
       userId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}user_id'],
       )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      syncStatus: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sync_status'],
+      )!,
+      idempotencyKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}idempotency_key'],
+      )!,
+      fieldVersions: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}field_versions'],
+      ),
       spo2Percent: $Spo2LogsTable.$converterspo2Percent.fromSql(
         attachedDatabase.typeMapping.read(
           DriftSqlType.string,
@@ -13360,8 +17392,13 @@ class $Spo2LogsTable extends Spo2Logs with TableInfo<$Spo2LogsTable, Spo2Log> {
 }
 
 class Spo2Log extends DataClass implements Insertable<Spo2Log> {
-  final int id;
+  final String id;
   final String userId;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final String syncStatus;
+  final String idempotencyKey;
+  final String? fieldVersions;
   final String spo2Percent;
   final String? pulse;
   final DateTime loggedAt;
@@ -13369,6 +17406,11 @@ class Spo2Log extends DataClass implements Insertable<Spo2Log> {
   const Spo2Log({
     required this.id,
     required this.userId,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.syncStatus,
+    required this.idempotencyKey,
+    this.fieldVersions,
     required this.spo2Percent,
     this.pulse,
     required this.loggedAt,
@@ -13377,8 +17419,15 @@ class Spo2Log extends DataClass implements Insertable<Spo2Log> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
+    map['id'] = Variable<String>(id);
     map['user_id'] = Variable<String>(userId);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['sync_status'] = Variable<String>(syncStatus);
+    map['idempotency_key'] = Variable<String>(idempotencyKey);
+    if (!nullToAbsent || fieldVersions != null) {
+      map['field_versions'] = Variable<String>(fieldVersions);
+    }
     {
       map['spo2_percent'] = Variable<String>(
         $Spo2LogsTable.$converterspo2Percent.toSql(spo2Percent),
@@ -13398,6 +17447,13 @@ class Spo2Log extends DataClass implements Insertable<Spo2Log> {
     return Spo2LogsCompanion(
       id: Value(id),
       userId: Value(userId),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      syncStatus: Value(syncStatus),
+      idempotencyKey: Value(idempotencyKey),
+      fieldVersions: fieldVersions == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fieldVersions),
       spo2Percent: Value(spo2Percent),
       pulse: pulse == null && nullToAbsent
           ? const Value.absent()
@@ -13413,8 +17469,13 @@ class Spo2Log extends DataClass implements Insertable<Spo2Log> {
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return Spo2Log(
-      id: serializer.fromJson<int>(json['id']),
+      id: serializer.fromJson<String>(json['id']),
       userId: serializer.fromJson<String>(json['userId']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      syncStatus: serializer.fromJson<String>(json['syncStatus']),
+      idempotencyKey: serializer.fromJson<String>(json['idempotencyKey']),
+      fieldVersions: serializer.fromJson<String?>(json['fieldVersions']),
       spo2Percent: serializer.fromJson<String>(json['spo2Percent']),
       pulse: serializer.fromJson<String?>(json['pulse']),
       loggedAt: serializer.fromJson<DateTime>(json['loggedAt']),
@@ -13425,8 +17486,13 @@ class Spo2Log extends DataClass implements Insertable<Spo2Log> {
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
+      'id': serializer.toJson<String>(id),
       'userId': serializer.toJson<String>(userId),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'syncStatus': serializer.toJson<String>(syncStatus),
+      'idempotencyKey': serializer.toJson<String>(idempotencyKey),
+      'fieldVersions': serializer.toJson<String?>(fieldVersions),
       'spo2Percent': serializer.toJson<String>(spo2Percent),
       'pulse': serializer.toJson<String?>(pulse),
       'loggedAt': serializer.toJson<DateTime>(loggedAt),
@@ -13435,8 +17501,13 @@ class Spo2Log extends DataClass implements Insertable<Spo2Log> {
   }
 
   Spo2Log copyWith({
-    int? id,
+    String? id,
     String? userId,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    String? syncStatus,
+    String? idempotencyKey,
+    Value<String?> fieldVersions = const Value.absent(),
     String? spo2Percent,
     Value<String?> pulse = const Value.absent(),
     DateTime? loggedAt,
@@ -13444,6 +17515,13 @@ class Spo2Log extends DataClass implements Insertable<Spo2Log> {
   }) => Spo2Log(
     id: id ?? this.id,
     userId: userId ?? this.userId,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    syncStatus: syncStatus ?? this.syncStatus,
+    idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+    fieldVersions: fieldVersions.present
+        ? fieldVersions.value
+        : this.fieldVersions,
     spo2Percent: spo2Percent ?? this.spo2Percent,
     pulse: pulse.present ? pulse.value : this.pulse,
     loggedAt: loggedAt ?? this.loggedAt,
@@ -13453,6 +17531,17 @@ class Spo2Log extends DataClass implements Insertable<Spo2Log> {
     return Spo2Log(
       id: data.id.present ? data.id.value : this.id,
       userId: data.userId.present ? data.userId.value : this.userId,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      syncStatus: data.syncStatus.present
+          ? data.syncStatus.value
+          : this.syncStatus,
+      idempotencyKey: data.idempotencyKey.present
+          ? data.idempotencyKey.value
+          : this.idempotencyKey,
+      fieldVersions: data.fieldVersions.present
+          ? data.fieldVersions.value
+          : this.fieldVersions,
       spo2Percent: data.spo2Percent.present
           ? data.spo2Percent.value
           : this.spo2Percent,
@@ -13467,6 +17556,11 @@ class Spo2Log extends DataClass implements Insertable<Spo2Log> {
     return (StringBuffer('Spo2Log(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('fieldVersions: $fieldVersions, ')
           ..write('spo2Percent: $spo2Percent, ')
           ..write('pulse: $pulse, ')
           ..write('loggedAt: $loggedAt, ')
@@ -13476,14 +17570,30 @@ class Spo2Log extends DataClass implements Insertable<Spo2Log> {
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, userId, spo2Percent, pulse, loggedAt, source);
+  int get hashCode => Object.hash(
+    id,
+    userId,
+    createdAt,
+    updatedAt,
+    syncStatus,
+    idempotencyKey,
+    fieldVersions,
+    spo2Percent,
+    pulse,
+    loggedAt,
+    source,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is Spo2Log &&
           other.id == this.id &&
           other.userId == this.userId &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.syncStatus == this.syncStatus &&
+          other.idempotencyKey == this.idempotencyKey &&
+          other.fieldVersions == this.fieldVersions &&
           other.spo2Percent == this.spo2Percent &&
           other.pulse == this.pulse &&
           other.loggedAt == this.loggedAt &&
@@ -13491,64 +17601,108 @@ class Spo2Log extends DataClass implements Insertable<Spo2Log> {
 }
 
 class Spo2LogsCompanion extends UpdateCompanion<Spo2Log> {
-  final Value<int> id;
+  final Value<String> id;
   final Value<String> userId;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<String> syncStatus;
+  final Value<String> idempotencyKey;
+  final Value<String?> fieldVersions;
   final Value<String> spo2Percent;
   final Value<String?> pulse;
   final Value<DateTime> loggedAt;
   final Value<String> source;
+  final Value<int> rowid;
   const Spo2LogsCompanion({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    this.idempotencyKey = const Value.absent(),
+    this.fieldVersions = const Value.absent(),
     this.spo2Percent = const Value.absent(),
     this.pulse = const Value.absent(),
     this.loggedAt = const Value.absent(),
     this.source = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   Spo2LogsCompanion.insert({
-    this.id = const Value.absent(),
+    required String id,
     required String userId,
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    required String idempotencyKey,
+    this.fieldVersions = const Value.absent(),
     required String spo2Percent,
     this.pulse = const Value.absent(),
     required DateTime loggedAt,
     required String source,
-  }) : userId = Value(userId),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       userId = Value(userId),
+       idempotencyKey = Value(idempotencyKey),
        spo2Percent = Value(spo2Percent),
        loggedAt = Value(loggedAt),
        source = Value(source);
   static Insertable<Spo2Log> custom({
-    Expression<int>? id,
+    Expression<String>? id,
     Expression<String>? userId,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<String>? syncStatus,
+    Expression<String>? idempotencyKey,
+    Expression<String>? fieldVersions,
     Expression<String>? spo2Percent,
     Expression<String>? pulse,
     Expression<DateTime>? loggedAt,
     Expression<String>? source,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (userId != null) 'user_id': userId,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (syncStatus != null) 'sync_status': syncStatus,
+      if (idempotencyKey != null) 'idempotency_key': idempotencyKey,
+      if (fieldVersions != null) 'field_versions': fieldVersions,
       if (spo2Percent != null) 'spo2_percent': spo2Percent,
       if (pulse != null) 'pulse': pulse,
       if (loggedAt != null) 'logged_at': loggedAt,
       if (source != null) 'source': source,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
   Spo2LogsCompanion copyWith({
-    Value<int>? id,
+    Value<String>? id,
     Value<String>? userId,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<String>? syncStatus,
+    Value<String>? idempotencyKey,
+    Value<String?>? fieldVersions,
     Value<String>? spo2Percent,
     Value<String?>? pulse,
     Value<DateTime>? loggedAt,
     Value<String>? source,
+    Value<int>? rowid,
   }) {
     return Spo2LogsCompanion(
       id: id ?? this.id,
       userId: userId ?? this.userId,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      syncStatus: syncStatus ?? this.syncStatus,
+      idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+      fieldVersions: fieldVersions ?? this.fieldVersions,
       spo2Percent: spo2Percent ?? this.spo2Percent,
       pulse: pulse ?? this.pulse,
       loggedAt: loggedAt ?? this.loggedAt,
       source: source ?? this.source,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -13556,10 +17710,25 @@ class Spo2LogsCompanion extends UpdateCompanion<Spo2Log> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (id.present) {
-      map['id'] = Variable<int>(id.value);
+      map['id'] = Variable<String>(id.value);
     }
     if (userId.present) {
       map['user_id'] = Variable<String>(userId.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (syncStatus.present) {
+      map['sync_status'] = Variable<String>(syncStatus.value);
+    }
+    if (idempotencyKey.present) {
+      map['idempotency_key'] = Variable<String>(idempotencyKey.value);
+    }
+    if (fieldVersions.present) {
+      map['field_versions'] = Variable<String>(fieldVersions.value);
     }
     if (spo2Percent.present) {
       map['spo2_percent'] = Variable<String>(
@@ -13577,6 +17746,9 @@ class Spo2LogsCompanion extends UpdateCompanion<Spo2Log> {
     if (source.present) {
       map['source'] = Variable<String>(source.value);
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
@@ -13585,10 +17757,16 @@ class Spo2LogsCompanion extends UpdateCompanion<Spo2Log> {
     return (StringBuffer('Spo2LogsCompanion(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('fieldVersions: $fieldVersions, ')
           ..write('spo2Percent: $spo2Percent, ')
           ..write('pulse: $pulse, ')
           ..write('loggedAt: $loggedAt, ')
-          ..write('source: $source')
+          ..write('source: $source, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -13602,16 +17780,12 @@ class $PeriodLogsTable extends PeriodLogs
   $PeriodLogsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
     'id',
     aliasedName,
     false,
-    hasAutoIncrement: true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
   );
   static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
   @override
@@ -13621,6 +17795,64 @@ class $PeriodLogsTable extends PeriodLogs
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _syncStatusMeta = const VerificationMeta(
+    'syncStatus',
+  );
+  @override
+  late final GeneratedColumn<String> syncStatus = GeneratedColumn<String>(
+    'sync_status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('pending'),
+  );
+  static const VerificationMeta _idempotencyKeyMeta = const VerificationMeta(
+    'idempotencyKey',
+  );
+  @override
+  late final GeneratedColumn<String> idempotencyKey = GeneratedColumn<String>(
+    'idempotency_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _fieldVersionsMeta = const VerificationMeta(
+    'fieldVersions',
+  );
+  @override
+  late final GeneratedColumn<String> fieldVersions = GeneratedColumn<String>(
+    'field_versions',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
   );
   @override
   late final GeneratedColumnWithTypeConverter<String, String>
@@ -13667,39 +17899,20 @@ class $PeriodLogsTable extends PeriodLogs
         type: DriftSqlType.string,
         requiredDuringInsert: false,
       ).withConverter<String?>($PeriodLogsTable.$converternotesEncryptedn);
-  static const VerificationMeta _syncStatusMeta = const VerificationMeta(
-    'syncStatus',
-  );
-  @override
-  late final GeneratedColumn<String> syncStatus = GeneratedColumn<String>(
-    'sync_status',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _idempotencyKeyMeta = const VerificationMeta(
-    'idempotencyKey',
-  );
-  @override
-  late final GeneratedColumn<String> idempotencyKey = GeneratedColumn<String>(
-    'idempotency_key',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
     userId,
+    createdAt,
+    updatedAt,
+    syncStatus,
+    idempotencyKey,
+    fieldVersions,
     cycleStartEncrypted,
     cycleEndEncrypted,
     symptomsEncrypted,
     flowIntensityEncrypted,
     notesEncrypted,
-    syncStatus,
-    idempotencyKey,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -13715,6 +17928,8 @@ class $PeriodLogsTable extends PeriodLogs
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
     }
     if (data.containsKey('user_id')) {
       context.handle(
@@ -13723,6 +17938,18 @@ class $PeriodLogsTable extends PeriodLogs
       );
     } else if (isInserting) {
       context.missing(_userIdMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
     }
     if (data.containsKey('sync_status')) {
       context.handle(
@@ -13738,6 +17965,17 @@ class $PeriodLogsTable extends PeriodLogs
           _idempotencyKeyMeta,
         ),
       );
+    } else if (isInserting) {
+      context.missing(_idempotencyKeyMeta);
+    }
+    if (data.containsKey('field_versions')) {
+      context.handle(
+        _fieldVersionsMeta,
+        fieldVersions.isAcceptableOrUnknown(
+          data['field_versions']!,
+          _fieldVersionsMeta,
+        ),
+      );
     }
     return context;
   }
@@ -13749,13 +17987,33 @@ class $PeriodLogsTable extends PeriodLogs
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return PeriodLog(
       id: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
+        DriftSqlType.string,
         data['${effectivePrefix}id'],
       )!,
       userId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}user_id'],
       )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      syncStatus: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sync_status'],
+      )!,
+      idempotencyKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}idempotency_key'],
+      )!,
+      fieldVersions: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}field_versions'],
+      ),
       cycleStartEncrypted: $PeriodLogsTable.$convertercycleStartEncrypted
           .fromSql(
             attachedDatabase.typeMapping.read(
@@ -13788,14 +18046,6 @@ class $PeriodLogsTable extends PeriodLogs
           data['${effectivePrefix}notes_encrypted'],
         ),
       ),
-      syncStatus: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}sync_status'],
-      ),
-      idempotencyKey: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}idempotency_key'],
-      ),
     );
   }
 
@@ -13825,31 +18075,44 @@ class $PeriodLogsTable extends PeriodLogs
 }
 
 class PeriodLog extends DataClass implements Insertable<PeriodLog> {
-  final int id;
+  final String id;
   final String userId;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final String syncStatus;
+  final String idempotencyKey;
+  final String? fieldVersions;
   final String cycleStartEncrypted;
   final String? cycleEndEncrypted;
   final String? symptomsEncrypted;
   final String? flowIntensityEncrypted;
   final String? notesEncrypted;
-  final String? syncStatus;
-  final String? idempotencyKey;
   const PeriodLog({
     required this.id,
     required this.userId,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.syncStatus,
+    required this.idempotencyKey,
+    this.fieldVersions,
     required this.cycleStartEncrypted,
     this.cycleEndEncrypted,
     this.symptomsEncrypted,
     this.flowIntensityEncrypted,
     this.notesEncrypted,
-    this.syncStatus,
-    this.idempotencyKey,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
+    map['id'] = Variable<String>(id);
     map['user_id'] = Variable<String>(userId);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['sync_status'] = Variable<String>(syncStatus);
+    map['idempotency_key'] = Variable<String>(idempotencyKey);
+    if (!nullToAbsent || fieldVersions != null) {
+      map['field_versions'] = Variable<String>(fieldVersions);
+    }
     {
       map['cycle_start_encrypted'] = Variable<String>(
         $PeriodLogsTable.$convertercycleStartEncrypted.toSql(
@@ -13879,12 +18142,6 @@ class PeriodLog extends DataClass implements Insertable<PeriodLog> {
         $PeriodLogsTable.$converternotesEncryptedn.toSql(notesEncrypted),
       );
     }
-    if (!nullToAbsent || syncStatus != null) {
-      map['sync_status'] = Variable<String>(syncStatus);
-    }
-    if (!nullToAbsent || idempotencyKey != null) {
-      map['idempotency_key'] = Variable<String>(idempotencyKey);
-    }
     return map;
   }
 
@@ -13892,6 +18149,13 @@ class PeriodLog extends DataClass implements Insertable<PeriodLog> {
     return PeriodLogsCompanion(
       id: Value(id),
       userId: Value(userId),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      syncStatus: Value(syncStatus),
+      idempotencyKey: Value(idempotencyKey),
+      fieldVersions: fieldVersions == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fieldVersions),
       cycleStartEncrypted: Value(cycleStartEncrypted),
       cycleEndEncrypted: cycleEndEncrypted == null && nullToAbsent
           ? const Value.absent()
@@ -13905,12 +18169,6 @@ class PeriodLog extends DataClass implements Insertable<PeriodLog> {
       notesEncrypted: notesEncrypted == null && nullToAbsent
           ? const Value.absent()
           : Value(notesEncrypted),
-      syncStatus: syncStatus == null && nullToAbsent
-          ? const Value.absent()
-          : Value(syncStatus),
-      idempotencyKey: idempotencyKey == null && nullToAbsent
-          ? const Value.absent()
-          : Value(idempotencyKey),
     );
   }
 
@@ -13920,8 +18178,13 @@ class PeriodLog extends DataClass implements Insertable<PeriodLog> {
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return PeriodLog(
-      id: serializer.fromJson<int>(json['id']),
+      id: serializer.fromJson<String>(json['id']),
       userId: serializer.fromJson<String>(json['userId']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      syncStatus: serializer.fromJson<String>(json['syncStatus']),
+      idempotencyKey: serializer.fromJson<String>(json['idempotencyKey']),
+      fieldVersions: serializer.fromJson<String?>(json['fieldVersions']),
       cycleStartEncrypted: serializer.fromJson<String>(
         json['cycleStartEncrypted'],
       ),
@@ -13935,16 +18198,19 @@ class PeriodLog extends DataClass implements Insertable<PeriodLog> {
         json['flowIntensityEncrypted'],
       ),
       notesEncrypted: serializer.fromJson<String?>(json['notesEncrypted']),
-      syncStatus: serializer.fromJson<String?>(json['syncStatus']),
-      idempotencyKey: serializer.fromJson<String?>(json['idempotencyKey']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
+      'id': serializer.toJson<String>(id),
       'userId': serializer.toJson<String>(userId),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'syncStatus': serializer.toJson<String>(syncStatus),
+      'idempotencyKey': serializer.toJson<String>(idempotencyKey),
+      'fieldVersions': serializer.toJson<String?>(fieldVersions),
       'cycleStartEncrypted': serializer.toJson<String>(cycleStartEncrypted),
       'cycleEndEncrypted': serializer.toJson<String?>(cycleEndEncrypted),
       'symptomsEncrypted': serializer.toJson<String?>(symptomsEncrypted),
@@ -13952,24 +18218,32 @@ class PeriodLog extends DataClass implements Insertable<PeriodLog> {
         flowIntensityEncrypted,
       ),
       'notesEncrypted': serializer.toJson<String?>(notesEncrypted),
-      'syncStatus': serializer.toJson<String?>(syncStatus),
-      'idempotencyKey': serializer.toJson<String?>(idempotencyKey),
     };
   }
 
   PeriodLog copyWith({
-    int? id,
+    String? id,
     String? userId,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    String? syncStatus,
+    String? idempotencyKey,
+    Value<String?> fieldVersions = const Value.absent(),
     String? cycleStartEncrypted,
     Value<String?> cycleEndEncrypted = const Value.absent(),
     Value<String?> symptomsEncrypted = const Value.absent(),
     Value<String?> flowIntensityEncrypted = const Value.absent(),
     Value<String?> notesEncrypted = const Value.absent(),
-    Value<String?> syncStatus = const Value.absent(),
-    Value<String?> idempotencyKey = const Value.absent(),
   }) => PeriodLog(
     id: id ?? this.id,
     userId: userId ?? this.userId,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    syncStatus: syncStatus ?? this.syncStatus,
+    idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+    fieldVersions: fieldVersions.present
+        ? fieldVersions.value
+        : this.fieldVersions,
     cycleStartEncrypted: cycleStartEncrypted ?? this.cycleStartEncrypted,
     cycleEndEncrypted: cycleEndEncrypted.present
         ? cycleEndEncrypted.value
@@ -13983,15 +18257,22 @@ class PeriodLog extends DataClass implements Insertable<PeriodLog> {
     notesEncrypted: notesEncrypted.present
         ? notesEncrypted.value
         : this.notesEncrypted,
-    syncStatus: syncStatus.present ? syncStatus.value : this.syncStatus,
-    idempotencyKey: idempotencyKey.present
-        ? idempotencyKey.value
-        : this.idempotencyKey,
   );
   PeriodLog copyWithCompanion(PeriodLogsCompanion data) {
     return PeriodLog(
       id: data.id.present ? data.id.value : this.id,
       userId: data.userId.present ? data.userId.value : this.userId,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      syncStatus: data.syncStatus.present
+          ? data.syncStatus.value
+          : this.syncStatus,
+      idempotencyKey: data.idempotencyKey.present
+          ? data.idempotencyKey.value
+          : this.idempotencyKey,
+      fieldVersions: data.fieldVersions.present
+          ? data.fieldVersions.value
+          : this.fieldVersions,
       cycleStartEncrypted: data.cycleStartEncrypted.present
           ? data.cycleStartEncrypted.value
           : this.cycleStartEncrypted,
@@ -14007,12 +18288,6 @@ class PeriodLog extends DataClass implements Insertable<PeriodLog> {
       notesEncrypted: data.notesEncrypted.present
           ? data.notesEncrypted.value
           : this.notesEncrypted,
-      syncStatus: data.syncStatus.present
-          ? data.syncStatus.value
-          : this.syncStatus,
-      idempotencyKey: data.idempotencyKey.present
-          ? data.idempotencyKey.value
-          : this.idempotencyKey,
     );
   }
 
@@ -14021,13 +18296,16 @@ class PeriodLog extends DataClass implements Insertable<PeriodLog> {
     return (StringBuffer('PeriodLog(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('fieldVersions: $fieldVersions, ')
           ..write('cycleStartEncrypted: $cycleStartEncrypted, ')
           ..write('cycleEndEncrypted: $cycleEndEncrypted, ')
           ..write('symptomsEncrypted: $symptomsEncrypted, ')
           ..write('flowIntensityEncrypted: $flowIntensityEncrypted, ')
-          ..write('notesEncrypted: $notesEncrypted, ')
-          ..write('syncStatus: $syncStatus, ')
-          ..write('idempotencyKey: $idempotencyKey')
+          ..write('notesEncrypted: $notesEncrypted')
           ..write(')'))
         .toString();
   }
@@ -14036,13 +18314,16 @@ class PeriodLog extends DataClass implements Insertable<PeriodLog> {
   int get hashCode => Object.hash(
     id,
     userId,
+    createdAt,
+    updatedAt,
+    syncStatus,
+    idempotencyKey,
+    fieldVersions,
     cycleStartEncrypted,
     cycleEndEncrypted,
     symptomsEncrypted,
     flowIntensityEncrypted,
     notesEncrypted,
-    syncStatus,
-    idempotencyKey,
   );
   @override
   bool operator ==(Object other) =>
@@ -14050,62 +18331,88 @@ class PeriodLog extends DataClass implements Insertable<PeriodLog> {
       (other is PeriodLog &&
           other.id == this.id &&
           other.userId == this.userId &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.syncStatus == this.syncStatus &&
+          other.idempotencyKey == this.idempotencyKey &&
+          other.fieldVersions == this.fieldVersions &&
           other.cycleStartEncrypted == this.cycleStartEncrypted &&
           other.cycleEndEncrypted == this.cycleEndEncrypted &&
           other.symptomsEncrypted == this.symptomsEncrypted &&
           other.flowIntensityEncrypted == this.flowIntensityEncrypted &&
-          other.notesEncrypted == this.notesEncrypted &&
-          other.syncStatus == this.syncStatus &&
-          other.idempotencyKey == this.idempotencyKey);
+          other.notesEncrypted == this.notesEncrypted);
 }
 
 class PeriodLogsCompanion extends UpdateCompanion<PeriodLog> {
-  final Value<int> id;
+  final Value<String> id;
   final Value<String> userId;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<String> syncStatus;
+  final Value<String> idempotencyKey;
+  final Value<String?> fieldVersions;
   final Value<String> cycleStartEncrypted;
   final Value<String?> cycleEndEncrypted;
   final Value<String?> symptomsEncrypted;
   final Value<String?> flowIntensityEncrypted;
   final Value<String?> notesEncrypted;
-  final Value<String?> syncStatus;
-  final Value<String?> idempotencyKey;
+  final Value<int> rowid;
   const PeriodLogsCompanion({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    this.idempotencyKey = const Value.absent(),
+    this.fieldVersions = const Value.absent(),
     this.cycleStartEncrypted = const Value.absent(),
     this.cycleEndEncrypted = const Value.absent(),
     this.symptomsEncrypted = const Value.absent(),
     this.flowIntensityEncrypted = const Value.absent(),
     this.notesEncrypted = const Value.absent(),
-    this.syncStatus = const Value.absent(),
-    this.idempotencyKey = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   PeriodLogsCompanion.insert({
-    this.id = const Value.absent(),
+    required String id,
     required String userId,
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    required String idempotencyKey,
+    this.fieldVersions = const Value.absent(),
     required String cycleStartEncrypted,
     this.cycleEndEncrypted = const Value.absent(),
     this.symptomsEncrypted = const Value.absent(),
     this.flowIntensityEncrypted = const Value.absent(),
     this.notesEncrypted = const Value.absent(),
-    this.syncStatus = const Value.absent(),
-    this.idempotencyKey = const Value.absent(),
-  }) : userId = Value(userId),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       userId = Value(userId),
+       idempotencyKey = Value(idempotencyKey),
        cycleStartEncrypted = Value(cycleStartEncrypted);
   static Insertable<PeriodLog> custom({
-    Expression<int>? id,
+    Expression<String>? id,
     Expression<String>? userId,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<String>? syncStatus,
+    Expression<String>? idempotencyKey,
+    Expression<String>? fieldVersions,
     Expression<String>? cycleStartEncrypted,
     Expression<String>? cycleEndEncrypted,
     Expression<String>? symptomsEncrypted,
     Expression<String>? flowIntensityEncrypted,
     Expression<String>? notesEncrypted,
-    Expression<String>? syncStatus,
-    Expression<String>? idempotencyKey,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (userId != null) 'user_id': userId,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (syncStatus != null) 'sync_status': syncStatus,
+      if (idempotencyKey != null) 'idempotency_key': idempotencyKey,
+      if (fieldVersions != null) 'field_versions': fieldVersions,
       if (cycleStartEncrypted != null)
         'cycle_start_encrypted': cycleStartEncrypted,
       if (cycleEndEncrypted != null) 'cycle_end_encrypted': cycleEndEncrypted,
@@ -14113,33 +18420,40 @@ class PeriodLogsCompanion extends UpdateCompanion<PeriodLog> {
       if (flowIntensityEncrypted != null)
         'flow_intensity_encrypted': flowIntensityEncrypted,
       if (notesEncrypted != null) 'notes_encrypted': notesEncrypted,
-      if (syncStatus != null) 'sync_status': syncStatus,
-      if (idempotencyKey != null) 'idempotency_key': idempotencyKey,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
   PeriodLogsCompanion copyWith({
-    Value<int>? id,
+    Value<String>? id,
     Value<String>? userId,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<String>? syncStatus,
+    Value<String>? idempotencyKey,
+    Value<String?>? fieldVersions,
     Value<String>? cycleStartEncrypted,
     Value<String?>? cycleEndEncrypted,
     Value<String?>? symptomsEncrypted,
     Value<String?>? flowIntensityEncrypted,
     Value<String?>? notesEncrypted,
-    Value<String?>? syncStatus,
-    Value<String?>? idempotencyKey,
+    Value<int>? rowid,
   }) {
     return PeriodLogsCompanion(
       id: id ?? this.id,
       userId: userId ?? this.userId,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      syncStatus: syncStatus ?? this.syncStatus,
+      idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+      fieldVersions: fieldVersions ?? this.fieldVersions,
       cycleStartEncrypted: cycleStartEncrypted ?? this.cycleStartEncrypted,
       cycleEndEncrypted: cycleEndEncrypted ?? this.cycleEndEncrypted,
       symptomsEncrypted: symptomsEncrypted ?? this.symptomsEncrypted,
       flowIntensityEncrypted:
           flowIntensityEncrypted ?? this.flowIntensityEncrypted,
       notesEncrypted: notesEncrypted ?? this.notesEncrypted,
-      syncStatus: syncStatus ?? this.syncStatus,
-      idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -14147,10 +18461,25 @@ class PeriodLogsCompanion extends UpdateCompanion<PeriodLog> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (id.present) {
-      map['id'] = Variable<int>(id.value);
+      map['id'] = Variable<String>(id.value);
     }
     if (userId.present) {
       map['user_id'] = Variable<String>(userId.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (syncStatus.present) {
+      map['sync_status'] = Variable<String>(syncStatus.value);
+    }
+    if (idempotencyKey.present) {
+      map['idempotency_key'] = Variable<String>(idempotencyKey.value);
+    }
+    if (fieldVersions.present) {
+      map['field_versions'] = Variable<String>(fieldVersions.value);
     }
     if (cycleStartEncrypted.present) {
       map['cycle_start_encrypted'] = Variable<String>(
@@ -14185,11 +18514,8 @@ class PeriodLogsCompanion extends UpdateCompanion<PeriodLog> {
         $PeriodLogsTable.$converternotesEncryptedn.toSql(notesEncrypted.value),
       );
     }
-    if (syncStatus.present) {
-      map['sync_status'] = Variable<String>(syncStatus.value);
-    }
-    if (idempotencyKey.present) {
-      map['idempotency_key'] = Variable<String>(idempotencyKey.value);
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
     }
     return map;
   }
@@ -14199,13 +18525,17 @@ class PeriodLogsCompanion extends UpdateCompanion<PeriodLog> {
     return (StringBuffer('PeriodLogsCompanion(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('fieldVersions: $fieldVersions, ')
           ..write('cycleStartEncrypted: $cycleStartEncrypted, ')
           ..write('cycleEndEncrypted: $cycleEndEncrypted, ')
           ..write('symptomsEncrypted: $symptomsEncrypted, ')
           ..write('flowIntensityEncrypted: $flowIntensityEncrypted, ')
           ..write('notesEncrypted: $notesEncrypted, ')
-          ..write('syncStatus: $syncStatus, ')
-          ..write('idempotencyKey: $idempotencyKey')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -14219,16 +18549,12 @@ class $JournalEntriesTable extends JournalEntries
   $JournalEntriesTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
     'id',
     aliasedName,
     false,
-    hasAutoIncrement: true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
   );
   static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
   @override
@@ -14238,6 +18564,64 @@ class $JournalEntriesTable extends JournalEntries
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _syncStatusMeta = const VerificationMeta(
+    'syncStatus',
+  );
+  @override
+  late final GeneratedColumn<String> syncStatus = GeneratedColumn<String>(
+    'sync_status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('pending'),
+  );
+  static const VerificationMeta _idempotencyKeyMeta = const VerificationMeta(
+    'idempotencyKey',
+  );
+  @override
+  late final GeneratedColumn<String> idempotencyKey = GeneratedColumn<String>(
+    'idempotency_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _fieldVersionsMeta = const VerificationMeta(
+    'fieldVersions',
+  );
+  @override
+  late final GeneratedColumn<String> fieldVersions = GeneratedColumn<String>(
+    'field_versions',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
   );
   @override
   late final GeneratedColumnWithTypeConverter<String, String> contentEncrypted =
@@ -14290,27 +18674,20 @@ class $JournalEntriesTable extends JournalEntries
     type: DriftSqlType.dateTime,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _syncStatusMeta = const VerificationMeta(
-    'syncStatus',
-  );
-  @override
-  late final GeneratedColumn<String> syncStatus = GeneratedColumn<String>(
-    'sync_status',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
     userId,
+    createdAt,
+    updatedAt,
+    syncStatus,
+    idempotencyKey,
+    fieldVersions,
     contentEncrypted,
     moodScore,
     tags,
     promptUsed,
     loggedAt,
-    syncStatus,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -14326,6 +18703,8 @@ class $JournalEntriesTable extends JournalEntries
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
     }
     if (data.containsKey('user_id')) {
       context.handle(
@@ -14334,6 +18713,44 @@ class $JournalEntriesTable extends JournalEntries
       );
     } else if (isInserting) {
       context.missing(_userIdMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    if (data.containsKey('sync_status')) {
+      context.handle(
+        _syncStatusMeta,
+        syncStatus.isAcceptableOrUnknown(data['sync_status']!, _syncStatusMeta),
+      );
+    }
+    if (data.containsKey('idempotency_key')) {
+      context.handle(
+        _idempotencyKeyMeta,
+        idempotencyKey.isAcceptableOrUnknown(
+          data['idempotency_key']!,
+          _idempotencyKeyMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_idempotencyKeyMeta);
+    }
+    if (data.containsKey('field_versions')) {
+      context.handle(
+        _fieldVersionsMeta,
+        fieldVersions.isAcceptableOrUnknown(
+          data['field_versions']!,
+          _fieldVersionsMeta,
+        ),
+      );
     }
     if (data.containsKey('mood_score')) {
       context.handle(
@@ -14361,12 +18778,6 @@ class $JournalEntriesTable extends JournalEntries
     } else if (isInserting) {
       context.missing(_loggedAtMeta);
     }
-    if (data.containsKey('sync_status')) {
-      context.handle(
-        _syncStatusMeta,
-        syncStatus.isAcceptableOrUnknown(data['sync_status']!, _syncStatusMeta),
-      );
-    }
     return context;
   }
 
@@ -14377,13 +18788,33 @@ class $JournalEntriesTable extends JournalEntries
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return JournalEntry(
       id: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
+        DriftSqlType.string,
         data['${effectivePrefix}id'],
       )!,
       userId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}user_id'],
       )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      syncStatus: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sync_status'],
+      )!,
+      idempotencyKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}idempotency_key'],
+      )!,
+      fieldVersions: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}field_versions'],
+      ),
       contentEncrypted: $JournalEntriesTable.$convertercontentEncrypted.fromSql(
         attachedDatabase.typeMapping.read(
           DriftSqlType.string,
@@ -14406,10 +18837,6 @@ class $JournalEntriesTable extends JournalEntries
         DriftSqlType.dateTime,
         data['${effectivePrefix}logged_at'],
       )!,
-      syncStatus: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}sync_status'],
-      ),
     );
   }
 
@@ -14423,29 +18850,44 @@ class $JournalEntriesTable extends JournalEntries
 }
 
 class JournalEntry extends DataClass implements Insertable<JournalEntry> {
-  final int id;
+  final String id;
   final String userId;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final String syncStatus;
+  final String idempotencyKey;
+  final String? fieldVersions;
   final String contentEncrypted;
   final int? moodScore;
   final String? tags;
   final String? promptUsed;
   final DateTime loggedAt;
-  final String? syncStatus;
   const JournalEntry({
     required this.id,
     required this.userId,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.syncStatus,
+    required this.idempotencyKey,
+    this.fieldVersions,
     required this.contentEncrypted,
     this.moodScore,
     this.tags,
     this.promptUsed,
     required this.loggedAt,
-    this.syncStatus,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
+    map['id'] = Variable<String>(id);
     map['user_id'] = Variable<String>(userId);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['sync_status'] = Variable<String>(syncStatus);
+    map['idempotency_key'] = Variable<String>(idempotencyKey);
+    if (!nullToAbsent || fieldVersions != null) {
+      map['field_versions'] = Variable<String>(fieldVersions);
+    }
     {
       map['content_encrypted'] = Variable<String>(
         $JournalEntriesTable.$convertercontentEncrypted.toSql(contentEncrypted),
@@ -14461,9 +18903,6 @@ class JournalEntry extends DataClass implements Insertable<JournalEntry> {
       map['prompt_used'] = Variable<String>(promptUsed);
     }
     map['logged_at'] = Variable<DateTime>(loggedAt);
-    if (!nullToAbsent || syncStatus != null) {
-      map['sync_status'] = Variable<String>(syncStatus);
-    }
     return map;
   }
 
@@ -14471,6 +18910,13 @@ class JournalEntry extends DataClass implements Insertable<JournalEntry> {
     return JournalEntriesCompanion(
       id: Value(id),
       userId: Value(userId),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      syncStatus: Value(syncStatus),
+      idempotencyKey: Value(idempotencyKey),
+      fieldVersions: fieldVersions == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fieldVersions),
       contentEncrypted: Value(contentEncrypted),
       moodScore: moodScore == null && nullToAbsent
           ? const Value.absent()
@@ -14480,9 +18926,6 @@ class JournalEntry extends DataClass implements Insertable<JournalEntry> {
           ? const Value.absent()
           : Value(promptUsed),
       loggedAt: Value(loggedAt),
-      syncStatus: syncStatus == null && nullToAbsent
-          ? const Value.absent()
-          : Value(syncStatus),
     );
   }
 
@@ -14492,54 +18935,83 @@ class JournalEntry extends DataClass implements Insertable<JournalEntry> {
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return JournalEntry(
-      id: serializer.fromJson<int>(json['id']),
+      id: serializer.fromJson<String>(json['id']),
       userId: serializer.fromJson<String>(json['userId']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      syncStatus: serializer.fromJson<String>(json['syncStatus']),
+      idempotencyKey: serializer.fromJson<String>(json['idempotencyKey']),
+      fieldVersions: serializer.fromJson<String?>(json['fieldVersions']),
       contentEncrypted: serializer.fromJson<String>(json['contentEncrypted']),
       moodScore: serializer.fromJson<int?>(json['moodScore']),
       tags: serializer.fromJson<String?>(json['tags']),
       promptUsed: serializer.fromJson<String?>(json['promptUsed']),
       loggedAt: serializer.fromJson<DateTime>(json['loggedAt']),
-      syncStatus: serializer.fromJson<String?>(json['syncStatus']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
+      'id': serializer.toJson<String>(id),
       'userId': serializer.toJson<String>(userId),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'syncStatus': serializer.toJson<String>(syncStatus),
+      'idempotencyKey': serializer.toJson<String>(idempotencyKey),
+      'fieldVersions': serializer.toJson<String?>(fieldVersions),
       'contentEncrypted': serializer.toJson<String>(contentEncrypted),
       'moodScore': serializer.toJson<int?>(moodScore),
       'tags': serializer.toJson<String?>(tags),
       'promptUsed': serializer.toJson<String?>(promptUsed),
       'loggedAt': serializer.toJson<DateTime>(loggedAt),
-      'syncStatus': serializer.toJson<String?>(syncStatus),
     };
   }
 
   JournalEntry copyWith({
-    int? id,
+    String? id,
     String? userId,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    String? syncStatus,
+    String? idempotencyKey,
+    Value<String?> fieldVersions = const Value.absent(),
     String? contentEncrypted,
     Value<int?> moodScore = const Value.absent(),
     Value<String?> tags = const Value.absent(),
     Value<String?> promptUsed = const Value.absent(),
     DateTime? loggedAt,
-    Value<String?> syncStatus = const Value.absent(),
   }) => JournalEntry(
     id: id ?? this.id,
     userId: userId ?? this.userId,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    syncStatus: syncStatus ?? this.syncStatus,
+    idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+    fieldVersions: fieldVersions.present
+        ? fieldVersions.value
+        : this.fieldVersions,
     contentEncrypted: contentEncrypted ?? this.contentEncrypted,
     moodScore: moodScore.present ? moodScore.value : this.moodScore,
     tags: tags.present ? tags.value : this.tags,
     promptUsed: promptUsed.present ? promptUsed.value : this.promptUsed,
     loggedAt: loggedAt ?? this.loggedAt,
-    syncStatus: syncStatus.present ? syncStatus.value : this.syncStatus,
   );
   JournalEntry copyWithCompanion(JournalEntriesCompanion data) {
     return JournalEntry(
       id: data.id.present ? data.id.value : this.id,
       userId: data.userId.present ? data.userId.value : this.userId,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      syncStatus: data.syncStatus.present
+          ? data.syncStatus.value
+          : this.syncStatus,
+      idempotencyKey: data.idempotencyKey.present
+          ? data.idempotencyKey.value
+          : this.idempotencyKey,
+      fieldVersions: data.fieldVersions.present
+          ? data.fieldVersions.value
+          : this.fieldVersions,
       contentEncrypted: data.contentEncrypted.present
           ? data.contentEncrypted.value
           : this.contentEncrypted,
@@ -14549,9 +19021,6 @@ class JournalEntry extends DataClass implements Insertable<JournalEntry> {
           ? data.promptUsed.value
           : this.promptUsed,
       loggedAt: data.loggedAt.present ? data.loggedAt.value : this.loggedAt,
-      syncStatus: data.syncStatus.present
-          ? data.syncStatus.value
-          : this.syncStatus,
     );
   }
 
@@ -14560,12 +19029,16 @@ class JournalEntry extends DataClass implements Insertable<JournalEntry> {
     return (StringBuffer('JournalEntry(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('fieldVersions: $fieldVersions, ')
           ..write('contentEncrypted: $contentEncrypted, ')
           ..write('moodScore: $moodScore, ')
           ..write('tags: $tags, ')
           ..write('promptUsed: $promptUsed, ')
-          ..write('loggedAt: $loggedAt, ')
-          ..write('syncStatus: $syncStatus')
+          ..write('loggedAt: $loggedAt')
           ..write(')'))
         .toString();
   }
@@ -14574,12 +19047,16 @@ class JournalEntry extends DataClass implements Insertable<JournalEntry> {
   int get hashCode => Object.hash(
     id,
     userId,
+    createdAt,
+    updatedAt,
+    syncStatus,
+    idempotencyKey,
+    fieldVersions,
     contentEncrypted,
     moodScore,
     tags,
     promptUsed,
     loggedAt,
-    syncStatus,
   );
   @override
   bool operator ==(Object other) =>
@@ -14587,86 +19064,127 @@ class JournalEntry extends DataClass implements Insertable<JournalEntry> {
       (other is JournalEntry &&
           other.id == this.id &&
           other.userId == this.userId &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.syncStatus == this.syncStatus &&
+          other.idempotencyKey == this.idempotencyKey &&
+          other.fieldVersions == this.fieldVersions &&
           other.contentEncrypted == this.contentEncrypted &&
           other.moodScore == this.moodScore &&
           other.tags == this.tags &&
           other.promptUsed == this.promptUsed &&
-          other.loggedAt == this.loggedAt &&
-          other.syncStatus == this.syncStatus);
+          other.loggedAt == this.loggedAt);
 }
 
 class JournalEntriesCompanion extends UpdateCompanion<JournalEntry> {
-  final Value<int> id;
+  final Value<String> id;
   final Value<String> userId;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<String> syncStatus;
+  final Value<String> idempotencyKey;
+  final Value<String?> fieldVersions;
   final Value<String> contentEncrypted;
   final Value<int?> moodScore;
   final Value<String?> tags;
   final Value<String?> promptUsed;
   final Value<DateTime> loggedAt;
-  final Value<String?> syncStatus;
+  final Value<int> rowid;
   const JournalEntriesCompanion({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    this.idempotencyKey = const Value.absent(),
+    this.fieldVersions = const Value.absent(),
     this.contentEncrypted = const Value.absent(),
     this.moodScore = const Value.absent(),
     this.tags = const Value.absent(),
     this.promptUsed = const Value.absent(),
     this.loggedAt = const Value.absent(),
-    this.syncStatus = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   JournalEntriesCompanion.insert({
-    this.id = const Value.absent(),
+    required String id,
     required String userId,
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    required String idempotencyKey,
+    this.fieldVersions = const Value.absent(),
     required String contentEncrypted,
     this.moodScore = const Value.absent(),
     this.tags = const Value.absent(),
     this.promptUsed = const Value.absent(),
     required DateTime loggedAt,
-    this.syncStatus = const Value.absent(),
-  }) : userId = Value(userId),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       userId = Value(userId),
+       idempotencyKey = Value(idempotencyKey),
        contentEncrypted = Value(contentEncrypted),
        loggedAt = Value(loggedAt);
   static Insertable<JournalEntry> custom({
-    Expression<int>? id,
+    Expression<String>? id,
     Expression<String>? userId,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<String>? syncStatus,
+    Expression<String>? idempotencyKey,
+    Expression<String>? fieldVersions,
     Expression<String>? contentEncrypted,
     Expression<int>? moodScore,
     Expression<String>? tags,
     Expression<String>? promptUsed,
     Expression<DateTime>? loggedAt,
-    Expression<String>? syncStatus,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (userId != null) 'user_id': userId,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (syncStatus != null) 'sync_status': syncStatus,
+      if (idempotencyKey != null) 'idempotency_key': idempotencyKey,
+      if (fieldVersions != null) 'field_versions': fieldVersions,
       if (contentEncrypted != null) 'content_encrypted': contentEncrypted,
       if (moodScore != null) 'mood_score': moodScore,
       if (tags != null) 'tags': tags,
       if (promptUsed != null) 'prompt_used': promptUsed,
       if (loggedAt != null) 'logged_at': loggedAt,
-      if (syncStatus != null) 'sync_status': syncStatus,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
   JournalEntriesCompanion copyWith({
-    Value<int>? id,
+    Value<String>? id,
     Value<String>? userId,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<String>? syncStatus,
+    Value<String>? idempotencyKey,
+    Value<String?>? fieldVersions,
     Value<String>? contentEncrypted,
     Value<int?>? moodScore,
     Value<String?>? tags,
     Value<String?>? promptUsed,
     Value<DateTime>? loggedAt,
-    Value<String?>? syncStatus,
+    Value<int>? rowid,
   }) {
     return JournalEntriesCompanion(
       id: id ?? this.id,
       userId: userId ?? this.userId,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      syncStatus: syncStatus ?? this.syncStatus,
+      idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+      fieldVersions: fieldVersions ?? this.fieldVersions,
       contentEncrypted: contentEncrypted ?? this.contentEncrypted,
       moodScore: moodScore ?? this.moodScore,
       tags: tags ?? this.tags,
       promptUsed: promptUsed ?? this.promptUsed,
       loggedAt: loggedAt ?? this.loggedAt,
-      syncStatus: syncStatus ?? this.syncStatus,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -14674,10 +19192,25 @@ class JournalEntriesCompanion extends UpdateCompanion<JournalEntry> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (id.present) {
-      map['id'] = Variable<int>(id.value);
+      map['id'] = Variable<String>(id.value);
     }
     if (userId.present) {
       map['user_id'] = Variable<String>(userId.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (syncStatus.present) {
+      map['sync_status'] = Variable<String>(syncStatus.value);
+    }
+    if (idempotencyKey.present) {
+      map['idempotency_key'] = Variable<String>(idempotencyKey.value);
+    }
+    if (fieldVersions.present) {
+      map['field_versions'] = Variable<String>(fieldVersions.value);
     }
     if (contentEncrypted.present) {
       map['content_encrypted'] = Variable<String>(
@@ -14698,8 +19231,8 @@ class JournalEntriesCompanion extends UpdateCompanion<JournalEntry> {
     if (loggedAt.present) {
       map['logged_at'] = Variable<DateTime>(loggedAt.value);
     }
-    if (syncStatus.present) {
-      map['sync_status'] = Variable<String>(syncStatus.value);
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
     }
     return map;
   }
@@ -14709,12 +19242,17 @@ class JournalEntriesCompanion extends UpdateCompanion<JournalEntry> {
     return (StringBuffer('JournalEntriesCompanion(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('fieldVersions: $fieldVersions, ')
           ..write('contentEncrypted: $contentEncrypted, ')
           ..write('moodScore: $moodScore, ')
           ..write('tags: $tags, ')
           ..write('promptUsed: $promptUsed, ')
           ..write('loggedAt: $loggedAt, ')
-          ..write('syncStatus: $syncStatus')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -14728,16 +19266,12 @@ class $DoctorAppointmentsTable extends DoctorAppointments
   $DoctorAppointmentsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
     'id',
     aliasedName,
     false,
-    hasAutoIncrement: true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
   );
   static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
   @override
@@ -14747,6 +19281,64 @@ class $DoctorAppointmentsTable extends DoctorAppointments
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _syncStatusMeta = const VerificationMeta(
+    'syncStatus',
+  );
+  @override
+  late final GeneratedColumn<String> syncStatus = GeneratedColumn<String>(
+    'sync_status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('pending'),
+  );
+  static const VerificationMeta _idempotencyKeyMeta = const VerificationMeta(
+    'idempotencyKey',
+  );
+  @override
+  late final GeneratedColumn<String> idempotencyKey = GeneratedColumn<String>(
+    'idempotency_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _fieldVersionsMeta = const VerificationMeta(
+    'fieldVersions',
+  );
+  @override
+  late final GeneratedColumn<String> fieldVersions = GeneratedColumn<String>(
+    'field_versions',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
   );
   @override
   late final GeneratedColumnWithTypeConverter<String, String>
@@ -14814,6 +19406,11 @@ class $DoctorAppointmentsTable extends DoctorAppointments
   List<GeneratedColumn> get $columns => [
     id,
     userId,
+    createdAt,
+    updatedAt,
+    syncStatus,
+    idempotencyKey,
+    fieldVersions,
     doctorNameEncrypted,
     specialityEncrypted,
     appointmentDtEncrypted,
@@ -14834,6 +19431,8 @@ class $DoctorAppointmentsTable extends DoctorAppointments
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
     }
     if (data.containsKey('user_id')) {
       context.handle(
@@ -14842,6 +19441,44 @@ class $DoctorAppointmentsTable extends DoctorAppointments
       );
     } else if (isInserting) {
       context.missing(_userIdMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    if (data.containsKey('sync_status')) {
+      context.handle(
+        _syncStatusMeta,
+        syncStatus.isAcceptableOrUnknown(data['sync_status']!, _syncStatusMeta),
+      );
+    }
+    if (data.containsKey('idempotency_key')) {
+      context.handle(
+        _idempotencyKeyMeta,
+        idempotencyKey.isAcceptableOrUnknown(
+          data['idempotency_key']!,
+          _idempotencyKeyMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_idempotencyKeyMeta);
+    }
+    if (data.containsKey('field_versions')) {
+      context.handle(
+        _fieldVersionsMeta,
+        fieldVersions.isAcceptableOrUnknown(
+          data['field_versions']!,
+          _fieldVersionsMeta,
+        ),
+      );
     }
     if (data.containsKey('reminder_sent')) {
       context.handle(
@@ -14862,13 +19499,33 @@ class $DoctorAppointmentsTable extends DoctorAppointments
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return DoctorAppointment(
       id: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
+        DriftSqlType.string,
         data['${effectivePrefix}id'],
       )!,
       userId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}user_id'],
       )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      syncStatus: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sync_status'],
+      )!,
+      idempotencyKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}idempotency_key'],
+      )!,
+      fieldVersions: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}field_versions'],
+      ),
       doctorNameEncrypted: $DoctorAppointmentsTable
           .$converterdoctorNameEncrypted
           .fromSql(
@@ -14928,8 +19585,13 @@ class $DoctorAppointmentsTable extends DoctorAppointments
 
 class DoctorAppointment extends DataClass
     implements Insertable<DoctorAppointment> {
-  final int id;
+  final String id;
   final String userId;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final String syncStatus;
+  final String idempotencyKey;
+  final String? fieldVersions;
   final String doctorNameEncrypted;
   final String? specialityEncrypted;
   final String appointmentDtEncrypted;
@@ -14938,6 +19600,11 @@ class DoctorAppointment extends DataClass
   const DoctorAppointment({
     required this.id,
     required this.userId,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.syncStatus,
+    required this.idempotencyKey,
+    this.fieldVersions,
     required this.doctorNameEncrypted,
     this.specialityEncrypted,
     required this.appointmentDtEncrypted,
@@ -14947,8 +19614,15 @@ class DoctorAppointment extends DataClass
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
+    map['id'] = Variable<String>(id);
     map['user_id'] = Variable<String>(userId);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['sync_status'] = Variable<String>(syncStatus);
+    map['idempotency_key'] = Variable<String>(idempotencyKey);
+    if (!nullToAbsent || fieldVersions != null) {
+      map['field_versions'] = Variable<String>(fieldVersions);
+    }
     {
       map['doctor_name_encrypted'] = Variable<String>(
         $DoctorAppointmentsTable.$converterdoctorNameEncrypted.toSql(
@@ -14985,6 +19659,13 @@ class DoctorAppointment extends DataClass
     return DoctorAppointmentsCompanion(
       id: Value(id),
       userId: Value(userId),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      syncStatus: Value(syncStatus),
+      idempotencyKey: Value(idempotencyKey),
+      fieldVersions: fieldVersions == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fieldVersions),
       doctorNameEncrypted: Value(doctorNameEncrypted),
       specialityEncrypted: specialityEncrypted == null && nullToAbsent
           ? const Value.absent()
@@ -15003,8 +19684,13 @@ class DoctorAppointment extends DataClass
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return DoctorAppointment(
-      id: serializer.fromJson<int>(json['id']),
+      id: serializer.fromJson<String>(json['id']),
       userId: serializer.fromJson<String>(json['userId']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      syncStatus: serializer.fromJson<String>(json['syncStatus']),
+      idempotencyKey: serializer.fromJson<String>(json['idempotencyKey']),
+      fieldVersions: serializer.fromJson<String?>(json['fieldVersions']),
       doctorNameEncrypted: serializer.fromJson<String>(
         json['doctorNameEncrypted'],
       ),
@@ -15022,8 +19708,13 @@ class DoctorAppointment extends DataClass
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
+      'id': serializer.toJson<String>(id),
       'userId': serializer.toJson<String>(userId),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'syncStatus': serializer.toJson<String>(syncStatus),
+      'idempotencyKey': serializer.toJson<String>(idempotencyKey),
+      'fieldVersions': serializer.toJson<String?>(fieldVersions),
       'doctorNameEncrypted': serializer.toJson<String>(doctorNameEncrypted),
       'specialityEncrypted': serializer.toJson<String?>(specialityEncrypted),
       'appointmentDtEncrypted': serializer.toJson<String>(
@@ -15035,8 +19726,13 @@ class DoctorAppointment extends DataClass
   }
 
   DoctorAppointment copyWith({
-    int? id,
+    String? id,
     String? userId,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    String? syncStatus,
+    String? idempotencyKey,
+    Value<String?> fieldVersions = const Value.absent(),
     String? doctorNameEncrypted,
     Value<String?> specialityEncrypted = const Value.absent(),
     String? appointmentDtEncrypted,
@@ -15045,6 +19741,13 @@ class DoctorAppointment extends DataClass
   }) => DoctorAppointment(
     id: id ?? this.id,
     userId: userId ?? this.userId,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    syncStatus: syncStatus ?? this.syncStatus,
+    idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+    fieldVersions: fieldVersions.present
+        ? fieldVersions.value
+        : this.fieldVersions,
     doctorNameEncrypted: doctorNameEncrypted ?? this.doctorNameEncrypted,
     specialityEncrypted: specialityEncrypted.present
         ? specialityEncrypted.value
@@ -15060,6 +19763,17 @@ class DoctorAppointment extends DataClass
     return DoctorAppointment(
       id: data.id.present ? data.id.value : this.id,
       userId: data.userId.present ? data.userId.value : this.userId,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      syncStatus: data.syncStatus.present
+          ? data.syncStatus.value
+          : this.syncStatus,
+      idempotencyKey: data.idempotencyKey.present
+          ? data.idempotencyKey.value
+          : this.idempotencyKey,
+      fieldVersions: data.fieldVersions.present
+          ? data.fieldVersions.value
+          : this.fieldVersions,
       doctorNameEncrypted: data.doctorNameEncrypted.present
           ? data.doctorNameEncrypted.value
           : this.doctorNameEncrypted,
@@ -15083,6 +19797,11 @@ class DoctorAppointment extends DataClass
     return (StringBuffer('DoctorAppointment(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('fieldVersions: $fieldVersions, ')
           ..write('doctorNameEncrypted: $doctorNameEncrypted, ')
           ..write('specialityEncrypted: $specialityEncrypted, ')
           ..write('appointmentDtEncrypted: $appointmentDtEncrypted, ')
@@ -15096,6 +19815,11 @@ class DoctorAppointment extends DataClass
   int get hashCode => Object.hash(
     id,
     userId,
+    createdAt,
+    updatedAt,
+    syncStatus,
+    idempotencyKey,
+    fieldVersions,
     doctorNameEncrypted,
     specialityEncrypted,
     appointmentDtEncrypted,
@@ -15108,6 +19832,11 @@ class DoctorAppointment extends DataClass
       (other is DoctorAppointment &&
           other.id == this.id &&
           other.userId == this.userId &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.syncStatus == this.syncStatus &&
+          other.idempotencyKey == this.idempotencyKey &&
+          other.fieldVersions == this.fieldVersions &&
           other.doctorNameEncrypted == this.doctorNameEncrypted &&
           other.specialityEncrypted == this.specialityEncrypted &&
           other.appointmentDtEncrypted == this.appointmentDtEncrypted &&
@@ -15116,45 +19845,76 @@ class DoctorAppointment extends DataClass
 }
 
 class DoctorAppointmentsCompanion extends UpdateCompanion<DoctorAppointment> {
-  final Value<int> id;
+  final Value<String> id;
   final Value<String> userId;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<String> syncStatus;
+  final Value<String> idempotencyKey;
+  final Value<String?> fieldVersions;
   final Value<String> doctorNameEncrypted;
   final Value<String?> specialityEncrypted;
   final Value<String> appointmentDtEncrypted;
   final Value<String?> notesEncrypted;
   final Value<bool> reminderSent;
+  final Value<int> rowid;
   const DoctorAppointmentsCompanion({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    this.idempotencyKey = const Value.absent(),
+    this.fieldVersions = const Value.absent(),
     this.doctorNameEncrypted = const Value.absent(),
     this.specialityEncrypted = const Value.absent(),
     this.appointmentDtEncrypted = const Value.absent(),
     this.notesEncrypted = const Value.absent(),
     this.reminderSent = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   DoctorAppointmentsCompanion.insert({
-    this.id = const Value.absent(),
+    required String id,
     required String userId,
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    required String idempotencyKey,
+    this.fieldVersions = const Value.absent(),
     required String doctorNameEncrypted,
     this.specialityEncrypted = const Value.absent(),
     required String appointmentDtEncrypted,
     this.notesEncrypted = const Value.absent(),
     this.reminderSent = const Value.absent(),
-  }) : userId = Value(userId),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       userId = Value(userId),
+       idempotencyKey = Value(idempotencyKey),
        doctorNameEncrypted = Value(doctorNameEncrypted),
        appointmentDtEncrypted = Value(appointmentDtEncrypted);
   static Insertable<DoctorAppointment> custom({
-    Expression<int>? id,
+    Expression<String>? id,
     Expression<String>? userId,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<String>? syncStatus,
+    Expression<String>? idempotencyKey,
+    Expression<String>? fieldVersions,
     Expression<String>? doctorNameEncrypted,
     Expression<String>? specialityEncrypted,
     Expression<String>? appointmentDtEncrypted,
     Expression<String>? notesEncrypted,
     Expression<bool>? reminderSent,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (userId != null) 'user_id': userId,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (syncStatus != null) 'sync_status': syncStatus,
+      if (idempotencyKey != null) 'idempotency_key': idempotencyKey,
+      if (fieldVersions != null) 'field_versions': fieldVersions,
       if (doctorNameEncrypted != null)
         'doctor_name_encrypted': doctorNameEncrypted,
       if (specialityEncrypted != null)
@@ -15163,27 +19923,40 @@ class DoctorAppointmentsCompanion extends UpdateCompanion<DoctorAppointment> {
         'appointment_dt_encrypted': appointmentDtEncrypted,
       if (notesEncrypted != null) 'notes_encrypted': notesEncrypted,
       if (reminderSent != null) 'reminder_sent': reminderSent,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
   DoctorAppointmentsCompanion copyWith({
-    Value<int>? id,
+    Value<String>? id,
     Value<String>? userId,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<String>? syncStatus,
+    Value<String>? idempotencyKey,
+    Value<String?>? fieldVersions,
     Value<String>? doctorNameEncrypted,
     Value<String?>? specialityEncrypted,
     Value<String>? appointmentDtEncrypted,
     Value<String?>? notesEncrypted,
     Value<bool>? reminderSent,
+    Value<int>? rowid,
   }) {
     return DoctorAppointmentsCompanion(
       id: id ?? this.id,
       userId: userId ?? this.userId,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      syncStatus: syncStatus ?? this.syncStatus,
+      idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+      fieldVersions: fieldVersions ?? this.fieldVersions,
       doctorNameEncrypted: doctorNameEncrypted ?? this.doctorNameEncrypted,
       specialityEncrypted: specialityEncrypted ?? this.specialityEncrypted,
       appointmentDtEncrypted:
           appointmentDtEncrypted ?? this.appointmentDtEncrypted,
       notesEncrypted: notesEncrypted ?? this.notesEncrypted,
       reminderSent: reminderSent ?? this.reminderSent,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -15191,10 +19964,25 @@ class DoctorAppointmentsCompanion extends UpdateCompanion<DoctorAppointment> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (id.present) {
-      map['id'] = Variable<int>(id.value);
+      map['id'] = Variable<String>(id.value);
     }
     if (userId.present) {
       map['user_id'] = Variable<String>(userId.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (syncStatus.present) {
+      map['sync_status'] = Variable<String>(syncStatus.value);
+    }
+    if (idempotencyKey.present) {
+      map['idempotency_key'] = Variable<String>(idempotencyKey.value);
+    }
+    if (fieldVersions.present) {
+      map['field_versions'] = Variable<String>(fieldVersions.value);
     }
     if (doctorNameEncrypted.present) {
       map['doctor_name_encrypted'] = Variable<String>(
@@ -15227,6 +20015,9 @@ class DoctorAppointmentsCompanion extends UpdateCompanion<DoctorAppointment> {
     if (reminderSent.present) {
       map['reminder_sent'] = Variable<bool>(reminderSent.value);
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
@@ -15235,11 +20026,17 @@ class DoctorAppointmentsCompanion extends UpdateCompanion<DoctorAppointment> {
     return (StringBuffer('DoctorAppointmentsCompanion(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('fieldVersions: $fieldVersions, ')
           ..write('doctorNameEncrypted: $doctorNameEncrypted, ')
           ..write('specialityEncrypted: $specialityEncrypted, ')
           ..write('appointmentDtEncrypted: $appointmentDtEncrypted, ')
           ..write('notesEncrypted: $notesEncrypted, ')
-          ..write('reminderSent: $reminderSent')
+          ..write('reminderSent: $reminderSent, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -19781,6 +24578,73 @@ class $UsersTable extends Users with TableInfo<$UsersTable, LocalUser> {
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
+    'user_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _syncStatusMeta = const VerificationMeta(
+    'syncStatus',
+  );
+  @override
+  late final GeneratedColumn<String> syncStatus = GeneratedColumn<String>(
+    'sync_status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('pending'),
+  );
+  static const VerificationMeta _idempotencyKeyMeta = const VerificationMeta(
+    'idempotencyKey',
+  );
+  @override
+  late final GeneratedColumn<String> idempotencyKey = GeneratedColumn<String>(
+    'idempotency_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _fieldVersionsMeta = const VerificationMeta(
+    'fieldVersions',
+  );
+  @override
+  late final GeneratedColumn<String> fieldVersions = GeneratedColumn<String>(
+    'field_versions',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _emailMeta = const VerificationMeta('email');
   @override
   late final GeneratedColumn<String> email = GeneratedColumn<String>(
@@ -19978,6 +24842,12 @@ class $UsersTable extends Users with TableInfo<$UsersTable, LocalUser> {
   @override
   List<GeneratedColumn> get $columns => [
     id,
+    userId,
+    createdAt,
+    updatedAt,
+    syncStatus,
+    idempotencyKey,
+    fieldVersions,
     email,
     name,
     karmaTotal,
@@ -20012,6 +24882,52 @@ class $UsersTable extends Users with TableInfo<$UsersTable, LocalUser> {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     } else if (isInserting) {
       context.missing(_idMeta);
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_userIdMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    if (data.containsKey('sync_status')) {
+      context.handle(
+        _syncStatusMeta,
+        syncStatus.isAcceptableOrUnknown(data['sync_status']!, _syncStatusMeta),
+      );
+    }
+    if (data.containsKey('idempotency_key')) {
+      context.handle(
+        _idempotencyKeyMeta,
+        idempotencyKey.isAcceptableOrUnknown(
+          data['idempotency_key']!,
+          _idempotencyKeyMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_idempotencyKeyMeta);
+    }
+    if (data.containsKey('field_versions')) {
+      context.handle(
+        _fieldVersionsMeta,
+        fieldVersions.isAcceptableOrUnknown(
+          data['field_versions']!,
+          _fieldVersionsMeta,
+        ),
+      );
     }
     if (data.containsKey('email')) {
       context.handle(
@@ -20162,6 +25078,30 @@ class $UsersTable extends Users with TableInfo<$UsersTable, LocalUser> {
         DriftSqlType.string,
         data['${effectivePrefix}id'],
       )!,
+      userId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_id'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      syncStatus: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sync_status'],
+      )!,
+      idempotencyKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}idempotency_key'],
+      )!,
+      fieldVersions: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}field_versions'],
+      ),
       email: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}email'],
@@ -20241,6 +25181,12 @@ class $UsersTable extends Users with TableInfo<$UsersTable, LocalUser> {
 
 class LocalUser extends DataClass implements Insertable<LocalUser> {
   final String id;
+  final String userId;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final String syncStatus;
+  final String idempotencyKey;
+  final String? fieldVersions;
   final String email;
   final String name;
   final int karmaTotal;
@@ -20260,6 +25206,12 @@ class LocalUser extends DataClass implements Insertable<LocalUser> {
   final bool retainOcrText;
   const LocalUser({
     required this.id,
+    required this.userId,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.syncStatus,
+    required this.idempotencyKey,
+    this.fieldVersions,
     required this.email,
     required this.name,
     required this.karmaTotal,
@@ -20282,6 +25234,14 @@ class LocalUser extends DataClass implements Insertable<LocalUser> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<String>(id);
+    map['user_id'] = Variable<String>(userId);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['sync_status'] = Variable<String>(syncStatus);
+    map['idempotency_key'] = Variable<String>(idempotencyKey);
+    if (!nullToAbsent || fieldVersions != null) {
+      map['field_versions'] = Variable<String>(fieldVersions);
+    }
     map['email'] = Variable<String>(email);
     map['name'] = Variable<String>(name);
     map['karma_total'] = Variable<int>(karmaTotal);
@@ -20327,6 +25287,14 @@ class LocalUser extends DataClass implements Insertable<LocalUser> {
   UsersCompanion toCompanion(bool nullToAbsent) {
     return UsersCompanion(
       id: Value(id),
+      userId: Value(userId),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      syncStatus: Value(syncStatus),
+      idempotencyKey: Value(idempotencyKey),
+      fieldVersions: fieldVersions == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fieldVersions),
       email: Value(email),
       name: Value(name),
       karmaTotal: Value(karmaTotal),
@@ -20376,6 +25344,12 @@ class LocalUser extends DataClass implements Insertable<LocalUser> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return LocalUser(
       id: serializer.fromJson<String>(json['id']),
+      userId: serializer.fromJson<String>(json['userId']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      syncStatus: serializer.fromJson<String>(json['syncStatus']),
+      idempotencyKey: serializer.fromJson<String>(json['idempotencyKey']),
+      fieldVersions: serializer.fromJson<String?>(json['fieldVersions']),
       email: serializer.fromJson<String>(json['email']),
       name: serializer.fromJson<String>(json['name']),
       karmaTotal: serializer.fromJson<int>(json['karmaTotal']),
@@ -20408,6 +25382,12 @@ class LocalUser extends DataClass implements Insertable<LocalUser> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
+      'userId': serializer.toJson<String>(userId),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'syncStatus': serializer.toJson<String>(syncStatus),
+      'idempotencyKey': serializer.toJson<String>(idempotencyKey),
+      'fieldVersions': serializer.toJson<String?>(fieldVersions),
       'email': serializer.toJson<String>(email),
       'name': serializer.toJson<String>(name),
       'karmaTotal': serializer.toJson<int>(karmaTotal),
@@ -20430,6 +25410,12 @@ class LocalUser extends DataClass implements Insertable<LocalUser> {
 
   LocalUser copyWith({
     String? id,
+    String? userId,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    String? syncStatus,
+    String? idempotencyKey,
+    Value<String?> fieldVersions = const Value.absent(),
     String? email,
     String? name,
     int? karmaTotal,
@@ -20449,6 +25435,14 @@ class LocalUser extends DataClass implements Insertable<LocalUser> {
     bool? retainOcrText,
   }) => LocalUser(
     id: id ?? this.id,
+    userId: userId ?? this.userId,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    syncStatus: syncStatus ?? this.syncStatus,
+    idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+    fieldVersions: fieldVersions.present
+        ? fieldVersions.value
+        : this.fieldVersions,
     email: email ?? this.email,
     name: name ?? this.name,
     karmaTotal: karmaTotal ?? this.karmaTotal,
@@ -20484,6 +25478,18 @@ class LocalUser extends DataClass implements Insertable<LocalUser> {
   LocalUser copyWithCompanion(UsersCompanion data) {
     return LocalUser(
       id: data.id.present ? data.id.value : this.id,
+      userId: data.userId.present ? data.userId.value : this.userId,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      syncStatus: data.syncStatus.present
+          ? data.syncStatus.value
+          : this.syncStatus,
+      idempotencyKey: data.idempotencyKey.present
+          ? data.idempotencyKey.value
+          : this.idempotencyKey,
+      fieldVersions: data.fieldVersions.present
+          ? data.fieldVersions.value
+          : this.fieldVersions,
       email: data.email.present ? data.email.value : this.email,
       name: data.name.present ? data.name.value : this.name,
       karmaTotal: data.karmaTotal.present
@@ -20536,6 +25542,12 @@ class LocalUser extends DataClass implements Insertable<LocalUser> {
   String toString() {
     return (StringBuffer('LocalUser(')
           ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('fieldVersions: $fieldVersions, ')
           ..write('email: $email, ')
           ..write('name: $name, ')
           ..write('karmaTotal: $karmaTotal, ')
@@ -20558,8 +25570,14 @@ class LocalUser extends DataClass implements Insertable<LocalUser> {
   }
 
   @override
-  int get hashCode => Object.hash(
+  int get hashCode => Object.hashAll([
     id,
+    userId,
+    createdAt,
+    updatedAt,
+    syncStatus,
+    idempotencyKey,
+    fieldVersions,
     email,
     name,
     karmaTotal,
@@ -20577,12 +25595,18 @@ class LocalUser extends DataClass implements Insertable<LocalUser> {
     doshaKapha,
     dominantDosha,
     retainOcrText,
-  );
+  ]);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is LocalUser &&
           other.id == this.id &&
+          other.userId == this.userId &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.syncStatus == this.syncStatus &&
+          other.idempotencyKey == this.idempotencyKey &&
+          other.fieldVersions == this.fieldVersions &&
           other.email == this.email &&
           other.name == this.name &&
           other.karmaTotal == this.karmaTotal &&
@@ -20604,6 +25628,12 @@ class LocalUser extends DataClass implements Insertable<LocalUser> {
 
 class UsersCompanion extends UpdateCompanion<LocalUser> {
   final Value<String> id;
+  final Value<String> userId;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<String> syncStatus;
+  final Value<String> idempotencyKey;
+  final Value<String?> fieldVersions;
   final Value<String> email;
   final Value<String> name;
   final Value<int> karmaTotal;
@@ -20624,6 +25654,12 @@ class UsersCompanion extends UpdateCompanion<LocalUser> {
   final Value<int> rowid;
   const UsersCompanion({
     this.id = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    this.idempotencyKey = const Value.absent(),
+    this.fieldVersions = const Value.absent(),
     this.email = const Value.absent(),
     this.name = const Value.absent(),
     this.karmaTotal = const Value.absent(),
@@ -20645,6 +25681,12 @@ class UsersCompanion extends UpdateCompanion<LocalUser> {
   });
   UsersCompanion.insert({
     required String id,
+    required String userId,
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    required String idempotencyKey,
+    this.fieldVersions = const Value.absent(),
     required String email,
     required String name,
     this.karmaTotal = const Value.absent(),
@@ -20664,10 +25706,18 @@ class UsersCompanion extends UpdateCompanion<LocalUser> {
     this.retainOcrText = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
+       userId = Value(userId),
+       idempotencyKey = Value(idempotencyKey),
        email = Value(email),
        name = Value(name);
   static Insertable<LocalUser> custom({
     Expression<String>? id,
+    Expression<String>? userId,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<String>? syncStatus,
+    Expression<String>? idempotencyKey,
+    Expression<String>? fieldVersions,
     Expression<String>? email,
     Expression<String>? name,
     Expression<int>? karmaTotal,
@@ -20689,6 +25739,12 @@ class UsersCompanion extends UpdateCompanion<LocalUser> {
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
+      if (userId != null) 'user_id': userId,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (syncStatus != null) 'sync_status': syncStatus,
+      if (idempotencyKey != null) 'idempotency_key': idempotencyKey,
+      if (fieldVersions != null) 'field_versions': fieldVersions,
       if (email != null) 'email': email,
       if (name != null) 'name': name,
       if (karmaTotal != null) 'karma_total': karmaTotal,
@@ -20715,6 +25771,12 @@ class UsersCompanion extends UpdateCompanion<LocalUser> {
 
   UsersCompanion copyWith({
     Value<String>? id,
+    Value<String>? userId,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<String>? syncStatus,
+    Value<String>? idempotencyKey,
+    Value<String?>? fieldVersions,
     Value<String>? email,
     Value<String>? name,
     Value<int>? karmaTotal,
@@ -20736,6 +25798,12 @@ class UsersCompanion extends UpdateCompanion<LocalUser> {
   }) {
     return UsersCompanion(
       id: id ?? this.id,
+      userId: userId ?? this.userId,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      syncStatus: syncStatus ?? this.syncStatus,
+      idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+      fieldVersions: fieldVersions ?? this.fieldVersions,
       email: email ?? this.email,
       name: name ?? this.name,
       karmaTotal: karmaTotal ?? this.karmaTotal,
@@ -20762,6 +25830,24 @@ class UsersCompanion extends UpdateCompanion<LocalUser> {
     final map = <String, Expression>{};
     if (id.present) {
       map['id'] = Variable<String>(id.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<String>(userId.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (syncStatus.present) {
+      map['sync_status'] = Variable<String>(syncStatus.value);
+    }
+    if (idempotencyKey.present) {
+      map['idempotency_key'] = Variable<String>(idempotencyKey.value);
+    }
+    if (fieldVersions.present) {
+      map['field_versions'] = Variable<String>(fieldVersions.value);
     }
     if (email.present) {
       map['email'] = Variable<String>(email.value);
@@ -20826,6 +25912,12 @@ class UsersCompanion extends UpdateCompanion<LocalUser> {
   String toString() {
     return (StringBuffer('UsersCompanion(')
           ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('fieldVersions: $fieldVersions, ')
           ..write('email: $email, ')
           ..write('name: $name, ')
           ..write('karmaTotal: $karmaTotal, ')
@@ -20857,16 +25949,12 @@ class $HeartRateLogsTable extends HeartRateLogs
   $HeartRateLogsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
     'id',
     aliasedName,
     false,
-    hasAutoIncrement: true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
   );
   static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
   @override
@@ -20876,6 +25964,64 @@ class $HeartRateLogsTable extends HeartRateLogs
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _syncStatusMeta = const VerificationMeta(
+    'syncStatus',
+  );
+  @override
+  late final GeneratedColumn<String> syncStatus = GeneratedColumn<String>(
+    'sync_status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('pending'),
+  );
+  static const VerificationMeta _idempotencyKeyMeta = const VerificationMeta(
+    'idempotencyKey',
+  );
+  @override
+  late final GeneratedColumn<String> idempotencyKey = GeneratedColumn<String>(
+    'idempotency_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _fieldVersionsMeta = const VerificationMeta(
+    'fieldVersions',
+  );
+  @override
+  late final GeneratedColumn<String> fieldVersions = GeneratedColumn<String>(
+    'field_versions',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
   );
   static const VerificationMeta _bpmMeta = const VerificationMeta('bpm');
   @override
@@ -20907,7 +26053,18 @@ class $HeartRateLogsTable extends HeartRateLogs
     requiredDuringInsert: true,
   );
   @override
-  List<GeneratedColumn> get $columns => [id, userId, bpm, timestamp, source];
+  List<GeneratedColumn> get $columns => [
+    id,
+    userId,
+    createdAt,
+    updatedAt,
+    syncStatus,
+    idempotencyKey,
+    fieldVersions,
+    bpm,
+    timestamp,
+    source,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -20922,6 +26079,8 @@ class $HeartRateLogsTable extends HeartRateLogs
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
     }
     if (data.containsKey('user_id')) {
       context.handle(
@@ -20930,6 +26089,44 @@ class $HeartRateLogsTable extends HeartRateLogs
       );
     } else if (isInserting) {
       context.missing(_userIdMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    if (data.containsKey('sync_status')) {
+      context.handle(
+        _syncStatusMeta,
+        syncStatus.isAcceptableOrUnknown(data['sync_status']!, _syncStatusMeta),
+      );
+    }
+    if (data.containsKey('idempotency_key')) {
+      context.handle(
+        _idempotencyKeyMeta,
+        idempotencyKey.isAcceptableOrUnknown(
+          data['idempotency_key']!,
+          _idempotencyKeyMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_idempotencyKeyMeta);
+    }
+    if (data.containsKey('field_versions')) {
+      context.handle(
+        _fieldVersionsMeta,
+        fieldVersions.isAcceptableOrUnknown(
+          data['field_versions']!,
+          _fieldVersionsMeta,
+        ),
+      );
     }
     if (data.containsKey('bpm')) {
       context.handle(
@@ -20965,13 +26162,33 @@ class $HeartRateLogsTable extends HeartRateLogs
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return HeartRateLog(
       id: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
+        DriftSqlType.string,
         data['${effectivePrefix}id'],
       )!,
       userId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}user_id'],
       )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      syncStatus: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sync_status'],
+      )!,
+      idempotencyKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}idempotency_key'],
+      )!,
+      fieldVersions: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}field_versions'],
+      ),
       bpm: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}bpm'],
@@ -20994,14 +26211,24 @@ class $HeartRateLogsTable extends HeartRateLogs
 }
 
 class HeartRateLog extends DataClass implements Insertable<HeartRateLog> {
-  final int id;
+  final String id;
   final String userId;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final String syncStatus;
+  final String idempotencyKey;
+  final String? fieldVersions;
   final int bpm;
   final DateTime timestamp;
   final String source;
   const HeartRateLog({
     required this.id,
     required this.userId,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.syncStatus,
+    required this.idempotencyKey,
+    this.fieldVersions,
     required this.bpm,
     required this.timestamp,
     required this.source,
@@ -21009,8 +26236,15 @@ class HeartRateLog extends DataClass implements Insertable<HeartRateLog> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
+    map['id'] = Variable<String>(id);
     map['user_id'] = Variable<String>(userId);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['sync_status'] = Variable<String>(syncStatus);
+    map['idempotency_key'] = Variable<String>(idempotencyKey);
+    if (!nullToAbsent || fieldVersions != null) {
+      map['field_versions'] = Variable<String>(fieldVersions);
+    }
     map['bpm'] = Variable<int>(bpm);
     map['timestamp'] = Variable<DateTime>(timestamp);
     map['source'] = Variable<String>(source);
@@ -21021,6 +26255,13 @@ class HeartRateLog extends DataClass implements Insertable<HeartRateLog> {
     return HeartRateLogsCompanion(
       id: Value(id),
       userId: Value(userId),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      syncStatus: Value(syncStatus),
+      idempotencyKey: Value(idempotencyKey),
+      fieldVersions: fieldVersions == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fieldVersions),
       bpm: Value(bpm),
       timestamp: Value(timestamp),
       source: Value(source),
@@ -21033,8 +26274,13 @@ class HeartRateLog extends DataClass implements Insertable<HeartRateLog> {
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return HeartRateLog(
-      id: serializer.fromJson<int>(json['id']),
+      id: serializer.fromJson<String>(json['id']),
       userId: serializer.fromJson<String>(json['userId']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      syncStatus: serializer.fromJson<String>(json['syncStatus']),
+      idempotencyKey: serializer.fromJson<String>(json['idempotencyKey']),
+      fieldVersions: serializer.fromJson<String?>(json['fieldVersions']),
       bpm: serializer.fromJson<int>(json['bpm']),
       timestamp: serializer.fromJson<DateTime>(json['timestamp']),
       source: serializer.fromJson<String>(json['source']),
@@ -21044,8 +26290,13 @@ class HeartRateLog extends DataClass implements Insertable<HeartRateLog> {
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
+      'id': serializer.toJson<String>(id),
       'userId': serializer.toJson<String>(userId),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'syncStatus': serializer.toJson<String>(syncStatus),
+      'idempotencyKey': serializer.toJson<String>(idempotencyKey),
+      'fieldVersions': serializer.toJson<String?>(fieldVersions),
       'bpm': serializer.toJson<int>(bpm),
       'timestamp': serializer.toJson<DateTime>(timestamp),
       'source': serializer.toJson<String>(source),
@@ -21053,14 +26304,26 @@ class HeartRateLog extends DataClass implements Insertable<HeartRateLog> {
   }
 
   HeartRateLog copyWith({
-    int? id,
+    String? id,
     String? userId,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    String? syncStatus,
+    String? idempotencyKey,
+    Value<String?> fieldVersions = const Value.absent(),
     int? bpm,
     DateTime? timestamp,
     String? source,
   }) => HeartRateLog(
     id: id ?? this.id,
     userId: userId ?? this.userId,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    syncStatus: syncStatus ?? this.syncStatus,
+    idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+    fieldVersions: fieldVersions.present
+        ? fieldVersions.value
+        : this.fieldVersions,
     bpm: bpm ?? this.bpm,
     timestamp: timestamp ?? this.timestamp,
     source: source ?? this.source,
@@ -21069,6 +26332,17 @@ class HeartRateLog extends DataClass implements Insertable<HeartRateLog> {
     return HeartRateLog(
       id: data.id.present ? data.id.value : this.id,
       userId: data.userId.present ? data.userId.value : this.userId,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      syncStatus: data.syncStatus.present
+          ? data.syncStatus.value
+          : this.syncStatus,
+      idempotencyKey: data.idempotencyKey.present
+          ? data.idempotencyKey.value
+          : this.idempotencyKey,
+      fieldVersions: data.fieldVersions.present
+          ? data.fieldVersions.value
+          : this.fieldVersions,
       bpm: data.bpm.present ? data.bpm.value : this.bpm,
       timestamp: data.timestamp.present ? data.timestamp.value : this.timestamp,
       source: data.source.present ? data.source.value : this.source,
@@ -21080,6 +26354,11 @@ class HeartRateLog extends DataClass implements Insertable<HeartRateLog> {
     return (StringBuffer('HeartRateLog(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('fieldVersions: $fieldVersions, ')
           ..write('bpm: $bpm, ')
           ..write('timestamp: $timestamp, ')
           ..write('source: $source')
@@ -21088,70 +26367,130 @@ class HeartRateLog extends DataClass implements Insertable<HeartRateLog> {
   }
 
   @override
-  int get hashCode => Object.hash(id, userId, bpm, timestamp, source);
+  int get hashCode => Object.hash(
+    id,
+    userId,
+    createdAt,
+    updatedAt,
+    syncStatus,
+    idempotencyKey,
+    fieldVersions,
+    bpm,
+    timestamp,
+    source,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is HeartRateLog &&
           other.id == this.id &&
           other.userId == this.userId &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.syncStatus == this.syncStatus &&
+          other.idempotencyKey == this.idempotencyKey &&
+          other.fieldVersions == this.fieldVersions &&
           other.bpm == this.bpm &&
           other.timestamp == this.timestamp &&
           other.source == this.source);
 }
 
 class HeartRateLogsCompanion extends UpdateCompanion<HeartRateLog> {
-  final Value<int> id;
+  final Value<String> id;
   final Value<String> userId;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<String> syncStatus;
+  final Value<String> idempotencyKey;
+  final Value<String?> fieldVersions;
   final Value<int> bpm;
   final Value<DateTime> timestamp;
   final Value<String> source;
+  final Value<int> rowid;
   const HeartRateLogsCompanion({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    this.idempotencyKey = const Value.absent(),
+    this.fieldVersions = const Value.absent(),
     this.bpm = const Value.absent(),
     this.timestamp = const Value.absent(),
     this.source = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   HeartRateLogsCompanion.insert({
-    this.id = const Value.absent(),
+    required String id,
     required String userId,
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    required String idempotencyKey,
+    this.fieldVersions = const Value.absent(),
     required int bpm,
     required DateTime timestamp,
     required String source,
-  }) : userId = Value(userId),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       userId = Value(userId),
+       idempotencyKey = Value(idempotencyKey),
        bpm = Value(bpm),
        timestamp = Value(timestamp),
        source = Value(source);
   static Insertable<HeartRateLog> custom({
-    Expression<int>? id,
+    Expression<String>? id,
     Expression<String>? userId,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<String>? syncStatus,
+    Expression<String>? idempotencyKey,
+    Expression<String>? fieldVersions,
     Expression<int>? bpm,
     Expression<DateTime>? timestamp,
     Expression<String>? source,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (userId != null) 'user_id': userId,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (syncStatus != null) 'sync_status': syncStatus,
+      if (idempotencyKey != null) 'idempotency_key': idempotencyKey,
+      if (fieldVersions != null) 'field_versions': fieldVersions,
       if (bpm != null) 'bpm': bpm,
       if (timestamp != null) 'timestamp': timestamp,
       if (source != null) 'source': source,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
   HeartRateLogsCompanion copyWith({
-    Value<int>? id,
+    Value<String>? id,
     Value<String>? userId,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<String>? syncStatus,
+    Value<String>? idempotencyKey,
+    Value<String?>? fieldVersions,
     Value<int>? bpm,
     Value<DateTime>? timestamp,
     Value<String>? source,
+    Value<int>? rowid,
   }) {
     return HeartRateLogsCompanion(
       id: id ?? this.id,
       userId: userId ?? this.userId,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      syncStatus: syncStatus ?? this.syncStatus,
+      idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+      fieldVersions: fieldVersions ?? this.fieldVersions,
       bpm: bpm ?? this.bpm,
       timestamp: timestamp ?? this.timestamp,
       source: source ?? this.source,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -21159,10 +26498,25 @@ class HeartRateLogsCompanion extends UpdateCompanion<HeartRateLog> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (id.present) {
-      map['id'] = Variable<int>(id.value);
+      map['id'] = Variable<String>(id.value);
     }
     if (userId.present) {
       map['user_id'] = Variable<String>(userId.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (syncStatus.present) {
+      map['sync_status'] = Variable<String>(syncStatus.value);
+    }
+    if (idempotencyKey.present) {
+      map['idempotency_key'] = Variable<String>(idempotencyKey.value);
+    }
+    if (fieldVersions.present) {
+      map['field_versions'] = Variable<String>(fieldVersions.value);
     }
     if (bpm.present) {
       map['bpm'] = Variable<int>(bpm.value);
@@ -21173,6 +26527,9 @@ class HeartRateLogsCompanion extends UpdateCompanion<HeartRateLog> {
     if (source.present) {
       map['source'] = Variable<String>(source.value);
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
@@ -21181,9 +26538,15 @@ class HeartRateLogsCompanion extends UpdateCompanion<HeartRateLog> {
     return (StringBuffer('HeartRateLogsCompanion(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('fieldVersions: $fieldVersions, ')
           ..write('bpm: $bpm, ')
           ..write('timestamp: $timestamp, ')
-          ..write('source: $source')
+          ..write('source: $source, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -21197,16 +26560,12 @@ class $AyurvedicRitualLogsTable extends AyurvedicRitualLogs
   $AyurvedicRitualLogsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
     'id',
     aliasedName,
     false,
-    hasAutoIncrement: true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
   );
   static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
   @override
@@ -21216,6 +26575,64 @@ class $AyurvedicRitualLogsTable extends AyurvedicRitualLogs
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _syncStatusMeta = const VerificationMeta(
+    'syncStatus',
+  );
+  @override
+  late final GeneratedColumn<String> syncStatus = GeneratedColumn<String>(
+    'sync_status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('pending'),
+  );
+  static const VerificationMeta _idempotencyKeyMeta = const VerificationMeta(
+    'idempotencyKey',
+  );
+  @override
+  late final GeneratedColumn<String> idempotencyKey = GeneratedColumn<String>(
+    'idempotency_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _fieldVersionsMeta = const VerificationMeta(
+    'fieldVersions',
+  );
+  @override
+  late final GeneratedColumn<String> fieldVersions = GeneratedColumn<String>(
+    'field_versions',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
   );
   static const VerificationMeta _ritualKeyMeta = const VerificationMeta(
     'ritualKey',
@@ -21254,6 +26671,11 @@ class $AyurvedicRitualLogsTable extends AyurvedicRitualLogs
   List<GeneratedColumn> get $columns => [
     id,
     userId,
+    createdAt,
+    updatedAt,
+    syncStatus,
+    idempotencyKey,
+    fieldVersions,
     ritualKey,
     completedAt,
     karmaAwarded,
@@ -21272,6 +26694,8 @@ class $AyurvedicRitualLogsTable extends AyurvedicRitualLogs
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
     }
     if (data.containsKey('user_id')) {
       context.handle(
@@ -21280,6 +26704,44 @@ class $AyurvedicRitualLogsTable extends AyurvedicRitualLogs
       );
     } else if (isInserting) {
       context.missing(_userIdMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    if (data.containsKey('sync_status')) {
+      context.handle(
+        _syncStatusMeta,
+        syncStatus.isAcceptableOrUnknown(data['sync_status']!, _syncStatusMeta),
+      );
+    }
+    if (data.containsKey('idempotency_key')) {
+      context.handle(
+        _idempotencyKeyMeta,
+        idempotencyKey.isAcceptableOrUnknown(
+          data['idempotency_key']!,
+          _idempotencyKeyMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_idempotencyKeyMeta);
+    }
+    if (data.containsKey('field_versions')) {
+      context.handle(
+        _fieldVersionsMeta,
+        fieldVersions.isAcceptableOrUnknown(
+          data['field_versions']!,
+          _fieldVersionsMeta,
+        ),
+      );
     }
     if (data.containsKey('ritual_key')) {
       context.handle(
@@ -21321,13 +26783,33 @@ class $AyurvedicRitualLogsTable extends AyurvedicRitualLogs
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return AyurvedicRitualLog(
       id: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
+        DriftSqlType.string,
         data['${effectivePrefix}id'],
       )!,
       userId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}user_id'],
       )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      syncStatus: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sync_status'],
+      )!,
+      idempotencyKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}idempotency_key'],
+      )!,
+      fieldVersions: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}field_versions'],
+      ),
       ritualKey: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}ritual_key'],
@@ -21351,14 +26833,24 @@ class $AyurvedicRitualLogsTable extends AyurvedicRitualLogs
 
 class AyurvedicRitualLog extends DataClass
     implements Insertable<AyurvedicRitualLog> {
-  final int id;
+  final String id;
   final String userId;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final String syncStatus;
+  final String idempotencyKey;
+  final String? fieldVersions;
   final String ritualKey;
   final DateTime completedAt;
   final int karmaAwarded;
   const AyurvedicRitualLog({
     required this.id,
     required this.userId,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.syncStatus,
+    required this.idempotencyKey,
+    this.fieldVersions,
     required this.ritualKey,
     required this.completedAt,
     required this.karmaAwarded,
@@ -21366,8 +26858,15 @@ class AyurvedicRitualLog extends DataClass
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
+    map['id'] = Variable<String>(id);
     map['user_id'] = Variable<String>(userId);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['sync_status'] = Variable<String>(syncStatus);
+    map['idempotency_key'] = Variable<String>(idempotencyKey);
+    if (!nullToAbsent || fieldVersions != null) {
+      map['field_versions'] = Variable<String>(fieldVersions);
+    }
     map['ritual_key'] = Variable<String>(ritualKey);
     map['completed_at'] = Variable<DateTime>(completedAt);
     map['karma_awarded'] = Variable<int>(karmaAwarded);
@@ -21378,6 +26877,13 @@ class AyurvedicRitualLog extends DataClass
     return AyurvedicRitualLogsCompanion(
       id: Value(id),
       userId: Value(userId),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      syncStatus: Value(syncStatus),
+      idempotencyKey: Value(idempotencyKey),
+      fieldVersions: fieldVersions == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fieldVersions),
       ritualKey: Value(ritualKey),
       completedAt: Value(completedAt),
       karmaAwarded: Value(karmaAwarded),
@@ -21390,8 +26896,13 @@ class AyurvedicRitualLog extends DataClass
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return AyurvedicRitualLog(
-      id: serializer.fromJson<int>(json['id']),
+      id: serializer.fromJson<String>(json['id']),
       userId: serializer.fromJson<String>(json['userId']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      syncStatus: serializer.fromJson<String>(json['syncStatus']),
+      idempotencyKey: serializer.fromJson<String>(json['idempotencyKey']),
+      fieldVersions: serializer.fromJson<String?>(json['fieldVersions']),
       ritualKey: serializer.fromJson<String>(json['ritualKey']),
       completedAt: serializer.fromJson<DateTime>(json['completedAt']),
       karmaAwarded: serializer.fromJson<int>(json['karmaAwarded']),
@@ -21401,8 +26912,13 @@ class AyurvedicRitualLog extends DataClass
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
+      'id': serializer.toJson<String>(id),
       'userId': serializer.toJson<String>(userId),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'syncStatus': serializer.toJson<String>(syncStatus),
+      'idempotencyKey': serializer.toJson<String>(idempotencyKey),
+      'fieldVersions': serializer.toJson<String?>(fieldVersions),
       'ritualKey': serializer.toJson<String>(ritualKey),
       'completedAt': serializer.toJson<DateTime>(completedAt),
       'karmaAwarded': serializer.toJson<int>(karmaAwarded),
@@ -21410,14 +26926,26 @@ class AyurvedicRitualLog extends DataClass
   }
 
   AyurvedicRitualLog copyWith({
-    int? id,
+    String? id,
     String? userId,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    String? syncStatus,
+    String? idempotencyKey,
+    Value<String?> fieldVersions = const Value.absent(),
     String? ritualKey,
     DateTime? completedAt,
     int? karmaAwarded,
   }) => AyurvedicRitualLog(
     id: id ?? this.id,
     userId: userId ?? this.userId,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    syncStatus: syncStatus ?? this.syncStatus,
+    idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+    fieldVersions: fieldVersions.present
+        ? fieldVersions.value
+        : this.fieldVersions,
     ritualKey: ritualKey ?? this.ritualKey,
     completedAt: completedAt ?? this.completedAt,
     karmaAwarded: karmaAwarded ?? this.karmaAwarded,
@@ -21426,6 +26954,17 @@ class AyurvedicRitualLog extends DataClass
     return AyurvedicRitualLog(
       id: data.id.present ? data.id.value : this.id,
       userId: data.userId.present ? data.userId.value : this.userId,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      syncStatus: data.syncStatus.present
+          ? data.syncStatus.value
+          : this.syncStatus,
+      idempotencyKey: data.idempotencyKey.present
+          ? data.idempotencyKey.value
+          : this.idempotencyKey,
+      fieldVersions: data.fieldVersions.present
+          ? data.fieldVersions.value
+          : this.fieldVersions,
       ritualKey: data.ritualKey.present ? data.ritualKey.value : this.ritualKey,
       completedAt: data.completedAt.present
           ? data.completedAt.value
@@ -21441,6 +26980,11 @@ class AyurvedicRitualLog extends DataClass
     return (StringBuffer('AyurvedicRitualLog(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('fieldVersions: $fieldVersions, ')
           ..write('ritualKey: $ritualKey, ')
           ..write('completedAt: $completedAt, ')
           ..write('karmaAwarded: $karmaAwarded')
@@ -21449,71 +26993,130 @@ class AyurvedicRitualLog extends DataClass
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, userId, ritualKey, completedAt, karmaAwarded);
+  int get hashCode => Object.hash(
+    id,
+    userId,
+    createdAt,
+    updatedAt,
+    syncStatus,
+    idempotencyKey,
+    fieldVersions,
+    ritualKey,
+    completedAt,
+    karmaAwarded,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is AyurvedicRitualLog &&
           other.id == this.id &&
           other.userId == this.userId &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.syncStatus == this.syncStatus &&
+          other.idempotencyKey == this.idempotencyKey &&
+          other.fieldVersions == this.fieldVersions &&
           other.ritualKey == this.ritualKey &&
           other.completedAt == this.completedAt &&
           other.karmaAwarded == this.karmaAwarded);
 }
 
 class AyurvedicRitualLogsCompanion extends UpdateCompanion<AyurvedicRitualLog> {
-  final Value<int> id;
+  final Value<String> id;
   final Value<String> userId;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<String> syncStatus;
+  final Value<String> idempotencyKey;
+  final Value<String?> fieldVersions;
   final Value<String> ritualKey;
   final Value<DateTime> completedAt;
   final Value<int> karmaAwarded;
+  final Value<int> rowid;
   const AyurvedicRitualLogsCompanion({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    this.idempotencyKey = const Value.absent(),
+    this.fieldVersions = const Value.absent(),
     this.ritualKey = const Value.absent(),
     this.completedAt = const Value.absent(),
     this.karmaAwarded = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   AyurvedicRitualLogsCompanion.insert({
-    this.id = const Value.absent(),
+    required String id,
     required String userId,
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    required String idempotencyKey,
+    this.fieldVersions = const Value.absent(),
     required String ritualKey,
     required DateTime completedAt,
     required int karmaAwarded,
-  }) : userId = Value(userId),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       userId = Value(userId),
+       idempotencyKey = Value(idempotencyKey),
        ritualKey = Value(ritualKey),
        completedAt = Value(completedAt),
        karmaAwarded = Value(karmaAwarded);
   static Insertable<AyurvedicRitualLog> custom({
-    Expression<int>? id,
+    Expression<String>? id,
     Expression<String>? userId,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<String>? syncStatus,
+    Expression<String>? idempotencyKey,
+    Expression<String>? fieldVersions,
     Expression<String>? ritualKey,
     Expression<DateTime>? completedAt,
     Expression<int>? karmaAwarded,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (userId != null) 'user_id': userId,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (syncStatus != null) 'sync_status': syncStatus,
+      if (idempotencyKey != null) 'idempotency_key': idempotencyKey,
+      if (fieldVersions != null) 'field_versions': fieldVersions,
       if (ritualKey != null) 'ritual_key': ritualKey,
       if (completedAt != null) 'completed_at': completedAt,
       if (karmaAwarded != null) 'karma_awarded': karmaAwarded,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
   AyurvedicRitualLogsCompanion copyWith({
-    Value<int>? id,
+    Value<String>? id,
     Value<String>? userId,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<String>? syncStatus,
+    Value<String>? idempotencyKey,
+    Value<String?>? fieldVersions,
     Value<String>? ritualKey,
     Value<DateTime>? completedAt,
     Value<int>? karmaAwarded,
+    Value<int>? rowid,
   }) {
     return AyurvedicRitualLogsCompanion(
       id: id ?? this.id,
       userId: userId ?? this.userId,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      syncStatus: syncStatus ?? this.syncStatus,
+      idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+      fieldVersions: fieldVersions ?? this.fieldVersions,
       ritualKey: ritualKey ?? this.ritualKey,
       completedAt: completedAt ?? this.completedAt,
       karmaAwarded: karmaAwarded ?? this.karmaAwarded,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -21521,10 +27124,25 @@ class AyurvedicRitualLogsCompanion extends UpdateCompanion<AyurvedicRitualLog> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (id.present) {
-      map['id'] = Variable<int>(id.value);
+      map['id'] = Variable<String>(id.value);
     }
     if (userId.present) {
       map['user_id'] = Variable<String>(userId.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (syncStatus.present) {
+      map['sync_status'] = Variable<String>(syncStatus.value);
+    }
+    if (idempotencyKey.present) {
+      map['idempotency_key'] = Variable<String>(idempotencyKey.value);
+    }
+    if (fieldVersions.present) {
+      map['field_versions'] = Variable<String>(fieldVersions.value);
     }
     if (ritualKey.present) {
       map['ritual_key'] = Variable<String>(ritualKey.value);
@@ -21535,6 +27153,9 @@ class AyurvedicRitualLogsCompanion extends UpdateCompanion<AyurvedicRitualLog> {
     if (karmaAwarded.present) {
       map['karma_awarded'] = Variable<int>(karmaAwarded.value);
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
@@ -21543,9 +27164,15 @@ class AyurvedicRitualLogsCompanion extends UpdateCompanion<AyurvedicRitualLog> {
     return (StringBuffer('AyurvedicRitualLogsCompanion(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('fieldVersions: $fieldVersions, ')
           ..write('ritualKey: $ritualKey, ')
           ..write('completedAt: $completedAt, ')
-          ..write('karmaAwarded: $karmaAwarded')
+          ..write('karmaAwarded: $karmaAwarded, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -21559,16 +27186,12 @@ class $WaterLogsTable extends WaterLogs
   $WaterLogsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
     'id',
     aliasedName,
     false,
-    hasAutoIncrement: true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
   );
   static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
   @override
@@ -21579,27 +27202,29 @@ class $WaterLogsTable extends WaterLogs
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _amountMlMeta = const VerificationMeta(
-    'amountMl',
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
   );
   @override
-  late final GeneratedColumn<int> amountMl = GeneratedColumn<int>(
-    'amount_ml',
-    aliasedName,
-    false,
-    type: DriftSqlType.int,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _loggedAtMeta = const VerificationMeta(
-    'loggedAt',
-  );
-  @override
-  late final GeneratedColumn<DateTime> loggedAt = GeneratedColumn<DateTime>(
-    'logged_at',
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
     aliasedName,
     false,
     type: DriftSqlType.dateTime,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
   );
   static const VerificationMeta _syncStatusMeta = const VerificationMeta(
     'syncStatus',
@@ -21624,14 +27249,50 @@ class $WaterLogsTable extends WaterLogs
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _fieldVersionsMeta = const VerificationMeta(
+    'fieldVersions',
+  );
+  @override
+  late final GeneratedColumn<String> fieldVersions = GeneratedColumn<String>(
+    'field_versions',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _amountMlMeta = const VerificationMeta(
+    'amountMl',
+  );
+  @override
+  late final GeneratedColumn<int> amountMl = GeneratedColumn<int>(
+    'amount_ml',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _loggedAtMeta = const VerificationMeta(
+    'loggedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> loggedAt = GeneratedColumn<DateTime>(
+    'logged_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
     userId,
-    amountMl,
-    loggedAt,
+    createdAt,
+    updatedAt,
     syncStatus,
     idempotencyKey,
+    fieldVersions,
+    amountMl,
+    loggedAt,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -21647,6 +27308,8 @@ class $WaterLogsTable extends WaterLogs
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
     }
     if (data.containsKey('user_id')) {
       context.handle(
@@ -21656,21 +27319,17 @@ class $WaterLogsTable extends WaterLogs
     } else if (isInserting) {
       context.missing(_userIdMeta);
     }
-    if (data.containsKey('amount_ml')) {
+    if (data.containsKey('created_at')) {
       context.handle(
-        _amountMlMeta,
-        amountMl.isAcceptableOrUnknown(data['amount_ml']!, _amountMlMeta),
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
       );
-    } else if (isInserting) {
-      context.missing(_amountMlMeta);
     }
-    if (data.containsKey('logged_at')) {
+    if (data.containsKey('updated_at')) {
       context.handle(
-        _loggedAtMeta,
-        loggedAt.isAcceptableOrUnknown(data['logged_at']!, _loggedAtMeta),
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
       );
-    } else if (isInserting) {
-      context.missing(_loggedAtMeta);
     }
     if (data.containsKey('sync_status')) {
       context.handle(
@@ -21689,6 +27348,31 @@ class $WaterLogsTable extends WaterLogs
     } else if (isInserting) {
       context.missing(_idempotencyKeyMeta);
     }
+    if (data.containsKey('field_versions')) {
+      context.handle(
+        _fieldVersionsMeta,
+        fieldVersions.isAcceptableOrUnknown(
+          data['field_versions']!,
+          _fieldVersionsMeta,
+        ),
+      );
+    }
+    if (data.containsKey('amount_ml')) {
+      context.handle(
+        _amountMlMeta,
+        amountMl.isAcceptableOrUnknown(data['amount_ml']!, _amountMlMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_amountMlMeta);
+    }
+    if (data.containsKey('logged_at')) {
+      context.handle(
+        _loggedAtMeta,
+        loggedAt.isAcceptableOrUnknown(data['logged_at']!, _loggedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_loggedAtMeta);
+    }
     return context;
   }
 
@@ -21699,20 +27383,20 @@ class $WaterLogsTable extends WaterLogs
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return WaterLog(
       id: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
+        DriftSqlType.string,
         data['${effectivePrefix}id'],
       )!,
       userId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}user_id'],
       )!,
-      amountMl: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}amount_ml'],
-      )!,
-      loggedAt: attachedDatabase.typeMapping.read(
+      createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
-        data['${effectivePrefix}logged_at'],
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
       )!,
       syncStatus: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
@@ -21721,6 +27405,18 @@ class $WaterLogsTable extends WaterLogs
       idempotencyKey: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}idempotency_key'],
+      )!,
+      fieldVersions: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}field_versions'],
+      ),
+      amountMl: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}amount_ml'],
+      )!,
+      loggedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}logged_at'],
       )!,
     );
   }
@@ -21732,29 +27428,40 @@ class $WaterLogsTable extends WaterLogs
 }
 
 class WaterLog extends DataClass implements Insertable<WaterLog> {
-  final int id;
+  final String id;
   final String userId;
-  final int amountMl;
-  final DateTime loggedAt;
+  final DateTime createdAt;
+  final DateTime updatedAt;
   final String syncStatus;
   final String idempotencyKey;
+  final String? fieldVersions;
+  final int amountMl;
+  final DateTime loggedAt;
   const WaterLog({
     required this.id,
     required this.userId,
-    required this.amountMl,
-    required this.loggedAt,
+    required this.createdAt,
+    required this.updatedAt,
     required this.syncStatus,
     required this.idempotencyKey,
+    this.fieldVersions,
+    required this.amountMl,
+    required this.loggedAt,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
+    map['id'] = Variable<String>(id);
     map['user_id'] = Variable<String>(userId);
-    map['amount_ml'] = Variable<int>(amountMl);
-    map['logged_at'] = Variable<DateTime>(loggedAt);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
     map['sync_status'] = Variable<String>(syncStatus);
     map['idempotency_key'] = Variable<String>(idempotencyKey);
+    if (!nullToAbsent || fieldVersions != null) {
+      map['field_versions'] = Variable<String>(fieldVersions);
+    }
+    map['amount_ml'] = Variable<int>(amountMl);
+    map['logged_at'] = Variable<DateTime>(loggedAt);
     return map;
   }
 
@@ -21762,10 +27469,15 @@ class WaterLog extends DataClass implements Insertable<WaterLog> {
     return WaterLogsCompanion(
       id: Value(id),
       userId: Value(userId),
-      amountMl: Value(amountMl),
-      loggedAt: Value(loggedAt),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
       syncStatus: Value(syncStatus),
       idempotencyKey: Value(idempotencyKey),
+      fieldVersions: fieldVersions == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fieldVersions),
+      amountMl: Value(amountMl),
+      loggedAt: Value(loggedAt),
     );
   }
 
@@ -21775,54 +27487,73 @@ class WaterLog extends DataClass implements Insertable<WaterLog> {
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return WaterLog(
-      id: serializer.fromJson<int>(json['id']),
+      id: serializer.fromJson<String>(json['id']),
       userId: serializer.fromJson<String>(json['userId']),
-      amountMl: serializer.fromJson<int>(json['amountMl']),
-      loggedAt: serializer.fromJson<DateTime>(json['loggedAt']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
       syncStatus: serializer.fromJson<String>(json['syncStatus']),
       idempotencyKey: serializer.fromJson<String>(json['idempotencyKey']),
+      fieldVersions: serializer.fromJson<String?>(json['fieldVersions']),
+      amountMl: serializer.fromJson<int>(json['amountMl']),
+      loggedAt: serializer.fromJson<DateTime>(json['loggedAt']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
+      'id': serializer.toJson<String>(id),
       'userId': serializer.toJson<String>(userId),
-      'amountMl': serializer.toJson<int>(amountMl),
-      'loggedAt': serializer.toJson<DateTime>(loggedAt),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
       'syncStatus': serializer.toJson<String>(syncStatus),
       'idempotencyKey': serializer.toJson<String>(idempotencyKey),
+      'fieldVersions': serializer.toJson<String?>(fieldVersions),
+      'amountMl': serializer.toJson<int>(amountMl),
+      'loggedAt': serializer.toJson<DateTime>(loggedAt),
     };
   }
 
   WaterLog copyWith({
-    int? id,
+    String? id,
     String? userId,
-    int? amountMl,
-    DateTime? loggedAt,
+    DateTime? createdAt,
+    DateTime? updatedAt,
     String? syncStatus,
     String? idempotencyKey,
+    Value<String?> fieldVersions = const Value.absent(),
+    int? amountMl,
+    DateTime? loggedAt,
   }) => WaterLog(
     id: id ?? this.id,
     userId: userId ?? this.userId,
-    amountMl: amountMl ?? this.amountMl,
-    loggedAt: loggedAt ?? this.loggedAt,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
     syncStatus: syncStatus ?? this.syncStatus,
     idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+    fieldVersions: fieldVersions.present
+        ? fieldVersions.value
+        : this.fieldVersions,
+    amountMl: amountMl ?? this.amountMl,
+    loggedAt: loggedAt ?? this.loggedAt,
   );
   WaterLog copyWithCompanion(WaterLogsCompanion data) {
     return WaterLog(
       id: data.id.present ? data.id.value : this.id,
       userId: data.userId.present ? data.userId.value : this.userId,
-      amountMl: data.amountMl.present ? data.amountMl.value : this.amountMl,
-      loggedAt: data.loggedAt.present ? data.loggedAt.value : this.loggedAt,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
       syncStatus: data.syncStatus.present
           ? data.syncStatus.value
           : this.syncStatus,
       idempotencyKey: data.idempotencyKey.present
           ? data.idempotencyKey.value
           : this.idempotencyKey,
+      fieldVersions: data.fieldVersions.present
+          ? data.fieldVersions.value
+          : this.fieldVersions,
+      amountMl: data.amountMl.present ? data.amountMl.value : this.amountMl,
+      loggedAt: data.loggedAt.present ? data.loggedAt.value : this.loggedAt,
     );
   }
 
@@ -21831,88 +27562,132 @@ class WaterLog extends DataClass implements Insertable<WaterLog> {
     return (StringBuffer('WaterLog(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
-          ..write('amountMl: $amountMl, ')
-          ..write('loggedAt: $loggedAt, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
           ..write('syncStatus: $syncStatus, ')
-          ..write('idempotencyKey: $idempotencyKey')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('fieldVersions: $fieldVersions, ')
+          ..write('amountMl: $amountMl, ')
+          ..write('loggedAt: $loggedAt')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, userId, amountMl, loggedAt, syncStatus, idempotencyKey);
+  int get hashCode => Object.hash(
+    id,
+    userId,
+    createdAt,
+    updatedAt,
+    syncStatus,
+    idempotencyKey,
+    fieldVersions,
+    amountMl,
+    loggedAt,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is WaterLog &&
           other.id == this.id &&
           other.userId == this.userId &&
-          other.amountMl == this.amountMl &&
-          other.loggedAt == this.loggedAt &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
           other.syncStatus == this.syncStatus &&
-          other.idempotencyKey == this.idempotencyKey);
+          other.idempotencyKey == this.idempotencyKey &&
+          other.fieldVersions == this.fieldVersions &&
+          other.amountMl == this.amountMl &&
+          other.loggedAt == this.loggedAt);
 }
 
 class WaterLogsCompanion extends UpdateCompanion<WaterLog> {
-  final Value<int> id;
+  final Value<String> id;
   final Value<String> userId;
-  final Value<int> amountMl;
-  final Value<DateTime> loggedAt;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
   final Value<String> syncStatus;
   final Value<String> idempotencyKey;
+  final Value<String?> fieldVersions;
+  final Value<int> amountMl;
+  final Value<DateTime> loggedAt;
+  final Value<int> rowid;
   const WaterLogsCompanion({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
-    this.amountMl = const Value.absent(),
-    this.loggedAt = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
     this.syncStatus = const Value.absent(),
     this.idempotencyKey = const Value.absent(),
+    this.fieldVersions = const Value.absent(),
+    this.amountMl = const Value.absent(),
+    this.loggedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   WaterLogsCompanion.insert({
-    this.id = const Value.absent(),
+    required String id,
     required String userId,
-    required int amountMl,
-    required DateTime loggedAt,
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
     this.syncStatus = const Value.absent(),
     required String idempotencyKey,
-  }) : userId = Value(userId),
+    this.fieldVersions = const Value.absent(),
+    required int amountMl,
+    required DateTime loggedAt,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       userId = Value(userId),
+       idempotencyKey = Value(idempotencyKey),
        amountMl = Value(amountMl),
-       loggedAt = Value(loggedAt),
-       idempotencyKey = Value(idempotencyKey);
+       loggedAt = Value(loggedAt);
   static Insertable<WaterLog> custom({
-    Expression<int>? id,
+    Expression<String>? id,
     Expression<String>? userId,
-    Expression<int>? amountMl,
-    Expression<DateTime>? loggedAt,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
     Expression<String>? syncStatus,
     Expression<String>? idempotencyKey,
+    Expression<String>? fieldVersions,
+    Expression<int>? amountMl,
+    Expression<DateTime>? loggedAt,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (userId != null) 'user_id': userId,
-      if (amountMl != null) 'amount_ml': amountMl,
-      if (loggedAt != null) 'logged_at': loggedAt,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
       if (syncStatus != null) 'sync_status': syncStatus,
       if (idempotencyKey != null) 'idempotency_key': idempotencyKey,
+      if (fieldVersions != null) 'field_versions': fieldVersions,
+      if (amountMl != null) 'amount_ml': amountMl,
+      if (loggedAt != null) 'logged_at': loggedAt,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
   WaterLogsCompanion copyWith({
-    Value<int>? id,
+    Value<String>? id,
     Value<String>? userId,
-    Value<int>? amountMl,
-    Value<DateTime>? loggedAt,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
     Value<String>? syncStatus,
     Value<String>? idempotencyKey,
+    Value<String?>? fieldVersions,
+    Value<int>? amountMl,
+    Value<DateTime>? loggedAt,
+    Value<int>? rowid,
   }) {
     return WaterLogsCompanion(
       id: id ?? this.id,
       userId: userId ?? this.userId,
-      amountMl: amountMl ?? this.amountMl,
-      loggedAt: loggedAt ?? this.loggedAt,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
       syncStatus: syncStatus ?? this.syncStatus,
       idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+      fieldVersions: fieldVersions ?? this.fieldVersions,
+      amountMl: amountMl ?? this.amountMl,
+      loggedAt: loggedAt ?? this.loggedAt,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -21920,10 +27695,25 @@ class WaterLogsCompanion extends UpdateCompanion<WaterLog> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (id.present) {
-      map['id'] = Variable<int>(id.value);
+      map['id'] = Variable<String>(id.value);
     }
     if (userId.present) {
       map['user_id'] = Variable<String>(userId.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (syncStatus.present) {
+      map['sync_status'] = Variable<String>(syncStatus.value);
+    }
+    if (idempotencyKey.present) {
+      map['idempotency_key'] = Variable<String>(idempotencyKey.value);
+    }
+    if (fieldVersions.present) {
+      map['field_versions'] = Variable<String>(fieldVersions.value);
     }
     if (amountMl.present) {
       map['amount_ml'] = Variable<int>(amountMl.value);
@@ -21931,11 +27721,8 @@ class WaterLogsCompanion extends UpdateCompanion<WaterLog> {
     if (loggedAt.present) {
       map['logged_at'] = Variable<DateTime>(loggedAt.value);
     }
-    if (syncStatus.present) {
-      map['sync_status'] = Variable<String>(syncStatus.value);
-    }
-    if (idempotencyKey.present) {
-      map['idempotency_key'] = Variable<String>(idempotencyKey.value);
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
     }
     return map;
   }
@@ -21945,10 +27732,14 @@ class WaterLogsCompanion extends UpdateCompanion<WaterLog> {
     return (StringBuffer('WaterLogsCompanion(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('fieldVersions: $fieldVersions, ')
           ..write('amountMl: $amountMl, ')
           ..write('loggedAt: $loggedAt, ')
-          ..write('syncStatus: $syncStatus, ')
-          ..write('idempotencyKey: $idempotencyKey')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -22057,8 +27848,13 @@ abstract class _$AppDatabase extends GeneratedDatabase {
 
 typedef $$FoodLogsTableCreateCompanionBuilder =
     FoodLogsCompanion Function({
-      Value<int> id,
+      required String id,
       required String userId,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> syncStatus,
+      required String idempotencyKey,
+      Value<String?> fieldVersions,
       Value<String?> foodItemId,
       Value<String?> recipeId,
       required String foodName,
@@ -22075,14 +27871,17 @@ typedef $$FoodLogsTableCreateCompanionBuilder =
       Value<double?> calciumMg,
       required DateTime loggedAt,
       Value<String?> logMethod,
-      Value<String> syncStatus,
-      required String idempotencyKey,
-      Value<String?> fieldVersions,
+      Value<int> rowid,
     });
 typedef $$FoodLogsTableUpdateCompanionBuilder =
     FoodLogsCompanion Function({
-      Value<int> id,
+      Value<String> id,
       Value<String> userId,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> syncStatus,
+      Value<String> idempotencyKey,
+      Value<String?> fieldVersions,
       Value<String?> foodItemId,
       Value<String?> recipeId,
       Value<String> foodName,
@@ -22099,9 +27898,7 @@ typedef $$FoodLogsTableUpdateCompanionBuilder =
       Value<double?> calciumMg,
       Value<DateTime> loggedAt,
       Value<String?> logMethod,
-      Value<String> syncStatus,
-      Value<String> idempotencyKey,
-      Value<String?> fieldVersions,
+      Value<int> rowid,
     });
 
 class $$FoodLogsTableFilterComposer
@@ -22113,13 +27910,38 @@ class $$FoodLogsTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<int> get id => $composableBuilder(
+  ColumnFilters<String> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnFilters(column),
   );
 
   ColumnFilters<String> get userId => $composableBuilder(
     column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -22202,21 +28024,6 @@ class $$FoodLogsTableFilterComposer
     column: $table.logMethod,
     builder: (column) => ColumnFilters(column),
   );
-
-  ColumnFilters<String> get syncStatus => $composableBuilder(
-    column: $table.syncStatus,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get idempotencyKey => $composableBuilder(
-    column: $table.idempotencyKey,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get fieldVersions => $composableBuilder(
-    column: $table.fieldVersions,
-    builder: (column) => ColumnFilters(column),
-  );
 }
 
 class $$FoodLogsTableOrderingComposer
@@ -22228,13 +28035,38 @@ class $$FoodLogsTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<int> get id => $composableBuilder(
+  ColumnOrderings<String> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnOrderings(column),
   );
 
   ColumnOrderings<String> get userId => $composableBuilder(
     column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -22317,21 +28149,6 @@ class $$FoodLogsTableOrderingComposer
     column: $table.logMethod,
     builder: (column) => ColumnOrderings(column),
   );
-
-  ColumnOrderings<String> get syncStatus => $composableBuilder(
-    column: $table.syncStatus,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get idempotencyKey => $composableBuilder(
-    column: $table.idempotencyKey,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get fieldVersions => $composableBuilder(
-    column: $table.fieldVersions,
-    builder: (column) => ColumnOrderings(column),
-  );
 }
 
 class $$FoodLogsTableAnnotationComposer
@@ -22343,11 +28160,32 @@ class $$FoodLogsTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<int> get id =>
+  GeneratedColumn<String> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
   GeneratedColumn<String> get userId =>
       $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<String> get foodItemId => $composableBuilder(
     column: $table.foodItemId,
@@ -22402,21 +28240,6 @@ class $$FoodLogsTableAnnotationComposer
 
   GeneratedColumn<String> get logMethod =>
       $composableBuilder(column: $table.logMethod, builder: (column) => column);
-
-  GeneratedColumn<String> get syncStatus => $composableBuilder(
-    column: $table.syncStatus,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get idempotencyKey => $composableBuilder(
-    column: $table.idempotencyKey,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get fieldVersions => $composableBuilder(
-    column: $table.fieldVersions,
-    builder: (column) => column,
-  );
 }
 
 class $$FoodLogsTableTableManager
@@ -22447,8 +28270,13 @@ class $$FoodLogsTableTableManager
               $$FoodLogsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
+                Value<String> id = const Value.absent(),
                 Value<String> userId = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                Value<String> idempotencyKey = const Value.absent(),
+                Value<String?> fieldVersions = const Value.absent(),
                 Value<String?> foodItemId = const Value.absent(),
                 Value<String?> recipeId = const Value.absent(),
                 Value<String> foodName = const Value.absent(),
@@ -22465,12 +28293,15 @@ class $$FoodLogsTableTableManager
                 Value<double?> calciumMg = const Value.absent(),
                 Value<DateTime> loggedAt = const Value.absent(),
                 Value<String?> logMethod = const Value.absent(),
-                Value<String> syncStatus = const Value.absent(),
-                Value<String> idempotencyKey = const Value.absent(),
-                Value<String?> fieldVersions = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
               }) => FoodLogsCompanion(
                 id: id,
                 userId: userId,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                syncStatus: syncStatus,
+                idempotencyKey: idempotencyKey,
+                fieldVersions: fieldVersions,
                 foodItemId: foodItemId,
                 recipeId: recipeId,
                 foodName: foodName,
@@ -22487,14 +28318,17 @@ class $$FoodLogsTableTableManager
                 calciumMg: calciumMg,
                 loggedAt: loggedAt,
                 logMethod: logMethod,
-                syncStatus: syncStatus,
-                idempotencyKey: idempotencyKey,
-                fieldVersions: fieldVersions,
+                rowid: rowid,
               ),
           createCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
+                required String id,
                 required String userId,
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                required String idempotencyKey,
+                Value<String?> fieldVersions = const Value.absent(),
                 Value<String?> foodItemId = const Value.absent(),
                 Value<String?> recipeId = const Value.absent(),
                 required String foodName,
@@ -22511,12 +28345,15 @@ class $$FoodLogsTableTableManager
                 Value<double?> calciumMg = const Value.absent(),
                 required DateTime loggedAt,
                 Value<String?> logMethod = const Value.absent(),
-                Value<String> syncStatus = const Value.absent(),
-                required String idempotencyKey,
-                Value<String?> fieldVersions = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
               }) => FoodLogsCompanion.insert(
                 id: id,
                 userId: userId,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                syncStatus: syncStatus,
+                idempotencyKey: idempotencyKey,
+                fieldVersions: fieldVersions,
                 foodItemId: foodItemId,
                 recipeId: recipeId,
                 foodName: foodName,
@@ -22533,9 +28370,7 @@ class $$FoodLogsTableTableManager
                 calciumMg: calciumMg,
                 loggedAt: loggedAt,
                 logMethod: logMethod,
-                syncStatus: syncStatus,
-                idempotencyKey: idempotencyKey,
-                fieldVersions: fieldVersions,
+                rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
@@ -22561,7 +28396,13 @@ typedef $$FoodLogsTableProcessedTableManager =
     >;
 typedef $$FoodItemsTableCreateCompanionBuilder =
     FoodItemsCompanion Function({
-      Value<int> id,
+      required String id,
+      required String userId,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> syncStatus,
+      required String idempotencyKey,
+      Value<String?> fieldVersions,
       Value<String?> appwriteId,
       required String name,
       Value<String?> nameLocal,
@@ -22579,10 +28420,17 @@ typedef $$FoodItemsTableCreateCompanionBuilder =
       Value<bool> isIndian,
       Value<Map<String, dynamic>?> servingSizes,
       required String source,
+      Value<int> rowid,
     });
 typedef $$FoodItemsTableUpdateCompanionBuilder =
     FoodItemsCompanion Function({
-      Value<int> id,
+      Value<String> id,
+      Value<String> userId,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> syncStatus,
+      Value<String> idempotencyKey,
+      Value<String?> fieldVersions,
       Value<String?> appwriteId,
       Value<String> name,
       Value<String?> nameLocal,
@@ -22600,6 +28448,7 @@ typedef $$FoodItemsTableUpdateCompanionBuilder =
       Value<bool> isIndian,
       Value<Map<String, dynamic>?> servingSizes,
       Value<String> source,
+      Value<int> rowid,
     });
 
 class $$FoodItemsTableFilterComposer
@@ -22611,8 +28460,38 @@ class $$FoodItemsTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<int> get id => $composableBuilder(
+  ColumnFilters<String> get id => $composableBuilder(
     column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -22716,8 +28595,38 @@ class $$FoodItemsTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<int> get id => $composableBuilder(
+  ColumnOrderings<String> get id => $composableBuilder(
     column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -22816,8 +28725,32 @@ class $$FoodItemsTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<int> get id =>
+  GeneratedColumn<String> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get userId =>
+      $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<String> get appwriteId => $composableBuilder(
     column: $table.appwriteId,
@@ -22922,7 +28855,13 @@ class $$FoodItemsTableTableManager
               $$FoodItemsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
+                Value<String> id = const Value.absent(),
+                Value<String> userId = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                Value<String> idempotencyKey = const Value.absent(),
+                Value<String?> fieldVersions = const Value.absent(),
                 Value<String?> appwriteId = const Value.absent(),
                 Value<String> name = const Value.absent(),
                 Value<String?> nameLocal = const Value.absent(),
@@ -22941,8 +28880,15 @@ class $$FoodItemsTableTableManager
                 Value<Map<String, dynamic>?> servingSizes =
                     const Value.absent(),
                 Value<String> source = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
               }) => FoodItemsCompanion(
                 id: id,
+                userId: userId,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                syncStatus: syncStatus,
+                idempotencyKey: idempotencyKey,
+                fieldVersions: fieldVersions,
                 appwriteId: appwriteId,
                 name: name,
                 nameLocal: nameLocal,
@@ -22960,10 +28906,17 @@ class $$FoodItemsTableTableManager
                 isIndian: isIndian,
                 servingSizes: servingSizes,
                 source: source,
+                rowid: rowid,
               ),
           createCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
+                required String id,
+                required String userId,
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                required String idempotencyKey,
+                Value<String?> fieldVersions = const Value.absent(),
                 Value<String?> appwriteId = const Value.absent(),
                 required String name,
                 Value<String?> nameLocal = const Value.absent(),
@@ -22982,8 +28935,15 @@ class $$FoodItemsTableTableManager
                 Value<Map<String, dynamic>?> servingSizes =
                     const Value.absent(),
                 required String source,
+                Value<int> rowid = const Value.absent(),
               }) => FoodItemsCompanion.insert(
                 id: id,
+                userId: userId,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                syncStatus: syncStatus,
+                idempotencyKey: idempotencyKey,
+                fieldVersions: fieldVersions,
                 appwriteId: appwriteId,
                 name: name,
                 nameLocal: nameLocal,
@@ -23001,6 +28961,7 @@ class $$FoodItemsTableTableManager
                 isIndian: isIndian,
                 servingSizes: servingSizes,
                 source: source,
+                rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
@@ -23026,8 +28987,13 @@ typedef $$FoodItemsTableProcessedTableManager =
     >;
 typedef $$WorkoutLogsTableCreateCompanionBuilder =
     WorkoutLogsCompanion Function({
-      Value<int> id,
+      required String id,
       required String userId,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> syncStatus,
+      required String idempotencyKey,
+      Value<String?> fieldVersions,
       Value<String?> workoutId,
       required String title,
       required int durationMin,
@@ -23036,13 +29002,17 @@ typedef $$WorkoutLogsTableCreateCompanionBuilder =
       Value<int?> rpe,
       Value<int?> hrZone,
       required DateTime loggedAt,
-      Value<String> syncStatus,
-      required String idempotencyKey,
+      Value<int> rowid,
     });
 typedef $$WorkoutLogsTableUpdateCompanionBuilder =
     WorkoutLogsCompanion Function({
-      Value<int> id,
+      Value<String> id,
       Value<String> userId,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> syncStatus,
+      Value<String> idempotencyKey,
+      Value<String?> fieldVersions,
       Value<String?> workoutId,
       Value<String> title,
       Value<int> durationMin,
@@ -23051,8 +29021,7 @@ typedef $$WorkoutLogsTableUpdateCompanionBuilder =
       Value<int?> rpe,
       Value<int?> hrZone,
       Value<DateTime> loggedAt,
-      Value<String> syncStatus,
-      Value<String> idempotencyKey,
+      Value<int> rowid,
     });
 
 class $$WorkoutLogsTableFilterComposer
@@ -23064,13 +29033,38 @@ class $$WorkoutLogsTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<int> get id => $composableBuilder(
+  ColumnFilters<String> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnFilters(column),
   );
 
   ColumnFilters<String> get userId => $composableBuilder(
     column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -23113,16 +29107,6 @@ class $$WorkoutLogsTableFilterComposer
     column: $table.loggedAt,
     builder: (column) => ColumnFilters(column),
   );
-
-  ColumnFilters<String> get syncStatus => $composableBuilder(
-    column: $table.syncStatus,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get idempotencyKey => $composableBuilder(
-    column: $table.idempotencyKey,
-    builder: (column) => ColumnFilters(column),
-  );
 }
 
 class $$WorkoutLogsTableOrderingComposer
@@ -23134,13 +29118,38 @@ class $$WorkoutLogsTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<int> get id => $composableBuilder(
+  ColumnOrderings<String> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnOrderings(column),
   );
 
   ColumnOrderings<String> get userId => $composableBuilder(
     column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -23183,16 +29192,6 @@ class $$WorkoutLogsTableOrderingComposer
     column: $table.loggedAt,
     builder: (column) => ColumnOrderings(column),
   );
-
-  ColumnOrderings<String> get syncStatus => $composableBuilder(
-    column: $table.syncStatus,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get idempotencyKey => $composableBuilder(
-    column: $table.idempotencyKey,
-    builder: (column) => ColumnOrderings(column),
-  );
 }
 
 class $$WorkoutLogsTableAnnotationComposer
@@ -23204,11 +29203,32 @@ class $$WorkoutLogsTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<int> get id =>
+  GeneratedColumn<String> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
   GeneratedColumn<String> get userId =>
       $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<String> get workoutId =>
       $composableBuilder(column: $table.workoutId, builder: (column) => column);
@@ -23237,16 +29257,6 @@ class $$WorkoutLogsTableAnnotationComposer
 
   GeneratedColumn<DateTime> get loggedAt =>
       $composableBuilder(column: $table.loggedAt, builder: (column) => column);
-
-  GeneratedColumn<String> get syncStatus => $composableBuilder(
-    column: $table.syncStatus,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get idempotencyKey => $composableBuilder(
-    column: $table.idempotencyKey,
-    builder: (column) => column,
-  );
 }
 
 class $$WorkoutLogsTableTableManager
@@ -23280,8 +29290,13 @@ class $$WorkoutLogsTableTableManager
               $$WorkoutLogsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
+                Value<String> id = const Value.absent(),
                 Value<String> userId = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                Value<String> idempotencyKey = const Value.absent(),
+                Value<String?> fieldVersions = const Value.absent(),
                 Value<String?> workoutId = const Value.absent(),
                 Value<String> title = const Value.absent(),
                 Value<int> durationMin = const Value.absent(),
@@ -23290,11 +29305,15 @@ class $$WorkoutLogsTableTableManager
                 Value<int?> rpe = const Value.absent(),
                 Value<int?> hrZone = const Value.absent(),
                 Value<DateTime> loggedAt = const Value.absent(),
-                Value<String> syncStatus = const Value.absent(),
-                Value<String> idempotencyKey = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
               }) => WorkoutLogsCompanion(
                 id: id,
                 userId: userId,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                syncStatus: syncStatus,
+                idempotencyKey: idempotencyKey,
+                fieldVersions: fieldVersions,
                 workoutId: workoutId,
                 title: title,
                 durationMin: durationMin,
@@ -23303,13 +29322,17 @@ class $$WorkoutLogsTableTableManager
                 rpe: rpe,
                 hrZone: hrZone,
                 loggedAt: loggedAt,
-                syncStatus: syncStatus,
-                idempotencyKey: idempotencyKey,
+                rowid: rowid,
               ),
           createCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
+                required String id,
                 required String userId,
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                required String idempotencyKey,
+                Value<String?> fieldVersions = const Value.absent(),
                 Value<String?> workoutId = const Value.absent(),
                 required String title,
                 required int durationMin,
@@ -23318,11 +29341,15 @@ class $$WorkoutLogsTableTableManager
                 Value<int?> rpe = const Value.absent(),
                 Value<int?> hrZone = const Value.absent(),
                 required DateTime loggedAt,
-                Value<String> syncStatus = const Value.absent(),
-                required String idempotencyKey,
+                Value<int> rowid = const Value.absent(),
               }) => WorkoutLogsCompanion.insert(
                 id: id,
                 userId: userId,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                syncStatus: syncStatus,
+                idempotencyKey: idempotencyKey,
+                fieldVersions: fieldVersions,
                 workoutId: workoutId,
                 title: title,
                 durationMin: durationMin,
@@ -23331,8 +29358,7 @@ class $$WorkoutLogsTableTableManager
                 rpe: rpe,
                 hrZone: hrZone,
                 loggedAt: loggedAt,
-                syncStatus: syncStatus,
-                idempotencyKey: idempotencyKey,
+                rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
@@ -23361,27 +29387,35 @@ typedef $$WorkoutLogsTableProcessedTableManager =
     >;
 typedef $$StepLogsTableCreateCompanionBuilder =
     StepLogsCompanion Function({
-      Value<int> id,
+      required String id,
       required String userId,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> syncStatus,
+      required String idempotencyKey,
+      Value<String?> fieldVersions,
       required DateTime date,
       required int stepCount,
       Value<double?> distanceM,
       Value<double?> caloriesBurned,
       required String source,
-      Value<String> syncStatus,
-      required String idempotencyKey,
+      Value<int> rowid,
     });
 typedef $$StepLogsTableUpdateCompanionBuilder =
     StepLogsCompanion Function({
-      Value<int> id,
+      Value<String> id,
       Value<String> userId,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> syncStatus,
+      Value<String> idempotencyKey,
+      Value<String?> fieldVersions,
       Value<DateTime> date,
       Value<int> stepCount,
       Value<double?> distanceM,
       Value<double?> caloriesBurned,
       Value<String> source,
-      Value<String> syncStatus,
-      Value<String> idempotencyKey,
+      Value<int> rowid,
     });
 
 class $$StepLogsTableFilterComposer
@@ -23393,13 +29427,38 @@ class $$StepLogsTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<int> get id => $composableBuilder(
+  ColumnFilters<String> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnFilters(column),
   );
 
   ColumnFilters<String> get userId => $composableBuilder(
     column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -23427,16 +29486,6 @@ class $$StepLogsTableFilterComposer
     column: $table.source,
     builder: (column) => ColumnFilters(column),
   );
-
-  ColumnFilters<String> get syncStatus => $composableBuilder(
-    column: $table.syncStatus,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get idempotencyKey => $composableBuilder(
-    column: $table.idempotencyKey,
-    builder: (column) => ColumnFilters(column),
-  );
 }
 
 class $$StepLogsTableOrderingComposer
@@ -23448,13 +29497,38 @@ class $$StepLogsTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<int> get id => $composableBuilder(
+  ColumnOrderings<String> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnOrderings(column),
   );
 
   ColumnOrderings<String> get userId => $composableBuilder(
     column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -23482,16 +29556,6 @@ class $$StepLogsTableOrderingComposer
     column: $table.source,
     builder: (column) => ColumnOrderings(column),
   );
-
-  ColumnOrderings<String> get syncStatus => $composableBuilder(
-    column: $table.syncStatus,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get idempotencyKey => $composableBuilder(
-    column: $table.idempotencyKey,
-    builder: (column) => ColumnOrderings(column),
-  );
 }
 
 class $$StepLogsTableAnnotationComposer
@@ -23503,11 +29567,32 @@ class $$StepLogsTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<int> get id =>
+  GeneratedColumn<String> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
   GeneratedColumn<String> get userId =>
       $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<DateTime> get date =>
       $composableBuilder(column: $table.date, builder: (column) => column);
@@ -23525,16 +29610,6 @@ class $$StepLogsTableAnnotationComposer
 
   GeneratedColumn<String> get source =>
       $composableBuilder(column: $table.source, builder: (column) => column);
-
-  GeneratedColumn<String> get syncStatus => $composableBuilder(
-    column: $table.syncStatus,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get idempotencyKey => $composableBuilder(
-    column: $table.idempotencyKey,
-    builder: (column) => column,
-  );
 }
 
 class $$StepLogsTableTableManager
@@ -23565,47 +29640,63 @@ class $$StepLogsTableTableManager
               $$StepLogsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
+                Value<String> id = const Value.absent(),
                 Value<String> userId = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                Value<String> idempotencyKey = const Value.absent(),
+                Value<String?> fieldVersions = const Value.absent(),
                 Value<DateTime> date = const Value.absent(),
                 Value<int> stepCount = const Value.absent(),
                 Value<double?> distanceM = const Value.absent(),
                 Value<double?> caloriesBurned = const Value.absent(),
                 Value<String> source = const Value.absent(),
-                Value<String> syncStatus = const Value.absent(),
-                Value<String> idempotencyKey = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
               }) => StepLogsCompanion(
                 id: id,
                 userId: userId,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                syncStatus: syncStatus,
+                idempotencyKey: idempotencyKey,
+                fieldVersions: fieldVersions,
                 date: date,
                 stepCount: stepCount,
                 distanceM: distanceM,
                 caloriesBurned: caloriesBurned,
                 source: source,
-                syncStatus: syncStatus,
-                idempotencyKey: idempotencyKey,
+                rowid: rowid,
               ),
           createCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
+                required String id,
                 required String userId,
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                required String idempotencyKey,
+                Value<String?> fieldVersions = const Value.absent(),
                 required DateTime date,
                 required int stepCount,
                 Value<double?> distanceM = const Value.absent(),
                 Value<double?> caloriesBurned = const Value.absent(),
                 required String source,
-                Value<String> syncStatus = const Value.absent(),
-                required String idempotencyKey,
+                Value<int> rowid = const Value.absent(),
               }) => StepLogsCompanion.insert(
                 id: id,
                 userId: userId,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                syncStatus: syncStatus,
+                idempotencyKey: idempotencyKey,
+                fieldVersions: fieldVersions,
                 date: date,
                 stepCount: stepCount,
                 distanceM: distanceM,
                 caloriesBurned: caloriesBurned,
                 source: source,
-                syncStatus: syncStatus,
-                idempotencyKey: idempotencyKey,
+                rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
@@ -23631,8 +29722,13 @@ typedef $$StepLogsTableProcessedTableManager =
     >;
 typedef $$SleepLogsTableCreateCompanionBuilder =
     SleepLogsCompanion Function({
-      Value<int> id,
+      required String id,
       required String userId,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> syncStatus,
+      required String idempotencyKey,
+      Value<String?> fieldVersions,
       required DateTime date,
       required String bedtime,
       required String wakeTime,
@@ -23642,11 +29738,17 @@ typedef $$SleepLogsTableCreateCompanionBuilder =
       Value<int?> sleepDebtMin,
       Value<String?> notes,
       required String source,
+      Value<int> rowid,
     });
 typedef $$SleepLogsTableUpdateCompanionBuilder =
     SleepLogsCompanion Function({
-      Value<int> id,
+      Value<String> id,
       Value<String> userId,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> syncStatus,
+      Value<String> idempotencyKey,
+      Value<String?> fieldVersions,
       Value<DateTime> date,
       Value<String> bedtime,
       Value<String> wakeTime,
@@ -23656,6 +29758,7 @@ typedef $$SleepLogsTableUpdateCompanionBuilder =
       Value<int?> sleepDebtMin,
       Value<String?> notes,
       Value<String> source,
+      Value<int> rowid,
     });
 
 class $$SleepLogsTableFilterComposer
@@ -23667,13 +29770,38 @@ class $$SleepLogsTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<int> get id => $composableBuilder(
+  ColumnFilters<String> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnFilters(column),
   );
 
   ColumnFilters<String> get userId => $composableBuilder(
     column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -23732,13 +29860,38 @@ class $$SleepLogsTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<int> get id => $composableBuilder(
+  ColumnOrderings<String> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnOrderings(column),
   );
 
   ColumnOrderings<String> get userId => $composableBuilder(
     column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -23797,11 +29950,32 @@ class $$SleepLogsTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<int> get id =>
+  GeneratedColumn<String> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
   GeneratedColumn<String> get userId =>
       $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<DateTime> get date =>
       $composableBuilder(column: $table.date, builder: (column) => column);
@@ -23867,8 +30041,13 @@ class $$SleepLogsTableTableManager
               $$SleepLogsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
+                Value<String> id = const Value.absent(),
                 Value<String> userId = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                Value<String> idempotencyKey = const Value.absent(),
+                Value<String?> fieldVersions = const Value.absent(),
                 Value<DateTime> date = const Value.absent(),
                 Value<String> bedtime = const Value.absent(),
                 Value<String> wakeTime = const Value.absent(),
@@ -23878,9 +30057,15 @@ class $$SleepLogsTableTableManager
                 Value<int?> sleepDebtMin = const Value.absent(),
                 Value<String?> notes = const Value.absent(),
                 Value<String> source = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
               }) => SleepLogsCompanion(
                 id: id,
                 userId: userId,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                syncStatus: syncStatus,
+                idempotencyKey: idempotencyKey,
+                fieldVersions: fieldVersions,
                 date: date,
                 bedtime: bedtime,
                 wakeTime: wakeTime,
@@ -23890,11 +30075,17 @@ class $$SleepLogsTableTableManager
                 sleepDebtMin: sleepDebtMin,
                 notes: notes,
                 source: source,
+                rowid: rowid,
               ),
           createCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
+                required String id,
                 required String userId,
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                required String idempotencyKey,
+                Value<String?> fieldVersions = const Value.absent(),
                 required DateTime date,
                 required String bedtime,
                 required String wakeTime,
@@ -23904,9 +30095,15 @@ class $$SleepLogsTableTableManager
                 Value<int?> sleepDebtMin = const Value.absent(),
                 Value<String?> notes = const Value.absent(),
                 required String source,
+                Value<int> rowid = const Value.absent(),
               }) => SleepLogsCompanion.insert(
                 id: id,
                 userId: userId,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                syncStatus: syncStatus,
+                idempotencyKey: idempotencyKey,
+                fieldVersions: fieldVersions,
                 date: date,
                 bedtime: bedtime,
                 wakeTime: wakeTime,
@@ -23916,6 +30113,7 @@ class $$SleepLogsTableTableManager
                 sleepDebtMin: sleepDebtMin,
                 notes: notes,
                 source: source,
+                rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
@@ -23941,29 +30139,37 @@ typedef $$SleepLogsTableProcessedTableManager =
     >;
 typedef $$MoodLogsTableCreateCompanionBuilder =
     MoodLogsCompanion Function({
-      Value<int> id,
+      required String id,
       required String userId,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> syncStatus,
+      required String idempotencyKey,
+      Value<String?> fieldVersions,
       required int moodScore,
       Value<int?> energyLevel,
       Value<int?> stressLevel,
       Value<String?> tags,
       Value<String?> notes,
       required DateTime loggedAt,
-      Value<String> syncStatus,
-      required String idempotencyKey,
+      Value<int> rowid,
     });
 typedef $$MoodLogsTableUpdateCompanionBuilder =
     MoodLogsCompanion Function({
-      Value<int> id,
+      Value<String> id,
       Value<String> userId,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> syncStatus,
+      Value<String> idempotencyKey,
+      Value<String?> fieldVersions,
       Value<int> moodScore,
       Value<int?> energyLevel,
       Value<int?> stressLevel,
       Value<String?> tags,
       Value<String?> notes,
       Value<DateTime> loggedAt,
-      Value<String> syncStatus,
-      Value<String> idempotencyKey,
+      Value<int> rowid,
     });
 
 class $$MoodLogsTableFilterComposer
@@ -23975,13 +30181,38 @@ class $$MoodLogsTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<int> get id => $composableBuilder(
+  ColumnFilters<String> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnFilters(column),
   );
 
   ColumnFilters<String> get userId => $composableBuilder(
     column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -24014,16 +30245,6 @@ class $$MoodLogsTableFilterComposer
     column: $table.loggedAt,
     builder: (column) => ColumnFilters(column),
   );
-
-  ColumnFilters<String> get syncStatus => $composableBuilder(
-    column: $table.syncStatus,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get idempotencyKey => $composableBuilder(
-    column: $table.idempotencyKey,
-    builder: (column) => ColumnFilters(column),
-  );
 }
 
 class $$MoodLogsTableOrderingComposer
@@ -24035,13 +30256,38 @@ class $$MoodLogsTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<int> get id => $composableBuilder(
+  ColumnOrderings<String> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnOrderings(column),
   );
 
   ColumnOrderings<String> get userId => $composableBuilder(
     column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -24074,16 +30320,6 @@ class $$MoodLogsTableOrderingComposer
     column: $table.loggedAt,
     builder: (column) => ColumnOrderings(column),
   );
-
-  ColumnOrderings<String> get syncStatus => $composableBuilder(
-    column: $table.syncStatus,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get idempotencyKey => $composableBuilder(
-    column: $table.idempotencyKey,
-    builder: (column) => ColumnOrderings(column),
-  );
 }
 
 class $$MoodLogsTableAnnotationComposer
@@ -24095,11 +30331,32 @@ class $$MoodLogsTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<int> get id =>
+  GeneratedColumn<String> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
   GeneratedColumn<String> get userId =>
       $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<int> get moodScore =>
       $composableBuilder(column: $table.moodScore, builder: (column) => column);
@@ -24122,16 +30379,6 @@ class $$MoodLogsTableAnnotationComposer
 
   GeneratedColumn<DateTime> get loggedAt =>
       $composableBuilder(column: $table.loggedAt, builder: (column) => column);
-
-  GeneratedColumn<String> get syncStatus => $composableBuilder(
-    column: $table.syncStatus,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get idempotencyKey => $composableBuilder(
-    column: $table.idempotencyKey,
-    builder: (column) => column,
-  );
 }
 
 class $$MoodLogsTableTableManager
@@ -24162,51 +30409,67 @@ class $$MoodLogsTableTableManager
               $$MoodLogsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
+                Value<String> id = const Value.absent(),
                 Value<String> userId = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                Value<String> idempotencyKey = const Value.absent(),
+                Value<String?> fieldVersions = const Value.absent(),
                 Value<int> moodScore = const Value.absent(),
                 Value<int?> energyLevel = const Value.absent(),
                 Value<int?> stressLevel = const Value.absent(),
                 Value<String?> tags = const Value.absent(),
                 Value<String?> notes = const Value.absent(),
                 Value<DateTime> loggedAt = const Value.absent(),
-                Value<String> syncStatus = const Value.absent(),
-                Value<String> idempotencyKey = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
               }) => MoodLogsCompanion(
                 id: id,
                 userId: userId,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                syncStatus: syncStatus,
+                idempotencyKey: idempotencyKey,
+                fieldVersions: fieldVersions,
                 moodScore: moodScore,
                 energyLevel: energyLevel,
                 stressLevel: stressLevel,
                 tags: tags,
                 notes: notes,
                 loggedAt: loggedAt,
-                syncStatus: syncStatus,
-                idempotencyKey: idempotencyKey,
+                rowid: rowid,
               ),
           createCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
+                required String id,
                 required String userId,
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                required String idempotencyKey,
+                Value<String?> fieldVersions = const Value.absent(),
                 required int moodScore,
                 Value<int?> energyLevel = const Value.absent(),
                 Value<int?> stressLevel = const Value.absent(),
                 Value<String?> tags = const Value.absent(),
                 Value<String?> notes = const Value.absent(),
                 required DateTime loggedAt,
-                Value<String> syncStatus = const Value.absent(),
-                required String idempotencyKey,
+                Value<int> rowid = const Value.absent(),
               }) => MoodLogsCompanion.insert(
                 id: id,
                 userId: userId,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                syncStatus: syncStatus,
+                idempotencyKey: idempotencyKey,
+                fieldVersions: fieldVersions,
                 moodScore: moodScore,
                 energyLevel: energyLevel,
                 stressLevel: stressLevel,
                 tags: tags,
                 notes: notes,
                 loggedAt: loggedAt,
-                syncStatus: syncStatus,
-                idempotencyKey: idempotencyKey,
+                rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
@@ -24232,8 +30495,13 @@ typedef $$MoodLogsTableProcessedTableManager =
     >;
 typedef $$MedicationsTableCreateCompanionBuilder =
     MedicationsCompanion Function({
-      Value<int> id,
+      required String id,
       required String userId,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> syncStatus,
+      required String idempotencyKey,
+      Value<String?> fieldVersions,
       required String name,
       required String dose,
       required String frequency,
@@ -24242,11 +30510,17 @@ typedef $$MedicationsTableCreateCompanionBuilder =
       Value<DateTime?> refillDate,
       Value<String?> pharmacyLink,
       Value<bool> isActive,
+      Value<int> rowid,
     });
 typedef $$MedicationsTableUpdateCompanionBuilder =
     MedicationsCompanion Function({
-      Value<int> id,
+      Value<String> id,
       Value<String> userId,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> syncStatus,
+      Value<String> idempotencyKey,
+      Value<String?> fieldVersions,
       Value<String> name,
       Value<String> dose,
       Value<String> frequency,
@@ -24255,6 +30529,7 @@ typedef $$MedicationsTableUpdateCompanionBuilder =
       Value<DateTime?> refillDate,
       Value<String?> pharmacyLink,
       Value<bool> isActive,
+      Value<int> rowid,
     });
 
 class $$MedicationsTableFilterComposer
@@ -24266,13 +30541,38 @@ class $$MedicationsTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<int> get id => $composableBuilder(
+  ColumnFilters<String> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnFilters(column),
   );
 
   ColumnFilters<String> get userId => $composableBuilder(
     column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -24326,13 +30626,38 @@ class $$MedicationsTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<int> get id => $composableBuilder(
+  ColumnOrderings<String> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnOrderings(column),
   );
 
   ColumnOrderings<String> get userId => $composableBuilder(
     column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -24386,11 +30711,32 @@ class $$MedicationsTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<int> get id =>
+  GeneratedColumn<String> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
   GeneratedColumn<String> get userId =>
       $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
@@ -24454,8 +30800,13 @@ class $$MedicationsTableTableManager
               $$MedicationsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
+                Value<String> id = const Value.absent(),
                 Value<String> userId = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                Value<String> idempotencyKey = const Value.absent(),
+                Value<String?> fieldVersions = const Value.absent(),
                 Value<String> name = const Value.absent(),
                 Value<String> dose = const Value.absent(),
                 Value<String> frequency = const Value.absent(),
@@ -24464,9 +30815,15 @@ class $$MedicationsTableTableManager
                 Value<DateTime?> refillDate = const Value.absent(),
                 Value<String?> pharmacyLink = const Value.absent(),
                 Value<bool> isActive = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
               }) => MedicationsCompanion(
                 id: id,
                 userId: userId,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                syncStatus: syncStatus,
+                idempotencyKey: idempotencyKey,
+                fieldVersions: fieldVersions,
                 name: name,
                 dose: dose,
                 frequency: frequency,
@@ -24475,11 +30832,17 @@ class $$MedicationsTableTableManager
                 refillDate: refillDate,
                 pharmacyLink: pharmacyLink,
                 isActive: isActive,
+                rowid: rowid,
               ),
           createCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
+                required String id,
                 required String userId,
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                required String idempotencyKey,
+                Value<String?> fieldVersions = const Value.absent(),
                 required String name,
                 required String dose,
                 required String frequency,
@@ -24488,9 +30851,15 @@ class $$MedicationsTableTableManager
                 Value<DateTime?> refillDate = const Value.absent(),
                 Value<String?> pharmacyLink = const Value.absent(),
                 Value<bool> isActive = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
               }) => MedicationsCompanion.insert(
                 id: id,
                 userId: userId,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                syncStatus: syncStatus,
+                idempotencyKey: idempotencyKey,
+                fieldVersions: fieldVersions,
                 name: name,
                 dose: dose,
                 frequency: frequency,
@@ -24499,6 +30868,7 @@ class $$MedicationsTableTableManager
                 refillDate: refillDate,
                 pharmacyLink: pharmacyLink,
                 isActive: isActive,
+                rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
@@ -24527,8 +30897,13 @@ typedef $$MedicationsTableProcessedTableManager =
     >;
 typedef $$HabitsTableCreateCompanionBuilder =
     HabitsCompanion Function({
-      Value<int> id,
+      required String id,
       required String userId,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> syncStatus,
+      required String idempotencyKey,
+      Value<String?> fieldVersions,
       required String name,
       required String icon,
       required int targetCount,
@@ -24539,11 +30914,17 @@ typedef $$HabitsTableCreateCompanionBuilder =
       Value<bool> streakRecoveryUsed,
       Value<String?> reminderTime,
       Value<bool> isPreset,
+      Value<int> rowid,
     });
 typedef $$HabitsTableUpdateCompanionBuilder =
     HabitsCompanion Function({
-      Value<int> id,
+      Value<String> id,
       Value<String> userId,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> syncStatus,
+      Value<String> idempotencyKey,
+      Value<String?> fieldVersions,
       Value<String> name,
       Value<String> icon,
       Value<int> targetCount,
@@ -24554,6 +30935,7 @@ typedef $$HabitsTableUpdateCompanionBuilder =
       Value<bool> streakRecoveryUsed,
       Value<String?> reminderTime,
       Value<bool> isPreset,
+      Value<int> rowid,
     });
 
 class $$HabitsTableFilterComposer
@@ -24565,13 +30947,38 @@ class $$HabitsTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<int> get id => $composableBuilder(
+  ColumnFilters<String> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnFilters(column),
   );
 
   ColumnFilters<String> get userId => $composableBuilder(
     column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -24635,13 +31042,38 @@ class $$HabitsTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<int> get id => $composableBuilder(
+  ColumnOrderings<String> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnOrderings(column),
   );
 
   ColumnOrderings<String> get userId => $composableBuilder(
     column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -24705,11 +31137,32 @@ class $$HabitsTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<int> get id =>
+  GeneratedColumn<String> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
   GeneratedColumn<String> get userId =>
       $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
@@ -24780,8 +31233,13 @@ class $$HabitsTableTableManager
               $$HabitsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
+                Value<String> id = const Value.absent(),
                 Value<String> userId = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                Value<String> idempotencyKey = const Value.absent(),
+                Value<String?> fieldVersions = const Value.absent(),
                 Value<String> name = const Value.absent(),
                 Value<String> icon = const Value.absent(),
                 Value<int> targetCount = const Value.absent(),
@@ -24792,9 +31250,15 @@ class $$HabitsTableTableManager
                 Value<bool> streakRecoveryUsed = const Value.absent(),
                 Value<String?> reminderTime = const Value.absent(),
                 Value<bool> isPreset = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
               }) => HabitsCompanion(
                 id: id,
                 userId: userId,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                syncStatus: syncStatus,
+                idempotencyKey: idempotencyKey,
+                fieldVersions: fieldVersions,
                 name: name,
                 icon: icon,
                 targetCount: targetCount,
@@ -24805,11 +31269,17 @@ class $$HabitsTableTableManager
                 streakRecoveryUsed: streakRecoveryUsed,
                 reminderTime: reminderTime,
                 isPreset: isPreset,
+                rowid: rowid,
               ),
           createCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
+                required String id,
                 required String userId,
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                required String idempotencyKey,
+                Value<String?> fieldVersions = const Value.absent(),
                 required String name,
                 required String icon,
                 required int targetCount,
@@ -24820,9 +31290,15 @@ class $$HabitsTableTableManager
                 Value<bool> streakRecoveryUsed = const Value.absent(),
                 Value<String?> reminderTime = const Value.absent(),
                 Value<bool> isPreset = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
               }) => HabitsCompanion.insert(
                 id: id,
                 userId: userId,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                syncStatus: syncStatus,
+                idempotencyKey: idempotencyKey,
+                fieldVersions: fieldVersions,
                 name: name,
                 icon: icon,
                 targetCount: targetCount,
@@ -24833,6 +31309,7 @@ class $$HabitsTableTableManager
                 streakRecoveryUsed: streakRecoveryUsed,
                 reminderTime: reminderTime,
                 isPreset: isPreset,
+                rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
@@ -24858,19 +31335,31 @@ typedef $$HabitsTableProcessedTableManager =
     >;
 typedef $$HabitCompletionsTableCreateCompanionBuilder =
     HabitCompletionsCompanion Function({
-      Value<int> id,
+      required String id,
+      required String userId,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> syncStatus,
+      required String idempotencyKey,
+      Value<String?> fieldVersions,
       required int habitId,
       required DateTime date,
       required int count,
-      Value<String> syncStatus,
+      Value<int> rowid,
     });
 typedef $$HabitCompletionsTableUpdateCompanionBuilder =
     HabitCompletionsCompanion Function({
-      Value<int> id,
+      Value<String> id,
+      Value<String> userId,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> syncStatus,
+      Value<String> idempotencyKey,
+      Value<String?> fieldVersions,
       Value<int> habitId,
       Value<DateTime> date,
       Value<int> count,
-      Value<String> syncStatus,
+      Value<int> rowid,
     });
 
 class $$HabitCompletionsTableFilterComposer
@@ -24882,8 +31371,38 @@ class $$HabitCompletionsTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<int> get id => $composableBuilder(
+  ColumnFilters<String> get id => $composableBuilder(
     column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -24901,11 +31420,6 @@ class $$HabitCompletionsTableFilterComposer
     column: $table.count,
     builder: (column) => ColumnFilters(column),
   );
-
-  ColumnFilters<String> get syncStatus => $composableBuilder(
-    column: $table.syncStatus,
-    builder: (column) => ColumnFilters(column),
-  );
 }
 
 class $$HabitCompletionsTableOrderingComposer
@@ -24917,8 +31431,38 @@ class $$HabitCompletionsTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<int> get id => $composableBuilder(
+  ColumnOrderings<String> get id => $composableBuilder(
     column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -24936,11 +31480,6 @@ class $$HabitCompletionsTableOrderingComposer
     column: $table.count,
     builder: (column) => ColumnOrderings(column),
   );
-
-  ColumnOrderings<String> get syncStatus => $composableBuilder(
-    column: $table.syncStatus,
-    builder: (column) => ColumnOrderings(column),
-  );
 }
 
 class $$HabitCompletionsTableAnnotationComposer
@@ -24952,8 +31491,32 @@ class $$HabitCompletionsTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<int> get id =>
+  GeneratedColumn<String> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get userId =>
+      $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<int> get habitId =>
       $composableBuilder(column: $table.habitId, builder: (column) => column);
@@ -24963,11 +31526,6 @@ class $$HabitCompletionsTableAnnotationComposer
 
   GeneratedColumn<int> get count =>
       $composableBuilder(column: $table.count, builder: (column) => column);
-
-  GeneratedColumn<String> get syncStatus => $composableBuilder(
-    column: $table.syncStatus,
-    builder: (column) => column,
-  );
 }
 
 class $$HabitCompletionsTableTableManager
@@ -25007,31 +31565,55 @@ class $$HabitCompletionsTableTableManager
               $$HabitCompletionsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
+                Value<String> id = const Value.absent(),
+                Value<String> userId = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                Value<String> idempotencyKey = const Value.absent(),
+                Value<String?> fieldVersions = const Value.absent(),
                 Value<int> habitId = const Value.absent(),
                 Value<DateTime> date = const Value.absent(),
                 Value<int> count = const Value.absent(),
-                Value<String> syncStatus = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
               }) => HabitCompletionsCompanion(
                 id: id,
+                userId: userId,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                syncStatus: syncStatus,
+                idempotencyKey: idempotencyKey,
+                fieldVersions: fieldVersions,
                 habitId: habitId,
                 date: date,
                 count: count,
-                syncStatus: syncStatus,
+                rowid: rowid,
               ),
           createCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
+                required String id,
+                required String userId,
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                required String idempotencyKey,
+                Value<String?> fieldVersions = const Value.absent(),
                 required int habitId,
                 required DateTime date,
                 required int count,
-                Value<String> syncStatus = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
               }) => HabitCompletionsCompanion.insert(
                 id: id,
+                userId: userId,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                syncStatus: syncStatus,
+                idempotencyKey: idempotencyKey,
+                fieldVersions: fieldVersions,
                 habitId: habitId,
                 date: date,
                 count: count,
-                syncStatus: syncStatus,
+                rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
@@ -25060,8 +31642,13 @@ typedef $$HabitCompletionsTableProcessedTableManager =
     >;
 typedef $$BodyMeasurementsTableCreateCompanionBuilder =
     BodyMeasurementsCompanion Function({
-      Value<int> id,
+      required String id,
       required String userId,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> syncStatus,
+      required String idempotencyKey,
+      Value<String?> fieldVersions,
       Value<double?> weightKg,
       Value<double?> heightCm,
       Value<double?> chestCm,
@@ -25072,11 +31659,17 @@ typedef $$BodyMeasurementsTableCreateCompanionBuilder =
       Value<double?> bodyFatPct,
       Value<double?> bmi,
       required DateTime measuredAt,
+      Value<int> rowid,
     });
 typedef $$BodyMeasurementsTableUpdateCompanionBuilder =
     BodyMeasurementsCompanion Function({
-      Value<int> id,
+      Value<String> id,
       Value<String> userId,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> syncStatus,
+      Value<String> idempotencyKey,
+      Value<String?> fieldVersions,
       Value<double?> weightKg,
       Value<double?> heightCm,
       Value<double?> chestCm,
@@ -25087,6 +31680,7 @@ typedef $$BodyMeasurementsTableUpdateCompanionBuilder =
       Value<double?> bodyFatPct,
       Value<double?> bmi,
       Value<DateTime> measuredAt,
+      Value<int> rowid,
     });
 
 class $$BodyMeasurementsTableFilterComposer
@@ -25098,13 +31692,38 @@ class $$BodyMeasurementsTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<int> get id => $composableBuilder(
+  ColumnFilters<String> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnFilters(column),
   );
 
   ColumnFilters<String> get userId => $composableBuilder(
     column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -25168,13 +31787,38 @@ class $$BodyMeasurementsTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<int> get id => $composableBuilder(
+  ColumnOrderings<String> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnOrderings(column),
   );
 
   ColumnOrderings<String> get userId => $composableBuilder(
     column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -25238,11 +31882,32 @@ class $$BodyMeasurementsTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<int> get id =>
+  GeneratedColumn<String> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
   GeneratedColumn<String> get userId =>
       $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<double> get weightKg =>
       $composableBuilder(column: $table.weightKg, builder: (column) => column);
@@ -25316,8 +31981,13 @@ class $$BodyMeasurementsTableTableManager
               $$BodyMeasurementsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
+                Value<String> id = const Value.absent(),
                 Value<String> userId = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                Value<String> idempotencyKey = const Value.absent(),
+                Value<String?> fieldVersions = const Value.absent(),
                 Value<double?> weightKg = const Value.absent(),
                 Value<double?> heightCm = const Value.absent(),
                 Value<double?> chestCm = const Value.absent(),
@@ -25328,9 +31998,15 @@ class $$BodyMeasurementsTableTableManager
                 Value<double?> bodyFatPct = const Value.absent(),
                 Value<double?> bmi = const Value.absent(),
                 Value<DateTime> measuredAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
               }) => BodyMeasurementsCompanion(
                 id: id,
                 userId: userId,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                syncStatus: syncStatus,
+                idempotencyKey: idempotencyKey,
+                fieldVersions: fieldVersions,
                 weightKg: weightKg,
                 heightCm: heightCm,
                 chestCm: chestCm,
@@ -25341,11 +32017,17 @@ class $$BodyMeasurementsTableTableManager
                 bodyFatPct: bodyFatPct,
                 bmi: bmi,
                 measuredAt: measuredAt,
+                rowid: rowid,
               ),
           createCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
+                required String id,
                 required String userId,
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                required String idempotencyKey,
+                Value<String?> fieldVersions = const Value.absent(),
                 Value<double?> weightKg = const Value.absent(),
                 Value<double?> heightCm = const Value.absent(),
                 Value<double?> chestCm = const Value.absent(),
@@ -25356,9 +32038,15 @@ class $$BodyMeasurementsTableTableManager
                 Value<double?> bodyFatPct = const Value.absent(),
                 Value<double?> bmi = const Value.absent(),
                 required DateTime measuredAt,
+                Value<int> rowid = const Value.absent(),
               }) => BodyMeasurementsCompanion.insert(
                 id: id,
                 userId: userId,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                syncStatus: syncStatus,
+                idempotencyKey: idempotencyKey,
+                fieldVersions: fieldVersions,
                 weightKg: weightKg,
                 heightCm: heightCm,
                 chestCm: chestCm,
@@ -25369,6 +32057,7 @@ class $$BodyMeasurementsTableTableManager
                 bodyFatPct: bodyFatPct,
                 bmi: bmi,
                 measuredAt: measuredAt,
+                rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
@@ -25397,8 +32086,13 @@ typedef $$BodyMeasurementsTableProcessedTableManager =
     >;
 typedef $$FastingLogsTableCreateCompanionBuilder =
     FastingLogsCompanion Function({
-      Value<int> id,
+      required String id,
       required String userId,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> syncStatus,
+      required String idempotencyKey,
+      Value<String?> fieldVersions,
       required String protocol,
       required DateTime fastStart,
       Value<DateTime?> fastEnd,
@@ -25406,13 +32100,17 @@ typedef $$FastingLogsTableCreateCompanionBuilder =
       Value<bool> completed,
       Value<DateTime?> brokenAt,
       Value<String?> notes,
-      Value<String> syncStatus,
-      required String idempotencyKey,
+      Value<int> rowid,
     });
 typedef $$FastingLogsTableUpdateCompanionBuilder =
     FastingLogsCompanion Function({
-      Value<int> id,
+      Value<String> id,
       Value<String> userId,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> syncStatus,
+      Value<String> idempotencyKey,
+      Value<String?> fieldVersions,
       Value<String> protocol,
       Value<DateTime> fastStart,
       Value<DateTime?> fastEnd,
@@ -25420,8 +32118,7 @@ typedef $$FastingLogsTableUpdateCompanionBuilder =
       Value<bool> completed,
       Value<DateTime?> brokenAt,
       Value<String?> notes,
-      Value<String> syncStatus,
-      Value<String> idempotencyKey,
+      Value<int> rowid,
     });
 
 class $$FastingLogsTableFilterComposer
@@ -25433,13 +32130,38 @@ class $$FastingLogsTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<int> get id => $composableBuilder(
+  ColumnFilters<String> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnFilters(column),
   );
 
   ColumnFilters<String> get userId => $composableBuilder(
     column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -25477,16 +32199,6 @@ class $$FastingLogsTableFilterComposer
     column: $table.notes,
     builder: (column) => ColumnFilters(column),
   );
-
-  ColumnFilters<String> get syncStatus => $composableBuilder(
-    column: $table.syncStatus,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get idempotencyKey => $composableBuilder(
-    column: $table.idempotencyKey,
-    builder: (column) => ColumnFilters(column),
-  );
 }
 
 class $$FastingLogsTableOrderingComposer
@@ -25498,13 +32210,38 @@ class $$FastingLogsTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<int> get id => $composableBuilder(
+  ColumnOrderings<String> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnOrderings(column),
   );
 
   ColumnOrderings<String> get userId => $composableBuilder(
     column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -25542,16 +32279,6 @@ class $$FastingLogsTableOrderingComposer
     column: $table.notes,
     builder: (column) => ColumnOrderings(column),
   );
-
-  ColumnOrderings<String> get syncStatus => $composableBuilder(
-    column: $table.syncStatus,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get idempotencyKey => $composableBuilder(
-    column: $table.idempotencyKey,
-    builder: (column) => ColumnOrderings(column),
-  );
 }
 
 class $$FastingLogsTableAnnotationComposer
@@ -25563,11 +32290,32 @@ class $$FastingLogsTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<int> get id =>
+  GeneratedColumn<String> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
   GeneratedColumn<String> get userId =>
       $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<String> get protocol =>
       $composableBuilder(column: $table.protocol, builder: (column) => column);
@@ -25591,16 +32339,6 @@ class $$FastingLogsTableAnnotationComposer
 
   GeneratedColumn<String> get notes =>
       $composableBuilder(column: $table.notes, builder: (column) => column);
-
-  GeneratedColumn<String> get syncStatus => $composableBuilder(
-    column: $table.syncStatus,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get idempotencyKey => $composableBuilder(
-    column: $table.idempotencyKey,
-    builder: (column) => column,
-  );
 }
 
 class $$FastingLogsTableTableManager
@@ -25634,8 +32372,13 @@ class $$FastingLogsTableTableManager
               $$FastingLogsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
+                Value<String> id = const Value.absent(),
                 Value<String> userId = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                Value<String> idempotencyKey = const Value.absent(),
+                Value<String?> fieldVersions = const Value.absent(),
                 Value<String> protocol = const Value.absent(),
                 Value<DateTime> fastStart = const Value.absent(),
                 Value<DateTime?> fastEnd = const Value.absent(),
@@ -25643,11 +32386,15 @@ class $$FastingLogsTableTableManager
                 Value<bool> completed = const Value.absent(),
                 Value<DateTime?> brokenAt = const Value.absent(),
                 Value<String?> notes = const Value.absent(),
-                Value<String> syncStatus = const Value.absent(),
-                Value<String> idempotencyKey = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
               }) => FastingLogsCompanion(
                 id: id,
                 userId: userId,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                syncStatus: syncStatus,
+                idempotencyKey: idempotencyKey,
+                fieldVersions: fieldVersions,
                 protocol: protocol,
                 fastStart: fastStart,
                 fastEnd: fastEnd,
@@ -25655,13 +32402,17 @@ class $$FastingLogsTableTableManager
                 completed: completed,
                 brokenAt: brokenAt,
                 notes: notes,
-                syncStatus: syncStatus,
-                idempotencyKey: idempotencyKey,
+                rowid: rowid,
               ),
           createCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
+                required String id,
                 required String userId,
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                required String idempotencyKey,
+                Value<String?> fieldVersions = const Value.absent(),
                 required String protocol,
                 required DateTime fastStart,
                 Value<DateTime?> fastEnd = const Value.absent(),
@@ -25669,11 +32420,15 @@ class $$FastingLogsTableTableManager
                 Value<bool> completed = const Value.absent(),
                 Value<DateTime?> brokenAt = const Value.absent(),
                 Value<String?> notes = const Value.absent(),
-                Value<String> syncStatus = const Value.absent(),
-                required String idempotencyKey,
+                Value<int> rowid = const Value.absent(),
               }) => FastingLogsCompanion.insert(
                 id: id,
                 userId: userId,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                syncStatus: syncStatus,
+                idempotencyKey: idempotencyKey,
+                fieldVersions: fieldVersions,
                 protocol: protocol,
                 fastStart: fastStart,
                 fastEnd: fastEnd,
@@ -25681,8 +32436,7 @@ class $$FastingLogsTableTableManager
                 completed: completed,
                 brokenAt: brokenAt,
                 notes: notes,
-                syncStatus: syncStatus,
-                idempotencyKey: idempotencyKey,
+                rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
@@ -25711,23 +32465,35 @@ typedef $$FastingLogsTableProcessedTableManager =
     >;
 typedef $$MealPlansTableCreateCompanionBuilder =
     MealPlansCompanion Function({
-      Value<int> id,
+      required String id,
       required String userId,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> syncStatus,
+      required String idempotencyKey,
+      Value<String?> fieldVersions,
       required DateTime weekStart,
       required Map<String, dynamic> planData,
       required String planType,
       Value<String?> festivalKey,
       required String generatedBy,
+      Value<int> rowid,
     });
 typedef $$MealPlansTableUpdateCompanionBuilder =
     MealPlansCompanion Function({
-      Value<int> id,
+      Value<String> id,
       Value<String> userId,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> syncStatus,
+      Value<String> idempotencyKey,
+      Value<String?> fieldVersions,
       Value<DateTime> weekStart,
       Value<Map<String, dynamic>> planData,
       Value<String> planType,
       Value<String?> festivalKey,
       Value<String> generatedBy,
+      Value<int> rowid,
     });
 
 class $$MealPlansTableFilterComposer
@@ -25739,13 +32505,38 @@ class $$MealPlansTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<int> get id => $composableBuilder(
+  ColumnFilters<String> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnFilters(column),
   );
 
   ColumnFilters<String> get userId => $composableBuilder(
     column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -25789,13 +32580,38 @@ class $$MealPlansTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<int> get id => $composableBuilder(
+  ColumnOrderings<String> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnOrderings(column),
   );
 
   ColumnOrderings<String> get userId => $composableBuilder(
     column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -25834,11 +32650,32 @@ class $$MealPlansTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<int> get id =>
+  GeneratedColumn<String> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
   GeneratedColumn<String> get userId =>
       $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<DateTime> get weekStart =>
       $composableBuilder(column: $table.weekStart, builder: (column) => column);
@@ -25888,39 +32725,63 @@ class $$MealPlansTableTableManager
               $$MealPlansTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
+                Value<String> id = const Value.absent(),
                 Value<String> userId = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                Value<String> idempotencyKey = const Value.absent(),
+                Value<String?> fieldVersions = const Value.absent(),
                 Value<DateTime> weekStart = const Value.absent(),
                 Value<Map<String, dynamic>> planData = const Value.absent(),
                 Value<String> planType = const Value.absent(),
                 Value<String?> festivalKey = const Value.absent(),
                 Value<String> generatedBy = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
               }) => MealPlansCompanion(
                 id: id,
                 userId: userId,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                syncStatus: syncStatus,
+                idempotencyKey: idempotencyKey,
+                fieldVersions: fieldVersions,
                 weekStart: weekStart,
                 planData: planData,
                 planType: planType,
                 festivalKey: festivalKey,
                 generatedBy: generatedBy,
+                rowid: rowid,
               ),
           createCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
+                required String id,
                 required String userId,
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                required String idempotencyKey,
+                Value<String?> fieldVersions = const Value.absent(),
                 required DateTime weekStart,
                 required Map<String, dynamic> planData,
                 required String planType,
                 Value<String?> festivalKey = const Value.absent(),
                 required String generatedBy,
+                Value<int> rowid = const Value.absent(),
               }) => MealPlansCompanion.insert(
                 id: id,
                 userId: userId,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                syncStatus: syncStatus,
+                idempotencyKey: idempotencyKey,
+                fieldVersions: fieldVersions,
                 weekStart: weekStart,
                 planData: planData,
                 planType: planType,
                 festivalKey: festivalKey,
                 generatedBy: generatedBy,
+                rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
@@ -25946,8 +32807,13 @@ typedef $$MealPlansTableProcessedTableManager =
     >;
 typedef $$RecipesTableCreateCompanionBuilder =
     RecipesCompanion Function({
-      Value<int> id,
+      required String id,
       required String userId,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> syncStatus,
+      required String idempotencyKey,
+      Value<String?> fieldVersions,
       required String title,
       Value<String?> description,
       required Map<String, dynamic> ingredients,
@@ -25963,11 +32829,17 @@ typedef $$RecipesTableCreateCompanionBuilder =
       Value<double?> b12Mcg,
       Value<String?> cuisineRegion,
       Value<bool> isPublic,
+      Value<int> rowid,
     });
 typedef $$RecipesTableUpdateCompanionBuilder =
     RecipesCompanion Function({
-      Value<int> id,
+      Value<String> id,
       Value<String> userId,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> syncStatus,
+      Value<String> idempotencyKey,
+      Value<String?> fieldVersions,
       Value<String> title,
       Value<String?> description,
       Value<Map<String, dynamic>> ingredients,
@@ -25983,6 +32855,7 @@ typedef $$RecipesTableUpdateCompanionBuilder =
       Value<double?> b12Mcg,
       Value<String?> cuisineRegion,
       Value<bool> isPublic,
+      Value<int> rowid,
     });
 
 class $$RecipesTableFilterComposer
@@ -25994,13 +32867,38 @@ class $$RecipesTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<int> get id => $composableBuilder(
+  ColumnFilters<String> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnFilters(column),
   );
 
   ColumnFilters<String> get userId => $composableBuilder(
     column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -26099,13 +32997,38 @@ class $$RecipesTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<int> get id => $composableBuilder(
+  ColumnOrderings<String> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnOrderings(column),
   );
 
   ColumnOrderings<String> get userId => $composableBuilder(
     column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -26194,11 +33117,32 @@ class $$RecipesTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<int> get id =>
+  GeneratedColumn<String> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
   GeneratedColumn<String> get userId =>
       $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<String> get title =>
       $composableBuilder(column: $table.title, builder: (column) => column);
@@ -26285,8 +33229,13 @@ class $$RecipesTableTableManager
               $$RecipesTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
+                Value<String> id = const Value.absent(),
                 Value<String> userId = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                Value<String> idempotencyKey = const Value.absent(),
+                Value<String?> fieldVersions = const Value.absent(),
                 Value<String> title = const Value.absent(),
                 Value<String?> description = const Value.absent(),
                 Value<Map<String, dynamic>> ingredients = const Value.absent(),
@@ -26302,9 +33251,15 @@ class $$RecipesTableTableManager
                 Value<double?> b12Mcg = const Value.absent(),
                 Value<String?> cuisineRegion = const Value.absent(),
                 Value<bool> isPublic = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
               }) => RecipesCompanion(
                 id: id,
                 userId: userId,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                syncStatus: syncStatus,
+                idempotencyKey: idempotencyKey,
+                fieldVersions: fieldVersions,
                 title: title,
                 description: description,
                 ingredients: ingredients,
@@ -26320,11 +33275,17 @@ class $$RecipesTableTableManager
                 b12Mcg: b12Mcg,
                 cuisineRegion: cuisineRegion,
                 isPublic: isPublic,
+                rowid: rowid,
               ),
           createCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
+                required String id,
                 required String userId,
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                required String idempotencyKey,
+                Value<String?> fieldVersions = const Value.absent(),
                 required String title,
                 Value<String?> description = const Value.absent(),
                 required Map<String, dynamic> ingredients,
@@ -26340,9 +33301,15 @@ class $$RecipesTableTableManager
                 Value<double?> b12Mcg = const Value.absent(),
                 Value<String?> cuisineRegion = const Value.absent(),
                 Value<bool> isPublic = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
               }) => RecipesCompanion.insert(
                 id: id,
                 userId: userId,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                syncStatus: syncStatus,
+                idempotencyKey: idempotencyKey,
+                fieldVersions: fieldVersions,
                 title: title,
                 description: description,
                 ingredients: ingredients,
@@ -26358,6 +33325,7 @@ class $$RecipesTableTableManager
                 b12Mcg: b12Mcg,
                 cuisineRegion: cuisineRegion,
                 isPublic: isPublic,
+                rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
@@ -26383,21 +33351,33 @@ typedef $$RecipesTableProcessedTableManager =
     >;
 typedef $$PersonalRecordsTableCreateCompanionBuilder =
     PersonalRecordsCompanion Function({
-      Value<int> id,
+      required String id,
       required String userId,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> syncStatus,
+      required String idempotencyKey,
+      Value<String?> fieldVersions,
       required String exerciseName,
       required double recordValue,
       required String unit,
       required DateTime achievedAt,
+      Value<int> rowid,
     });
 typedef $$PersonalRecordsTableUpdateCompanionBuilder =
     PersonalRecordsCompanion Function({
-      Value<int> id,
+      Value<String> id,
       Value<String> userId,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> syncStatus,
+      Value<String> idempotencyKey,
+      Value<String?> fieldVersions,
       Value<String> exerciseName,
       Value<double> recordValue,
       Value<String> unit,
       Value<DateTime> achievedAt,
+      Value<int> rowid,
     });
 
 class $$PersonalRecordsTableFilterComposer
@@ -26409,13 +33389,38 @@ class $$PersonalRecordsTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<int> get id => $composableBuilder(
+  ColumnFilters<String> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnFilters(column),
   );
 
   ColumnFilters<String> get userId => $composableBuilder(
     column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -26449,13 +33454,38 @@ class $$PersonalRecordsTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<int> get id => $composableBuilder(
+  ColumnOrderings<String> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnOrderings(column),
   );
 
   ColumnOrderings<String> get userId => $composableBuilder(
     column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -26489,11 +33519,32 @@ class $$PersonalRecordsTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<int> get id =>
+  GeneratedColumn<String> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
   GeneratedColumn<String> get userId =>
       $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<String> get exerciseName => $composableBuilder(
     column: $table.exerciseName,
@@ -26551,35 +33602,59 @@ class $$PersonalRecordsTableTableManager
               $$PersonalRecordsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
+                Value<String> id = const Value.absent(),
                 Value<String> userId = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                Value<String> idempotencyKey = const Value.absent(),
+                Value<String?> fieldVersions = const Value.absent(),
                 Value<String> exerciseName = const Value.absent(),
                 Value<double> recordValue = const Value.absent(),
                 Value<String> unit = const Value.absent(),
                 Value<DateTime> achievedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
               }) => PersonalRecordsCompanion(
                 id: id,
                 userId: userId,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                syncStatus: syncStatus,
+                idempotencyKey: idempotencyKey,
+                fieldVersions: fieldVersions,
                 exerciseName: exerciseName,
                 recordValue: recordValue,
                 unit: unit,
                 achievedAt: achievedAt,
+                rowid: rowid,
               ),
           createCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
+                required String id,
                 required String userId,
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                required String idempotencyKey,
+                Value<String?> fieldVersions = const Value.absent(),
                 required String exerciseName,
                 required double recordValue,
                 required String unit,
                 required DateTime achievedAt,
+                Value<int> rowid = const Value.absent(),
               }) => PersonalRecordsCompanion.insert(
                 id: id,
                 userId: userId,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                syncStatus: syncStatus,
+                idempotencyKey: idempotencyKey,
+                fieldVersions: fieldVersions,
                 exerciseName: exerciseName,
                 recordValue: recordValue,
                 unit: unit,
                 achievedAt: achievedAt,
+                rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
@@ -26608,8 +33683,13 @@ typedef $$PersonalRecordsTableProcessedTableManager =
     >;
 typedef $$NutritionGoalsTableCreateCompanionBuilder =
     NutritionGoalsCompanion Function({
-      Value<int> id,
+      required String id,
       required String userId,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> syncStatus,
+      required String idempotencyKey,
+      Value<String?> fieldVersions,
       required double tdee,
       required double calorieGoal,
       required double proteinG,
@@ -26620,11 +33700,17 @@ typedef $$NutritionGoalsTableCreateCompanionBuilder =
       Value<double?> b12Mcg,
       Value<double?> ironMg,
       Value<double?> calciumMg,
+      Value<int> rowid,
     });
 typedef $$NutritionGoalsTableUpdateCompanionBuilder =
     NutritionGoalsCompanion Function({
-      Value<int> id,
+      Value<String> id,
       Value<String> userId,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> syncStatus,
+      Value<String> idempotencyKey,
+      Value<String?> fieldVersions,
       Value<double> tdee,
       Value<double> calorieGoal,
       Value<double> proteinG,
@@ -26635,6 +33721,7 @@ typedef $$NutritionGoalsTableUpdateCompanionBuilder =
       Value<double?> b12Mcg,
       Value<double?> ironMg,
       Value<double?> calciumMg,
+      Value<int> rowid,
     });
 
 class $$NutritionGoalsTableFilterComposer
@@ -26646,13 +33733,38 @@ class $$NutritionGoalsTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<int> get id => $composableBuilder(
+  ColumnFilters<String> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnFilters(column),
   );
 
   ColumnFilters<String> get userId => $composableBuilder(
     column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -26716,13 +33828,38 @@ class $$NutritionGoalsTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<int> get id => $composableBuilder(
+  ColumnOrderings<String> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnOrderings(column),
   );
 
   ColumnOrderings<String> get userId => $composableBuilder(
     column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -26786,11 +33923,32 @@ class $$NutritionGoalsTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<int> get id =>
+  GeneratedColumn<String> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
   GeneratedColumn<String> get userId =>
       $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<double> get tdee =>
       $composableBuilder(column: $table.tdee, builder: (column) => column);
@@ -26858,8 +34016,13 @@ class $$NutritionGoalsTableTableManager
               $$NutritionGoalsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
+                Value<String> id = const Value.absent(),
                 Value<String> userId = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                Value<String> idempotencyKey = const Value.absent(),
+                Value<String?> fieldVersions = const Value.absent(),
                 Value<double> tdee = const Value.absent(),
                 Value<double> calorieGoal = const Value.absent(),
                 Value<double> proteinG = const Value.absent(),
@@ -26870,9 +34033,15 @@ class $$NutritionGoalsTableTableManager
                 Value<double?> b12Mcg = const Value.absent(),
                 Value<double?> ironMg = const Value.absent(),
                 Value<double?> calciumMg = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
               }) => NutritionGoalsCompanion(
                 id: id,
                 userId: userId,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                syncStatus: syncStatus,
+                idempotencyKey: idempotencyKey,
+                fieldVersions: fieldVersions,
                 tdee: tdee,
                 calorieGoal: calorieGoal,
                 proteinG: proteinG,
@@ -26883,11 +34052,17 @@ class $$NutritionGoalsTableTableManager
                 b12Mcg: b12Mcg,
                 ironMg: ironMg,
                 calciumMg: calciumMg,
+                rowid: rowid,
               ),
           createCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
+                required String id,
                 required String userId,
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                required String idempotencyKey,
+                Value<String?> fieldVersions = const Value.absent(),
                 required double tdee,
                 required double calorieGoal,
                 required double proteinG,
@@ -26898,9 +34073,15 @@ class $$NutritionGoalsTableTableManager
                 Value<double?> b12Mcg = const Value.absent(),
                 Value<double?> ironMg = const Value.absent(),
                 Value<double?> calciumMg = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
               }) => NutritionGoalsCompanion.insert(
                 id: id,
                 userId: userId,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                syncStatus: syncStatus,
+                idempotencyKey: idempotencyKey,
+                fieldVersions: fieldVersions,
                 tdee: tdee,
                 calorieGoal: calorieGoal,
                 proteinG: proteinG,
@@ -26911,6 +34092,7 @@ class $$NutritionGoalsTableTableManager
                 b12Mcg: b12Mcg,
                 ironMg: ironMg,
                 calciumMg: calciumMg,
+                rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
@@ -26939,23 +34121,33 @@ typedef $$NutritionGoalsTableProcessedTableManager =
     >;
 typedef $$KarmaTransactionsTableCreateCompanionBuilder =
     KarmaTransactionsCompanion Function({
-      Value<int> id,
+      required String id,
       required String userId,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> syncStatus,
+      required String idempotencyKey,
+      Value<String?> fieldVersions,
       required int amount,
       required String action,
       Value<String?> description,
       required int balanceAfter,
-      required DateTime createdAt,
+      Value<int> rowid,
     });
 typedef $$KarmaTransactionsTableUpdateCompanionBuilder =
     KarmaTransactionsCompanion Function({
-      Value<int> id,
+      Value<String> id,
       Value<String> userId,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> syncStatus,
+      Value<String> idempotencyKey,
+      Value<String?> fieldVersions,
       Value<int> amount,
       Value<String> action,
       Value<String?> description,
       Value<int> balanceAfter,
-      Value<DateTime> createdAt,
+      Value<int> rowid,
     });
 
 class $$KarmaTransactionsTableFilterComposer
@@ -26967,13 +34159,38 @@ class $$KarmaTransactionsTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<int> get id => $composableBuilder(
+  ColumnFilters<String> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnFilters(column),
   );
 
   ColumnFilters<String> get userId => $composableBuilder(
     column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -26996,11 +34213,6 @@ class $$KarmaTransactionsTableFilterComposer
     column: $table.balanceAfter,
     builder: (column) => ColumnFilters(column),
   );
-
-  ColumnFilters<DateTime> get createdAt => $composableBuilder(
-    column: $table.createdAt,
-    builder: (column) => ColumnFilters(column),
-  );
 }
 
 class $$KarmaTransactionsTableOrderingComposer
@@ -27012,13 +34224,38 @@ class $$KarmaTransactionsTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<int> get id => $composableBuilder(
+  ColumnOrderings<String> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnOrderings(column),
   );
 
   ColumnOrderings<String> get userId => $composableBuilder(
     column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -27041,11 +34278,6 @@ class $$KarmaTransactionsTableOrderingComposer
     column: $table.balanceAfter,
     builder: (column) => ColumnOrderings(column),
   );
-
-  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
-    column: $table.createdAt,
-    builder: (column) => ColumnOrderings(column),
-  );
 }
 
 class $$KarmaTransactionsTableAnnotationComposer
@@ -27057,11 +34289,32 @@ class $$KarmaTransactionsTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<int> get id =>
+  GeneratedColumn<String> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
   GeneratedColumn<String> get userId =>
       $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<int> get amount =>
       $composableBuilder(column: $table.amount, builder: (column) => column);
@@ -27078,9 +34331,6 @@ class $$KarmaTransactionsTableAnnotationComposer
     column: $table.balanceAfter,
     builder: (column) => column,
   );
-
-  GeneratedColumn<DateTime> get createdAt =>
-      $composableBuilder(column: $table.createdAt, builder: (column) => column);
 }
 
 class $$KarmaTransactionsTableTableManager
@@ -27123,39 +34373,59 @@ class $$KarmaTransactionsTableTableManager
               ),
           updateCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
+                Value<String> id = const Value.absent(),
                 Value<String> userId = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                Value<String> idempotencyKey = const Value.absent(),
+                Value<String?> fieldVersions = const Value.absent(),
                 Value<int> amount = const Value.absent(),
                 Value<String> action = const Value.absent(),
                 Value<String?> description = const Value.absent(),
                 Value<int> balanceAfter = const Value.absent(),
-                Value<DateTime> createdAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
               }) => KarmaTransactionsCompanion(
                 id: id,
                 userId: userId,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                syncStatus: syncStatus,
+                idempotencyKey: idempotencyKey,
+                fieldVersions: fieldVersions,
                 amount: amount,
                 action: action,
                 description: description,
                 balanceAfter: balanceAfter,
-                createdAt: createdAt,
+                rowid: rowid,
               ),
           createCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
+                required String id,
                 required String userId,
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                required String idempotencyKey,
+                Value<String?> fieldVersions = const Value.absent(),
                 required int amount,
                 required String action,
                 Value<String?> description = const Value.absent(),
                 required int balanceAfter,
-                required DateTime createdAt,
+                Value<int> rowid = const Value.absent(),
               }) => KarmaTransactionsCompanion.insert(
                 id: id,
                 userId: userId,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                syncStatus: syncStatus,
+                idempotencyKey: idempotencyKey,
+                fieldVersions: fieldVersions,
                 amount: amount,
                 action: action,
                 description: description,
                 balanceAfter: balanceAfter,
-                createdAt: createdAt,
+                rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
@@ -27731,8 +35001,13 @@ typedef $$SyncDeadLetterTableProcessedTableManager =
     >;
 typedef $$BloodPressureLogsTableCreateCompanionBuilder =
     BloodPressureLogsCompanion Function({
-      Value<int> id,
+      required String id,
       required String userId,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> syncStatus,
+      required String idempotencyKey,
+      Value<String?> fieldVersions,
       required String systolic,
       required String diastolic,
       Value<String?> pulse,
@@ -27740,13 +35015,17 @@ typedef $$BloodPressureLogsTableCreateCompanionBuilder =
       required String classification,
       Value<String?> notes,
       required String source,
-      Value<String> syncStatus,
-      required String idempotencyKey,
+      Value<int> rowid,
     });
 typedef $$BloodPressureLogsTableUpdateCompanionBuilder =
     BloodPressureLogsCompanion Function({
-      Value<int> id,
+      Value<String> id,
       Value<String> userId,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> syncStatus,
+      Value<String> idempotencyKey,
+      Value<String?> fieldVersions,
       Value<String> systolic,
       Value<String> diastolic,
       Value<String?> pulse,
@@ -27754,8 +35033,7 @@ typedef $$BloodPressureLogsTableUpdateCompanionBuilder =
       Value<String> classification,
       Value<String?> notes,
       Value<String> source,
-      Value<String> syncStatus,
-      Value<String> idempotencyKey,
+      Value<int> rowid,
     });
 
 class $$BloodPressureLogsTableFilterComposer
@@ -27767,13 +35045,38 @@ class $$BloodPressureLogsTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<int> get id => $composableBuilder(
+  ColumnFilters<String> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnFilters(column),
   );
 
   ColumnFilters<String> get userId => $composableBuilder(
     column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -27814,16 +35117,6 @@ class $$BloodPressureLogsTableFilterComposer
     column: $table.source,
     builder: (column) => ColumnFilters(column),
   );
-
-  ColumnFilters<String> get syncStatus => $composableBuilder(
-    column: $table.syncStatus,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get idempotencyKey => $composableBuilder(
-    column: $table.idempotencyKey,
-    builder: (column) => ColumnFilters(column),
-  );
 }
 
 class $$BloodPressureLogsTableOrderingComposer
@@ -27835,13 +35128,38 @@ class $$BloodPressureLogsTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<int> get id => $composableBuilder(
+  ColumnOrderings<String> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnOrderings(column),
   );
 
   ColumnOrderings<String> get userId => $composableBuilder(
     column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -27879,16 +35197,6 @@ class $$BloodPressureLogsTableOrderingComposer
     column: $table.source,
     builder: (column) => ColumnOrderings(column),
   );
-
-  ColumnOrderings<String> get syncStatus => $composableBuilder(
-    column: $table.syncStatus,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get idempotencyKey => $composableBuilder(
-    column: $table.idempotencyKey,
-    builder: (column) => ColumnOrderings(column),
-  );
 }
 
 class $$BloodPressureLogsTableAnnotationComposer
@@ -27900,11 +35208,32 @@ class $$BloodPressureLogsTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<int> get id =>
+  GeneratedColumn<String> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
   GeneratedColumn<String> get userId =>
       $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
+    builder: (column) => column,
+  );
 
   GeneratedColumnWithTypeConverter<String, String> get systolic =>
       $composableBuilder(column: $table.systolic, builder: (column) => column);
@@ -27928,16 +35257,6 @@ class $$BloodPressureLogsTableAnnotationComposer
 
   GeneratedColumn<String> get source =>
       $composableBuilder(column: $table.source, builder: (column) => column);
-
-  GeneratedColumn<String> get syncStatus => $composableBuilder(
-    column: $table.syncStatus,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get idempotencyKey => $composableBuilder(
-    column: $table.idempotencyKey,
-    builder: (column) => column,
-  );
 }
 
 class $$BloodPressureLogsTableTableManager
@@ -27980,8 +35299,13 @@ class $$BloodPressureLogsTableTableManager
               ),
           updateCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
+                Value<String> id = const Value.absent(),
                 Value<String> userId = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                Value<String> idempotencyKey = const Value.absent(),
+                Value<String?> fieldVersions = const Value.absent(),
                 Value<String> systolic = const Value.absent(),
                 Value<String> diastolic = const Value.absent(),
                 Value<String?> pulse = const Value.absent(),
@@ -27989,11 +35313,15 @@ class $$BloodPressureLogsTableTableManager
                 Value<String> classification = const Value.absent(),
                 Value<String?> notes = const Value.absent(),
                 Value<String> source = const Value.absent(),
-                Value<String> syncStatus = const Value.absent(),
-                Value<String> idempotencyKey = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
               }) => BloodPressureLogsCompanion(
                 id: id,
                 userId: userId,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                syncStatus: syncStatus,
+                idempotencyKey: idempotencyKey,
+                fieldVersions: fieldVersions,
                 systolic: systolic,
                 diastolic: diastolic,
                 pulse: pulse,
@@ -28001,13 +35329,17 @@ class $$BloodPressureLogsTableTableManager
                 classification: classification,
                 notes: notes,
                 source: source,
-                syncStatus: syncStatus,
-                idempotencyKey: idempotencyKey,
+                rowid: rowid,
               ),
           createCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
+                required String id,
                 required String userId,
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                required String idempotencyKey,
+                Value<String?> fieldVersions = const Value.absent(),
                 required String systolic,
                 required String diastolic,
                 Value<String?> pulse = const Value.absent(),
@@ -28015,11 +35347,15 @@ class $$BloodPressureLogsTableTableManager
                 required String classification,
                 Value<String?> notes = const Value.absent(),
                 required String source,
-                Value<String> syncStatus = const Value.absent(),
-                required String idempotencyKey,
+                Value<int> rowid = const Value.absent(),
               }) => BloodPressureLogsCompanion.insert(
                 id: id,
                 userId: userId,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                syncStatus: syncStatus,
+                idempotencyKey: idempotencyKey,
+                fieldVersions: fieldVersions,
                 systolic: systolic,
                 diastolic: diastolic,
                 pulse: pulse,
@@ -28027,8 +35363,7 @@ class $$BloodPressureLogsTableTableManager
                 classification: classification,
                 notes: notes,
                 source: source,
-                syncStatus: syncStatus,
-                idempotencyKey: idempotencyKey,
+                rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
@@ -28061,8 +35396,13 @@ typedef $$BloodPressureLogsTableProcessedTableManager =
     >;
 typedef $$GlucoseLogsTableCreateCompanionBuilder =
     GlucoseLogsCompanion Function({
-      Value<int> id,
+      required String id,
       required String userId,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> syncStatus,
+      required String idempotencyKey,
+      Value<String?> fieldVersions,
       required String glucoseMgdl,
       required String readingType,
       Value<String?> foodLogId,
@@ -28071,13 +35411,17 @@ typedef $$GlucoseLogsTableCreateCompanionBuilder =
       Value<String?> hba1cEstimate,
       Value<String?> notes,
       required String source,
-      Value<String> syncStatus,
-      required String idempotencyKey,
+      Value<int> rowid,
     });
 typedef $$GlucoseLogsTableUpdateCompanionBuilder =
     GlucoseLogsCompanion Function({
-      Value<int> id,
+      Value<String> id,
       Value<String> userId,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> syncStatus,
+      Value<String> idempotencyKey,
+      Value<String?> fieldVersions,
       Value<String> glucoseMgdl,
       Value<String> readingType,
       Value<String?> foodLogId,
@@ -28086,8 +35430,7 @@ typedef $$GlucoseLogsTableUpdateCompanionBuilder =
       Value<String?> hba1cEstimate,
       Value<String?> notes,
       Value<String> source,
-      Value<String> syncStatus,
-      Value<String> idempotencyKey,
+      Value<int> rowid,
     });
 
 class $$GlucoseLogsTableFilterComposer
@@ -28099,13 +35442,38 @@ class $$GlucoseLogsTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<int> get id => $composableBuilder(
+  ColumnFilters<String> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnFilters(column),
   );
 
   ColumnFilters<String> get userId => $composableBuilder(
     column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -28150,16 +35518,6 @@ class $$GlucoseLogsTableFilterComposer
     column: $table.source,
     builder: (column) => ColumnFilters(column),
   );
-
-  ColumnFilters<String> get syncStatus => $composableBuilder(
-    column: $table.syncStatus,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get idempotencyKey => $composableBuilder(
-    column: $table.idempotencyKey,
-    builder: (column) => ColumnFilters(column),
-  );
 }
 
 class $$GlucoseLogsTableOrderingComposer
@@ -28171,13 +35529,38 @@ class $$GlucoseLogsTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<int> get id => $composableBuilder(
+  ColumnOrderings<String> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnOrderings(column),
   );
 
   ColumnOrderings<String> get userId => $composableBuilder(
     column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -28220,16 +35603,6 @@ class $$GlucoseLogsTableOrderingComposer
     column: $table.source,
     builder: (column) => ColumnOrderings(column),
   );
-
-  ColumnOrderings<String> get syncStatus => $composableBuilder(
-    column: $table.syncStatus,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get idempotencyKey => $composableBuilder(
-    column: $table.idempotencyKey,
-    builder: (column) => ColumnOrderings(column),
-  );
 }
 
 class $$GlucoseLogsTableAnnotationComposer
@@ -28241,11 +35614,32 @@ class $$GlucoseLogsTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<int> get id =>
+  GeneratedColumn<String> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
   GeneratedColumn<String> get userId =>
       $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
+    builder: (column) => column,
+  );
 
   GeneratedColumnWithTypeConverter<String, String> get glucoseMgdl =>
       $composableBuilder(
@@ -28280,16 +35674,6 @@ class $$GlucoseLogsTableAnnotationComposer
 
   GeneratedColumn<String> get source =>
       $composableBuilder(column: $table.source, builder: (column) => column);
-
-  GeneratedColumn<String> get syncStatus => $composableBuilder(
-    column: $table.syncStatus,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get idempotencyKey => $composableBuilder(
-    column: $table.idempotencyKey,
-    builder: (column) => column,
-  );
 }
 
 class $$GlucoseLogsTableTableManager
@@ -28323,8 +35707,13 @@ class $$GlucoseLogsTableTableManager
               $$GlucoseLogsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
+                Value<String> id = const Value.absent(),
                 Value<String> userId = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                Value<String> idempotencyKey = const Value.absent(),
+                Value<String?> fieldVersions = const Value.absent(),
                 Value<String> glucoseMgdl = const Value.absent(),
                 Value<String> readingType = const Value.absent(),
                 Value<String?> foodLogId = const Value.absent(),
@@ -28333,11 +35722,15 @@ class $$GlucoseLogsTableTableManager
                 Value<String?> hba1cEstimate = const Value.absent(),
                 Value<String?> notes = const Value.absent(),
                 Value<String> source = const Value.absent(),
-                Value<String> syncStatus = const Value.absent(),
-                Value<String> idempotencyKey = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
               }) => GlucoseLogsCompanion(
                 id: id,
                 userId: userId,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                syncStatus: syncStatus,
+                idempotencyKey: idempotencyKey,
+                fieldVersions: fieldVersions,
                 glucoseMgdl: glucoseMgdl,
                 readingType: readingType,
                 foodLogId: foodLogId,
@@ -28346,13 +35739,17 @@ class $$GlucoseLogsTableTableManager
                 hba1cEstimate: hba1cEstimate,
                 notes: notes,
                 source: source,
-                syncStatus: syncStatus,
-                idempotencyKey: idempotencyKey,
+                rowid: rowid,
               ),
           createCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
+                required String id,
                 required String userId,
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                required String idempotencyKey,
+                Value<String?> fieldVersions = const Value.absent(),
                 required String glucoseMgdl,
                 required String readingType,
                 Value<String?> foodLogId = const Value.absent(),
@@ -28361,11 +35758,15 @@ class $$GlucoseLogsTableTableManager
                 Value<String?> hba1cEstimate = const Value.absent(),
                 Value<String?> notes = const Value.absent(),
                 required String source,
-                Value<String> syncStatus = const Value.absent(),
-                required String idempotencyKey,
+                Value<int> rowid = const Value.absent(),
               }) => GlucoseLogsCompanion.insert(
                 id: id,
                 userId: userId,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                syncStatus: syncStatus,
+                idempotencyKey: idempotencyKey,
+                fieldVersions: fieldVersions,
                 glucoseMgdl: glucoseMgdl,
                 readingType: readingType,
                 foodLogId: foodLogId,
@@ -28374,8 +35775,7 @@ class $$GlucoseLogsTableTableManager
                 hba1cEstimate: hba1cEstimate,
                 notes: notes,
                 source: source,
-                syncStatus: syncStatus,
-                idempotencyKey: idempotencyKey,
+                rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
@@ -28404,21 +35804,33 @@ typedef $$GlucoseLogsTableProcessedTableManager =
     >;
 typedef $$Spo2LogsTableCreateCompanionBuilder =
     Spo2LogsCompanion Function({
-      Value<int> id,
+      required String id,
       required String userId,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> syncStatus,
+      required String idempotencyKey,
+      Value<String?> fieldVersions,
       required String spo2Percent,
       Value<String?> pulse,
       required DateTime loggedAt,
       required String source,
+      Value<int> rowid,
     });
 typedef $$Spo2LogsTableUpdateCompanionBuilder =
     Spo2LogsCompanion Function({
-      Value<int> id,
+      Value<String> id,
       Value<String> userId,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> syncStatus,
+      Value<String> idempotencyKey,
+      Value<String?> fieldVersions,
       Value<String> spo2Percent,
       Value<String?> pulse,
       Value<DateTime> loggedAt,
       Value<String> source,
+      Value<int> rowid,
     });
 
 class $$Spo2LogsTableFilterComposer
@@ -28430,13 +35842,38 @@ class $$Spo2LogsTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<int> get id => $composableBuilder(
+  ColumnFilters<String> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnFilters(column),
   );
 
   ColumnFilters<String> get userId => $composableBuilder(
     column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -28472,13 +35909,38 @@ class $$Spo2LogsTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<int> get id => $composableBuilder(
+  ColumnOrderings<String> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnOrderings(column),
   );
 
   ColumnOrderings<String> get userId => $composableBuilder(
     column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -28512,11 +35974,32 @@ class $$Spo2LogsTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<int> get id =>
+  GeneratedColumn<String> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
   GeneratedColumn<String> get userId =>
       $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
+    builder: (column) => column,
+  );
 
   GeneratedColumnWithTypeConverter<String, String> get spo2Percent =>
       $composableBuilder(
@@ -28562,35 +36045,59 @@ class $$Spo2LogsTableTableManager
               $$Spo2LogsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
+                Value<String> id = const Value.absent(),
                 Value<String> userId = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                Value<String> idempotencyKey = const Value.absent(),
+                Value<String?> fieldVersions = const Value.absent(),
                 Value<String> spo2Percent = const Value.absent(),
                 Value<String?> pulse = const Value.absent(),
                 Value<DateTime> loggedAt = const Value.absent(),
                 Value<String> source = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
               }) => Spo2LogsCompanion(
                 id: id,
                 userId: userId,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                syncStatus: syncStatus,
+                idempotencyKey: idempotencyKey,
+                fieldVersions: fieldVersions,
                 spo2Percent: spo2Percent,
                 pulse: pulse,
                 loggedAt: loggedAt,
                 source: source,
+                rowid: rowid,
               ),
           createCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
+                required String id,
                 required String userId,
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                required String idempotencyKey,
+                Value<String?> fieldVersions = const Value.absent(),
                 required String spo2Percent,
                 Value<String?> pulse = const Value.absent(),
                 required DateTime loggedAt,
                 required String source,
+                Value<int> rowid = const Value.absent(),
               }) => Spo2LogsCompanion.insert(
                 id: id,
                 userId: userId,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                syncStatus: syncStatus,
+                idempotencyKey: idempotencyKey,
+                fieldVersions: fieldVersions,
                 spo2Percent: spo2Percent,
                 pulse: pulse,
                 loggedAt: loggedAt,
                 source: source,
+                rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
@@ -28616,27 +36123,35 @@ typedef $$Spo2LogsTableProcessedTableManager =
     >;
 typedef $$PeriodLogsTableCreateCompanionBuilder =
     PeriodLogsCompanion Function({
-      Value<int> id,
+      required String id,
       required String userId,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> syncStatus,
+      required String idempotencyKey,
+      Value<String?> fieldVersions,
       required String cycleStartEncrypted,
       Value<String?> cycleEndEncrypted,
       Value<String?> symptomsEncrypted,
       Value<String?> flowIntensityEncrypted,
       Value<String?> notesEncrypted,
-      Value<String?> syncStatus,
-      Value<String?> idempotencyKey,
+      Value<int> rowid,
     });
 typedef $$PeriodLogsTableUpdateCompanionBuilder =
     PeriodLogsCompanion Function({
-      Value<int> id,
+      Value<String> id,
       Value<String> userId,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> syncStatus,
+      Value<String> idempotencyKey,
+      Value<String?> fieldVersions,
       Value<String> cycleStartEncrypted,
       Value<String?> cycleEndEncrypted,
       Value<String?> symptomsEncrypted,
       Value<String?> flowIntensityEncrypted,
       Value<String?> notesEncrypted,
-      Value<String?> syncStatus,
-      Value<String?> idempotencyKey,
+      Value<int> rowid,
     });
 
 class $$PeriodLogsTableFilterComposer
@@ -28648,13 +36163,38 @@ class $$PeriodLogsTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<int> get id => $composableBuilder(
+  ColumnFilters<String> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnFilters(column),
   );
 
   ColumnFilters<String> get userId => $composableBuilder(
     column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -28687,16 +36227,6 @@ class $$PeriodLogsTableFilterComposer
         column: $table.notesEncrypted,
         builder: (column) => ColumnWithTypeConverterFilters(column),
       );
-
-  ColumnFilters<String> get syncStatus => $composableBuilder(
-    column: $table.syncStatus,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get idempotencyKey => $composableBuilder(
-    column: $table.idempotencyKey,
-    builder: (column) => ColumnFilters(column),
-  );
 }
 
 class $$PeriodLogsTableOrderingComposer
@@ -28708,13 +36238,38 @@ class $$PeriodLogsTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<int> get id => $composableBuilder(
+  ColumnOrderings<String> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnOrderings(column),
   );
 
   ColumnOrderings<String> get userId => $composableBuilder(
     column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -28742,16 +36297,6 @@ class $$PeriodLogsTableOrderingComposer
     column: $table.notesEncrypted,
     builder: (column) => ColumnOrderings(column),
   );
-
-  ColumnOrderings<String> get syncStatus => $composableBuilder(
-    column: $table.syncStatus,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get idempotencyKey => $composableBuilder(
-    column: $table.idempotencyKey,
-    builder: (column) => ColumnOrderings(column),
-  );
 }
 
 class $$PeriodLogsTableAnnotationComposer
@@ -28763,11 +36308,32 @@ class $$PeriodLogsTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<int> get id =>
+  GeneratedColumn<String> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
   GeneratedColumn<String> get userId =>
       $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
+    builder: (column) => column,
+  );
 
   GeneratedColumnWithTypeConverter<String, String> get cycleStartEncrypted =>
       $composableBuilder(
@@ -28798,16 +36364,6 @@ class $$PeriodLogsTableAnnotationComposer
         column: $table.notesEncrypted,
         builder: (column) => column,
       );
-
-  GeneratedColumn<String> get syncStatus => $composableBuilder(
-    column: $table.syncStatus,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get idempotencyKey => $composableBuilder(
-    column: $table.idempotencyKey,
-    builder: (column) => column,
-  );
 }
 
 class $$PeriodLogsTableTableManager
@@ -28841,47 +36397,63 @@ class $$PeriodLogsTableTableManager
               $$PeriodLogsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
+                Value<String> id = const Value.absent(),
                 Value<String> userId = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                Value<String> idempotencyKey = const Value.absent(),
+                Value<String?> fieldVersions = const Value.absent(),
                 Value<String> cycleStartEncrypted = const Value.absent(),
                 Value<String?> cycleEndEncrypted = const Value.absent(),
                 Value<String?> symptomsEncrypted = const Value.absent(),
                 Value<String?> flowIntensityEncrypted = const Value.absent(),
                 Value<String?> notesEncrypted = const Value.absent(),
-                Value<String?> syncStatus = const Value.absent(),
-                Value<String?> idempotencyKey = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
               }) => PeriodLogsCompanion(
                 id: id,
                 userId: userId,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                syncStatus: syncStatus,
+                idempotencyKey: idempotencyKey,
+                fieldVersions: fieldVersions,
                 cycleStartEncrypted: cycleStartEncrypted,
                 cycleEndEncrypted: cycleEndEncrypted,
                 symptomsEncrypted: symptomsEncrypted,
                 flowIntensityEncrypted: flowIntensityEncrypted,
                 notesEncrypted: notesEncrypted,
-                syncStatus: syncStatus,
-                idempotencyKey: idempotencyKey,
+                rowid: rowid,
               ),
           createCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
+                required String id,
                 required String userId,
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                required String idempotencyKey,
+                Value<String?> fieldVersions = const Value.absent(),
                 required String cycleStartEncrypted,
                 Value<String?> cycleEndEncrypted = const Value.absent(),
                 Value<String?> symptomsEncrypted = const Value.absent(),
                 Value<String?> flowIntensityEncrypted = const Value.absent(),
                 Value<String?> notesEncrypted = const Value.absent(),
-                Value<String?> syncStatus = const Value.absent(),
-                Value<String?> idempotencyKey = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
               }) => PeriodLogsCompanion.insert(
                 id: id,
                 userId: userId,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                syncStatus: syncStatus,
+                idempotencyKey: idempotencyKey,
+                fieldVersions: fieldVersions,
                 cycleStartEncrypted: cycleStartEncrypted,
                 cycleEndEncrypted: cycleEndEncrypted,
                 symptomsEncrypted: symptomsEncrypted,
                 flowIntensityEncrypted: flowIntensityEncrypted,
                 notesEncrypted: notesEncrypted,
-                syncStatus: syncStatus,
-                idempotencyKey: idempotencyKey,
+                rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
@@ -28907,25 +36479,35 @@ typedef $$PeriodLogsTableProcessedTableManager =
     >;
 typedef $$JournalEntriesTableCreateCompanionBuilder =
     JournalEntriesCompanion Function({
-      Value<int> id,
+      required String id,
       required String userId,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> syncStatus,
+      required String idempotencyKey,
+      Value<String?> fieldVersions,
       required String contentEncrypted,
       Value<int?> moodScore,
       Value<String?> tags,
       Value<String?> promptUsed,
       required DateTime loggedAt,
-      Value<String?> syncStatus,
+      Value<int> rowid,
     });
 typedef $$JournalEntriesTableUpdateCompanionBuilder =
     JournalEntriesCompanion Function({
-      Value<int> id,
+      Value<String> id,
       Value<String> userId,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> syncStatus,
+      Value<String> idempotencyKey,
+      Value<String?> fieldVersions,
       Value<String> contentEncrypted,
       Value<int?> moodScore,
       Value<String?> tags,
       Value<String?> promptUsed,
       Value<DateTime> loggedAt,
-      Value<String?> syncStatus,
+      Value<int> rowid,
     });
 
 class $$JournalEntriesTableFilterComposer
@@ -28937,13 +36519,38 @@ class $$JournalEntriesTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<int> get id => $composableBuilder(
+  ColumnFilters<String> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnFilters(column),
   );
 
   ColumnFilters<String> get userId => $composableBuilder(
     column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -28972,11 +36579,6 @@ class $$JournalEntriesTableFilterComposer
     column: $table.loggedAt,
     builder: (column) => ColumnFilters(column),
   );
-
-  ColumnFilters<String> get syncStatus => $composableBuilder(
-    column: $table.syncStatus,
-    builder: (column) => ColumnFilters(column),
-  );
 }
 
 class $$JournalEntriesTableOrderingComposer
@@ -28988,13 +36590,38 @@ class $$JournalEntriesTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<int> get id => $composableBuilder(
+  ColumnOrderings<String> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnOrderings(column),
   );
 
   ColumnOrderings<String> get userId => $composableBuilder(
     column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -29022,11 +36649,6 @@ class $$JournalEntriesTableOrderingComposer
     column: $table.loggedAt,
     builder: (column) => ColumnOrderings(column),
   );
-
-  ColumnOrderings<String> get syncStatus => $composableBuilder(
-    column: $table.syncStatus,
-    builder: (column) => ColumnOrderings(column),
-  );
 }
 
 class $$JournalEntriesTableAnnotationComposer
@@ -29038,11 +36660,32 @@ class $$JournalEntriesTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<int> get id =>
+  GeneratedColumn<String> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
   GeneratedColumn<String> get userId =>
       $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
+    builder: (column) => column,
+  );
 
   GeneratedColumnWithTypeConverter<String, String> get contentEncrypted =>
       $composableBuilder(
@@ -29063,11 +36706,6 @@ class $$JournalEntriesTableAnnotationComposer
 
   GeneratedColumn<DateTime> get loggedAt =>
       $composableBuilder(column: $table.loggedAt, builder: (column) => column);
-
-  GeneratedColumn<String> get syncStatus => $composableBuilder(
-    column: $table.syncStatus,
-    builder: (column) => column,
-  );
 }
 
 class $$JournalEntriesTableTableManager
@@ -29103,43 +36741,63 @@ class $$JournalEntriesTableTableManager
               $$JournalEntriesTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
+                Value<String> id = const Value.absent(),
                 Value<String> userId = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                Value<String> idempotencyKey = const Value.absent(),
+                Value<String?> fieldVersions = const Value.absent(),
                 Value<String> contentEncrypted = const Value.absent(),
                 Value<int?> moodScore = const Value.absent(),
                 Value<String?> tags = const Value.absent(),
                 Value<String?> promptUsed = const Value.absent(),
                 Value<DateTime> loggedAt = const Value.absent(),
-                Value<String?> syncStatus = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
               }) => JournalEntriesCompanion(
                 id: id,
                 userId: userId,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                syncStatus: syncStatus,
+                idempotencyKey: idempotencyKey,
+                fieldVersions: fieldVersions,
                 contentEncrypted: contentEncrypted,
                 moodScore: moodScore,
                 tags: tags,
                 promptUsed: promptUsed,
                 loggedAt: loggedAt,
-                syncStatus: syncStatus,
+                rowid: rowid,
               ),
           createCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
+                required String id,
                 required String userId,
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                required String idempotencyKey,
+                Value<String?> fieldVersions = const Value.absent(),
                 required String contentEncrypted,
                 Value<int?> moodScore = const Value.absent(),
                 Value<String?> tags = const Value.absent(),
                 Value<String?> promptUsed = const Value.absent(),
                 required DateTime loggedAt,
-                Value<String?> syncStatus = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
               }) => JournalEntriesCompanion.insert(
                 id: id,
                 userId: userId,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                syncStatus: syncStatus,
+                idempotencyKey: idempotencyKey,
+                fieldVersions: fieldVersions,
                 contentEncrypted: contentEncrypted,
                 moodScore: moodScore,
                 tags: tags,
                 promptUsed: promptUsed,
                 loggedAt: loggedAt,
-                syncStatus: syncStatus,
+                rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
@@ -29168,23 +36826,35 @@ typedef $$JournalEntriesTableProcessedTableManager =
     >;
 typedef $$DoctorAppointmentsTableCreateCompanionBuilder =
     DoctorAppointmentsCompanion Function({
-      Value<int> id,
+      required String id,
       required String userId,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> syncStatus,
+      required String idempotencyKey,
+      Value<String?> fieldVersions,
       required String doctorNameEncrypted,
       Value<String?> specialityEncrypted,
       required String appointmentDtEncrypted,
       Value<String?> notesEncrypted,
       Value<bool> reminderSent,
+      Value<int> rowid,
     });
 typedef $$DoctorAppointmentsTableUpdateCompanionBuilder =
     DoctorAppointmentsCompanion Function({
-      Value<int> id,
+      Value<String> id,
       Value<String> userId,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> syncStatus,
+      Value<String> idempotencyKey,
+      Value<String?> fieldVersions,
       Value<String> doctorNameEncrypted,
       Value<String?> specialityEncrypted,
       Value<String> appointmentDtEncrypted,
       Value<String?> notesEncrypted,
       Value<bool> reminderSent,
+      Value<int> rowid,
     });
 
 class $$DoctorAppointmentsTableFilterComposer
@@ -29196,13 +36866,38 @@ class $$DoctorAppointmentsTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<int> get id => $composableBuilder(
+  ColumnFilters<String> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnFilters(column),
   );
 
   ColumnFilters<String> get userId => $composableBuilder(
     column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -29245,13 +36940,38 @@ class $$DoctorAppointmentsTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<int> get id => $composableBuilder(
+  ColumnOrderings<String> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnOrderings(column),
   );
 
   ColumnOrderings<String> get userId => $composableBuilder(
     column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -29290,11 +37010,32 @@ class $$DoctorAppointmentsTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<int> get id =>
+  GeneratedColumn<String> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
   GeneratedColumn<String> get userId =>
       $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
+    builder: (column) => column,
+  );
 
   GeneratedColumnWithTypeConverter<String, String> get doctorNameEncrypted =>
       $composableBuilder(
@@ -29366,39 +37107,63 @@ class $$DoctorAppointmentsTableTableManager
               ),
           updateCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
+                Value<String> id = const Value.absent(),
                 Value<String> userId = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                Value<String> idempotencyKey = const Value.absent(),
+                Value<String?> fieldVersions = const Value.absent(),
                 Value<String> doctorNameEncrypted = const Value.absent(),
                 Value<String?> specialityEncrypted = const Value.absent(),
                 Value<String> appointmentDtEncrypted = const Value.absent(),
                 Value<String?> notesEncrypted = const Value.absent(),
                 Value<bool> reminderSent = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
               }) => DoctorAppointmentsCompanion(
                 id: id,
                 userId: userId,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                syncStatus: syncStatus,
+                idempotencyKey: idempotencyKey,
+                fieldVersions: fieldVersions,
                 doctorNameEncrypted: doctorNameEncrypted,
                 specialityEncrypted: specialityEncrypted,
                 appointmentDtEncrypted: appointmentDtEncrypted,
                 notesEncrypted: notesEncrypted,
                 reminderSent: reminderSent,
+                rowid: rowid,
               ),
           createCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
+                required String id,
                 required String userId,
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                required String idempotencyKey,
+                Value<String?> fieldVersions = const Value.absent(),
                 required String doctorNameEncrypted,
                 Value<String?> specialityEncrypted = const Value.absent(),
                 required String appointmentDtEncrypted,
                 Value<String?> notesEncrypted = const Value.absent(),
                 Value<bool> reminderSent = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
               }) => DoctorAppointmentsCompanion.insert(
                 id: id,
                 userId: userId,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                syncStatus: syncStatus,
+                idempotencyKey: idempotencyKey,
+                fieldVersions: fieldVersions,
                 doctorNameEncrypted: doctorNameEncrypted,
                 specialityEncrypted: specialityEncrypted,
                 appointmentDtEncrypted: appointmentDtEncrypted,
                 notesEncrypted: notesEncrypted,
                 reminderSent: reminderSent,
+                rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
@@ -31663,6 +39428,12 @@ typedef $$InsightRatingsTableProcessedTableManager =
 typedef $$UsersTableCreateCompanionBuilder =
     UsersCompanion Function({
       required String id,
+      required String userId,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> syncStatus,
+      required String idempotencyKey,
+      Value<String?> fieldVersions,
       required String email,
       required String name,
       Value<int> karmaTotal,
@@ -31685,6 +39456,12 @@ typedef $$UsersTableCreateCompanionBuilder =
 typedef $$UsersTableUpdateCompanionBuilder =
     UsersCompanion Function({
       Value<String> id,
+      Value<String> userId,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> syncStatus,
+      Value<String> idempotencyKey,
+      Value<String?> fieldVersions,
       Value<String> email,
       Value<String> name,
       Value<int> karmaTotal,
@@ -31715,6 +39492,36 @@ class $$UsersTableFilterComposer extends Composer<_$AppDatabase, $UsersTable> {
   });
   ColumnFilters<String> get id => $composableBuilder(
     column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -31818,6 +39625,36 @@ class $$UsersTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get email => $composableBuilder(
     column: $table.email,
     builder: (column) => ColumnOrderings(column),
@@ -31915,6 +39752,30 @@ class $$UsersTableAnnotationComposer
   });
   GeneratedColumn<String> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get userId =>
+      $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<String> get email =>
       $composableBuilder(column: $table.email, builder: (column) => column);
@@ -32025,6 +39886,12 @@ class $$UsersTableTableManager
           updateCompanionCallback:
               ({
                 Value<String> id = const Value.absent(),
+                Value<String> userId = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                Value<String> idempotencyKey = const Value.absent(),
+                Value<String?> fieldVersions = const Value.absent(),
                 Value<String> email = const Value.absent(),
                 Value<String> name = const Value.absent(),
                 Value<int> karmaTotal = const Value.absent(),
@@ -32045,6 +39912,12 @@ class $$UsersTableTableManager
                 Value<int> rowid = const Value.absent(),
               }) => UsersCompanion(
                 id: id,
+                userId: userId,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                syncStatus: syncStatus,
+                idempotencyKey: idempotencyKey,
+                fieldVersions: fieldVersions,
                 email: email,
                 name: name,
                 karmaTotal: karmaTotal,
@@ -32067,6 +39940,12 @@ class $$UsersTableTableManager
           createCompanionCallback:
               ({
                 required String id,
+                required String userId,
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                required String idempotencyKey,
+                Value<String?> fieldVersions = const Value.absent(),
                 required String email,
                 required String name,
                 Value<int> karmaTotal = const Value.absent(),
@@ -32087,6 +39966,12 @@ class $$UsersTableTableManager
                 Value<int> rowid = const Value.absent(),
               }) => UsersCompanion.insert(
                 id: id,
+                userId: userId,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                syncStatus: syncStatus,
+                idempotencyKey: idempotencyKey,
+                fieldVersions: fieldVersions,
                 email: email,
                 name: name,
                 karmaTotal: karmaTotal,
@@ -32130,19 +40015,31 @@ typedef $$UsersTableProcessedTableManager =
     >;
 typedef $$HeartRateLogsTableCreateCompanionBuilder =
     HeartRateLogsCompanion Function({
-      Value<int> id,
+      required String id,
       required String userId,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> syncStatus,
+      required String idempotencyKey,
+      Value<String?> fieldVersions,
       required int bpm,
       required DateTime timestamp,
       required String source,
+      Value<int> rowid,
     });
 typedef $$HeartRateLogsTableUpdateCompanionBuilder =
     HeartRateLogsCompanion Function({
-      Value<int> id,
+      Value<String> id,
       Value<String> userId,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> syncStatus,
+      Value<String> idempotencyKey,
+      Value<String?> fieldVersions,
       Value<int> bpm,
       Value<DateTime> timestamp,
       Value<String> source,
+      Value<int> rowid,
     });
 
 class $$HeartRateLogsTableFilterComposer
@@ -32154,13 +40051,38 @@ class $$HeartRateLogsTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<int> get id => $composableBuilder(
+  ColumnFilters<String> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnFilters(column),
   );
 
   ColumnFilters<String> get userId => $composableBuilder(
     column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -32189,13 +40111,38 @@ class $$HeartRateLogsTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<int> get id => $composableBuilder(
+  ColumnOrderings<String> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnOrderings(column),
   );
 
   ColumnOrderings<String> get userId => $composableBuilder(
     column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -32224,11 +40171,32 @@ class $$HeartRateLogsTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<int> get id =>
+  GeneratedColumn<String> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
   GeneratedColumn<String> get userId =>
       $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<int> get bpm =>
       $composableBuilder(column: $table.bpm, builder: (column) => column);
@@ -32271,31 +40239,55 @@ class $$HeartRateLogsTableTableManager
               $$HeartRateLogsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
+                Value<String> id = const Value.absent(),
                 Value<String> userId = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                Value<String> idempotencyKey = const Value.absent(),
+                Value<String?> fieldVersions = const Value.absent(),
                 Value<int> bpm = const Value.absent(),
                 Value<DateTime> timestamp = const Value.absent(),
                 Value<String> source = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
               }) => HeartRateLogsCompanion(
                 id: id,
                 userId: userId,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                syncStatus: syncStatus,
+                idempotencyKey: idempotencyKey,
+                fieldVersions: fieldVersions,
                 bpm: bpm,
                 timestamp: timestamp,
                 source: source,
+                rowid: rowid,
               ),
           createCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
+                required String id,
                 required String userId,
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                required String idempotencyKey,
+                Value<String?> fieldVersions = const Value.absent(),
                 required int bpm,
                 required DateTime timestamp,
                 required String source,
+                Value<int> rowid = const Value.absent(),
               }) => HeartRateLogsCompanion.insert(
                 id: id,
                 userId: userId,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                syncStatus: syncStatus,
+                idempotencyKey: idempotencyKey,
+                fieldVersions: fieldVersions,
                 bpm: bpm,
                 timestamp: timestamp,
                 source: source,
+                rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
@@ -32324,19 +40316,31 @@ typedef $$HeartRateLogsTableProcessedTableManager =
     >;
 typedef $$AyurvedicRitualLogsTableCreateCompanionBuilder =
     AyurvedicRitualLogsCompanion Function({
-      Value<int> id,
+      required String id,
       required String userId,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> syncStatus,
+      required String idempotencyKey,
+      Value<String?> fieldVersions,
       required String ritualKey,
       required DateTime completedAt,
       required int karmaAwarded,
+      Value<int> rowid,
     });
 typedef $$AyurvedicRitualLogsTableUpdateCompanionBuilder =
     AyurvedicRitualLogsCompanion Function({
-      Value<int> id,
+      Value<String> id,
       Value<String> userId,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> syncStatus,
+      Value<String> idempotencyKey,
+      Value<String?> fieldVersions,
       Value<String> ritualKey,
       Value<DateTime> completedAt,
       Value<int> karmaAwarded,
+      Value<int> rowid,
     });
 
 class $$AyurvedicRitualLogsTableFilterComposer
@@ -32348,13 +40352,38 @@ class $$AyurvedicRitualLogsTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<int> get id => $composableBuilder(
+  ColumnFilters<String> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnFilters(column),
   );
 
   ColumnFilters<String> get userId => $composableBuilder(
     column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -32383,13 +40412,38 @@ class $$AyurvedicRitualLogsTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<int> get id => $composableBuilder(
+  ColumnOrderings<String> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnOrderings(column),
   );
 
   ColumnOrderings<String> get userId => $composableBuilder(
     column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -32418,11 +40472,32 @@ class $$AyurvedicRitualLogsTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<int> get id =>
+  GeneratedColumn<String> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
   GeneratedColumn<String> get userId =>
       $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<String> get ritualKey =>
       $composableBuilder(column: $table.ritualKey, builder: (column) => column);
@@ -32481,31 +40556,55 @@ class $$AyurvedicRitualLogsTableTableManager
               ),
           updateCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
+                Value<String> id = const Value.absent(),
                 Value<String> userId = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                Value<String> idempotencyKey = const Value.absent(),
+                Value<String?> fieldVersions = const Value.absent(),
                 Value<String> ritualKey = const Value.absent(),
                 Value<DateTime> completedAt = const Value.absent(),
                 Value<int> karmaAwarded = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
               }) => AyurvedicRitualLogsCompanion(
                 id: id,
                 userId: userId,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                syncStatus: syncStatus,
+                idempotencyKey: idempotencyKey,
+                fieldVersions: fieldVersions,
                 ritualKey: ritualKey,
                 completedAt: completedAt,
                 karmaAwarded: karmaAwarded,
+                rowid: rowid,
               ),
           createCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
+                required String id,
                 required String userId,
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                required String idempotencyKey,
+                Value<String?> fieldVersions = const Value.absent(),
                 required String ritualKey,
                 required DateTime completedAt,
                 required int karmaAwarded,
+                Value<int> rowid = const Value.absent(),
               }) => AyurvedicRitualLogsCompanion.insert(
                 id: id,
                 userId: userId,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                syncStatus: syncStatus,
+                idempotencyKey: idempotencyKey,
+                fieldVersions: fieldVersions,
                 ritualKey: ritualKey,
                 completedAt: completedAt,
                 karmaAwarded: karmaAwarded,
+                rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
@@ -32538,21 +40637,29 @@ typedef $$AyurvedicRitualLogsTableProcessedTableManager =
     >;
 typedef $$WaterLogsTableCreateCompanionBuilder =
     WaterLogsCompanion Function({
-      Value<int> id,
+      required String id,
       required String userId,
-      required int amountMl,
-      required DateTime loggedAt,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
       Value<String> syncStatus,
       required String idempotencyKey,
+      Value<String?> fieldVersions,
+      required int amountMl,
+      required DateTime loggedAt,
+      Value<int> rowid,
     });
 typedef $$WaterLogsTableUpdateCompanionBuilder =
     WaterLogsCompanion Function({
-      Value<int> id,
+      Value<String> id,
       Value<String> userId,
-      Value<int> amountMl,
-      Value<DateTime> loggedAt,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
       Value<String> syncStatus,
       Value<String> idempotencyKey,
+      Value<String?> fieldVersions,
+      Value<int> amountMl,
+      Value<DateTime> loggedAt,
+      Value<int> rowid,
     });
 
 class $$WaterLogsTableFilterComposer
@@ -32564,7 +40671,7 @@ class $$WaterLogsTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<int> get id => $composableBuilder(
+  ColumnFilters<String> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnFilters(column),
   );
@@ -32574,13 +40681,13 @@ class $$WaterLogsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<int> get amountMl => $composableBuilder(
-    column: $table.amountMl,
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<DateTime> get loggedAt => $composableBuilder(
-    column: $table.loggedAt,
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -32591,6 +40698,21 @@ class $$WaterLogsTableFilterComposer
 
   ColumnFilters<String> get idempotencyKey => $composableBuilder(
     column: $table.idempotencyKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get amountMl => $composableBuilder(
+    column: $table.amountMl,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get loggedAt => $composableBuilder(
+    column: $table.loggedAt,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -32604,7 +40726,7 @@ class $$WaterLogsTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<int> get id => $composableBuilder(
+  ColumnOrderings<String> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnOrderings(column),
   );
@@ -32614,13 +40736,13 @@ class $$WaterLogsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<int> get amountMl => $composableBuilder(
-    column: $table.amountMl,
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<DateTime> get loggedAt => $composableBuilder(
-    column: $table.loggedAt,
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -32631,6 +40753,21 @@ class $$WaterLogsTableOrderingComposer
 
   ColumnOrderings<String> get idempotencyKey => $composableBuilder(
     column: $table.idempotencyKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get amountMl => $composableBuilder(
+    column: $table.amountMl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get loggedAt => $composableBuilder(
+    column: $table.loggedAt,
     builder: (column) => ColumnOrderings(column),
   );
 }
@@ -32644,17 +40781,17 @@ class $$WaterLogsTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<int> get id =>
+  GeneratedColumn<String> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
   GeneratedColumn<String> get userId =>
       $composableBuilder(column: $table.userId, builder: (column) => column);
 
-  GeneratedColumn<int> get amountMl =>
-      $composableBuilder(column: $table.amountMl, builder: (column) => column);
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
-  GeneratedColumn<DateTime> get loggedAt =>
-      $composableBuilder(column: $table.loggedAt, builder: (column) => column);
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
 
   GeneratedColumn<String> get syncStatus => $composableBuilder(
     column: $table.syncStatus,
@@ -32665,6 +40802,17 @@ class $$WaterLogsTableAnnotationComposer
     column: $table.idempotencyKey,
     builder: (column) => column,
   );
+
+  GeneratedColumn<String> get fieldVersions => $composableBuilder(
+    column: $table.fieldVersions,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get amountMl =>
+      $composableBuilder(column: $table.amountMl, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get loggedAt =>
+      $composableBuilder(column: $table.loggedAt, builder: (column) => column);
 }
 
 class $$WaterLogsTableTableManager
@@ -32695,35 +40843,51 @@ class $$WaterLogsTableTableManager
               $$WaterLogsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
+                Value<String> id = const Value.absent(),
                 Value<String> userId = const Value.absent(),
-                Value<int> amountMl = const Value.absent(),
-                Value<DateTime> loggedAt = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
                 Value<String> syncStatus = const Value.absent(),
                 Value<String> idempotencyKey = const Value.absent(),
+                Value<String?> fieldVersions = const Value.absent(),
+                Value<int> amountMl = const Value.absent(),
+                Value<DateTime> loggedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
               }) => WaterLogsCompanion(
                 id: id,
                 userId: userId,
-                amountMl: amountMl,
-                loggedAt: loggedAt,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
                 syncStatus: syncStatus,
                 idempotencyKey: idempotencyKey,
+                fieldVersions: fieldVersions,
+                amountMl: amountMl,
+                loggedAt: loggedAt,
+                rowid: rowid,
               ),
           createCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
+                required String id,
                 required String userId,
-                required int amountMl,
-                required DateTime loggedAt,
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
                 Value<String> syncStatus = const Value.absent(),
                 required String idempotencyKey,
+                Value<String?> fieldVersions = const Value.absent(),
+                required int amountMl,
+                required DateTime loggedAt,
+                Value<int> rowid = const Value.absent(),
               }) => WaterLogsCompanion.insert(
                 id: id,
                 userId: userId,
-                amountMl: amountMl,
-                loggedAt: loggedAt,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
                 syncStatus: syncStatus,
                 idempotencyKey: idempotencyKey,
+                fieldVersions: fieldVersions,
+                amountMl: amountMl,
+                loggedAt: loggedAt,
+                rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))

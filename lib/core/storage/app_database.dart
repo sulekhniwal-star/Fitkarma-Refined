@@ -69,7 +69,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(String encryptionKey) : super(_openConnection(encryptionKey));
 
   @override
-  int get schemaVersion => 16;
+  int get schemaVersion => 17;
 
   @override
   MigrationStrategy get migration {
@@ -79,93 +79,52 @@ class AppDatabase extends _$AppDatabase {
 
         // FTS5 Setup for FoodItems
         await customStatement(
-            'CREATE VIRTUAL TABLE food_items_fts USING fts5(name, name_local, content="food_items", content_rowid="id")');
+            'CREATE VIRTUAL TABLE food_items_fts USING fts5(name, name_local, content="food_items", content_rowid="local_row_id")');
 
         // Triggers to keep FTS5 in sync
         await customStatement('''
           CREATE TRIGGER food_items_ai AFTER INSERT ON food_items BEGIN
-            INSERT INTO food_items_fts(rowid, name, name_local) VALUES (new.id, new.name, new.name_local);
+            INSERT INTO food_items_fts(rowid, name, name_local) VALUES (new.local_row_id, new.name, new.name_local);
           END;
         ''');
         await customStatement('''
           CREATE TRIGGER food_items_ad AFTER DELETE ON food_items BEGIN
-            INSERT INTO food_items_fts(food_items_fts, rowid, name, name_local) VALUES('delete', old.id, old.name, old.name_local);
+            INSERT INTO food_items_fts(food_items_fts, rowid, name, name_local) VALUES('delete', old.local_row_id, old.name, old.name_local);
           END;
         ''');
         await customStatement('''
           CREATE TRIGGER food_items_au AFTER UPDATE ON food_items BEGIN
-            INSERT INTO food_items_fts(food_items_fts, rowid, name, name_local) VALUES('delete', old.id, old.name, old.name_local);
-            INSERT INTO food_items_fts(rowid, name, name_local) VALUES (new.id, new.name, new.name_local);
+            INSERT INTO food_items_fts(food_items_fts, rowid, name, name_local) VALUES('delete', old.local_row_id, old.name, old.name_local);
+            INSERT INTO food_items_fts(rowid, name, name_local) VALUES (new.local_row_id, new.name, new.name_local);
           END;
         ''');
       },
       onUpgrade: (m, from, to) async {
-        if (from < 2) {
-          await m.addColumn(foodLogs, foodLogs.idempotencyKey);
-          await m.addColumn(foodLogs, foodLogs.fieldVersions);
-        }
-        if (from < 3) {
-          await m.addColumn(sleepLogs, sleepLogs.sleepDebtMin);
-          await m.createTable(labReports);
-        }
-        if (from < 4) {
-          await m.createTable(bloodPressureLogs);
-          await m.createTable(glucoseLogs);
-          await m.createTable(spo2Logs);
-          await m.createTable(periodLogs);
-          await m.createTable(journalEntries);
-          await m.createTable(doctorAppointments);
-        }
-        if (from < 5) {
-          await m.createTable(abhaLinks);
-          await m.createTable(emergencyCards);
-          await m.createTable(festivalCalendar);
-          await m.createTable(remoteConfigCache);
-        }
-        if (from < 6) {
-          await m.createTable(insightLogs);
-          await m.createTable(insightRatings);
-        }
-        if (from < 7) {
-          await m.createTable(users);
-        }
-        if (from < 8) {
-          // Re-create PeriodLogs because columns changed significantly
-          await m.deleteTable('period_logs');
-          await m.createTable(periodLogs);
-        }
-        if (from < 9) {
-          await m.deleteTable('abha_links');
-          await m.createTable(abhaLinks);
-        }
-        if (from < 10) {
-          await m.createTable(heartRateLogs);
-        }
-        if (from < 11) {
-          await m.deleteTable('doctor_appointments');
-          await m.createTable(doctorAppointments);
-        }
-        if (from < 12) {
-          await m.deleteTable('emergency_cards');
-          await m.createTable(emergencyCards);
-        }
-        if (from < 13) {
-          await m.addColumn(users, users.weddingRole);
-          await m.addColumn(users, users.weddingRelationType);
-          await m.addColumn(users, users.weddingStartDate);
-          await m.addColumn(users, users.weddingEndDate);
-          await m.addColumn(users, users.weddingPrepWeeks);
-          await m.addColumn(users, users.weddingEvents);
-          await m.addColumn(users, users.weddingPrimaryGoal);
-        }
-        if (from < 14) {
-          await m.createTable(ayurvedicRitualLogs);
-        }
-        if (from < 15) {
-          await m.addColumn(users, users.retainOcrText);
-        }
-        if (from < 16) {
-          await m.createTable(waterLogs);
+        if (from < 17) {
+          // Since we changed primary keys from int to text in many tables,
+          // a simple addColumn won't work. We need to recreate the tables.
+          // For development, we'll drop and recreate.
+          // WARNING: This deletes data. In production, we'd need complex migration.
+          final tablesToRecreate = [
+            foodLogs, foodItems, workoutLogs, stepLogs, sleepLogs, moodLogs,
+            medications, habits, habitCompletions, bodyMeasurements, fastingLogs,
+            mealPlans, recipes, personalRecords, nutritionGoals, karmaTransactions,
+            bloodPressureLogs, glucoseLogs, spo2Logs, periodLogs, journalEntries,
+            doctorAppointments, labReports, abhaLinks, emergencyCards,
+            festivalCalendar, remoteConfigCache, weddingEvents, insightLogs,
+            insightRatings, users, heartRateLogs, ayurvedicRitualLogs, waterLogs
+          ];
+
+          for (final table in tablesToRecreate) {
+            await m.deleteTable(table.actualTableName);
+            await m.createTable(table);
+          }
+          
+          // Recreate FTS
+          await customStatement('DROP TABLE IF EXISTS food_items_fts');
+          await customStatement(
+            'CREATE VIRTUAL TABLE food_items_fts USING fts5(name, name_local, content="food_items", content_rowid="local_row_id")'
+          );
         }
       },
     );
@@ -175,7 +134,7 @@ class AppDatabase extends _$AppDatabase {
   Future<List<FoodItem>> searchFoodFts(String query) async {
     final rows = await customSelect(
       "SELECT food_items.* FROM food_items "
-      "INNER JOIN food_items_fts ON food_items_fts.rowid = food_items.id "
+      "INNER JOIN food_items_fts ON food_items_fts.rowid = food_items.local_row_id "
       "WHERE food_items_fts MATCH '$query*' "
       "ORDER BY bm25(food_items_fts) "
       "LIMIT 50",
@@ -198,4 +157,3 @@ LazyDatabase _openConnection(String encryptionKey) {
     );
   });
 }
-
