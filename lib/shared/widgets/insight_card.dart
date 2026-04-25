@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../theme/app_colors.dart';
-import '../theme/app_text_styles.dart';
+import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_typography.dart';
 
 /// A card used to display actionable health insights to the user.
 /// 
@@ -22,8 +22,8 @@ class InsightCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final backgroundColor = isDark ? AppColorsDark.accentLight : AppColors.accentLight;
-    final textColor = isDark ? AppColorsDark.textPrimary : AppColors.textPrimary;
+    final backgroundColor = isDark ? AppColorsDark.accentMuted : AppColorsLight.accentMuted;
+    final textColor = isDark ? AppColorsDark.textPrimary : AppColorsLight.textPrimary;
 
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
@@ -60,7 +60,7 @@ class InsightCard extends StatelessWidget {
                     Expanded(
                       child: Text(
                         message,
-                        style: AppTextStyles.bodyMedium(isDark).copyWith(
+                        style: (isDark ? AppTypography.bodyMd() : AppTypography.bodyMd(color: AppColorsLight.textPrimary)).copyWith(
                           color: textColor,
                         ),
                       ),
@@ -97,7 +97,7 @@ class InsightCard extends StatelessWidget {
               onPressed: onDismiss,
               padding: EdgeInsets.zero,
               constraints: const BoxConstraints(),
-              color: isDark ? AppColorsDark.textMuted : AppColors.textMuted,
+              color: isDark ? AppColorsDark.textMuted : AppColorsLight.textMuted,
             ),
           ),
         ],

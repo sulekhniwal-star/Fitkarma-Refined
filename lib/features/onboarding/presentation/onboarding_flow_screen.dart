@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:fitkarma/core/config/app_theme.dart';
+import 'package:fitkarma/core/theme/app_theme.dart';
 import 'package:fitkarma/shared/widgets/fit_scaffold.dart';
 import 'package:fitkarma/shared/widgets/ambient_glow_blobs.dart';
 import '../domain/onboarding_providers.dart';

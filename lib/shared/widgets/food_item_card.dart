@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../theme/app_colors.dart';
-import '../theme/app_text_styles.dart';
+import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_typography.dart';
 
 /// A card displaying a food item with nutrient highlights and quick-add action.
 class FoodItemCard extends StatelessWidget {
@@ -30,7 +30,7 @@ class FoodItemCard extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
       decoration: BoxDecoration(
-        color: isDark ? AppColorsDark.surface : AppColors.surface,
+        color: isDark ? AppColorsDark.surface0 : AppColorsLight.surface0,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
@@ -49,7 +49,7 @@ class FoodItemCard extends StatelessWidget {
               width: 72,
               height: 72,
               decoration: BoxDecoration(
-                color: isDark ? AppColorsDark.divider : AppColors.divider,
+                color: isDark ? AppColorsDark.bg2 : AppColorsLight.bg2,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: ClipRRect(
@@ -73,18 +73,18 @@ class FoodItemCard extends StatelessWidget {
                 children: [
                   Text(
                     name,
-                    style: AppTextStyles.h3(isDark),
+                    style: (isDark ? AppTypography.h3() : AppTypography.h3(color: AppColorsLight.textPrimary)),
                   ),
                   if (nameHi != null)
                     Text(
                       nameHi!,
-                      style: AppTextStyles.sectionHeaderHindi(isDark),
+                      style: AppTypography.hindi(color: isDark ? AppColorsDark.textMuted : AppColorsLight.textMuted),
                     ),
                   const SizedBox(height: 4),
                   Text(
                     portionInfo,
-                    style: AppTextStyles.bodySmall(isDark).copyWith(
-                      color: isDark ? AppColorsDark.textSecondary : AppColors.textSecondary,
+                    style: (isDark ? AppTypography.bodySm() : AppTypography.bodySm(color: AppColorsLight.textMuted)).copyWith(
+                      color: isDark ? AppColorsDark.textMuted : AppColorsLight.textMuted,
                     ),
                   ),
                 ],
@@ -95,7 +95,7 @@ class FoodItemCard extends StatelessWidget {
               onPressed: onAdd,
               icon: const Icon(Icons.add, color: Colors.white, size: 20),
               style: IconButton.styleFrom(
-                backgroundColor: AppColors.primary,
+                backgroundColor: isDark ? AppColorsDark.primary : AppColorsLight.primary,
                 padding: const EdgeInsets.all(8),
               ),
             ),

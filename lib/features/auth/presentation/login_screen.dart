@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../../core/config/app_theme.dart';
+import '../../../core/theme/app_theme.dart';
 import '../../../shared/widgets/fit_scaffold.dart';
 import '../../../shared/widgets/glass_card.dart';
 import '../../../shared/widgets/ambient_glow_blobs.dart';
@@ -61,7 +61,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             content: Text(
               'Reset link sent to your email! / रीसेट लिंक आपके ईमेल पर भेज दिया गया है!',
             ),
-            backgroundColor: AppTheme.primary,
+             backgroundColor: AppColorsDark.primary,
             behavior: SnackBarBehavior.floating,
           ),
         );
@@ -75,7 +75,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: AppTheme.error,
+         backgroundColor: AppColorsDark.error,
         behavior: SnackBarBehavior.floating,
       ),
     );
@@ -84,13 +84,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authStateProvider);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return FitScaffold(
       pattern: ScaffoldPattern.immersiveHero,
       heroHeight: 300,
       heroBackground: Container(
-        decoration: const BoxDecoration(gradient: AppTheme.heroPrimary),
+         decoration: const BoxDecoration(gradient: AppGradients.heroPrimary),
         child: const AmbientGlowBlobs(),
       ),
       heroContent: Column(
@@ -100,13 +99,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           const SizedBox(height: 16),
           Text(
             'FITKARMA',
-            style: AppTheme.displayLg(
+             style: AppTypography.displayLg(
               context,
             ).copyWith(color: Colors.white, letterSpacing: 4),
           ),
           Text(
             'फिटकर्मा',
-            style: AppTheme.hindi(context).copyWith(
+             style: AppTypography.hindi(context).copyWith(
               color: Colors.white.withValues(alpha: 0.7),
               fontSize: 18,
             ),
@@ -116,39 +115,39 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Welcome back', style: AppTheme.displayMd(context)),
-          Text(
-            'पुनः आपका स्वागत है',
-            style: AppTheme.hindi(
-              context,
-            ).copyWith(color: AppTheme.textSecondary, fontSize: 16),
-          ),
+           Text('Welcome back', style: AppTypography.displayMd(context)),
+           Text(
+             'पुनः आपका स्वागत है',
+             style: AppTypography.hindi(
+               context,
+             ).copyWith(color: AppColorsDark.textSecondary, fontSize: 16),
+           ),
           const SizedBox(height: 32),
 
           GlassCard(
             child: Column(
-              children: [
-                TextField(
-                  controller: _emailController,
-                  keyboardType: TextInputType.emailAddress,
-                  style: AppTheme.bodyMd(context),
-                  decoration: InputDecoration(
-                    labelText: 'Email Address / ईमेल',
-                    labelStyle: AppTheme.labelMd(context),
-                    prefixIcon: const Icon(Icons.alternate_email, size: 20),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(AppTheme.radiusMd),
-                    ),
+               children: [
+                 TextField(
+                   controller: _emailController,
+                   keyboardType: TextInputType.emailAddress,
+                   style: AppTypography.bodyMd(context),
+                   decoration: InputDecoration(
+                     labelText: 'Email Address / ईमेल',
+                     labelStyle: AppTypography.labelMd(context),
+                     prefixIcon: const Icon(Icons.alternate_email, size: 20),
+                     border: OutlineInputBorder(
+                       borderRadius: BorderRadius.circular(AppRadius.md),
+                     ),
                   ),
                 ),
                 const SizedBox(height: 20),
                 TextField(
                   controller: _passwordController,
                   obscureText: _obscurePassword,
-                  style: AppTheme.bodyMd(context),
+                   style: AppTypography.bodyMd(context),
                   decoration: InputDecoration(
                     labelText: 'Password / पासवर्ड',
-                    labelStyle: AppTheme.labelMd(context),
+                     labelStyle: AppTypography.labelMd(context),
                     prefixIcon: const Icon(Icons.lock_outline, size: 20),
                     suffixIcon: IconButton(
                       icon: Icon(
@@ -157,12 +156,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             : Icons.visibility,
                         size: 20,
                       ),
-                      onPressed: () =>
-                          setState(() => _obscurePassword = !_obscurePassword),
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(AppTheme.radiusMd),
-                    ),
+                       onPressed: () =>
+                           setState(() => _obscurePassword = !_obscurePassword),
+                     ),
+                     border: OutlineInputBorder(
+                       borderRadius: BorderRadius.circular(AppRadius.md),
+                     ),
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -172,9 +171,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     onPressed: _handleForgotPassword,
                     child: Text(
                       'Forgot Password?',
-                      style: AppTheme.labelMd(
+                       style: AppTypography.labelMd(
                         context,
-                      ).copyWith(color: AppTheme.primary),
+                       ).copyWith(color: AppColorsDark.primary),
                     ),
                   ),
                 ),
@@ -186,11 +185,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   child: ElevatedButton(
                     onPressed: authState.isLoading ? null : _handleLogin,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppTheme.primary,
+                      backgroundColor: AppColorsDark.primary,
                       foregroundColor: Colors.white,
                       elevation: 0,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(AppTheme.radiusMd),
+                        borderRadius: BorderRadius.circular(AppRadius.md),
                       ),
                     ),
                     child: authState.isLoading
@@ -204,7 +203,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           )
                         : Text(
                             'LOGIN / लॉग इन करें',
-                            style: AppTheme.labelLg(context),
+                             style: AppTypography.labelLg(context),
                           ),
                   ),
                 ),

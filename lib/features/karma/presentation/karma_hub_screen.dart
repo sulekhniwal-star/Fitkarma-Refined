@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../shared/theme/app_colors.dart';
-import '../../../shared/theme/app_text_styles.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_typography.dart';
 import '../../../shared/widgets/challenge_card.dart';
 
 class KarmaHubScreen extends ConsumerStatefulWidget {
@@ -32,14 +32,14 @@ class _KarmaHubScreenState extends ConsumerState<KarmaHubScreen> with SingleTick
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColorsDark.background : AppColors.background,
+      backgroundColor: isDark ? AppColorsDark.bg1 : AppColorsLight.bg1,
       body: Stack(
         children: [
           // Pattern B - Hero Background
           Container(
             height: 280,
             decoration: BoxDecoration(
-              gradient: isDark ? AppColors.heroGradientDark : AppColors.heroGradient,
+              gradient: isDark ? AppGradients.heroDeep : AppGradients.heroDeepLight,
             ),
           ),
           
@@ -53,7 +53,7 @@ class _KarmaHubScreenState extends ConsumerState<KarmaHubScreen> with SingleTick
                   Container(
                     margin: const EdgeInsets.only(top: 12),
                     decoration: BoxDecoration(
-                      color: isDark ? AppColorsDark.background : AppColors.background,
+                      color: isDark ? AppColorsDark.bg1 : AppColorsLight.bg1,
                       borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
                     ),
                     padding: const EdgeInsets.symmetric(vertical: 24),
@@ -121,7 +121,7 @@ class _KarmaHero extends ConsumerWidget {
               const SizedBox(width: 12),
               Text(
                 'Level 12 Warrior',
-                style: AppTextStyles.displayMedium(true).copyWith(color: Colors.white, fontSize: 24),
+                style: AppTypography.h1(color: Colors.white).copyWith(fontSize: 24),
               ),
             ],
           ),
@@ -135,12 +135,12 @@ class _KarmaHero extends ConsumerWidget {
               const SizedBox(width: 12),
               Text(
                 '4,500',
-                style: AppTextStyles.displayLarge(true).copyWith(color: Colors.white, fontSize: 48),
+                style: AppTypography.monoXL(color: Colors.white),
               ),
               const SizedBox(width: 8),
               Text(
                 'XP',
-                style: AppTextStyles.h2(true).copyWith(color: Colors.white70),
+                style: AppTypography.h2(color: Colors.white70),
               ),
             ],
           ),
@@ -343,12 +343,12 @@ class _RitualItem extends StatelessWidget {
       decoration: BoxDecoration(
         color: isDone 
           ? (isDark ? Colors.green.withValues(alpha: 0.1) : Colors.green.shade50)
-          : (isDark ? AppColorsDark.surface : Colors.white),
+          : (isDark ? AppColorsDark.surface0 : AppColorsLight.surface0),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: isDone
             ? (isDark ? Colors.green.withValues(alpha: 0.3) : Colors.green.shade200)
-            : (isDark ? AppColorsDark.divider : AppColors.divider),
+            : (isDark ? AppColorsDark.divider : AppColorsLight.divider),
         ),
       ),
       child: Row(
@@ -364,7 +364,7 @@ class _RitualItem extends StatelessWidget {
               title, 
               style: TextStyle(
                 decoration: isDone ? TextDecoration.lineThrough : null,
-                color: isDark ? AppColorsDark.textPrimary : AppColors.textPrimary,
+                color: isDark ? AppColorsDark.textPrimary : AppColorsLight.textPrimary,
                 fontSize: 14,
               ),
             ),
@@ -373,7 +373,7 @@ class _RitualItem extends StatelessWidget {
             xp, 
             style: TextStyle(
               fontWeight: FontWeight.bold, 
-              color: AppColors.primary,
+              color: isDark ? AppColorsDark.primary : AppColorsLight.primary,
               fontSize: 12,
             ),
           ),
@@ -526,10 +526,10 @@ class _TrophyItem extends StatelessWidget {
       margin: const EdgeInsets.only(right: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isDark ? AppColorsDark.surface : Colors.white,
+        color: isDark ? AppColorsDark.surface0 : AppColorsLight.surface0,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: isLocked ? (isDark ? Colors.white10 : Colors.grey.shade200) : AppColors.primary.withValues(alpha: 0.2),
+          color: isLocked ? (isDark ? Colors.white10 : Colors.grey.shade200) : (isDark ? AppColorsDark.primary : AppColorsLight.primary).withValues(alpha: 0.2),
         ),
       ),
       child: Column(
@@ -549,7 +549,7 @@ class _TrophyItem extends StatelessWidget {
             style: TextStyle(
               fontWeight: FontWeight.bold, 
               fontSize: 13,
-              color: isDark ? AppColorsDark.textPrimary : AppColors.textPrimary,
+              color: isDark ? AppColorsDark.textPrimary : AppColorsLight.textPrimary,
             ),
             textAlign: TextAlign.center,
           ),

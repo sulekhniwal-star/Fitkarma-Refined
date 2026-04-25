@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../theme/app_colors.dart';
-import '../theme/app_text_styles.dart';
+import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_typography.dart';
 
 class HealthShareCard extends StatelessWidget {
   final String expiryLabel; // e.g. "Link expires in 7 days"
@@ -23,9 +23,9 @@ class HealthShareCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: isDark ? AppColorsDark.surface : Colors.white,
+        color: isDark ? AppColorsDark.surface0 : AppColorsLight.surface0,
         borderRadius: BorderRadius.circular(16),
-        border: isDark ? Border.all(color: AppColorsDark.divider) : null,
+        border: isDark ? Border.all(color: AppColorsDark.divider) : Border.all(color: AppColorsLight.divider),
         boxShadow: isDark
             ? null
             : [
@@ -44,27 +44,27 @@ class HealthShareCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: AppColors.teal.withValues(alpha: 0.1),
+                  color: (isDark ? AppColorsDark.teal : AppColorsLight.teal).withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(Icons.share, color: AppColors.teal, size: 20),
+                child: Icon(Icons.share, color: isDark ? AppColorsDark.teal : AppColorsLight.teal, size: 20),
               ),
               const SizedBox(width: 12),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Shareable Health Report', style: AppTextStyles.h4(isDark)),
+                  Text('Shareable Health Report', style: (isDark ? AppTypography.h4() : AppTypography.h4(color: AppColorsLight.textPrimary))),
                   const SizedBox(height: 2),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                     decoration: BoxDecoration(
-                      color: AppColors.warning.withValues(alpha: 0.1),
+                      color: (isDark ? AppColorsDark.warning : AppColorsLight.warning).withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: Text(
                       expiryLabel,
                       style: TextStyle(
-                        color: AppColors.warning,
+                        color: isDark ? AppColorsDark.warning : AppColorsLight.warning,
                         fontSize: 10,
                         fontWeight: FontWeight.bold,
                       ),
@@ -98,8 +98,8 @@ class HealthShareCard extends StatelessWidget {
                   icon: const Icon(Icons.copy, size: 18),
                   label: const Text('Copy Link'),
                   style: OutlinedButton.styleFrom(
-                    foregroundColor: isDark ? AppColorsDark.textPrimary : AppColors.textPrimary,
-                    side: BorderSide(color: isDark ? AppColorsDark.divider : AppColors.divider),
+                    foregroundColor: isDark ? AppColorsDark.textPrimary : AppColorsLight.textPrimary,
+                    side: BorderSide(color: isDark ? AppColorsDark.divider : AppColorsLight.divider),
                     padding: const EdgeInsets.symmetric(vertical: 12),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../theme/app_colors.dart';
-import '../theme/app_text_styles.dart';
+import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_typography.dart';
 
 enum LabClassification { normal, borderline, risk }
 
@@ -46,13 +46,14 @@ class _LabValueRowState extends State<LabValueRow> {
   }
 
   Color _getClassificationColor() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     switch (widget.classification) {
       case LabClassification.normal:
-        return AppColors.success;
+        return isDark ? AppColorsDark.success : AppColorsLight.success;
       case LabClassification.borderline:
-        return AppColors.warning;
+        return isDark ? AppColorsDark.warning : AppColorsLight.warning;
       case LabClassification.risk:
-        return AppColors.error;
+        return isDark ? AppColorsDark.error : AppColorsLight.error;
     }
   }
 
@@ -76,10 +77,10 @@ class _LabValueRowState extends State<LabValueRow> {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isDark ? AppColorsDark.surface : Colors.white,
+        color: isDark ? AppColorsDark.surface0 : AppColorsLight.surface0,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: _isConfirmed ? AppColors.primary.withValues(alpha: 0.5) : AppColors.divider,
+          color: _isConfirmed ? (isDark ? AppColorsDark.primary : AppColorsLight.primary).withValues(alpha: 0.5) : (isDark ? AppColorsDark.divider : AppColorsLight.divider),
           width: _isConfirmed ? 1.5 : 1,
         ),
       ),
@@ -96,11 +97,11 @@ class _LabValueRowState extends State<LabValueRow> {
                   children: [
                     Text(
                       widget.name,
-                      style: AppTextStyles.labelLarge(isDark),
+                      style: (isDark ? AppTypography.labelLg() : AppTypography.labelLg(color: AppColorsLight.textPrimary)),
                     ),
                     Text(
                       widget.hindiName,
-                      style: AppTextStyles.caption(isDark),
+                      style: (isDark ? AppTypography.caption() : AppTypography.caption(color: AppColorsLight.textMuted)),
                     ),
                   ],
                 ),
@@ -113,13 +114,13 @@ class _LabValueRowState extends State<LabValueRow> {
                     controller: _controller,
                     keyboardType: const TextInputType.numberWithOptions(decimal: true),
                     textAlign: TextAlign.center,
-                    style: AppTextStyles.bodyMedium(isDark).copyWith(fontWeight: FontWeight.bold),
+                    style: (isDark ? AppTypography.bodyMd() : AppTypography.bodyMd(color: AppColorsLight.textPrimary)).copyWith(fontWeight: FontWeight.bold),
                     decoration: InputDecoration(
                       contentPadding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(color: AppColors.primary, width: 2),
+                        borderSide: BorderSide(color: isDark ? AppColorsDark.primary : AppColorsLight.primary, width: 2),
                       ),
                     ),
                     onSubmitted: (val) {
@@ -135,18 +136,18 @@ class _LabValueRowState extends State<LabValueRow> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: AppColors.divider.withValues(alpha: 0.3),
+                    color: (isDark ? AppColorsDark.divider : AppColorsLight.divider).withValues(alpha: 0.3),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
                     _controller.text,
-                    style: AppTextStyles.labelLarge(isDark).copyWith(color: AppColors.primary),
+                    style: (isDark ? AppTypography.labelLg() : AppTypography.labelLg(color: AppColorsLight.textPrimary)).copyWith(color: isDark ? AppColorsDark.primary : AppColorsLight.primary),
                   ),
                 ),
               const SizedBox(width: 4),
               Text(
                 widget.unit,
-                style: AppTextStyles.bodySmall(isDark),
+                style: (isDark ? AppTypography.bodySm() : AppTypography.bodySm(color: AppColorsLight.textMuted)),
               ),
               const SizedBox(width: 12),
               _buildClassificationPill(classificationColor),
@@ -163,12 +164,12 @@ class _LabValueRowState extends State<LabValueRow> {
                     Icon(
                       _isEditing ? Icons.check_rounded : Icons.edit_outlined,
                       size: 16,
-                      color: AppColors.textSecondary,
+                      color: isDark ? AppColorsDark.textMuted : AppColorsLight.textMuted,
                     ),
                     const SizedBox(width: 4),
                     Text(
                       _isEditing ? 'Save' : 'Edit',
-                      style: AppTextStyles.bodySmall(isDark),
+                      style: (isDark ? AppTypography.bodySm() : AppTypography.bodySm(color: AppColorsLight.textMuted)),
                     ),
                   ],
                 ),
@@ -177,7 +178,7 @@ class _LabValueRowState extends State<LabValueRow> {
                 children: [
                   Text(
                     'Confirm Correct',
-                    style: AppTextStyles.bodySmall(isDark),
+                    style: (isDark ? AppTypography.bodySm() : AppTypography.bodySm(color: AppColorsLight.textMuted)),
                   ),
                   const SizedBox(width: 8),
                   SizedBox(
@@ -185,7 +186,7 @@ class _LabValueRowState extends State<LabValueRow> {
                     width: 24,
                     child: Checkbox(
                       value: _isConfirmed,
-                      activeColor: AppColors.primary,
+                      activeColor: isDark ? AppColorsDark.primary : AppColorsLight.primary,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                       onChanged: (val) {
                         setState(() => _isConfirmed = val ?? false);

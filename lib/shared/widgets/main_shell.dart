@@ -6,7 +6,8 @@ import 'bottom_nav_bar.dart';
 import 'side_drawer.dart';
 import 'quick_log_fab.dart';
 import 'bilingual_label.dart';
-import '../../core/config/app_theme.dart';
+import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_typography.dart';
 import '../../features/nutrition/data/water_repository.dart';
 import '../../features/auth/domain/auth_providers.dart';
 import '../../features/dashboard/domain/dashboard_providers.dart';
@@ -50,7 +51,7 @@ class MainShell extends ConsumerWidget {
       builder: (context) => Container(
         padding: const EdgeInsets.fromLTRB(24, 24, 24, 40),
         decoration: BoxDecoration(
-          color: AppTheme.surface0,
+          color: Theme.of(context).brightness == Brightness.dark ? AppColorsDark.surface0 : AppColorsLight.surface0,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
           border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
         ),
@@ -95,7 +96,7 @@ class MainShell extends ConsumerWidget {
               SnackBar(
                 content: Text('Added $label of water 💧'),
                 behavior: SnackBarBehavior.floating,
-                backgroundColor: AppTheme.primary,
+                backgroundColor: Theme.of(context).brightness == Brightness.dark ? AppColorsDark.primary : AppColorsLight.primary,
               ),
             );
           }
@@ -106,16 +107,16 @@ class MainShell extends ConsumerWidget {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: AppTheme.bg2,
+              color: Theme.of(context).brightness == Brightness.dark ? AppColorsDark.bg2 : AppColorsLight.bg2,
               shape: BoxShape.circle,
-              border: Border.all(color: AppTheme.primary.withValues(alpha: 0.2)),
+              border: Border.all(color: (Theme.of(context).brightness == Brightness.dark ? AppColorsDark.primary : AppColorsLight.primary).withValues(alpha: 0.2)),
             ),
-            child: Icon(icon, color: AppTheme.primary, size: 28),
+            child: Icon(icon, color: Theme.of(context).brightness == Brightness.dark ? AppColorsDark.primary : AppColorsLight.primary, size: 28),
           ),
           const SizedBox(height: 8),
           Text(
             label,
-            style: AppTheme.labelMd(context).copyWith(color: AppTheme.textPrimary),
+            style: (Theme.of(context).brightness == Brightness.dark ? AppTypography.labelMd() : AppTypography.labelMd(color: AppColorsLight.textPrimary)),
           ),
         ],
       ),

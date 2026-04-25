@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fitkarma/core/config/app_theme.dart';
+import 'package:fitkarma/core/theme/app_theme.dart';
 
 class OnboardingProgressIndicator extends StatelessWidget {
   final int currentStep;

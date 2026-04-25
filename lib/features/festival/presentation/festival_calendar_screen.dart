@@ -6,8 +6,7 @@ import '../../../core/storage/app_database.dart';
 import 'festival_providers.dart';
 import 'festival_filter_provider.dart';
 import '../../../shared/widgets/async_value_widget.dart';
-import '../../../shared/theme/app_colors.dart';
-import '../../../shared/theme/app_text_styles.dart';
+import '../../../core/theme/app_theme.dart';
 import '../../../shared/widgets/glass_card.dart';
 
 class FestivalCalendarScreen extends ConsumerWidget {
@@ -18,9 +17,9 @@ class FestivalCalendarScreen extends ConsumerWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     
     return Scaffold(
-      backgroundColor: isDark ? AppColorsDark.bg0 : AppColors.bg0,
+      backgroundColor: AppTheme.bg0,
       appBar: AppBar(
-        title: Text('Festival Calendar', style: AppTextStyles.h1(isDark)),
+        title: Text('Festival Calendar', style: AppTheme.h1(context)),
         elevation: 0,
         backgroundColor: Colors.transparent,
       ),
@@ -28,8 +27,8 @@ class FestivalCalendarScreen extends ConsumerWidget {
       body: Container(
         decoration: BoxDecoration(
           gradient: isDark 
-            ? LinearGradient(
-                colors: [AppColorsDark.bg0, AppColorsDark.bg1],
+            ? const LinearGradient(
+                colors: [AppTheme.bg0, AppTheme.bg1],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
               )
@@ -56,7 +55,7 @@ class FestivalCalendarScreen extends ConsumerWidget {
               const SizedBox(height: 16),
 
               // --- BENTO ROW 3: Upcoming Festivals (Main Content) ---
-              Text('Upcoming Festivals', style: AppTextStyles.h2(isDark)),
+              Text('Upcoming Festivals', style: AppTheme.h2(context)),
               const SizedBox(height: 12),
               const UpcomingFestivalsList(),
               const SizedBox(height: 24),
@@ -105,7 +104,7 @@ class FestivalHeaderBanner extends ConsumerWidget {
             bannerColor = const Color(0xFF800000);
             break;
           default:
-            bannerColor = isDark ? AppColorsDark.primary : AppColors.primary;
+            bannerColor = AppTheme.primary;
         }
 
         return GlassCard(
@@ -151,11 +150,11 @@ class FestivalHeaderBanner extends ConsumerWidget {
                                       children: [
                                         Text(
                                           festival.nameEn,
-                                          style: AppTextStyles.h1(true).copyWith(color: Colors.white),
+                                          style: AppTheme.h1(context).copyWith(color: Colors.white),
                                         ),
                                         Text(
                                           'Day 5 of 9 · Fasting Mode',
-                                          style: AppTextStyles.monoSm(true).copyWith(
+                                          style: AppTheme.monoSm(context).copyWith(
                                             color: Colors.white.withValues(alpha: 0.7),
                                             letterSpacing: 1.2,
                                           ),
@@ -180,15 +179,15 @@ class FestivalHeaderBanner extends ConsumerWidget {
                   children: [
                     Text(
                       festival.nameHi,
-                      style: AppTextStyles.sectionHeaderHindi(isDark).copyWith(
+                      style: AppTheme.hindi(context).copyWith(
                         fontSize: 18,
-                        color: isDark ? AppColorsDark.textPrimary : AppColors.textPrimary,
+                        color: AppTheme.textPrimary,
                       ),
                     ),
                     const SizedBox(height: 8),
                     Text(
                       'Phalahar diet plan is currently active for you.',
-                      style: AppTextStyles.body2(isDark),
+                      style: AppTheme.bodyMd(context),
                     ),
                     const SizedBox(height: 16),
                     Row(
@@ -237,7 +236,6 @@ class RegionFilterRow extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final currentFilter = ref.watch(festivalRegionFilterProvider);
     final regions = ['All', 'Hindu', 'Muslim', 'Sikh', 'Christian', 'Jain', 'Buddhist', 'National'];
-    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
@@ -253,12 +251,12 @@ class RegionFilterRow extends ConsumerWidget {
               onSelected: (selected) {
                 if (selected) ref.read(festivalRegionFilterProvider.notifier).setFilter(region);
               },
-              backgroundColor: isDark ? AppColorsDark.surface1 : AppColors.surface0,
-              selectedColor: isDark ? AppColorsDark.primary : AppColors.primary,
+              backgroundColor: AppTheme.surface1,
+              selectedColor: AppTheme.primary,
               labelStyle: TextStyle(
                 color: isSelected 
                   ? Colors.white 
-                  : (isDark ? AppColorsDark.textSecondary : AppColors.textSecondary),
+                  : (AppTheme.textSecondary),
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
               ),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -276,7 +274,6 @@ class UpcomingFestivalsList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final upcomingAsync = ref.watch(upcomingFestivalsProvider);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return AsyncValueWidget<List<FestivalCalendarEntry>>(
       value: upcomingAsync,
@@ -295,7 +292,7 @@ class UpcomingFestivalsList extends ConsumerWidget {
                     width: 50,
                     height: 50,
                     decoration: BoxDecoration(
-                      color: (isDark ? AppColorsDark.primary : AppColors.primary).withValues(alpha: 0.1),
+                      color: (AppTheme.primary).withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     alignment: Alignment.center,
@@ -306,10 +303,10 @@ class UpcomingFestivalsList extends ConsumerWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(f.nameEn, style: AppTextStyles.h3(isDark)),
+                        Text(f.nameEn, style: AppTheme.h3(context)),
                         Text(
                           '${f.startDate.day} ${_getMonth(f.startDate.month)} · ${f.religion.toUpperCase()}',
-                          style: AppTextStyles.body2(isDark).copyWith(fontSize: 12),
+                          style: AppTheme.bodyMd(context).copyWith(fontSize: 12),
                         ),
                       ],
                     ),
@@ -345,9 +342,9 @@ class MiniTableCalendar extends ConsumerWidget {
             padding: const EdgeInsets.all(16.0),
             child: Row(
               children: [
-                Icon(Icons.calendar_month, color: isDark ? AppColorsDark.accent : AppColors.accent),
+                Icon(Icons.calendar_month, color: AppTheme.accent),
                 const SizedBox(width: 8),
-                Text('Festival Calendar', style: AppTextStyles.h3(isDark)),
+                Text('Festival Calendar', style: AppTheme.h3(context)),
               ],
             ),
           ),
@@ -360,23 +357,23 @@ class MiniTableCalendar extends ConsumerWidget {
             headerStyle: HeaderStyle(
               formatButtonVisible: false, 
               titleCentered: true,
-              titleTextStyle: AppTextStyles.h3(isDark),
+              titleTextStyle: AppTheme.h3(context),
               leftChevronIcon: Icon(Icons.chevron_left, color: isDark ? Colors.white : Colors.black),
               rightChevronIcon: Icon(Icons.chevron_right, color: isDark ? Colors.white : Colors.black),
             ),
             calendarStyle: CalendarStyle(
               todayDecoration: BoxDecoration(
-                color: (isDark ? AppColorsDark.primary : AppColors.primary).withValues(alpha: 0.3), 
+                color: (AppTheme.primary).withValues(alpha: 0.3), 
                 shape: BoxShape.circle
               ),
-              todayTextStyle: TextStyle(color: isDark ? AppColorsDark.primary : AppColors.primary, fontWeight: FontWeight.bold),
+              todayTextStyle: TextStyle(color: AppTheme.primary, fontWeight: FontWeight.bold),
               markerDecoration: BoxDecoration(
-                color: isDark ? AppColorsDark.accent : AppColors.accent, 
+                color: AppTheme.accent, 
                 shape: BoxShape.circle
               ),
               outsideDaysVisible: false,
-              defaultTextStyle: AppTextStyles.body2(isDark),
-              weekendTextStyle: AppTextStyles.body2(isDark).copyWith(color: Colors.redAccent),
+              defaultTextStyle: AppTheme.bodyMd(context),
+              weekendTextStyle: AppTheme.bodyMd(context).copyWith(color: Colors.redAccent),
             ),
             eventLoader: (day) {
               return allFestivalsAsync.when(
@@ -402,19 +399,17 @@ class WeddingSetupCTA extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    
     return GlassCard(
       padding: EdgeInsets.zero,
-      color: (isDark ? AppColorsDark.accent : AppColors.accent).withValues(alpha: 0.1),
-      borderColor: (isDark ? AppColorsDark.accent : AppColors.accent).withValues(alpha: 0.2),
+      color: (AppTheme.accent).withValues(alpha: 0.1),
+      borderColor: (AppTheme.accent).withValues(alpha: 0.2),
       onTap: () => context.push('/wedding-planner/setup'),
       child: Container(
         padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              (isDark ? AppColorsDark.accent : AppColors.accent).withValues(alpha: 0.1),
+              (AppTheme.accent).withValues(alpha: 0.1),
               Colors.transparent,
             ],
             begin: Alignment.topLeft,
@@ -432,23 +427,23 @@ class WeddingSetupCTA extends StatelessWidget {
                 children: [
                   Text(
                     'Wedding Coming Up?',
-                    style: AppTextStyles.h2(isDark),
+                    style: AppTheme.h2(context),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     'Get a custom diet & fitness plan for your special role.',
-                    style: AppTextStyles.body2(isDark),
+                    style: AppTheme.bodyMd(context),
                   ),
                   const SizedBox(height: 16),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     decoration: BoxDecoration(
-                      color: isDark ? AppColorsDark.accent : AppColors.accent,
+                      color: AppTheme.accent,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
                       'Start Planner →',
-                      style: AppTextStyles.labelLarge(true).copyWith(color: Colors.black),
+                      style: AppTheme.labelLg(context).copyWith(color: Colors.black),
                     ),
                   ),
                 ],

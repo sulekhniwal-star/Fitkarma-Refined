@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../theme/app_colors.dart';
-import '../theme/app_text_styles.dart';
+import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_typography.dart';
 
 class EventDayCard extends StatelessWidget {
   final String title;
@@ -27,14 +27,14 @@ class EventDayCard extends StatelessWidget {
     Color energyColor;
     switch (energyDemand.toLowerCase()) {
       case 'high':
-        energyColor = AppColors.error;
+        energyColor = isDark ? AppColorsDark.error : AppColorsLight.error;
         break;
       case 'medium':
-        energyColor = AppColors.warning;
+        energyColor = isDark ? AppColorsDark.warning : AppColorsLight.warning;
         break;
       case 'low':
       default:
-        energyColor = AppColors.success;
+        energyColor = isDark ? AppColorsDark.success : AppColorsLight.success;
         break;
     }
 
@@ -44,7 +44,7 @@ class EventDayCard extends StatelessWidget {
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isDark ? AppColorsDark.surface : AppColors.surface,
+          color: isDark ? AppColorsDark.surface0 : AppColorsLight.surface0,
           borderRadius: BorderRadius.circular(12),
           border: isDark ? Border.all(color: AppColorsDark.divider) : null,
           boxShadow: isDark
@@ -67,8 +67,8 @@ class EventDayCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(title, style: AppTextStyles.h3(isDark)),
-                      Text(titleHi, style: AppTextStyles.sectionHeaderHindi(isDark)),
+                      Text(title, style: (isDark ? AppTypography.h3() : AppTypography.h3(color: AppColorsLight.textPrimary))),
+                      Text(titleHi, style: AppTypography.hindi(color: isDark ? AppColorsDark.textMuted : AppColorsLight.textMuted)),
                     ],
                   ),
                 ),
@@ -129,7 +129,7 @@ class _MealRow extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(icon, size: 16, color: isDark ? AppColorsDark.textSecondary : AppColors.textSecondary),
+        Icon(icon, size: 16, color: isDark ? AppColorsDark.textMuted : AppColorsLight.textMuted),
         const SizedBox(width: 8),
         Expanded(
           child: RichText(
@@ -137,11 +137,11 @@ class _MealRow extends StatelessWidget {
               children: [
                 TextSpan(
                   text: '$label ',
-                  style: AppTextStyles.labelMedium(isDark).copyWith(fontWeight: FontWeight.bold),
+                  style: (isDark ? AppTypography.labelMd() : AppTypography.labelMd(color: AppColorsLight.textPrimary)).copyWith(fontWeight: FontWeight.bold),
                 ),
                 TextSpan(
                   text: content,
-                  style: AppTextStyles.bodySmall(isDark),
+                  style: (isDark ? AppTypography.bodySm() : AppTypography.bodySm(color: AppColorsLight.textMuted)),
                 ),
               ],
             ),

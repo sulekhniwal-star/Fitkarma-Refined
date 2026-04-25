@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../theme/app_text_styles.dart';
+import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_typography.dart';
 
 /// A premium countdown card for wedding preparation.
 class WeddingCountdownCard extends StatelessWidget {
@@ -82,8 +83,7 @@ class WeddingCountdownCard extends StatelessWidget {
                   children: [
                     Text(
                       daysToWedding.toString(),
-                      style: AppTextStyles.displayLarge(true).copyWith(
-                        color: Colors.white,
+                      style: AppTypography.monoXL(color: Colors.white).copyWith(
                         fontSize: 64,
                         height: 1,
                       ),

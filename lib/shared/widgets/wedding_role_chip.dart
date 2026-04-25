@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import '../theme/app_colors.dart';
-import '../theme/app_text_styles.dart';
+import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_typography.dart';
+import '../../core/theme/app_typography.dart';
+import '../../core/theme/app_spacing.dart';
+import '../../core/router/transitions.dart';
 
 class WeddingRoleChip extends StatelessWidget {
   final String label;
@@ -24,21 +27,22 @@ class WeddingRoleChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return GestureDetector(
+    return CardTapAnimation(
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
+        curve: Curves.easeOutCubic,
         width: 120,
         height: 160,
         decoration: BoxDecoration(
           color: isSelected
-              ? (isDark ? AppColorsDark.primaryMuted : AppColors.primaryMuted)
-              : (isDark ? AppColorsDark.surface0 : AppColors.surface0),
-          borderRadius: BorderRadius.circular(16),
+              ? (isDark ? AppColorsDark.primaryMuted : AppColorsLight.primaryMuted)
+              : (isDark ? AppColorsDark.surface0 : AppColorsLight.surface0),
+          borderRadius: BorderRadius.circular(AppRadius.md),
           border: Border.all(
             color: isSelected
-                ? (isDark ? AppColorsDark.primary : AppColors.primary)
-                : (isDark ? AppColorsDark.divider : AppColors.divider),
+                ? (isDark ? AppColorsDark.primary : AppColorsLight.primary)
+                : (isDark ? AppColorsDark.divider : AppColorsLight.divider),
             width: isSelected ? 2 : 1,
           ),
           boxShadow: isSelected && isDark
@@ -57,7 +61,7 @@ class WeddingRoleChip extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(AppRadius.sm),
                   child: imagePath != null
                       ? Image.asset(
                           imagePath!,
@@ -79,17 +83,18 @@ class WeddingRoleChip extends StatelessWidget {
                 children: [
                   Text(
                     label,
-                    style: AppTextStyles.labelLarge(isDark).copyWith(
-                      color: isSelected ? (isDark ? AppColorsDark.primary : AppColors.primary) : null,
+                    style: (isDark ? AppTypography.labelLg() : AppTypography.labelLg(color: AppColorsLight.textPrimary)).copyWith(
+                      color: isSelected ? (isDark ? AppColorsDark.primary : AppColorsLight.primary) : null,
                       fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
                     ),
                   ),
                   Text(
                     labelHi,
-                    style: AppTextStyles.caption(isDark).copyWith(
-                      color: isSelected ? (isDark ? AppColorsDark.primary : AppColors.primary) : (isDark ? AppColorsDark.textSecondary : AppColors.textSecondary),
-                      fontSize: 10,
-                    ),
+                    style: AppTypography.hindi(
+                      color: isSelected 
+                          ? (isDark ? AppColorsDark.primary : AppColorsLight.primary) 
+                          : (isDark ? AppColorsDark.textSecondary : AppColorsLight.textSecondary)
+                    ).copyWith(fontSize: 11),
                   ),
                 ],
               ),
@@ -100,4 +105,3 @@ class WeddingRoleChip extends StatelessWidget {
     );
   }
 }
-

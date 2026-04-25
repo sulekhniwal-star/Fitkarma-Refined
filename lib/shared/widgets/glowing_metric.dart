@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../core/config/app_theme.dart';
+import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_typography.dart';
 import '../../core/config/device_tier.dart';
 
 class GlowingMetric extends ConsumerWidget {
@@ -13,7 +14,7 @@ class GlowingMetric extends ConsumerWidget {
     super.key,
     required this.value,
     this.unit,
-    this.color = AppTheme.primary,
+    this.color = AppColorsDark.primary,
     this.animate = true,
   });
 
@@ -40,8 +41,7 @@ class GlowingMetric extends ConsumerWidget {
           children: [
             Text(
               value,
-              style: AppTheme.metricXL(context).copyWith(
-                color: AppTheme.textPrimary,
+              style: AppTypography.metricXL(color: isDark ? AppColorsDark.textPrimary : AppColorsLight.textPrimary).copyWith(
                 shadows: tier.hasAmbientGlow 
                   ? [Shadow(color: color.withValues(alpha: 0.5), blurRadius: 12)] 
                   : null,
@@ -51,8 +51,7 @@ class GlowingMetric extends ConsumerWidget {
               const SizedBox(width: 4),
               Text(
                 unit!,
-                style: AppTheme.monoLg(context).copyWith(
-                  color: AppTheme.textSecondary.withValues(alpha: 0.7),
+                style: AppTypography.monoLg(color: isDark ? AppColorsDark.textMuted : AppColorsLight.textMuted).copyWith(
                 ),
               ),
             ],

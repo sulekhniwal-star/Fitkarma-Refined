@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import 'package:flutter/services.dart';
-import 'package:fitkarma/core/config/app_theme.dart';
+import 'package:fitkarma/core/theme/app_theme.dart';
 import 'package:fitkarma/shared/widgets/fit_scaffold.dart';
 import 'package:fitkarma/shared/widgets/glass_card.dart';
 import 'package:fitkarma/shared/widgets/encryption_badge.dart';

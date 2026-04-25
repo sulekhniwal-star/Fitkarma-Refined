@@ -4,7 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:go_router/go_router.dart';
 import 'dart:io';
 
-import '../../../core/config/app_theme.dart';
+import '../../../core/theme/app_theme.dart';
 import '../../../shared/theme/app_colors.dart';
 import '../../../shared/theme/app_text_styles.dart';
 import '../../../shared/widgets/fit_scaffold.dart';

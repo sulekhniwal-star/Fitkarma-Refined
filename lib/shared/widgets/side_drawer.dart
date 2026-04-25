@@ -1,8 +1,8 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../core/config/app_theme.dart';
-import '../../core/config/device_tier.dart';
+import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_typography.dart';
 import '../../features/auth/domain/auth_providers.dart';
 import 'bilingual_label.dart';
 import 'abha_link_badge.dart';
@@ -32,7 +32,7 @@ class SideDrawer extends ConsumerWidget {
             )
           else
             Container(
-              color: isDark ? AppTheme.bg1 : AppTheme.lBg1,
+              color: isDark ? AppColorsDark.bg1 : AppColorsLight.bg1,
             ),
 
           SafeArea(
@@ -88,16 +88,15 @@ class SideDrawer extends ConsumerWidget {
                     children: [
                       Text(
                         'FitKarma v2.0.0',
-                        style: TextStyle(
-                          color: isDark ? AppTheme.textMuted : AppTheme.lTextSecondary,
+                        style: (isDark ? AppTypography.caption() : AppTypography.caption(color: AppColorsLight.textMuted)).copyWith(
                           fontSize: 12,
                         ),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         'Offline Mode Active',
-                        style: TextStyle(
-                          color: AppTheme.accent.withValues(alpha: 0.7),
+                        style: (isDark ? AppTypography.caption() : AppTypography.caption(color: AppColorsLight.accent)).copyWith(
+                          color: (isDark ? AppColorsDark.accent : AppColorsLight.accent).withValues(alpha: 0.7),
                           fontSize: 10,
                           fontWeight: FontWeight.bold,
                         ),
@@ -129,13 +128,12 @@ class _DrawerHeader extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: 30,
-            backgroundColor: isDark ? AppTheme.surface1 : AppTheme.lSurface1,
+            backgroundColor: isDark ? AppColorsDark.surface1 : AppColorsLight.surface1,
             child: Text(
               user?.name.characters.first ?? 'U',
-              style: TextStyle(
+              style: (isDark ? AppTypography.h3() : AppTypography.h3(color: AppColorsLight.primary)).copyWith(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
-                color: isDark ? AppTheme.primary : AppTheme.lPrimary,
               ),
             ),
           ),
@@ -146,17 +144,11 @@ class _DrawerHeader extends StatelessWidget {
               children: [
                 Text(
                   user?.name ?? 'FitKarma User',
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: isDark ? AppTypography.h4() : AppTypography.h4(color: AppColorsLight.textPrimary),
                 ),
                 Text(
                   user?.email ?? '',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: isDark ? AppTheme.textMuted : AppTheme.lTextSecondary,
-                  ),
+                  style: (isDark ? AppTypography.caption() : AppTypography.caption(color: AppColorsLight.textMuted)),
                 ),
                 const SizedBox(height: 8),
                 ref.watch(abhaStatusProvider).when(
@@ -191,7 +183,7 @@ class _DrawerItem extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return ListTile(
-      leading: Icon(icon, color: isDark ? AppTheme.primary : AppTheme.lPrimary),
+      leading: Icon(icon, color: isDark ? AppColorsDark.primary : AppColorsLight.primary),
       title: BilingualLabel(english: english, hindi: hindi),
       onTap: onTap,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),

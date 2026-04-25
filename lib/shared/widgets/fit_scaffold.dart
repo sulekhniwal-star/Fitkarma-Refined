@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../core/config/app_theme.dart';
+import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_typography.dart';
 import 'ambient_glow_blobs.dart';
 import 'glass_app_bar.dart';
 
@@ -68,7 +69,7 @@ class FitScaffold extends ConsumerWidget {
 
   Widget _buildStandard(BuildContext context, bool isDark) {
     return Scaffold(
-      backgroundColor: isDark ? AppTheme.bg1 : AppTheme.lBg1,
+      backgroundColor: isDark ? AppColorsDark.bg1 : AppColorsLight.bg1,
       appBar: appBar ?? (title != null ? GlassAppBar(title: Text(title!), actions: actions) : null),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -83,7 +84,7 @@ class FitScaffold extends ConsumerWidget {
 
   Widget _buildImmersiveHero(BuildContext context, bool isDark) {
     return Scaffold(
-      backgroundColor: isDark ? AppTheme.bg1 : AppTheme.lBg1,
+      backgroundColor: isDark ? AppColorsDark.bg1 : AppColorsLight.bg1,
       extendBodyBehindAppBar: true,
       appBar: appBar ?? (title != null ? GlassAppBar(title: Text(title!), actions: actions) : null),
       body: Stack(
@@ -94,7 +95,7 @@ class FitScaffold extends ConsumerWidget {
             width: double.infinity,
             child: Stack(
               children: [
-                heroBackground ?? Container(decoration: const BoxDecoration(gradient: AppTheme.heroDeep)),
+                heroBackground ?? Container(decoration: BoxDecoration(gradient: isDark ? AppColorsDark.heroDeep : AppColorsLight.heroDeep)),
                 const AmbientGlowBlobs(),
                 if (heroContent != null) 
                   SafeArea(child: Center(child: heroContent!)),
@@ -107,11 +108,11 @@ class FitScaffold extends ConsumerWidget {
             top: heroHeight - 28,
             child: Container(
               decoration: BoxDecoration(
-                color: isDark ? AppTheme.bg1 : AppTheme.lBg1,
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(AppTheme.radiusXl)),
+                color: isDark ? AppColorsDark.bg1 : AppColorsLight.bg1,
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
               ),
               child: ClipRRect(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(AppTheme.radiusXl)),
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
                 child: SingleChildScrollView(
                   controller: scrollController,
                   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),

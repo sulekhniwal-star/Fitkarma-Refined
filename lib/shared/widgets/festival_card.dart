@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../theme/app_colors.dart';
-import '../theme/app_text_styles.dart';
+import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_typography.dart';
 import 'festival_diet_badge.dart';
 import 'glass_card.dart';
 
@@ -42,7 +42,7 @@ class FestivalCard extends StatelessWidget {
                 width: 48,
                 height: 48,
                 decoration: BoxDecoration(
-                  color: (isDark ? AppColorsDark.primary : AppColors.primary).withValues(alpha: 0.1),
+                  color: (isDark ? AppColorsDark.primary : AppColorsLight.primary).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 alignment: Alignment.center,
@@ -55,11 +55,11 @@ class FestivalCard extends StatelessWidget {
                   children: [
                     Text(
                       title,
-                      style: AppTextStyles.h2(isDark),
+                      style: (isDark ? AppTypography.h2() : AppTypography.h2(color: AppColorsLight.textPrimary)),
                     ),
                     Text(
                       '$titleHi · $dateRange',
-                      style: AppTextStyles.bodySmall(isDark),
+                      style: (isDark ? AppTypography.bodySm() : AppTypography.bodySm(color: AppColorsLight.textMuted)),
                     ),
                   ],
                 ),
@@ -74,13 +74,13 @@ class FestivalCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                 decoration: BoxDecoration(
-                  color: (isDark ? AppColorsDark.secondary : AppColors.secondary).withValues(alpha: 0.1),
+                  color: (isDark ? AppColorsDark.secondary : AppColorsLight.secondary).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
                   region,
-                  style: AppTextStyles.labelMedium(isDark).copyWith(
-                    color: isDark ? AppColorsDark.secondary : AppColors.secondary,
+                  style: (isDark ? AppTypography.labelMd() : AppTypography.labelMd(color: AppColorsLight.textPrimary)).copyWith(
+                    color: isDark ? AppColorsDark.secondary : AppColorsLight.secondary,
                   ),
                 ),
               ),
@@ -93,8 +93,8 @@ class FestivalCard extends StatelessWidget {
                 child: OutlinedButton(
                   onPressed: onSetReminder,
                   style: OutlinedButton.styleFrom(
-                    foregroundColor: isDark ? AppColorsDark.textPrimary : AppColors.textPrimary,
-                    side: BorderSide(color: isDark ? AppColorsDark.divider : AppColors.divider),
+                    foregroundColor: isDark ? AppColorsDark.textPrimary : AppColorsLight.textPrimary,
+                    side: BorderSide(color: isDark ? AppColorsDark.divider : AppColorsLight.divider),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
                   child: const Text('Set Reminder'),
@@ -105,7 +105,7 @@ class FestivalCard extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: onViewDietPlan,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: isDark ? AppColorsDark.primary : AppColors.primary,
+                    backgroundColor: isDark ? AppColorsDark.primary : AppColorsLight.primary,
                     foregroundColor: Colors.white,
                     elevation: 0,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),

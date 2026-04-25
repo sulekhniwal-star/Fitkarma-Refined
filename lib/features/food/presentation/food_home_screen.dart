@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../shared/theme/app_colors.dart';
-import '../../../shared/theme/app_text_styles.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_typography.dart';
 import '../../../shared/widgets/activity_rings.dart';
 import '../../../shared/widgets/meal_tab_bar.dart';
 import '../../../shared/widgets/micronutrient_bar.dart';
@@ -19,7 +19,7 @@ class FoodHomeScreen extends ConsumerWidget {
     final selectedMeal = ref.watch(selectedMealTabProvider);
 
     return Scaffold(
-      backgroundColor: isDark ? AppColorsDark.background : AppColors.background,
+      backgroundColor: isDark ? AppColorsDark.bg1 : AppColorsLight.bg1,
       appBar: AppBar(
         title: const Text('Nutrition Log'),
         actions: [
@@ -40,8 +40,8 @@ class FoodHomeScreen extends ConsumerWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Meal Logs', style: AppTextStyles.h2(isDark)),
-                Text('Edit', style: TextStyle(color: isDark ? AppColorsDark.primary : AppColors.primary)),
+                Text('Meal Logs', style: (isDark ? AppTypography.h2() : AppTypography.h2(color: AppColorsLight.textPrimary))),
+                Text('Edit', style: TextStyle(color: isDark ? AppColorsDark.primary : AppColorsLight.primary)),
               ],
             ),
             MealTabBar(
@@ -61,7 +61,7 @@ class FoodHomeScreen extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: isDark ? AppColorsDark.surface : AppColors.surface,
+        color: isDark ? AppColorsDark.surface0 : AppColorsLight.surface0,
         borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
@@ -82,10 +82,10 @@ class FoodHomeScreen extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('DAILY ENERGY', style: AppTextStyles.caption(isDark)),
-                Text('1,840 kcal', style: AppTextStyles.statLarge(isDark)),
+                Text('DAILY ENERGY', style: (isDark ? AppTypography.caption() : AppTypography.caption(color: AppColorsLight.textMuted))),
+                Text('1,840 kcal', style: (isDark ? AppTypography.monoLg() : AppTypography.monoLg(color: AppColorsLight.textPrimary))),
                 const SizedBox(height: 8),
-                Text('640 kcal remaining', style: AppTextStyles.bodySmall(isDark)),
+                Text('640 kcal remaining', style: (isDark ? AppTypography.bodySm() : AppTypography.bodySm(color: AppColorsLight.textMuted))),
               ],
             ),
           ),
@@ -98,7 +98,7 @@ class FoodHomeScreen extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Micronutrients', style: AppTextStyles.h3(isDark)),
+        Text('Micronutrients', style: (isDark ? AppTypography.h3() : AppTypography.h3(color: AppColorsLight.textPrimary))),
         const SizedBox(height: 12),
         const MicronutrientBar(name: 'Vitamin D', current: 400, goal: 600, unit: ' IU'),
         const MicronutrientBar(name: 'Vitamin B12', current: 2.1, goal: 2.4, unit: ' mcg'),
@@ -111,9 +111,9 @@ class FoodHomeScreen extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.primarySurface,
+        color: isDark ? AppColorsDark.primaryMuted : AppColorsLight.primaryMuted,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.primaryLight.withValues(alpha: 0.3)),
+        border: Border.all(color: (isDark ? AppColorsDark.primary : AppColorsLight.primary).withValues(alpha: 0.3)),
       ),
       child: Row(
         children: [
@@ -123,14 +123,14 @@ class FoodHomeScreen extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Repeat Yesterday?', style: AppTextStyles.labelLarge(false)),
-                Text('Add all meals from yesterday in one tap.', style: AppTextStyles.caption(false)),
+                Text('Repeat Yesterday?', style: AppTypography.labelLg(color: isDark ? AppColorsDark.textPrimary : AppColorsLight.textPrimary)),
+                Text('Add all meals from yesterday in one tap.', style: AppTypography.caption(color: isDark ? AppColorsDark.textMuted : AppColorsLight.textMuted)),
               ],
             ),
           ),
           TextButton(
             onPressed: () {},
-            child: const Text('COPY ALL'),
+            child: Text('COPY ALL', style: TextStyle(color: isDark ? AppColorsDark.primary : AppColorsLight.primary)),
           ),
         ],
       ),

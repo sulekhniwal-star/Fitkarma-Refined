@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
-import '../theme/app_colors.dart';
+import '../../core/theme/app_colors.dart';
 
 /// A widget that provides a shimmer loading effect.
 /// 
@@ -14,8 +14,8 @@ class ShimmerLoader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final baseColor = isDark ? AppColorsDark.divider : AppColors.divider;
-    final highlightColor = isDark ? AppColorsDark.surface : AppColors.surface;
+    final baseColor = isDark ? AppColorsDark.divider : AppColorsLight.divider;
+    final highlightColor = isDark ? AppColorsDark.surface0 : AppColorsLight.surface0;
 
     return Shimmer.fromColors(
       baseColor: baseColor,

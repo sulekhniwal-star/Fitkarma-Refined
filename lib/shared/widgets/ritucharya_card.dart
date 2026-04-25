@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fitkarma/features/ayurveda/domain/ayurveda_logic.dart';
-import 'package:fitkarma/core/config/app_theme.dart';
+import 'package:fitkarma/core/theme/app_colors.dart';
+import 'package:fitkarma/core/theme/app_typography.dart';
 import 'glass_card.dart';
 import 'bilingual_label.dart';
 
@@ -22,10 +23,10 @@ class RitucharyaCard extends ConsumerWidget {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: AppTheme.teal.withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(AppTheme.radiusSm),
+                  color: (Theme.of(context).brightness == Brightness.dark ? AppColorsDark.teal : AppColorsLight.teal).withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(8),
                 ),
-                child: const Icon(Icons.eco_outlined, color: AppTheme.teal, size: 24),
+                child: Icon(Icons.eco_outlined, color: Theme.of(context).brightness == Brightness.dark ? AppColorsDark.teal : AppColorsLight.teal, size: 24),
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -38,7 +39,7 @@ class RitucharyaCard extends ConsumerWidget {
                     ),
                     Text(
                       seasonData['season'] as String,
-                      style: AppTheme.labelLg(context).copyWith(color: AppTheme.teal),
+                      style: AppTypography.labelLg(color: Theme.of(context).brightness == Brightness.dark ? AppColorsDark.teal : AppColorsLight.teal),
                     ),
                   ],
                 ),
@@ -52,14 +53,14 @@ class RitucharyaCard extends ConsumerWidget {
             'Major Focus',
             seasonData['focus'] as String,
           ),
-          const Divider(height: 24, color: AppTheme.divider),
+          Divider(height: 24, color: Theme.of(context).brightness == Brightness.dark ? AppColorsDark.divider : AppColorsLight.divider),
           _buildInfoRow(
             context,
             Icons.restaurant_outlined,
             'Eat More',
             seasonData['foods'] as String,
           ),
-          const Divider(height: 24, color: AppTheme.divider),
+          Divider(height: 24, color: Theme.of(context).brightness == Brightness.dark ? AppColorsDark.divider : AppColorsLight.divider),
           _buildInfoRow(
             context,
             Icons.directions_run_outlined,
@@ -75,7 +76,7 @@ class RitucharyaCard extends ConsumerWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(icon, size: 18, color: AppTheme.textSecondary),
+        Icon(icon, size: 18, color: Theme.of(context).brightness == Brightness.dark ? AppColorsDark.textMuted : AppColorsLight.textMuted),
         const SizedBox(width: 12),
         Expanded(
           child: Column(
@@ -83,16 +84,15 @@ class RitucharyaCard extends ConsumerWidget {
             children: [
               Text(
                 label.toUpperCase(),
-                style: AppTheme.caption(context).copyWith(
+                style: AppTypography.caption(color: Theme.of(context).brightness == Brightness.dark ? AppColorsDark.textMuted : AppColorsLight.textMuted).copyWith(
                   letterSpacing: 1.0,
                   fontWeight: FontWeight.bold,
-                  color: AppTheme.textMuted,
                 ),
               ),
               const SizedBox(height: 4),
               Text(
                 value,
-                style: AppTheme.bodyMd(context).copyWith(color: AppTheme.textPrimary),
+                style: AppTypography.bodyMd(color: Theme.of(context).brightness == Brightness.dark ? AppColorsDark.textPrimary : AppColorsLight.textPrimary),
               ),
             ],
           ),

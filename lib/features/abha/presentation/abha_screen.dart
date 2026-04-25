@@ -5,7 +5,7 @@ import '../../auth/domain/auth_providers.dart';
 import '../../../shared/widgets/abha_link_badge.dart';
 import '../../../shared/widgets/encryption_badge.dart';
 import '../domain/abha_health_record.dart';
-import '../../../shared/theme/app_colors.dart';
+import 'package:fitkarma/core/theme/app_colors.dart';
 
 class ABHAScreen extends ConsumerStatefulWidget {
   const ABHAScreen({super.key});
@@ -319,7 +319,7 @@ class _ABHAScreenState extends ConsumerState<ABHAScreen> {
                 Text('Imported ${record.type.name} to Health Log!'),
               ],
             ),
-            backgroundColor: AppColors.primary,
+             backgroundColor: AppColorsDark.primary,
           ),
         );
       }

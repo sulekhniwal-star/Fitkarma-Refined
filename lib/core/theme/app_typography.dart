@@ -82,6 +82,16 @@ class AppTypography {
       TextStyle(fontFamily: _mono, fontSize: 28, fontWeight: FontWeight.w600,
                 letterSpacing: -0.5, color: color);
 
+  /// 14sp — Stats labels, small metrics
+  static TextStyle monoMd({Color color = AppColorsDark.textSecondary}) =>
+      TextStyle(fontFamily: _mono, fontSize: 14, fontWeight: FontWeight.w500,
+                letterSpacing: 0, color: color);
+
+  /// 12sp — Smallest data points, timestamps
+  static TextStyle monoSm({Color color = AppColorsDark.textMuted}) =>
+      TextStyle(fontFamily: _mono, fontSize: 12, fontWeight: FontWeight.w400,
+                letterSpacing: 0, color: color);
+
   // ── Utility ────────────────────────────────────────────────
   static TextStyle caption({Color color = AppColorsDark.textMuted}) =>
       TextStyle(fontFamily: _body, fontSize: 11, fontWeight: FontWeight.w400,
@@ -127,3 +137,8 @@ class AppTypography {
     bodySmall:     bodySm(color: AppColorsLight.textMuted),
   );
 }
+
+
+
+
+

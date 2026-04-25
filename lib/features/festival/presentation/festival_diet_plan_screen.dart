@@ -5,8 +5,7 @@ import '../domain/festival_diet_plan.dart';
 import '../../../shared/widgets/async_value_widget.dart';
 import '../../../core/storage/app_database.dart';
 import 'festival_providers.dart';
-import '../../../shared/theme/app_colors.dart';
-import '../../../shared/theme/app_text_styles.dart';
+import '../../../core/theme/app_theme.dart';
 import '../../../shared/widgets/glass_card.dart';
 
 class FestivalDietPlanScreen extends ConsumerWidget {
@@ -21,8 +20,8 @@ class FestivalDietPlanScreen extends ConsumerWidget {
 
     if (config == null) {
       return Scaffold(
-        backgroundColor: isDark ? AppColorsDark.bg0 : AppColors.bg0,
-        body: Center(child: Text('Diet plan not found.', style: AppTextStyles.body1(isDark))),
+        backgroundColor: AppTheme.bg0,
+        body: Center(child: Text('Diet plan not found.', style: AppTheme.bodyLg(context))),
       );
     }
 
@@ -31,15 +30,15 @@ class FestivalDietPlanScreen extends ConsumerWidget {
       data: (detail) {
         if (detail == null) {
           return Scaffold(
-            backgroundColor: isDark ? AppColorsDark.bg0 : AppColors.bg0,
-            body: Center(child: Text('Festival details not found.', style: AppTextStyles.body1(isDark))),
+            backgroundColor: AppTheme.bg0,
+            body: Center(child: Text('Festival details not found.', style: AppTheme.bodyLg(context))),
           );
         }
 
         final heroColor = _getHeroColor(config.type, isDark);
 
         return Scaffold(
-          backgroundColor: isDark ? AppColorsDark.bg0 : AppColors.bg0,
+          backgroundColor: AppTheme.bg0,
           body: CustomScrollView(
             physics: const BouncingScrollPhysics(),
             slivers: [
@@ -47,14 +46,14 @@ class FestivalDietPlanScreen extends ConsumerWidget {
                 expandedHeight: 220,
                 pinned: true,
                 stretch: true,
-                backgroundColor: isDark ? AppColorsDark.bg0 : AppColors.bg0,
+                backgroundColor: AppTheme.bg0,
                 elevation: 0,
                 flexibleSpace: FlexibleSpaceBar(
                   centerTitle: false,
                   titlePadding: const EdgeInsets.only(left: 56, bottom: 16),
                   title: Text(
                     detail.nameEn,
-                    style: AppTextStyles.h1(true).copyWith(fontSize: 20),
+                    style: AppTheme.h1(context).copyWith(fontSize: 20),
                   ),
                   background: Stack(
                     fit: StackFit.expand,
@@ -89,7 +88,7 @@ class FestivalDietPlanScreen extends ConsumerWidget {
                             end: Alignment.bottomCenter,
                             colors: [
                               Colors.transparent,
-                              isDark ? AppColorsDark.bg0 : AppColors.bg0,
+                              AppTheme.bg0,
                             ],
                           ),
                         ),
@@ -125,9 +124,9 @@ class FestivalDietPlanScreen extends ConsumerWidget {
           ),
           floatingActionButton: FloatingActionButton.extended(
             onPressed: () {},
-            backgroundColor: isDark ? AppColorsDark.primary : AppColors.primary,
+            backgroundColor: AppTheme.primary,
             foregroundColor: Colors.white,
-            label: Text('Quick Log Meal', style: AppTextStyles.labelLarge(true)),
+            label: Text('Quick Log Meal', style: AppTheme.labelLg(context)),
             icon: const Icon(Icons.add_task),
           ),
         );
@@ -141,7 +140,7 @@ class FestivalDietPlanScreen extends ConsumerWidget {
       case FestivalDietType.sattvicFast: return isDark ? const Color(0xFF451A03) : const Color(0xFF9A3412);
       case FestivalDietType.rozaFast: return isDark ? const Color(0xFF064E3B) : const Color(0xFF065F46);
       case FestivalDietType.feastMode: return isDark ? const Color(0xFF4C1D95) : const Color(0xFF6D28D9);
-      default: return isDark ? AppColorsDark.secondary : AppColors.secondary;
+      default: return AppTheme.secondary;
     }
   }
 }
@@ -168,7 +167,7 @@ class _FastingOverviewCard extends StatelessWidget {
               const SizedBox(width: 8),
               Text(
                 'Diet Profile: ${config.type.name.toUpperCase()}', 
-                style: AppTextStyles.monoSm(isDark).copyWith(
+                style: AppTheme.monoSm(context).copyWith(
                   fontWeight: FontWeight.bold,
                   color: heroColor,
                   letterSpacing: 1.1,
@@ -179,7 +178,7 @@ class _FastingOverviewCard extends StatelessWidget {
           const SizedBox(height: 12),
           Text(
             config.insightCardMessage,
-            style: AppTextStyles.body1(isDark).copyWith(height: 1.5),
+            style: AppTheme.bodyLg(context).copyWith(height: 1.5),
           ),
           const SizedBox(height: 20),
           Container(
@@ -221,13 +220,12 @@ class _StatItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Column(
       children: [
         Icon(icon, size: 24, color: color.withValues(alpha: 0.7)),
         const SizedBox(height: 4),
-        Text(value, style: AppTextStyles.monoLg(isDark).copyWith(fontSize: 18)),
-        Text(label, style: AppTextStyles.caption(isDark)),
+        Text(value, style: AppTheme.monoLg(context).copyWith(fontSize: 18)),
+        Text(label, style: AppTheme.caption(context)),
       ],
     );
   }
@@ -239,18 +237,16 @@ class _FoodRestrictionsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Dietary Guidelines', style: AppTextStyles.h2(isDark)),
+        Text('Dietary Guidelines', style: AppTheme.h2(context)),
         const SizedBox(height: 16),
         if (config.allowedFoodIds != null && config.allowedFoodIds!.isNotEmpty) ...[
           _RestrictionList(
             title: 'Recommended / Allowed',
             items: config.allowedFoodIds!,
-            color: AppColors.success,
+            color: AppTheme.success,
             icon: Icons.check_circle_outline,
           ),
           const SizedBox(height: 16),
@@ -259,7 +255,7 @@ class _FoodRestrictionsSection extends StatelessWidget {
           _RestrictionList(
             title: 'Restricted / Forbidden',
             items: config.forbiddenFoodIds!,
-            color: AppColors.error,
+            color: AppTheme.error,
             icon: Icons.block_flipped,
           ),
         ],
@@ -296,7 +292,7 @@ class _RestrictionList extends StatelessWidget {
             children: [
               Icon(icon, color: color, size: 18),
               const SizedBox(width: 8),
-              Text(title, style: AppTextStyles.labelLarge(isDark).copyWith(color: color)),
+              Text(title, style: AppTheme.labelLg(context).copyWith(color: color)),
             ],
           ),
           const SizedBox(height: 12),
@@ -312,7 +308,7 @@ class _RestrictionList extends StatelessWidget {
               ),
               child: Text(
                 item.replaceAll('_', ' ').toUpperCase(),
-                style: AppTextStyles.monoSm(isDark).copyWith(
+                style: AppTheme.monoSm(context).copyWith(
                   color: color, 
                   fontWeight: FontWeight.bold,
                   fontSize: 10,
@@ -341,11 +337,11 @@ class _MealPlanTabs extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TabBar(
-              labelColor: isDark ? AppColorsDark.primary : AppColors.primary,
-              unselectedLabelColor: isDark ? AppColorsDark.textSecondary : AppColors.textSecondary,
-              indicatorColor: isDark ? AppColorsDark.primary : AppColors.primary,
+              labelColor: AppTheme.primary,
+              unselectedLabelColor: AppTheme.textSecondary,
+              indicatorColor: AppTheme.primary,
               indicatorSize: TabBarIndicatorSize.label,
-              labelStyle: AppTextStyles.labelLarge(isDark),
+              labelStyle: AppTheme.labelLg(context),
               tabs: const [
                 Tab(text: 'Today'),
                 Tab(text: 'Tomorrow'),
@@ -423,14 +419,14 @@ class _MealTile extends StatelessWidget {
       leading: Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: (isDark ? AppColorsDark.primary : AppColors.primary).withValues(alpha: 0.1),
+          color: (AppTheme.primary).withValues(alpha: 0.1),
           shape: BoxShape.circle,
         ),
-        child: Icon(icon, color: isDark ? AppColorsDark.primary : AppColors.primary, size: 20),
+        child: Icon(icon, color: AppTheme.primary, size: 20),
       ),
-      title: Text(title, style: AppTextStyles.labelLarge(isDark)),
-      subtitle: Text(subtitle, style: AppTextStyles.body2(isDark)),
-      trailing: Icon(Icons.add_circle_outline, color: isDark ? AppColorsDark.divider : AppColors.divider, size: 20),
+      title: Text(title, style: AppTheme.labelLg(context)),
+      subtitle: Text(subtitle, style: AppTheme.bodyMd(context)),
+      trailing: const Icon(Icons.add_circle_outline, color: AppTheme.divider, size: 20),
     );
   }
 }
@@ -486,7 +482,7 @@ class _RamadanClocksState extends ConsumerState<_RamadanClocks> {
             label: 'Iftar Starts', 
             time: '06:52 PM', 
             countdown: _formatDuration(iftarRemaining),
-            color: AppColors.primary,
+            color: AppTheme.primary,
           ),
         ),
       ],
@@ -573,8 +569,6 @@ class _TimeBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    
     return GlassCard(
       padding: const EdgeInsets.all(16),
       color: color.withValues(alpha: 0.1),
@@ -583,12 +577,12 @@ class _TimeBox extends StatelessWidget {
         children: [
           Text(
             label, 
-            style: AppTextStyles.monoSm(isDark).copyWith(color: color, fontWeight: FontWeight.bold),
+            style: AppTheme.monoSm(context).copyWith(color: color, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
           Text(
             time, 
-            style: AppTextStyles.monoLg(isDark).copyWith(color: color, fontSize: 24),
+            style: AppTheme.monoLg(context).copyWith(color: color, fontSize: 24),
           ),
           const SizedBox(height: 8),
           Container(
@@ -599,7 +593,7 @@ class _TimeBox extends StatelessWidget {
             ),
             child: Text(
               countdown, 
-              style: AppTextStyles.monoSm(true).copyWith(
+              style: AppTheme.monoSm(context).copyWith(
                 color: color, 
                 fontWeight: FontWeight.bold,
                 fontSize: 14,

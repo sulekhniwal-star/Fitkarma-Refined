@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
-import '../theme/app_colors.dart';
-import '../theme/app_text_styles.dart';
+import 'package:fitkarma/core/theme/app_colors.dart';
+import 'package:fitkarma/core/theme/app_typography.dart';
 
 /// A notification banner indicating sync failures or connectivity status.
 /// 
@@ -25,7 +24,7 @@ class SyncStatusBanner extends StatelessWidget {
 
     if (dlqCount > 0) {
       return _BannerContainer(
-        color: AppColors.warning,
+        color: isDark ? AppColorsDark.warning : AppColorsLight.warning,
         title: '⚠ $dlqCount items failed to sync',
         subtitle: 'Tap to review and retry.',
         onTap: onReviewDeadLetter,
@@ -35,7 +34,7 @@ class SyncStatusBanner extends StatelessWidget {
 
     if (isOffline) {
       return _BannerContainer(
-        color: isDark ? AppColorsDark.teal : AppColors.teal,
+        color: isDark ? AppColorsDark.teal : AppColorsLight.teal,
         title: 'Offline',
         subtitle: 'Changes saved locally. Will sync when online.',
         isDark: isDark,
@@ -44,7 +43,7 @@ class SyncStatusBanner extends StatelessWidget {
 
     if (isLowDataMode) {
       return _BannerContainer(
-        color: isDark ? AppColorsDark.teal : AppColors.teal,
+        color: isDark ? AppColorsDark.teal : AppColorsLight.teal,
         title: 'Low Data Mode active',
         subtitle: 'Syncing at a lower frequency.',
         isDark: isDark,
@@ -86,16 +85,13 @@ class _BannerContainer extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: AppTextStyles.labelLarge(true).copyWith(
-                      color: Colors.white,
+                    style: AppTypography.labelLg(color: Colors.white).copyWith(
                       height: 1.1,
                     ),
                   ),
                   Text(
                     subtitle,
-                    style: AppTextStyles.caption(true).copyWith(
-                      color: Colors.white70,
-                    ),
+                    style: AppTypography.caption(color: Colors.white70),
                   ),
                 ],
               ),

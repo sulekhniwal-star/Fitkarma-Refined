@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../theme/app_colors.dart';
-import '../theme/app_text_styles.dart';
+import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_typography.dart';
 
 enum MealType { breakfast, lunch, dinner, snack }
 
@@ -55,8 +55,8 @@ class _MealTabPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final primaryColor = isDark ? AppColorsDark.primary : AppColors.primary;
-    final surfaceColor = isDark ? AppColorsDark.surface : AppColors.surface;
+    final primaryColor = isDark ? AppColorsDark.primary : AppColorsLight.primary;
+    final surfaceColor = isDark ? AppColorsDark.surface0 : AppColorsLight.surface0;
 
     return InkWell(
       onTap: onTap,
@@ -79,7 +79,7 @@ class _MealTabPill extends StatelessWidget {
               children: [
                 Text(
                   _getNameEn(type),
-                  style: AppTextStyles.labelLarge(isDark).copyWith(
+                  style: (isDark ? AppTypography.labelLg() : AppTypography.labelLg(color: AppColorsLight.textPrimary)).copyWith(
                     color: isSelected ? Colors.white : primaryColor,
                     fontSize: 12,
                     height: 1.1,
@@ -87,8 +87,7 @@ class _MealTabPill extends StatelessWidget {
                 ),
                 Text(
                   _getNameHi(type),
-                  style: AppTextStyles.sectionHeaderHindi(isDark).copyWith(
-                    color: isSelected ? Colors.white70 : AppColors.textSecondary,
+                  style: AppTypography.hindi(color: isSelected ? Colors.white70 : (isDark ? AppColorsDark.textMuted : AppColorsLight.textMuted)).copyWith(
                     fontSize: 10,
                     height: 1.0,
                   ),

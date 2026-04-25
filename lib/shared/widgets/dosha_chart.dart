@@ -1,6 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter/material.dart';
-import '../theme/app_text_styles.dart';
+import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_typography.dart';
 
 /// A pie chart displaying the balance of Vata, Pitta, and Kapha doshas.
 class DoshaChart extends StatelessWidget {
@@ -58,11 +58,11 @@ class DoshaChart extends StatelessWidget {
                 children: [
                   Text(
                     dominant.toUpperCase(),
-                    style: AppTextStyles.h2(isDark),
+                    style: (isDark ? AppTypography.h2() : AppTypography.h2(color: AppColorsLight.textPrimary)),
                   ),
                   Text(
                     'Dominant',
-                    style: AppTextStyles.caption(isDark),
+                    style: (isDark ? AppTypography.caption() : AppTypography.caption(color: AppColorsLight.textMuted)),
                   ),
                 ],
               ),
@@ -118,7 +118,7 @@ class _LegendItem extends StatelessWidget {
         const SizedBox(width: 6),
         Text(
           label,
-          style: AppTextStyles.labelMedium(isDark),
+          style: (isDark ? AppTypography.labelMd() : AppTypography.labelMd(color: AppColorsLight.textPrimary)),
         ),
       ],
     );

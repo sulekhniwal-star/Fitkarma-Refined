@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../theme/app_colors.dart';
-import '../theme/app_text_styles.dart';
+import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_typography.dart';
 
 /// A small pill-shaped badge indicating that data is protected by AES-256 encryption.
 /// 
@@ -31,7 +31,7 @@ class EncryptionBadge extends StatelessWidget {
             const SizedBox(width: 4),
             Text(
               'AES-256',
-              style: AppTextStyles.caption(isDark).copyWith(
+              style: (isDark ? AppTypography.caption() : AppTypography.caption(color: AppColorsLight.textMuted)).copyWith(
                 color: tealColor,
                 fontWeight: FontWeight.bold,
                 fontSize: 9,

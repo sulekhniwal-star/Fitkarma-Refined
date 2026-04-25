@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../theme/app_colors.dart';
-import '../theme/app_text_styles.dart';
+import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_typography.dart';
 
 /// A hero-style card displaying the user's Karma level and XP progress.
 class KarmaLevelCard extends StatelessWidget {
@@ -31,13 +31,13 @@ class KarmaLevelCard extends StatelessWidget {
           colors: [
             const Color(0xFF1A1A2E),
             const Color(0xFF2C2A6B),
-            AppColors.secondaryDark,
+            AppColorsDark.secondary,
           ],
         ),
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: AppColors.secondary.withValues(alpha: 0.3),
+            color: AppColorsDark.secondary.withValues(alpha: 0.3),
             blurRadius: 15,
             offset: const Offset(0, 8),
           ),
@@ -69,8 +69,7 @@ class KarmaLevelCard extends StatelessWidget {
                   ),
                   child: Text(
                     'LEVEL $level',
-                    style: const TextStyle(
-                      color: Colors.white,
+                    style: AppTypography.labelMd(color: Colors.white).copyWith(
                       fontSize: 10,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 1.2,
@@ -87,12 +86,12 @@ class KarmaLevelCard extends StatelessWidget {
                       children: [
                         Text(
                           title,
-                          style: AppTextStyles.h1(true).copyWith(color: Colors.white),
+                          style: AppTypography.h1(color: Colors.white),
                         ),
                         const SizedBox(height: 4),
                         Text(
                           'Keep pushing for the next rank!',
-                          style: AppTextStyles.bodySmall(true).copyWith(color: Colors.white70),
+                          style: AppTypography.bodySm(color: Colors.white70),
                         ),
                       ],
                     ),
@@ -108,7 +107,7 @@ class KarmaLevelCard extends StatelessWidget {
                 LinearProgressIndicator(
                   value: progress,
                   backgroundColor: Colors.white.withValues(alpha: 0.1),
-                  color: AppColors.accent,
+                  color: AppColorsDark.accent,
                   minHeight: 8,
                   borderRadius: BorderRadius.circular(4),
                 ),
@@ -118,15 +117,11 @@ class KarmaLevelCard extends StatelessWidget {
                   children: [
                     Text(
                       '$currentXP / $nextLevelXP XP',
-                      style: AppTextStyles.labelMedium(true).copyWith(
-                        color: Colors.white70,
-                      ),
+                      style: AppTypography.labelMd(color: Colors.white70),
                     ),
                     Text(
                       'Next level in $xpRemaining XP',
-                      style: AppTextStyles.caption(true).copyWith(
-                        color: Colors.white54,
-                      ),
+                      style: AppTypography.caption(color: Colors.white54),
                     ),
                   ],
                 ),

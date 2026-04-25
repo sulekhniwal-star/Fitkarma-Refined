@@ -1,7 +1,8 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../core/config/app_theme.dart';
+import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_typography.dart';
 import '../../core/config/device_tier.dart';
 
 class GlassAppBar extends ConsumerWidget implements PreferredSizeWidget {
@@ -46,7 +47,7 @@ class GlassAppBar extends ConsumerWidget implements PreferredSizeWidget {
             decoration: BoxDecoration(
               border: Border(
                 bottom: BorderSide(
-                  color: isDark ? AppTheme.glassBorder : AppTheme.lGlassBorder,
+                  color: isDark ? AppColorsDark.divider : AppColorsLight.divider,
                   width: 0.5,
                 ),
               ),

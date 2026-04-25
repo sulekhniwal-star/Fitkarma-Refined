@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../theme/app_colors.dart';
-import '../theme/app_text_styles.dart';
+import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_typography.dart';
 
 class FestivalDietBadge extends StatelessWidget {
   final String fastingType; // Nirjala / Phalahar / Roza / Feast
@@ -17,17 +17,17 @@ class FestivalDietBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
       decoration: BoxDecoration(
-        color: isDark ? AppColorsDark.primarySurface : AppColors.primarySurface,
+        color: isDark ? AppColorsDark.primaryMuted : AppColorsLight.primaryMuted,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: isDark ? AppColorsDark.primary.withValues(alpha:0.5) : AppColors.primary.withValues(alpha:0.5),
+          color: (isDark ? AppColorsDark.primary : AppColorsLight.primary).withValues(alpha:0.5),
           width: 1,
         ),
       ),
       child: Text(
         fastingType,
-        style: AppTextStyles.labelMedium(isDark).copyWith(
-          color: isDark ? AppColorsDark.primary : AppColors.primary,
+        style: (isDark ? AppTypography.labelMd() : AppTypography.labelMd(color: AppColorsLight.textPrimary)).copyWith(
+          color: isDark ? AppColorsDark.primary : AppColorsLight.primary,
         ),
       ),
     );

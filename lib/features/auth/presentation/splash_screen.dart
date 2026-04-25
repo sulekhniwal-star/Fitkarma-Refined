@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../../core/config/app_theme.dart';
+import '../../../core/theme/app_theme.dart';
 import '../../../core/config/device_tier.dart';
 import '../domain/auth_providers.dart';
 

@@ -11,7 +11,7 @@ import 'package:fitkarma/core/storage/app_database.dart'
 import 'package:fitkarma/features/auth/domain/auth_providers.dart';
 import 'package:fitkarma/features/dashboard/domain/dashboard_providers.dart';
 import 'package:fitkarma/features/abha/data/abha_repository.dart';
-import 'package:fitkarma/core/config/app_theme.dart';
+import 'package:fitkarma/core/theme/app_theme.dart';
 import 'package:fitkarma/shared/widgets/fit_scaffold.dart';
 import 'package:fitkarma/shared/widgets/activity_rings.dart';
 import 'package:fitkarma/shared/widgets/async_value_widget.dart';

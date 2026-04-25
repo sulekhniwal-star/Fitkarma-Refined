@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fitkarma/core/config/app_theme.dart';
+import 'package:fitkarma/core/theme/app_theme.dart';
 import 'package:fitkarma/shared/widgets/glass_card.dart';
 import '../../domain/onboarding_providers.dart';
 

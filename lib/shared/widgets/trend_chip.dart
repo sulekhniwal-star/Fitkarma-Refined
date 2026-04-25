@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../theme/app_colors.dart';
-import '../theme/app_text_styles.dart';
+import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_typography.dart';
 
 enum TrendDirection { up, down, stable }
 
@@ -27,15 +27,15 @@ class TrendChip extends StatelessWidget {
     final (icon, color) = switch (direction) {
       TrendDirection.up => (
           '▲',
-          isDark ? AppColorsDark.success : AppColors.success,
+          isDark ? AppColorsDark.success : AppColorsLight.success,
         ),
       TrendDirection.down => (
           '▼',
-          isDark ? AppColorsDark.error : AppColors.error,
+          isDark ? AppColorsDark.error : AppColorsLight.error,
         ),
       TrendDirection.stable => (
           '→',
-          isDark ? AppColorsDark.textMuted : AppColors.textMuted,
+          isDark ? AppColorsDark.textMuted : AppColorsLight.textMuted,
         ),
     };
 
@@ -59,7 +59,7 @@ class TrendChip extends StatelessWidget {
           const SizedBox(width: 2),
           Text(
             label,
-            style: AppTextStyles.caption(isDark).copyWith(
+            style: (isDark ? AppTypography.caption() : AppTypography.caption(color: AppColorsLight.textMuted)).copyWith(
               color: color,
             ),
           ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../theme/app_colors.dart';
+import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_typography.dart';
 
 class HomeWidgetPreview extends StatelessWidget {
   final Widget? child;
@@ -41,9 +42,7 @@ class HomeWidgetPreview extends StatelessWidget {
         if (title != null)
           Text(
             title!,
-            style: TextStyle(
-              color: isDark ? AppColorsDark.textPrimary : AppColors.textPrimary,
-              fontSize: 14,
+            style: (isDark ? AppTypography.labelMd() : AppTypography.labelMd(color: AppColorsLight.textPrimary)).copyWith(
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -51,10 +50,7 @@ class HomeWidgetPreview extends StatelessWidget {
           const SizedBox(height: 4),
           Text(
             description!,
-            style: TextStyle(
-              color: isDark ? Colors.white60 : Colors.black54,
-              fontSize: 12,
-            ),
+            style: (isDark ? AppTypography.bodySm() : AppTypography.bodySm(color: AppColorsLight.textMuted)),
           ),
         ],
         if (onAdd != null) ...[
@@ -79,10 +75,7 @@ class HomeWidgetPreview extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             size!,
-            style: TextStyle(
-              color: isDark ? Colors.white54 : Colors.black45,
-              fontSize: 12,
-            ),
+            style: (isDark ? AppTypography.caption() : AppTypography.caption(color: AppColorsLight.textMuted)),
           ),
         ],
       ],
@@ -96,7 +89,7 @@ class ActivityRingsWidgetPreview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final bgColor = isDark ? const Color(0xFF1E1E2C) : AppColors.background;
+    final bgColor = isDark ? const Color(0xFF1E1E2C) : AppColorsLight.bg1;
 
     return Container(
       width: 280,
@@ -115,15 +108,15 @@ class ActivityRingsWidgetPreview extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          _RingMiniStat(color: AppColors.primary, label: '8.5k', icon: Icons.directions_walk),
-          _RingMiniStat(color: AppColors.success, label: '1.2k', icon: Icons.local_fire_department),
-          _RingMiniStat(color: AppColors.teal, label: '4/8', icon: Icons.water_drop),
+          _RingMiniStat(color: isDark ? AppColorsDark.primary : AppColorsLight.primary, label: '8.5k', icon: Icons.directions_walk),
+          _RingMiniStat(color: isDark ? AppColorsDark.success : AppColorsLight.success, label: '1.2k', icon: Icons.local_fire_department),
+          _RingMiniStat(color: isDark ? AppColorsDark.teal : AppColorsLight.teal, label: '4/8', icon: Icons.water_drop),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Text('FitKarma', style: TextStyle(color: isDark ? Colors.white70 : Colors.black54, fontSize: 8, fontWeight: FontWeight.bold)),
-              Text('Level 12', style: TextStyle(color: AppColors.primary, fontSize: 10, fontWeight: FontWeight.bold)),
+              Text('FitKarma', style: (isDark ? AppTypography.caption() : AppTypography.caption(color: AppColorsLight.textMuted)).copyWith(fontSize: 8, fontWeight: FontWeight.bold)),
+              Text('Level 12', style: (isDark ? AppTypography.labelMd() : AppTypography.labelMd(color: AppColorsLight.primary)).copyWith(fontSize: 10, fontWeight: FontWeight.bold)),
             ],
           ),
         ],

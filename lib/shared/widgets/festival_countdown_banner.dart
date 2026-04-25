@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../theme/app_text_styles.dart';
-import '../../core/config/app_theme.dart';
+import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_typography.dart';
 
 /// A prominent banner for upcoming festivals with countdown and meal actions.
 class FestivalCountdownBanner extends StatelessWidget {
@@ -58,8 +58,7 @@ class FestivalCountdownBanner extends StatelessWidget {
                     children: [
                       Text(
                         festivalName.toUpperCase(),
-                        style: AppTextStyles.h2(true).copyWith(
-                          color: Colors.white,
+                        style: AppTypography.h2(color: Colors.white).copyWith(
                           letterSpacing: 2.0,
                           fontWeight: FontWeight.w900,
                         ),
@@ -67,9 +66,7 @@ class FestivalCountdownBanner extends StatelessWidget {
                       const SizedBox(height: 4),
                       Text(
                         festivalNameHi,
-                        style: AppTheme.labelMd(context).copyWith(
-                          color: Colors.white.withValues(alpha: 0.8),
-                        ),
+                        style: AppTypography.labelMd(color: Colors.white.withValues(alpha: 0.8)),
                       ),
                     ],
                   ),
@@ -84,8 +81,7 @@ class FestivalCountdownBanner extends StatelessWidget {
                     children: [
                       Text(
                         daysRemaining == 0 ? 'LIVE' : daysRemaining.toString(),
-                        style: AppTheme.monoLg(context).copyWith(
-                          color: Colors.white,
+                        style: AppTypography.monoLg(color: Colors.white).copyWith(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                         ),
@@ -93,8 +89,7 @@ class FestivalCountdownBanner extends StatelessWidget {
                       if (daysRemaining > 0)
                         Text(
                           'DAYS',
-                          style: AppTheme.labelMd(context).copyWith(
-                            color: Colors.white70,
+                          style: AppTypography.labelMd(color: Colors.white70).copyWith(
                             letterSpacing: 1.2,
                           ),
                         ),
@@ -118,15 +113,14 @@ class FestivalCountdownBanner extends StatelessWidget {
                     height: 48,
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(AppTheme.radiusMd),
+                      borderRadius: BorderRadius.circular(12),
                     ),
                     child: InkWell(
                       onTap: onViewDietPlan,
                       child: Center(
                         child: Text(
                           'VIEW DIET PLAN',
-                          style: AppTheme.labelLg(context).copyWith(
-                            color: bannerColor,
+                          style: AppTypography.labelLg(color: bannerColor).copyWith(
                             fontWeight: FontWeight.w800,
                           ),
                         ),
@@ -141,15 +135,14 @@ class FestivalCountdownBanner extends StatelessWidget {
                       height: 48,
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.white, width: 1.5),
-                        borderRadius: BorderRadius.circular(AppTheme.radiusMd),
+                        borderRadius: BorderRadius.circular(12),
                       ),
                       child: InkWell(
                         onTap: onSpecialAction,
                         child: Center(
                           child: Text(
                             (specialActionLabel ?? 'ACTION').toUpperCase(),
-                            style: AppTheme.labelLg(context).copyWith(
-                              color: Colors.white,
+                            style: AppTypography.labelLg(color: Colors.white).copyWith(
                               fontWeight: FontWeight.w800,
                             ),
                           ),

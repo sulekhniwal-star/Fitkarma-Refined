@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/security/security_providers.dart';
-import '../../../shared/theme/app_colors.dart';
-import '../../../shared/theme/app_text_styles.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_typography.dart';
 
 class BiomorphicShieldScreen extends ConsumerStatefulWidget {
   const BiomorphicShieldScreen({super.key});
@@ -74,7 +74,7 @@ class _BiomorphicShieldScreenState extends ConsumerState<BiomorphicShieldScreen>
                   center: Alignment.center,
                   radius: 1.2,
                   colors: [
-                    AppColors.primary.withValues(alpha: 0.15),
+                    AppColorsDark.primary.withValues(alpha: 0.15),
                     Colors.black,
                   ],
                 ),
@@ -96,14 +96,14 @@ class _BiomorphicShieldScreenState extends ConsumerState<BiomorphicShieldScreen>
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         border: Border.all(
-                          color: AppColors.primary.withValues(
+                          color: AppColorsDark.primary.withValues(
                             alpha: _glowAnimation.value * 0.5,
                           ),
                           width: 2,
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: AppColors.primary.withValues(
+                            color: AppColorsDark.primary.withValues(
                               alpha: _glowAnimation.value * 0.2,
                             ),
                             blurRadius: 30,
@@ -114,7 +114,7 @@ class _BiomorphicShieldScreenState extends ConsumerState<BiomorphicShieldScreen>
                       child: Icon(
                         Icons.fingerprint_rounded,
                         size: 80,
-                        color: AppColors.primary.withValues(alpha: 0.8),
+                        color: AppColorsDark.primary.withValues(alpha: 0.8),
                       ),
                     );
                   },
@@ -124,8 +124,7 @@ class _BiomorphicShieldScreenState extends ConsumerState<BiomorphicShieldScreen>
                 // Text labels
                 Text(
                   'FitKarma Shield',
-                  style: AppTextStyles.h1(true).copyWith(
-                    color: Colors.white,
+                  style: AppTypography.h1(color: Colors.white).copyWith(
                     letterSpacing: 2,
                     fontWeight: FontWeight.w900,
                   ),
@@ -133,8 +132,7 @@ class _BiomorphicShieldScreenState extends ConsumerState<BiomorphicShieldScreen>
                 const SizedBox(height: 8),
                 Text(
                   'IDENTIFY VERIFICATION REQUIRED',
-                  style: AppTextStyles.caption(true).copyWith(
-                    color: Colors.white.withValues(alpha: 0.5),
+                  style: AppTypography.caption(color: Colors.white.withValues(alpha: 0.5)).copyWith(
                     letterSpacing: 1.5,
                   ),
                 ),
@@ -164,8 +162,7 @@ class _BiomorphicShieldScreenState extends ConsumerState<BiomorphicShieldScreen>
                       ),
                       child: Text(
                         'TAP TO UNLOCK',
-                        style: AppTextStyles.labelLarge(true).copyWith(
-                          color: Colors.white,
+                        style: AppTypography.labelLg(color: Colors.white).copyWith(
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -185,25 +182,23 @@ class _BiomorphicShieldScreenState extends ConsumerState<BiomorphicShieldScreen>
               child: Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: AppColors.error.withValues(alpha: 0.1),
+                  color: AppColorsDark.error.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: AppColors.error.withValues(alpha: 0.3),
+                    color: AppColorsDark.error.withValues(alpha: 0.3),
                   ),
                 ),
                 child: Row(
                   children: [
                     const Icon(
                       Icons.warning_amber_rounded,
-                      color: AppColors.error,
+                      color: AppColorsDark.error,
                     ),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
                         'Device integrity check failed. Enclave protection is reduced.',
-                        style: AppTextStyles.bodySmall(
-                          true,
-                        ).copyWith(color: AppColors.error),
+                        style: AppTypography.bodySm(color: AppColorsDark.error),
                       ),
                     ),
                   ],

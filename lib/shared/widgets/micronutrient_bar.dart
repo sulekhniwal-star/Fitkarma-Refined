@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../theme/app_text_styles.dart';
+import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_typography.dart';
 
 /// A compact progress bar for tracking micronutrients (e.g., Vitamin D, B12, Iron).
 /// 
@@ -22,7 +23,7 @@ class MicronutrientBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final progress = (current / goal).clamp(0.0, 1.0);
-    final barColor = _getTrafficLightColor(progress);
+    final barColor = _getTrafficLightColor(progress, isDark);
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
@@ -32,7 +33,7 @@ class MicronutrientBar extends StatelessWidget {
             width: 80,
             child: Text(
               name,
-              style: AppTextStyles.caption(isDark).copyWith(fontSize: 10),
+              style: (isDark ? AppTypography.caption() : AppTypography.caption(color: AppColorsLight.textMuted)).copyWith(fontSize: 10),
             ),
           ),
           const SizedBox(width: 8),
@@ -53,9 +54,9 @@ class MicronutrientBar extends StatelessWidget {
             child: Text(
               '${current.toStringAsFixed(1)}$unit / ${goal.toStringAsFixed(0)}$unit',
               textAlign: TextAlign.end,
-              style: AppTextStyles.caption(isDark).copyWith(
+              style: (isDark ? AppTypography.caption() : AppTypography.caption(color: AppColorsLight.textMuted)).copyWith(
                 fontSize: 10,
-                color: isDark ? Colors.white54 : Colors.black54,
+                color: isDark ? AppColorsDark.textMuted : AppColorsLight.textMuted,
               ),
             ),
           ),
@@ -64,10 +65,10 @@ class MicronutrientBar extends StatelessWidget {
     );
   }
 
-  Color _getTrafficLightColor(double progress) {
-    if (progress >= 0.8) return Colors.green;
-    if (progress >= 0.4) return Colors.amber;
-    return Colors.red;
+  Color _getTrafficLightColor(double progress, bool isDark) {
+    if (progress >= 0.8) return isDark ? AppColorsDark.success : AppColorsLight.success;
+    if (progress >= 0.4) return isDark ? AppColorsDark.warning : AppColorsLight.warning;
+    return isDark ? AppColorsDark.error : AppColorsLight.error;
   }
 }
 

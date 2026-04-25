@@ -2,8 +2,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/security/security_providers.dart';
-import '../theme/app_colors.dart';
-import '../theme/app_text_styles.dart';
+import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_typography.dart';
 
 /// A wrapper widget that blurs its content unless a biometric challenge is passed.
 /// Used for sensitive data protection inside screens without locking the whole app.
@@ -65,16 +65,16 @@ class _ShieldedViewState extends ConsumerState<ShieldedView> {
               children: [
                 Icon(
                   Icons.lock_person_rounded,
-                  color: AppColors.primary.withValues(alpha: 0.8),
+                  color: (isDark ? AppColorsDark.primary : AppColorsLight.primary).withValues(alpha: 0.8),
                   size: 32,
                 ),
                 const SizedBox(height: 8),
                 Text(
                   'TAP TO REVEAL',
-                  style: AppTextStyles.labelSmall(isDark).copyWith(
+                  style: (isDark ? AppTypography.bodySm() : AppTypography.bodySm(color: AppColorsLight.textMuted)).copyWith(
                     fontWeight: FontWeight.w900,
                     letterSpacing: 1.2,
-                    color: AppColors.primary,
+                    color: isDark ? AppColorsDark.primary : AppColorsLight.primary,
                   ),
                 ),
               ],

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../core/config/app_theme.dart';
-import '../../core/config/device_tier.dart';
+import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_typography.dart';
 
 class AmbientGlowBlobs extends ConsumerWidget {
   const AmbientGlowBlobs({super.key});
@@ -17,7 +17,7 @@ class AmbientGlowBlobs extends ConsumerWidget {
         // Blob 1: Secondary (Purple/Blue)
         _buildBlob(
           alignment: const Alignment(-0.8, -0.6),
-          color: AppTheme.secondary.withOpacity(tier == DeviceTier.mid ? 0.05 : 0.20),
+          color: (isDark ? AppColorsDark.secondary : AppColorsLight.secondary).withOpacity(tier == DeviceTier.mid ? 0.05 : 0.20),
           size: 280,
           blur: 80,
         ),
@@ -26,7 +26,7 @@ class AmbientGlowBlobs extends ConsumerWidget {
           // Blob 2: Primary (Orange)
           _buildBlob(
             alignment: const Alignment(0.7, -0.4),
-            color: AppTheme.primary.withValues(alpha: 0.15),
+            color: (isDark ? AppColorsDark.primary : AppColorsLight.primary).withValues(alpha: 0.15),
             size: 200,
             blur: 60,
           ),
@@ -34,7 +34,7 @@ class AmbientGlowBlobs extends ConsumerWidget {
           // Blob 3: Teal
           _buildBlob(
             alignment: const Alignment(0.0, -0.8),
-            color: AppTheme.teal.withValues(alpha: 0.10),
+            color: (isDark ? AppColorsDark.teal : AppColorsLight.teal).withValues(alpha: 0.10),
             size: 160,
             blur: 50,
           ),

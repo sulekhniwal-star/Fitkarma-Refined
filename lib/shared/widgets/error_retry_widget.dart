@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../theme/app_colors.dart';
-import '../theme/app_text_styles.dart';
+import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_typography.dart';
 
 /// A widget to display error states with a retry action.
 /// 
@@ -21,7 +21,7 @@ class ErrorRetryWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final primaryColor = isDark ? AppColorsDark.primary : AppColors.primary;
+    final primaryColor = isDark ? AppColorsDark.primary : AppColorsLight.primary;
 
     return Center(
       child: Padding(
@@ -32,19 +32,19 @@ class ErrorRetryWidget extends StatelessWidget {
             Icon(
               Icons.error_outline_rounded,
               size: 48,
-              color: isDark ? AppColorsDark.error : AppColors.error,
+              color: isDark ? AppColorsDark.error : AppColorsLight.error,
             ),
             const SizedBox(height: 16),
             Text(
               'Something went wrong',
-              style: AppTextStyles.h2(isDark),
+              style: (isDark ? AppTypography.h2() : AppTypography.h2(color: AppColorsLight.textPrimary)),
             ),
             const SizedBox(height: 8),
             Text(
               message ?? 'We encountered an error while loading your data. Please check your connection and try again.',
               textAlign: TextAlign.center,
-              style: AppTextStyles.bodyMedium(isDark).copyWith(
-                color: isDark ? AppColorsDark.textSecondary : AppColors.textSecondary,
+              style: (isDark ? AppTypography.bodyMd() : AppTypography.bodyMd(color: AppColorsLight.textMuted)).copyWith(
+                color: isDark ? AppColorsDark.textMuted : AppColorsLight.textMuted,
               ),
             ),
             const SizedBox(height: 24),
@@ -60,7 +60,7 @@ class ErrorRetryWidget extends StatelessWidget {
               ),
               child: Text(
                 'Retry',
-                style: AppTextStyles.buttonLarge(isDark),
+                style: (isDark ? AppTypography.labelLg() : AppTypography.labelLg(color: Colors.white)),
               ),
             ),
           ],

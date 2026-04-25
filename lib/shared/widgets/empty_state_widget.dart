@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
-import '../theme/app_text_styles.dart';
+import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_typography.dart';
 
 enum EmptyStateType {
   food,
@@ -117,8 +117,7 @@ class FitKarmaEmptyState extends StatelessWidget {
             if (hindiTitle != null) ...[
               Text(
                 hindiTitle!,
-                style: AppTextStyles.bodySmall(isDark).copyWith(
-                  color: Theme.of(context).primaryColor,
+                style: AppTypography.hindi(color: isDark ? AppColorsDark.primary : AppColorsLight.primary).copyWith(
                   fontWeight: FontWeight.bold,
                 ),
                 textAlign: TextAlign.center,
@@ -127,14 +126,14 @@ class FitKarmaEmptyState extends StatelessWidget {
             ],
             Text(
               title ?? _defaultTitle,
-              style: AppTextStyles.h3(isDark),
+              style: (isDark ? AppTypography.h3() : AppTypography.h3(color: AppColorsLight.textPrimary)),
               textAlign: TextAlign.center,
             ),
             if (subtitle != null) ...[
               const SizedBox(height: 8),
               Text(
                 subtitle!,
-                style: AppTextStyles.bodySmall(isDark),
+                style: (isDark ? AppTypography.bodySm() : AppTypography.bodySm(color: AppColorsLight.textMuted)),
                 textAlign: TextAlign.center,
               ),
             ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../core/config/app_theme.dart';
+import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_typography.dart';
 import 'dart:ui';
 
 /// Actions available in the Quick Log Speed Dial.
@@ -118,7 +119,7 @@ class _QuickLogFABState extends State<QuickLogFAB>
             boxShadow: [
               if (_isExpanded)
                 BoxShadow(
-                  color: AppTheme.primary.withValues(alpha: 0.3),
+                  color: (Theme.of(context).brightness == Brightness.dark ? AppColorsDark.primary : AppColorsLight.primary).withValues(alpha: 0.3),
                   blurRadius: 20,
                   spreadRadius: 5,
                 ),
@@ -126,7 +127,7 @@ class _QuickLogFABState extends State<QuickLogFAB>
           ),
           child: FloatingActionButton(
             onPressed: _toggle,
-            backgroundColor: AppTheme.primary,
+            backgroundColor: Theme.of(context).brightness == Brightness.dark ? AppColorsDark.primary : AppColorsLight.primary,
             elevation: 4,
             shape: const CircleBorder(),
             child: AnimatedRotation(
@@ -169,7 +170,7 @@ class _QuickLogFABState extends State<QuickLogFAB>
                         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                         margin: const EdgeInsets.only(right: 12),
                         decoration: BoxDecoration(
-                          color: AppTheme.surface0.withValues(alpha: 0.8),
+                          color: (Theme.of(context).brightness == Brightness.dark ? AppColorsDark.surface0 : AppColorsLight.surface0).withValues(alpha: 0.8),
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
                             color: Colors.white.withValues(alpha: 0.1),
@@ -178,8 +179,7 @@ class _QuickLogFABState extends State<QuickLogFAB>
                         ),
                         child: Text(
                           data.label,
-                          style: AppTheme.labelMd(context).copyWith(
-                            color: Colors.white,
+                          style: AppTypography.labelMd(color: Colors.white).copyWith(
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -195,16 +195,16 @@ class _QuickLogFABState extends State<QuickLogFAB>
                       _toggle();
                       widget.onActions[data.action]?.call();
                     },
-                    backgroundColor: AppTheme.bg2,
+                    backgroundColor: Theme.of(context).brightness == Brightness.dark ? AppColorsDark.bg2 : AppColorsLight.bg2,
                     mini: true,
                     elevation: 2,
                     shape: CircleBorder(
                       side: BorderSide(
-                        color: AppTheme.primary.withValues(alpha: 0.3),
+                        color: (Theme.of(context).brightness == Brightness.dark ? AppColorsDark.primary : AppColorsLight.primary).withValues(alpha: 0.3),
                         width: 1,
                       ),
                     ),
-                    child: Icon(data.icon, color: AppTheme.primary, size: 20),
+                    child: Icon(data.icon, color: Theme.of(context).brightness == Brightness.dark ? AppColorsDark.primary : AppColorsLight.primary, size: 20),
                   ),
                 ),
               ],

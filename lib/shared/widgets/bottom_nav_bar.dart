@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../core/config/app_theme.dart';
+import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_typography.dart';
 
 /// Model representing a single item in the bottom navigation bar.
 class BottomNavItem {
@@ -63,7 +64,7 @@ class FitKarmaBottomNav extends ConsumerWidget {
     return BottomAppBar(
       height: 80,
       padding: EdgeInsets.zero,
-      color: isDark ? AppTheme.bg1 : AppTheme.lBg1,
+      color: isDark ? AppColorsDark.bg1 : AppColorsLight.bg1,
       shape: const CircularNotchedRectangle(),
       notchMargin: 10,
       child: Row(
@@ -120,8 +121,8 @@ class _NavBarItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final activeColor = isDark ? AppTheme.primary : AppTheme.lPrimary;
-    final inactiveColor = isDark ? AppTheme.textMuted : AppTheme.lTextSecondary;
+    final activeColor = isDark ? AppColorsDark.primary : AppColorsLight.primary;
+    final inactiveColor = isDark ? AppColorsDark.textMuted : AppColorsLight.textMuted;
     
     return Expanded(
       child: InkWell(
@@ -163,7 +164,7 @@ class _NavBarItem extends StatelessWidget {
             const SizedBox(height: 4),
             Text(
               item.labelEn.toUpperCase(),
-              style: AppTheme.labelMd(context).copyWith(
+              style: (isDark ? AppTypography.labelMd() : AppTypography.labelMd(color: activeColor)).copyWith(
                 fontSize: 9,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                 color: isSelected ? activeColor : inactiveColor,
@@ -172,10 +173,11 @@ class _NavBarItem extends StatelessWidget {
             ),
             Text(
               item.labelHi,
-              style: AppTheme.hindi(context).copyWith(
+              style: AppTypography.hindi(
+                color: isSelected ? activeColor.withValues(alpha: 0.9) : inactiveColor.withValues(alpha: 0.7)
+              ).copyWith(
                 fontSize: 9,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                color: isSelected ? activeColor.withValues(alpha: 0.9) : inactiveColor.withValues(alpha: 0.7),
               ),
             ),
           ],

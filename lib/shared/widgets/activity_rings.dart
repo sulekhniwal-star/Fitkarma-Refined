@@ -1,9 +1,8 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../theme/app_colors.dart';
-import '../../core/config/device_tier.dart';
-import '../../core/config/app_theme.dart';
+import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_typography.dart';
 
 /// Data model for a single activity ring.
 class RingData {
@@ -43,7 +42,7 @@ class ActivityRingsWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final trackColor = isDark ? AppColorsDark.divider : AppColors.divider;
+    final trackColor = isDark ? AppColorsDark.divider : AppColorsLight.divider;
     final tier = ref.watch(deviceTierProvider);
 
     // Primary metric (outermost ring)
@@ -65,14 +64,11 @@ class ActivityRingsWidget extends ConsumerWidget {
                   children: [
                     Text(
                       primaryRing.value,
-                      style: AppTheme.metricLg(context).copyWith(
-                        color: isDark ? AppTheme.textPrimary : AppTheme.lTextPrimary,
-                      ),
+                      style: AppTypography.metricLg(color: isDark ? AppColorsDark.textPrimary : AppColorsLight.textPrimary),
                     ),
                     Text(
                       primaryRing.label.toUpperCase(),
-                      style: AppTheme.caption(context).copyWith(
-                        color: AppTheme.textMuted,
+                      style: AppTypography.caption(color: isDark ? AppColorsDark.textMuted : AppColorsLight.textMuted).copyWith(
                         letterSpacing: 2,
                         fontWeight: FontWeight.bold,
                       ),
@@ -205,14 +201,13 @@ class _StatItem extends StatelessWidget {
             const SizedBox(width: 6),
             Text(
               ring.label,
-              style: AppTheme.bodySm(context).copyWith(color: AppTheme.textSecondary),
+              style: AppTypography.bodySm(color: isDark ? AppColorsDark.textMuted : AppColorsLight.textMuted),
             ),
           ],
         ),
         Text(
           ring.value,
-          style: AppTheme.labelLg(context).copyWith(
-            color: isDark ? AppTheme.textPrimary : AppTheme.lTextPrimary,
+          style: AppTypography.labelLg(color: isDark ? AppColorsDark.textPrimary : AppColorsLight.textPrimary).copyWith(
             fontWeight: FontWeight.bold,
           ),
         ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../theme/app_text_styles.dart';
+import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_typography.dart';
 
 /// A widget that displays text in both English and Hindi.
 /// 
@@ -30,11 +31,11 @@ class BilingualLabel extends StatelessWidget {
       children: [
         Text(
           english,
-          style: englishStyle ?? AppTextStyles.h3(isDark),
+          style: englishStyle ?? (isDark ? AppTypography.h3() : AppTypography.h3(color: AppColorsLight.textPrimary)),
         ),
         Text(
           hindi,
-          style: hindiStyle ?? AppTextStyles.sectionHeaderHindi(isDark),
+          style: hindiStyle ?? (isDark ? AppTypography.hindi() : AppTypography.hindi(color: AppColorsLight.textSecondary)),
         ),
       ],
     );

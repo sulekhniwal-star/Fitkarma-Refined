@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
-import '../../../shared/theme/app_colors.dart';
+import '../../../core/theme/app_colors.dart';
 import '../../../shared/theme/app_text_styles.dart';
 import '../../../shared/widgets/async_value_widget.dart';
 import '../../../shared/widgets/food_item_card.dart';

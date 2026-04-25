@@ -1,7 +1,8 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../core/config/app_theme.dart';
+import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_typography.dart';
 import '../../core/config/device_tier.dart';
 
 enum BentoSize {
@@ -94,15 +95,15 @@ class BentoCard extends ConsumerWidget {
     double widthFactor,
     Widget content,
   ) {
-    final glassColor = isDark ? AppTheme.bg2 : AppTheme.lSurface0;
+    final glassColor = isDark ? AppColorsDark.bg2 : AppColorsLight.surface0;
     final glassOpacity = tier.glassOpacity;
     final borderOpacity = isDark ? 0.1 : 0.08;
 
     Widget card = Container(
-      padding: padding ?? const EdgeInsets.all(AppTheme.radiusMd),
+      padding: padding ?? const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: glassColor.withValues(alpha: glassOpacity),
-        borderRadius: BorderRadius.circular(AppTheme.radiusLg),
+        borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: (isDark ? Colors.white : Colors.black).withValues(alpha: borderOpacity),
           width: 0.5,
@@ -110,7 +111,7 @@ class BentoCard extends ConsumerWidget {
         boxShadow: showBorderGlow && tier.hasAmbientGlow
             ? [
                 BoxShadow(
-                  color: (glowColor ?? AppTheme.primary).withValues(alpha: 0.15),
+                  color: (glowColor ?? (isDark ? AppColorsDark.primary : AppColorsLight.primary)).withValues(alpha: 0.15),
                   blurRadius: 20,
                   spreadRadius: -5,
                 ),
@@ -122,7 +123,7 @@ class BentoCard extends ConsumerWidget {
 
     if (tier.isGlassSurfacesEnabled) {
       card = ClipRRect(
-        borderRadius: BorderRadius.circular(AppTheme.radiusLg),
+        borderRadius: BorderRadius.circular(16),
         child: BackdropFilter(
           filter: ImageFilter.blur(
             sigmaX: tier.blurRadius,
@@ -136,7 +137,7 @@ class BentoCard extends ConsumerWidget {
     if (onTap != null) {
       card = InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(AppTheme.radiusLg),
+        borderRadius: BorderRadius.circular(16),
         child: card,
       );
     }

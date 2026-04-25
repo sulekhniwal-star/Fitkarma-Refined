@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fitkarma/core/config/app_theme.dart';
+import 'package:fitkarma/core/theme/app_theme.dart';
 import 'package:fitkarma/shared/widgets/fit_scaffold.dart';
 import 'package:fitkarma/features/ayurveda/domain/prakriti_quiz.dart';
 import 'package:fitkarma/features/ayurveda/domain/ayurveda_providers.dart';

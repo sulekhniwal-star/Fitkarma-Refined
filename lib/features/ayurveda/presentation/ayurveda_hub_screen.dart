@@ -6,7 +6,7 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:fitkarma/features/ayurveda/domain/dosha_calculator.dart';
 import 'package:fitkarma/features/ayurveda/domain/ayurveda_providers.dart';
 import 'package:fitkarma/features/ayurveda/data/ayurveda_data.dart';
-import 'package:fitkarma/core/config/app_theme.dart';
+import 'package:fitkarma/core/theme/app_theme.dart';
 import 'package:fitkarma/shared/widgets/glass_card.dart';
 import 'package:fitkarma/shared/widgets/fit_scaffold.dart';
 

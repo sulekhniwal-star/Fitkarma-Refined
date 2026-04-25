@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../theme/app_colors.dart';
-import '../theme/app_text_styles.dart';
+import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_typography.dart';
 
 class ChallengeCarouselCard extends StatelessWidget {
   final String title;
@@ -31,7 +31,7 @@ class ChallengeCarouselCard extends StatelessWidget {
         margin: const EdgeInsets.only(right: 16),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isDark ? AppColorsDark.surface : AppColors.surface,
+          color: isDark ? AppColorsDark.surface0 : AppColorsLight.surface0,
           borderRadius: BorderRadius.circular(12),
           border: isDark ? Border.all(color: AppColorsDark.divider) : null,
           boxShadow: isDark
@@ -54,13 +54,13 @@ class ChallengeCarouselCard extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                     decoration: BoxDecoration(
-                      color: AppColors.primary.withValues(alpha: 0.1),
+                      color: (isDark ? AppColorsDark.primary : AppColorsLight.primary).withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: Text(
                       festivalTag!,
                       style: TextStyle(
-                        color: AppColors.primary,
+                        color: isDark ? AppColorsDark.primary : AppColorsLight.primary,
                         fontSize: 10,
                         fontWeight: FontWeight.bold,
                       ),
@@ -71,13 +71,13 @@ class ChallengeCarouselCard extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(
-                    color: AppColors.accent.withValues(alpha: 0.1),
+                    color: (isDark ? AppColorsDark.accent : AppColorsLight.accent).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(
                     '+$xpReward XP',
                     style: TextStyle(
-                      color: isDark ? AppColorsDark.accentDark : AppColors.accentDark,
+                      color: isDark ? AppColorsDark.accent : AppColorsLight.accent,
                       fontSize: 10,
                       fontWeight: FontWeight.bold,
                     ),
@@ -88,14 +88,14 @@ class ChallengeCarouselCard extends StatelessWidget {
             const SizedBox(height: 12),
             Text(
               title,
-              style: AppTextStyles.h4(isDark),
+              style: (isDark ? AppTypography.h4() : AppTypography.h4(color: AppColorsLight.textPrimary)),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
             const SizedBox(height: 4),
             Text(
               description,
-              style: AppTextStyles.bodySmall(isDark),
+              style: (isDark ? AppTypography.bodySm() : AppTypography.bodySm(color: AppColorsLight.textMuted)),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
@@ -106,11 +106,11 @@ class ChallengeCarouselCard extends StatelessWidget {
               children: [
                 Text(
                   'Progress',
-                  style: AppTextStyles.caption(isDark),
+                  style: (isDark ? AppTypography.caption() : AppTypography.caption(color: AppColorsLight.textMuted)),
                 ),
                 Text(
                   '${(progress * 100).toInt()}%',
-                  style: AppTextStyles.caption(isDark).copyWith(fontWeight: FontWeight.bold),
+                  style: (isDark ? AppTypography.caption() : AppTypography.caption(color: AppColorsLight.textMuted)).copyWith(fontWeight: FontWeight.bold),
                 ),
               ],
             ),
@@ -119,8 +119,8 @@ class ChallengeCarouselCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(4),
               child: LinearProgressIndicator(
                 value: progress,
-                backgroundColor: isDark ? AppColorsDark.divider : AppColors.divider,
-                valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+                backgroundColor: isDark ? AppColorsDark.bg2 : AppColorsLight.bg2,
+                valueColor: AlwaysStoppedAnimation<Color>(isDark ? AppColorsDark.primary : AppColorsLight.primary),
                 minHeight: 6,
               ),
             ),

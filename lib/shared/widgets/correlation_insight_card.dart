@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../theme/app_colors.dart';
-import '../theme/app_text_styles.dart';
+import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_typography.dart';
 
 /// Represents a link to a specific app module within a correlation card.
 class ModuleLink {
@@ -35,8 +35,8 @@ class CorrelationInsightCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final backgroundColor = isDark ? AppColorsDark.secondarySurface : AppColors.secondarySurface;
-    final primaryColor = isDark ? AppColorsDark.secondary : AppColors.secondary;
+    final backgroundColor = isDark ? AppColorsDark.secondaryMuted : AppColorsLight.secondaryMuted;
+    final primaryColor = isDark ? AppColorsDark.secondary : AppColorsLight.secondary;
 
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
@@ -63,7 +63,7 @@ class CorrelationInsightCard extends StatelessWidget {
                 Expanded(
                   child: Text(
                     message,
-                    style: AppTextStyles.bodyMedium(isDark),
+                    style: (isDark ? AppTypography.bodyMd() : AppTypography.bodyMd(color: AppColorsLight.textPrimary)),
                   ),
                 ),
               ],
@@ -80,7 +80,7 @@ class CorrelationInsightCard extends StatelessWidget {
               children: [
                 Text(
                   'Was this helpful?',
-                  style: AppTextStyles.caption(isDark),
+                  style: (isDark ? AppTypography.caption() : AppTypography.caption(color: AppColorsLight.textMuted)),
                 ),
                 const Spacer(),
                 IconButton(
@@ -115,8 +115,8 @@ class _ModulePill extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final primaryColor = isDark ? AppColorsDark.secondary : AppColors.secondary;
-    final surfaceColor = isDark ? AppColorsDark.surface : AppColors.surface;
+    final primaryColor = isDark ? AppColorsDark.secondary : AppColorsLight.secondary;
+    final surfaceColor = isDark ? AppColorsDark.surface0 : AppColorsLight.surface0;
 
     return InkWell(
       onTap: link.onTap,
@@ -135,7 +135,7 @@ class _ModulePill extends StatelessWidget {
             const SizedBox(width: 4),
             Text(
               link.label,
-              style: AppTextStyles.labelMedium(isDark).copyWith(
+              style: (isDark ? AppTypography.labelMd() : AppTypography.labelMd(color: AppColorsLight.textPrimary)).copyWith(
                 color: primaryColor,
               ),
             ),

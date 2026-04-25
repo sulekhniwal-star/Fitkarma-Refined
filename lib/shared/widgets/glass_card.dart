@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import '../theme/app_colors.dart';
+import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_typography.dart';
 
 class GlassCard extends StatefulWidget {
   final Widget child;
@@ -11,6 +12,8 @@ class GlassCard extends StatefulWidget {
   final Color? borderColor;
   final VoidCallback? onTap;
   final bool animate;
+  final double? width;
+  final double? height;
 
   const GlassCard({
     super.key,
@@ -22,6 +25,8 @@ class GlassCard extends StatefulWidget {
     this.borderColor,
     this.onTap,
     this.animate = true,
+    this.width,
+    this.height,
   });
 
   @override
@@ -60,13 +65,15 @@ class _GlassCardState extends State<GlassCard> with SingleTickerProviderStateMix
         
     final defaultBorderColor = isDark 
         ? Colors.white.withValues(alpha: 0.1) 
-        : AppColors.primary.withValues(alpha: 0.1);
+        : AppColorsLight.primary.withValues(alpha: 0.1);
 
     Widget content = ClipRRect(
       borderRadius: BorderRadius.circular(widget.borderRadius),
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: widget.blur, sigmaY: widget.blur),
         child: Container(
+          width: widget.width,
+          height: widget.height,
           padding: widget.padding ?? const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: widget.color ?? defaultColor,
