@@ -153,7 +153,7 @@
 
 ### 3.1 Database
 
-- [ ] `appwrite databases create --databaseId "fitkarma-db" --name "FitKarma Database"`
+- [x] `appwrite databases create --databaseId "fitkarma-db" --name "FitKarma Database"`
 
 ### 3.2 Collections — Creation
 
