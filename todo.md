@@ -113,8 +113,8 @@
 
 ### 2.2 Configuration — `lib/core/config/`
 
-- [ ] `app_config.dart` — dart-define constants for endpoint, project ID, DB ID
-- [ ] `device_tier.dart` — `DeviceTier` enum (`low`, `mid`, `high`)
+- [x] `app_config.dart` — dart-define constants for endpoint, project ID, DB ID
+- [x] `device_tier.dart` — `DeviceTier` enum (`low`, `mid`, `high`)
 - [ ] `user_experience_stage.dart` — `UXStage` enum + `getUXStage(DateTime)` function
 
 ### 2.3 Providers — `lib/core/providers/`

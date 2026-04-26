@@ -10,8 +10,19 @@ class AppConfig {
 
   // DB IDs (set after CLI creates them)
   static const String dbId     = String.fromEnvironment('APPWRITE_DB_ID');
-  static const String usersCol = 'users';
-  static const String foodCol  = 'food_logs';
-  static const String bpCol    = 'bp_readings';
-  // ... other collection IDs
+  
+  // Collection IDs
+  static const String usersCol          = 'users';
+  static const String foodLogsCol       = 'food_logs';
+  static const String bpReadingsCol     = 'bp_readings';
+  static const String glucoseReadingsCol = 'glucose_readings';
+  static const String sleepLogsCol      = 'sleep_logs';
+  static const String waterLogsCol      = 'water_logs';
+  static const String medicationLogsCol = 'medication_logs';
+  static const String labReportsCol     = 'lab_reports';
+  static const String karmaEventsCol    = 'karma_events';
+
+  // Storage Buckets
+  static const String labReportsBucket  = 'lab-reports';
+  static const String avatarsBucket     = 'avatars';
 }
