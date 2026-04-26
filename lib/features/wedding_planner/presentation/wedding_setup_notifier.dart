@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:uuid/uuid.dart';
 import '../domain/wedding_setup_state.dart';
 import '../../../core/storage/drift_service.dart';
 import '../../../core/storage/app_database.dart';
+import 'package:drift/drift.dart';
 import '../../auth/domain/auth_providers.dart';
 import '../../auth/data/users_repository.dart';
 
 class WeddingSetupNotifier extends Notifier<WeddingSetupState> {
+  final _uuid = const Uuid();
+
   @override
   WeddingSetupState build() => const WeddingSetupState();
 
@@ -61,10 +65,13 @@ class WeddingSetupNotifier extends Notifier<WeddingSetupState> {
       for (final eventKey in state.selectedEvents) {
         await db.into(db.weddingEvents).insert(
           WeddingEventsCompanion.insert(
+            id: _uuid.v4(),
             userId: userId,
             eventKey: eventKey,
             eventName: _getEventName(eventKey),
             date: state.dateRange?.start ?? DateTime.now(),
+            idempotencyKey: _uuid.v4(),
+            syncStatus: const Value('pending'),
           ),
         );
       }
@@ -104,4 +111,3 @@ class WeddingSetupNotifier extends Notifier<WeddingSetupState> {
 final weddingSetupProvider = NotifierProvider<WeddingSetupNotifier, WeddingSetupState>(() {
   return WeddingSetupNotifier();
 });
-

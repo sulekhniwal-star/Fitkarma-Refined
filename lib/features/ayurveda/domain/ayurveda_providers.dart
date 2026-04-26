@@ -40,8 +40,11 @@ class AyurvedaNotifier extends _$AyurvedaNotifier {
         doshaPitta: Value(score.pitta),
         doshaKapha: Value(score.kapha),
         dominantDosha: Value(score.dominant.name),
+        updatedAt: Value(DateTime.now()),
+        syncStatus: const Value('pending'),
       ),
     );
+
     
     ref.invalidateSelf();
   }
@@ -54,13 +57,16 @@ class AyurvedaNotifier extends _$AyurvedaNotifier {
     final db = ref.read(driftDbProvider);
 
     await (db.update(db.users)..where((t) => t.id.equals(userId))).write(
-      const UsersCompanion(
-        doshaVata: Value(null),
-        doshaPitta: Value(null),
-        doshaKapha: Value(null),
-        dominantDosha: Value(null),
+      UsersCompanion(
+        doshaVata: const Value(null),
+        doshaPitta: const Value(null),
+        doshaKapha: const Value(null),
+        dominantDosha: const Value(null),
+        updatedAt: Value(DateTime.now()),
+        syncStatus: const Value('pending'),
       ),
     );
+
     
     ref.invalidateSelf();
   }

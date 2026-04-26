@@ -1,4 +1,5 @@
 import 'package:drift/drift.dart';
+import 'package:uuid/uuid.dart';
 import '../../../core/storage/app_database.dart';
 import '../../../core/security/encryption_service.dart';
 import '../../../core/network/sync_queue.dart';
@@ -7,11 +8,12 @@ import '../domain/bp_classifier.dart';
 class BPDriftService {
   final AppDatabase _db;
   static const String _dataClass = 'bp_glucose';
+  final _uuid = const Uuid();
 
   BPDriftService(this._db);
 
   /// Inserts an encrypted blood pressure log.
-  Future<int> insertBPLog({
+  Future<void> insertBPLog({
     required String userId,
     required int systolic,
     required int diastolic,
@@ -25,6 +27,7 @@ class BPDriftService {
 
     final classification = BPClassifier.classify(systolic, diastolic).name;
     final companion = BloodPressureLogsCompanion.insert(
+      id: _uuid.v4(),
       userId: userId,
       systolic: encSystolic,
       diastolic: encDiastolic,
@@ -34,9 +37,10 @@ class BPDriftService {
       notes: Value(encNote),
       source: 'manual',
       idempotencyKey: generateIdempotencyKey(userId, 'bp_log', DateTime.now().toIso8601String()),
+      syncStatus: const Value('pending'),
     );
 
-    return await _db.into(_db.bloodPressureLogs).insert(companion);
+    await _db.into(_db.bloodPressureLogs).insert(companion);
   }
 
   /// Fetches and decrypts blood pressure logs.
@@ -60,4 +64,3 @@ class BPDriftService {
     return decrypted;
   }
 }
-

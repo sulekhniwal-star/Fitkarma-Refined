@@ -2,12 +2,14 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:drift/drift.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:uuid/uuid.dart';
 import '../../../core/storage/drift_service.dart';
 import '../../../core/storage/app_database.dart';
 import '../../../core/network/sync_queue.dart';
 
 class KarmaRepository {
   final AppDatabase db;
+  final _uuid = const Uuid();
 
   KarmaRepository({required this.db});
 
@@ -27,14 +29,19 @@ class KarmaRepository {
     final newLevel = computeLevel(newTotal);
 
     // 2. Insert transaction
+    final txId = _uuid.v4();
     await db.into(db.karmaTransactions).insert(
           KarmaTransactionsCompanion.insert(
+            id: txId,
             userId: userId,
             amount: amount,
             action: action,
             description: Value(description),
             balanceAfter: newTotal,
-            createdAt: now,
+            createdAt: Value(now),
+            updatedAt: Value(now),
+            idempotencyKey: _uuid.v4(),
+            syncStatus: const Value('pending'),
           ),
         );
 
@@ -43,8 +50,11 @@ class KarmaRepository {
       UsersCompanion(
         karmaTotal: Value(newTotal),
         karmaLevel: Value(newLevel),
+        updatedAt: Value(now),
+        syncStatus: const Value('pending'),
       ),
     );
+
 
     // 4. Enqueue sync for Appwrite
     final idempotencyKey = generateIdempotencyKey(userId, 'karma', now.millisecondsSinceEpoch.toString());
@@ -52,7 +62,7 @@ class KarmaRepository {
           SyncQueueCompanion.insert(
             collection: 'karma_transactions',
             operation: 'create',
-            localId: idempotencyKey, // Transactions don't have a stable local integer ID usually, using key
+            localId: txId,
             payload: jsonEncode({
               'userId': userId,
               'amount': amount,
@@ -105,7 +115,7 @@ class KarmaRepository {
   }
 
   /// Recovers a streak if not used this month.
-  Future<bool> recoverStreak(String userId, int habitId) async {
+  Future<bool> recoverStreak(String userId, String habitId) async {
     final habit = await (db.select(db.habits)..where((t) => t.id.equals(habitId))).getSingleOrNull();
     if (habit == null) return false;
 
@@ -128,8 +138,13 @@ class KarmaRepository {
 
     // Mark as used
     await (db.update(db.habits)..where((t) => t.id.equals(habitId))).write(
-      const HabitsCompanion(streakRecoveryUsed: Value(true)),
+      HabitsCompanion(
+        streakRecoveryUsed: const Value(true),
+        updatedAt: Value(DateTime.now()),
+        syncStatus: const Value('pending'),
+      ),
     );
+
 
     return true;
   }
@@ -138,4 +153,3 @@ class KarmaRepository {
 final karmaRepositoryProvider = Provider<KarmaRepository>((ref) {
   return KarmaRepository(db: DriftService.db);
 });
-

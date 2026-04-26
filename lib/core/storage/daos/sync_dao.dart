@@ -57,7 +57,7 @@ class SyncDao extends DatabaseAccessor<AppDatabase> with _$SyncDaoMixin {
     await transaction(() async {
       await into(syncDeadLetter).insert(
         SyncDeadLetterCompanion.insert(
-          userId: '',
+          userId: 'unknown', // SyncQueue doesn't have userId currently
           originalItem: task.payload,
           failCount: task.retryCount + 1,
           lastError: Value(errorMessage),
@@ -72,13 +72,16 @@ class SyncDao extends DatabaseAccessor<AppDatabase> with _$SyncDaoMixin {
   Future<void> updateConfig(String key, String value) {
     return into(remoteConfigCache).insert(
       RemoteConfigCacheCompanion.insert(
+        id: 'system_config_$key', // RemoteConfigCache DOES use Syncable
+        userId: 'system',
         key: key,
         value: value,
         type: 'string',
         lastUpdated: DateTime.now(),
+        idempotencyKey: 'system_config_$key',
+        syncStatus: const Value('synced'),
       ),
       mode: InsertMode.insertOrReplace,
     );
   }
 }
-

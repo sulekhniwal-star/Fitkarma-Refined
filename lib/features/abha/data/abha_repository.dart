@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:drift/drift.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:uuid/uuid.dart';
 import '../../auth/domain/auth_providers.dart';
 import '../../../core/network/appwrite_client.dart';
 import '../../../core/security/encryption_service.dart';
@@ -9,11 +10,11 @@ import '../../../core/storage/app_database.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../blood_pressure/domain/bp_classifier.dart';
 import '../domain/abha_health_record.dart';
-// For LabMarker
 
 class AbhaRepository {
   final AppDatabase db;
   final FlutterSecureStorage secureStorage;
+  final _uuid = const Uuid();
   static const String dataClass = 'abha';
 
   AbhaRepository({required this.db, required this.secureStorage});
@@ -60,6 +61,7 @@ class AbhaRepository {
         .into(db.abhaLinks)
         .insert(
           AbhaLinksCompanion.insert(
+            id: _uuid.v4(),
             userId: userId,
             abhaIdEncrypted: idEnc,
             abhaAddressEncrypted: addrEnc != null
@@ -67,6 +69,8 @@ class AbhaRepository {
                 : const Value.absent(),
             linkedAtEncrypted: nowEnc,
             consentGranted: true,
+            idempotencyKey: _uuid.v4(),
+            syncStatus: const Value('pending'),
           ),
         );
   }
@@ -169,6 +173,7 @@ class AbhaRepository {
           .into(db.bloodPressureLogs)
           .insert(
             BloodPressureLogsCompanion.insert(
+              id: _uuid.v4(),
               userId: userId,
               systolic: sysEnc,
               diastolic: diaEnc,
@@ -177,6 +182,7 @@ class AbhaRepository {
               classification: classification,
               source: 'abha',
               idempotencyKey: '${userId}_bp_${record.date.toIso8601String()}',
+              syncStatus: const Value('pending'),
             ),
           );
     }
@@ -219,6 +225,7 @@ class AbhaRepository {
           .into(db.glucoseLogs)
           .insert(
             GlucoseLogsCompanion.insert(
+              id: _uuid.v4(),
               userId: userId,
               glucoseMgdl: valEnc,
               readingType: type,
@@ -227,6 +234,7 @@ class AbhaRepository {
               source: 'abha',
               idempotencyKey:
                   '${userId}_glucose_${record.date.toIso8601String()}',
+              syncStatus: const Value('pending'),
             ),
           );
     }
@@ -240,6 +248,7 @@ class AbhaRepository {
         .into(db.labReports)
         .insert(
           LabReportsCompanion.insert(
+            id: _uuid.v4(),
             userId: userId,
             reportDate: record.date,
             labName: Value(record.source),
@@ -247,6 +256,8 @@ class AbhaRepository {
             confirmedByUser: const Value(true), // ABHA records are pre-verified
             source: 'abha',
             importedMetrics: Value(jsonEncode(metrics.keys.toList())),
+            idempotencyKey: _uuid.v4(),
+            syncStatus: const Value('pending'),
           ),
         );
   }

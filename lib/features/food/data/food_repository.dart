@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:drift/drift.dart';
 import 'food_aw_service.dart';
 import '../../../core/storage/app_database.dart';
 import '../../../core/storage/daos/food_dao.dart';
 import '../../../core/storage/daos/sync_dao.dart';
 import '../../../core/constants/api_endpoints.dart';
-// For generateIdempotencyKey
 
 class FoodRepository {
   final FoodDao _foodDao;
@@ -68,14 +68,14 @@ class FoodRepository {
   /// Logs a food entry locally and enqueues it for remote synchronization.
   Future<void> logFood(FoodLogsCompanion log) async {
     // 1. Local Persistence
-    final localId = await _foodDao.insertLog(log);
+    await _foodDao.insertLog(log);
 
     // 2. Synchronize to Cloud via Queue
     await _syncDao.enqueue(
       SyncQueueCompanion.insert(
         collection: AW.foodLogs,
         operation: 'create',
-        localId: localId.toString(),
+        localId: log.id.value,
         payload: jsonEncode({
           'food_name': log.foodName.value,
           'meal_type': log.mealType.value,
@@ -97,4 +97,3 @@ class FoodRepository {
     return await _foodDao.copyYesterdayMeals(userId);
   }
 }
-

@@ -112,8 +112,8 @@ class FoodDao extends DatabaseAccessor<AppDatabase> with _$FoodDaoMixin {
             loggedAt: now,
             logMethod: const Value('copy_yesterday'),
             idempotencyKey: _generateIdempotencyKey(userId, 'food_log', '${log.id}_copy'),
-            createdAt: now,
-            updatedAt: now,
+            createdAt: Value(now),
+            updatedAt: Value(now),
             syncStatus: const Value('pending'),
           ),
         );

@@ -15,23 +15,6 @@ class SyncEngineService {
 
   SyncEngineService({required this.db, required this.syncDao});
 
-  /// The standard way to insert a record into any syncable table.
-  /// This handles UUID generation, sync queueing, and optimistic status.
-  Future<String> createRecord<T extends Table, D extends DataClass>(
-    SyncableTable table, // We might need a common interface or just use custom logic
-    Companion companion, {
-    required String collection,
-  }) async {
-    final localId = _uuid.v4();
-    final idempotencyKey = _uuid.v4();
-    
-    // 1. Prepare the record with sync metadata
-    // This is tricky with Drift because Companions are specific to tables.
-    // We might need to use a more generic approach or helper methods per DAO.
-    
-    return localId;
-  }
-
   /// Processes the sync queue. Should be called when online.
   Future<void> processQueue() async {
     final pending = await syncDao.getPendingTasks(limit: 10);
@@ -52,6 +35,7 @@ class SyncEngineService {
   }
 
   Future<void> _syncTask(SyncQueueEntry task) async {
+    // ignore: unused_local_variable
     final payload = jsonDecode(task.payload);
     
     // Logic to call Appwrite based on task.operation and task.collection

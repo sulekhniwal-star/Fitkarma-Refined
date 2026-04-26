@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:drift/drift.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:uuid/uuid.dart';
 import '../../../core/storage/app_database.dart';
 import '../../../core/storage/drift_service.dart';
 import '../../../core/network/sync_queue.dart';
@@ -8,6 +9,7 @@ import '../../../core/constants/api_endpoints.dart';
 
 class WaterRepository {
   final AppDatabase db;
+  final _uuid = const Uuid();
 
   WaterRepository(this.db);
 
@@ -17,10 +19,12 @@ class WaterRepository {
     required int amountMl,
   }) async {
     final now = DateTime.now();
+    final localId = _uuid.v4();
     final idempotencyKey = generateIdempotencyKey(userId, 'water', now.toIso8601String());
 
-    final localId = await db.into(db.waterLogs).insert(
+    await db.into(db.waterLogs).insert(
           WaterLogsCompanion.insert(
+            id: localId,
             userId: userId,
             amountMl: amountMl,
             loggedAt: now,
@@ -32,7 +36,7 @@ class WaterRepository {
     // Queue for background sync with Appwrite
     await db.into(db.syncQueue).insert(
           SyncQueueCompanion.insert(
-            localId: localId.toString(),
+            localId: localId,
             operation: 'create',
             collection: AW.waterLogs,
             payload: jsonEncode({
@@ -65,7 +69,7 @@ class WaterRepository {
   }
 
   /// Deletes a specific water log and handles sync cancellation if needed.
-  Future<void> deleteWaterLog(int id) async {
+  Future<void> deleteWaterLog(String id) async {
     await (db.delete(db.waterLogs)..where((t) => t.id.equals(id))).go();
     // In a full sync implementation, we'd also queue a delete operation for Appwrite
   }

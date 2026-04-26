@@ -1,13 +1,15 @@
 import 'package:drift/drift.dart';
+import 'package:uuid/uuid.dart';
 import '../../../core/storage/app_database.dart';
 import '../../../core/network/sync_queue.dart';
 
 class MoodDriftService {
   final AppDatabase _db;
+  final _uuid = const Uuid();
 
   MoodDriftService(this._db);
 
-  Future<int> insertMoodLog({
+  Future<void> insertMoodLog({
     required String userId,
     required int score,
     required int energy,
@@ -16,6 +18,7 @@ class MoodDriftService {
     String? note,
   }) async {
     final companion = MoodLogsCompanion.insert(
+      id: _uuid.v4(),
       userId: userId,
       moodScore: score,
       energyLevel: Value(energy),
@@ -24,9 +27,10 @@ class MoodDriftService {
       notes: Value(note),
       loggedAt: DateTime.now(),
       idempotencyKey: generateIdempotencyKey(userId, 'mood_log', DateTime.now().toIso8601String()),
+      syncStatus: const Value('pending'),
     );
 
-    return await _db.into(_db.moodLogs).insert(companion);
+    await _db.into(_db.moodLogs).insert(companion);
   }
 
   Future<List<MoodLog>> getRecentMoods(String userId) async {
@@ -37,4 +41,3 @@ class MoodDriftService {
         .get();
   }
 }
-

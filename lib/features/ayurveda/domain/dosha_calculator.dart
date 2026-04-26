@@ -9,7 +9,7 @@ class DoshaScore {
 
   Map<Dosha, double> get percentages {
     final total = vata + pitta + kapha;
-    if (total == 0) return {Dosha.vata: 0, Dosha.pitta: 0, Dosha.kapha: 0};
+    if (total == 0) return {Dosha.vata: 33.3, Dosha.pitta: 33.3, Dosha.kapha: 33.4};
     return {
       Dosha.vata: (vata / total) * 100,
       Dosha.pitta: (pitta / total) * 100,
@@ -26,21 +26,17 @@ class DoshaScore {
 }
 
 class DoshaCalculator {
-  /// Calculates dosha scores from 12 answers.
-  /// Each answer index is a question, value 0-2 (mapping to V, P, K).
-  static DoshaScore calculate(List<int> answers) {
+  /// Calculates dosha scores from a list of selected option points.
+  /// Each selected option is a Map<String, int> like {'vata': 3, 'pitta': 0, 'kapha': 0}.
+  static DoshaScore calculate(List<Map<String, int>> selections) {
     int v = 0, p = 0, k = 0;
     
-    // Simplified mapping for demo purposes
-    for (int i = 0; i < answers.length; i++) {
-        final val = answers[i];
-        if (i % 3 == 0) {
-          v += val;
-        } else if (i % 3 == 1) p += val;
-        else k += val;
+    for (final selection in selections) {
+      v += selection['vata'] ?? 0;
+      p += selection['pitta'] ?? 0;
+      k += selection['kapha'] ?? 0;
     }
     
     return DoshaScore(vata: v, pitta: p, kapha: k);
   }
 }
-

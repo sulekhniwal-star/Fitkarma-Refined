@@ -1,11 +1,12 @@
 import 'package:drift/drift.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:uuid/uuid.dart';
 import '../../../core/security/encryption_service.dart';
 import '../../../core/storage/app_database.dart';
 import '../../../core/storage/drift_service.dart';
 
 class AppointmentModel {
-  final int? id;
+  final String? id;
   final String doctorName;
   final String? speciality;
   final DateTime appointmentDt;
@@ -22,6 +23,7 @@ class AppointmentModel {
 
 class AppointmentsRepository {
   final AppDatabase db;
+  final _uuid = const Uuid();
   static const String dataClass = 'appointments';
 
   AppointmentsRepository({required this.db});
@@ -39,11 +41,14 @@ class AppointmentsRepository {
 
     await db.into(db.doctorAppointments).insert(
           DoctorAppointmentsCompanion.insert(
+            id: _uuid.v4(),
             userId: userId,
             doctorNameEncrypted: nameEnc,
             specialityEncrypted: Value(specEnc),
             appointmentDtEncrypted: dateEnc,
             notesEncrypted: Value(notesEnc),
+            idempotencyKey: _uuid.v4(),
+            syncStatus: const Value('pending'),
           ),
         );
   }
@@ -81,4 +86,3 @@ class AppointmentsRepository {
 final appointmentsRepositoryProvider = Provider<AppointmentsRepository>((ref) {
   return AppointmentsRepository(db: DriftService.db);
 });
-

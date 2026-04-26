@@ -1,4 +1,5 @@
 import 'package:drift/drift.dart';
+import 'package:uuid/uuid.dart';
 import '../../../core/storage/app_database.dart';
 import '../../../core/security/encryption_service.dart';
 import '../../../core/network/sync_queue.dart';
@@ -6,10 +7,11 @@ import '../../../core/network/sync_queue.dart';
 class GlucoseDriftService {
   final AppDatabase _db;
   static const String _dataClass = 'bp_glucose';
+  final _uuid = const Uuid();
 
   GlucoseDriftService(this._db);
 
-  Future<int> insertGlucoseLog({
+  Future<void> insertGlucoseLog({
     required String userId,
     required double value,
     required String readingType,
@@ -22,6 +24,7 @@ class GlucoseDriftService {
     final classification = _classifyGlucose(value, readingType);
     
     final companion = GlucoseLogsCompanion.insert(
+      id: _uuid.v4(),
       userId: userId,
       glucoseMgdl: encValue,
       readingType: readingType,
@@ -31,9 +34,10 @@ class GlucoseDriftService {
       notes: Value(encNote),
       source: 'manual',
       idempotencyKey: generateIdempotencyKey(userId, 'glucose_log', DateTime.now().toIso8601String()),
+      syncStatus: const Value('pending'),
     );
 
-    return await _db.into(_db.glucoseLogs).insert(companion);
+    await _db.into(_db.glucoseLogs).insert(companion);
   }
 
   String _classifyGlucose(double value, String readingType) {
@@ -71,4 +75,3 @@ class GlucoseDriftService {
     return decrypted;
   }
 }
-

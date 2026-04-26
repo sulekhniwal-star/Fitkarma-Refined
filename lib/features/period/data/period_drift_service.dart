@@ -1,4 +1,5 @@
 import 'package:drift/drift.dart';
+import 'package:uuid/uuid.dart';
 import '../../../core/security/encryption_service.dart';
 import '../../../core/storage/app_database.dart';
 
@@ -22,6 +23,7 @@ class PeriodLogModel {
 
 class PeriodDriftService {
   final AppDatabase db;
+  final _uuid = const Uuid();
   static const String dataClass = 'period';
 
   PeriodDriftService({required this.db});
@@ -44,12 +46,15 @@ class PeriodDriftService {
 
     await db.into(db.periodLogs).insert(
           PeriodLogsCompanion.insert(
+            id: _uuid.v4(),
             userId: userId,
             cycleStartEncrypted: startEnc,
             cycleEndEncrypted: Value(endEnc),
             symptomsEncrypted: Value(sxEnc),
             flowIntensityEncrypted: Value(flowEnc),
             notesEncrypted: Value(notesEnc),
+            idempotencyKey: _uuid.v4(),
+            syncStatus: const Value('pending'),
           ),
         );
     // Sync to Appwrite is OPT-IN, so we don't enqueue here by default.
@@ -130,4 +135,3 @@ class PeriodDriftService {
     }
   }
 }
-

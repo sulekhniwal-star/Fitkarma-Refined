@@ -33,7 +33,7 @@ final class AyurvedaNotifierProvider
   AyurvedaNotifier create() => AyurvedaNotifier();
 }
 
-String _$ayurvedaNotifierHash() => r'f9a3d1a6d4a6145316ea68e63876b275909f9e96';
+String _$ayurvedaNotifierHash() => r'f47495bcc5db755b5a92cb3fca30ea4a601af5b4';
 
 abstract class _$AyurvedaNotifier extends $AsyncNotifier<DoshaScore?> {
   FutureOr<DoshaScore?> build();

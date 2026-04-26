@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
+import 'package:uuid/uuid.dart';
+import 'package:drift/drift.dart' hide Column;
 
 import '../../../core/theme/app_theme.dart';
 import '../../../shared/widgets/async_value_widget.dart';
@@ -333,10 +335,12 @@ class _PortionSelectorSheetState extends ConsumerState<_PortionSelectorSheet> {
                 if (userId == null) return;
 
                 final calories = (widget.item['calories'] ?? 100.0).toDouble() * _quantity;
+                final uuid = const Uuid().v4();
                 final idempotencyKey = generateIdempotencyKey(userId, 'food_log', DateTime.now().toIso8601String());
 
                 await ref.read(foodRepositoryProvider).logFood(
                   FoodLogsCompanion.insert(
+                    id: uuid,
                     userId: userId,
                     foodName: widget.item['name'],
                     mealType: widget.mealType,
@@ -347,6 +351,7 @@ class _PortionSelectorSheetState extends ConsumerState<_PortionSelectorSheet> {
                     fatG: 0,
                     loggedAt: DateTime.now(),
                     idempotencyKey: idempotencyKey,
+                    syncStatus: const Value('pending'),
                   ),
                 );
 

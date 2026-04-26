@@ -1,10 +1,12 @@
 import 'package:drift/drift.dart';
+import 'package:uuid/uuid.dart';
 import '../../../core/storage/app_database.dart';
 
 enum Chronotype { earlyBird, nightOwl, intermediate }
 
 class SleepDriftService {
   final AppDatabase _db;
+  final _uuid = const Uuid();
 
   SleepDriftService(this._db);
 
@@ -46,7 +48,7 @@ class SleepDriftService {
     return Chronotype.intermediate;
   }
 
-  Future<int> insertSleepLog({
+  Future<void> insertSleepLog({
     required String userId,
     required DateTime bedtime,
     required DateTime wakeTime,
@@ -58,6 +60,7 @@ class SleepDriftService {
     final wakeTimeStr = '${wakeTime.hour.toString().padLeft(2, '0')}:${wakeTime.minute.toString().padLeft(2, '0')}';
     
     final companion = SleepLogsCompanion.insert(
+      id: _uuid.v4(),
       userId: userId,
       date: DateTime.now(),
       bedtime: bedtimeStr,
@@ -66,9 +69,10 @@ class SleepDriftService {
       qualityScore: quality,
       notes: Value(note),
       source: 'manual',
+      idempotencyKey: _uuid.v4(),
+      syncStatus: const Value('pending'),
     );
 
-    return await _db.into(_db.sleepLogs).insert(companion);
+    await _db.into(_db.sleepLogs).insert(companion);
   }
 }
-

@@ -105,7 +105,7 @@ class AppDatabase extends _$AppDatabase {
           // a simple addColumn won't work. We need to recreate the tables.
           // For development, we'll drop and recreate.
           // WARNING: This deletes data. In production, we'd need complex migration.
-          final tablesToRecreate = [
+          final List<TableInfo> tablesToRecreate = [
             foodLogs, foodItems, workoutLogs, stepLogs, sleepLogs, moodLogs,
             medications, habits, habitCompletions, bodyMeasurements, fastingLogs,
             mealPlans, recipes, personalRecords, nutritionGoals, karmaTransactions,
@@ -114,6 +114,7 @@ class AppDatabase extends _$AppDatabase {
             festivalCalendar, remoteConfigCache, weddingEvents, insightLogs,
             insightRatings, users, heartRateLogs, ayurvedicRitualLogs, waterLogs
           ];
+
 
           for (final table in tablesToRecreate) {
             await m.deleteTable(table.actualTableName);

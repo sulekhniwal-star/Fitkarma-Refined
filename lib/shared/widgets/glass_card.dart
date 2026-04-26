@@ -14,6 +14,7 @@ class GlassCard extends ConsumerWidget {
   final double? height;
   final EdgeInsetsGeometry? padding;
   final double borderRadius;
+  final Color? color;           // Optional override for glass background
   final Color? glowColor;       // null = no glow
   final Color? borderColor;
   final VoidCallback? onTap;
@@ -25,6 +26,7 @@ class GlassCard extends ConsumerWidget {
     this.height,
     this.padding,
     this.borderRadius = AppRadius.md,
+    this.color,
     this.glowColor,
     this.borderColor,
     this.onTap,
@@ -36,9 +38,9 @@ class GlassCard extends ConsumerWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final useBlur = tier.hasBlur;
-    final bgColor = isDark
+    final bgColor = color ?? (isDark
         ? (useBlur ? AppColorsDark.glass : AppColorsDark.surface1)
-        : (useBlur ? AppColorsLight.glass : AppColorsLight.surface1);
+        : (useBlur ? AppColorsLight.glass : AppColorsLight.surface1));
     final border = borderColor ??
         (isDark ? AppColorsDark.glassBorder : AppColorsLight.glassBorder);
 

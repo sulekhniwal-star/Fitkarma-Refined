@@ -96,22 +96,19 @@ class RemoteConfig extends AsyncNotifier<RemoteConfigData> {
           batch.insert(
             db.remoteConfigCache,
             RemoteConfigCacheCompanion.insert(
+              id: 'system_config_$key',
+              userId: 'system',
               key: key,
               value: value,
               type: type,
               lastUpdated: DateTime.now(),
+              idempotencyKey: 'system_config_$key',
+              syncStatus: const Value('synced'),
             ),
             mode: InsertMode.insertOrReplace,
           );
         }
       });
-
-      // Optional: If you want the UI to react to the new config immediately after refresh:
-      // final refreshedConfig = {
-      //   for (final doc in response.documents)
-      //     doc.data['key'] as String: _parseValue(doc.data['value'].toString(), doc.data['type'] as String)
-      // };
-      // state = AsyncData(RemoteConfigData(refreshedConfig));
       
     } catch (e) {
       // Fail silently for background refresh to avoid UI error states
@@ -121,4 +118,3 @@ class RemoteConfig extends AsyncNotifier<RemoteConfigData> {
 
 /// Global provider for the RemoteConfig service.
 final remoteConfigProvider = AsyncNotifierProvider<RemoteConfig, RemoteConfigData>(RemoteConfig.new);
-

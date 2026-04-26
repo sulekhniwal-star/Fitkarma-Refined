@@ -737,7 +737,7 @@ class _HerbalRemedies extends StatelessWidget {
     );
   }
 
-  void _showRemedyDetails(BuildContext context, Map<String, String> herb) {
+  void _showRemedyDetails(BuildContext context, Map<String, dynamic> herb) {
     showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(

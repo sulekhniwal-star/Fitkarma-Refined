@@ -2,13 +2,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../auth/domain/auth_providers.dart';
 import '../../nutrition/data/water_repository.dart';
 import '../../../shared/widgets/meal_tab_bar.dart';
+import '../../../core/di/providers.dart';
+import '../../festival/presentation/festival_providers.dart';
+import '../../karma/data/karma_repository.dart';
 
-// --- Placeholder Models ---
+// --- Dashboard Models ---
 
 class InsightOutput {
   final String message;
   final bool isCorrelation;
-  final List<dynamic>? modules; // Simplified for now
+  final List<dynamic>? modules;
   InsightOutput({required this.message, this.isCorrelation = false, this.modules});
 }
 
@@ -36,14 +39,30 @@ class WeddingEventData {
   WeddingEventData({required this.role, required this.daysToWedding, required this.nextEventName, required this.daysToNextEvent});
 }
 
-// --- Dashboard Providers (Mocked for UI Implementation) ---
+// --- Dashboard Providers (Connected to Real Data) ---
 
-final todayStepsProvider = FutureProvider<int>((ref) async {
-  return 8540;
+final todayStepsProvider = StreamProvider<int>((ref) {
+  final userId = ref.watch(authStateProvider).value?.id;
+  if (userId == null) return Stream.value(0);
+  
+  final dao = ref.watch(healthDaoProvider);
+  final now = DateTime.now();
+  final start = DateTime(now.year, now.month, now.day);
+  final end = start.add(const Duration(days: 1));
+  
+  return dao.watchSteps(userId, start, end).map((logs) =>
+    logs.fold(0, (sum, log) => sum + log.stepCount)
+  );
 });
 
-final todayCaloriesProvider = FutureProvider<double>((ref) async {
-  return 1450.0;
+final todayCaloriesProvider = StreamProvider<double>((ref) {
+  final userId = ref.watch(authStateProvider).value?.id;
+  if (userId == null) return Stream.value(0.0);
+  
+  final dao = ref.watch(foodDaoProvider);
+  return dao.getTodayLogs(userId, DateTime.now()).map((logs) =>
+    logs.fold(0.0, (sum, log) => sum + log.calories)
+  );
 });
 
 final todayWaterProvider = FutureProvider<int>((ref) async {
@@ -54,10 +73,24 @@ final todayWaterProvider = FutureProvider<int>((ref) async {
 });
 
 final todayActiveMinutesProvider = FutureProvider<int>((ref) async {
-  return 45;
+  final userId = ref.watch(authStateProvider).value?.id;
+  if (userId == null) return 0;
+  
+  final dao = ref.watch(healthDaoProvider);
+  final workouts = await dao.getRecentWorkouts(userId, 20);
+  
+  final today = DateTime.now();
+  final todayWorkouts = workouts.where((w) => 
+    w.loggedAt.year == today.year && 
+    w.loggedAt.month == today.month && 
+    w.loggedAt.day == today.day
+  );
+  
+  return todayWorkouts.fold<int>(0, (sum, w) => sum + w.durationMin);
 });
 
 final latestInsightProvider = FutureProvider<InsightOutput?>((ref) async {
+  // Placeholder until Insight Engine is fully connected
   return InsightOutput(
     message: "You've been consistent with your water intake this week! Drinking more water helped improve your sleep quality by 12%.",
     isCorrelation: true,
@@ -76,14 +109,48 @@ class MealTabNotifier extends Notifier<MealType> {
 }
 
 final karmaProvider = FutureProvider<KarmaData>((ref) async {
-  return KarmaData(level: 12, title: 'Health Warrior', currentXP: 1450, nextLevelXP: 2000);
+  final userId = ref.watch(authStateProvider).value?.id;
+  if (userId == null) return KarmaData(level: 1, title: 'Seedling', currentXP: 0, nextLevelXP: 100);
+  
+  final userDao = ref.watch(userDaoProvider);
+  final user = await userDao.getUser(userId);
+  final repo = ref.watch(karmaRepositoryProvider);
+  
+  final xp = user?.karmaTotal ?? 0;
+  final level = user?.karmaLevel ?? 1;
+  
+  // Simple XP for next level calculation (quadratic matching repository)
+  // threshold = 41.65 * (level)^2
+  final nextLevelXP = (41.65 * level * level).toInt();
+  
+  return KarmaData(
+    level: level,
+    title: repo.getLevelTitle(level),
+    currentXP: xp,
+    nextLevelXP: nextLevelXP,
+  );
 });
 
 final activeFestivalProvider = FutureProvider<FestivalData?>((ref) async {
-  return FestivalData(name: 'Navratri', nameHi: 'नवरात्रि', daysRemaining: 3, fastingType: 'Fruitarian');
+  final repo = ref.watch(festivalRepositoryProvider);
+  final festival = await repo.getCurrentFestival();
+  
+  if (festival == null) return null;
+  
+  final now = DateTime.now();
+  final daysRemaining = festival.startDate.isAfter(now) 
+    ? festival.startDate.difference(now).inDays 
+    : 0;
+
+  return FestivalData(
+    name: festival.nameEn,
+    nameHi: festival.nameHi,
+    daysRemaining: daysRemaining,
+    fastingType: festival.fastingType ?? 'No Restriction',
+  );
 });
 
 final activeWeddingProvider = FutureProvider<WeddingEventData?>((ref) async {
-  return null; // For now
+  // Placeholder until Wedding Repository is implemented
+  return null;
 });
-

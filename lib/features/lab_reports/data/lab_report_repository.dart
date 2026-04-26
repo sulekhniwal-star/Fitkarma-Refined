@@ -26,6 +26,7 @@ class LabReportRepository {
 
     await _db.into(_db.labReports).insert(
       LabReportsCompanion.insert(
+        id: _uuid.v4(),
         userId: userId,
         reportDate: extraction.reportDate,
         labName: Value(extraction.labName),
@@ -34,6 +35,8 @@ class LabReportRepository {
         confirmedByUser: const Value(true),
         source: extraction.source,
         importedMetrics: Value(confirmedMetrics.join(', ')),
+        idempotencyKey: _uuid.v4(),
+        syncStatus: const Value('pending'),
       ),
     );
 
@@ -65,6 +68,7 @@ class LabReportRepository {
     if (sys.isConfirmed && dia.isConfirmed) {
       await _db.into(_db.bloodPressureLogs).insert(
         BloodPressureLogsCompanion.insert(
+          id: _uuid.v4(),
           userId: userId,
           systolic: sys.value.toInt().toString(),
           diastolic: dia.value.toInt().toString(),
@@ -72,6 +76,7 @@ class LabReportRepository {
           classification: _classifyBP(sys.value.toInt(), dia.value.toInt()),
           source: 'ocr',
           idempotencyKey: _uuid.v4(),
+          syncStatus: const Value('pending'),
         ),
       );
     }
@@ -84,6 +89,7 @@ class LabReportRepository {
     
     await _db.into(_db.glucoseLogs).insert(
       GlucoseLogsCompanion.insert(
+        id: _uuid.v4(),
         userId: userId,
         glucoseMgdl: marker.name == 'HbA1c' ? '0' : marker.value.toString(),
         readingType: marker.name == 'HbA1c' ? 'hba1c' : type,
@@ -92,6 +98,7 @@ class LabReportRepository {
         source: 'ocr',
         idempotencyKey: _uuid.v4(),
         hba1cEstimate: marker.name == 'HbA1c' ? Value(marker.value.toString()) : const Value.absent(),
+        syncStatus: const Value('pending'),
       ),
     );
   }

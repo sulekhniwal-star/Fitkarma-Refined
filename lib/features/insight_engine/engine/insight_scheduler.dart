@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:workmanager/workmanager.dart';
 import 'package:drift/drift.dart';
+import 'package:uuid/uuid.dart';
 import '../models/insight_rule.dart';
 import 'rule_evaluator.dart';
 import '../../../core/storage/drift_service.dart';
@@ -36,6 +37,7 @@ void callbackDispatcher() {
 class InsightScheduler {
   final AppDatabase db;
   final List<InsightRule> rules;
+  final _uuid = const Uuid();
 
   InsightScheduler(this.db, this.rules);
 
@@ -115,18 +117,25 @@ class InsightScheduler {
     final availableSlots = 2 - logsToday.length;
     for (final result in results.take(availableSlots)) {
       await db.into(db.insightLogs).insert(InsightLogsCompanion.insert(
+        id: _uuid.v4(),
         userId: userId,
         insightId: result.id,
         shownAt: now,
+        idempotencyKey: _uuid.v4(),
+        syncStatus: const Value('pending'),
       ));
     }
 
     // 7. Update last run timestamp in Drift (using RemoteConfigCache as a general KV store)
     await db.into(db.remoteConfigCache).insertOnConflictUpdate(RemoteConfigCacheCompanion.insert(
+      id: _uuid.v4(),
+      userId: userId,
       key: _lastRunKey,
       value: 'LAST_RUN_SUCCESS',
       type: 'timestamp',
       lastUpdated: now,
+      idempotencyKey: _uuid.v4(),
+      syncStatus: const Value('synced'),
     ));
   }
 
@@ -145,11 +154,13 @@ class InsightScheduler {
   /// Stores user ratings (👍/👎) in Drift
   Future<void> storeRating(String userId, String insightId, bool isPositive) async {
     await db.into(db.insightRatings).insert(InsightRatingsCompanion.insert(
+      id: _uuid.v4(),
       userId: userId,
       insightId: insightId,
       rating: isPositive ? 1 : -1,
       ratedAt: DateTime.now(),
+      idempotencyKey: _uuid.v4(),
+      syncStatus: const Value('pending'),
     ));
   }
 }
-

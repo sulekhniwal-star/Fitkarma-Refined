@@ -2,11 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:fitkarma/features/festival/presentation/festival_providers.dart';
-import 'package:fitkarma/features/festival/data/festival_repository.dart';
-import 'package:fitkarma/features/festival/domain/festival_date_engine.dart';
-import 'package:fitkarma/core/storage/drift_service.dart';
-import 'package:fitkarma/core/storage/app_database.dart'
-    show FestivalCalendarEntry;
 
 import 'package:fitkarma/features/auth/domain/auth_providers.dart';
 import 'package:fitkarma/features/dashboard/domain/dashboard_providers.dart';
@@ -27,15 +22,6 @@ import 'package:fitkarma/shared/widgets/ritucharya_card.dart';
 import 'package:fitkarma/shared/widgets/bento_card.dart';
 import 'package:fitkarma/shared/widgets/quick_log_fab.dart';
 
-final _currentFestivalProvider = FutureProvider<FestivalCalendarEntry?>((
-  ref,
-) async {
-  final db = DriftService.db;
-  final engine = FestivalDateEngine();
-  final repo = FestivalRepository(db: db, engine: engine);
-  return repo.getCurrentFestival();
-});
-
 class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({super.key});
 
@@ -47,12 +33,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   @override
   void initState() {
     super.initState();
-    // Trigger festival sync on startup
+    // Trigger initialization syncs
     Future.microtask(() async {
-      final db = DriftService.db;
-      final engine = FestivalDateEngine();
-      final repo = FestivalRepository(db: db, engine: engine);
-      await repo.syncAll();
+      await ref.read(festivalRepositoryProvider).syncAll();
       _triggerAbhaSync();
     });
   }
@@ -84,13 +67,12 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(authStateProvider).value;
-    final currentFestAsync = ref.watch(_currentFestivalProvider);
-    final currentFest = currentFestAsync.whenOrNull(data: (data) => data);
+    final currentFest = ref.watch(activeFestivalProvider).value;
 
     return FitScaffold(
       pattern: ScaffoldPattern.immersiveHero,
       title: 'Dashboard',
-      heroHeight: 320, // Strictly follow (§2.4a)
+      heroHeight: 320,
       heroBackground: currentFest != null
           ? Container(
               decoration: const BoxDecoration(gradient: AppTheme.heroFestival),
@@ -99,7 +81,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       heroContent: _buildHeroContent(context, user),
       floatingActionButton: QuickLogFAB(
         onActions: {
-          QuickLogAction.food: () {},
+          QuickLogAction.food: () => context.push('/food/log'),
           QuickLogAction.water: () {},
           QuickLogAction.mood: () {},
           QuickLogAction.workout: () {},
@@ -108,15 +90,15 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Row 1: Activity Row (Simple Stats §6.4)
+          // Row 1: Activity Row
           _buildActivitySummary(ref),
           const SizedBox(height: 24),
 
-          // Row 2: Secondary Metrics (Workout + Sleep §6.4)
+          // Row 2: Secondary Metrics
           _buildSecondaryMetrics(ref),
           const SizedBox(height: 24),
 
-          // Row 3: Seasonal Wellness (Ritucharya)
+          // Row 3: Seasonal Wellness
           const RitucharyaCard(),
           const SizedBox(height: 24),
 
@@ -124,14 +106,14 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           _buildContextualBanner(ref, currentFest),
           const SizedBox(height: 24),
 
-          // 5. AI Insights (§9)
+          // 5. AI Insights
           _buildInsightSection(ref),
           const SizedBox(height: 32),
 
           // 6. Food & Nutrition
           _buildMealSection(ref),
 
-          const SizedBox(height: 100), // Padding for BottomNav + FAB
+          const SizedBox(height: 100),
         ],
       ),
     );
@@ -147,7 +129,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         const SizedBox(height: 48),
-        // Personalized Header - Above the Fold (§6.1)
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Row(
@@ -168,9 +149,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           ),
         ),
         const Spacer(),
-        // The Visual Champion - L1 Hero Metric (§6.1)
         ActivityRingsWidget(
-          showLabels: false, // Cleaner for Hero
+          showLabels: false,
           rings: [
             RingData(
               progress: (steps / 10000).clamp(0, 1),
@@ -243,7 +223,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         children: [
           _buildSimpleStat(Icons.directions_walk_rounded, steps.toString(), 'Steps', AppTheme.primary),
           _buildSimpleStat(Icons.local_fire_department_rounded, calories.toInt().toString(), 'Kcal', AppTheme.accent),
-          _buildSimpleStat(Icons.emoji_events_rounded, '${karmaValue?.level ?? 0}', 'Level', AppTheme.warning),
+          _buildSimpleStat(Icons.emoji_events_rounded, '${karmaValue?.level ?? 1}', 'Level', AppTheme.warning),
         ],
       ),
     );
@@ -263,7 +243,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   Widget _buildSecondaryMetrics(WidgetRef ref) {
     return Row(
       children: [
-        // Latest Workout half-card (§6.4)
         Expanded(
           child: BentoCard(
             size: BentoSize.half,
@@ -274,7 +253,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Icon(Icons.directions_run_rounded, color: AppTheme.primary, size: 20),
+                    const Icon(Icons.directions_run_rounded, color: AppTheme.primary, size: 20),
                     Text('2h ago', style: AppTheme.caption(context).copyWith(color: AppTheme.textMuted)),
                   ],
                 ),
@@ -286,7 +265,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           ),
         ),
         const SizedBox(width: 12),
-        // Sleep half-card (§6.4)
         Expanded(
           child: BentoCard(
             size: BentoSize.half,
@@ -297,7 +275,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Icon(Icons.bedtime_rounded, color: AppTheme.secondary, size: 20),
+                    const Icon(Icons.bedtime_rounded, color: AppTheme.secondary, size: 20),
                     Text('Last Night', style: AppTheme.caption(context).copyWith(color: AppTheme.textMuted)),
                   ],
                 ),
@@ -319,19 +297,16 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
   Widget _buildContextualBanner(
     WidgetRef ref,
-    FestivalCalendarEntry? festival,
+    FestivalData? festival,
   ) {
     if (festival != null) {
-      final now = DateTime.now();
-      final daysRemaining = festival.startDate.difference(now).inDays;
-
       return FestivalCountdownBanner(
-        festivalName: festival.nameEn,
+        festivalName: festival.name,
         festivalNameHi: festival.nameHi,
-        daysRemaining: daysRemaining < 0 ? 0 : daysRemaining,
-        fastingType: festival.fastingType ?? 'Normal',
+        daysRemaining: festival.daysRemaining,
+        fastingType: festival.fastingType,
         bannerColor: AppTheme.primary,
-        onViewDietPlan: () => context.push('/festival/${festival.festivalKey}/diet'),
+        onViewDietPlan: () => context.push('/festival/${festival.name}/diet'),
       );
     }
 
@@ -356,7 +331,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
   Widget _buildInsightSection(WidgetRef ref) {
     final insight = ref.watch(latestInsightProvider);
-    final festival = ref.watch(currentFestivalProvider).value;
 
     return AsyncValueWidget<InsightOutput?>(
       value: insight,
@@ -369,33 +343,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               hindi: 'एआई अंतर्दृष्टि',
             ),
             const SizedBox(height: 16),
-
-            // Festival Diet Insight (§9)
-            if (festival != null &&
-                DateTime.now().isAfter(
-                  festival.startDate.subtract(const Duration(days: 1)),
-                ))
-              Padding(
-                padding: const EdgeInsets.only(bottom: 16),
-                child: BentoCard(
-                  size: BentoSize.full,
-                  padding: const EdgeInsets.all(16),
-                  child: Row(
-                    children: [
-                      const Icon(Icons.auto_awesome, color: AppTheme.accent),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Text(
-                          festival.insightMessage,
-                          style: AppTheme.labelMd(
-                            context,
-                          ).copyWith(color: AppTheme.textPrimary),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
 
             if (output != null) ...[
               if (output.isCorrelation)
@@ -430,8 +377,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           children: [
             const BilingualLabel(english: "Today's Meals", hindi: "आज का खाना"),
             TextButton(
-              onPressed: () {},
-              child: Text(
+              onPressed: () => context.push('/food/log'),
+              child: const Text(
                 'Add Meal',
                 style: TextStyle(color: AppTheme.primary),
               ),
@@ -445,18 +392,12 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               ref.read(selectedMealTabProvider.notifier).setTab(type),
         ),
         const SizedBox(height: 16),
+        // Food items should eventually come from todayCaloriesProvider's data
         FoodItemCard(
           name: 'Classic Masala Dosa',
           nameHi: 'मसाला डोसा',
           portionInfo: '1 plate · 340 kcal',
           emoji: '🍳',
-          onAdd: () {},
-        ),
-        const SizedBox(height: 12),
-        FoodItemCard(
-          name: 'Greek Yogurt with Berries',
-          portionInfo: '1 bowl · 185 kcal',
-          emoji: '🥣',
           onAdd: () {},
         ),
       ],

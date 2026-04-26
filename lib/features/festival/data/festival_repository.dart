@@ -3,6 +3,8 @@ import 'package:fitkarma/core/storage/app_database.dart';
 import 'package:fitkarma/features/festival/domain/festival_date_engine.dart';
 import 'package:drift/drift.dart';
 import 'package:fitkarma/features/festival/domain/festival_diet_plan.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fitkarma/core/storage/drift_service.dart';
 
 class FestivalRepository {
   final AppDatabase db;
@@ -30,9 +32,11 @@ class FestivalRepository {
     final entries = festivals.map((f) {
       // Find diet config if exists
       final dietConfig = festivalDietConfigs[f.festivalKey];
+      final id = '${f.festivalKey}_${f.year}';
       
       return FestivalCalendarCompanion(
-        id: Value('${f.festivalKey}_${f.year}'),
+        id: Value(id),
+        userId: const Value('system'), // Global festival
         festivalKey: Value(f.festivalKey),
         nameEn: Value(f.nameEn),
         nameHi: Value(f.nameHi),
@@ -41,8 +45,8 @@ class FestivalRepository {
         endDate: Value(f.endDate),
         calendarSystem: Value(f.system.name),
         dietPlanType: Value(dietConfig?.type.name ?? 'noRestriction'),
-        regionCodes: Value('["ALL"]'), // Default
-        religion: Value('universal'), // Default
+        regionCodes: const Value('["ALL"]'), // Default
+        religion: const Value('universal'), // Default
         isFastingDay: Value(dietConfig?.type == FestivalDietType.nirjalaFast || 
                           dietConfig?.type == FestivalDietType.phalaharFast || 
                           dietConfig?.type == FestivalDietType.sattvicFast || 
@@ -51,6 +55,10 @@ class FestivalRepository {
         insightMessage: Value(dietConfig?.insightCardMessage ?? 'Enjoy the festive day!'),
         computedDynamically: const Value(true),
         computedAt: Value(DateTime.now()),
+        updatedAt: Value(DateTime.now()),
+        createdAt: Value(DateTime.now()),
+        idempotencyKey: Value('local_$id'),
+        syncStatus: const Value('synced'), // Locally computed, no need to sync back
       );
     }).toList();
 
@@ -73,6 +81,7 @@ class FestivalRepository {
         final data = doc.data;
         return FestivalCalendarCompanion(
           id: Value(doc.$id),
+          userId: const Value('system'),
           festivalKey: Value(data['festival_key'] ?? ''),
           nameEn: Value(data['name_en'] ?? ''),
           nameHi: Value(data['name_hi'] ?? ''),
@@ -87,6 +96,10 @@ class FestivalRepository {
           insightMessage: Value(data['insight_message'] ?? ''),
           computedDynamically: const Value(false), // It's from the source of truth
           computedAt: Value(DateTime.now()),
+          updatedAt: Value(DateTime.now()),
+          createdAt: Value(DateTime.now()),
+          idempotencyKey: Value(doc.$id),
+          syncStatus: const Value('synced'),
         );
       }).toList();
 
