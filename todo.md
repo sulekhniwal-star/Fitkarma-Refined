@@ -119,14 +119,14 @@
 
 ### 2.3 Providers — `lib/core/providers/`
 
-- [ ] `core_providers.dart` — `appwriteClientProvider` (singleton `Client`)
-- [ ] `core_providers.dart` — `appwriteAccountProvider`
-- [ ] `core_providers.dart` — `appwriteDatabasesProvider`
-- [ ] `core_providers.dart` — `appwriteStorageProvider`
-- [ ] `core_providers.dart` — `appDatabaseProvider` (override in `ProviderScope`)
-- [ ] `device_tier_provider.dart` — `deviceTierProvider`
-- [ ] `ux_stage_provider.dart` — `uxStageProvider` (mocked for now)
-- [ ] `low_data_mode_provider.dart` — `LowDataModeNotifier` + `lowDataModeProvider`
+- [x] `core_providers.dart` — `appwriteClientProvider` (singleton `Client`)
+- [x] `core_providers.dart` — `appwriteAccountProvider`
+- [x] `core_providers.dart` — `appwriteDatabasesProvider`
+- [x] `core_providers.dart` — `appwriteStorageProvider`
+- [x] `core_providers.dart` — `appDatabaseProvider` (override in `ProviderScope`)
+- [x] `device_tier_provider.dart` — `deviceTierProvider`
+- [x] `ux_stage_provider.dart` — `uxStageProvider` (mocked for now)
+- [x] `low_data_mode_provider.dart` — `LowDataModeNotifier` + `lowDataModeProvider`
 
 ### 2.4 Router — `lib/core/router/`
 
