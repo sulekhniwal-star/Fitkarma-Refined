@@ -5,7 +5,7 @@
     "databases": [
         {
             "$id": "fitkarma-db",
-            "name": "fitkarma-db",
+            "name": "FitKarma Database",
             "enabled": true
         }
     ],
@@ -14,7 +14,168 @@
             "$id": "users",
             "databaseId": "fitkarma-db",
             "name": "users",
-            "documentSecurity": false,
+            "documentSecurity": true,
+            "permissions": ["read(\"any\")", "create(\"any\")", "update(\"any\")", "delete(\"any\")"],
+            "attributes": [],
+            "indexes": [],
+            "enabled": true
+        },
+        {
+            "$id": "food_logs",
+            "databaseId": "fitkarma-db",
+            "name": "food_logs",
+            "documentSecurity": true,
+            "permissions": ["read(\"any\")", "create(\"any\")", "update(\"any\")", "delete(\"any\")"],
+            "attributes": [],
+            "indexes": [],
+            "enabled": true
+        },
+        {
+            "$id": "bp_readings",
+            "databaseId": "fitkarma-db",
+            "name": "bp_readings",
+            "documentSecurity": true,
+            "permissions": ["read(\"any\")", "create(\"any\")", "update(\"any\")", "delete(\"any\")"],
+            "attributes": [],
+            "indexes": [],
+            "enabled": true
+        },
+        {
+            "$id": "glucose_readings",
+            "databaseId": "fitkarma-db",
+            "name": "glucose_readings",
+            "documentSecurity": true,
+            "permissions": ["read(\"any\")", "create(\"any\")", "update(\"any\")", "delete(\"any\")"],
+            "attributes": [],
+            "indexes": [],
+            "enabled": true
+        },
+        {
+            "$id": "sleep_logs",
+            "databaseId": "fitkarma-db",
+            "name": "sleep_logs",
+            "documentSecurity": true,
+            "permissions": ["read(\"any\")", "create(\"any\")", "update(\"any\")", "delete(\"any\")"],
+            "attributes": [],
+            "indexes": [],
+            "enabled": true
+        },
+        {
+            "$id": "workouts",
+            "databaseId": "fitkarma-db",
+            "name": "workouts",
+            "documentSecurity": true,
+            "permissions": ["read(\"any\")", "create(\"any\")", "update(\"any\")", "delete(\"any\")"],
+            "attributes": [],
+            "indexes": [],
+            "enabled": true
+        },
+        {
+            "$id": "habits",
+            "databaseId": "fitkarma-db",
+            "name": "habits",
+            "documentSecurity": true,
+            "permissions": ["read(\"any\")", "create(\"any\")", "update(\"any\")", "delete(\"any\")"],
+            "attributes": [],
+            "indexes": [],
+            "enabled": true
+        },
+        {
+            "$id": "journal",
+            "databaseId": "fitkarma-db",
+            "name": "journal",
+            "documentSecurity": true,
+            "permissions": ["read(\"any\")", "create(\"any\")", "update(\"any\")", "delete(\"any\")"],
+            "attributes": [],
+            "indexes": [],
+            "enabled": true
+        },
+        {
+            "$id": "lab_reports",
+            "databaseId": "fitkarma-db",
+            "name": "lab_reports",
+            "documentSecurity": true,
+            "permissions": ["read(\"any\")", "create(\"any\")", "update(\"any\")", "delete(\"any\")"],
+            "attributes": [],
+            "indexes": [],
+            "enabled": true
+        },
+        {
+            "$id": "karma_events",
+            "databaseId": "fitkarma-db",
+            "name": "karma_events",
+            "documentSecurity": true,
+            "permissions": ["read(\"any\")", "create(\"any\")", "update(\"any\")", "delete(\"any\")"],
+            "attributes": [],
+            "indexes": [],
+            "enabled": true
+        },
+        {
+            "$id": "festivals",
+            "databaseId": "fitkarma-db",
+            "name": "festivals",
+            "documentSecurity": true,
+            "permissions": ["read(\"any\")", "create(\"any\")", "update(\"any\")", "delete(\"any\")"],
+            "attributes": [],
+            "indexes": [],
+            "enabled": true
+        },
+        {
+            "$id": "medications",
+            "databaseId": "fitkarma-db",
+            "name": "medications",
+            "documentSecurity": true,
+            "permissions": ["read(\"any\")", "create(\"any\")", "update(\"any\")", "delete(\"any\")"],
+            "attributes": [],
+            "indexes": [],
+            "enabled": true
+        },
+        {
+            "$id": "water_logs",
+            "databaseId": "fitkarma-db",
+            "name": "water_logs",
+            "documentSecurity": true,
+            "permissions": ["read(\"any\")", "create(\"any\")", "update(\"any\")", "delete(\"any\")"],
+            "attributes": [],
+            "indexes": [],
+            "enabled": true
+        },
+        {
+            "$id": "social_posts",
+            "databaseId": "fitkarma-db",
+            "name": "social_posts",
+            "documentSecurity": true,
+            "permissions": ["read(\"any\")", "create(\"any\")", "update(\"any\")", "delete(\"any\")"],
+            "attributes": [],
+            "indexes": [],
+            "enabled": true
+        },
+        {
+            "$id": "groups",
+            "databaseId": "fitkarma-db",
+            "name": "groups",
+            "documentSecurity": true,
+            "permissions": ["read(\"any\")", "create(\"any\")", "update(\"any\")", "delete(\"any\")"],
+            "attributes": [],
+            "indexes": [],
+            "enabled": true
+        },
+        {
+            "$id": "share_tokens",
+            "databaseId": "fitkarma-db",
+            "name": "share_tokens",
+            "documentSecurity": true,
+            "permissions": ["read(\"any\")", "create(\"any\")", "update(\"any\")", "delete(\"any\")"],
+            "attributes": [],
+            "indexes": [],
+            "enabled": true
+        },
+        {
+            "$id": "wedding_plans",
+            "databaseId": "fitkarma-db",
+            "name": "wedding_plans",
+            "documentSecurity": true,
+            "permissions": ["read(\"any\")", "create(\"any\")", "update(\"any\")", "delete(\"any\")"],
             "attributes": [],
             "indexes": [],
             "enabled": true

@@ -157,23 +157,23 @@
 
 ### 3.2 Collections — Creation
 
-- [ ] `users` collection
-- [ ] `food_logs` collection
-- [ ] `bp_readings` collection
-- [ ] `glucose_readings` collection
-- [ ] `sleep_logs` collection
-- [ ] `workouts` collection
-- [ ] `habits` collection
-- [ ] `journal` collection
-- [ ] `lab_reports` collection
-- [ ] `karma_events` collection
-- [ ] `festivals` collection
-- [ ] `medications` collection
-- [ ] `water_logs` collection
-- [ ] `social_posts` collection
-- [ ] `groups` collection
-- [ ] `share_tokens` collection *(used by report-share function)*
-- [ ] `wedding_plans` collection *(derived from Drift tables — add remote collection)*
+- [x] `users` collection
+- [x] `food_logs` collection
+- [x] `bp_readings` collection
+- [x] `glucose_readings` collection
+- [x] `sleep_logs` collection
+- [x] `workouts` collection
+- [x] `habits` collection
+- [x] `journal` collection
+- [x] `lab_reports` collection
+- [x] `karma_events` collection
+- [x] `festivals` collection
+- [x] `medications` collection
+- [x] `water_logs` collection
+- [x] `social_posts` collection
+- [x] `groups` collection
+- [x] `share_tokens` collection *(used by report-share function)*
+- [x] `wedding_plans` collection *(derived from Drift tables — add remote collection)*
 
 ### 3.3 Collections — Attributes (run all CLI attribute commands per §24.3)
 
