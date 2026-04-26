@@ -3,8 +3,6 @@ import 'package:fitkarma/core/storage/app_database.dart';
 import 'package:fitkarma/features/festival/domain/festival_date_engine.dart';
 import 'package:drift/drift.dart';
 import 'package:fitkarma/features/festival/domain/festival_diet_plan.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fitkarma/core/storage/drift_service.dart';
 
 class FestivalRepository {
   final AppDatabase db;

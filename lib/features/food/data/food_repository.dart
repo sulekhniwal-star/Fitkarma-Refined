@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:drift/drift.dart';
 import 'food_aw_service.dart';
 import '../../../core/storage/app_database.dart';
 import '../../../core/storage/daos/food_dao.dart';
