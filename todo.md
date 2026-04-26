@@ -142,10 +142,10 @@
 
 ### 2.6 Database — `lib/core/storage/`
 
-- [ ] `app_database.dart` — `AppDatabase` class annotated with `@DriftDatabase`
-- [ ] `app_database.dart` — `_openConnection` with SQLCipher + secure key
-- [ ] `app_database.dart` — schema version + `MigrationStrategy`
-- [ ] Run `dart run build_runner build` to generate `app_database.g.dart`
+- [x] `app_database.dart` — `AppDatabase` class annotated with `@DriftDatabase`
+- [x] `app_database.dart` — `openConnection` with SQLCipher + secure key
+- [x] `app_database.dart` — schema version + `MigrationStrategy`
+- [x] Run `dart run build_runner build` to generate `app_database.g.dart`
 
 ---
 

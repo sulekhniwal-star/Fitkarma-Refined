@@ -1,9 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:appwrite/appwrite.dart';
 import '../config/app_config.dart';
-// Note: AppDatabase will be implemented in Section 2.5
-// For now, we stub the import or use a dummy class if needed
-// However, the docs show it imported.
+import '../storage/app_database.dart';
 
 // Appwrite Client — singleton
 final appwriteClientProvider = Provider<Client>((ref) {
@@ -27,6 +25,6 @@ final appwriteStorageProvider = Provider<Storage>((ref) {
 });
 
 // Local database — to be overridden in ProviderScope in main.dart
-final appDatabaseProvider = Provider<dynamic>((ref) {
+final appDatabaseProvider = Provider<AppDatabase>((ref) {
   throw UnimplementedError('Must be overridden in ProviderScope overrides');
 });
