@@ -60,10 +60,10 @@
 
 ### 1.2 Appwrite CLI Bootstrap
 
-- [ ] Install Appwrite CLI (`curl -sL https://appwrite.io/cli/install.sh | bash`)
-- [ ] `appwrite login` (interactive, store session)
-- [ ] `appwrite init project` — create `appwrite.json` in repo root
-- [ ] Commit `appwrite.json`
+- [x] Install Appwrite CLI (`curl -sL https://appwrite.io/cli/install.sh | bash`)
+- [x] `appwrite login` (interactive, store session)
+- [x] `appwrite init project` — create `appwrite.json` in repo root
+- [x] Commit `appwrite.json`
 
 ### 1.3 Environment & Secrets
 
