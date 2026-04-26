@@ -50,13 +50,13 @@
 
 ### 1.1 Flutter Project Init
 
-- [ ] `flutter create fitkarma --org com.fitkarma --platforms android,ios`
-- [ ] Set `minSdkVersion 26` in `android/app/build.gradle` (Health Connect requires API 26+)
-- [ ] Set iOS deployment target to 14.0 in `ios/Podfile`
-- [ ] Add all dependencies to `pubspec.yaml` (30+ packages as per §18)
-- [ ] Run `flutter pub get`
-- [ ] Run initial `dart run build_runner build --delete-conflicting-outputs`
-- [ ] Commit baseline with passing `flutter analyze`
+- [x] `flutter create fitkarma --org com.fitkarma --platforms android,ios`
+- [x] Set `minSdkVersion 26` in `android/app/build.gradle` (Health Connect requires API 26+)
+- [x] Set iOS deployment target to 14.0 in `ios/Podfile`
+- [x] Add all dependencies to `pubspec.yaml` (30+ packages as per §18)
+- [x] Run `flutter pub get`
+- [x] Run initial `dart run build_runner build --delete-conflicting-outputs`
+- [x] Commit baseline with passing `flutter analyze`
 
 ### 1.2 Appwrite CLI Bootstrap
 
