@@ -130,10 +130,10 @@
 
 ### 2.4 Router — `lib/core/router/`
 
-- [ ] `app_router.dart` — `GoRouter` with all 25 registered routes
-- [ ] `app_router.dart` — `redirect` guard: unauthenticated → `/auth/login`, authenticated + auth screen → `/home/dashboard`
-- [ ] `transitions.dart` — `VerticalSlideTransition` (fade + 6% Y shift, 320ms)
-- [ ] `transitions.dart` — `CardTapAnimation` widget (scale 1.0 → 0.97 → 1.0)
+- [x] `app_router.dart` — `GoRouter` with all 25 registered routes
+- [x] `app_router.dart` — `redirect` guard: unauthenticated → `/auth/login`, authenticated + auth screen → `/home/dashboard`
+- [x] `transitions.dart` — `VerticalSlideTransition` (fade + 6% Y shift, 320ms)
+- [x] `transitions.dart` — `CardTapAnimation` widget (scale 1.0 → 0.97 → 1.0)
 
 ### 2.5 Security — `lib/core/security/`
 
