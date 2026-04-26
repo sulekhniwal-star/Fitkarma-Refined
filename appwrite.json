@@ -1,0 +1,23 @@
+{
+    "projectId": "fitkarma",
+    "projectName": "FitKarma",
+    "endpoint": "https://fra.cloud.appwrite.io/v1",
+    "databases": [
+        {
+            "$id": "fitkarma-db",
+            "name": "fitkarma-db",
+            "enabled": true
+        }
+    ],
+    "collections": [
+        {
+            "$id": "users",
+            "databaseId": "fitkarma-db",
+            "name": "users",
+            "documentSecurity": false,
+            "attributes": [],
+            "indexes": [],
+            "enabled": true
+        }
+    ]
+}
