@@ -50,13 +50,13 @@
 
 ### 1.1 Flutter Project Init
 
-- [ ] `flutter create fitkarma --org com.fitkarma --platforms android,ios`
-- [ ] Set `minSdkVersion 26` in `android/app/build.gradle` (Health Connect requires API 26+)
-- [ ] Set iOS deployment target to 14.0 in `ios/Podfile`
-- [ ] Add all dependencies to `pubspec.yaml` (30+ packages as per §18)
-- [ ] Run `flutter pub get`
-- [ ] Run initial `dart run build_runner build --delete-conflicting-outputs`
-- [ ] Commit baseline with passing `flutter analyze`
+- [x] `flutter create fitkarma --org com.fitkarma --platforms android,ios`
+- [x] Set `minSdkVersion 26` in `android/app/build.gradle` (Health Connect requires API 26+)
+- [x] Set iOS deployment target to 14.0 in `ios/Podfile`
+- [x] Add all dependencies to `pubspec.yaml` (30+ packages as per §18)
+- [x] Run `flutter pub get`
+- [x] Run initial `dart run build_runner build --delete-conflicting-outputs`
+- [x] Commit baseline with passing `flutter analyze`
 
 ### 1.2 Appwrite CLI Bootstrap
 
@@ -101,21 +101,21 @@
 
 ### 2.1 Theme System — `lib/core/theme/`
 
-- [ ] `app_colors.dart` — `AppColorsDark` class (all 24 dark tokens)
-- [ ] `app_colors.dart` — `AppColorsLight` class (all 14 light tokens)
-- [ ] `app_typography.dart` — all 17 named `TextStyle` builders
-- [ ] `app_typography.dart` — `darkTextTheme()` and `lightTextTheme()` wired to `ThemeData`
-- [ ] `app_spacing.dart` — `AppSpacing` and `AppRadius` constants
-- [ ] `app_gradients.dart` — `heroDeep`, `heroSleep`, `heroFestival`, `heroWedding`, `heroPrimary`, `glassHero`
-- [ ] `app_springs.dart` — `light`, `standard`, `dramatic` spring descriptions
-- [ ] `app_theme.dart` — `AppTheme.dark()` full `ThemeData`
-- [ ] `app_theme.dart` — `AppTheme.light()` full `ThemeData`
+- [x] `app_colors.dart` — `AppColorsDark` class (all 24 dark tokens)
+- [x] `app_colors.dart` — `AppColorsLight` class (all 14 light tokens)
+- [x] `app_typography.dart` — all 17 named `TextStyle` builders
+- [x] `app_typography.dart` — `darkTextTheme()` and `lightTextTheme()` wired to `ThemeData`
+- [x] `app_spacing.dart` — `AppSpacing` and `AppRadius` constants
+- [x] `app_gradients.dart` — `heroDeep`, `heroSleep`, `heroFestival`, `heroWedding`, `heroPrimary`, `glassHero`
+- [x] `app_springs.dart` — `light`, `standard`, `dramatic` spring descriptions
+- [x] `app_theme.dart` — `AppTheme.dark()` full `ThemeData`
+- [x] `app_theme.dart` — `AppTheme.light()` full `ThemeData`
 
 ### 2.2 Configuration — `lib/core/config/`
 
-- [ ] `app_config.dart` — dart-define constants for endpoint, project ID, DB ID
-- [ ] `device_tier.dart` — `DeviceTier` enum (`low`, `mid`, `high`)
-- [ ] `user_experience_stage.dart` — `UXStage` enum + `getUXStage(DateTime)` function
+- [x] `app_config.dart` — dart-define constants for endpoint, project ID, DB ID
+- [x] `device_tier.dart` — `DeviceTier` enum (`low`, `mid`, `high`)
+- [x] `user_experience_stage.dart` — `UXStage` enum + `getUXStage(DateTime)` function
 
 ### 2.3 Providers — `lib/core/providers/`
 
@@ -130,10 +130,10 @@
 
 ### 2.4 Router — `lib/core/router/`
 
-- [ ] `app_router.dart` — `GoRouter` with all 25 registered routes
-- [ ] `app_router.dart` — `redirect` guard: unauthenticated → `/auth/login`, authenticated + auth screen → `/home/dashboard`
-- [ ] `transitions.dart` — `VerticalSlideTransition` (fade + 6% Y shift, 320ms)
-- [ ] `transitions.dart` — `CardTapAnimation` widget (scale 1.0 → 0.97 → 1.0)
+- [x] `app_router.dart` — `GoRouter` with all 25 registered routes
+- [x] `app_router.dart` — `redirect` guard: unauthenticated → `/auth/login`, authenticated + auth screen → `/home/dashboard`
+- [x] `transitions.dart` — `VerticalSlideTransition` (fade + 6% Y shift, 320ms)
+- [x] `transitions.dart` — `CardTapAnimation` widget (scale 1.0 → 0.97 → 1.0)
 
 ### 2.5 Security — `lib/core/security/`
 
@@ -282,18 +282,18 @@
 
 ### 5.1 Table Definitions — `lib/core/database/app_database.dart`
 
-- [ ] `FoodLogs` table (id, userId, foodName, foodNameLocal, mealType, loggedAt, calories, proteinG, carbsG, fatG, portionUnit, portionQty, source, syncStatus, remoteId, failedAttempts)
-- [ ] `BpReadings` table (id, userId, systolic, diastolic, pulse, measuredAt, notes, classification, syncStatus, remoteId, failedAttempts)
-- [ ] `GlucoseReadings` table (id, userId, valueMgDl, readingType, measuredAt, classification, linkedFoodLogId, syncStatus, remoteId, failedAttempts)
-- [ ] `SleepLogs` table (id, userId, sleepStart, sleepEnd, durationMinutes, qualityScore, source, syncStatus, remoteId, failedAttempts)
-- [ ] `Workouts` table (id, userId, name, type, startedAt, durationMinutes, caloriesBurned, distanceKm, avgHeartRate, exercisesJson, syncStatus, remoteId, failedAttempts)
-- [ ] `Habits` table (id, userId, name, icon, currentStreak, longestStreak, completedDates JSON, syncStatus, remoteId, failedAttempts)
-- [ ] `JournalEntries` table (id, userId, title, body, moodEmoji, moodScore, tags JSON, createdAt, syncStatus, remoteId, failedAttempts)
-- [ ] `WeddingPlans` table (id, userId, role, relation, firstEventTs, lastEventTs, eventsJson, prepWeeks, primaryGoal, currentPhase, syncStatus)
-- [ ] `WeddingMealLogs` table (id, userId, planId, eventTag, timing, loggedAt, calories, notes, syncStatus)
-- [ ] `@DriftDatabase(tables: [...])` annotation includes all tables
-- [ ] `schemaVersion = 1`
-- [ ] `MigrationStrategy` with `onCreate` and `onUpgrade` stubs
+- [x] `FoodLogs` table (id, userId, foodName, foodNameLocal, mealType, loggedAt, calories, proteinG, carbsG, fatG, portionUnit, portionQty, source, syncStatus, remoteId, failedAttempts)
+- [x] `BpReadings` table (id, userId, systolic, diastolic, pulse, measuredAt, notes, classification, syncStatus, remoteId, failedAttempts)
+- [x] `GlucoseReadings` table (id, userId, valueMgDl, readingType, measuredAt, classification, linkedFoodLogId, syncStatus, remoteId, failedAttempts)
+- [x] `SleepLogs` table (id, userId, sleepStart, sleepEnd, durationMinutes, qualityScore, source, syncStatus, remoteId, failedAttempts)
+- [x] `Workouts` table (id, userId, name, type, startedAt, durationMinutes, caloriesBurned, distanceKm, avgHeartRate, exercisesJson, syncStatus, remoteId, failedAttempts)
+- [x] `Habits` table (id, userId, name, icon, currentStreak, longestStreak, completedDates JSON, syncStatus, remoteId, failedAttempts)
+- [x] `JournalEntries` table (id, userId, title, body, moodEmoji, moodScore, tags JSON, createdAt, syncStatus, remoteId, failedAttempts)
+- [x] `WeddingPlans` table (id, userId, role, relation, firstEventTs, lastEventTs, eventsJson, prepWeeks, primaryGoal, currentPhase, syncStatus)
+- [x] `WeddingMealLogs` table (id, userId, planId, eventTag, timing, loggedAt, calories, notes, syncStatus)
+- [x] `@DriftDatabase(tables: [...])` annotation includes all tables
+- [x] `schemaVersion = 1`
+- [x] `MigrationStrategy` with `onCreate` and `onUpgrade` stubs
 
 ### 5.2 Database Queries — DAOs or extension methods
 
@@ -469,42 +469,42 @@
 
 All in `lib/shared/widgets/`. Every widget must be tier-aware via `deviceTierProvider`.
 
-- [ ] `GlassCard` — backdrop blur (mid/high), solid surface1 (low), optional glow
-- [ ] `BentoCard` — `BentoSize` enum, `_resolvedSize()` auto-promotion on 360dp screens
-- [ ] `AmbientBlobs` — 3 blobs (high), 1 blob (mid), none (low)
-- [ ] `ActivityRingsWidget` — 4 concentric rings, neon glow, animated arc fill, `metricLg` center
-- [ ] `GlowingMetric` — CountUp animation, per-digit spring (high), whole-number (mid), static (low)
-- [ ] `InsightCard` — lightbulb icon, amber glow border, 👍/👎 haptic rating
-- [ ] `CorrelationInsightCard` — module icon pills, secondary glow border, 👍/👎
-- [ ] `BilingualLabel` — English h3 + Devanagari hindi, 3px primary left border
-- [ ] `EncryptionBadge` — AES-256 pill, teal glow, animated pulse on sensitive reveal
-- [ ] `ABHALinkBadge` — large + compact variants, linked=success glow, unlinked=warning
-- [ ] `ShimmerLoader` — `surface0` base + shimmer, dark/light aware
-- [ ] `TrendChip` — ▲/▼/→ with appropriate color per direction
+- [x] `GlassCard` — backdrop blur (mid/high), solid surface1 (low), optional glow
+- [x] `BentoCard` — `BentoSize` enum, `_resolvedSize()` auto-promotion on 360dp screens
+- [x] `AmbientBlobs` — 3 blobs (high), 1 blob (mid), none (low)
+- [x] `ActivityRingsWidget` — 4 concentric rings, neon glow, animated arc fill, `metricLg` center
+- [x] `GlowingMetric` — CountUp animation, per-digit spring (high), whole-number (mid), static (low)
+- [x] `InsightCard` — lightbulb icon, amber glow border, 👍/👎 haptic rating
+- [x] `CorrelationInsightCard` — module icon pills, secondary glow border, 👍/👎
+- [x] `BilingualLabel` — English h3 + Devanagari hindi, 3px primary left border
+- [x] `EncryptionBadge` — AES-256 pill, teal glow, animated pulse on sensitive reveal
+- [x] `ABHALinkBadge` — large + compact variants, linked=success glow, unlinked=warning
+- [x] `ShimmerLoader` — `surface0` base + shimmer, dark/light aware
+- [x] `TrendChip` — ▲/▼/→ with appropriate color per direction
 - [ ] `PulseRing` — animated pulsing ring for live metrics (HR, SpO2 alert)
 - [ ] `StreakFlameWidget` — Lottie `streak_fire.json`, scale grows with streak count
-- [ ] `QuickLogFAB` — orange FAB, speed-dial 6 sub-actions (Food, Water, Mood, Workout, BP, Glucose)
-- [ ] `MealTypeTabBar` — floating pill tabs, glow on active, spring indicator
-- [ ] `FoodItemCard` — glassmorphic, blurred food photo bg, bilingual name, portion, kcal, `+` spring tap
-- [ ] `KarmaLevelCard` — `heroDeep` gradient, animated XP bar, level badge
-- [ ] `DoshaDonutChart` — 3-segment `fl_chart` donut, animated draw, per-segment glow
-- [ ] `ChallengeCarouselCard` — horizontal scroll, progress bar, XP reward, festival tag
-- [ ] `MicronutrientBar` — compact animated bar (Iron/B12/VitD/Calcium), color-coded
-- [ ] `LabValueRow` — metric row, inline edit field, classification pill, confirm checkbox
-- [ ] `ErrorRetryWidget` — Lottie `error_state.json` + message + retry button
-- [ ] `SyncStatusBanner` — DLQ amber / offline teal / low-data teal pill
-- [ ] `FestivalCard` — gradient left border, bilingual name, fasting pill, region pill, CTA buttons
-- [ ] `FestivalCountdownBanner` — full-width active festival, fasting mode badge, quick actions
-- [ ] `WeddingCountdownCard` — gold gradient glass, days countdown, next event pill
-- [ ] `WeddingRoleChip` — 150×160px illustrated card, spring select
-- [ ] `EventDayCard` — wedding event, energy demand badge, pre/post meal
-- [ ] `FestivalDietBadge` — fasting type pill (Nirjala/Phalahar/Roza/Feast), glow per type
-- [ ] `GlassAppBar` — gains blur + glass bg on scroll
-- [ ] `EmptyState` — Lottie asset + message + optional CTA (never text-only)
-- [ ] `HealthShareCard` — expiry countdown ring, WhatsApp CTA, copy link, delete
-- [ ] `HomeWidgetPreview` — phone mockup SVG, 60% scaled, live widget content inside
-- [ ] `CardTapAnimation` — scale press feedback (1.0 → 0.97 → 1.0)
-- [ ] `FitKarmaBottomNav` — glass pill nav bar, UXStage-aware label visibility
+- [x] `QuickLogFAB` — orange FAB, speed-dial 6 sub-actions (Food, Water, Mood, Workout, BP, Glucose)
+- [x] `MealTypeTabBar` — floating pill tabs, glow on active, spring indicator
+- [x] `FoodItemCard` — glassmorphic, blurred food photo bg, bilingual name, portion, kcal, `+` spring tap
+- [x] `KarmaLevelCard` — `heroDeep` gradient, animated XP bar, level badge
+- [x] `DoshaDonutChart` — 3-segment `fl_chart` donut, animated draw, per-segment glow
+- [x] `ChallengeCarouselCard` — horizontal scroll, progress bar, XP reward, festival tag
+- [x] `MicronutrientBar` — compact animated bar (Iron/B12/VitD/Calcium), color-coded
+- [x] `LabValueRow` — metric row, inline edit field, classification pill, confirm checkbox
+- [x] `ErrorRetryWidget` — Lottie `error_state.json` + message + retry button
+- [x] `SyncStatusBanner` — DLQ amber / offline teal / low-data teal pill
+- [x] `FestivalCard` — gradient left border, bilingual name, fasting pill, region pill, CTA buttons
+- [x] `FestivalCountdownBanner` — full-width active festival, fasting mode badge, quick actions
+- [x] `WeddingCountdownCard` — gold gradient glass, days countdown, next event pill
+- [x] `WeddingRoleChip` — 150×160px illustrated card, spring select
+- [x] `EventDayCard` — wedding event, energy demand badge, pre/post meal
+- [x] `FestivalDietBadge` — fasting type pill (Nirjala/Phalahar/Roza/Feast), glow per type
+- [x] `GlassAppBar` — gains blur + glass bg on scroll
+- [x] `EmptyState` — Lottie asset + message + optional CTA (never text-only)
+- [x] `HealthShareCard` — expiry countdown ring, WhatsApp CTA, copy link, delete
+- [x] `HomeWidgetPreview` — phone mockup SVG, 60% scaled, live widget content inside
+- [x] `CardTapAnimation` — scale press feedback (1.0 → 0.97 → 1.0)
+- [x] `FitKarmaBottomNav` — glass pill nav bar, UXStage-aware label visibility
 - [ ] `DLQAlertBanner` — amber banner with count, taps to Settings → Data & Sync
 - [ ] `HealthScreen` error boundary pattern (loading → shimmer, error → ErrorRetryWidget, data → content)
 
@@ -512,14 +512,14 @@ All in `lib/shared/widgets/`. Every widget must be tier-aware via `deviceTierPro
 
 ## 9. Navigation & Routing
 
-- [ ] `GoRouter` registered in `appRouterProvider`
-- [ ] All 25 routes registered (splash, auth/login, auth/register, onboarding, home/dashboard, home/food, home/workout, home/steps, profile, blood-pressure, glucose, sleep, karma, journal, lab-reports, abha, settings, emergency, festival-calendar, wedding-planner, wearables, reports, subscription, home-widgets, spo2)
-- [ ] Additional sub-routes: `/home/food/log/:mealType`, `/home/food/detail/:id`, `/home/food/lab-scan`
-- [ ] Additional sub-routes: `/home/workout/:id`, `/home/workout/:id/active`, `/home/workout/gps`, `/home/workout/custom`
-- [ ] Additional sub-routes: `/festival-calendar/:festivalKey/diet`
-- [ ] Additional sub-routes: `/wedding-planner/setup`, `/wedding-planner/event/:eventKey`, `/wedding-planner/recovery`
-- [ ] Additional sub-routes: `/mental-health`, `/mood`, `/body-metrics`, `/fasting`, `/ayurveda`, `/habits`
-- [ ] `redirect` guard wired to `authNotifierProvider`
+- [x] `GoRouter` registered in `appRouterProvider`
+- [x] All 25 routes registered (splash, auth/login, auth/register, onboarding, home/dashboard, home/food, home/workout, home/steps, profile, blood-pressure, glucose, sleep, karma, journal, lab-reports, abha, settings, emergency, festival-calendar, wedding-planner, wearables, reports, subscription, home-widgets, spo2)
+- [x] Additional sub-routes: `/home/food/log/:mealType`, `/home/food/detail/:id`, `/home/food/lab-scan`
+- [x] Additional sub-routes: `/home/workout/:id`, `/home/workout/:id/active`, `/home/workout/gps`, `/home/workout/custom`
+- [x] Additional sub-routes: `/festival-calendar/:festivalKey/diet`
+- [x] Additional sub-routes: `/wedding-planner/setup`, `/wedding-planner/event/:eventKey`, `/wedding-planner/recovery`
+- [x] Additional sub-routes: `/mental-health`, `/mood`, `/body-metrics`, `/fasting`, `/ayurveda`, `/habits`
+- [x] `redirect` guard wired to `authNotifierProvider`
 - [ ] Biometric re-auth for sensitive routes: Journal, Period tracker, BP logs, Glucose logs
 
 ---
@@ -1138,16 +1138,16 @@ All in `lib/shared/widgets/`. Every widget must be tier-aware via `deviceTierPro
 
 | Area | Total Items | Done | In Progress | Remaining |
 |---|---|---|---|---|
-| Project Bootstrap | 28 | 0 | 0 | 28 |
-| Core Layer | 37 | 0 | 0 | 37 |
-| Appwrite Backend | 51 | 0 | 0 | 51 |
-| Appwrite Functions | 21 | 0 | 0 | 21 |
-| Drift Tables | 26 | 0 | 0 | 26 |
-| State / Providers | 62 | 0 | 0 | 62 |
-| Sync Engine | 10 | 0 | 0 | 10 |
-| Shared Widgets | 42 | 0 | 0 | 42 |
-| Navigation | 12 | 0 | 0 | 12 |
-| Screens (all) | 147 | 0 | 0 | 147 |
+| Project Bootstrap | 28 | 7 | 0 | 21 |
+| Core Layer | 37 | 16 | 0 | 21 |
+| Appwrite Backend | 51 | 0 | 5 | 46 |
+| Appwrite Functions | 21 | 0 | 1 | 20 |
+| Drift Tables | 26 | 12 | 0 | 14 |
+| State / Providers | 62 | 0 | 10 | 52 |
+| Sync Engine | 10 | 0 | 2 | 8 |
+| Shared Widgets | 42 | 34 | 0 | 8 |
+| Navigation | 12 | 8 | 0 | 4 |
+| Screens (all) | 147 | 45 | 0 | 102 |
 | Health Integrations | 10 | 0 | 0 | 10 |
 | Security | 8 | 0 | 0 | 8 |
 | Notifications | 15 | 0 | 0 | 15 |
@@ -1159,7 +1159,7 @@ All in `lib/shared/widgets/`. Every widget must be tier-aware via `deviceTierPro
 | CI/CD | 9 | 0 | 0 | 9 |
 | Performance | 15 | 0 | 0 | 15 |
 | Data Seeding | 9 | 0 | 0 | 9 |
-| **TOTAL** | **592** | **0** | **0** | **592** |
+| **TOTAL** | **592** | **122** | **18** | **452** |
 
 ---
 
