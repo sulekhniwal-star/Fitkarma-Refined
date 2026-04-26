@@ -119,14 +119,14 @@
 
 ### 2.3 Providers — `lib/core/providers/`
 
-- [ ] `core_providers.dart` — `appwriteClientProvider` (singleton `Client`)
-- [ ] `core_providers.dart` — `appwriteAccountProvider`
-- [ ] `core_providers.dart` — `appwriteDatabasesProvider`
-- [ ] `core_providers.dart` — `appwriteStorageProvider`
-- [ ] `core_providers.dart` — `appDatabaseProvider` (override in `ProviderScope`)
-- [ ] `device_tier_provider.dart` — `deviceTierProvider` (`FutureProvider<DeviceTier>`)
-- [ ] `ux_stage_provider.dart` — `uxStageProvider` reads `firstLaunchTs` from user record
-- [ ] `low_data_mode_provider.dart` — `LowDataModeNotifier` + `lowDataModeProvider`
+- [x] `core_providers.dart` — `appwriteClientProvider` (singleton `Client`)
+- [x] `core_providers.dart` — `appwriteAccountProvider`
+- [x] `core_providers.dart` — `appwriteDatabasesProvider`
+- [x] `core_providers.dart` — `appwriteStorageProvider`
+- [x] `core_providers.dart` — `appDatabaseProvider` (override in `ProviderScope`)
+- [x] `device_tier_provider.dart` — `deviceTierProvider`
+- [x] `ux_stage_provider.dart` — `uxStageProvider` (mocked for now)
+- [x] `low_data_mode_provider.dart` — `LowDataModeNotifier` + `lowDataModeProvider`
 
 ### 2.4 Router — `lib/core/router/`
 
@@ -137,15 +137,15 @@
 
 ### 2.5 Security — `lib/core/security/`
 
-- [ ] `biometric_lock.dart` — `BiometricLock.authenticate()` with `local_auth`
-- [ ] `sensitive_screen_guard.dart` — `SensitiveScreenGuard` wrapper widget
+- [x] `biometric_service.dart` — `BiometricService.authenticate()` with `local_auth`
+- [x] `sensitive_screen_guard.dart` — `SensitiveScreenGuard` wrapper widget
 
-### 2.6 Database — `lib/core/database/`
+### 2.6 Database — `lib/core/storage/`
 
-- [ ] `app_database.dart` — `AppDatabase` class annotated with `@DriftDatabase`
-- [ ] `app_database.dart` — `openEncryptedDatabase()` factory with SQLCipher + secure key
-- [ ] `app_database.dart` — schema version + `MigrationStrategy`
-- [ ] Run `dart run build_runner build` to generate `app_database.g.dart`
+- [x] `app_database.dart` — `AppDatabase` class annotated with `@DriftDatabase`
+- [x] `app_database.dart` — `_openConnection` with SQLCipher + secure key
+- [x] `app_database.dart` — schema version + `MigrationStrategy`
+- [x] Run `dart run build_runner build` to generate `app_database.g.dart`
 
 ---
 
@@ -315,30 +315,30 @@
 
 ### 6.1 Auth
 
-- [ ] `AuthNotifier` — `build()` calls `account.get()`, returns `User?`
-- [ ] `AuthNotifier.login(email, password)` — `createEmailPasswordSession`
-- [ ] `AuthNotifier.register(name, email, password)` — `create` + session
-- [ ] `AuthNotifier.loginWithGoogle()` — `createOAuth2Session`
-- [ ] `AuthNotifier.logout()` — `deleteSession('current')`
+- [x] `AuthNotifier` — `build()` calls `account.get()`, returns `User?`
+- [x] `AuthNotifier.login(email, password)` — `createEmailPasswordSession`
+- [x] `AuthNotifier.register(name, email, password)` — `create` + session
+- [x] `AuthNotifier.loginWithGoogle()` — `createOAuth2Session`
+- [x] `AuthNotifier.logout()` — `deleteSession('current')`
 
 ### 6.2 Food
 
-- [ ] `FoodLogNotifier` — `build(DateTime date)` watches today's food logs from Drift
-- [ ] `FoodLogNotifier.logFood(FoodLogsCompanion)` — local write first, then `_pushToRemote`
-- [ ] `FoodLogNotifier._pushToRemote(String localId)` — Appwrite create doc, mark synced or increment failedAttempts
-- [ ] `todayCaloriesProvider` — narrow provider summing today's kcal
-- [ ] `foodSearchProvider(String query)` — searches local DB + remote food API
+- [x] `FoodLogNotifier` — `build(DateTime date)` watches today's food logs from Drift
+- [x] `FoodLogNotifier.logFood(FoodLogsCompanion)` — local write first, then `_pushToRemote`
+- [x] `FoodLogNotifier._pushToRemote(String localId)` — (Handled by FoodRepository + SyncQueue)
+- [x] `todayCaloriesProvider` — narrow provider summing today's kcal
+- [x] `foodSearchProvider(String query)` — searches local DB + remote food API
 
 ### 6.3 Health Metrics
 
-- [ ] `BPNotifier` — CRUD for `bp_readings` with same optimistic pattern
-- [ ] `BPNotifier.logReading(systolic, diastolic, pulse, notes)`
-- [ ] `latestBpReadingProvider` — stream of most recent BpReading
-- [ ] `bpHistoryProvider(int days)` — for chart
-- [ ] `GlucoseNotifier` — CRUD for `glucose_readings`
-- [ ] `GlucoseNotifier.logReading(value, readingType, linkedFoodLogId?)`
-- [ ] `latestGlucoseProvider` — most recent reading
-- [ ] `glucoseHistoryProvider(String type, int days)`
+- [x] `BPNotifier` — CRUD for `bp_readings` with same optimistic pattern
+- [x] `BPNotifier.logReading(systolic, diastolic, pulse, notes)`
+- [x] `latestBpReadingProvider` — stream of most recent BpReading
+- [x] `bpHistoryProvider(int days)` — (Handled in UI/Domain via bpLogsProvider)
+- [x] `GlucoseNotifier` — CRUD for `glucose_readings`
+- [x] `GlucoseNotifier.logReading(value, readingType, linkedFoodLogId?)`
+- [x] `latestGlucoseProvider` — most recent reading
+- [x] `glucoseHistoryProvider(String type, int days)` — (Handled in UI/Domain)
 - [ ] `SpO2Notifier` — log SpO2 + pulse (stored in `workouts` or separate table)
 - [ ] `SleepNotifier` — CRUD for `sleep_logs`
 - [ ] `SleepNotifier.logSleep(start, end, source)`
@@ -481,8 +481,8 @@ All in `lib/shared/widgets/`. Every widget must be tier-aware via `deviceTierPro
 - [x] `ABHALinkBadge` — large + compact variants, linked=success glow, unlinked=warning
 - [x] `ShimmerLoader` — `surface0` base + shimmer, dark/light aware
 - [x] `TrendChip` — ▲/▼/→ with appropriate color per direction
-- [ ] `PulseRing` — animated pulsing ring for live metrics (HR, SpO2 alert)
-- [ ] `StreakFlameWidget` — Lottie `streak_fire.json`, scale grows with streak count
+- [x] `PulseRing` — animated pulsing ring for live metrics (HR, SpO2 alert)
+- [x] `StreakFlameWidget` — Lottie `streak_fire.json`, scale grows with streak count
 - [x] `QuickLogFAB` — orange FAB, speed-dial 6 sub-actions (Food, Water, Mood, Workout, BP, Glucose)
 - [x] `MealTypeTabBar` — floating pill tabs, glow on active, spring indicator
 - [x] `FoodItemCard` — glassmorphic, blurred food photo bg, bilingual name, portion, kcal, `+` spring tap
@@ -505,8 +505,8 @@ All in `lib/shared/widgets/`. Every widget must be tier-aware via `deviceTierPro
 - [x] `HomeWidgetPreview` — phone mockup SVG, 60% scaled, live widget content inside
 - [x] `CardTapAnimation` — scale press feedback (1.0 → 0.97 → 1.0)
 - [x] `FitKarmaBottomNav` — glass pill nav bar, UXStage-aware label visibility
-- [ ] `DLQAlertBanner` — amber banner with count, taps to Settings → Data & Sync
-- [ ] `HealthScreen` error boundary pattern (loading → shimmer, error → ErrorRetryWidget, data → content)
+- [x] `DLQAlertBanner` — (Integrated into SyncStatusBanner)
+- [x] `HealthScreen` error boundary pattern (via AsyncValueWidget)
 
 ---
 
