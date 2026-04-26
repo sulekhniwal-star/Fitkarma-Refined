@@ -67,33 +67,33 @@
 
 ### 1.3 Environment & Secrets
 
-- [ ] Create `.env.local` with `APPWRITE_ENDPOINT`, `APPWRITE_PROJECT_ID`, `APPWRITE_DB_ID`
-- [ ] Add `.env.local` to `.gitignore`
-- [ ] Configure `AppConfig` dart-define values (§23.2)
+- [x] Create `.env.local` with `APPWRITE_ENDPOINT`, `APPWRITE_PROJECT_ID`, `APPWRITE_DB_ID`
+- [x] Add `.env.local` to `.gitignore`
+- [x] Configure `AppConfig` dart-define values (§23.2)
 - [ ] Add GitHub Actions secrets: `APPWRITE_ENDPOINT`, `APPWRITE_PROJECT_ID`, `APPWRITE_API_KEY`
 - [ ] Add GitHub Actions secrets: `ABHA_CLIENT_ID`, `ABHA_CLIENT_SECRET`
 
 ### 1.4 Android Manifest
 
-- [ ] `INTERNET` permission
-- [ ] `ACCESS_NETWORK_STATE` permission
-- [ ] `health.READ_STEPS` permission
-- [ ] `health.READ_HEART_RATE` permission
-- [ ] `health.READ_SLEEP_SESSION` permission
-- [ ] `ACCESS_FINE_LOCATION` permission (GPS workouts)
-- [ ] `ACCESS_COARSE_LOCATION` permission
-- [ ] Health Connect `<queries>` package declaration
-- [ ] Home widget `<receiver>` declaration for `StepsWidgetProvider`
-- [ ] Home widget `<meta-data>` pointing to `@xml/steps_widget_info`
+- [x] `INTERNET` permission
+- [x] `ACCESS_NETWORK_STATE` permission
+- [x] `health.READ_STEPS` permission
+- [x] `health.READ_HEART_RATE` permission
+- [x] `health.READ_SLEEP_SESSION` permission
+- [x] `ACCESS_FINE_LOCATION` permission (GPS workouts)
+- [x] `ACCESS_COARSE_LOCATION` permission
+- [x] Health Connect `<queries>` package declaration
+- [x] Home widget `<receiver>` declaration for `StepsWidgetProvider`
+- [x] Home widget `<meta-data>` pointing to `@xml/steps_widget_info`
 
 ### 1.5 iOS `Info.plist`
 
-- [ ] `NSHealthShareUsageDescription`
-- [ ] `NSHealthUpdateUsageDescription`
-- [ ] `NSLocationWhenInUseUsageDescription`
-- [ ] `NSCameraUsageDescription` (OCR lab scan)
-- [ ] `NSPhotoLibraryUsageDescription`
-- [ ] `NSFaceIDUsageDescription` (biometric lock)
+- [x] `NSHealthShareUsageDescription`
+- [x] `NSHealthUpdateUsageDescription`
+- [x] `NSLocationWhenInUseUsageDescription`
+- [x] `NSCameraUsageDescription` (OCR lab scan)
+- [x] `NSPhotoLibraryUsageDescription`
+- [x] `NSFaceIDUsageDescription` (biometric lock)
 
 ---
 

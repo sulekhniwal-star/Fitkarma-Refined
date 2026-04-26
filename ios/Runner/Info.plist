@@ -66,5 +66,17 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSHealthShareUsageDescription</key>
+	<string>FitKarma needs access to read your health data to track steps, heart rate, and sleep.</string>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>FitKarma needs access to write health data to sync your workouts.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>FitKarma needs access to your location for tracking GPS workouts.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>FitKarma needs access to your camera to scan lab reports and food labels.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>FitKarma needs access to your photo library to upload lab reports.</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>FitKarma needs access to Face ID for secure biometric lock.</string>
 </dict>
 </plist>
