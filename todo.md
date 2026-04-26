@@ -137,8 +137,8 @@
 
 ### 2.5 Security — `lib/core/security/`
 
-- [ ] `biometric_service.dart` — `BiometricService.authenticate()` with `local_auth`
-- [ ] `sensitive_screen_guard.dart` — `SensitiveScreenGuard` wrapper widget
+- [x] `biometric_service.dart` — `BiometricService.authenticate()` with `local_auth`
+- [x] `sensitive_screen_guard.dart` — `SensitiveScreenGuard` wrapper widget
 
 ### 2.6 Database — `lib/core/storage/`
 
