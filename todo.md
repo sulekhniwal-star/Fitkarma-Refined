@@ -101,15 +101,15 @@
 
 ### 2.1 Theme System — `lib/core/theme/`
 
-- [ ] `app_colors.dart` — `AppColorsDark` class (all 24 dark tokens)
-- [ ] `app_colors.dart` — `AppColorsLight` class (all 14 light tokens)
-- [ ] `app_typography.dart` — all 17 named `TextStyle` builders
-- [ ] `app_typography.dart` — `darkTextTheme()` and `lightTextTheme()` wired to `ThemeData`
-- [ ] `app_spacing.dart` — `AppSpacing` and `AppRadius` constants
-- [ ] `app_gradients.dart` — `heroDeep`, `heroSleep`, `heroFestival`, `heroWedding`, `heroPrimary`, `glassHero`
-- [ ] `app_springs.dart` — `light`, `standard`, `dramatic` spring descriptions
-- [ ] `app_theme.dart` — `AppTheme.dark()` full `ThemeData`
-- [ ] `app_theme.dart` — `AppTheme.light()` full `ThemeData`
+- [x] `app_colors.dart` — `AppColorsDark` class (all 24 dark tokens)
+- [x] `app_colors.dart` — `AppColorsLight` class (all 14 light tokens)
+- [x] `app_typography.dart` — all 17 named `TextStyle` builders
+- [x] `app_typography.dart` — `darkTextTheme()` and `lightTextTheme()` wired to `ThemeData`
+- [x] `app_spacing.dart` — `AppSpacing` and `AppRadius` constants
+- [x] `app_gradients.dart` — `heroDeep`, `heroSleep`, `heroFestival`, `heroWedding`, `heroPrimary`, `glassHero`
+- [x] `app_springs.dart` — `light`, `standard`, `dramatic` spring descriptions
+- [x] `app_theme.dart` — `AppTheme.dark()` full `ThemeData`
+- [x] `app_theme.dart` — `AppTheme.light()` full `ThemeData`
 
 ### 2.2 Configuration — `lib/core/config/`
 
