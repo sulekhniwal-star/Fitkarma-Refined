@@ -31,10 +31,7 @@ class _BiometricGuardState extends ConsumerState<BiometricGuard> {
     try {
       final bool didAuthenticate = await _auth.authenticate(
         localizedReason: 'Please authenticate to access sensitive health data',
-        options: const AuthenticationOptions(
-          stickyAuth: true,
-          biometricOnly: true,
-        ),
+        biometricOnly: true,
       );
       if (mounted) {
         setState(() => _isAuthorized = didAuthenticate);

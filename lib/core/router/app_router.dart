@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../features/auth/providers/auth_provider.dart';
+import '../../features/splash/screens/splash_screen.dart';
+import '../../features/auth/screens/login_screen.dart';
+import '../../features/auth/screens/register_screen.dart';
+import '../../features/onboarding/screens/onboarding_screen.dart';
 import 'biometric_guard.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
@@ -19,10 +23,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       return null;
     },
     routes: [
-      GoRoute(path: '/splash',          builder: (_, __) => const _PlaceholderScreen(name: 'Splash')),
-      GoRoute(path: '/auth/login',      builder: (_, __) => const _PlaceholderScreen(name: 'Login')),
-      GoRoute(path: '/auth/register',   builder: (_, __) => const _PlaceholderScreen(name: 'Register')),
-      GoRoute(path: '/onboarding',      builder: (_, __) => const _PlaceholderScreen(name: 'Onboarding')),
+      GoRoute(path: '/splash',          builder: (_, __) => const SplashScreen()),
+      GoRoute(path: '/auth/login',      builder: (_, __) => const LoginScreen()),
+      GoRoute(path: '/auth/register',   builder: (_, __) => const RegisterScreen()),
+      GoRoute(path: '/onboarding',      builder: (_, __) => const OnboardingScreen()),
       
       // Dashboard & Main Features
       GoRoute(

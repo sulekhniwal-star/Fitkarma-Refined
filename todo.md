@@ -512,30 +512,30 @@ All in `lib/shared/widgets/`. Every widget must be tier-aware via `deviceTierPro
 
 ## 9. Navigation & Routing
 
-- [ ] `GoRouter` registered in `appRouterProvider`
-- [ ] All 25 routes registered (splash, auth/login, auth/register, onboarding, home/dashboard, home/food, home/workout, home/steps, profile, blood-pressure, glucose, sleep, karma, journal, lab-reports, abha, settings, emergency, festival-calendar, wedding-planner, wearables, reports, subscription, home-widgets, spo2)
-- [ ] Additional sub-routes: `/home/food/log/:mealType`, `/home/food/detail/:id`, `/home/food/lab-scan`
-- [ ] Additional sub-routes: `/home/workout/:id`, `/home/workout/:id/active`, `/home/workout/gps`, `/home/workout/custom`
-- [ ] Additional sub-routes: `/festival-calendar/:festivalKey/diet`
-- [ ] Additional sub-routes: `/wedding-planner/setup`, `/wedding-planner/event/:eventKey`, `/wedding-planner/recovery`
-- [ ] Additional sub-routes: `/mental-health`, `/mood`, `/body-metrics`, `/fasting`, `/ayurveda`, `/habits`
-- [ ] `redirect` guard wired to `authNotifierProvider`
-- [ ] Biometric re-auth for sensitive routes: Journal, Period tracker, BP logs, Glucose logs
+- [x] `GoRouter` registered in `appRouterProvider`
+- [x] All 25 routes registered (splash, auth/login, auth/register, onboarding, home/dashboard, home/food, home/workout, home/steps, profile, blood-pressure, glucose, sleep, karma, journal, lab-reports, abha, settings, emergency, festival-calendar, wedding-planner, wearables, reports, subscription, home-widgets, spo2)
+- [x] Additional sub-routes: `/home/food/log/:mealType`, `/home/food/detail/:id`, `/home/food/lab-scan`
+- [x] Additional sub-routes: `/home/workout/:id`, `/home/workout/:id/active`, `/home/workout/gps`, `/home/workout/custom`
+- [x] Additional sub-routes: `/festival-calendar/:festivalKey/diet`
+- [x] Additional sub-routes: `/wedding-planner/setup`, `/wedding-planner/event/:eventKey`, `/wedding-planner/recovery`
+- [x] Additional sub-routes: `/mental-health`, `/mood`, `/body-metrics`, `/fasting`, `/ayurveda`, `/habits`
+- [x] `redirect` guard wired to `authNotifierProvider`
+- [x] Biometric re-auth for sensitive routes: Journal, Period tracker, BP logs, Glucose logs
 
 ---
 
 ## 10. Screens — Onboarding & Auth
 
-- [ ] **SplashScreen** — Rive `logo_reveal.riv`, tagline fade, linear progress bar; always dark
-- [ ] **OnboardingFlow** — 6-step segmented progress bar (4px, radiusFull), swipe gesture + Next/Back buttons
-- [ ] **Onboarding Step 1** — Name field, gender chip selector (4 chips, 44px tap targets), DOB date picker
-- [ ] **Onboarding Step 2** — Height ruler widget, weight drum-roll picker, metric/imperial toggle, 4-card fitness goal grid, 5-card activity level stack
-- [ ] **Onboarding Step 3** — 3-column condition chip grid, amber glass info card, Continue + Skip
-- [ ] **Onboarding Step 4** — 12-question dosha quiz carousel, auto-advance 400ms, `DoshaDonutChart` result
-- [ ] **Onboarding Step 5** — 22-language grid (4-column), health permission toggles (custom pill, not Material), privacy caption
-- [ ] **Onboarding Step 6** — `ABHALinkBadge` large, ABHA 14-digit input, OTP 6-box input (spring slide-in), wearable row, Finish Setup
-- [ ] **LoginScreen** — logo + tagline, glass card with email/password fields, Google + Apple OAuth buttons
-- [ ] **RegisterScreen** — same as login + Name + Confirm Password fields
+- [x] **SplashScreen** — Rive `logo_reveal.riv`, tagline fade, linear progress bar; always dark
+- [x] **OnboardingFlow** — 6-step segmented progress bar (4px, radiusFull), swipe gesture + Next/Back buttons
+- [x] **Onboarding Step 1** — Name field, gender chip selector (4 chips, 44px tap targets), DOB date picker
+- [x] **Onboarding Step 2** — Height ruler widget, weight drum-roll picker, metric/imperial toggle, 4-card fitness goal grid, 5-card activity level stack
+- [x] **Onboarding Step 3** — 3-column condition chip grid, amber glass info card, Continue + Skip
+- [x] **Onboarding Step 4** — 12-question dosha quiz carousel, auto-advance 400ms, `DoshaDonutChart` result
+- [x] **Onboarding Step 5** — 22-language grid (4-column), health permission toggles (custom pill, not Material), privacy caption
+- [x] **Onboarding Step 6** — `ABHALinkBadge` large, ABHA 14-digit input, OTP 6-box input (spring slide-in), wearable row, Finish Setup
+- [x] **LoginScreen** — logo + tagline, glass card with email/password fields, Google + Apple OAuth buttons
+- [x] **RegisterScreen** — same as login + Name + Confirm Password fields
 
 ---
 
