@@ -30,7 +30,7 @@ class ChallengeCarouselCard extends StatelessWidget {
                 margin: const EdgeInsets.only(bottom: 12),
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                 decoration: BoxDecoration(
-                  color: Colors.orange.withOpacity(0.1),
+                  color: Colors.orange.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: Text(
@@ -58,7 +58,7 @@ class ChallengeCarouselCard extends StatelessWidget {
               child: LinearProgressIndicator(
                 value: progress,
                 minHeight: 6,
-                backgroundColor: Colors.grey.withOpacity(0.1),
+                backgroundColor: Colors.grey.withValues(alpha: 0.1),
                 valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFFF97316)),
               ),
             ),

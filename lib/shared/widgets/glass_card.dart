@@ -32,7 +32,7 @@ class GlassCard extends ConsumerWidget {
         boxShadow: showGlow && tier != DeviceTier.low
             ? [
                 BoxShadow(
-                  color: (glowColor ?? Colors.orange).withOpacity(0.2),
+                  color: (glowColor ?? Colors.orange).withValues(alpha: 0.2),
                   blurRadius: 30,
                   spreadRadius: 5,
                 )
@@ -46,10 +46,10 @@ class GlassCard extends ConsumerWidget {
           child: Container(
             padding: padding ?? const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: Theme.of(context).cardColor.withOpacity(opacity),
+              color: Theme.of(context).cardColor.withValues(alpha: opacity),
               borderRadius: BorderRadius.circular(borderRadius ?? 24),
               border: Border.all(
-                color: Colors.white.withOpacity(tier == DeviceTier.low ? 0.1 : 0.2),
+                color: Colors.white.withValues(alpha: tier == DeviceTier.low ? 0.1 : 0.2),
                 width: 1.5,
               ),
             ),

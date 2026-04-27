@@ -120,7 +120,7 @@ class WeddingRoleChip extends StatelessWidget {
             width: 2,
           ),
           boxShadow: isSelected ? [
-            BoxShadow(color: Colors.amber.withOpacity(0.2), blurRadius: 10, spreadRadius: 2)
+            BoxShadow(color: Colors.amber.withValues(alpha: 0.2), blurRadius: 10, spreadRadius: 2)
           ] : null,
         ),
         child: Column(
@@ -129,7 +129,7 @@ class WeddingRoleChip extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: isSelected ? Colors.amber.withOpacity(0.1) : Colors.grey.shade50,
+                color: isSelected ? Colors.amber.withValues(alpha: 0.1) : Colors.grey.shade50,
                 shape: BoxShape.circle,
               ),
               child: Icon(

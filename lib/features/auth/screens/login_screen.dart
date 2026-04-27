@@ -49,7 +49,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               height: 300,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: const Color(0xFFF97316).withOpacity(0.1),
+                color: const Color(0xFFF97316).withValues(alpha: 0.1),
               ),
             ),
           ),

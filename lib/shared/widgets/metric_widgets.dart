@@ -25,7 +25,7 @@ class GlowingMetric extends StatelessWidget {
             shape: BoxShape.circle,
             boxShadow: [
               BoxShadow(
-                color: color.withOpacity(0.3),
+                color: color.withValues(alpha: 0.3),
                 blurRadius: 20,
                 spreadRadius: 2,
               ),
@@ -45,7 +45,7 @@ class GlowingMetric extends StatelessWidget {
           style: TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.bold,
-            color: color.withOpacity(0.7),
+            color: color.withValues(alpha: 0.7),
             letterSpacing: 1,
           ),
         ),
@@ -100,7 +100,7 @@ class _PulseRingState extends State<PulseRing> with SingleTickerProviderStateMix
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             border: Border.all(
-              color: widget.color.withOpacity(1 - _controller.value),
+              color: widget.color.withValues(alpha: 1 - _controller.value),
               width: _controller.value * 20,
             ),
           ),

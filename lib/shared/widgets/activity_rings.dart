@@ -64,7 +64,7 @@ class _RingsPainter extends CustomPainter {
       
       // Background track
       final trackPaint = Paint()
-        ..color = colors[i].withOpacity(0.1)
+        ..color = colors[i].withValues(alpha: 0.1)
         ..style = PaintingStyle.stroke
         ..strokeWidth = strokeWidth
         ..strokeCap = StrokeCap.round;

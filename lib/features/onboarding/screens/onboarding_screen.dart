@@ -56,7 +56,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                       decoration: BoxDecoration(
                         color: index <= _currentStep 
                           ? const Color(0xFFF97316) 
-                          : Colors.grey.withOpacity(0.2),
+                          : Colors.grey.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(2),
                       ),
                     ),

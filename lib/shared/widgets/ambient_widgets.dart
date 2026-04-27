@@ -26,8 +26,8 @@ class AmbientBlobs extends ConsumerWidget {
               shape: BoxShape.circle,
               gradient: RadialGradient(
                 colors: [
-                  const Color(0xFFF97316).withOpacity(0.1),
-                  const Color(0xFFF97316).withOpacity(0.0),
+                  const Color(0xFFF97316).withValues(alpha: 0.1),
+                  const Color(0xFFF97316).withValues(alpha: 0.0),
                 ],
               ),
             ),

@@ -21,7 +21,7 @@ class GlassAppBar extends StatelessWidget implements PreferredSizeWidget {
         child: AppBar(
           title: title,
           actions: actions,
-          backgroundColor: Colors.white.withOpacity(showBlur ? 0.7 : 1.0),
+          backgroundColor: Colors.white.withValues(alpha: showBlur ? 0.7 : 1.0),
           elevation: 0,
           centerTitle: false,
         ),
@@ -48,11 +48,11 @@ class FitKarmaBottomNav extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.fromLTRB(24, 0, 24, 24),
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.8),
+        color: Colors.black.withValues(alpha: 0.8),
         borderRadius: BorderRadius.circular(30),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.2),
+            color: Colors.black.withValues(alpha: 0.2),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -66,7 +66,7 @@ class FitKarmaBottomNav extends StatelessWidget {
             selectedIndex: selectedIndex,
             onDestinationSelected: onDestinationSelected,
             backgroundColor: Colors.transparent,
-            indicatorColor: const Color(0xFFF97316).withOpacity(0.2),
+            indicatorColor: const Color(0xFFF97316).withValues(alpha: 0.2),
             destinations: const [
               NavigationDestination(icon: Icon(Icons.dashboard_outlined), selectedIcon: Icon(Icons.dashboard, color: Color(0xFFF97316)), label: 'Home'),
               NavigationDestination(icon: Icon(Icons.restaurant_outlined), selectedIcon: Icon(Icons.restaurant, color: Color(0xFFF97316)), label: 'Food'),

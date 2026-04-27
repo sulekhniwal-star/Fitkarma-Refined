@@ -11,6 +11,9 @@ import '../../features/karma/screens/karma_hub_screen.dart';
 import 'biometric_guard.dart';
 
 import '../../features/food/screens/food_home_screen.dart';
+import '../../features/food/screens/food_log_screen.dart';
+import '../../features/food/screens/food_detail_screen.dart';
+import '../../features/food/screens/lab_scan_screen.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
   final authState = ref.watch(authNotifierProvider);
@@ -42,9 +45,19 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: '/home/food',
         builder: (_, __) => const FoodHomeScreen(),
         routes: [
-          GoRoute(path: 'log/:mealType', builder: (_, state) => _PlaceholderScreen(name: 'Log ${state.pathParameters['mealType']}')),
-          GoRoute(path: 'detail/:id', builder: (_, state) => _PlaceholderScreen(name: 'Food Detail ${state.pathParameters['id']}')),
-          GoRoute(path: 'lab-scan', builder: (_, __) => const _PlaceholderScreen(name: 'Lab Scan')),
+          GoRoute(
+            path: 'log/:mealType',
+            builder: (_, state) => FoodLogScreen(
+              mealType: state.pathParameters['mealType'] ?? 'breakfast',
+            ),
+          ),
+          GoRoute(
+            path: 'detail/:id',
+            builder: (_, state) => FoodDetailScreen(
+              foodId: state.pathParameters['id'] ?? 'dal_rice',
+            ),
+          ),
+          GoRoute(path: 'lab-scan', builder: (_, __) => const LabScanScreen()),
         ],
       ),
       

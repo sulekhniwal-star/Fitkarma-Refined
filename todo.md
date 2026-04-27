@@ -570,28 +570,28 @@ All in `lib/shared/widgets/`. Every widget must be tier-aware via `deviceTierPro
   - [x] "Copy Yesterday" amber glass banner (if today's log is empty)
   - [x] Logged Meals by selected tab, swipe left → delete
 
-- [ ] **FoodLogScreen** (`/home/food/log/:mealType`) — Pattern A
-  - [ ] Glass search bar (radiusFull), mic icon, barcode icon
-  - [ ] Quick-action chip row: Scan Label, Upload Plate, Lab/Rx Scan, Manual
-  - [ ] "Frequent Indian Portions" 2×N bento grid of `FoodItemCard`
-  - [ ] "Restaurant Results" section with Swiggy/Zomato attribution pills
-  - [ ] "Recent Logs" list with re-log button
-  - [ ] `[Confirm Meal]` full-width primary button (replaces FAB)
+- [x] **FoodLogScreen** (`/home/food/log/:mealType`) — Pattern A
+  - [x] Glass search bar (radiusFull), mic icon, barcode icon
+  - [x] Quick-action chip row: Scan Label, Upload Plate, Lab/Rx Scan, Manual
+  - [x] "Frequent Indian Portions" 2×N bento grid of `FoodItemCard`
+  - [x] "Restaurant Results" section with Swiggy/Zomato attribution pills
+  - [x] "Recent Logs" list with re-log button
+  - [x] `[Confirm Meal]` full-width primary button (replaces FAB)
 
-- [ ] **FoodDetailScreen** (`/home/food/detail/:id`) — Pattern B (food photo hero)
-  - [ ] Hero: blurred food photo, bilingual name, kcal with primary glow
-  - [ ] Indian serving size drum-roll picker (katori/piece/glass/tbsp)
-  - [ ] Full macro table with animated bar fills
-  - [ ] Micronutrient table: Iron, B12, VitD, Calcium with RDA %
-  - [ ] `[Add to Log]` primary full-width
+- [x] **FoodDetailScreen** (`/home/food/detail/:id`) — Pattern B (food photo hero)
+  - [x] Hero: blurred food photo, bilingual name, kcal with primary glow
+  - [x] Indian serving size drum-roll picker (katori/piece/glass/tbsp)
+  - [x] Full macro table with animated bar fills
+  - [x] Micronutrient table: Iron, B12, VitD, Calcium with RDA %
+  - [x] `[Add to Log]` primary full-width
 
-- [ ] **LabScanScreen** (`/home/food/lab-scan`) — Pattern A (Calm Zone)
-  - [ ] Two half glass cards: Take Photo, Upload PDF
-  - [ ] `ShimmerLoader` processing state with "Extracting health values..."
-  - [ ] Extracted values scroll with `LabValueRow` per metric
-  - [ ] Classification pill colors: green=Normal, amber=Borderline, red=High/Low
-  - [ ] `EncryptionBadge` + privacy caption
-  - [ ] `[Import to Health Data]` primary, `[Discard]` error text
+- [x] **LabScanScreen** (`/home/food/lab-scan`) — Pattern A (Calm Zone)
+  - [x] Two half glass cards: Take Photo, Upload PDF
+  - [x] `ShimmerLoader` processing state with "Extracting health values..."
+  - [x] Extracted values scroll with `LabValueRow` per metric
+  - [x] Classification pill colors: green=Normal, amber=Borderline, red=High/Low
+  - [x] `EncryptionBadge` + privacy caption
+  - [x] `[Import to Health Data]` primary, `[Discard]` error text
 
 ---
 
