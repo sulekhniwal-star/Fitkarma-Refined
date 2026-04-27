@@ -541,34 +541,34 @@ All in `lib/shared/widgets/`. Every widget must be tier-aware via `deviceTierPro
 
 ## 11. Screens — Core Dashboard & Karma
 
-- [ ] **DashboardScreen** (`/home/dashboard`) — Pattern B scaffold, `heroDeep` gradient hero
-  - [ ] Hero: avatar (48px, primary ring), namaste greeting, bilingual, XP amber pill, level indigo pill
-  - [ ] Hero: `ABHALinkBadge` compact if ABHA not linked
-  - [ ] Body bento grid: Row 1 `ActivityRingsWidget` full width
-  - [ ] Body bento grid: Row 2 two half-cards (Latest Workout + Sleep Recovery)
-  - [ ] Body bento grid: Row 3 `InsightCard` OR `CorrelationInsightCard` (max 1)
-  - [ ] Body bento grid: Row 4+ Today's Meals with `MealTypeTabBar`
-  - [ ] `QuickLogFAB` fixed bottom-right, 20px from nav bar
-  - [ ] UXStage.firstWeek: only Steps + Food + 1 Insight visible by default
-  - [ ] Dark mode glow blobs active; light mode warm glass cards
+- [x] **DashboardScreen** (`/home/dashboard`) — Pattern B scaffold, `heroDeep` gradient hero
+  - [x] Hero: avatar (48px, primary ring), namaste greeting, bilingual, XP amber pill, level indigo pill
+  - [x] Hero: `ABHALinkBadge` compact if ABHA not linked
+  - [x] Body bento grid: Row 1 `ActivityRingsWidget` full width
+  - [x] Body bento grid: Row 2 two half-cards (Latest Workout + Sleep Recovery)
+  - [x] Body bento grid: Row 3 `InsightCard` OR `CorrelationInsightCard` (max 1)
+  - [x] Body bento grid: Row 4+ Today's Meals with `MealTypeTabBar`
+  - [x] `QuickLogFAB` fixed bottom-right, 20px from nav bar
+  - [x] UXStage.firstWeek: only Steps + Food + 1 Insight visible by default
+  - [x] Dark mode glow blobs active; light mode warm glass cards
 
-- [ ] **KarmaHubScreen** (`/karma`) — Pattern B, `heroDeep`
-  - [ ] Hero: `displayLg` XP total, animated XP progress bar, level badge, coin Lottie on tap
-  - [ ] Daily Rituals checklist glass cards (dosha-driven, green tick / empty ring)
-  - [ ] Active Challenges `ChallengeCarouselCard` horizontal scroll
-  - [ ] Leaderboard: pill tab bar (Friends/City/National/Seasonal), top-5 with gold/silver/bronze glow ranks
-  - [ ] Karma Store glass card, Streak Recovery amber pill option
+- [x] **KarmaHubScreen** (`/karma`) — Pattern B, `heroDeep`
+  - [x] Hero: `displayLg` XP total, animated XP progress bar, level badge, coin Lottie on tap
+  - [x] Daily Rituals checklist glass cards (dosha-driven, green tick / empty ring)
+  - [x] Active Challenges `ChallengeCarouselCard` horizontal scroll
+  - [x] Leaderboard: pill tab bar (Friends/City/National/Seasonal), top-5 with gold/silver/bronze glow ranks
+  - [x] Karma Store glass card, Streak Recovery amber pill option
 
 ---
 
 ## 12. Screens — Food & Nutrition
 
-- [ ] **FoodHomeScreen** (`/home/food`) — Pattern A
-  - [ ] `MealTypeTabBar` sticky below app bar (not inside app bar)
-  - [ ] Macro Summary full-width glass card: 4 animated rings (Calories/Protein/Carbs/Fat)
-  - [ ] `MicronutrientBar` row: Iron, B12, Vitamin D, Calcium
-  - [ ] "Copy Yesterday" amber glass banner (if today's log is empty)
-  - [ ] Logged Meals by selected tab, swipe left → delete
+- [x] **FoodHomeScreen** (`/home/food`) — Pattern A
+  - [x] `MealTypeTabBar` sticky below app bar (not inside app bar)
+  - [x] Macro Summary full-width glass card: 4 animated rings (Calories/Protein/Carbs/Fat)
+  - [x] `MicronutrientBar` row: Iron, B12, Vitamin D, Calcium
+  - [x] "Copy Yesterday" amber glass banner (if today's log is empty)
+  - [x] Logged Meals by selected tab, swipe left → delete
 
 - [ ] **FoodLogScreen** (`/home/food/log/:mealType`) — Pattern A
   - [ ] Glass search bar (radiusFull), mic icon, barcode icon

@@ -6,7 +6,11 @@ import '../../features/splash/screens/splash_screen.dart';
 import '../../features/auth/screens/login_screen.dart';
 import '../../features/auth/screens/register_screen.dart';
 import '../../features/onboarding/screens/onboarding_screen.dart';
+import '../../features/home/screens/dashboard_screen.dart';
+import '../../features/karma/screens/karma_hub_screen.dart';
 import 'biometric_guard.dart';
+
+import '../../features/food/screens/food_home_screen.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
   final authState = ref.watch(authNotifierProvider);
@@ -31,12 +35,12 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       // Dashboard & Main Features
       GoRoute(
         path: '/home/dashboard',  
-        builder: (_, __) => const _PlaceholderScreen(name: 'Dashboard'),
+        builder: (_, __) => const DashboardScreen(),
       ),
       
       GoRoute(
         path: '/home/food',
-        builder: (_, __) => const _PlaceholderScreen(name: 'Food Home'),
+        builder: (_, __) => const FoodHomeScreen(),
         routes: [
           GoRoute(path: 'log/:mealType', builder: (_, state) => _PlaceholderScreen(name: 'Log ${state.pathParameters['mealType']}')),
           GoRoute(path: 'detail/:id', builder: (_, state) => _PlaceholderScreen(name: 'Food Detail ${state.pathParameters['id']}')),
@@ -67,7 +71,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/period-tracker',  builder: (_, __) => const BiometricGuard(child: _PlaceholderScreen(name: 'Period Tracker'))),
       
       // Intelligence & Insights
-      GoRoute(path: '/karma',           builder: (_, __) => const _PlaceholderScreen(name: 'Karma Hub')),
+      GoRoute(path: '/karma',           builder: (_, __) => const KarmaHubScreen()),
       GoRoute(path: '/journal',         builder: (_, __) => const BiometricGuard(child: _PlaceholderScreen(name: 'Journal'))),
       GoRoute(path: '/mood',            builder: (_, __) => const _PlaceholderScreen(name: 'Mood Tracker')),
       GoRoute(path: '/mental-health',   builder: (_, __) => const _PlaceholderScreen(name: 'Mental Health')),

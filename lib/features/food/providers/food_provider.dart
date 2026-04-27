@@ -26,6 +26,11 @@ class FoodLogNotifier extends _$FoodLogNotifier {
     return ref.watch(appDatabaseProvider).watchTodayFoodLogs(user.$id, date);
   }
 
+  Future<void> deleteFood(String id) async {
+    final db = ref.read(appDatabaseProvider);
+    await (db.delete(db.foodLogs)..where((t) => t.id.equals(id))).go();
+  }
+
   Future<void> logFood(FoodLogsCompanion log) async {
     final db = ref.read(appDatabaseProvider);
     await db.into(db.foodLogs).insert(log);
