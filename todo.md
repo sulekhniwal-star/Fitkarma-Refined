@@ -597,93 +597,93 @@ All in `lib/shared/widgets/`. Every widget must be tier-aware via `deviceTierPro
 
 ## 13. Screens — Workout
 
-- [ ] **WorkoutHomeScreen** (`/home/workout`) — Pattern A
-  - [ ] `StreakFlameWidget` + "Day N Streak!" banner (orangeGradient bg, if active)
-  - [ ] Featured workout card (Pattern B mini, photo hero, Start button)
-  - [ ] Category chips horizontal scroll (Yoga/HIIT/Strength/Cardio/Dance/Bollywood/Cricket/Kabaddi/Pranayama)
-  - [ ] WorkoutCard 2-column bento grid (photo bg, title, duration, premium lock)
+- [x] **WorkoutHomeScreen** (`/home/workout`) — Pattern A
+  - [x] `StreakFlameWidget` + "Day N Streak!" banner (orangeGradient bg, if active)
+  - [x] Featured workout card (Pattern B mini, photo hero, Start button)
+  - [x] Category chips horizontal scroll (Yoga/HIIT/Strength/Cardio/Dance/Bollywood/Cricket/Kabaddi/Pranayama)
+  - [x] WorkoutCard 2-column bento grid (photo bg, title, duration, premium lock)
 
-- [ ] **WorkoutDetailScreen** (`/home/workout/:id`) — Pattern B (thumbnail hero)
-  - [ ] Hero: title displayLg, Duration badge, Difficulty badge, `[Start Workout]`
-  - [ ] Description, equipment chips, exercise list glass cards
-  - [ ] Exercise: name, Sets×Reps, RPE target, superset bracket letter (A/B/C left accent)
-  - [ ] Similar workouts horizontal scroll
+- [x] **WorkoutDetailScreen** (`/home/workout/:id`) — Pattern B (thumbnail hero)
+  - [x] Hero: title displayLg, Duration badge, Difficulty badge, `[Start Workout]`
+  - [x] Description, equipment chips, exercise list glass cards
+  - [x] Exercise: name, Sets×Reps, RPE target, superset bracket letter (A/B/C left accent)
+  - [x] Similar workouts horizontal scroll
 
-- [ ] **ActiveWorkoutScreen** (`/home/workout/:id/active`) — Pattern C
-  - [ ] Exercise name h1 centered
-  - [ ] Set counter `monoXL` primary glow
-  - [ ] Rep target `bodyLg`
-  - [ ] Rest Timer: `PulseRing` countdown, configurable seconds, haptic + audio on complete, Skip button
-  - [ ] HR Zone badge from wearable
-  - [ ] RPE selector (1–10 gradient slider, haptic per notch)
-  - [ ] Pause · Next · Finish glass dock (bottom)
+- [x] **ActiveWorkoutScreen** (`/home/workout/:id/active`) — Pattern C
+  - [x] Exercise name h1 centered
+  - [x] Set counter `monoXL` primary glow
+  - [x] Rep target `bodyLg`
+  - [x] Rest Timer: `PulseRing` countdown, configurable seconds, haptic + audio on complete, Skip button
+  - [x] HR Zone badge from wearable
+  - [x] RPE selector (1–10 gradient slider, haptic per notch)
+  - [x] Pause · Next · Finish glass dock (bottom)
 
-- [ ] **GPSWorkoutScreen** (`/home/workout/gps`) — Pattern C
-  - [ ] `flutter_map` full-bleed with custom dark tiles
-  - [ ] Offline tile cache indicator teal pill
-  - [ ] Stats overlay glass card: Distance `monoXL`, Duration, Pace `monoLg`, Avg HR `monoLg`
+- [x] **GPSWorkoutScreen** (`/home/workout/gps`) — Pattern C
+  - [x] `flutter_map` full-bleed with custom dark tiles
+  - [x] Offline tile cache indicator teal pill
+  - [x] Stats overlay glass card: Distance `monoXL`, Duration, Pace `monoLg`, Avg HR `monoLg`
 
-- [ ] **CustomWorkoutBuilderScreen** (`/home/workout/custom`) — Pattern A
-  - [ ] `ReorderableListView` drag-and-drop exercise rows
-  - [ ] Each row: name, sets/reps/rest inline inputs, RPE input, superset A/B/C pills, drag handle
-  - [ ] `[+ Add Exercise]` outlined full-width
-  - [ ] `[Save Plan]` primary
+- [x] **CustomWorkoutBuilderScreen** (`/home/workout/custom`) — Pattern A
+  - [x] `ReorderableListView` drag-and-drop exercise rows
+  - [x] Each row: name, sets/reps/rest inline inputs, RPE input, superset A/B/C pills, drag handle
+  - [x] `[+ Add Exercise]` outlined full-width
+  - [x] `[Save Plan]` primary
 
 ---
 
 ## 14. Screens — Steps & Activity
 
-- [ ] **StepsScreen** (`/home/steps`) — Pattern B (`heroPrimary`)
-  - [ ] Hero: step count `heroDisplay` 72sp white with success glow
-  - [ ] `PulseRing` progress behind count
-  - [ ] Goal label, confetti Lottie on goal completion
-  - [ ] Hourly bar chart glass card (animated fill, success color)
-  - [ ] 7-day trend line chart (area fill, success20)
-  - [ ] Distance + Calories two half-cards `monoLg`
-  - [ ] Adaptive goal card (teal border, Accept/Keep buttons)
-  - [ ] Inactivity nudge card (amber glass, if >60 min inactive, `[Start Walk]` teal button)
+- [x] **StepsScreen** (`/home/steps`) — Pattern B (`heroPrimary`)
+  - [x] Hero: step count `heroDisplay` 72sp white with success glow
+  - [x] `PulseRing` progress behind count
+  - [x] Goal label, confetti Lottie on goal completion
+  - [x] Hourly bar chart glass card (animated fill, success color)
+  - [x] 7-day trend line chart (area fill, success20)
+  - [x] Distance + Calories two half-cards `monoLg`
+  - [x] Adaptive goal card (teal border, Accept/Keep buttons)
+  - [x] Inactivity nudge card (amber glass, if >60 min inactive, `[Start Walk]` teal button)
 
 ---
 
 ## 15. Screens — Health Monitoring
 
-- [ ] **BPScreen** (`/blood-pressure`) — Pattern B (`heroDeep`)
-  - [ ] Hero: latest `metricXL` reading (e.g. "128/82"), neon white glow per number
-  - [ ] AHA classification badge (color-coded glass pill)
-  - [ ] Pulse `bodyLg`, `EncryptionBadge` in hero
-  - [ ] BP Trend Chart: 7/30/90 day toggle, AHA reference bands, animated draw on tab switch
-  - [ ] Log BP FAB → bottom sheet (Systolic, Diastolic, Pulse, Notes, EncryptionBadge, Save)
-  - [ ] Morning/evening reminder glass card with edit toggle
+- [x] **BPScreen** (`/blood-pressure`) — Pattern B (`heroDeep`)
+  - [x] Hero: latest `metricXL` reading (e.g. "128/82"), neon white glow per number
+  - [x] AHA classification badge (color-coded glass pill)
+  - [x] Pulse `bodyLg`, `EncryptionBadge` in hero
+  - [x] BP Trend Chart: 7/30/90 day toggle, AHA reference bands, animated draw on tab switch
+  - [x] Log BP FAB → bottom sheet (Systolic, Diastolic, Pulse, Notes, EncryptionBadge, Save)
+  - [x] Morning/evening reminder glass card with edit toggle
 
-- [ ] **GlucoseScreen** (`/glucose`) — Pattern B (`heroDeep`)
-  - [ ] Hero: latest `metricXL`, reading type tag, classification badge, `EncryptionBadge`
-  - [ ] Reading type selector pills: Fasting/Post-meal/Random/Bedtime
-  - [ ] Glucose history chart with target band per reading type, animated draw
-  - [ ] HbA1c estimator card (glass, secondary glow, shown if ≥30 readings, with disclaimer)
-  - [ ] Meal correlation row (linked food log for post-meal)
-  - [ ] "Import from Lab Report →" row
+- [x] **GlucoseScreen** (`/glucose`) — Pattern B (`heroDeep`)
+  - [x] Hero: latest `metricXL`, reading type tag, classification badge, `EncryptionBadge`
+  - [x] Reading type selector pills: Fasting/Post-meal/Random/Bedtime
+  - [x] Glucose history chart with target band per reading type, animated draw
+  - [x] HbA1c estimator card (glass, secondary glow, shown if ≥30 readings, with disclaimer)
+  - [x] Meal correlation row (linked food log for post-meal)
+  - [x] "Import from Lab Report →" row
 
-- [ ] **SpO2Screen** (`/spo2`) — Pattern B (`heroDeep`)
-  - [ ] Hero: latest SpO2 % `metricXL` teal glow, pulse `bodyLg`, timestamp caption
-  - [ ] Alert banner if <95%: error glass, warning text, `PulseRing` error color
-  - [ ] 7-day history chart (teal line, 95–100% target band)
-  - [ ] Log SpO2 bottom sheet (% field, pulse optional, EncryptionBadge)
+- [x] **SpO2Screen** (`/spo2`) — Pattern B (`heroDeep`)
+  - [x] Hero: latest SpO2 % `metricXL` teal glow, pulse `bodyLg`, timestamp caption
+  - [x] Alert banner if <95%: error glass, warning text, `PulseRing` error color
+  - [x] 7-day history chart (teal line, 95–100% target band)
+  - [x] Log SpO2 bottom sheet (% field, pulse optional, EncryptionBadge)
 
-- [ ] **FastingTimerScreen** (`/fasting`) — Pattern B (`heroDeep`)
-  - [ ] Hero: stage name `displayMd`, countdown `heroDisplay` with glow, `PulseRing` behind
-  - [ ] Stage progress linear bar
-  - [ ] Stage timeline horizontal glass card (Fed→Fasted 12h→Fat Burn 16h→Ketosis 24h→Autophagy 48h+)
-  - [ ] Start/Pause/Stop glass buttons; fasting type chips when not started
-  - [ ] Last fasting log glass card with TrendChip
-  - [ ] Active festival link banner (if applicable)
+- [x] **FastingTimerScreen** (`/fasting`) — Pattern B (`heroDeep`)
+  - [x] Hero: stage name `displayMd`, countdown `heroDisplay` with glow, `PulseRing` behind
+  - [x] Stage progress linear bar
+  - [x] Stage timeline horizontal glass card (Fed→Fasted 12h→Fat Burn 16h→Ketosis 24h→Autophagy 48h+)
+  - [x] Start/Pause/Stop glass buttons; fasting type chips when not started
+  - [x] Last fasting log glass card with TrendChip
+  - [x] Active festival link banner (if applicable)
 
-- [ ] **BodyMetricsScreen** (`/body-metrics`) — Pattern B (`heroDeep`)
-  - [ ] Hero: weight `metricXL`, BMI `monoLg` + classification badge
-  - [ ] 30-day weight trend chart, target dashed line
-  - [ ] Body composition half-cards (if wearable data available)
-  - [ ] BMI history chart 90-day
-  - [ ] Measurement log card (Waist/Chest/Hips, inline edit)
-  - [ ] Log Weight FAB
+- [x] **BodyMetricsScreen** (`/body-metrics`) — Pattern B (`heroDeep`)
+  - [x] Hero: weight `metricXL`, BMI `monoLg` + classification badge
+  - [x] 30-day weight trend chart, target dashed line
+  - [x] Body composition half-cards (if wearable data available)
+  - [x] BMI history chart 90-day
+  - [x] Measurement log card (Waist/Chest/Hips, inline edit)
+  - [x] Log Weight FAB
 
 ---
 
@@ -1147,7 +1147,7 @@ All in `lib/shared/widgets/`. Every widget must be tier-aware via `deviceTierPro
 | Sync Engine | 10 | 0 | 2 | 8 |
 | Shared Widgets | 42 | 34 | 0 | 8 |
 | Navigation | 12 | 8 | 0 | 4 |
-| Screens (all) | 147 | 45 | 0 | 102 |
+| Screens (all) | 147 | 65 | 0 | 82 |
 | Health Integrations | 10 | 0 | 0 | 10 |
 | Security | 8 | 0 | 0 | 8 |
 | Notifications | 15 | 0 | 0 | 15 |
