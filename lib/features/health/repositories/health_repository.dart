@@ -110,6 +110,28 @@ class HealthRepository {
       rethrow;
     }
   }
+
+  Future<void> pushStepsToRemote(String localId) async {
+    try {
+      final log = await (_db.select(_db.stepCounts)..where((t) => t.id.equals(localId))).getSingle();
+      
+      await _tables.createRow(
+        databaseId: AppConfig.dbId,
+        tableId: AppConfig.stepLogsCol,
+        rowId: log.id,
+        data: {
+          'userId': log.userId,
+          'count': log.count,
+          'date': log.date.toIso8601String(),
+        },
+      );
+
+      await _db.markSynced(localId, log.id, 'step_logs');
+    } catch (e) {
+      await _db.incrementFailedAttempts(localId, 'step_logs');
+      rethrow;
+    }
+  }
 }
 
 @riverpod

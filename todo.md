@@ -347,25 +347,25 @@
 
 ### 6.4 Workout
 
-- [ ] `WorkoutNotifier` — CRUD for `workouts`
-- [ ] `WorkoutNotifier.startWorkout(Workout)` — writes in-progress record
-- [ ] `WorkoutNotifier.finishWorkout(String id, duration, calories)` — completes record
-- [ ] `activeWorkoutProvider` — current in-progress workout (if any)
-- [ ] `workoutHistoryProvider(int limit)`
-- [ ] `personalRecordsProvider` — max weight/reps per exercise across all workouts
+- [x] `WorkoutNotifier` — CRUD for `workouts`
+- [x] `WorkoutNotifier.startWorkout(Workout)` — writes in-progress record
+- [x] `WorkoutNotifier.finishWorkout(String id, duration, calories)` — completes record
+- [x] `activeWorkoutProvider` — current in-progress workout (if any)
+- [x] `workoutHistoryProvider(int limit)`
+- [x] `personalRecordsProvider` — max weight/reps per exercise across all workouts
 
 ### 6.5 Habit
 
-- [ ] `HabitNotifier` — CRUD for `habits`
-- [ ] `HabitNotifier.completeHabit(String habitId)` — add today to completedDates, increment streak
-- [ ] `HabitNotifier.recoverStreak(String habitId, String userId)` — once/month, costs 50 XP
-- [ ] `todayHabitsProvider` — all habits with today's completion status
+- [x] `HabitNotifier` — CRUD for `habits`
+- [x] `HabitNotifier.completeHabit(String habitId)` — add today to completedDates, increment streak
+- [x] `HabitNotifier.recoverStreak(String habitId, String userId)` — once/month, costs 50 XP
+- [x] `todayHabitsProvider` — all habits with today's completion status
 
 ### 6.6 Steps
 
-- [ ] `stepsProvider` — reads from Health Connect via `HealthService.todaySteps()`
-- [ ] `stepHistoryProvider(int days)` — 7-day bar chart data
-- [ ] `adaptiveGoalProvider` — 7-day average + suggested new goal
+- [x] `stepsProvider` — reads from Health Connect via `HealthService.todaySteps()`
+- [x] `stepHistoryProvider(int days)` — 7-day bar chart data
+- [x] `adaptiveGoalProvider` — 7-day average + suggested new goal
 
 ### 6.7 Karma
 

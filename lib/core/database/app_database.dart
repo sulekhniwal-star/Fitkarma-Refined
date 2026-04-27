@@ -188,6 +188,32 @@ class Spo2Readings extends Table {
   Set<Column> get primaryKey => {id};
 }
 
+class UserProfiles extends Table {
+  @override
+  String get tableName => 'user_profiles';
+  TextColumn get id => text().withLength(min: 1, max: 64)();
+  TextColumn get name => text().withLength(min: 1, max: 128)();
+  IntColumn get xp => integer().withDefault(const Constant(0))();
+  IntColumn get level => integer().withDefault(const Constant(1))();
+  TextColumn get rank => text().nullable()();
+  DateTimeColumn get updatedAt => dateTime()();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
+class KarmaEvents extends Table {
+  TextColumn get id => text().withLength(min: 1, max: 64)();
+  TextColumn get userId => text().withLength(min: 1, max: 64)();
+  TextColumn get eventType => text()();
+  IntColumn get points => integer()();
+  DateTimeColumn get occurredAt => dateTime()();
+  TextColumn get syncStatus => text().withLength(min: 1, max: 16).withDefault(const Constant('pending'))();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
 @DriftDatabase(tables: [
   FoodLogs,
   BpReadings,
@@ -200,6 +226,8 @@ class Spo2Readings extends Table {
   WeddingMealLogs,
   StepCounts,
   Spo2Readings,
+  UserProfiles,
+  KarmaEvents,
 ])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
@@ -326,6 +354,23 @@ class AppDatabase extends _$AppDatabase {
           ..orderBy([(t) => OrderingTerm.desc(t.startedAt)])
           ..limit(limit))
         .watch();
+  }
+
+  Stream<List<Habit>> watchAllHabits(String userId) {
+    return (select(habits)..where((t) => t.userId.equals(userId))).watch();
+  }
+
+  Stream<List<StepCount>> watchStepHistory(String userId, int days) {
+    final start = DateTime.now().subtract(Duration(days: days));
+    return (select(stepCounts)
+          ..where((t) => t.userId.equals(userId))
+          ..where((t) => t.date.isBiggerOrEqualValue(start))
+          ..orderBy([(t) => OrderingTerm.desc(t.date)]))
+        .watch();
+  }
+
+  Future<void> saveSteps(StepCountsCompanion companion) async {
+    await into(stepCounts).insertOnConflictUpdate(companion);
   }
 
   // --- Generic Sync Queries ---
