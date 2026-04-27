@@ -32,6 +32,10 @@ final appwriteStorageProvider = Provider<Storage>((ref) {
   return Storage(ref.watch(appwriteClientProvider));
 });
 
+final secureStorageProvider = Provider<FlutterSecureStorage>((ref) {
+  return const FlutterSecureStorage();
+});
+
 // Local database — to be overridden in ProviderScope in main.dart
 final appDatabaseProvider = Provider<AppDatabase>((ref) {
   throw UnimplementedError('Must be overridden in ProviderScope overrides');
