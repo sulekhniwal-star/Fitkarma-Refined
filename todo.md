@@ -369,10 +369,10 @@
 
 ### 6.7 Karma
 
-- [ ] `KarmaService.awardXP(userId, eventType)` — calls `xp-calculator` function
-- [ ] `xpFloatNotifierProvider` — shows floating "+X XP" animation
-- [ ] `leaderboardProvider(LeaderboardType)` — friends/city/national/seasonal
-- [ ] `userKarmaProvider` — streams user's current XP + level from Drift-cached user
+- [x] `KarmaService.awardXP(userId, eventType)` — calls `xp-calculator` function
+- [x] `xpFloatNotifierProvider` — shows floating "+X XP" animation
+- [x] `leaderboardProvider(LeaderboardType)` — friends/city/national/seasonal
+- [x] `userKarmaProvider` — streams user's current XP + level from Drift-cached user
 
 ### 6.8 Fasting
 
