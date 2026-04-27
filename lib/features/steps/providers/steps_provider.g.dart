@@ -174,7 +174,7 @@ final adaptiveGoalProvider = AutoDisposeProvider<double>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef AdaptiveGoalRef = AutoDisposeProviderRef<double>;
-String _$stepsNotifierHash() => r'447a8a79eefc8080f15e0389e98110ce6ef8d564';
+String _$stepsNotifierHash() => r'f7b4b0d1f5594851b4d6740077d6ca4ad9d8da6e';
 
 /// See also [StepsNotifier].
 @ProviderFor(StepsNotifier)

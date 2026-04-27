@@ -24,6 +24,10 @@ final appwriteTablesDBProvider = Provider<TablesDB>((ref) {
   return TablesDB(ref.watch(appwriteClientProvider));
 });
 
+final appwriteFunctionsProvider = Provider<Functions>((ref) {
+  return Functions(ref.watch(appwriteClientProvider));
+});
+
 final appwriteStorageProvider = Provider<Storage>((ref) {
   return Storage(ref.watch(appwriteClientProvider));
 });

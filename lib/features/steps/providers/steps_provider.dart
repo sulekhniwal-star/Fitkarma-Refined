@@ -21,8 +21,6 @@ class StepsNotifier extends _$StepsNotifier {
       return;
     }
 
-    final healthService = ref.watch(healthServiceProvider);
-
     // Periodic refresh every 10 minutes
     yield* Stream.periodic(
             const Duration(minutes: 10), (_) => _fetchSteps(user.$id))

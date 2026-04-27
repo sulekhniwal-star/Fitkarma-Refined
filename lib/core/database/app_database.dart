@@ -373,6 +373,10 @@ class AppDatabase extends _$AppDatabase {
     await into(stepCounts).insertOnConflictUpdate(companion);
   }
 
+  Stream<UserProfile?> watchUserProfile(String id) {
+    return (select(userProfiles)..where((t) => t.id.equals(id))).watchSingleOrNull();
+  }
+
   // --- Generic Sync Queries ---
 
   Future<List<D>> getPendingRecords<T extends HasResultSet, D>(ResultSetImplementation<T, D> table) async {
