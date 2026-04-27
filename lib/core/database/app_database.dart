@@ -141,6 +141,9 @@ class SocialPosts extends Table {
   IntColumn get likeCount => integer().withDefault(const Constant(0))();
   BoolColumn get isLiked => boolean().withDefault(const Constant(false))();
   DateTimeColumn get createdAt => dateTime()();
+  TextColumn get syncStatus => text().withLength(min: 1, max: 16).withDefault(const Constant('pending'))();
+  TextColumn get remoteId => text().nullable()();
+  IntColumn get failedAttempts => integer().withDefault(const Constant(0))();
 
   @override
   Set<Column> get primaryKey => {id};
@@ -153,6 +156,9 @@ class CommunityGroups extends Table {
   TextColumn get iconId => text().nullable()();
   IntColumn get memberCount => integer().withDefault(const Constant(0))();
   BoolColumn get isJoined => boolean().withDefault(const Constant(false))();
+  TextColumn get syncStatus => text().withLength(min: 1, max: 16).withDefault(const Constant('pending'))();
+  TextColumn get remoteId => text().nullable()();
+  IntColumn get failedAttempts => integer().withDefault(const Constant(0))();
 
   @override
   Set<Column> get primaryKey => {id};
@@ -200,6 +206,9 @@ class LabReports extends Table {
   TextColumn get extractedDataJson => text().nullable()();
   DateTimeColumn get reportDate => dateTime().nullable()();
   DateTimeColumn get createdAt => dateTime()();
+  TextColumn get syncStatus => text().withLength(min: 1, max: 16).withDefault(const Constant('pending'))();
+  TextColumn get remoteId => text().nullable()();
+  IntColumn get failedAttempts => integer().withDefault(const Constant(0))();
 
   @override
   Set<Column> get primaryKey => {id};
@@ -211,6 +220,8 @@ class StepCounts extends Table {
   DateTimeColumn get date => dateTime()();
   IntColumn get count => integer().withDefault(const Constant(0))();
   TextColumn get syncStatus => text().withLength(min: 1, max: 16).withDefault(const Constant('pending'))();
+  TextColumn get remoteId => text().nullable()();
+  IntColumn get failedAttempts => integer().withDefault(const Constant(0))();
 
   @override
   Set<Column> get primaryKey => {id};

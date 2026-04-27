@@ -23,7 +23,7 @@ final dashboardInsightProvider = AutoDisposeFutureProvider<String>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef DashboardInsightRef = AutoDisposeFutureProviderRef<String>;
-String _$correlationEngineHash() => r'75dd3ca3c7af4e6bf226e708f18d6ca7c4ba4386';
+String _$correlationEngineHash() => r'e3daf496d0291ecae5c798f7645f0c8966b3983c';
 
 /// See also [CorrelationEngine].
 @ProviderFor(CorrelationEngine)

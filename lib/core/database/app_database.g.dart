@@ -5345,8 +5345,23 @@ class $StepCountsTable extends StepCounts
       type: DriftSqlType.string,
       requiredDuringInsert: false,
       defaultValue: const Constant('pending'));
+  static const VerificationMeta _remoteIdMeta =
+      const VerificationMeta('remoteId');
   @override
-  List<GeneratedColumn> get $columns => [id, userId, date, count, syncStatus];
+  late final GeneratedColumn<String> remoteId = GeneratedColumn<String>(
+      'remote_id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _failedAttemptsMeta =
+      const VerificationMeta('failedAttempts');
+  @override
+  late final GeneratedColumn<int> failedAttempts = GeneratedColumn<int>(
+      'failed_attempts', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(0));
+  @override
+  List<GeneratedColumn> get $columns =>
+      [id, userId, date, count, syncStatus, remoteId, failedAttempts];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -5384,6 +5399,16 @@ class $StepCountsTable extends StepCounts
           syncStatus.isAcceptableOrUnknown(
               data['sync_status']!, _syncStatusMeta));
     }
+    if (data.containsKey('remote_id')) {
+      context.handle(_remoteIdMeta,
+          remoteId.isAcceptableOrUnknown(data['remote_id']!, _remoteIdMeta));
+    }
+    if (data.containsKey('failed_attempts')) {
+      context.handle(
+          _failedAttemptsMeta,
+          failedAttempts.isAcceptableOrUnknown(
+              data['failed_attempts']!, _failedAttemptsMeta));
+    }
     return context;
   }
 
@@ -5403,6 +5428,10 @@ class $StepCountsTable extends StepCounts
           .read(DriftSqlType.int, data['${effectivePrefix}count'])!,
       syncStatus: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}sync_status'])!,
+      remoteId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}remote_id']),
+      failedAttempts: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}failed_attempts'])!,
     );
   }
 
@@ -5418,12 +5447,16 @@ class StepCount extends DataClass implements Insertable<StepCount> {
   final DateTime date;
   final int count;
   final String syncStatus;
+  final String? remoteId;
+  final int failedAttempts;
   const StepCount(
       {required this.id,
       required this.userId,
       required this.date,
       required this.count,
-      required this.syncStatus});
+      required this.syncStatus,
+      this.remoteId,
+      required this.failedAttempts});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -5432,6 +5465,10 @@ class StepCount extends DataClass implements Insertable<StepCount> {
     map['date'] = Variable<DateTime>(date);
     map['count'] = Variable<int>(count);
     map['sync_status'] = Variable<String>(syncStatus);
+    if (!nullToAbsent || remoteId != null) {
+      map['remote_id'] = Variable<String>(remoteId);
+    }
+    map['failed_attempts'] = Variable<int>(failedAttempts);
     return map;
   }
 
@@ -5442,6 +5479,10 @@ class StepCount extends DataClass implements Insertable<StepCount> {
       date: Value(date),
       count: Value(count),
       syncStatus: Value(syncStatus),
+      remoteId: remoteId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(remoteId),
+      failedAttempts: Value(failedAttempts),
     );
   }
 
@@ -5454,6 +5495,8 @@ class StepCount extends DataClass implements Insertable<StepCount> {
       date: serializer.fromJson<DateTime>(json['date']),
       count: serializer.fromJson<int>(json['count']),
       syncStatus: serializer.fromJson<String>(json['syncStatus']),
+      remoteId: serializer.fromJson<String?>(json['remoteId']),
+      failedAttempts: serializer.fromJson<int>(json['failedAttempts']),
     );
   }
   @override
@@ -5465,6 +5508,8 @@ class StepCount extends DataClass implements Insertable<StepCount> {
       'date': serializer.toJson<DateTime>(date),
       'count': serializer.toJson<int>(count),
       'syncStatus': serializer.toJson<String>(syncStatus),
+      'remoteId': serializer.toJson<String?>(remoteId),
+      'failedAttempts': serializer.toJson<int>(failedAttempts),
     };
   }
 
@@ -5473,13 +5518,17 @@ class StepCount extends DataClass implements Insertable<StepCount> {
           String? userId,
           DateTime? date,
           int? count,
-          String? syncStatus}) =>
+          String? syncStatus,
+          Value<String?> remoteId = const Value.absent(),
+          int? failedAttempts}) =>
       StepCount(
         id: id ?? this.id,
         userId: userId ?? this.userId,
         date: date ?? this.date,
         count: count ?? this.count,
         syncStatus: syncStatus ?? this.syncStatus,
+        remoteId: remoteId.present ? remoteId.value : this.remoteId,
+        failedAttempts: failedAttempts ?? this.failedAttempts,
       );
   StepCount copyWithCompanion(StepCountsCompanion data) {
     return StepCount(
@@ -5489,6 +5538,10 @@ class StepCount extends DataClass implements Insertable<StepCount> {
       count: data.count.present ? data.count.value : this.count,
       syncStatus:
           data.syncStatus.present ? data.syncStatus.value : this.syncStatus,
+      remoteId: data.remoteId.present ? data.remoteId.value : this.remoteId,
+      failedAttempts: data.failedAttempts.present
+          ? data.failedAttempts.value
+          : this.failedAttempts,
     );
   }
 
@@ -5499,13 +5552,16 @@ class StepCount extends DataClass implements Insertable<StepCount> {
           ..write('userId: $userId, ')
           ..write('date: $date, ')
           ..write('count: $count, ')
-          ..write('syncStatus: $syncStatus')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('remoteId: $remoteId, ')
+          ..write('failedAttempts: $failedAttempts')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, userId, date, count, syncStatus);
+  int get hashCode => Object.hash(
+      id, userId, date, count, syncStatus, remoteId, failedAttempts);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -5514,7 +5570,9 @@ class StepCount extends DataClass implements Insertable<StepCount> {
           other.userId == this.userId &&
           other.date == this.date &&
           other.count == this.count &&
-          other.syncStatus == this.syncStatus);
+          other.syncStatus == this.syncStatus &&
+          other.remoteId == this.remoteId &&
+          other.failedAttempts == this.failedAttempts);
 }
 
 class StepCountsCompanion extends UpdateCompanion<StepCount> {
@@ -5523,6 +5581,8 @@ class StepCountsCompanion extends UpdateCompanion<StepCount> {
   final Value<DateTime> date;
   final Value<int> count;
   final Value<String> syncStatus;
+  final Value<String?> remoteId;
+  final Value<int> failedAttempts;
   final Value<int> rowid;
   const StepCountsCompanion({
     this.id = const Value.absent(),
@@ -5530,6 +5590,8 @@ class StepCountsCompanion extends UpdateCompanion<StepCount> {
     this.date = const Value.absent(),
     this.count = const Value.absent(),
     this.syncStatus = const Value.absent(),
+    this.remoteId = const Value.absent(),
+    this.failedAttempts = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   StepCountsCompanion.insert({
@@ -5538,6 +5600,8 @@ class StepCountsCompanion extends UpdateCompanion<StepCount> {
     required DateTime date,
     this.count = const Value.absent(),
     this.syncStatus = const Value.absent(),
+    this.remoteId = const Value.absent(),
+    this.failedAttempts = const Value.absent(),
     this.rowid = const Value.absent(),
   })  : id = Value(id),
         userId = Value(userId),
@@ -5548,6 +5612,8 @@ class StepCountsCompanion extends UpdateCompanion<StepCount> {
     Expression<DateTime>? date,
     Expression<int>? count,
     Expression<String>? syncStatus,
+    Expression<String>? remoteId,
+    Expression<int>? failedAttempts,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -5556,6 +5622,8 @@ class StepCountsCompanion extends UpdateCompanion<StepCount> {
       if (date != null) 'date': date,
       if (count != null) 'count': count,
       if (syncStatus != null) 'sync_status': syncStatus,
+      if (remoteId != null) 'remote_id': remoteId,
+      if (failedAttempts != null) 'failed_attempts': failedAttempts,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -5566,6 +5634,8 @@ class StepCountsCompanion extends UpdateCompanion<StepCount> {
       Value<DateTime>? date,
       Value<int>? count,
       Value<String>? syncStatus,
+      Value<String?>? remoteId,
+      Value<int>? failedAttempts,
       Value<int>? rowid}) {
     return StepCountsCompanion(
       id: id ?? this.id,
@@ -5573,6 +5643,8 @@ class StepCountsCompanion extends UpdateCompanion<StepCount> {
       date: date ?? this.date,
       count: count ?? this.count,
       syncStatus: syncStatus ?? this.syncStatus,
+      remoteId: remoteId ?? this.remoteId,
+      failedAttempts: failedAttempts ?? this.failedAttempts,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -5595,6 +5667,12 @@ class StepCountsCompanion extends UpdateCompanion<StepCount> {
     if (syncStatus.present) {
       map['sync_status'] = Variable<String>(syncStatus.value);
     }
+    if (remoteId.present) {
+      map['remote_id'] = Variable<String>(remoteId.value);
+    }
+    if (failedAttempts.present) {
+      map['failed_attempts'] = Variable<int>(failedAttempts.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -5609,6 +5687,8 @@ class StepCountsCompanion extends UpdateCompanion<StepCount> {
           ..write('date: $date, ')
           ..write('count: $count, ')
           ..write('syncStatus: $syncStatus, ')
+          ..write('remoteId: $remoteId, ')
+          ..write('failedAttempts: $failedAttempts, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -7789,6 +7869,30 @@ class $SocialPostsTable extends SocialPosts
   late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
       'created_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  static const VerificationMeta _syncStatusMeta =
+      const VerificationMeta('syncStatus');
+  @override
+  late final GeneratedColumn<String> syncStatus = GeneratedColumn<String>(
+      'sync_status', aliasedName, false,
+      additionalChecks:
+          GeneratedColumn.checkTextLength(minTextLength: 1, maxTextLength: 16),
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      defaultValue: const Constant('pending'));
+  static const VerificationMeta _remoteIdMeta =
+      const VerificationMeta('remoteId');
+  @override
+  late final GeneratedColumn<String> remoteId = GeneratedColumn<String>(
+      'remote_id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _failedAttemptsMeta =
+      const VerificationMeta('failedAttempts');
+  @override
+  late final GeneratedColumn<int> failedAttempts = GeneratedColumn<int>(
+      'failed_attempts', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(0));
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -7799,7 +7903,10 @@ class $SocialPostsTable extends SocialPosts
         mediaFileId,
         likeCount,
         isLiked,
-        createdAt
+        createdAt,
+        syncStatus,
+        remoteId,
+        failedAttempts
       ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -7860,6 +7967,22 @@ class $SocialPostsTable extends SocialPosts
     } else if (isInserting) {
       context.missing(_createdAtMeta);
     }
+    if (data.containsKey('sync_status')) {
+      context.handle(
+          _syncStatusMeta,
+          syncStatus.isAcceptableOrUnknown(
+              data['sync_status']!, _syncStatusMeta));
+    }
+    if (data.containsKey('remote_id')) {
+      context.handle(_remoteIdMeta,
+          remoteId.isAcceptableOrUnknown(data['remote_id']!, _remoteIdMeta));
+    }
+    if (data.containsKey('failed_attempts')) {
+      context.handle(
+          _failedAttemptsMeta,
+          failedAttempts.isAcceptableOrUnknown(
+              data['failed_attempts']!, _failedAttemptsMeta));
+    }
     return context;
   }
 
@@ -7887,6 +8010,12 @@ class $SocialPostsTable extends SocialPosts
           .read(DriftSqlType.bool, data['${effectivePrefix}is_liked'])!,
       createdAt: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
+      syncStatus: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}sync_status'])!,
+      remoteId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}remote_id']),
+      failedAttempts: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}failed_attempts'])!,
     );
   }
 
@@ -7906,6 +8035,9 @@ class SocialPost extends DataClass implements Insertable<SocialPost> {
   final int likeCount;
   final bool isLiked;
   final DateTime createdAt;
+  final String syncStatus;
+  final String? remoteId;
+  final int failedAttempts;
   const SocialPost(
       {required this.id,
       required this.userId,
@@ -7915,7 +8047,10 @@ class SocialPost extends DataClass implements Insertable<SocialPost> {
       this.mediaFileId,
       required this.likeCount,
       required this.isLiked,
-      required this.createdAt});
+      required this.createdAt,
+      required this.syncStatus,
+      this.remoteId,
+      required this.failedAttempts});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -7932,6 +8067,11 @@ class SocialPost extends DataClass implements Insertable<SocialPost> {
     map['like_count'] = Variable<int>(likeCount);
     map['is_liked'] = Variable<bool>(isLiked);
     map['created_at'] = Variable<DateTime>(createdAt);
+    map['sync_status'] = Variable<String>(syncStatus);
+    if (!nullToAbsent || remoteId != null) {
+      map['remote_id'] = Variable<String>(remoteId);
+    }
+    map['failed_attempts'] = Variable<int>(failedAttempts);
     return map;
   }
 
@@ -7950,6 +8090,11 @@ class SocialPost extends DataClass implements Insertable<SocialPost> {
       likeCount: Value(likeCount),
       isLiked: Value(isLiked),
       createdAt: Value(createdAt),
+      syncStatus: Value(syncStatus),
+      remoteId: remoteId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(remoteId),
+      failedAttempts: Value(failedAttempts),
     );
   }
 
@@ -7966,6 +8111,9 @@ class SocialPost extends DataClass implements Insertable<SocialPost> {
       likeCount: serializer.fromJson<int>(json['likeCount']),
       isLiked: serializer.fromJson<bool>(json['isLiked']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      syncStatus: serializer.fromJson<String>(json['syncStatus']),
+      remoteId: serializer.fromJson<String?>(json['remoteId']),
+      failedAttempts: serializer.fromJson<int>(json['failedAttempts']),
     );
   }
   @override
@@ -7981,6 +8129,9 @@ class SocialPost extends DataClass implements Insertable<SocialPost> {
       'likeCount': serializer.toJson<int>(likeCount),
       'isLiked': serializer.toJson<bool>(isLiked),
       'createdAt': serializer.toJson<DateTime>(createdAt),
+      'syncStatus': serializer.toJson<String>(syncStatus),
+      'remoteId': serializer.toJson<String?>(remoteId),
+      'failedAttempts': serializer.toJson<int>(failedAttempts),
     };
   }
 
@@ -7993,7 +8144,10 @@ class SocialPost extends DataClass implements Insertable<SocialPost> {
           Value<String?> mediaFileId = const Value.absent(),
           int? likeCount,
           bool? isLiked,
-          DateTime? createdAt}) =>
+          DateTime? createdAt,
+          String? syncStatus,
+          Value<String?> remoteId = const Value.absent(),
+          int? failedAttempts}) =>
       SocialPost(
         id: id ?? this.id,
         userId: userId ?? this.userId,
@@ -8005,6 +8159,9 @@ class SocialPost extends DataClass implements Insertable<SocialPost> {
         likeCount: likeCount ?? this.likeCount,
         isLiked: isLiked ?? this.isLiked,
         createdAt: createdAt ?? this.createdAt,
+        syncStatus: syncStatus ?? this.syncStatus,
+        remoteId: remoteId.present ? remoteId.value : this.remoteId,
+        failedAttempts: failedAttempts ?? this.failedAttempts,
       );
   SocialPost copyWithCompanion(SocialPostsCompanion data) {
     return SocialPost(
@@ -8020,6 +8177,12 @@ class SocialPost extends DataClass implements Insertable<SocialPost> {
       likeCount: data.likeCount.present ? data.likeCount.value : this.likeCount,
       isLiked: data.isLiked.present ? data.isLiked.value : this.isLiked,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      syncStatus:
+          data.syncStatus.present ? data.syncStatus.value : this.syncStatus,
+      remoteId: data.remoteId.present ? data.remoteId.value : this.remoteId,
+      failedAttempts: data.failedAttempts.present
+          ? data.failedAttempts.value
+          : this.failedAttempts,
     );
   }
 
@@ -8034,14 +8197,28 @@ class SocialPost extends DataClass implements Insertable<SocialPost> {
           ..write('mediaFileId: $mediaFileId, ')
           ..write('likeCount: $likeCount, ')
           ..write('isLiked: $isLiked, ')
-          ..write('createdAt: $createdAt')
+          ..write('createdAt: $createdAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('remoteId: $remoteId, ')
+          ..write('failedAttempts: $failedAttempts')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, userId, userName, userAvatarId, content,
-      mediaFileId, likeCount, isLiked, createdAt);
+  int get hashCode => Object.hash(
+      id,
+      userId,
+      userName,
+      userAvatarId,
+      content,
+      mediaFileId,
+      likeCount,
+      isLiked,
+      createdAt,
+      syncStatus,
+      remoteId,
+      failedAttempts);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -8054,7 +8231,10 @@ class SocialPost extends DataClass implements Insertable<SocialPost> {
           other.mediaFileId == this.mediaFileId &&
           other.likeCount == this.likeCount &&
           other.isLiked == this.isLiked &&
-          other.createdAt == this.createdAt);
+          other.createdAt == this.createdAt &&
+          other.syncStatus == this.syncStatus &&
+          other.remoteId == this.remoteId &&
+          other.failedAttempts == this.failedAttempts);
 }
 
 class SocialPostsCompanion extends UpdateCompanion<SocialPost> {
@@ -8067,6 +8247,9 @@ class SocialPostsCompanion extends UpdateCompanion<SocialPost> {
   final Value<int> likeCount;
   final Value<bool> isLiked;
   final Value<DateTime> createdAt;
+  final Value<String> syncStatus;
+  final Value<String?> remoteId;
+  final Value<int> failedAttempts;
   final Value<int> rowid;
   const SocialPostsCompanion({
     this.id = const Value.absent(),
@@ -8078,6 +8261,9 @@ class SocialPostsCompanion extends UpdateCompanion<SocialPost> {
     this.likeCount = const Value.absent(),
     this.isLiked = const Value.absent(),
     this.createdAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    this.remoteId = const Value.absent(),
+    this.failedAttempts = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   SocialPostsCompanion.insert({
@@ -8090,6 +8276,9 @@ class SocialPostsCompanion extends UpdateCompanion<SocialPost> {
     this.likeCount = const Value.absent(),
     this.isLiked = const Value.absent(),
     required DateTime createdAt,
+    this.syncStatus = const Value.absent(),
+    this.remoteId = const Value.absent(),
+    this.failedAttempts = const Value.absent(),
     this.rowid = const Value.absent(),
   })  : id = Value(id),
         userId = Value(userId),
@@ -8106,6 +8295,9 @@ class SocialPostsCompanion extends UpdateCompanion<SocialPost> {
     Expression<int>? likeCount,
     Expression<bool>? isLiked,
     Expression<DateTime>? createdAt,
+    Expression<String>? syncStatus,
+    Expression<String>? remoteId,
+    Expression<int>? failedAttempts,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -8118,6 +8310,9 @@ class SocialPostsCompanion extends UpdateCompanion<SocialPost> {
       if (likeCount != null) 'like_count': likeCount,
       if (isLiked != null) 'is_liked': isLiked,
       if (createdAt != null) 'created_at': createdAt,
+      if (syncStatus != null) 'sync_status': syncStatus,
+      if (remoteId != null) 'remote_id': remoteId,
+      if (failedAttempts != null) 'failed_attempts': failedAttempts,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -8132,6 +8327,9 @@ class SocialPostsCompanion extends UpdateCompanion<SocialPost> {
       Value<int>? likeCount,
       Value<bool>? isLiked,
       Value<DateTime>? createdAt,
+      Value<String>? syncStatus,
+      Value<String?>? remoteId,
+      Value<int>? failedAttempts,
       Value<int>? rowid}) {
     return SocialPostsCompanion(
       id: id ?? this.id,
@@ -8143,6 +8341,9 @@ class SocialPostsCompanion extends UpdateCompanion<SocialPost> {
       likeCount: likeCount ?? this.likeCount,
       isLiked: isLiked ?? this.isLiked,
       createdAt: createdAt ?? this.createdAt,
+      syncStatus: syncStatus ?? this.syncStatus,
+      remoteId: remoteId ?? this.remoteId,
+      failedAttempts: failedAttempts ?? this.failedAttempts,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -8177,6 +8378,15 @@ class SocialPostsCompanion extends UpdateCompanion<SocialPost> {
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
+    if (syncStatus.present) {
+      map['sync_status'] = Variable<String>(syncStatus.value);
+    }
+    if (remoteId.present) {
+      map['remote_id'] = Variable<String>(remoteId.value);
+    }
+    if (failedAttempts.present) {
+      map['failed_attempts'] = Variable<int>(failedAttempts.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -8195,6 +8405,9 @@ class SocialPostsCompanion extends UpdateCompanion<SocialPost> {
           ..write('likeCount: $likeCount, ')
           ..write('isLiked: $isLiked, ')
           ..write('createdAt: $createdAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('remoteId: $remoteId, ')
+          ..write('failedAttempts: $failedAttempts, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -8249,9 +8462,42 @@ class $CommunityGroupsTable extends CommunityGroups
       defaultConstraints:
           GeneratedColumn.constraintIsAlways('CHECK ("is_joined" IN (0, 1))'),
       defaultValue: const Constant(false));
+  static const VerificationMeta _syncStatusMeta =
+      const VerificationMeta('syncStatus');
   @override
-  List<GeneratedColumn> get $columns =>
-      [id, name, description, iconId, memberCount, isJoined];
+  late final GeneratedColumn<String> syncStatus = GeneratedColumn<String>(
+      'sync_status', aliasedName, false,
+      additionalChecks:
+          GeneratedColumn.checkTextLength(minTextLength: 1, maxTextLength: 16),
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      defaultValue: const Constant('pending'));
+  static const VerificationMeta _remoteIdMeta =
+      const VerificationMeta('remoteId');
+  @override
+  late final GeneratedColumn<String> remoteId = GeneratedColumn<String>(
+      'remote_id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _failedAttemptsMeta =
+      const VerificationMeta('failedAttempts');
+  @override
+  late final GeneratedColumn<int> failedAttempts = GeneratedColumn<int>(
+      'failed_attempts', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(0));
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        name,
+        description,
+        iconId,
+        memberCount,
+        isJoined,
+        syncStatus,
+        remoteId,
+        failedAttempts
+      ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -8293,6 +8539,22 @@ class $CommunityGroupsTable extends CommunityGroups
       context.handle(_isJoinedMeta,
           isJoined.isAcceptableOrUnknown(data['is_joined']!, _isJoinedMeta));
     }
+    if (data.containsKey('sync_status')) {
+      context.handle(
+          _syncStatusMeta,
+          syncStatus.isAcceptableOrUnknown(
+              data['sync_status']!, _syncStatusMeta));
+    }
+    if (data.containsKey('remote_id')) {
+      context.handle(_remoteIdMeta,
+          remoteId.isAcceptableOrUnknown(data['remote_id']!, _remoteIdMeta));
+    }
+    if (data.containsKey('failed_attempts')) {
+      context.handle(
+          _failedAttemptsMeta,
+          failedAttempts.isAcceptableOrUnknown(
+              data['failed_attempts']!, _failedAttemptsMeta));
+    }
     return context;
   }
 
@@ -8314,6 +8576,12 @@ class $CommunityGroupsTable extends CommunityGroups
           .read(DriftSqlType.int, data['${effectivePrefix}member_count'])!,
       isJoined: attachedDatabase.typeMapping
           .read(DriftSqlType.bool, data['${effectivePrefix}is_joined'])!,
+      syncStatus: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}sync_status'])!,
+      remoteId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}remote_id']),
+      failedAttempts: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}failed_attempts'])!,
     );
   }
 
@@ -8330,13 +8598,19 @@ class CommunityGroup extends DataClass implements Insertable<CommunityGroup> {
   final String? iconId;
   final int memberCount;
   final bool isJoined;
+  final String syncStatus;
+  final String? remoteId;
+  final int failedAttempts;
   const CommunityGroup(
       {required this.id,
       required this.name,
       this.description,
       this.iconId,
       required this.memberCount,
-      required this.isJoined});
+      required this.isJoined,
+      required this.syncStatus,
+      this.remoteId,
+      required this.failedAttempts});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -8350,6 +8624,11 @@ class CommunityGroup extends DataClass implements Insertable<CommunityGroup> {
     }
     map['member_count'] = Variable<int>(memberCount);
     map['is_joined'] = Variable<bool>(isJoined);
+    map['sync_status'] = Variable<String>(syncStatus);
+    if (!nullToAbsent || remoteId != null) {
+      map['remote_id'] = Variable<String>(remoteId);
+    }
+    map['failed_attempts'] = Variable<int>(failedAttempts);
     return map;
   }
 
@@ -8364,6 +8643,11 @@ class CommunityGroup extends DataClass implements Insertable<CommunityGroup> {
           iconId == null && nullToAbsent ? const Value.absent() : Value(iconId),
       memberCount: Value(memberCount),
       isJoined: Value(isJoined),
+      syncStatus: Value(syncStatus),
+      remoteId: remoteId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(remoteId),
+      failedAttempts: Value(failedAttempts),
     );
   }
 
@@ -8377,6 +8661,9 @@ class CommunityGroup extends DataClass implements Insertable<CommunityGroup> {
       iconId: serializer.fromJson<String?>(json['iconId']),
       memberCount: serializer.fromJson<int>(json['memberCount']),
       isJoined: serializer.fromJson<bool>(json['isJoined']),
+      syncStatus: serializer.fromJson<String>(json['syncStatus']),
+      remoteId: serializer.fromJson<String?>(json['remoteId']),
+      failedAttempts: serializer.fromJson<int>(json['failedAttempts']),
     );
   }
   @override
@@ -8389,6 +8676,9 @@ class CommunityGroup extends DataClass implements Insertable<CommunityGroup> {
       'iconId': serializer.toJson<String?>(iconId),
       'memberCount': serializer.toJson<int>(memberCount),
       'isJoined': serializer.toJson<bool>(isJoined),
+      'syncStatus': serializer.toJson<String>(syncStatus),
+      'remoteId': serializer.toJson<String?>(remoteId),
+      'failedAttempts': serializer.toJson<int>(failedAttempts),
     };
   }
 
@@ -8398,7 +8688,10 @@ class CommunityGroup extends DataClass implements Insertable<CommunityGroup> {
           Value<String?> description = const Value.absent(),
           Value<String?> iconId = const Value.absent(),
           int? memberCount,
-          bool? isJoined}) =>
+          bool? isJoined,
+          String? syncStatus,
+          Value<String?> remoteId = const Value.absent(),
+          int? failedAttempts}) =>
       CommunityGroup(
         id: id ?? this.id,
         name: name ?? this.name,
@@ -8406,6 +8699,9 @@ class CommunityGroup extends DataClass implements Insertable<CommunityGroup> {
         iconId: iconId.present ? iconId.value : this.iconId,
         memberCount: memberCount ?? this.memberCount,
         isJoined: isJoined ?? this.isJoined,
+        syncStatus: syncStatus ?? this.syncStatus,
+        remoteId: remoteId.present ? remoteId.value : this.remoteId,
+        failedAttempts: failedAttempts ?? this.failedAttempts,
       );
   CommunityGroup copyWithCompanion(CommunityGroupsCompanion data) {
     return CommunityGroup(
@@ -8417,6 +8713,12 @@ class CommunityGroup extends DataClass implements Insertable<CommunityGroup> {
       memberCount:
           data.memberCount.present ? data.memberCount.value : this.memberCount,
       isJoined: data.isJoined.present ? data.isJoined.value : this.isJoined,
+      syncStatus:
+          data.syncStatus.present ? data.syncStatus.value : this.syncStatus,
+      remoteId: data.remoteId.present ? data.remoteId.value : this.remoteId,
+      failedAttempts: data.failedAttempts.present
+          ? data.failedAttempts.value
+          : this.failedAttempts,
     );
   }
 
@@ -8428,14 +8730,17 @@ class CommunityGroup extends DataClass implements Insertable<CommunityGroup> {
           ..write('description: $description, ')
           ..write('iconId: $iconId, ')
           ..write('memberCount: $memberCount, ')
-          ..write('isJoined: $isJoined')
+          ..write('isJoined: $isJoined, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('remoteId: $remoteId, ')
+          ..write('failedAttempts: $failedAttempts')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, name, description, iconId, memberCount, isJoined);
+  int get hashCode => Object.hash(id, name, description, iconId, memberCount,
+      isJoined, syncStatus, remoteId, failedAttempts);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -8445,7 +8750,10 @@ class CommunityGroup extends DataClass implements Insertable<CommunityGroup> {
           other.description == this.description &&
           other.iconId == this.iconId &&
           other.memberCount == this.memberCount &&
-          other.isJoined == this.isJoined);
+          other.isJoined == this.isJoined &&
+          other.syncStatus == this.syncStatus &&
+          other.remoteId == this.remoteId &&
+          other.failedAttempts == this.failedAttempts);
 }
 
 class CommunityGroupsCompanion extends UpdateCompanion<CommunityGroup> {
@@ -8455,6 +8763,9 @@ class CommunityGroupsCompanion extends UpdateCompanion<CommunityGroup> {
   final Value<String?> iconId;
   final Value<int> memberCount;
   final Value<bool> isJoined;
+  final Value<String> syncStatus;
+  final Value<String?> remoteId;
+  final Value<int> failedAttempts;
   final Value<int> rowid;
   const CommunityGroupsCompanion({
     this.id = const Value.absent(),
@@ -8463,6 +8774,9 @@ class CommunityGroupsCompanion extends UpdateCompanion<CommunityGroup> {
     this.iconId = const Value.absent(),
     this.memberCount = const Value.absent(),
     this.isJoined = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    this.remoteId = const Value.absent(),
+    this.failedAttempts = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   CommunityGroupsCompanion.insert({
@@ -8472,6 +8786,9 @@ class CommunityGroupsCompanion extends UpdateCompanion<CommunityGroup> {
     this.iconId = const Value.absent(),
     this.memberCount = const Value.absent(),
     this.isJoined = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    this.remoteId = const Value.absent(),
+    this.failedAttempts = const Value.absent(),
     this.rowid = const Value.absent(),
   })  : id = Value(id),
         name = Value(name);
@@ -8482,6 +8799,9 @@ class CommunityGroupsCompanion extends UpdateCompanion<CommunityGroup> {
     Expression<String>? iconId,
     Expression<int>? memberCount,
     Expression<bool>? isJoined,
+    Expression<String>? syncStatus,
+    Expression<String>? remoteId,
+    Expression<int>? failedAttempts,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -8491,6 +8811,9 @@ class CommunityGroupsCompanion extends UpdateCompanion<CommunityGroup> {
       if (iconId != null) 'icon_id': iconId,
       if (memberCount != null) 'member_count': memberCount,
       if (isJoined != null) 'is_joined': isJoined,
+      if (syncStatus != null) 'sync_status': syncStatus,
+      if (remoteId != null) 'remote_id': remoteId,
+      if (failedAttempts != null) 'failed_attempts': failedAttempts,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -8502,6 +8825,9 @@ class CommunityGroupsCompanion extends UpdateCompanion<CommunityGroup> {
       Value<String?>? iconId,
       Value<int>? memberCount,
       Value<bool>? isJoined,
+      Value<String>? syncStatus,
+      Value<String?>? remoteId,
+      Value<int>? failedAttempts,
       Value<int>? rowid}) {
     return CommunityGroupsCompanion(
       id: id ?? this.id,
@@ -8510,6 +8836,9 @@ class CommunityGroupsCompanion extends UpdateCompanion<CommunityGroup> {
       iconId: iconId ?? this.iconId,
       memberCount: memberCount ?? this.memberCount,
       isJoined: isJoined ?? this.isJoined,
+      syncStatus: syncStatus ?? this.syncStatus,
+      remoteId: remoteId ?? this.remoteId,
+      failedAttempts: failedAttempts ?? this.failedAttempts,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -8535,6 +8864,15 @@ class CommunityGroupsCompanion extends UpdateCompanion<CommunityGroup> {
     if (isJoined.present) {
       map['is_joined'] = Variable<bool>(isJoined.value);
     }
+    if (syncStatus.present) {
+      map['sync_status'] = Variable<String>(syncStatus.value);
+    }
+    if (remoteId.present) {
+      map['remote_id'] = Variable<String>(remoteId.value);
+    }
+    if (failedAttempts.present) {
+      map['failed_attempts'] = Variable<int>(failedAttempts.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -8550,6 +8888,9 @@ class CommunityGroupsCompanion extends UpdateCompanion<CommunityGroup> {
           ..write('iconId: $iconId, ')
           ..write('memberCount: $memberCount, ')
           ..write('isJoined: $isJoined, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('remoteId: $remoteId, ')
+          ..write('failedAttempts: $failedAttempts, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -8613,6 +8954,30 @@ class $LabReportsTable extends LabReports
   late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
       'created_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  static const VerificationMeta _syncStatusMeta =
+      const VerificationMeta('syncStatus');
+  @override
+  late final GeneratedColumn<String> syncStatus = GeneratedColumn<String>(
+      'sync_status', aliasedName, false,
+      additionalChecks:
+          GeneratedColumn.checkTextLength(minTextLength: 1, maxTextLength: 16),
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      defaultValue: const Constant('pending'));
+  static const VerificationMeta _remoteIdMeta =
+      const VerificationMeta('remoteId');
+  @override
+  late final GeneratedColumn<String> remoteId = GeneratedColumn<String>(
+      'remote_id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _failedAttemptsMeta =
+      const VerificationMeta('failedAttempts');
+  @override
+  late final GeneratedColumn<int> failedAttempts = GeneratedColumn<int>(
+      'failed_attempts', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(0));
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -8622,7 +8987,10 @@ class $LabReportsTable extends LabReports
         reportType,
         extractedDataJson,
         reportDate,
-        createdAt
+        createdAt,
+        syncStatus,
+        remoteId,
+        failedAttempts
       ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -8681,6 +9049,22 @@ class $LabReportsTable extends LabReports
     } else if (isInserting) {
       context.missing(_createdAtMeta);
     }
+    if (data.containsKey('sync_status')) {
+      context.handle(
+          _syncStatusMeta,
+          syncStatus.isAcceptableOrUnknown(
+              data['sync_status']!, _syncStatusMeta));
+    }
+    if (data.containsKey('remote_id')) {
+      context.handle(_remoteIdMeta,
+          remoteId.isAcceptableOrUnknown(data['remote_id']!, _remoteIdMeta));
+    }
+    if (data.containsKey('failed_attempts')) {
+      context.handle(
+          _failedAttemptsMeta,
+          failedAttempts.isAcceptableOrUnknown(
+              data['failed_attempts']!, _failedAttemptsMeta));
+    }
     return context;
   }
 
@@ -8706,6 +9090,12 @@ class $LabReportsTable extends LabReports
           .read(DriftSqlType.dateTime, data['${effectivePrefix}report_date']),
       createdAt: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
+      syncStatus: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}sync_status'])!,
+      remoteId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}remote_id']),
+      failedAttempts: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}failed_attempts'])!,
     );
   }
 
@@ -8724,6 +9114,9 @@ class LabReport extends DataClass implements Insertable<LabReport> {
   final String? extractedDataJson;
   final DateTime? reportDate;
   final DateTime createdAt;
+  final String syncStatus;
+  final String? remoteId;
+  final int failedAttempts;
   const LabReport(
       {required this.id,
       required this.userId,
@@ -8732,7 +9125,10 @@ class LabReport extends DataClass implements Insertable<LabReport> {
       this.reportType,
       this.extractedDataJson,
       this.reportDate,
-      required this.createdAt});
+      required this.createdAt,
+      required this.syncStatus,
+      this.remoteId,
+      required this.failedAttempts});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -8750,6 +9146,11 @@ class LabReport extends DataClass implements Insertable<LabReport> {
       map['report_date'] = Variable<DateTime>(reportDate);
     }
     map['created_at'] = Variable<DateTime>(createdAt);
+    map['sync_status'] = Variable<String>(syncStatus);
+    if (!nullToAbsent || remoteId != null) {
+      map['remote_id'] = Variable<String>(remoteId);
+    }
+    map['failed_attempts'] = Variable<int>(failedAttempts);
     return map;
   }
 
@@ -8769,6 +9170,11 @@ class LabReport extends DataClass implements Insertable<LabReport> {
           ? const Value.absent()
           : Value(reportDate),
       createdAt: Value(createdAt),
+      syncStatus: Value(syncStatus),
+      remoteId: remoteId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(remoteId),
+      failedAttempts: Value(failedAttempts),
     );
   }
 
@@ -8785,6 +9191,9 @@ class LabReport extends DataClass implements Insertable<LabReport> {
           serializer.fromJson<String?>(json['extractedDataJson']),
       reportDate: serializer.fromJson<DateTime?>(json['reportDate']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      syncStatus: serializer.fromJson<String>(json['syncStatus']),
+      remoteId: serializer.fromJson<String?>(json['remoteId']),
+      failedAttempts: serializer.fromJson<int>(json['failedAttempts']),
     );
   }
   @override
@@ -8799,6 +9208,9 @@ class LabReport extends DataClass implements Insertable<LabReport> {
       'extractedDataJson': serializer.toJson<String?>(extractedDataJson),
       'reportDate': serializer.toJson<DateTime?>(reportDate),
       'createdAt': serializer.toJson<DateTime>(createdAt),
+      'syncStatus': serializer.toJson<String>(syncStatus),
+      'remoteId': serializer.toJson<String?>(remoteId),
+      'failedAttempts': serializer.toJson<int>(failedAttempts),
     };
   }
 
@@ -8810,7 +9222,10 @@ class LabReport extends DataClass implements Insertable<LabReport> {
           Value<String?> reportType = const Value.absent(),
           Value<String?> extractedDataJson = const Value.absent(),
           Value<DateTime?> reportDate = const Value.absent(),
-          DateTime? createdAt}) =>
+          DateTime? createdAt,
+          String? syncStatus,
+          Value<String?> remoteId = const Value.absent(),
+          int? failedAttempts}) =>
       LabReport(
         id: id ?? this.id,
         userId: userId ?? this.userId,
@@ -8822,6 +9237,9 @@ class LabReport extends DataClass implements Insertable<LabReport> {
             : this.extractedDataJson,
         reportDate: reportDate.present ? reportDate.value : this.reportDate,
         createdAt: createdAt ?? this.createdAt,
+        syncStatus: syncStatus ?? this.syncStatus,
+        remoteId: remoteId.present ? remoteId.value : this.remoteId,
+        failedAttempts: failedAttempts ?? this.failedAttempts,
       );
   LabReport copyWithCompanion(LabReportsCompanion data) {
     return LabReport(
@@ -8837,6 +9255,12 @@ class LabReport extends DataClass implements Insertable<LabReport> {
       reportDate:
           data.reportDate.present ? data.reportDate.value : this.reportDate,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      syncStatus:
+          data.syncStatus.present ? data.syncStatus.value : this.syncStatus,
+      remoteId: data.remoteId.present ? data.remoteId.value : this.remoteId,
+      failedAttempts: data.failedAttempts.present
+          ? data.failedAttempts.value
+          : this.failedAttempts,
     );
   }
 
@@ -8850,14 +9274,27 @@ class LabReport extends DataClass implements Insertable<LabReport> {
           ..write('reportType: $reportType, ')
           ..write('extractedDataJson: $extractedDataJson, ')
           ..write('reportDate: $reportDate, ')
-          ..write('createdAt: $createdAt')
+          ..write('createdAt: $createdAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('remoteId: $remoteId, ')
+          ..write('failedAttempts: $failedAttempts')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, userId, fileName, fileId, reportType,
-      extractedDataJson, reportDate, createdAt);
+  int get hashCode => Object.hash(
+      id,
+      userId,
+      fileName,
+      fileId,
+      reportType,
+      extractedDataJson,
+      reportDate,
+      createdAt,
+      syncStatus,
+      remoteId,
+      failedAttempts);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -8869,7 +9306,10 @@ class LabReport extends DataClass implements Insertable<LabReport> {
           other.reportType == this.reportType &&
           other.extractedDataJson == this.extractedDataJson &&
           other.reportDate == this.reportDate &&
-          other.createdAt == this.createdAt);
+          other.createdAt == this.createdAt &&
+          other.syncStatus == this.syncStatus &&
+          other.remoteId == this.remoteId &&
+          other.failedAttempts == this.failedAttempts);
 }
 
 class LabReportsCompanion extends UpdateCompanion<LabReport> {
@@ -8881,6 +9321,9 @@ class LabReportsCompanion extends UpdateCompanion<LabReport> {
   final Value<String?> extractedDataJson;
   final Value<DateTime?> reportDate;
   final Value<DateTime> createdAt;
+  final Value<String> syncStatus;
+  final Value<String?> remoteId;
+  final Value<int> failedAttempts;
   final Value<int> rowid;
   const LabReportsCompanion({
     this.id = const Value.absent(),
@@ -8891,6 +9334,9 @@ class LabReportsCompanion extends UpdateCompanion<LabReport> {
     this.extractedDataJson = const Value.absent(),
     this.reportDate = const Value.absent(),
     this.createdAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    this.remoteId = const Value.absent(),
+    this.failedAttempts = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   LabReportsCompanion.insert({
@@ -8902,6 +9348,9 @@ class LabReportsCompanion extends UpdateCompanion<LabReport> {
     this.extractedDataJson = const Value.absent(),
     this.reportDate = const Value.absent(),
     required DateTime createdAt,
+    this.syncStatus = const Value.absent(),
+    this.remoteId = const Value.absent(),
+    this.failedAttempts = const Value.absent(),
     this.rowid = const Value.absent(),
   })  : id = Value(id),
         userId = Value(userId),
@@ -8917,6 +9366,9 @@ class LabReportsCompanion extends UpdateCompanion<LabReport> {
     Expression<String>? extractedDataJson,
     Expression<DateTime>? reportDate,
     Expression<DateTime>? createdAt,
+    Expression<String>? syncStatus,
+    Expression<String>? remoteId,
+    Expression<int>? failedAttempts,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -8928,6 +9380,9 @@ class LabReportsCompanion extends UpdateCompanion<LabReport> {
       if (extractedDataJson != null) 'extracted_data_json': extractedDataJson,
       if (reportDate != null) 'report_date': reportDate,
       if (createdAt != null) 'created_at': createdAt,
+      if (syncStatus != null) 'sync_status': syncStatus,
+      if (remoteId != null) 'remote_id': remoteId,
+      if (failedAttempts != null) 'failed_attempts': failedAttempts,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -8941,6 +9396,9 @@ class LabReportsCompanion extends UpdateCompanion<LabReport> {
       Value<String?>? extractedDataJson,
       Value<DateTime?>? reportDate,
       Value<DateTime>? createdAt,
+      Value<String>? syncStatus,
+      Value<String?>? remoteId,
+      Value<int>? failedAttempts,
       Value<int>? rowid}) {
     return LabReportsCompanion(
       id: id ?? this.id,
@@ -8951,6 +9409,9 @@ class LabReportsCompanion extends UpdateCompanion<LabReport> {
       extractedDataJson: extractedDataJson ?? this.extractedDataJson,
       reportDate: reportDate ?? this.reportDate,
       createdAt: createdAt ?? this.createdAt,
+      syncStatus: syncStatus ?? this.syncStatus,
+      remoteId: remoteId ?? this.remoteId,
+      failedAttempts: failedAttempts ?? this.failedAttempts,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -8982,6 +9443,15 @@ class LabReportsCompanion extends UpdateCompanion<LabReport> {
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
+    if (syncStatus.present) {
+      map['sync_status'] = Variable<String>(syncStatus.value);
+    }
+    if (remoteId.present) {
+      map['remote_id'] = Variable<String>(remoteId.value);
+    }
+    if (failedAttempts.present) {
+      map['failed_attempts'] = Variable<int>(failedAttempts.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -8999,6 +9469,9 @@ class LabReportsCompanion extends UpdateCompanion<LabReport> {
           ..write('extractedDataJson: $extractedDataJson, ')
           ..write('reportDate: $reportDate, ')
           ..write('createdAt: $createdAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('remoteId: $remoteId, ')
+          ..write('failedAttempts: $failedAttempts, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -11661,6 +12134,8 @@ typedef $$StepCountsTableCreateCompanionBuilder = StepCountsCompanion Function({
   required DateTime date,
   Value<int> count,
   Value<String> syncStatus,
+  Value<String?> remoteId,
+  Value<int> failedAttempts,
   Value<int> rowid,
 });
 typedef $$StepCountsTableUpdateCompanionBuilder = StepCountsCompanion Function({
@@ -11669,6 +12144,8 @@ typedef $$StepCountsTableUpdateCompanionBuilder = StepCountsCompanion Function({
   Value<DateTime> date,
   Value<int> count,
   Value<String> syncStatus,
+  Value<String?> remoteId,
+  Value<int> failedAttempts,
   Value<int> rowid,
 });
 
@@ -11695,6 +12172,13 @@ class $$StepCountsTableFilterComposer
 
   ColumnFilters<String> get syncStatus => $composableBuilder(
       column: $table.syncStatus, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get remoteId => $composableBuilder(
+      column: $table.remoteId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get failedAttempts => $composableBuilder(
+      column: $table.failedAttempts,
+      builder: (column) => ColumnFilters(column));
 }
 
 class $$StepCountsTableOrderingComposer
@@ -11720,6 +12204,13 @@ class $$StepCountsTableOrderingComposer
 
   ColumnOrderings<String> get syncStatus => $composableBuilder(
       column: $table.syncStatus, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get remoteId => $composableBuilder(
+      column: $table.remoteId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get failedAttempts => $composableBuilder(
+      column: $table.failedAttempts,
+      builder: (column) => ColumnOrderings(column));
 }
 
 class $$StepCountsTableAnnotationComposer
@@ -11745,6 +12236,12 @@ class $$StepCountsTableAnnotationComposer
 
   GeneratedColumn<String> get syncStatus => $composableBuilder(
       column: $table.syncStatus, builder: (column) => column);
+
+  GeneratedColumn<String> get remoteId =>
+      $composableBuilder(column: $table.remoteId, builder: (column) => column);
+
+  GeneratedColumn<int> get failedAttempts => $composableBuilder(
+      column: $table.failedAttempts, builder: (column) => column);
 }
 
 class $$StepCountsTableTableManager extends RootTableManager<
@@ -11775,6 +12272,8 @@ class $$StepCountsTableTableManager extends RootTableManager<
             Value<DateTime> date = const Value.absent(),
             Value<int> count = const Value.absent(),
             Value<String> syncStatus = const Value.absent(),
+            Value<String?> remoteId = const Value.absent(),
+            Value<int> failedAttempts = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               StepCountsCompanion(
@@ -11783,6 +12282,8 @@ class $$StepCountsTableTableManager extends RootTableManager<
             date: date,
             count: count,
             syncStatus: syncStatus,
+            remoteId: remoteId,
+            failedAttempts: failedAttempts,
             rowid: rowid,
           ),
           createCompanionCallback: ({
@@ -11791,6 +12292,8 @@ class $$StepCountsTableTableManager extends RootTableManager<
             required DateTime date,
             Value<int> count = const Value.absent(),
             Value<String> syncStatus = const Value.absent(),
+            Value<String?> remoteId = const Value.absent(),
+            Value<int> failedAttempts = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               StepCountsCompanion.insert(
@@ -11799,6 +12302,8 @@ class $$StepCountsTableTableManager extends RootTableManager<
             date: date,
             count: count,
             syncStatus: syncStatus,
+            remoteId: remoteId,
+            failedAttempts: failedAttempts,
             rowid: rowid,
           ),
           withReferenceMapper: (p0) => p0
@@ -12876,6 +13381,9 @@ typedef $$SocialPostsTableCreateCompanionBuilder = SocialPostsCompanion
   Value<int> likeCount,
   Value<bool> isLiked,
   required DateTime createdAt,
+  Value<String> syncStatus,
+  Value<String?> remoteId,
+  Value<int> failedAttempts,
   Value<int> rowid,
 });
 typedef $$SocialPostsTableUpdateCompanionBuilder = SocialPostsCompanion
@@ -12889,6 +13397,9 @@ typedef $$SocialPostsTableUpdateCompanionBuilder = SocialPostsCompanion
   Value<int> likeCount,
   Value<bool> isLiked,
   Value<DateTime> createdAt,
+  Value<String> syncStatus,
+  Value<String?> remoteId,
+  Value<int> failedAttempts,
   Value<int> rowid,
 });
 
@@ -12927,6 +13438,16 @@ class $$SocialPostsTableFilterComposer
 
   ColumnFilters<DateTime> get createdAt => $composableBuilder(
       column: $table.createdAt, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get syncStatus => $composableBuilder(
+      column: $table.syncStatus, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get remoteId => $composableBuilder(
+      column: $table.remoteId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get failedAttempts => $composableBuilder(
+      column: $table.failedAttempts,
+      builder: (column) => ColumnFilters(column));
 }
 
 class $$SocialPostsTableOrderingComposer
@@ -12965,6 +13486,16 @@ class $$SocialPostsTableOrderingComposer
 
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
       column: $table.createdAt, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get syncStatus => $composableBuilder(
+      column: $table.syncStatus, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get remoteId => $composableBuilder(
+      column: $table.remoteId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get failedAttempts => $composableBuilder(
+      column: $table.failedAttempts,
+      builder: (column) => ColumnOrderings(column));
 }
 
 class $$SocialPostsTableAnnotationComposer
@@ -13002,6 +13533,15 @@ class $$SocialPostsTableAnnotationComposer
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<String> get syncStatus => $composableBuilder(
+      column: $table.syncStatus, builder: (column) => column);
+
+  GeneratedColumn<String> get remoteId =>
+      $composableBuilder(column: $table.remoteId, builder: (column) => column);
+
+  GeneratedColumn<int> get failedAttempts => $composableBuilder(
+      column: $table.failedAttempts, builder: (column) => column);
 }
 
 class $$SocialPostsTableTableManager extends RootTableManager<
@@ -13036,6 +13576,9 @@ class $$SocialPostsTableTableManager extends RootTableManager<
             Value<int> likeCount = const Value.absent(),
             Value<bool> isLiked = const Value.absent(),
             Value<DateTime> createdAt = const Value.absent(),
+            Value<String> syncStatus = const Value.absent(),
+            Value<String?> remoteId = const Value.absent(),
+            Value<int> failedAttempts = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               SocialPostsCompanion(
@@ -13048,6 +13591,9 @@ class $$SocialPostsTableTableManager extends RootTableManager<
             likeCount: likeCount,
             isLiked: isLiked,
             createdAt: createdAt,
+            syncStatus: syncStatus,
+            remoteId: remoteId,
+            failedAttempts: failedAttempts,
             rowid: rowid,
           ),
           createCompanionCallback: ({
@@ -13060,6 +13606,9 @@ class $$SocialPostsTableTableManager extends RootTableManager<
             Value<int> likeCount = const Value.absent(),
             Value<bool> isLiked = const Value.absent(),
             required DateTime createdAt,
+            Value<String> syncStatus = const Value.absent(),
+            Value<String?> remoteId = const Value.absent(),
+            Value<int> failedAttempts = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               SocialPostsCompanion.insert(
@@ -13072,6 +13621,9 @@ class $$SocialPostsTableTableManager extends RootTableManager<
             likeCount: likeCount,
             isLiked: isLiked,
             createdAt: createdAt,
+            syncStatus: syncStatus,
+            remoteId: remoteId,
+            failedAttempts: failedAttempts,
             rowid: rowid,
           ),
           withReferenceMapper: (p0) => p0
@@ -13101,6 +13653,9 @@ typedef $$CommunityGroupsTableCreateCompanionBuilder = CommunityGroupsCompanion
   Value<String?> iconId,
   Value<int> memberCount,
   Value<bool> isJoined,
+  Value<String> syncStatus,
+  Value<String?> remoteId,
+  Value<int> failedAttempts,
   Value<int> rowid,
 });
 typedef $$CommunityGroupsTableUpdateCompanionBuilder = CommunityGroupsCompanion
@@ -13111,6 +13666,9 @@ typedef $$CommunityGroupsTableUpdateCompanionBuilder = CommunityGroupsCompanion
   Value<String?> iconId,
   Value<int> memberCount,
   Value<bool> isJoined,
+  Value<String> syncStatus,
+  Value<String?> remoteId,
+  Value<int> failedAttempts,
   Value<int> rowid,
 });
 
@@ -13140,6 +13698,16 @@ class $$CommunityGroupsTableFilterComposer
 
   ColumnFilters<bool> get isJoined => $composableBuilder(
       column: $table.isJoined, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get syncStatus => $composableBuilder(
+      column: $table.syncStatus, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get remoteId => $composableBuilder(
+      column: $table.remoteId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get failedAttempts => $composableBuilder(
+      column: $table.failedAttempts,
+      builder: (column) => ColumnFilters(column));
 }
 
 class $$CommunityGroupsTableOrderingComposer
@@ -13168,6 +13736,16 @@ class $$CommunityGroupsTableOrderingComposer
 
   ColumnOrderings<bool> get isJoined => $composableBuilder(
       column: $table.isJoined, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get syncStatus => $composableBuilder(
+      column: $table.syncStatus, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get remoteId => $composableBuilder(
+      column: $table.remoteId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get failedAttempts => $composableBuilder(
+      column: $table.failedAttempts,
+      builder: (column) => ColumnOrderings(column));
 }
 
 class $$CommunityGroupsTableAnnotationComposer
@@ -13196,6 +13774,15 @@ class $$CommunityGroupsTableAnnotationComposer
 
   GeneratedColumn<bool> get isJoined =>
       $composableBuilder(column: $table.isJoined, builder: (column) => column);
+
+  GeneratedColumn<String> get syncStatus => $composableBuilder(
+      column: $table.syncStatus, builder: (column) => column);
+
+  GeneratedColumn<String> get remoteId =>
+      $composableBuilder(column: $table.remoteId, builder: (column) => column);
+
+  GeneratedColumn<int> get failedAttempts => $composableBuilder(
+      column: $table.failedAttempts, builder: (column) => column);
 }
 
 class $$CommunityGroupsTableTableManager extends RootTableManager<
@@ -13231,6 +13818,9 @@ class $$CommunityGroupsTableTableManager extends RootTableManager<
             Value<String?> iconId = const Value.absent(),
             Value<int> memberCount = const Value.absent(),
             Value<bool> isJoined = const Value.absent(),
+            Value<String> syncStatus = const Value.absent(),
+            Value<String?> remoteId = const Value.absent(),
+            Value<int> failedAttempts = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               CommunityGroupsCompanion(
@@ -13240,6 +13830,9 @@ class $$CommunityGroupsTableTableManager extends RootTableManager<
             iconId: iconId,
             memberCount: memberCount,
             isJoined: isJoined,
+            syncStatus: syncStatus,
+            remoteId: remoteId,
+            failedAttempts: failedAttempts,
             rowid: rowid,
           ),
           createCompanionCallback: ({
@@ -13249,6 +13842,9 @@ class $$CommunityGroupsTableTableManager extends RootTableManager<
             Value<String?> iconId = const Value.absent(),
             Value<int> memberCount = const Value.absent(),
             Value<bool> isJoined = const Value.absent(),
+            Value<String> syncStatus = const Value.absent(),
+            Value<String?> remoteId = const Value.absent(),
+            Value<int> failedAttempts = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               CommunityGroupsCompanion.insert(
@@ -13258,6 +13854,9 @@ class $$CommunityGroupsTableTableManager extends RootTableManager<
             iconId: iconId,
             memberCount: memberCount,
             isJoined: isJoined,
+            syncStatus: syncStatus,
+            remoteId: remoteId,
+            failedAttempts: failedAttempts,
             rowid: rowid,
           ),
           withReferenceMapper: (p0) => p0
@@ -13291,6 +13890,9 @@ typedef $$LabReportsTableCreateCompanionBuilder = LabReportsCompanion Function({
   Value<String?> extractedDataJson,
   Value<DateTime?> reportDate,
   required DateTime createdAt,
+  Value<String> syncStatus,
+  Value<String?> remoteId,
+  Value<int> failedAttempts,
   Value<int> rowid,
 });
 typedef $$LabReportsTableUpdateCompanionBuilder = LabReportsCompanion Function({
@@ -13302,6 +13904,9 @@ typedef $$LabReportsTableUpdateCompanionBuilder = LabReportsCompanion Function({
   Value<String?> extractedDataJson,
   Value<DateTime?> reportDate,
   Value<DateTime> createdAt,
+  Value<String> syncStatus,
+  Value<String?> remoteId,
+  Value<int> failedAttempts,
   Value<int> rowid,
 });
 
@@ -13338,6 +13943,16 @@ class $$LabReportsTableFilterComposer
 
   ColumnFilters<DateTime> get createdAt => $composableBuilder(
       column: $table.createdAt, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get syncStatus => $composableBuilder(
+      column: $table.syncStatus, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get remoteId => $composableBuilder(
+      column: $table.remoteId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get failedAttempts => $composableBuilder(
+      column: $table.failedAttempts,
+      builder: (column) => ColumnFilters(column));
 }
 
 class $$LabReportsTableOrderingComposer
@@ -13373,6 +13988,16 @@ class $$LabReportsTableOrderingComposer
 
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
       column: $table.createdAt, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get syncStatus => $composableBuilder(
+      column: $table.syncStatus, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get remoteId => $composableBuilder(
+      column: $table.remoteId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get failedAttempts => $composableBuilder(
+      column: $table.failedAttempts,
+      builder: (column) => ColumnOrderings(column));
 }
 
 class $$LabReportsTableAnnotationComposer
@@ -13407,6 +14032,15 @@ class $$LabReportsTableAnnotationComposer
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<String> get syncStatus => $composableBuilder(
+      column: $table.syncStatus, builder: (column) => column);
+
+  GeneratedColumn<String> get remoteId =>
+      $composableBuilder(column: $table.remoteId, builder: (column) => column);
+
+  GeneratedColumn<int> get failedAttempts => $composableBuilder(
+      column: $table.failedAttempts, builder: (column) => column);
 }
 
 class $$LabReportsTableTableManager extends RootTableManager<
@@ -13440,6 +14074,9 @@ class $$LabReportsTableTableManager extends RootTableManager<
             Value<String?> extractedDataJson = const Value.absent(),
             Value<DateTime?> reportDate = const Value.absent(),
             Value<DateTime> createdAt = const Value.absent(),
+            Value<String> syncStatus = const Value.absent(),
+            Value<String?> remoteId = const Value.absent(),
+            Value<int> failedAttempts = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               LabReportsCompanion(
@@ -13451,6 +14088,9 @@ class $$LabReportsTableTableManager extends RootTableManager<
             extractedDataJson: extractedDataJson,
             reportDate: reportDate,
             createdAt: createdAt,
+            syncStatus: syncStatus,
+            remoteId: remoteId,
+            failedAttempts: failedAttempts,
             rowid: rowid,
           ),
           createCompanionCallback: ({
@@ -13462,6 +14102,9 @@ class $$LabReportsTableTableManager extends RootTableManager<
             Value<String?> extractedDataJson = const Value.absent(),
             Value<DateTime?> reportDate = const Value.absent(),
             required DateTime createdAt,
+            Value<String> syncStatus = const Value.absent(),
+            Value<String?> remoteId = const Value.absent(),
+            Value<int> failedAttempts = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               LabReportsCompanion.insert(
@@ -13473,6 +14116,9 @@ class $$LabReportsTableTableManager extends RootTableManager<
             extractedDataJson: extractedDataJson,
             reportDate: reportDate,
             createdAt: createdAt,
+            syncStatus: syncStatus,
+            remoteId: remoteId,
+            failedAttempts: failedAttempts,
             rowid: rowid,
           ),
           withReferenceMapper: (p0) => p0

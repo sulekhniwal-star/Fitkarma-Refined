@@ -453,15 +453,15 @@
 
 ## 7. Sync Engine
 
-- [ ] `SyncWorker` class — `syncPending()` iterates all pending Drift rows
-- [ ] `SyncWorker._syncTable<T>()` — generic sync per table with error handling
-- [ ] `SyncWorker` — DLQ promotion after 3 failed attempts (`failedAttempts >= 3` → `syncStatus = 'dlq'`)
-- [ ] `connectivityStreamProvider` — `Connectivity().onConnectivityChanged` stream
-- [ ] Listener in `ProviderScope` — calls `syncWorker.syncPending()` on connectivity restored
-- [ ] Periodic background sync via `Workmanager` at tier-appropriate interval (6h / 30m / 15m)
-- [ ] `dlqCountProvider` — `FutureProvider<int>` summing DLQ rows across all tables
-- [ ] `SyncStatusBanner` widget reads `dlqCountProvider` and `connectivityStreamProvider`
-- [ ] `pendingSyncCountProvider` — badge count for Settings → Data & Sync
+- [x] `SyncWorker` class — `syncPending()` iterates all pending Drift rows
+- [x] `SyncWorker._syncTable<T>()` — generic sync per table with error handling
+- [x] `SyncWorker` — DLQ promotion after 3 failed attempts (`failedAttempts >= 3` → `syncStatus = 'dlq'`)
+- [x] `connectivityStreamProvider` — `Connectivity().onConnectivityChanged` stream
+- [x] Listener in `ProviderScope` — calls `syncWorker.syncPending()` on connectivity restored
+- [x] Periodic background sync via `Workmanager` at tier-appropriate interval (6h / 30m / 15m)
+- [x] `dlqCountProvider` — `FutureProvider<int>` summing DLQ rows across all tables
+- [x] `SyncStatusBanner` widget reads `dlqCountProvider` and `connectivityStreamProvider`
+- [x] `pendingSyncCountProvider` — badge count for Settings → Data & Sync
 
 ---
 
