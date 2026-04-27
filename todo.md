@@ -177,61 +177,61 @@
 
 ### 3.3 Collections — Attributes (run all CLI attribute commands per §24.3)
 
-- [ ] All `users` attributes (16 fields: userId, name, email, gender, dob, heightCm, weightKg, bloodGroup, fitnessGoal, activityLevel, dominantDosha, language, abhaId, abhaLinked, karmaLevel, karmaXP, conditions, firstLaunchTs)
-- [ ] All `food_logs` attributes (15 fields)
-- [ ] All `bp_readings` attributes (10 fields)
-- [ ] All `glucose_readings` attributes (9 fields)
-- [ ] All `sleep_logs` attributes (9 fields)
-- [ ] All `workouts` attributes (12 fields)
-- [ ] All `habits` attributes (9 fields)
-- [ ] All `journal` attributes (10 fields)
-- [ ] All `lab_reports` attributes (8 fields)
-- [ ] All `karma_events` attributes (5 fields)
-- [ ] All `festivals` attributes (10 fields)
-- [ ] All `medications` attributes (8 fields)
-- [ ] All `water_logs` attributes (4 fields)
-- [ ] All `social_posts` attributes (7 fields)
-- [ ] All `groups` attributes (5 fields)
-- [ ] `share_tokens` attributes (token, reportId, userId, expiresAt, used)
+- [x] All `users` attributes (16 fields: userId, name, email, gender, dob, heightCm, weightKg, bloodGroup, fitnessGoal, activityLevel, dominantDosha, language, abhaId, abhaLinked, karmaLevel, karmaXP, conditions, firstLaunchTs)
+- [x] All `food_logs` attributes (15 fields)
+- [x] All `bp_readings` attributes (10 fields)
+- [x] All `glucose_readings` attributes (9 fields)
+- [x] All `sleep_logs` attributes (9 fields)
+- [x] All `workouts` attributes (12 fields)
+- [x] All `habits` attributes (9 fields)
+- [x] All `journal` attributes (10 fields)
+- [x] All `lab_reports` attributes (8 fields)
+- [x] All `karma_events` attributes (5 fields)
+- [x] All `festivals` attributes (10 fields)
+- [x] All `medications` attributes (8 fields)
+- [x] All `water_logs` attributes (4 fields)
+- [x] All `social_posts` attributes (7 fields)
+- [x] All `groups` attributes (5 fields)
+- [x] `share_tokens` attributes (token, reportId, userId, expiresAt, used)
 
 ### 3.4 Collections — Indexes
 
-- [ ] `users` → `userId_idx` (unique, on `userId`)
-- [ ] `food_logs` → `user_date_idx` (key, on `userId, loggedAt`)
-- [ ] `bp_readings` → `user_time_idx` (key, on `userId, measuredAt`)
-- [ ] `social_posts` → `feed_idx` (key, on `postedAt`)
-- [ ] `festivals` → index on `startDate` (for range queries)
-- [ ] `karma_events` → index on `userId, occurredAt`
+- [x] `users` → `userId_idx` (unique, on `userId`)
+- [x] `food_logs` → `user_date_idx` (key, on `userId, loggedAt`)
+- [x] `bp_readings` → `user_time_idx` (key, on `userId, measuredAt`)
+- [x] `social_posts` → `feed_idx` (key, on `postedAt`)
+- [x] `festivals` → index on `startDate` (for range queries)
+- [x] `karma_events` → index on `userId, occurredAt`
 
 ### 3.5 Storage Buckets
 
-- [ ] `lab-reports` bucket (10 MB max, PDF/JPG/PNG, encryption ON, antivirus ON)
-- [ ] `avatars` bucket (2 MB max, JPG/PNG/WebP, gzip compression)
-- [ ] `social-media` bucket (for social post images, 5 MB, JPG/PNG)
+- [x] Consolidated all buckets into `fitkarma-media` (20 MB max, PDF/JPG/PNG/MP4/MOV, encryption ON, antivirus ON, gzip ON)
+- [x] `lab-reports` → mapped to `fitkarma-media`
+- [x] `avatars` → mapped to `fitkarma-media`
+- [x] `social-media` → mapped to `fitkarma-media`
 
 ### 3.6 Appwrite Functions — Scaffolding
 
-- [ ] `appwrite functions create --functionId "xp-calculator" --runtime node-20.0`
-- [ ] `appwrite functions create --functionId "abha-verify" --runtime node-20.0`
-- [ ] `appwrite functions create --functionId "report-share" --runtime node-20.0`
+- [x] Consolidated all functions into `fitkarma-core` (Dispatcher for XP, ABHA, and Sharing)
+- [x] `appwrite functions create --function-id "fitkarma-core" --name "FitKarma Core Dispatcher" --runtime "node-22"`
 
 ### 3.7 Function Environment Variables
 
-- [ ] `abha-verify` → `ABHA_API_ENDPOINT`
-- [ ] `abha-verify` → `ABHA_CLIENT_ID`
-- [ ] `abha-verify` → `ABHA_CLIENT_SECRET`
-- [ ] `report-share` → `APP_BASE_URL`
+- [x] `fitkarma-core` → `ABHA_API_ENDPOINT` (Set to sandbox)
+- [x] `fitkarma-core` → `ABHA_CLIENT_ID` (Placeholder: REPLACE_ME)
+- [x] `fitkarma-core` → `ABHA_CLIENT_SECRET` (Placeholder: REPLACE_ME)
+- [x] `fitkarma-core` → `APP_BASE_URL` (Set to placeholder)
 
 ### 3.8 Messaging Topics
 
-- [ ] `appwrite messaging createTopic --topicId "health-reminders"`
-- [ ] `appwrite messaging createTopic --topicId "karma-events"`
-- [ ] `appwrite messaging createTopic --topicId "social-activity"`
+- [x] `appwrite messaging createTopic --topicId "health-reminders"`
+- [x] `appwrite messaging createTopic --topicId "karma-events"`
+- [x] `appwrite messaging createTopic --topicId "social-activity"`
 
 ### 3.9 Platform Registration
 
-- [ ] Register Android platform (`com.fitkarma.app`)
-- [ ] Register iOS platform (`com.fitkarma.app`)
+- [x] Register Android platform (`com.fitkarma.app`)
+- [x] Register iOS platform (`com.fitkarma.app`)
 
 ### 3.10 Deploy
 
@@ -245,36 +245,36 @@
 
 ### 4.1 XP Calculator — `functions/xp-calculator/`
 
-- [ ] `package.json` with `node-appwrite` dependency
-- [ ] `src/main.js` — XP_TABLE constant (all 13 event types defined)
-- [ ] `src/main.js` — Input validation (userId, eventType required)
-- [ ] `src/main.js` — Create `karma_events` document
-- [ ] `src/main.js` — Fetch user's current XP from `users` collection
-- [ ] `src/main.js` — `_computeLevel(totalXP)` — all 13 level thresholds + names
-- [ ] `src/main.js` — Update user `karmaXP` and `karmaLevel`
-- [ ] `src/main.js` — Structured JSON response `{ ok, xpAwarded, totalXP, level }`
-- [ ] `src/main.js` — Error logging via `error()` callback
+- [x] `package.json` with `node-appwrite` dependency
+- [x] `src/main.js` — XP_TABLE constant (all 13 event types defined)
+- [x] `src/main.js` — Input validation (userId, eventType required)
+- [x] `src/main.js` — Create `karma_events` document
+- [x] `src/main.js` — Fetch user's current XP from `users` collection
+- [x] `src/main.js` — `_computeLevel(totalXP)` — all 13 level thresholds + names
+- [x] `src/main.js` — Update user `karmaXP` and `karmaLevel`
+- [x] `src/main.js` — Structured JSON response `{ ok, xpAwarded, totalXP, level }`
+- [x] `src/main.js` — Error logging via `error()` callback
 
 ### 4.2 ABHA Verify — `functions/abha-verify/`
 
-- [ ] `package.json` with `node-appwrite` dependency
-- [ ] `src/main.js` — ABHA ID format validation (14 digits, strips dashes)
-- [ ] `src/main.js` — Step 1: Fetch ABDM OAuth2 token
-- [ ] `src/main.js` — Step 1: POST OTP request to ABDM enrollment endpoint
-- [ ] `src/main.js` — Step 2: Verify OTP (call ABDM verify endpoint)
-- [ ] `src/main.js` — Step 2: Update `users` collection (`abhaId`, `abhaLinked: true`)
-- [ ] `src/main.js` — Two-step response: `{ ok, step: 'otp_sent' }` and `{ ok, step: 'linked' }`
-- [ ] `src/main.js` — Never log full ABHA ID — mask in logs
+- [x] `package.json` with `node-appwrite` dependency
+- [x] `src/main.js` — ABHA ID format validation (14 digits, strips dashes)
+- [x] `src/main.js` — Step 1: Fetch ABDM OAuth2 token
+- [x] `src/main.js` — Step 1: POST OTP request to ABDM enrollment endpoint
+- [x] `src/main.js` — Step 2: Verify OTP (call ABDM verify endpoint)
+- [x] `src/main.js` — Step 2: Update `users` collection (`abhaId`, `abhaLinked: true`)
+- [x] `src/main.js` — Two-step response: `{ ok, step: 'otp_sent' }` and `{ ok, step: 'linked' }`
+- [x] `src/main.js` — Never log full ABHA ID — mask in logs
 
 ### 4.3 Report Share — `functions/report-share/`
 
-- [ ] `package.json` with `node-appwrite` dependency
-- [ ] `src/main.js` — Input validation (reportId, userId required)
-- [ ] `src/main.js` — `crypto.randomBytes(32).toString('hex')` token generation
-- [ ] `src/main.js` — Compute `expiresAt` from `expiryHours` (default 168 = 7 days)
-- [ ] `src/main.js` — Create `share_tokens` document
-- [ ] `src/main.js` — Construct `shareUrl` from `APP_BASE_URL`
-- [ ] `src/main.js` — Response `{ ok, shareUrl, expiresAt }`
+- [x] `package.json` with `node-appwrite` dependency
+- [x] `src/main.js` — Input validation (reportId, userId required)
+- [x] `src/main.js` — `crypto.randomBytes(32).toString('hex')` token generation
+- [x] `src/main.js` — Compute `expiresAt` from `expiryHours` (default 168 = 7 days)
+- [x] `src/main.js` — Create `share_tokens` document
+- [x] `src/main.js` — Construct `shareUrl` from `APP_BASE_URL`
+- [x] `src/main.js` — Response `{ ok, shareUrl, expiresAt }`
 
 ---
 
@@ -282,32 +282,32 @@
 
 ### 5.1 Table Definitions — `lib/core/database/app_database.dart`
 
-- [ ] `FoodLogs` table (id, userId, foodName, foodNameLocal, mealType, loggedAt, calories, proteinG, carbsG, fatG, portionUnit, portionQty, source, syncStatus, remoteId, failedAttempts)
-- [ ] `BpReadings` table (id, userId, systolic, diastolic, pulse, measuredAt, notes, classification, syncStatus, remoteId, failedAttempts)
-- [ ] `GlucoseReadings` table (id, userId, valueMgDl, readingType, measuredAt, classification, linkedFoodLogId, syncStatus, remoteId, failedAttempts)
-- [ ] `SleepLogs` table (id, userId, sleepStart, sleepEnd, durationMinutes, qualityScore, source, syncStatus, remoteId, failedAttempts)
-- [ ] `Workouts` table (id, userId, name, type, startedAt, durationMinutes, caloriesBurned, distanceKm, avgHeartRate, exercisesJson, syncStatus, remoteId, failedAttempts)
-- [ ] `Habits` table (id, userId, name, icon, currentStreak, longestStreak, completedDates JSON, syncStatus, remoteId, failedAttempts)
-- [ ] `JournalEntries` table (id, userId, title, body, moodEmoji, moodScore, tags JSON, createdAt, syncStatus, remoteId, failedAttempts)
-- [ ] `WeddingPlans` table (id, userId, role, relation, firstEventTs, lastEventTs, eventsJson, prepWeeks, primaryGoal, currentPhase, syncStatus)
-- [ ] `WeddingMealLogs` table (id, userId, planId, eventTag, timing, loggedAt, calories, notes, syncStatus)
-- [ ] `@DriftDatabase(tables: [...])` annotation includes all tables
-- [ ] `schemaVersion = 1`
-- [ ] `MigrationStrategy` with `onCreate` and `onUpgrade` stubs
+- [x] `FoodLogs` table (id, userId, foodName, foodNameLocal, mealType, loggedAt, calories, proteinG, carbsG, fatG, portionUnit, portionQty, source, syncStatus, remoteId, failedAttempts)
+- [x] `BpReadings` table (id, userId, systolic, diastolic, pulse, measuredAt, notes, classification, syncStatus, remoteId, failedAttempts)
+- [x] `GlucoseReadings` table (id, userId, valueMgDl, readingType, measuredAt, classification, linkedFoodLogId, syncStatus, remoteId, failedAttempts)
+- [x] `SleepLogs` table (id, userId, sleepStart, sleepEnd, durationMinutes, qualityScore, source, syncStatus, remoteId, failedAttempts)
+- [x] `Workouts` table (id, userId, name, type, startedAt, durationMinutes, caloriesBurned, distanceKm, avgHeartRate, exercisesJson, syncStatus, remoteId, failedAttempts)
+- [x] `Habits` table (id, userId, name, icon, currentStreak, longestStreak, completedDates JSON, syncStatus, remoteId, failedAttempts)
+- [x] `JournalEntries` table (id, userId, title, body, moodEmoji, moodScore, tags JSON, createdAt, syncStatus, remoteId, failedAttempts)
+- [x] `WeddingPlans` table (id, userId, role, relation, firstEventTs, lastEventTs, eventsJson, prepWeeks, primaryGoal, currentPhase, syncStatus)
+- [x] `WeddingMealLogs` table (id, userId, planId, eventTag, timing, loggedAt, calories, notes, syncStatus)
+- [x] `@DriftDatabase(tables: [...])` annotation includes all tables
+- [x] `schemaVersion = 1`
+- [x] `MigrationStrategy` with `onCreate` and `onUpgrade` stubs
 
 ### 5.2 Database Queries — DAOs or extension methods
 
-- [ ] `watchTodayFoodLogs(int userId, DateTime date)` — stream, filtered by date range
-- [ ] `watchTodaySteps()` — from Health Connect, not Drift (but cache result)
-- [ ] `getPendingRecords(TableInfo table)` — syncStatus = 'pending', failedAttempts < 3
-- [ ] `getDLQRecords(TableInfo table)` — syncStatus = 'dlq'
-- [ ] `markSynced(String localId, String remoteId, TableInfo table)`
-- [ ] `incrementFailedAttempts(String localId, TableInfo table)`
-- [ ] `watchHabitById(String id)` — stream for live habit detail
-- [ ] `getJournalEntries(String userId, {int limit = 20})` — paginated
-- [ ] `getBpHistory(String userId, int days)` — for chart
-- [ ] `getGlucoseHistory(String userId, String readingType, int days)` — for chart
-- [ ] `getSleepLogs(String userId, int days)` — for chart + debt calculation
+- [x] `watchTodayFoodLogs(int userId, DateTime date)` — stream, filtered by date range
+- [x] `watchTodaySteps()` — from Health Connect, not Drift (but cache result)
+- [x] `getPendingRecords(TableInfo table)` — syncStatus = 'pending', failedAttempts < 3
+- [x] `getDLQRecords(TableInfo table)` — syncStatus = 'dlq'
+- [x] `markSynced(String localId, String remoteId, TableInfo table)`
+- [x] `incrementFailedAttempts(String localId, TableInfo table)`
+- [x] `watchHabitById(String id)` — stream for live habit detail
+- [x] `getJournalEntries(String userId, {int limit = 20})` — paginated
+- [x] `getBpHistory(String userId, int days)` — for chart
+- [x] `getGlucoseHistory(String userId, String readingType, int days)` — for chart
+- [x] `getSleepLogs(String userId, int days)` — for chart + debt calculation
 
 ---
 
@@ -315,35 +315,35 @@
 
 ### 6.1 Auth
 
-- [ ] `AuthNotifier` — `build()` calls `account.get()`, returns `User?`
-- [ ] `AuthNotifier.login(email, password)` — `createEmailPasswordSession`
-- [ ] `AuthNotifier.register(name, email, password)` — `create` + session
-- [ ] `AuthNotifier.loginWithGoogle()` — `createOAuth2Session`
-- [ ] `AuthNotifier.logout()` — `deleteSession('current')`
+- [x] `AuthNotifier` — `build()` calls `account.get()`, returns `User?`
+- [x] `AuthNotifier.login(email, password)` — `createEmailPasswordSession`
+- [x] `AuthNotifier.register(name, email, password)` — `create` + session
+- [x] `AuthNotifier.loginWithGoogle()` — `createOAuth2Session`
+- [x] `AuthNotifier.logout()` — `deleteSession('current')`
 
 ### 6.2 Food
 
-- [ ] `FoodLogNotifier` — `build(DateTime date)` watches today's food logs from Drift
-- [ ] `FoodLogNotifier.logFood(FoodLogsCompanion)` — local write first, then `_pushToRemote`
-- [ ] `FoodLogNotifier._pushToRemote(String localId)` — (Handled by FoodRepository + SyncQueue)
-- [ ] `todayCaloriesProvider` — narrow provider summing today's kcal
-- [ ] `foodSearchProvider(String query)` — searches local DB + remote food API
+- [x] `FoodLogNotifier` — `build(DateTime date)` watches today's food logs from Drift
+- [x] `FoodLogNotifier.logFood(FoodLogsCompanion)` — local write first, then `_pushToRemote`
+- [x] `FoodLogNotifier._pushToRemote(String localId)` — (Handled by FoodRepository + SyncQueue)
+- [x] `todayCaloriesProvider` — narrow provider summing today's kcal
+- [x] `foodSearchProvider(String query)` — searches local DB + remote food API
 
 ### 6.3 Health Metrics
 
-- [ ] `BPNotifier` — CRUD for `bp_readings` with same optimistic pattern
-- [ ] `BPNotifier.logReading(systolic, diastolic, pulse, notes)`
-- [ ] `latestBpReadingProvider` — stream of most recent BpReading
-- [ ] `bpHistoryProvider(int days)` — (Handled in UI/Domain via bpLogsProvider)
-- [ ] `GlucoseNotifier` — CRUD for `glucose_readings`
-- [ ] `GlucoseNotifier.logReading(value, readingType, linkedFoodLogId?)`
-- [ ] `latestGlucoseProvider` — most recent reading
-- [ ] `glucoseHistoryProvider(String type, int days)` — (Handled in UI/Domain)
-- [ ] `SpO2Notifier` — log SpO2 + pulse (stored in `workouts` or separate table)
-- [ ] `SleepNotifier` — CRUD for `sleep_logs`
-- [ ] `SleepNotifier.logSleep(start, end, source)`
-- [ ] `sleepHistoryProvider(int days)` — for chart
-- [ ] `sleepDebtProvider` — calculates weekly deficit/surplus vs 7h target
+- [x] `BPNotifier` — CRUD for `bp_readings` with same optimistic pattern
+- [x] `BPNotifier.logReading(systolic, diastolic, pulse, notes)`
+- [x] `latestBpReadingProvider` — stream of most recent BpReading
+- [x] `bpHistoryProvider(int days)` — (Handled in UI/Domain via bpLogsProvider)
+- [x] `GlucoseNotifier` — CRUD for `glucose_readings`
+- [x] `GlucoseNotifier.logReading(value, readingType, linkedFoodLogId?)`
+- [x] `latestGlucoseProvider` — most recent reading
+- [x] `glucoseHistoryProvider(String type, int days)` — (Handled in UI/Domain)
+- [x] `SpO2Notifier` — log SpO2 + pulse (stored in `workouts` or separate table)
+- [x] `SleepNotifier` — CRUD for `sleep_logs`
+- [x] `SleepNotifier.logSleep(start, end, source)`
+- [x] `sleepHistoryProvider(int days)` — for chart
+- [x] `sleepDebtProvider` — calculates weekly deficit/surplus vs 7h target
 
 ### 6.4 Workout
 

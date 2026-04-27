@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:appwrite/appwrite.dart';
 import '../config/app_config.dart';
-import '../storage/app_database.dart';
+import '../database/app_database.dart';
 
 // Appwrite Client — singleton
 final appwriteClientProvider = Provider<Client>((ref) {
@@ -18,6 +18,10 @@ final appwriteAccountProvider = Provider<Account>((ref) {
 
 final appwriteDatabasesProvider = Provider<Databases>((ref) {
   return Databases(ref.watch(appwriteClientProvider));
+});
+
+final appwriteTablesDBProvider = Provider<TablesDB>((ref) {
+  return TablesDB(ref.watch(appwriteClientProvider));
 });
 
 final appwriteStorageProvider = Provider<Storage>((ref) {

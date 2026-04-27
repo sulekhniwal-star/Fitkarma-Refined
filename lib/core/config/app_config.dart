@@ -9,7 +9,7 @@ class AppConfig {
       String.fromEnvironment('APPWRITE_PROJECT_ID');
 
   // DB IDs (set after CLI creates them)
-  static const String dbId     = String.fromEnvironment('APPWRITE_DB_ID');
+  static const String dbId     = 'fitkarma-db';
   
   // Collection IDs
   static const String usersCol          = 'users';
@@ -21,8 +21,9 @@ class AppConfig {
   static const String medicationLogsCol = 'medication_logs';
   static const String labReportsCol     = 'lab_reports';
   static const String karmaEventsCol    = 'karma_events';
+  static const String spo2ReadingsCol   = 'spo2_readings';
+  static const String workoutsCol       = 'workouts';
 
-  // Storage Buckets
-  static const String labReportsBucket  = 'lab-reports';
-  static const String avatarsBucket     = 'avatars';
+  // Storage Buckets (Consolidated)
+  static const String mediaBucket       = 'fitkarma-media';
 }

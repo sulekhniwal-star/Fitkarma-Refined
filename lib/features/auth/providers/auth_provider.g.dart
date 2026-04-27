@@ -1,26 +1,25 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'device_tier.dart';
+part of 'auth_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$deviceTierHash() => r'3bfa1062ca1d6af7c94ffb3492e45f09d4835888';
+String _$authNotifierHash() => r'dc1f97c223727ee42bd706672b86ed8483cdf3aa';
 
-/// See also [deviceTier].
-@ProviderFor(deviceTier)
-final deviceTierProvider = AutoDisposeFutureProvider<DeviceTier>.internal(
-  deviceTier,
-  name: r'deviceTierProvider',
+/// See also [AuthNotifier].
+@ProviderFor(AuthNotifier)
+final authNotifierProvider =
+    AutoDisposeAsyncNotifierProvider<AuthNotifier, models.User?>.internal(
+  AuthNotifier.new,
+  name: r'authNotifierProvider',
   debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$deviceTierHash,
+      const bool.fromEnvironment('dart.vm.product') ? null : _$authNotifierHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef DeviceTierRef = AutoDisposeFutureProviderRef<DeviceTier>;
+typedef _$AuthNotifier = AutoDisposeAsyncNotifier<models.User?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
