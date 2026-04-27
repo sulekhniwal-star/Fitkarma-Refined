@@ -131,6 +131,33 @@ class JournalEntries extends Table {
   Set<Column> get primaryKey => {id};
 }
 
+class SocialPosts extends Table {
+  TextColumn get id => text().withLength(min: 1, max: 64)();
+  TextColumn get userId => text().withLength(min: 1, max: 64)();
+  TextColumn get userName => text()();
+  TextColumn get userAvatarId => text().nullable()();
+  TextColumn get content => text()();
+  TextColumn get mediaFileId => text().nullable()();
+  IntColumn get likeCount => integer().withDefault(const Constant(0))();
+  BoolColumn get isLiked => boolean().withDefault(const Constant(false))();
+  DateTimeColumn get createdAt => dateTime()();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
+class CommunityGroups extends Table {
+  TextColumn get id => text().withLength(min: 1, max: 64)();
+  TextColumn get name => text()();
+  TextColumn get description => text().nullable()();
+  TextColumn get iconId => text().nullable()();
+  IntColumn get memberCount => integer().withDefault(const Constant(0))();
+  BoolColumn get isJoined => boolean().withDefault(const Constant(false))();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
 class WeddingPlans extends Table {
   TextColumn get id => text().withLength(min: 1, max: 64)();
   TextColumn get userId => text().withLength(min: 1, max: 64)();
@@ -159,6 +186,20 @@ class WeddingMealLogs extends Table {
   RealColumn get calories => real().nullable()();
   TextColumn get notes => text().nullable()();
   TextColumn get syncStatus => text().withLength(min: 1, max: 16).withDefault(const Constant('pending'))();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
+class LabReports extends Table {
+  TextColumn get id => text().withLength(min: 1, max: 64)();
+  TextColumn get userId => text().withLength(min: 1, max: 64)();
+  TextColumn get fileName => text()();
+  TextColumn get fileId => text()(); // Appwrite Storage File ID
+  TextColumn get reportType => text().nullable()();
+  TextColumn get extractedDataJson => text().nullable()();
+  DateTimeColumn get reportDate => dateTime().nullable()();
+  DateTimeColumn get createdAt => dateTime()();
 
   @override
   Set<Column> get primaryKey => {id};
@@ -261,6 +302,9 @@ class Festivals extends Table {
   KarmaEvents,
   WeightLogs,
   Festivals,
+  SocialPosts,
+  CommunityGroups,
+  LabReports,
 ])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
@@ -473,6 +517,46 @@ class AppDatabase extends _$AppDatabase {
           ..orderBy([(t) => OrderingTerm.desc(t.firstEventTs)])
           ..limit(1))
         .watchSingleOrNull();
+  }
+
+  Stream<List<SocialPost>> watchSocialFeed({int limit = 20, int offset = 0}) {
+    return (select(socialPosts)
+          ..orderBy([(t) => OrderingTerm.desc(t.createdAt)])
+          ..limit(limit, offset: offset))
+        .watch();
+  }
+
+  Stream<List<CommunityGroup>> watchAllGroups() {
+    return (select(communityGroups)..orderBy([(t) => OrderingTerm.asc(t.name)])).watch();
+  }
+
+  Stream<List<CommunityGroup>> watchJoinedGroups() {
+    return (select(communityGroups)..where((t) => t.isJoined.equals(true))).watch();
+  }
+
+  Stream<List<LabReport>> watchLabReports(String userId) {
+    return (select(labReports)
+          ..where((t) => t.userId.equals(userId))
+          ..orderBy([(t) => OrderingTerm.desc(t.reportDate), (t) => OrderingTerm.desc(t.createdAt)]))
+        .watch();
+  }
+
+  Stream<List<FoodLog>> watchFoodHistory(String userId, int days) {
+    final start = DateTime.now().subtract(Duration(days: days));
+    return (select(foodLogs)
+          ..where((t) => t.userId.equals(userId))
+          ..where((t) => t.loggedAt.isBiggerOrEqualValue(start))
+          ..orderBy([(t) => OrderingTerm.desc(t.loggedAt)]))
+        .watch();
+  }
+
+  Stream<List<GlucoseReading>> watchGlucoseHistory(String userId, int days) {
+    final start = DateTime.now().subtract(Duration(days: days));
+    return (select(glucoseReadings)
+          ..where((t) => t.userId.equals(userId))
+          ..where((t) => t.measuredAt.isBiggerOrEqualValue(start))
+          ..orderBy([(t) => OrderingTerm.desc(t.measuredAt)]))
+        .watch();
   }
 
   // --- Generic Sync Queries ---

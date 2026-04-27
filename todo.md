@@ -416,38 +416,38 @@
 
 ### 6.14 Social
 
-- [ ] `SocialFeedNotifier` — paginated social posts
-- [ ] `SocialFeedNotifier.createPost(content, mediaFileId?)`
-- [ ] `SocialFeedNotifier.likePost(String postId)`
-- [ ] `socialRealtimeProvider` — Appwrite Realtime subscription for live feed updates
-- [ ] `groupsProvider` — community groups list
-- [ ] `myGroupsProvider` — user's joined groups
+- [x] `SocialFeedNotifier` — paginated social posts
+- [x] `SocialFeedNotifier.createPost(content, mediaFileId?)`
+- [x] `SocialFeedNotifier.likePost(String postId)`
+- [x] `socialRealtimeProvider` — Appwrite Realtime subscription for live feed updates
+- [x] `groupsProvider` — community groups list
+- [x] `myGroupsProvider` — user's joined groups
 
 ### 6.15 Reports
 
-- [ ] `labReportsProvider` — list of imported lab reports
-- [ ] `LabReportNotifier.importFromOCR(File imageOrPdf)`
-- [ ] `LabReportNotifier.uploadFile(File)` → Appwrite Storage → returns `fileId`
-- [ ] `shareLinkProvider(String reportId)` — calls `report-share` function
-- [ ] `healthReportProvider(String period)` — weekly/monthly summary
+- [x] `labReportsProvider` — list of imported lab reports
+- [x] `LabReportNotifier.importFromOCR(File imageOrPdf)`
+- [x] `LabReportNotifier.uploadFile(File)` → Appwrite Storage → returns `fileId`
+- [x] `shareLinkProvider(String reportId)` — calls `report-share` function
+- [x] `healthReportProvider(String period)` — weekly/monthly summary
 
 ### 6.16 Settings
 
-- [ ] `ThemeNotifier` — light/dark/system, persisted to `flutter_secure_storage`
-- [ ] `LanguageNotifier` — 22-language selector, persisted
-- [ ] `FontSizeNotifier` — slider value, drives `textScaleFactor`
-- [ ] `DyslexiaFontNotifier` — toggles `OpenDyslexic`, persisted
-- [ ] `BiometricLockNotifier` — enabled/disabled toggle, persisted
-- [ ] `NotificationPrefsNotifier` — per-module notification toggles
-- [ ] `wearablesProvider` — list of connected wearables
-- [ ] `subscriptionStatusProvider` — free/monthly/quarterly/yearly/family
+- [x] `ThemeNotifier` — light/dark/system, persisted to `flutter_secure_storage`
+- [x] `LanguageNotifier` — 22-language selector, persisted
+- [x] `FontSizeNotifier` — slider value, drives `textScaleFactor`
+- [x] `DyslexiaFontNotifier` — toggles `OpenDyslexic`, persisted
+- [x] `BiometricLockNotifier` — enabled/disabled toggle, persisted
+- [x] `NotificationPrefsNotifier` — per-module notification toggles
+- [x] `wearablesProvider` — list of connected wearables
+- [x] `subscriptionStatusProvider` — free/monthly/quarterly/yearly/family
 
 ### 6.17 Correlation Engine
 
-- [ ] `CorrelationEngine.sleepMoodInsight(userId)` — requires 14+ days both datasets
-- [ ] `CorrelationEngine.foodGlucoseInsight(userId)` — post-meal glucose vs food
-- [ ] `CorrelationEngine.stepsEnergyInsight(userId)` — steps vs mood score
-- [ ] `dashboardInsightProvider` — selects best available insight for the day
+- [x] `CorrelationEngine.sleepMoodInsight(userId)` — requires 14+ days both datasets
+- [x] `CorrelationEngine.foodGlucoseInsight(userId)` — post-meal glucose vs food
+- [x] `CorrelationEngine.stepsEnergyInsight(userId)` — steps vs mood score
+- [x] `dashboardInsightProvider` — selects best available insight for the day
 
 ---
 
