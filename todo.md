@@ -469,44 +469,44 @@
 
 All in `lib/shared/widgets/`. Every widget must be tier-aware via `deviceTierProvider`.
 
-- [ ] `GlassCard` — backdrop blur (mid/high), solid surface1 (low), optional glow
-- [ ] `BentoCard` — `BentoSize` enum, `_resolvedSize()` auto-promotion on 360dp screens
-- [ ] `AmbientBlobs` — 3 blobs (high), 1 blob (mid), none (low)
-- [ ] `ActivityRingsWidget` — 4 concentric rings, neon glow, animated arc fill, `metricLg` center
-- [ ] `GlowingMetric` — CountUp animation, per-digit spring (high), whole-number (mid), static (low)
-- [ ] `InsightCard` — lightbulb icon, amber glow border, 👍/👎 haptic rating
-- [ ] `CorrelationInsightCard` — module icon pills, secondary glow border, 👍/👎
-- [ ] `BilingualLabel` — English h3 + Devanagari hindi, 3px primary left border
-- [ ] `EncryptionBadge` — AES-256 pill, teal glow, animated pulse on sensitive reveal
-- [ ] `ABHALinkBadge` — large + compact variants, linked=success glow, unlinked=warning
-- [ ] `ShimmerLoader` — `surface0` base + shimmer, dark/light aware
-- [ ] `TrendChip` — ▲/▼/→ with appropriate color per direction
-- [ ] `PulseRing` — animated pulsing ring for live metrics (HR, SpO2 alert)
-- [ ] `StreakFlameWidget` — Lottie `streak_fire.json`, scale grows with streak count
-- [ ] `QuickLogFAB` — orange FAB, speed-dial 6 sub-actions (Food, Water, Mood, Workout, BP, Glucose)
-- [ ] `MealTypeTabBar` — floating pill tabs, glow on active, spring indicator
-- [ ] `FoodItemCard` — glassmorphic, blurred food photo bg, bilingual name, portion, kcal, `+` spring tap
-- [ ] `KarmaLevelCard` — `heroDeep` gradient, animated XP bar, level badge
-- [ ] `DoshaDonutChart` — 3-segment `fl_chart` donut, animated draw, per-segment glow
-- [ ] `ChallengeCarouselCard` — horizontal scroll, progress bar, XP reward, festival tag
-- [ ] `MicronutrientBar` — compact animated bar (Iron/B12/VitD/Calcium), color-coded
-- [ ] `LabValueRow` — metric row, inline edit field, classification pill, confirm checkbox
-- [ ] `ErrorRetryWidget` — Lottie `error_state.json` + message + retry button
-- [ ] `SyncStatusBanner` — DLQ amber / offline teal / low-data teal pill
-- [ ] `FestivalCard` — gradient left border, bilingual name, fasting pill, region pill, CTA buttons
-- [ ] `FestivalCountdownBanner` — full-width active festival, fasting mode badge, quick actions
-- [ ] `WeddingCountdownCard` — gold gradient glass, days countdown, next event pill
-- [ ] `WeddingRoleChip` — 150×160px illustrated card, spring select
-- [ ] `EventDayCard` — wedding event, energy demand badge, pre/post meal
-- [ ] `FestivalDietBadge` — fasting type pill (Nirjala/Phalahar/Roza/Feast), glow per type
-- [ ] `GlassAppBar` — gains blur + glass bg on scroll
-- [ ] `EmptyState` — Lottie asset + message + optional CTA (never text-only)
-- [ ] `HealthShareCard` — expiry countdown ring, WhatsApp CTA, copy link, delete
-- [ ] `HomeWidgetPreview` — phone mockup SVG, 60% scaled, live widget content inside
-- [ ] `CardTapAnimation` — scale press feedback (1.0 → 0.97 → 1.0)
-- [ ] `FitKarmaBottomNav` — glass pill nav bar, UXStage-aware label visibility
-- [ ] `DLQAlertBanner` — (Integrated into SyncStatusBanner)
-- [ ] `HealthScreen` error boundary pattern (via AsyncValueWidget)
+- [x] `GlassCard` — backdrop blur (mid/high), solid surface1 (low), optional glow
+- [x] `BentoCard` — `BentoSize` enum, `_resolvedSize()` auto-promotion on 360dp screens
+- [x] `AmbientBlobs` — 3 blobs (high), 1 blob (mid), none (low)
+- [x] `ActivityRingsWidget` — 4 concentric rings, neon glow, animated arc fill, `metricLg` center
+- [x] `GlowingMetric` — CountUp animation, per-digit spring (high), whole-number (mid), static (low)
+- [x] `InsightCard` — lightbulb icon, amber glow border, 👍/👎 haptic rating
+- [x] `CorrelationInsightCard` — module icon pills, secondary glow border, 👍/👎
+- [x] `BilingualLabel` — English h3 + Devanagari hindi, 3px primary left border
+- [x] `EncryptionBadge` — AES-256 pill, teal glow, animated pulse on sensitive reveal
+- [x] `ABHALinkBadge` — large + compact variants, linked=success glow, unlinked=warning
+- [x] `ShimmerLoader` — `surface0` base + shimmer, dark/light aware
+- [x] `TrendChip` — ▲/▼/→ with appropriate color per direction
+- [x] `PulseRing` — animated pulsing ring for live metrics (HR, SpO2 alert)
+- [x] `StreakFlameWidget` — Lottie `streak_fire.json`, scale grows with streak count
+- [x] `QuickLogFAB` — orange FAB, speed-dial 6 sub-actions (Food, Water, Mood, Workout, BP, Glucose)
+- [x] `MealTypeTabBar` — floating pill tabs, glow on active, spring indicator
+- [x] `FoodItemCard` — glassmorphic, blurred food photo bg, bilingual name, portion, kcal, `+` spring tap
+- [x] `KarmaLevelCard` — `heroDeep` gradient, animated XP bar, level badge
+- [x] `DoshaDonutChart` — 3-segment `fl_chart` donut, animated draw, per-segment glow
+- [x] `ChallengeCarouselCard` — horizontal scroll, progress bar, XP reward, festival tag
+- [x] `MicronutrientBar` — compact animated bar (Iron/B12/VitD/Calcium), color-coded
+- [x] `LabValueRow` — metric row, inline edit field, classification pill, confirm checkbox
+- [x] `ErrorRetryWidget` — Lottie `error_state.json` + message + retry button
+- [x] `SyncStatusBanner` — DLQ amber / offline teal / low-data teal pill
+- [x] `FestivalCard` — gradient left border, bilingual name, fasting pill, region pill, CTA buttons
+- [x] `FestivalCountdownBanner` — full-width active festival, fasting mode badge, quick actions
+- [x] `WeddingCountdownCard` — gold gradient glass, days countdown, next event pill
+- [x] `WeddingRoleChip` — 150×160px illustrated card, spring select
+- [x] `EventDayCard` — wedding event, energy demand badge, pre/post meal
+- [x] `FestivalDietBadge` — fasting type pill (Nirjala/Phalahar/Roza/Feast), glow per type
+- [x] `GlassAppBar` — gains blur + glass bg on scroll
+- [x] `EmptyState` — Lottie asset + message + optional CTA (never text-only)
+- [x] `HealthShareCard` — expiry countdown ring, WhatsApp CTA, copy link, delete
+- [x] `HomeWidgetPreview` — phone mockup SVG, 60% scaled, live widget content inside
+- [x] `CardTapAnimation` — scale press feedback (1.0 → 0.97 → 1.0)
+- [x] `FitKarmaBottomNav` — glass pill nav bar, UXStage-aware label visibility
+- [x] `DLQAlertBanner` — (Integrated into SyncStatusBanner)
+- [x] `HealthScreen` error boundary pattern (via AsyncValueWidget)
 
 ---
 
