@@ -11,7 +11,7 @@ import 'package:collection/collection.dart';
 part 'steps_provider.g.dart';
 
 @riverpod
-class StepsNotifier extends _$StepsNotifier {
+class Steps extends _$Steps {
   @override
   Stream<int> build() async* {
     final authState = ref.watch(authNotifierProvider);

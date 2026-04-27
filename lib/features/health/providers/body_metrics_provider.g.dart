@@ -1,12 +1,12 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'steps_provider.dart';
+part of 'body_metrics_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$stepHistoryHash() => r'59802f7f292e5c73af9e4cf4677cdab490cfcfa1';
+String _$weightHistoryHash() => r'e8adc860adbf9bd068cf7f5fbd76f5a6ad77aaaf';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -29,27 +29,27 @@ class _SystemHash {
   }
 }
 
-/// See also [stepHistory].
-@ProviderFor(stepHistory)
-const stepHistoryProvider = StepHistoryFamily();
+/// See also [weightHistory].
+@ProviderFor(weightHistory)
+const weightHistoryProvider = WeightHistoryFamily();
 
-/// See also [stepHistory].
-class StepHistoryFamily extends Family<AsyncValue<List<StepCount>>> {
-  /// See also [stepHistory].
-  const StepHistoryFamily();
+/// See also [weightHistory].
+class WeightHistoryFamily extends Family<AsyncValue<List<WeightLog>>> {
+  /// See also [weightHistory].
+  const WeightHistoryFamily();
 
-  /// See also [stepHistory].
-  StepHistoryProvider call(
+  /// See also [weightHistory].
+  WeightHistoryProvider call(
     int days,
   ) {
-    return StepHistoryProvider(
+    return WeightHistoryProvider(
       days,
     );
   }
 
   @override
-  StepHistoryProvider getProviderOverride(
-    covariant StepHistoryProvider provider,
+  WeightHistoryProvider getProviderOverride(
+    covariant WeightHistoryProvider provider,
   ) {
     return call(
       provider.days,
@@ -68,32 +68,32 @@ class StepHistoryFamily extends Family<AsyncValue<List<StepCount>>> {
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'stepHistoryProvider';
+  String? get name => r'weightHistoryProvider';
 }
 
-/// See also [stepHistory].
-class StepHistoryProvider extends AutoDisposeStreamProvider<List<StepCount>> {
-  /// See also [stepHistory].
-  StepHistoryProvider(
+/// See also [weightHistory].
+class WeightHistoryProvider extends AutoDisposeStreamProvider<List<WeightLog>> {
+  /// See also [weightHistory].
+  WeightHistoryProvider(
     int days,
   ) : this._internal(
-          (ref) => stepHistory(
-            ref as StepHistoryRef,
+          (ref) => weightHistory(
+            ref as WeightHistoryRef,
             days,
           ),
-          from: stepHistoryProvider,
-          name: r'stepHistoryProvider',
+          from: weightHistoryProvider,
+          name: r'weightHistoryProvider',
           debugGetCreateSourceHash:
               const bool.fromEnvironment('dart.vm.product')
                   ? null
-                  : _$stepHistoryHash,
-          dependencies: StepHistoryFamily._dependencies,
+                  : _$weightHistoryHash,
+          dependencies: WeightHistoryFamily._dependencies,
           allTransitiveDependencies:
-              StepHistoryFamily._allTransitiveDependencies,
+              WeightHistoryFamily._allTransitiveDependencies,
           days: days,
         );
 
-  StepHistoryProvider._internal(
+  WeightHistoryProvider._internal(
     super._createNotifier, {
     required super.name,
     required super.dependencies,
@@ -107,12 +107,12 @@ class StepHistoryProvider extends AutoDisposeStreamProvider<List<StepCount>> {
 
   @override
   Override overrideWith(
-    Stream<List<StepCount>> Function(StepHistoryRef provider) create,
+    Stream<List<WeightLog>> Function(WeightHistoryRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
-      override: StepHistoryProvider._internal(
-        (ref) => create(ref as StepHistoryRef),
+      override: WeightHistoryProvider._internal(
+        (ref) => create(ref as WeightHistoryRef),
         from: from,
         name: null,
         dependencies: null,
@@ -124,13 +124,13 @@ class StepHistoryProvider extends AutoDisposeStreamProvider<List<StepCount>> {
   }
 
   @override
-  AutoDisposeStreamProviderElement<List<StepCount>> createElement() {
-    return _StepHistoryProviderElement(this);
+  AutoDisposeStreamProviderElement<List<WeightLog>> createElement() {
+    return _WeightHistoryProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is StepHistoryProvider && other.days == days;
+    return other is WeightHistoryProvider && other.days == days;
   }
 
   @override
@@ -144,49 +144,36 @@ class StepHistoryProvider extends AutoDisposeStreamProvider<List<StepCount>> {
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin StepHistoryRef on AutoDisposeStreamProviderRef<List<StepCount>> {
+mixin WeightHistoryRef on AutoDisposeStreamProviderRef<List<WeightLog>> {
   /// The parameter `days` of this provider.
   int get days;
 }
 
-class _StepHistoryProviderElement
-    extends AutoDisposeStreamProviderElement<List<StepCount>>
-    with StepHistoryRef {
-  _StepHistoryProviderElement(super.provider);
+class _WeightHistoryProviderElement
+    extends AutoDisposeStreamProviderElement<List<WeightLog>>
+    with WeightHistoryRef {
+  _WeightHistoryProviderElement(super.provider);
 
   @override
-  int get days => (origin as StepHistoryProvider).days;
+  int get days => (origin as WeightHistoryProvider).days;
 }
 
-String _$adaptiveGoalHash() => r'04811745ff5aabe6047697ce8d52bceafaf88860';
+String _$bodyMetricsNotifierHash() =>
+    r'7adf3ce1900729d402710932b46ebb9a3a7113d2';
 
-/// See also [adaptiveGoal].
-@ProviderFor(adaptiveGoal)
-final adaptiveGoalProvider = AutoDisposeProvider<double>.internal(
-  adaptiveGoal,
-  name: r'adaptiveGoalProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$adaptiveGoalHash,
+/// See also [BodyMetricsNotifier].
+@ProviderFor(BodyMetricsNotifier)
+final bodyMetricsNotifierProvider = AutoDisposeStreamNotifierProvider<
+    BodyMetricsNotifier, Map<String, dynamic>>.internal(
+  BodyMetricsNotifier.new,
+  name: r'bodyMetricsNotifierProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$bodyMetricsNotifierHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef AdaptiveGoalRef = AutoDisposeProviderRef<double>;
-String _$stepsHash() => r'f6a28e515985576099d60b7c870a967340b64dbb';
-
-/// See also [Steps].
-@ProviderFor(Steps)
-final stepsProvider = AutoDisposeStreamNotifierProvider<Steps, int>.internal(
-  Steps.new,
-  name: r'stepsProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$stepsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$Steps = AutoDisposeStreamNotifier<int>;
+typedef _$BodyMetricsNotifier = AutoDisposeStreamNotifier<Map<String, dynamic>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

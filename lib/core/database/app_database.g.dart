@@ -4275,6 +4275,12 @@ class $WeddingPlansTable extends WeddingPlans
   late final GeneratedColumn<String> currentPhase = GeneratedColumn<String>(
       'current_phase', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _createdAtMeta =
+      const VerificationMeta('createdAt');
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+      'created_at', aliasedName, false,
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
   static const VerificationMeta _syncStatusMeta =
       const VerificationMeta('syncStatus');
   @override
@@ -4297,6 +4303,7 @@ class $WeddingPlansTable extends WeddingPlans
         prepWeeks,
         primaryGoal,
         currentPhase,
+        createdAt,
         syncStatus
       ];
   @override
@@ -4376,6 +4383,12 @@ class $WeddingPlansTable extends WeddingPlans
     } else if (isInserting) {
       context.missing(_currentPhaseMeta);
     }
+    if (data.containsKey('created_at')) {
+      context.handle(_createdAtMeta,
+          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
     if (data.containsKey('sync_status')) {
       context.handle(
           _syncStatusMeta,
@@ -4411,6 +4424,8 @@ class $WeddingPlansTable extends WeddingPlans
           .read(DriftSqlType.string, data['${effectivePrefix}primary_goal'])!,
       currentPhase: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}current_phase'])!,
+      createdAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
       syncStatus: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}sync_status'])!,
     );
@@ -4433,6 +4448,7 @@ class WeddingPlan extends DataClass implements Insertable<WeddingPlan> {
   final int prepWeeks;
   final String primaryGoal;
   final String currentPhase;
+  final DateTime createdAt;
   final String syncStatus;
   const WeddingPlan(
       {required this.id,
@@ -4445,6 +4461,7 @@ class WeddingPlan extends DataClass implements Insertable<WeddingPlan> {
       required this.prepWeeks,
       required this.primaryGoal,
       required this.currentPhase,
+      required this.createdAt,
       required this.syncStatus});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -4461,6 +4478,7 @@ class WeddingPlan extends DataClass implements Insertable<WeddingPlan> {
     map['prep_weeks'] = Variable<int>(prepWeeks);
     map['primary_goal'] = Variable<String>(primaryGoal);
     map['current_phase'] = Variable<String>(currentPhase);
+    map['created_at'] = Variable<DateTime>(createdAt);
     map['sync_status'] = Variable<String>(syncStatus);
     return map;
   }
@@ -4479,6 +4497,7 @@ class WeddingPlan extends DataClass implements Insertable<WeddingPlan> {
       prepWeeks: Value(prepWeeks),
       primaryGoal: Value(primaryGoal),
       currentPhase: Value(currentPhase),
+      createdAt: Value(createdAt),
       syncStatus: Value(syncStatus),
     );
   }
@@ -4497,6 +4516,7 @@ class WeddingPlan extends DataClass implements Insertable<WeddingPlan> {
       prepWeeks: serializer.fromJson<int>(json['prepWeeks']),
       primaryGoal: serializer.fromJson<String>(json['primaryGoal']),
       currentPhase: serializer.fromJson<String>(json['currentPhase']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       syncStatus: serializer.fromJson<String>(json['syncStatus']),
     );
   }
@@ -4514,6 +4534,7 @@ class WeddingPlan extends DataClass implements Insertable<WeddingPlan> {
       'prepWeeks': serializer.toJson<int>(prepWeeks),
       'primaryGoal': serializer.toJson<String>(primaryGoal),
       'currentPhase': serializer.toJson<String>(currentPhase),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
       'syncStatus': serializer.toJson<String>(syncStatus),
     };
   }
@@ -4529,6 +4550,7 @@ class WeddingPlan extends DataClass implements Insertable<WeddingPlan> {
           int? prepWeeks,
           String? primaryGoal,
           String? currentPhase,
+          DateTime? createdAt,
           String? syncStatus}) =>
       WeddingPlan(
         id: id ?? this.id,
@@ -4541,6 +4563,7 @@ class WeddingPlan extends DataClass implements Insertable<WeddingPlan> {
         prepWeeks: prepWeeks ?? this.prepWeeks,
         primaryGoal: primaryGoal ?? this.primaryGoal,
         currentPhase: currentPhase ?? this.currentPhase,
+        createdAt: createdAt ?? this.createdAt,
         syncStatus: syncStatus ?? this.syncStatus,
       );
   WeddingPlan copyWithCompanion(WeddingPlansCompanion data) {
@@ -4562,6 +4585,7 @@ class WeddingPlan extends DataClass implements Insertable<WeddingPlan> {
       currentPhase: data.currentPhase.present
           ? data.currentPhase.value
           : this.currentPhase,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       syncStatus:
           data.syncStatus.present ? data.syncStatus.value : this.syncStatus,
     );
@@ -4580,6 +4604,7 @@ class WeddingPlan extends DataClass implements Insertable<WeddingPlan> {
           ..write('prepWeeks: $prepWeeks, ')
           ..write('primaryGoal: $primaryGoal, ')
           ..write('currentPhase: $currentPhase, ')
+          ..write('createdAt: $createdAt, ')
           ..write('syncStatus: $syncStatus')
           ..write(')'))
         .toString();
@@ -4597,6 +4622,7 @@ class WeddingPlan extends DataClass implements Insertable<WeddingPlan> {
       prepWeeks,
       primaryGoal,
       currentPhase,
+      createdAt,
       syncStatus);
   @override
   bool operator ==(Object other) =>
@@ -4612,6 +4638,7 @@ class WeddingPlan extends DataClass implements Insertable<WeddingPlan> {
           other.prepWeeks == this.prepWeeks &&
           other.primaryGoal == this.primaryGoal &&
           other.currentPhase == this.currentPhase &&
+          other.createdAt == this.createdAt &&
           other.syncStatus == this.syncStatus);
 }
 
@@ -4626,6 +4653,7 @@ class WeddingPlansCompanion extends UpdateCompanion<WeddingPlan> {
   final Value<int> prepWeeks;
   final Value<String> primaryGoal;
   final Value<String> currentPhase;
+  final Value<DateTime> createdAt;
   final Value<String> syncStatus;
   final Value<int> rowid;
   const WeddingPlansCompanion({
@@ -4639,6 +4667,7 @@ class WeddingPlansCompanion extends UpdateCompanion<WeddingPlan> {
     this.prepWeeks = const Value.absent(),
     this.primaryGoal = const Value.absent(),
     this.currentPhase = const Value.absent(),
+    this.createdAt = const Value.absent(),
     this.syncStatus = const Value.absent(),
     this.rowid = const Value.absent(),
   });
@@ -4653,6 +4682,7 @@ class WeddingPlansCompanion extends UpdateCompanion<WeddingPlan> {
     required int prepWeeks,
     required String primaryGoal,
     required String currentPhase,
+    required DateTime createdAt,
     this.syncStatus = const Value.absent(),
     this.rowid = const Value.absent(),
   })  : id = Value(id),
@@ -4663,7 +4693,8 @@ class WeddingPlansCompanion extends UpdateCompanion<WeddingPlan> {
         eventsJson = Value(eventsJson),
         prepWeeks = Value(prepWeeks),
         primaryGoal = Value(primaryGoal),
-        currentPhase = Value(currentPhase);
+        currentPhase = Value(currentPhase),
+        createdAt = Value(createdAt);
   static Insertable<WeddingPlan> custom({
     Expression<String>? id,
     Expression<String>? userId,
@@ -4675,6 +4706,7 @@ class WeddingPlansCompanion extends UpdateCompanion<WeddingPlan> {
     Expression<int>? prepWeeks,
     Expression<String>? primaryGoal,
     Expression<String>? currentPhase,
+    Expression<DateTime>? createdAt,
     Expression<String>? syncStatus,
     Expression<int>? rowid,
   }) {
@@ -4689,6 +4721,7 @@ class WeddingPlansCompanion extends UpdateCompanion<WeddingPlan> {
       if (prepWeeks != null) 'prep_weeks': prepWeeks,
       if (primaryGoal != null) 'primary_goal': primaryGoal,
       if (currentPhase != null) 'current_phase': currentPhase,
+      if (createdAt != null) 'created_at': createdAt,
       if (syncStatus != null) 'sync_status': syncStatus,
       if (rowid != null) 'rowid': rowid,
     });
@@ -4705,6 +4738,7 @@ class WeddingPlansCompanion extends UpdateCompanion<WeddingPlan> {
       Value<int>? prepWeeks,
       Value<String>? primaryGoal,
       Value<String>? currentPhase,
+      Value<DateTime>? createdAt,
       Value<String>? syncStatus,
       Value<int>? rowid}) {
     return WeddingPlansCompanion(
@@ -4718,6 +4752,7 @@ class WeddingPlansCompanion extends UpdateCompanion<WeddingPlan> {
       prepWeeks: prepWeeks ?? this.prepWeeks,
       primaryGoal: primaryGoal ?? this.primaryGoal,
       currentPhase: currentPhase ?? this.currentPhase,
+      createdAt: createdAt ?? this.createdAt,
       syncStatus: syncStatus ?? this.syncStatus,
       rowid: rowid ?? this.rowid,
     );
@@ -4756,6 +4791,9 @@ class WeddingPlansCompanion extends UpdateCompanion<WeddingPlan> {
     if (currentPhase.present) {
       map['current_phase'] = Variable<String>(currentPhase.value);
     }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
     if (syncStatus.present) {
       map['sync_status'] = Variable<String>(syncStatus.value);
     }
@@ -4778,6 +4816,7 @@ class WeddingPlansCompanion extends UpdateCompanion<WeddingPlan> {
           ..write('prepWeeks: $prepWeeks, ')
           ..write('primaryGoal: $primaryGoal, ')
           ..write('currentPhase: $currentPhase, ')
+          ..write('createdAt: $createdAt, ')
           ..write('syncStatus: $syncStatus, ')
           ..write('rowid: $rowid')
           ..write(')'))
@@ -6065,6 +6104,23 @@ class $UserProfilesTable extends UserProfiles
   late final GeneratedColumn<String> rank = GeneratedColumn<String>(
       'rank', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _heightCmMeta =
+      const VerificationMeta('heightCm');
+  @override
+  late final GeneratedColumn<double> heightCm = GeneratedColumn<double>(
+      'height_cm', aliasedName, true,
+      type: DriftSqlType.double, requiredDuringInsert: false);
+  static const VerificationMeta _religionMeta =
+      const VerificationMeta('religion');
+  @override
+  late final GeneratedColumn<String> religion = GeneratedColumn<String>(
+      'religion', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _regionMeta = const VerificationMeta('region');
+  @override
+  late final GeneratedColumn<String> region = GeneratedColumn<String>(
+      'region', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _updatedAtMeta =
       const VerificationMeta('updatedAt');
   @override
@@ -6072,7 +6128,8 @@ class $UserProfilesTable extends UserProfiles
       'updated_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   @override
-  List<GeneratedColumn> get $columns => [id, name, xp, level, rank, updatedAt];
+  List<GeneratedColumn> get $columns =>
+      [id, name, xp, level, rank, heightCm, religion, region, updatedAt];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -6105,6 +6162,18 @@ class $UserProfilesTable extends UserProfiles
       context.handle(
           _rankMeta, rank.isAcceptableOrUnknown(data['rank']!, _rankMeta));
     }
+    if (data.containsKey('height_cm')) {
+      context.handle(_heightCmMeta,
+          heightCm.isAcceptableOrUnknown(data['height_cm']!, _heightCmMeta));
+    }
+    if (data.containsKey('religion')) {
+      context.handle(_religionMeta,
+          religion.isAcceptableOrUnknown(data['religion']!, _religionMeta));
+    }
+    if (data.containsKey('region')) {
+      context.handle(_regionMeta,
+          region.isAcceptableOrUnknown(data['region']!, _regionMeta));
+    }
     if (data.containsKey('updated_at')) {
       context.handle(_updatedAtMeta,
           updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
@@ -6130,6 +6199,12 @@ class $UserProfilesTable extends UserProfiles
           .read(DriftSqlType.int, data['${effectivePrefix}level'])!,
       rank: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}rank']),
+      heightCm: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}height_cm']),
+      religion: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}religion']),
+      region: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}region']),
       updatedAt: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
     );
@@ -6147,6 +6222,9 @@ class UserProfile extends DataClass implements Insertable<UserProfile> {
   final int xp;
   final int level;
   final String? rank;
+  final double? heightCm;
+  final String? religion;
+  final String? region;
   final DateTime updatedAt;
   const UserProfile(
       {required this.id,
@@ -6154,6 +6232,9 @@ class UserProfile extends DataClass implements Insertable<UserProfile> {
       required this.xp,
       required this.level,
       this.rank,
+      this.heightCm,
+      this.religion,
+      this.region,
       required this.updatedAt});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -6164,6 +6245,15 @@ class UserProfile extends DataClass implements Insertable<UserProfile> {
     map['level'] = Variable<int>(level);
     if (!nullToAbsent || rank != null) {
       map['rank'] = Variable<String>(rank);
+    }
+    if (!nullToAbsent || heightCm != null) {
+      map['height_cm'] = Variable<double>(heightCm);
+    }
+    if (!nullToAbsent || religion != null) {
+      map['religion'] = Variable<String>(religion);
+    }
+    if (!nullToAbsent || region != null) {
+      map['region'] = Variable<String>(region);
     }
     map['updated_at'] = Variable<DateTime>(updatedAt);
     return map;
@@ -6176,6 +6266,14 @@ class UserProfile extends DataClass implements Insertable<UserProfile> {
       xp: Value(xp),
       level: Value(level),
       rank: rank == null && nullToAbsent ? const Value.absent() : Value(rank),
+      heightCm: heightCm == null && nullToAbsent
+          ? const Value.absent()
+          : Value(heightCm),
+      religion: religion == null && nullToAbsent
+          ? const Value.absent()
+          : Value(religion),
+      region:
+          region == null && nullToAbsent ? const Value.absent() : Value(region),
       updatedAt: Value(updatedAt),
     );
   }
@@ -6189,6 +6287,9 @@ class UserProfile extends DataClass implements Insertable<UserProfile> {
       xp: serializer.fromJson<int>(json['xp']),
       level: serializer.fromJson<int>(json['level']),
       rank: serializer.fromJson<String?>(json['rank']),
+      heightCm: serializer.fromJson<double?>(json['heightCm']),
+      religion: serializer.fromJson<String?>(json['religion']),
+      region: serializer.fromJson<String?>(json['region']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
     );
   }
@@ -6201,6 +6302,9 @@ class UserProfile extends DataClass implements Insertable<UserProfile> {
       'xp': serializer.toJson<int>(xp),
       'level': serializer.toJson<int>(level),
       'rank': serializer.toJson<String?>(rank),
+      'heightCm': serializer.toJson<double?>(heightCm),
+      'religion': serializer.toJson<String?>(religion),
+      'region': serializer.toJson<String?>(region),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
     };
   }
@@ -6211,6 +6315,9 @@ class UserProfile extends DataClass implements Insertable<UserProfile> {
           int? xp,
           int? level,
           Value<String?> rank = const Value.absent(),
+          Value<double?> heightCm = const Value.absent(),
+          Value<String?> religion = const Value.absent(),
+          Value<String?> region = const Value.absent(),
           DateTime? updatedAt}) =>
       UserProfile(
         id: id ?? this.id,
@@ -6218,6 +6325,9 @@ class UserProfile extends DataClass implements Insertable<UserProfile> {
         xp: xp ?? this.xp,
         level: level ?? this.level,
         rank: rank.present ? rank.value : this.rank,
+        heightCm: heightCm.present ? heightCm.value : this.heightCm,
+        religion: religion.present ? religion.value : this.religion,
+        region: region.present ? region.value : this.region,
         updatedAt: updatedAt ?? this.updatedAt,
       );
   UserProfile copyWithCompanion(UserProfilesCompanion data) {
@@ -6227,6 +6337,9 @@ class UserProfile extends DataClass implements Insertable<UserProfile> {
       xp: data.xp.present ? data.xp.value : this.xp,
       level: data.level.present ? data.level.value : this.level,
       rank: data.rank.present ? data.rank.value : this.rank,
+      heightCm: data.heightCm.present ? data.heightCm.value : this.heightCm,
+      religion: data.religion.present ? data.religion.value : this.religion,
+      region: data.region.present ? data.region.value : this.region,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
   }
@@ -6239,13 +6352,17 @@ class UserProfile extends DataClass implements Insertable<UserProfile> {
           ..write('xp: $xp, ')
           ..write('level: $level, ')
           ..write('rank: $rank, ')
+          ..write('heightCm: $heightCm, ')
+          ..write('religion: $religion, ')
+          ..write('region: $region, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, name, xp, level, rank, updatedAt);
+  int get hashCode => Object.hash(
+      id, name, xp, level, rank, heightCm, religion, region, updatedAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -6255,6 +6372,9 @@ class UserProfile extends DataClass implements Insertable<UserProfile> {
           other.xp == this.xp &&
           other.level == this.level &&
           other.rank == this.rank &&
+          other.heightCm == this.heightCm &&
+          other.religion == this.religion &&
+          other.region == this.region &&
           other.updatedAt == this.updatedAt);
 }
 
@@ -6264,6 +6384,9 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfile> {
   final Value<int> xp;
   final Value<int> level;
   final Value<String?> rank;
+  final Value<double?> heightCm;
+  final Value<String?> religion;
+  final Value<String?> region;
   final Value<DateTime> updatedAt;
   final Value<int> rowid;
   const UserProfilesCompanion({
@@ -6272,6 +6395,9 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfile> {
     this.xp = const Value.absent(),
     this.level = const Value.absent(),
     this.rank = const Value.absent(),
+    this.heightCm = const Value.absent(),
+    this.religion = const Value.absent(),
+    this.region = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   });
@@ -6281,6 +6407,9 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfile> {
     this.xp = const Value.absent(),
     this.level = const Value.absent(),
     this.rank = const Value.absent(),
+    this.heightCm = const Value.absent(),
+    this.religion = const Value.absent(),
+    this.region = const Value.absent(),
     required DateTime updatedAt,
     this.rowid = const Value.absent(),
   })  : id = Value(id),
@@ -6292,6 +6421,9 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfile> {
     Expression<int>? xp,
     Expression<int>? level,
     Expression<String>? rank,
+    Expression<double>? heightCm,
+    Expression<String>? religion,
+    Expression<String>? region,
     Expression<DateTime>? updatedAt,
     Expression<int>? rowid,
   }) {
@@ -6301,6 +6433,9 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfile> {
       if (xp != null) 'xp': xp,
       if (level != null) 'level': level,
       if (rank != null) 'rank': rank,
+      if (heightCm != null) 'height_cm': heightCm,
+      if (religion != null) 'religion': religion,
+      if (region != null) 'region': region,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (rowid != null) 'rowid': rowid,
     });
@@ -6312,6 +6447,9 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfile> {
       Value<int>? xp,
       Value<int>? level,
       Value<String?>? rank,
+      Value<double?>? heightCm,
+      Value<String?>? religion,
+      Value<String?>? region,
       Value<DateTime>? updatedAt,
       Value<int>? rowid}) {
     return UserProfilesCompanion(
@@ -6320,6 +6458,9 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfile> {
       xp: xp ?? this.xp,
       level: level ?? this.level,
       rank: rank ?? this.rank,
+      heightCm: heightCm ?? this.heightCm,
+      religion: religion ?? this.religion,
+      region: region ?? this.region,
       updatedAt: updatedAt ?? this.updatedAt,
       rowid: rowid ?? this.rowid,
     );
@@ -6343,6 +6484,15 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfile> {
     if (rank.present) {
       map['rank'] = Variable<String>(rank.value);
     }
+    if (heightCm.present) {
+      map['height_cm'] = Variable<double>(heightCm.value);
+    }
+    if (religion.present) {
+      map['religion'] = Variable<String>(religion.value);
+    }
+    if (region.present) {
+      map['region'] = Variable<String>(region.value);
+    }
     if (updatedAt.present) {
       map['updated_at'] = Variable<DateTime>(updatedAt.value);
     }
@@ -6360,6 +6510,9 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfile> {
           ..write('xp: $xp, ')
           ..write('level: $level, ')
           ..write('rank: $rank, ')
+          ..write('heightCm: $heightCm, ')
+          ..write('religion: $religion, ')
+          ..write('region: $region, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('rowid: $rowid')
           ..write(')'))
@@ -6725,6 +6878,847 @@ class KarmaEventsCompanion extends UpdateCompanion<KarmaEvent> {
   }
 }
 
+class $WeightLogsTable extends WeightLogs
+    with TableInfo<$WeightLogsTable, WeightLog> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $WeightLogsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, false,
+      additionalChecks:
+          GeneratedColumn.checkTextLength(minTextLength: 1, maxTextLength: 64),
+      type: DriftSqlType.string,
+      requiredDuringInsert: true);
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
+      'user_id', aliasedName, false,
+      additionalChecks:
+          GeneratedColumn.checkTextLength(minTextLength: 1, maxTextLength: 64),
+      type: DriftSqlType.string,
+      requiredDuringInsert: true);
+  static const VerificationMeta _weightKgMeta =
+      const VerificationMeta('weightKg');
+  @override
+  late final GeneratedColumn<double> weightKg = GeneratedColumn<double>(
+      'weight_kg', aliasedName, false,
+      type: DriftSqlType.double, requiredDuringInsert: true);
+  static const VerificationMeta _measuredAtMeta =
+      const VerificationMeta('measuredAt');
+  @override
+  late final GeneratedColumn<DateTime> measuredAt = GeneratedColumn<DateTime>(
+      'measured_at', aliasedName, false,
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  static const VerificationMeta _syncStatusMeta =
+      const VerificationMeta('syncStatus');
+  @override
+  late final GeneratedColumn<String> syncStatus = GeneratedColumn<String>(
+      'sync_status', aliasedName, false,
+      additionalChecks:
+          GeneratedColumn.checkTextLength(minTextLength: 1, maxTextLength: 16),
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      defaultValue: const Constant('pending'));
+  static const VerificationMeta _remoteIdMeta =
+      const VerificationMeta('remoteId');
+  @override
+  late final GeneratedColumn<String> remoteId = GeneratedColumn<String>(
+      'remote_id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _failedAttemptsMeta =
+      const VerificationMeta('failedAttempts');
+  @override
+  late final GeneratedColumn<int> failedAttempts = GeneratedColumn<int>(
+      'failed_attempts', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(0));
+  @override
+  List<GeneratedColumn> get $columns =>
+      [id, userId, weightKg, measuredAt, syncStatus, remoteId, failedAttempts];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'weight_logs';
+  @override
+  VerificationContext validateIntegrity(Insertable<WeightLog> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(_userIdMeta,
+          userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta));
+    } else if (isInserting) {
+      context.missing(_userIdMeta);
+    }
+    if (data.containsKey('weight_kg')) {
+      context.handle(_weightKgMeta,
+          weightKg.isAcceptableOrUnknown(data['weight_kg']!, _weightKgMeta));
+    } else if (isInserting) {
+      context.missing(_weightKgMeta);
+    }
+    if (data.containsKey('measured_at')) {
+      context.handle(
+          _measuredAtMeta,
+          measuredAt.isAcceptableOrUnknown(
+              data['measured_at']!, _measuredAtMeta));
+    } else if (isInserting) {
+      context.missing(_measuredAtMeta);
+    }
+    if (data.containsKey('sync_status')) {
+      context.handle(
+          _syncStatusMeta,
+          syncStatus.isAcceptableOrUnknown(
+              data['sync_status']!, _syncStatusMeta));
+    }
+    if (data.containsKey('remote_id')) {
+      context.handle(_remoteIdMeta,
+          remoteId.isAcceptableOrUnknown(data['remote_id']!, _remoteIdMeta));
+    }
+    if (data.containsKey('failed_attempts')) {
+      context.handle(
+          _failedAttemptsMeta,
+          failedAttempts.isAcceptableOrUnknown(
+              data['failed_attempts']!, _failedAttemptsMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  WeightLog map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return WeightLog(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      userId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}user_id'])!,
+      weightKg: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}weight_kg'])!,
+      measuredAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}measured_at'])!,
+      syncStatus: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}sync_status'])!,
+      remoteId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}remote_id']),
+      failedAttempts: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}failed_attempts'])!,
+    );
+  }
+
+  @override
+  $WeightLogsTable createAlias(String alias) {
+    return $WeightLogsTable(attachedDatabase, alias);
+  }
+}
+
+class WeightLog extends DataClass implements Insertable<WeightLog> {
+  final String id;
+  final String userId;
+  final double weightKg;
+  final DateTime measuredAt;
+  final String syncStatus;
+  final String? remoteId;
+  final int failedAttempts;
+  const WeightLog(
+      {required this.id,
+      required this.userId,
+      required this.weightKg,
+      required this.measuredAt,
+      required this.syncStatus,
+      this.remoteId,
+      required this.failedAttempts});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['user_id'] = Variable<String>(userId);
+    map['weight_kg'] = Variable<double>(weightKg);
+    map['measured_at'] = Variable<DateTime>(measuredAt);
+    map['sync_status'] = Variable<String>(syncStatus);
+    if (!nullToAbsent || remoteId != null) {
+      map['remote_id'] = Variable<String>(remoteId);
+    }
+    map['failed_attempts'] = Variable<int>(failedAttempts);
+    return map;
+  }
+
+  WeightLogsCompanion toCompanion(bool nullToAbsent) {
+    return WeightLogsCompanion(
+      id: Value(id),
+      userId: Value(userId),
+      weightKg: Value(weightKg),
+      measuredAt: Value(measuredAt),
+      syncStatus: Value(syncStatus),
+      remoteId: remoteId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(remoteId),
+      failedAttempts: Value(failedAttempts),
+    );
+  }
+
+  factory WeightLog.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return WeightLog(
+      id: serializer.fromJson<String>(json['id']),
+      userId: serializer.fromJson<String>(json['userId']),
+      weightKg: serializer.fromJson<double>(json['weightKg']),
+      measuredAt: serializer.fromJson<DateTime>(json['measuredAt']),
+      syncStatus: serializer.fromJson<String>(json['syncStatus']),
+      remoteId: serializer.fromJson<String?>(json['remoteId']),
+      failedAttempts: serializer.fromJson<int>(json['failedAttempts']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'userId': serializer.toJson<String>(userId),
+      'weightKg': serializer.toJson<double>(weightKg),
+      'measuredAt': serializer.toJson<DateTime>(measuredAt),
+      'syncStatus': serializer.toJson<String>(syncStatus),
+      'remoteId': serializer.toJson<String?>(remoteId),
+      'failedAttempts': serializer.toJson<int>(failedAttempts),
+    };
+  }
+
+  WeightLog copyWith(
+          {String? id,
+          String? userId,
+          double? weightKg,
+          DateTime? measuredAt,
+          String? syncStatus,
+          Value<String?> remoteId = const Value.absent(),
+          int? failedAttempts}) =>
+      WeightLog(
+        id: id ?? this.id,
+        userId: userId ?? this.userId,
+        weightKg: weightKg ?? this.weightKg,
+        measuredAt: measuredAt ?? this.measuredAt,
+        syncStatus: syncStatus ?? this.syncStatus,
+        remoteId: remoteId.present ? remoteId.value : this.remoteId,
+        failedAttempts: failedAttempts ?? this.failedAttempts,
+      );
+  WeightLog copyWithCompanion(WeightLogsCompanion data) {
+    return WeightLog(
+      id: data.id.present ? data.id.value : this.id,
+      userId: data.userId.present ? data.userId.value : this.userId,
+      weightKg: data.weightKg.present ? data.weightKg.value : this.weightKg,
+      measuredAt:
+          data.measuredAt.present ? data.measuredAt.value : this.measuredAt,
+      syncStatus:
+          data.syncStatus.present ? data.syncStatus.value : this.syncStatus,
+      remoteId: data.remoteId.present ? data.remoteId.value : this.remoteId,
+      failedAttempts: data.failedAttempts.present
+          ? data.failedAttempts.value
+          : this.failedAttempts,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('WeightLog(')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('weightKg: $weightKg, ')
+          ..write('measuredAt: $measuredAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('remoteId: $remoteId, ')
+          ..write('failedAttempts: $failedAttempts')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      id, userId, weightKg, measuredAt, syncStatus, remoteId, failedAttempts);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is WeightLog &&
+          other.id == this.id &&
+          other.userId == this.userId &&
+          other.weightKg == this.weightKg &&
+          other.measuredAt == this.measuredAt &&
+          other.syncStatus == this.syncStatus &&
+          other.remoteId == this.remoteId &&
+          other.failedAttempts == this.failedAttempts);
+}
+
+class WeightLogsCompanion extends UpdateCompanion<WeightLog> {
+  final Value<String> id;
+  final Value<String> userId;
+  final Value<double> weightKg;
+  final Value<DateTime> measuredAt;
+  final Value<String> syncStatus;
+  final Value<String?> remoteId;
+  final Value<int> failedAttempts;
+  final Value<int> rowid;
+  const WeightLogsCompanion({
+    this.id = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.weightKg = const Value.absent(),
+    this.measuredAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    this.remoteId = const Value.absent(),
+    this.failedAttempts = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  WeightLogsCompanion.insert({
+    required String id,
+    required String userId,
+    required double weightKg,
+    required DateTime measuredAt,
+    this.syncStatus = const Value.absent(),
+    this.remoteId = const Value.absent(),
+    this.failedAttempts = const Value.absent(),
+    this.rowid = const Value.absent(),
+  })  : id = Value(id),
+        userId = Value(userId),
+        weightKg = Value(weightKg),
+        measuredAt = Value(measuredAt);
+  static Insertable<WeightLog> custom({
+    Expression<String>? id,
+    Expression<String>? userId,
+    Expression<double>? weightKg,
+    Expression<DateTime>? measuredAt,
+    Expression<String>? syncStatus,
+    Expression<String>? remoteId,
+    Expression<int>? failedAttempts,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (userId != null) 'user_id': userId,
+      if (weightKg != null) 'weight_kg': weightKg,
+      if (measuredAt != null) 'measured_at': measuredAt,
+      if (syncStatus != null) 'sync_status': syncStatus,
+      if (remoteId != null) 'remote_id': remoteId,
+      if (failedAttempts != null) 'failed_attempts': failedAttempts,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  WeightLogsCompanion copyWith(
+      {Value<String>? id,
+      Value<String>? userId,
+      Value<double>? weightKg,
+      Value<DateTime>? measuredAt,
+      Value<String>? syncStatus,
+      Value<String?>? remoteId,
+      Value<int>? failedAttempts,
+      Value<int>? rowid}) {
+    return WeightLogsCompanion(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      weightKg: weightKg ?? this.weightKg,
+      measuredAt: measuredAt ?? this.measuredAt,
+      syncStatus: syncStatus ?? this.syncStatus,
+      remoteId: remoteId ?? this.remoteId,
+      failedAttempts: failedAttempts ?? this.failedAttempts,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<String>(userId.value);
+    }
+    if (weightKg.present) {
+      map['weight_kg'] = Variable<double>(weightKg.value);
+    }
+    if (measuredAt.present) {
+      map['measured_at'] = Variable<DateTime>(measuredAt.value);
+    }
+    if (syncStatus.present) {
+      map['sync_status'] = Variable<String>(syncStatus.value);
+    }
+    if (remoteId.present) {
+      map['remote_id'] = Variable<String>(remoteId.value);
+    }
+    if (failedAttempts.present) {
+      map['failed_attempts'] = Variable<int>(failedAttempts.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('WeightLogsCompanion(')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('weightKg: $weightKg, ')
+          ..write('measuredAt: $measuredAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('remoteId: $remoteId, ')
+          ..write('failedAttempts: $failedAttempts, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $FestivalsTable extends Festivals
+    with TableInfo<$FestivalsTable, Festival> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $FestivalsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, false,
+      additionalChecks:
+          GeneratedColumn.checkTextLength(minTextLength: 1, maxTextLength: 64),
+      type: DriftSqlType.string,
+      requiredDuringInsert: true);
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+      'name', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _descriptionMeta =
+      const VerificationMeta('description');
+  @override
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+      'description', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _startDateMeta =
+      const VerificationMeta('startDate');
+  @override
+  late final GeneratedColumn<DateTime> startDate = GeneratedColumn<DateTime>(
+      'start_date', aliasedName, false,
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  static const VerificationMeta _endDateMeta =
+      const VerificationMeta('endDate');
+  @override
+  late final GeneratedColumn<DateTime> endDate = GeneratedColumn<DateTime>(
+      'end_date', aliasedName, false,
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  static const VerificationMeta _religionMeta =
+      const VerificationMeta('religion');
+  @override
+  late final GeneratedColumn<String> religion = GeneratedColumn<String>(
+      'religion', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _regionMeta = const VerificationMeta('region');
+  @override
+  late final GeneratedColumn<String> region = GeneratedColumn<String>(
+      'region', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _dietPlanJsonMeta =
+      const VerificationMeta('dietPlanJson');
+  @override
+  late final GeneratedColumn<String> dietPlanJson = GeneratedColumn<String>(
+      'diet_plan_json', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        name,
+        description,
+        startDate,
+        endDate,
+        religion,
+        region,
+        dietPlanJson
+      ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'festivals';
+  @override
+  VerificationContext validateIntegrity(Insertable<Festival> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+          _descriptionMeta,
+          description.isAcceptableOrUnknown(
+              data['description']!, _descriptionMeta));
+    }
+    if (data.containsKey('start_date')) {
+      context.handle(_startDateMeta,
+          startDate.isAcceptableOrUnknown(data['start_date']!, _startDateMeta));
+    } else if (isInserting) {
+      context.missing(_startDateMeta);
+    }
+    if (data.containsKey('end_date')) {
+      context.handle(_endDateMeta,
+          endDate.isAcceptableOrUnknown(data['end_date']!, _endDateMeta));
+    } else if (isInserting) {
+      context.missing(_endDateMeta);
+    }
+    if (data.containsKey('religion')) {
+      context.handle(_religionMeta,
+          religion.isAcceptableOrUnknown(data['religion']!, _religionMeta));
+    }
+    if (data.containsKey('region')) {
+      context.handle(_regionMeta,
+          region.isAcceptableOrUnknown(data['region']!, _regionMeta));
+    }
+    if (data.containsKey('diet_plan_json')) {
+      context.handle(
+          _dietPlanJsonMeta,
+          dietPlanJson.isAcceptableOrUnknown(
+              data['diet_plan_json']!, _dietPlanJsonMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Festival map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Festival(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      name: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
+      description: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}description']),
+      startDate: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}start_date'])!,
+      endDate: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}end_date'])!,
+      religion: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}religion']),
+      region: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}region']),
+      dietPlanJson: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}diet_plan_json']),
+    );
+  }
+
+  @override
+  $FestivalsTable createAlias(String alias) {
+    return $FestivalsTable(attachedDatabase, alias);
+  }
+}
+
+class Festival extends DataClass implements Insertable<Festival> {
+  final String id;
+  final String name;
+  final String? description;
+  final DateTime startDate;
+  final DateTime endDate;
+  final String? religion;
+  final String? region;
+  final String? dietPlanJson;
+  const Festival(
+      {required this.id,
+      required this.name,
+      this.description,
+      required this.startDate,
+      required this.endDate,
+      this.religion,
+      this.region,
+      this.dietPlanJson});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['name'] = Variable<String>(name);
+    if (!nullToAbsent || description != null) {
+      map['description'] = Variable<String>(description);
+    }
+    map['start_date'] = Variable<DateTime>(startDate);
+    map['end_date'] = Variable<DateTime>(endDate);
+    if (!nullToAbsent || religion != null) {
+      map['religion'] = Variable<String>(religion);
+    }
+    if (!nullToAbsent || region != null) {
+      map['region'] = Variable<String>(region);
+    }
+    if (!nullToAbsent || dietPlanJson != null) {
+      map['diet_plan_json'] = Variable<String>(dietPlanJson);
+    }
+    return map;
+  }
+
+  FestivalsCompanion toCompanion(bool nullToAbsent) {
+    return FestivalsCompanion(
+      id: Value(id),
+      name: Value(name),
+      description: description == null && nullToAbsent
+          ? const Value.absent()
+          : Value(description),
+      startDate: Value(startDate),
+      endDate: Value(endDate),
+      religion: religion == null && nullToAbsent
+          ? const Value.absent()
+          : Value(religion),
+      region:
+          region == null && nullToAbsent ? const Value.absent() : Value(region),
+      dietPlanJson: dietPlanJson == null && nullToAbsent
+          ? const Value.absent()
+          : Value(dietPlanJson),
+    );
+  }
+
+  factory Festival.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Festival(
+      id: serializer.fromJson<String>(json['id']),
+      name: serializer.fromJson<String>(json['name']),
+      description: serializer.fromJson<String?>(json['description']),
+      startDate: serializer.fromJson<DateTime>(json['startDate']),
+      endDate: serializer.fromJson<DateTime>(json['endDate']),
+      religion: serializer.fromJson<String?>(json['religion']),
+      region: serializer.fromJson<String?>(json['region']),
+      dietPlanJson: serializer.fromJson<String?>(json['dietPlanJson']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'name': serializer.toJson<String>(name),
+      'description': serializer.toJson<String?>(description),
+      'startDate': serializer.toJson<DateTime>(startDate),
+      'endDate': serializer.toJson<DateTime>(endDate),
+      'religion': serializer.toJson<String?>(religion),
+      'region': serializer.toJson<String?>(region),
+      'dietPlanJson': serializer.toJson<String?>(dietPlanJson),
+    };
+  }
+
+  Festival copyWith(
+          {String? id,
+          String? name,
+          Value<String?> description = const Value.absent(),
+          DateTime? startDate,
+          DateTime? endDate,
+          Value<String?> religion = const Value.absent(),
+          Value<String?> region = const Value.absent(),
+          Value<String?> dietPlanJson = const Value.absent()}) =>
+      Festival(
+        id: id ?? this.id,
+        name: name ?? this.name,
+        description: description.present ? description.value : this.description,
+        startDate: startDate ?? this.startDate,
+        endDate: endDate ?? this.endDate,
+        religion: religion.present ? religion.value : this.religion,
+        region: region.present ? region.value : this.region,
+        dietPlanJson:
+            dietPlanJson.present ? dietPlanJson.value : this.dietPlanJson,
+      );
+  Festival copyWithCompanion(FestivalsCompanion data) {
+    return Festival(
+      id: data.id.present ? data.id.value : this.id,
+      name: data.name.present ? data.name.value : this.name,
+      description:
+          data.description.present ? data.description.value : this.description,
+      startDate: data.startDate.present ? data.startDate.value : this.startDate,
+      endDate: data.endDate.present ? data.endDate.value : this.endDate,
+      religion: data.religion.present ? data.religion.value : this.religion,
+      region: data.region.present ? data.region.value : this.region,
+      dietPlanJson: data.dietPlanJson.present
+          ? data.dietPlanJson.value
+          : this.dietPlanJson,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('Festival(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('description: $description, ')
+          ..write('startDate: $startDate, ')
+          ..write('endDate: $endDate, ')
+          ..write('religion: $religion, ')
+          ..write('region: $region, ')
+          ..write('dietPlanJson: $dietPlanJson')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, name, description, startDate, endDate,
+      religion, region, dietPlanJson);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Festival &&
+          other.id == this.id &&
+          other.name == this.name &&
+          other.description == this.description &&
+          other.startDate == this.startDate &&
+          other.endDate == this.endDate &&
+          other.religion == this.religion &&
+          other.region == this.region &&
+          other.dietPlanJson == this.dietPlanJson);
+}
+
+class FestivalsCompanion extends UpdateCompanion<Festival> {
+  final Value<String> id;
+  final Value<String> name;
+  final Value<String?> description;
+  final Value<DateTime> startDate;
+  final Value<DateTime> endDate;
+  final Value<String?> religion;
+  final Value<String?> region;
+  final Value<String?> dietPlanJson;
+  final Value<int> rowid;
+  const FestivalsCompanion({
+    this.id = const Value.absent(),
+    this.name = const Value.absent(),
+    this.description = const Value.absent(),
+    this.startDate = const Value.absent(),
+    this.endDate = const Value.absent(),
+    this.religion = const Value.absent(),
+    this.region = const Value.absent(),
+    this.dietPlanJson = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  FestivalsCompanion.insert({
+    required String id,
+    required String name,
+    this.description = const Value.absent(),
+    required DateTime startDate,
+    required DateTime endDate,
+    this.religion = const Value.absent(),
+    this.region = const Value.absent(),
+    this.dietPlanJson = const Value.absent(),
+    this.rowid = const Value.absent(),
+  })  : id = Value(id),
+        name = Value(name),
+        startDate = Value(startDate),
+        endDate = Value(endDate);
+  static Insertable<Festival> custom({
+    Expression<String>? id,
+    Expression<String>? name,
+    Expression<String>? description,
+    Expression<DateTime>? startDate,
+    Expression<DateTime>? endDate,
+    Expression<String>? religion,
+    Expression<String>? region,
+    Expression<String>? dietPlanJson,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (name != null) 'name': name,
+      if (description != null) 'description': description,
+      if (startDate != null) 'start_date': startDate,
+      if (endDate != null) 'end_date': endDate,
+      if (religion != null) 'religion': religion,
+      if (region != null) 'region': region,
+      if (dietPlanJson != null) 'diet_plan_json': dietPlanJson,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  FestivalsCompanion copyWith(
+      {Value<String>? id,
+      Value<String>? name,
+      Value<String?>? description,
+      Value<DateTime>? startDate,
+      Value<DateTime>? endDate,
+      Value<String?>? religion,
+      Value<String?>? region,
+      Value<String?>? dietPlanJson,
+      Value<int>? rowid}) {
+    return FestivalsCompanion(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      startDate: startDate ?? this.startDate,
+      endDate: endDate ?? this.endDate,
+      religion: religion ?? this.religion,
+      region: region ?? this.region,
+      dietPlanJson: dietPlanJson ?? this.dietPlanJson,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    if (startDate.present) {
+      map['start_date'] = Variable<DateTime>(startDate.value);
+    }
+    if (endDate.present) {
+      map['end_date'] = Variable<DateTime>(endDate.value);
+    }
+    if (religion.present) {
+      map['religion'] = Variable<String>(religion.value);
+    }
+    if (region.present) {
+      map['region'] = Variable<String>(region.value);
+    }
+    if (dietPlanJson.present) {
+      map['diet_plan_json'] = Variable<String>(dietPlanJson.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('FestivalsCompanion(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('description: $description, ')
+          ..write('startDate: $startDate, ')
+          ..write('endDate: $endDate, ')
+          ..write('religion: $religion, ')
+          ..write('region: $region, ')
+          ..write('dietPlanJson: $dietPlanJson, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -6743,6 +7737,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $Spo2ReadingsTable spo2Readings = $Spo2ReadingsTable(this);
   late final $UserProfilesTable userProfiles = $UserProfilesTable(this);
   late final $KarmaEventsTable karmaEvents = $KarmaEventsTable(this);
+  late final $WeightLogsTable weightLogs = $WeightLogsTable(this);
+  late final $FestivalsTable festivals = $FestivalsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -6760,7 +7756,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         stepCounts,
         spo2Readings,
         userProfiles,
-        karmaEvents
+        karmaEvents,
+        weightLogs,
+        festivals
       ];
 }
 
@@ -8673,6 +9671,7 @@ typedef $$WeddingPlansTableCreateCompanionBuilder = WeddingPlansCompanion
   required int prepWeeks,
   required String primaryGoal,
   required String currentPhase,
+  required DateTime createdAt,
   Value<String> syncStatus,
   Value<int> rowid,
 });
@@ -8688,6 +9687,7 @@ typedef $$WeddingPlansTableUpdateCompanionBuilder = WeddingPlansCompanion
   Value<int> prepWeeks,
   Value<String> primaryGoal,
   Value<String> currentPhase,
+  Value<DateTime> createdAt,
   Value<String> syncStatus,
   Value<int> rowid,
 });
@@ -8752,6 +9752,9 @@ class $$WeddingPlansTableFilterComposer
 
   ColumnFilters<String> get currentPhase => $composableBuilder(
       column: $table.currentPhase, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<String> get syncStatus => $composableBuilder(
       column: $table.syncStatus, builder: (column) => ColumnFilters(column));
@@ -8819,6 +9822,9 @@ class $$WeddingPlansTableOrderingComposer
       column: $table.currentPhase,
       builder: (column) => ColumnOrderings(column));
 
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => ColumnOrderings(column));
+
   ColumnOrderings<String> get syncStatus => $composableBuilder(
       column: $table.syncStatus, builder: (column) => ColumnOrderings(column));
 }
@@ -8861,6 +9867,9 @@ class $$WeddingPlansTableAnnotationComposer
 
   GeneratedColumn<String> get currentPhase => $composableBuilder(
       column: $table.currentPhase, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
   GeneratedColumn<String> get syncStatus => $composableBuilder(
       column: $table.syncStatus, builder: (column) => column);
@@ -8920,6 +9929,7 @@ class $$WeddingPlansTableTableManager extends RootTableManager<
             Value<int> prepWeeks = const Value.absent(),
             Value<String> primaryGoal = const Value.absent(),
             Value<String> currentPhase = const Value.absent(),
+            Value<DateTime> createdAt = const Value.absent(),
             Value<String> syncStatus = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
@@ -8934,6 +9944,7 @@ class $$WeddingPlansTableTableManager extends RootTableManager<
             prepWeeks: prepWeeks,
             primaryGoal: primaryGoal,
             currentPhase: currentPhase,
+            createdAt: createdAt,
             syncStatus: syncStatus,
             rowid: rowid,
           ),
@@ -8948,6 +9959,7 @@ class $$WeddingPlansTableTableManager extends RootTableManager<
             required int prepWeeks,
             required String primaryGoal,
             required String currentPhase,
+            required DateTime createdAt,
             Value<String> syncStatus = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
@@ -8962,6 +9974,7 @@ class $$WeddingPlansTableTableManager extends RootTableManager<
             prepWeeks: prepWeeks,
             primaryGoal: primaryGoal,
             currentPhase: currentPhase,
+            createdAt: createdAt,
             syncStatus: syncStatus,
             rowid: rowid,
           ),
@@ -9743,6 +10756,9 @@ typedef $$UserProfilesTableCreateCompanionBuilder = UserProfilesCompanion
   Value<int> xp,
   Value<int> level,
   Value<String?> rank,
+  Value<double?> heightCm,
+  Value<String?> religion,
+  Value<String?> region,
   required DateTime updatedAt,
   Value<int> rowid,
 });
@@ -9753,6 +10769,9 @@ typedef $$UserProfilesTableUpdateCompanionBuilder = UserProfilesCompanion
   Value<int> xp,
   Value<int> level,
   Value<String?> rank,
+  Value<double?> heightCm,
+  Value<String?> religion,
+  Value<String?> region,
   Value<DateTime> updatedAt,
   Value<int> rowid,
 });
@@ -9780,6 +10799,15 @@ class $$UserProfilesTableFilterComposer
 
   ColumnFilters<String> get rank => $composableBuilder(
       column: $table.rank, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<double> get heightCm => $composableBuilder(
+      column: $table.heightCm, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get religion => $composableBuilder(
+      column: $table.religion, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get region => $composableBuilder(
+      column: $table.region, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<DateTime> get updatedAt => $composableBuilder(
       column: $table.updatedAt, builder: (column) => ColumnFilters(column));
@@ -9809,6 +10837,15 @@ class $$UserProfilesTableOrderingComposer
   ColumnOrderings<String> get rank => $composableBuilder(
       column: $table.rank, builder: (column) => ColumnOrderings(column));
 
+  ColumnOrderings<double> get heightCm => $composableBuilder(
+      column: $table.heightCm, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get religion => $composableBuilder(
+      column: $table.religion, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get region => $composableBuilder(
+      column: $table.region, builder: (column) => ColumnOrderings(column));
+
   ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
       column: $table.updatedAt, builder: (column) => ColumnOrderings(column));
 }
@@ -9836,6 +10873,15 @@ class $$UserProfilesTableAnnotationComposer
 
   GeneratedColumn<String> get rank =>
       $composableBuilder(column: $table.rank, builder: (column) => column);
+
+  GeneratedColumn<double> get heightCm =>
+      $composableBuilder(column: $table.heightCm, builder: (column) => column);
+
+  GeneratedColumn<String> get religion =>
+      $composableBuilder(column: $table.religion, builder: (column) => column);
+
+  GeneratedColumn<String> get region =>
+      $composableBuilder(column: $table.region, builder: (column) => column);
 
   GeneratedColumn<DateTime> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
@@ -9872,6 +10918,9 @@ class $$UserProfilesTableTableManager extends RootTableManager<
             Value<int> xp = const Value.absent(),
             Value<int> level = const Value.absent(),
             Value<String?> rank = const Value.absent(),
+            Value<double?> heightCm = const Value.absent(),
+            Value<String?> religion = const Value.absent(),
+            Value<String?> region = const Value.absent(),
             Value<DateTime> updatedAt = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
@@ -9881,6 +10930,9 @@ class $$UserProfilesTableTableManager extends RootTableManager<
             xp: xp,
             level: level,
             rank: rank,
+            heightCm: heightCm,
+            religion: religion,
+            region: region,
             updatedAt: updatedAt,
             rowid: rowid,
           ),
@@ -9890,6 +10942,9 @@ class $$UserProfilesTableTableManager extends RootTableManager<
             Value<int> xp = const Value.absent(),
             Value<int> level = const Value.absent(),
             Value<String?> rank = const Value.absent(),
+            Value<double?> heightCm = const Value.absent(),
+            Value<String?> religion = const Value.absent(),
+            Value<String?> region = const Value.absent(),
             required DateTime updatedAt,
             Value<int> rowid = const Value.absent(),
           }) =>
@@ -9899,6 +10954,9 @@ class $$UserProfilesTableTableManager extends RootTableManager<
             xp: xp,
             level: level,
             rank: rank,
+            heightCm: heightCm,
+            religion: religion,
+            region: region,
             updatedAt: updatedAt,
             rowid: rowid,
           ),
@@ -10106,6 +11164,414 @@ typedef $$KarmaEventsTableProcessedTableManager = ProcessedTableManager<
     (KarmaEvent, BaseReferences<_$AppDatabase, $KarmaEventsTable, KarmaEvent>),
     KarmaEvent,
     PrefetchHooks Function()>;
+typedef $$WeightLogsTableCreateCompanionBuilder = WeightLogsCompanion Function({
+  required String id,
+  required String userId,
+  required double weightKg,
+  required DateTime measuredAt,
+  Value<String> syncStatus,
+  Value<String?> remoteId,
+  Value<int> failedAttempts,
+  Value<int> rowid,
+});
+typedef $$WeightLogsTableUpdateCompanionBuilder = WeightLogsCompanion Function({
+  Value<String> id,
+  Value<String> userId,
+  Value<double> weightKg,
+  Value<DateTime> measuredAt,
+  Value<String> syncStatus,
+  Value<String?> remoteId,
+  Value<int> failedAttempts,
+  Value<int> rowid,
+});
+
+class $$WeightLogsTableFilterComposer
+    extends Composer<_$AppDatabase, $WeightLogsTable> {
+  $$WeightLogsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get userId => $composableBuilder(
+      column: $table.userId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<double> get weightKg => $composableBuilder(
+      column: $table.weightKg, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get measuredAt => $composableBuilder(
+      column: $table.measuredAt, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get syncStatus => $composableBuilder(
+      column: $table.syncStatus, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get remoteId => $composableBuilder(
+      column: $table.remoteId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get failedAttempts => $composableBuilder(
+      column: $table.failedAttempts,
+      builder: (column) => ColumnFilters(column));
+}
+
+class $$WeightLogsTableOrderingComposer
+    extends Composer<_$AppDatabase, $WeightLogsTable> {
+  $$WeightLogsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get userId => $composableBuilder(
+      column: $table.userId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<double> get weightKg => $composableBuilder(
+      column: $table.weightKg, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get measuredAt => $composableBuilder(
+      column: $table.measuredAt, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get syncStatus => $composableBuilder(
+      column: $table.syncStatus, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get remoteId => $composableBuilder(
+      column: $table.remoteId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get failedAttempts => $composableBuilder(
+      column: $table.failedAttempts,
+      builder: (column) => ColumnOrderings(column));
+}
+
+class $$WeightLogsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $WeightLogsTable> {
+  $$WeightLogsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get userId =>
+      $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<double> get weightKg =>
+      $composableBuilder(column: $table.weightKg, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get measuredAt => $composableBuilder(
+      column: $table.measuredAt, builder: (column) => column);
+
+  GeneratedColumn<String> get syncStatus => $composableBuilder(
+      column: $table.syncStatus, builder: (column) => column);
+
+  GeneratedColumn<String> get remoteId =>
+      $composableBuilder(column: $table.remoteId, builder: (column) => column);
+
+  GeneratedColumn<int> get failedAttempts => $composableBuilder(
+      column: $table.failedAttempts, builder: (column) => column);
+}
+
+class $$WeightLogsTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $WeightLogsTable,
+    WeightLog,
+    $$WeightLogsTableFilterComposer,
+    $$WeightLogsTableOrderingComposer,
+    $$WeightLogsTableAnnotationComposer,
+    $$WeightLogsTableCreateCompanionBuilder,
+    $$WeightLogsTableUpdateCompanionBuilder,
+    (WeightLog, BaseReferences<_$AppDatabase, $WeightLogsTable, WeightLog>),
+    WeightLog,
+    PrefetchHooks Function()> {
+  $$WeightLogsTableTableManager(_$AppDatabase db, $WeightLogsTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$WeightLogsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$WeightLogsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$WeightLogsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<String> id = const Value.absent(),
+            Value<String> userId = const Value.absent(),
+            Value<double> weightKg = const Value.absent(),
+            Value<DateTime> measuredAt = const Value.absent(),
+            Value<String> syncStatus = const Value.absent(),
+            Value<String?> remoteId = const Value.absent(),
+            Value<int> failedAttempts = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              WeightLogsCompanion(
+            id: id,
+            userId: userId,
+            weightKg: weightKg,
+            measuredAt: measuredAt,
+            syncStatus: syncStatus,
+            remoteId: remoteId,
+            failedAttempts: failedAttempts,
+            rowid: rowid,
+          ),
+          createCompanionCallback: ({
+            required String id,
+            required String userId,
+            required double weightKg,
+            required DateTime measuredAt,
+            Value<String> syncStatus = const Value.absent(),
+            Value<String?> remoteId = const Value.absent(),
+            Value<int> failedAttempts = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              WeightLogsCompanion.insert(
+            id: id,
+            userId: userId,
+            weightKg: weightKg,
+            measuredAt: measuredAt,
+            syncStatus: syncStatus,
+            remoteId: remoteId,
+            failedAttempts: failedAttempts,
+            rowid: rowid,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ));
+}
+
+typedef $$WeightLogsTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $WeightLogsTable,
+    WeightLog,
+    $$WeightLogsTableFilterComposer,
+    $$WeightLogsTableOrderingComposer,
+    $$WeightLogsTableAnnotationComposer,
+    $$WeightLogsTableCreateCompanionBuilder,
+    $$WeightLogsTableUpdateCompanionBuilder,
+    (WeightLog, BaseReferences<_$AppDatabase, $WeightLogsTable, WeightLog>),
+    WeightLog,
+    PrefetchHooks Function()>;
+typedef $$FestivalsTableCreateCompanionBuilder = FestivalsCompanion Function({
+  required String id,
+  required String name,
+  Value<String?> description,
+  required DateTime startDate,
+  required DateTime endDate,
+  Value<String?> religion,
+  Value<String?> region,
+  Value<String?> dietPlanJson,
+  Value<int> rowid,
+});
+typedef $$FestivalsTableUpdateCompanionBuilder = FestivalsCompanion Function({
+  Value<String> id,
+  Value<String> name,
+  Value<String?> description,
+  Value<DateTime> startDate,
+  Value<DateTime> endDate,
+  Value<String?> religion,
+  Value<String?> region,
+  Value<String?> dietPlanJson,
+  Value<int> rowid,
+});
+
+class $$FestivalsTableFilterComposer
+    extends Composer<_$AppDatabase, $FestivalsTable> {
+  $$FestivalsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get name => $composableBuilder(
+      column: $table.name, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get description => $composableBuilder(
+      column: $table.description, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get startDate => $composableBuilder(
+      column: $table.startDate, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get endDate => $composableBuilder(
+      column: $table.endDate, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get religion => $composableBuilder(
+      column: $table.religion, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get region => $composableBuilder(
+      column: $table.region, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get dietPlanJson => $composableBuilder(
+      column: $table.dietPlanJson, builder: (column) => ColumnFilters(column));
+}
+
+class $$FestivalsTableOrderingComposer
+    extends Composer<_$AppDatabase, $FestivalsTable> {
+  $$FestivalsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get name => $composableBuilder(
+      column: $table.name, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get description => $composableBuilder(
+      column: $table.description, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get startDate => $composableBuilder(
+      column: $table.startDate, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get endDate => $composableBuilder(
+      column: $table.endDate, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get religion => $composableBuilder(
+      column: $table.religion, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get region => $composableBuilder(
+      column: $table.region, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get dietPlanJson => $composableBuilder(
+      column: $table.dietPlanJson,
+      builder: (column) => ColumnOrderings(column));
+}
+
+class $$FestivalsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $FestivalsTable> {
+  $$FestivalsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get description => $composableBuilder(
+      column: $table.description, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get startDate =>
+      $composableBuilder(column: $table.startDate, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get endDate =>
+      $composableBuilder(column: $table.endDate, builder: (column) => column);
+
+  GeneratedColumn<String> get religion =>
+      $composableBuilder(column: $table.religion, builder: (column) => column);
+
+  GeneratedColumn<String> get region =>
+      $composableBuilder(column: $table.region, builder: (column) => column);
+
+  GeneratedColumn<String> get dietPlanJson => $composableBuilder(
+      column: $table.dietPlanJson, builder: (column) => column);
+}
+
+class $$FestivalsTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $FestivalsTable,
+    Festival,
+    $$FestivalsTableFilterComposer,
+    $$FestivalsTableOrderingComposer,
+    $$FestivalsTableAnnotationComposer,
+    $$FestivalsTableCreateCompanionBuilder,
+    $$FestivalsTableUpdateCompanionBuilder,
+    (Festival, BaseReferences<_$AppDatabase, $FestivalsTable, Festival>),
+    Festival,
+    PrefetchHooks Function()> {
+  $$FestivalsTableTableManager(_$AppDatabase db, $FestivalsTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$FestivalsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$FestivalsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$FestivalsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<String> id = const Value.absent(),
+            Value<String> name = const Value.absent(),
+            Value<String?> description = const Value.absent(),
+            Value<DateTime> startDate = const Value.absent(),
+            Value<DateTime> endDate = const Value.absent(),
+            Value<String?> religion = const Value.absent(),
+            Value<String?> region = const Value.absent(),
+            Value<String?> dietPlanJson = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              FestivalsCompanion(
+            id: id,
+            name: name,
+            description: description,
+            startDate: startDate,
+            endDate: endDate,
+            religion: religion,
+            region: region,
+            dietPlanJson: dietPlanJson,
+            rowid: rowid,
+          ),
+          createCompanionCallback: ({
+            required String id,
+            required String name,
+            Value<String?> description = const Value.absent(),
+            required DateTime startDate,
+            required DateTime endDate,
+            Value<String?> religion = const Value.absent(),
+            Value<String?> region = const Value.absent(),
+            Value<String?> dietPlanJson = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              FestivalsCompanion.insert(
+            id: id,
+            name: name,
+            description: description,
+            startDate: startDate,
+            endDate: endDate,
+            religion: religion,
+            region: region,
+            dietPlanJson: dietPlanJson,
+            rowid: rowid,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ));
+}
+
+typedef $$FestivalsTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $FestivalsTable,
+    Festival,
+    $$FestivalsTableFilterComposer,
+    $$FestivalsTableOrderingComposer,
+    $$FestivalsTableAnnotationComposer,
+    $$FestivalsTableCreateCompanionBuilder,
+    $$FestivalsTableUpdateCompanionBuilder,
+    (Festival, BaseReferences<_$AppDatabase, $FestivalsTable, Festival>),
+    Festival,
+    PrefetchHooks Function()>;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -10136,4 +11602,8 @@ class $AppDatabaseManager {
       $$UserProfilesTableTableManager(_db, _db.userProfiles);
   $$KarmaEventsTableTableManager get karmaEvents =>
       $$KarmaEventsTableTableManager(_db, _db.karmaEvents);
+  $$WeightLogsTableTableManager get weightLogs =>
+      $$WeightLogsTableTableManager(_db, _db.weightLogs);
+  $$FestivalsTableTableManager get festivals =>
+      $$FestivalsTableTableManager(_db, _db.festivals);
 }

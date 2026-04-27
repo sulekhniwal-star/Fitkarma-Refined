@@ -142,6 +142,7 @@ class WeddingPlans extends Table {
   IntColumn get prepWeeks => integer()();
   TextColumn get primaryGoal => text()(); // weight_loss, glow, endurance
   TextColumn get currentPhase => text()(); // prep, active, final, recovery
+  DateTimeColumn get createdAt => dateTime()();
   TextColumn get syncStatus => text().withLength(min: 1, max: 16).withDefault(const Constant('pending'))();
 
   @override
@@ -196,6 +197,9 @@ class UserProfiles extends Table {
   IntColumn get xp => integer().withDefault(const Constant(0))();
   IntColumn get level => integer().withDefault(const Constant(1))();
   TextColumn get rank => text().nullable()();
+  RealColumn get heightCm => real().nullable()();
+  TextColumn get religion => text().nullable()();
+  TextColumn get region => text().nullable()();
   DateTimeColumn get updatedAt => dateTime()();
 
   @override
@@ -209,6 +213,33 @@ class KarmaEvents extends Table {
   IntColumn get points => integer()();
   DateTimeColumn get occurredAt => dateTime()();
   TextColumn get syncStatus => text().withLength(min: 1, max: 16).withDefault(const Constant('pending'))();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
+class WeightLogs extends Table {
+  TextColumn get id => text().withLength(min: 1, max: 64)();
+  TextColumn get userId => text().withLength(min: 1, max: 64)();
+  RealColumn get weightKg => real()();
+  DateTimeColumn get measuredAt => dateTime()();
+  TextColumn get syncStatus => text().withLength(min: 1, max: 16).withDefault(const Constant('pending'))();
+  TextColumn get remoteId => text().nullable()();
+  IntColumn get failedAttempts => integer().withDefault(const Constant(0))();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
+class Festivals extends Table {
+  TextColumn get id => text().withLength(min: 1, max: 64)();
+  TextColumn get name => text()();
+  TextColumn get description => text().nullable()();
+  DateTimeColumn get startDate => dateTime()();
+  DateTimeColumn get endDate => dateTime()();
+  TextColumn get religion => text().nullable()();
+  TextColumn get region => text().nullable()();
+  TextColumn get dietPlanJson => text().nullable()();
 
   @override
   Set<Column> get primaryKey => {id};
@@ -228,6 +259,8 @@ class KarmaEvents extends Table {
   Spo2Readings,
   UserProfiles,
   KarmaEvents,
+  WeightLogs,
+  Festivals,
 ])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
@@ -269,11 +302,11 @@ class AppDatabase extends _$AppDatabase {
     return (select(habits)..where((t) => t.id.equals(id))).watchSingle();
   }
 
-  Future<List<JournalEntry>> getJournalEntries(String userId, {int limit = 20}) {
+  Future<List<JournalEntry>> getJournalEntries(String userId, {int limit = 20, int offset = 0}) {
     return (select(journalEntries)
           ..where((t) => t.userId.equals(userId))
           ..orderBy([(t) => OrderingTerm.desc(t.createdAt)])
-          ..limit(limit))
+          ..limit(limit, offset: offset))
         .get();
   }
 
@@ -375,6 +408,71 @@ class AppDatabase extends _$AppDatabase {
 
   Stream<UserProfile?> watchUserProfile(String id) {
     return (select(userProfiles)..where((t) => t.id.equals(id))).watchSingleOrNull();
+  }
+
+  Stream<WeightLog?> watchLatestWeight(String userId) {
+    return (select(weightLogs)
+          ..where((t) => t.userId.equals(userId))
+          ..orderBy([(t) => OrderingTerm.desc(t.measuredAt)])
+          ..limit(1))
+        .watchSingleOrNull();
+  }
+
+  Stream<List<WeightLog>> watchWeightHistory(String userId, int days) {
+    final start = DateTime.now().subtract(Duration(days: days));
+    return (select(weightLogs)
+          ..where((t) => t.userId.equals(userId))
+          ..where((t) => t.measuredAt.isBiggerOrEqualValue(start))
+          ..orderBy([(t) => OrderingTerm.desc(t.measuredAt)]))
+        .watch();
+  }
+
+  Stream<JournalEntry?> watchTodayMood(String userId) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    return (select(journalEntries)
+          ..where((t) => t.userId.equals(userId))
+          ..where((t) => t.createdAt.isBiggerOrEqualValue(today))
+          ..orderBy([(t) => OrderingTerm.desc(t.createdAt)])
+          ..limit(1))
+        .watchSingleOrNull();
+  }
+
+  Stream<List<JournalEntry>> watchMoodHistory(String userId, int days) {
+    final start = DateTime.now().subtract(Duration(days: days));
+    return (select(journalEntries)
+          ..where((t) => t.userId.equals(userId))
+          ..where((t) => t.createdAt.isBiggerOrEqualValue(start))
+          ..orderBy([(t) => OrderingTerm.desc(t.createdAt)]))
+        .watch();
+  }
+
+  Stream<List<Festival>> watchActiveFestivals(DateTime date) {
+    return (select(festivals)
+          ..where((t) => t.startDate.isSmallerOrEqualValue(date))
+          ..where((t) => t.endDate.isBiggerOrEqualValue(date)))
+        .watch();
+  }
+
+  Stream<List<Festival>> watchUpcomingFestivals(DateTime from, int days) {
+    final end = from.add(Duration(days: days));
+    return (select(festivals)
+          ..where((t) => t.startDate.isBiggerOrEqualValue(from))
+          ..where((t) => t.startDate.isSmallerOrEqualValue(end))
+          ..orderBy([(t) => OrderingTerm.asc(t.startDate)]))
+        .watch();
+  }
+
+  Future<Festival?> getFestivalByKey(String id) {
+    return (select(festivals)..where((t) => t.id.equals(id))).getSingleOrNull();
+  }
+
+  Stream<WeddingPlan?> watchActiveWeddingPlan(String userId) {
+    return (select(weddingPlans)
+          ..where((t) => t.userId.equals(userId))
+          ..orderBy([(t) => OrderingTerm.desc(t.firstEventTs)])
+          ..limit(1))
+        .watchSingleOrNull();
   }
 
   // --- Generic Sync Queries ---

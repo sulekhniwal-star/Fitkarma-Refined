@@ -1,12 +1,28 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'steps_provider.dart';
+part of 'mood_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$stepHistoryHash() => r'59802f7f292e5c73af9e4cf4677cdab490cfcfa1';
+String _$todayMoodHash() => r'e20c2c270b22afbb5ed026ad1a537dc8672808d4';
+
+/// See also [todayMood].
+@ProviderFor(todayMood)
+final todayMoodProvider = AutoDisposeStreamProvider<JournalEntry?>.internal(
+  todayMood,
+  name: r'todayMoodProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$todayMoodHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef TodayMoodRef = AutoDisposeStreamProviderRef<JournalEntry?>;
+String _$moodHistoryHash() => r'927a69bf1001795bd3c3377a73593ffe00ac87f9';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -29,27 +45,27 @@ class _SystemHash {
   }
 }
 
-/// See also [stepHistory].
-@ProviderFor(stepHistory)
-const stepHistoryProvider = StepHistoryFamily();
+/// See also [moodHistory].
+@ProviderFor(moodHistory)
+const moodHistoryProvider = MoodHistoryFamily();
 
-/// See also [stepHistory].
-class StepHistoryFamily extends Family<AsyncValue<List<StepCount>>> {
-  /// See also [stepHistory].
-  const StepHistoryFamily();
+/// See also [moodHistory].
+class MoodHistoryFamily extends Family<AsyncValue<List<JournalEntry>>> {
+  /// See also [moodHistory].
+  const MoodHistoryFamily();
 
-  /// See also [stepHistory].
-  StepHistoryProvider call(
+  /// See also [moodHistory].
+  MoodHistoryProvider call(
     int days,
   ) {
-    return StepHistoryProvider(
+    return MoodHistoryProvider(
       days,
     );
   }
 
   @override
-  StepHistoryProvider getProviderOverride(
-    covariant StepHistoryProvider provider,
+  MoodHistoryProvider getProviderOverride(
+    covariant MoodHistoryProvider provider,
   ) {
     return call(
       provider.days,
@@ -68,32 +84,33 @@ class StepHistoryFamily extends Family<AsyncValue<List<StepCount>>> {
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'stepHistoryProvider';
+  String? get name => r'moodHistoryProvider';
 }
 
-/// See also [stepHistory].
-class StepHistoryProvider extends AutoDisposeStreamProvider<List<StepCount>> {
-  /// See also [stepHistory].
-  StepHistoryProvider(
+/// See also [moodHistory].
+class MoodHistoryProvider
+    extends AutoDisposeStreamProvider<List<JournalEntry>> {
+  /// See also [moodHistory].
+  MoodHistoryProvider(
     int days,
   ) : this._internal(
-          (ref) => stepHistory(
-            ref as StepHistoryRef,
+          (ref) => moodHistory(
+            ref as MoodHistoryRef,
             days,
           ),
-          from: stepHistoryProvider,
-          name: r'stepHistoryProvider',
+          from: moodHistoryProvider,
+          name: r'moodHistoryProvider',
           debugGetCreateSourceHash:
               const bool.fromEnvironment('dart.vm.product')
                   ? null
-                  : _$stepHistoryHash,
-          dependencies: StepHistoryFamily._dependencies,
+                  : _$moodHistoryHash,
+          dependencies: MoodHistoryFamily._dependencies,
           allTransitiveDependencies:
-              StepHistoryFamily._allTransitiveDependencies,
+              MoodHistoryFamily._allTransitiveDependencies,
           days: days,
         );
 
-  StepHistoryProvider._internal(
+  MoodHistoryProvider._internal(
     super._createNotifier, {
     required super.name,
     required super.dependencies,
@@ -107,12 +124,12 @@ class StepHistoryProvider extends AutoDisposeStreamProvider<List<StepCount>> {
 
   @override
   Override overrideWith(
-    Stream<List<StepCount>> Function(StepHistoryRef provider) create,
+    Stream<List<JournalEntry>> Function(MoodHistoryRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
-      override: StepHistoryProvider._internal(
-        (ref) => create(ref as StepHistoryRef),
+      override: MoodHistoryProvider._internal(
+        (ref) => create(ref as MoodHistoryRef),
         from: from,
         name: null,
         dependencies: null,
@@ -124,13 +141,13 @@ class StepHistoryProvider extends AutoDisposeStreamProvider<List<StepCount>> {
   }
 
   @override
-  AutoDisposeStreamProviderElement<List<StepCount>> createElement() {
-    return _StepHistoryProviderElement(this);
+  AutoDisposeStreamProviderElement<List<JournalEntry>> createElement() {
+    return _MoodHistoryProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is StepHistoryProvider && other.days == days;
+    return other is MoodHistoryProvider && other.days == days;
   }
 
   @override
@@ -144,49 +161,34 @@ class StepHistoryProvider extends AutoDisposeStreamProvider<List<StepCount>> {
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin StepHistoryRef on AutoDisposeStreamProviderRef<List<StepCount>> {
+mixin MoodHistoryRef on AutoDisposeStreamProviderRef<List<JournalEntry>> {
   /// The parameter `days` of this provider.
   int get days;
 }
 
-class _StepHistoryProviderElement
-    extends AutoDisposeStreamProviderElement<List<StepCount>>
-    with StepHistoryRef {
-  _StepHistoryProviderElement(super.provider);
+class _MoodHistoryProviderElement
+    extends AutoDisposeStreamProviderElement<List<JournalEntry>>
+    with MoodHistoryRef {
+  _MoodHistoryProviderElement(super.provider);
 
   @override
-  int get days => (origin as StepHistoryProvider).days;
+  int get days => (origin as MoodHistoryProvider).days;
 }
 
-String _$adaptiveGoalHash() => r'04811745ff5aabe6047697ce8d52bceafaf88860';
+String _$moodNotifierHash() => r'8d0162fcecd06e87b5d44f91d5471510aacb1c7d';
 
-/// See also [adaptiveGoal].
-@ProviderFor(adaptiveGoal)
-final adaptiveGoalProvider = AutoDisposeProvider<double>.internal(
-  adaptiveGoal,
-  name: r'adaptiveGoalProvider',
+/// See also [MoodNotifier].
+@ProviderFor(MoodNotifier)
+final moodNotifierProvider =
+    AutoDisposeNotifierProvider<MoodNotifier, void>.internal(
+  MoodNotifier.new,
+  name: r'moodNotifierProvider',
   debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$adaptiveGoalHash,
+      const bool.fromEnvironment('dart.vm.product') ? null : _$moodNotifierHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef AdaptiveGoalRef = AutoDisposeProviderRef<double>;
-String _$stepsHash() => r'f6a28e515985576099d60b7c870a967340b64dbb';
-
-/// See also [Steps].
-@ProviderFor(Steps)
-final stepsProvider = AutoDisposeStreamNotifierProvider<Steps, int>.internal(
-  Steps.new,
-  name: r'stepsProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$stepsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$Steps = AutoDisposeStreamNotifier<int>;
+typedef _$MoodNotifier = AutoDisposeNotifier<void>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

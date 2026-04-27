@@ -376,43 +376,43 @@
 
 ### 6.8 Fasting
 
-- [ ] `FastingTimerNotifier` — manages start/pause/stop with `Stopwatch`
-- [ ] `fastingStageProvider` — computes current stage from elapsed hours
-- [ ] `activeFastProvider` — persists timer state across app restarts (store start time in `flutter_secure_storage`)
+- [x] `FastingTimerNotifier` — manages start/pause/stop with `Stopwatch`
+- [x] `fastingStageProvider` — computes current stage from elapsed hours
+- [x] `activeFastProvider` — persists timer state across app restarts (store start time in `flutter_secure_storage`)
 
 ### 6.9 Body Metrics
 
-- [ ] `bodyMetricsProvider` — latest weight, BMI from user profile
-- [ ] `weightHistoryProvider(int days)`
-- [ ] `BodyMetricsNotifier.logWeight(double kg)`
+- [x] `bodyMetricsProvider` — latest weight, BMI from user profile
+- [x] `weightHistoryProvider(int days)`
+- [x] `BodyMetricsNotifier.logWeight(double kg)`
 
 ### 6.10 Mood
 
-- [ ] `MoodNotifier` — stores mood entry to `journal` table (moodScore + moodEmoji + tags)
-- [ ] `todayMoodProvider` — today's logged mood if exists
-- [ ] `moodHistoryProvider(int days)` — for 7-day heatmap
+- [x] `MoodNotifier` — stores mood entry to `journal` table (moodScore + moodEmoji + tags)
+- [x] `todayMoodProvider` — today's logged mood if exists
+- [x] `moodHistoryProvider(int days)` — for 7-day heatmap
 
 ### 6.11 Journal
 
-- [ ] `JournalNotifier` — CRUD for `journal_entries`
-- [ ] `JournalNotifier.createEntry(title, body, moodScore, tags)`
-- [ ] `journalEntriesProvider` — paginated list
-- [ ] `journalPromptProvider` — generates prompt from logged data patterns
+- [x] `JournalNotifier` — CRUD for `journal_entries`
+- [x] `JournalNotifier.createEntry(title, body, moodScore, tags)`
+- [x] `journalEntriesProvider` — paginated list
+- [x] `journalPromptProvider` — generates prompt from logged data patterns
 
 ### 6.12 Festival
 
-- [ ] `activeFestivalProvider` — queries `festivals` by current timestamp range
-- [ ] `upcomingFestivalsProvider` — next 30 days
-- [ ] `festivalDietProvider(String festivalKey)` — diet plan for specific festival
-- [ ] `userFestivalFilterProvider` — user's religion/region preference for filtering
+- [x] `activeFestivalProvider` — queries `festivals` by current timestamp range
+- [x] `upcomingFestivalsProvider` — next 30 days
+- [x] `festivalDietProvider(String festivalKey)` — diet plan for specific festival
+- [x] `userFestivalFilterProvider` — user's religion/region preference for filtering
 
 ### 6.13 Wedding
 
-- [ ] `WeddingPlanNotifier` — CRUD for `WeddingPlans` Drift table
-- [ ] `WeddingPlanNotifier.createPlan(role, dates, events, prepWeeks, goal)`
-- [ ] `activeWeddingPlanProvider` — current user's active wedding plan
-- [ ] `weddingPhaseProvider` — computes current phase (pre/wedding week/post)
-- [ ] `weddingEventDietProvider(String eventKey)` — per-event meal plan
+- [x] `WeddingPlanNotifier` — CRUD for `WeddingPlans` Drift table
+- [x] `WeddingPlanNotifier.createPlan(role, dates, events, prepWeeks, goal)`
+- [x] `activeWeddingPlanProvider` — current user's active wedding plan
+- [x] `weddingPhaseProvider` — computes current phase (pre/wedding week/post)
+- [x] `weddingEventDietProvider(String eventKey)` — per-event meal plan
 
 ### 6.14 Social
 
