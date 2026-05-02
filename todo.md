@@ -444,10 +444,10 @@
 
 ### 6.17 Correlation Engine
 
-- [ ] `CorrelationEngine.sleepMoodInsight(userId)` — requires 14+ days both datasets
-- [ ] `CorrelationEngine.foodGlucoseInsight(userId)` — post-meal glucose vs food
-- [ ] `CorrelationEngine.stepsEnergyInsight(userId)` — steps vs mood score
-- [ ] `dashboardInsightProvider` — selects best available insight for the day
+- [x] `CorrelationEngine.sleepMoodInsight(userId)` — requires 14+ days both datasets
+- [x] `CorrelationEngine.foodGlucoseInsight(userId)` — post-meal glucose vs food
+- [x] `CorrelationEngine.stepsEnergyInsight(userId)` — steps vs mood score
+- [x] `dashboardInsightProvider` — selects best available insight for the day
 
 ---
 

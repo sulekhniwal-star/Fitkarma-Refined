@@ -41,7 +41,7 @@ final class CorrelationEngineProvider
   }
 }
 
-String _$correlationEngineHash() => r'5a3726d06444d0217935a6598ab4052c88d94c64';
+String _$correlationEngineHash() => r'4d617294e57572f1b7ce04256c90fd8a3ca00300';
 
 abstract class _$CorrelationEngine extends $Notifier<bool> {
   bool build();
@@ -86,4 +86,4 @@ final class DashboardInsightProvider
   }
 }
 
-String _$dashboardInsightHash() => r'e0ca71243f2540b58c6a23049c9952a8f4109085';
+String _$dashboardInsightHash() => r'e735a2f9286283eb4442d7c8f4d6c05c1802a793';
