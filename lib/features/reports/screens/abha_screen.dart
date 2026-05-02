@@ -10,6 +10,7 @@ import '../../../shared/widgets/glass_card.dart';
 import '../../../shared/widgets/status_widgets.dart';
 import '../../auth/providers/auth_provider.dart';
 import '../../../core/providers/core_providers.dart';
+import '../providers/abha_provider.dart';
 
 // ── ABHA link state ────────────────────────────────────────────────────────────
 
@@ -34,7 +35,6 @@ class ABHAScreen extends ConsumerStatefulWidget {
 
 class _ABHAScreenState extends ConsumerState<ABHAScreen> {
   _ABHAStep _step = _ABHAStep.idle;
-  bool _abhaLinked = false;
   String _maskedAbha = '';
   bool _loading = false;
   String? _error;
@@ -78,6 +78,7 @@ class _ABHAScreenState extends ConsumerState<ABHAScreen> {
       );
       setState(() { _step = _ABHAStep.enterOtp; _loading = false; });
     } catch (_) {
+      // For demo, proceed anyway
       setState(() { _step = _ABHAStep.enterOtp; _loading = false; });
     }
   }
@@ -92,37 +93,18 @@ class _ABHAScreenState extends ConsumerState<ABHAScreen> {
     setState(() { _loading = true; _error = null; });
 
     try {
-      final user = ref.read(authProvider).asData?.value;
-      if (user == null) throw Exception('Not logged in');
-
       final raw = _abhaCtrl.text.replaceAll(RegExp(r'\D'), '');
-      final functions = ref.read(appwriteFunctionsProvider);
-      await functions.createExecution(
-        functionId: 'fitkarma-core',
-        body: jsonEncode({
-          'action': 'abha-verify',
-          'userId': user.$id,
-          'abhaId': raw,
-          'otp': otp,
-        }),
-      );
-
+      await ref.read(aBHANotifierProvider.notifier).linkAccount(raw, otp);
+      
       final masked = '${raw.substring(0, 2)}-****-****-${raw.substring(10)}';
       setState(() {
-        _abhaLinked = true;
         _maskedAbha = masked;
         _step = _ABHAStep.linked;
         _loading = false;
       });
-    } catch (_) {
-      final raw = _abhaCtrl.text.replaceAll(RegExp(r'\D'), '');
-      final masked = raw.length >= 14
-          ? '${raw.substring(0, 2)}-****-****-${raw.substring(10)}'
-          : 'XX-****-****-XXXX';
+    } catch (e) {
       setState(() {
-        _abhaLinked = true;
-        _maskedAbha = masked;
-        _step = _ABHAStep.linked;
+        _error = e.toString();
         _loading = false;
       });
     }
@@ -136,11 +118,14 @@ class _ABHAScreenState extends ConsumerState<ABHAScreen> {
     final bg1 = isDark ? AppColorsDark.bg1 : AppColorsLight.bg1;
     final divider = isDark ? AppColorsDark.divider : AppColorsLight.divider;
 
+    final abhaLinked = ref.watch(aBHANotifierProvider).value ?? false;
+
     return Scaffold(
       backgroundColor: bg1,
       appBar: AppBar(
         backgroundColor: bg1,
         elevation: 0,
+        centerTitle: false,
         leading: GestureDetector(
           onTap: () => context.pop(),
           child: Icon(Icons.arrow_back_ios_new_rounded,
@@ -161,7 +146,7 @@ class _ABHAScreenState extends ConsumerState<ABHAScreen> {
         children: [
           // ── ABHALinkBadge large ───────────────────────────────
           _ABHALinkBadgeLarge(
-            isLinked: _abhaLinked,
+            isLinked: abhaLinked,
             maskedId: _maskedAbha,
             isDark: isDark,
             text0: text0,
@@ -170,7 +155,7 @@ class _ABHAScreenState extends ConsumerState<ABHAScreen> {
           const SizedBox(height: 20),
 
           // ── Link flow ─────────────────────────────────────────
-          if (!_abhaLinked) ...[
+          if (!abhaLinked) ...[
             if (_step == _ABHAStep.idle || _step == _ABHAStep.enterAbha)
               _BenefitsCard(isDark: isDark, text0: text0, text2: text2),
             const SizedBox(height: 16),
@@ -193,7 +178,7 @@ class _ABHAScreenState extends ConsumerState<ABHAScreen> {
           ],
 
           // ── Linked records list ───────────────────────────────
-          if (_abhaLinked) ...[
+          if (abhaLinked) ...[
             Text('Linked Records',
                 style: AppTypography.h4(color: text0)),
             const SizedBox(height: 10),

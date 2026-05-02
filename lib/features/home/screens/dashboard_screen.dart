@@ -15,6 +15,7 @@ import '../../../shared/widgets/glass_card.dart';
 import '../../../shared/widgets/karma_widgets.dart';
 import '../../../shared/widgets/quick_log_fab.dart';
 import '../../../shared/widgets/status_widgets.dart';
+import '../../reports/providers/abha_provider.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({super.key});
@@ -31,6 +32,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final uxStage = ref.watch(uxStageProvider);
     final isFirstWeek = uxStage == UXStage.firstWeek;
+    final abhaLinked = ref.watch(aBHANotifierProvider).value ?? false;
 
     final text0 = isDark ? AppColorsDark.textPrimary : AppColorsLight.textPrimary;
     final text2 = isDark ? AppColorsDark.textMuted : AppColorsLight.textMuted;
@@ -113,7 +115,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           ),
 
                           // ABHA compact badge (only when not linked)
-                          const ABHALinkBadge(isLinked: false, compact: true),
+                          ABHALinkBadge(isLinked: abhaLinked, compact: true),
                         ],
                       ),
                     ),

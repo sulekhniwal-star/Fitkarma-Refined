@@ -443,3 +443,52 @@ class _SentimentCard extends StatelessWidget {
     );
   }
 }
+// ── Entry Detail Screen (Placeholder) ─────────────────────────────────────────
+
+class _EntryDetailScreen extends StatelessWidget {
+  final dynamic entry;
+  const _EntryDetailScreen({required this.entry});
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final text0 = isDark ? AppColorsDark.textPrimary : AppColorsLight.textPrimary;
+    final text2 = isDark ? AppColorsDark.textMuted : AppColorsLight.textMuted;
+    final bg1 = isDark ? AppColorsDark.bg1 : AppColorsLight.bg1;
+
+    return Scaffold(
+      backgroundColor: bg1,
+      appBar: AppBar(
+        backgroundColor: bg1,
+        elevation: 0,
+        leading: GestureDetector(
+          onTap: () => Navigator.pop(context),
+          child: Icon(Icons.arrow_back_ios_new_rounded,
+              size: 20, color: text2),
+        ),
+        title: Text('Entry Detail', style: AppTypography.h3(color: text0)),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(AppSpacing.screenH),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Mood: ${entry.moodEmoji ?? 'None'}',
+              style: AppTypography.bodyLg(color: text0),
+            ),
+            const SizedBox(height: 16),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Text(
+                  entry.body, // In real app, render Quill
+                  style: AppTypography.bodyMd(color: text0),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

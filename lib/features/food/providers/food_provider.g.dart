@@ -91,7 +91,7 @@ final class FoodLogNotifierProvider
   }
 }
 
-String _$foodLogNotifierHash() => r'a8df1a3348d8d53f7bbc2cae71661a8c6d4d25a0';
+String _$foodLogNotifierHash() => r'5e52aada973f9d2c5dbaaa3511d2e2bfd519764d';
 
 final class FoodLogNotifierFamily extends $Family
     with

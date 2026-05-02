@@ -50,50 +50,50 @@
 
 ### 1.1 Flutter Project Init
 
-- [x] `flutter create fitkarma --org com.fitkarma --platforms android,ios`
-- [x] Set `minSdkVersion 26` in `android/app/build.gradle` (Health Connect requires API 26+)
-- [x] Set iOS deployment target to 14.0 in `ios/Podfile`
-- [x] Add all dependencies to `pubspec.yaml` (30+ packages as per §18)
-- [x] Run `flutter pub get`
-- [x] Run initial `dart run build_runner build --delete-conflicting-outputs`
-- [x] Commit baseline with passing `flutter analyze`
+- [ ] `flutter create fitkarma --org com.fitkarma --platforms android,ios`
+- [ ] Set `minSdkVersion 26` in `android/app/build.gradle` (Health Connect requires API 26+)
+- [ ] Set iOS deployment target to 14.0 in `ios/Podfile`
+- [ ] Add all dependencies to `pubspec.yaml` (30+ packages as per §18)
+- [ ] Run `flutter pub get`
+- [ ] Run initial `dart run build_runner build --delete-conflicting-outputs`
+- [ ] Commit baseline with passing `flutter analyze`
 
 ### 1.2 Appwrite CLI Bootstrap
 
-- [x] Install Appwrite CLI (`curl -sL https://appwrite.io/cli/install.sh | bash`)
-- [x] `appwrite login` (interactive, store session)
-- [x] `appwrite init project` — create `appwrite.json` in repo root
-- [x] Commit `appwrite.json`
+- [ ] Install Appwrite CLI (`curl -sL https://appwrite.io/cli/install.sh | bash`)
+- [ ] `appwrite login` (interactive, store session)
+- [ ] `appwrite init project` — create `appwrite.json` in repo root
+- [ ] Commit `appwrite.json`
 
 ### 1.3 Environment & Secrets
 
-- [x] Create `.env.local` with `APPWRITE_ENDPOINT`, `APPWRITE_PROJECT_ID`, `APPWRITE_DB_ID`
-- [x] Add `.env.local` to `.gitignore`
-- [x] Configure `AppConfig` dart-define values (§23.2)
+- [ ] Create `.env.local` with `APPWRITE_ENDPOINT`, `APPWRITE_PROJECT_ID`, `APPWRITE_DB_ID`
+- [ ] Add `.env.local` to `.gitignore`
+- [ ] Configure `AppConfig` dart-define values (§23.2)
 - [ ] Add GitHub Actions secrets: `APPWRITE_ENDPOINT`, `APPWRITE_PROJECT_ID`, `APPWRITE_API_KEY`
 - [ ] Add GitHub Actions secrets: `ABHA_CLIENT_ID`, `ABHA_CLIENT_SECRET`
 
 ### 1.4 Android Manifest
 
-- [x] `INTERNET` permission
-- [x] `ACCESS_NETWORK_STATE` permission
-- [x] `health.READ_STEPS` permission
-- [x] `health.READ_HEART_RATE` permission
-- [x] `health.READ_SLEEP_SESSION` permission
-- [x] `ACCESS_FINE_LOCATION` permission (GPS workouts)
-- [x] `ACCESS_COARSE_LOCATION` permission
-- [x] Health Connect `<queries>` package declaration
-- [x] Home widget `<receiver>` declaration for `StepsWidgetProvider`
-- [x] Home widget `<meta-data>` pointing to `@xml/steps_widget_info`
+- [ ] `INTERNET` permission
+- [ ] `ACCESS_NETWORK_STATE` permission
+- [ ] `health.READ_STEPS` permission
+- [ ] `health.READ_HEART_RATE` permission
+- [ ] `health.READ_SLEEP_SESSION` permission
+- [ ] `ACCESS_FINE_LOCATION` permission (GPS workouts)
+- [ ] `ACCESS_COARSE_LOCATION` permission
+- [ ] Health Connect `<queries>` package declaration
+- [ ] Home widget `<receiver>` declaration for `StepsWidgetProvider`
+- [ ] Home widget `<meta-data>` pointing to `@xml/steps_widget_info`
 
 ### 1.5 iOS `Info.plist`
 
-- [x] `NSHealthShareUsageDescription`
-- [x] `NSHealthUpdateUsageDescription`
-- [x] `NSLocationWhenInUseUsageDescription`
-- [x] `NSCameraUsageDescription` (OCR lab scan)
-- [x] `NSPhotoLibraryUsageDescription`
-- [x] `NSFaceIDUsageDescription` (biometric lock)
+- [ ] `NSHealthShareUsageDescription`
+- [ ] `NSHealthUpdateUsageDescription`
+- [ ] `NSLocationWhenInUseUsageDescription`
+- [ ] `NSCameraUsageDescription` (OCR lab scan)
+- [ ] `NSPhotoLibraryUsageDescription`
+- [ ] `NSFaceIDUsageDescription` (biometric lock)
 
 ---
 
@@ -101,51 +101,51 @@
 
 ### 2.1 Theme System — `lib/core/theme/`
 
-- [x] `app_colors.dart` — `AppColorsDark` class (all 24 dark tokens)
-- [x] `app_colors.dart` — `AppColorsLight` class (all 14 light tokens)
-- [x] `app_typography.dart` — all 17 named `TextStyle` builders
-- [x] `app_typography.dart` — `darkTextTheme()` and `lightTextTheme()` wired to `ThemeData`
-- [x] `app_spacing.dart` — `AppSpacing` and `AppRadius` constants
-- [x] `app_gradients.dart` — `heroDeep`, `heroSleep`, `heroFestival`, `heroWedding`, `heroPrimary`, `glassHero`
-- [x] `app_springs.dart` — `light`, `standard`, `dramatic` spring descriptions
-- [x] `app_theme.dart` — `AppTheme.dark()` full `ThemeData`
-- [x] `app_theme.dart` — `AppTheme.light()` full `ThemeData`
+- [ ] `app_colors.dart` — `AppColorsDark` class (all 24 dark tokens)
+- [ ] `app_colors.dart` — `AppColorsLight` class (all 14 light tokens)
+- [ ] `app_typography.dart` — all 17 named `TextStyle` builders
+- [ ] `app_typography.dart` — `darkTextTheme()` and `lightTextTheme()` wired to `ThemeData`
+- [ ] `app_spacing.dart` — `AppSpacing` and `AppRadius` constants
+- [ ] `app_gradients.dart` — `heroDeep`, `heroSleep`, `heroFestival`, `heroWedding`, `heroPrimary`, `glassHero`
+- [ ] `app_springs.dart` — `light`, `standard`, `dramatic` spring descriptions
+- [ ] `app_theme.dart` — `AppTheme.dark()` full `ThemeData`
+- [ ] `app_theme.dart` — `AppTheme.light()` full `ThemeData`
 
 ### 2.2 Configuration — `lib/core/config/`
 
-- [x] `app_config.dart` — dart-define constants for endpoint, project ID, DB ID
-- [x] `device_tier.dart` — `DeviceTier` enum (`low`, `mid`, `high`)
-- [x] `user_experience_stage.dart` — `UXStage` enum + `getUXStage(DateTime)` function
+- [ ] `app_config.dart` — dart-define constants for endpoint, project ID, DB ID
+- [ ] `device_tier.dart` — `DeviceTier` enum (`low`, `mid`, `high`)
+- [ ] `user_experience_stage.dart` — `UXStage` enum + `getUXStage(DateTime)` function
 
 ### 2.3 Providers — `lib/core/providers/`
 
-- [x] `core_providers.dart` — `appwriteClientProvider` (singleton `Client`)
-- [x] `core_providers.dart` — `appwriteAccountProvider`
-- [x] `core_providers.dart` — `appwriteDatabasesProvider`
-- [x] `core_providers.dart` — `appwriteStorageProvider`
-- [x] `core_providers.dart` — `appDatabaseProvider` (override in `ProviderScope`)
-- [x] `device_tier_provider.dart` — `deviceTierProvider`
-- [x] `ux_stage_provider.dart` — `uxStageProvider` (mocked for now)
-- [x] `low_data_mode_provider.dart` — `LowDataModeNotifier` + `lowDataModeProvider`
+- [ ] `core_providers.dart` — `appwriteClientProvider` (singleton `Client`)
+- [ ] `core_providers.dart` — `appwriteAccountProvider`
+- [ ] `core_providers.dart` — `appwriteDatabasesProvider`
+- [ ] `core_providers.dart` — `appwriteStorageProvider`
+- [ ] `core_providers.dart` — `appDatabaseProvider` (override in `ProviderScope`)
+- [ ] `device_tier_provider.dart` — `deviceTierProvider`
+- [ ] `ux_stage_provider.dart` — `uxStageProvider` (mocked for now)
+- [ ] `low_data_mode_provider.dart` — `LowDataModeNotifier` + `lowDataModeProvider`
 
 ### 2.4 Router — `lib/core/router/`
 
-- [x] `app_router.dart` — `GoRouter` with all 25 registered routes
-- [x] `app_router.dart` — `redirect` guard: unauthenticated → `/auth/login`, authenticated + auth screen → `/home/dashboard`
-- [x] `transitions.dart` — `VerticalSlideTransition` (fade + 6% Y shift, 320ms)
-- [x] `transitions.dart` — `CardTapAnimation` widget (scale 1.0 → 0.97 → 1.0)
+- [ ] `app_router.dart` — `GoRouter` with all 25 registered routes
+- [ ] `app_router.dart` — `redirect` guard: unauthenticated → `/auth/login`, authenticated + auth screen → `/home/dashboard`
+- [ ] `transitions.dart` — `VerticalSlideTransition` (fade + 6% Y shift, 320ms)
+- [ ] `transitions.dart` — `CardTapAnimation` widget (scale 1.0 → 0.97 → 1.0)
 
 ### 2.5 Security — `lib/core/security/`
 
-- [x] `biometric_service.dart` — `BiometricService.authenticate()` with `local_auth`
-- [x] `sensitive_screen_guard.dart` — `SensitiveScreenGuard` wrapper widget
+- [ ] `biometric_service.dart` — `BiometricService.authenticate()` with `local_auth`
+- [ ] `sensitive_screen_guard.dart` — `SensitiveScreenGuard` wrapper widget
 
 ### 2.6 Database — `lib/core/storage/`
 
-- [x] `app_database.dart` — `AppDatabase` class annotated with `@DriftDatabase`
-- [x] `app_database.dart` — `openConnection` with SQLCipher + secure key
-- [x] `app_database.dart` — schema version + `MigrationStrategy`
-- [x] Run `dart run build_runner build` to generate `app_database.g.dart`
+- [ ] `app_database.dart` — `AppDatabase` class annotated with `@DriftDatabase`
+- [ ] `app_database.dart` — `openConnection` with SQLCipher + secure key
+- [ ] `app_database.dart` — schema version + `MigrationStrategy`
+- [ ] Run `dart run build_runner build` to generate `app_database.g.dart`
 
 ---
 
@@ -153,85 +153,85 @@
 
 ### 3.1 Database
 
-- [x] `appwrite databases create --databaseId "fitkarma-db" --name "FitKarma Database"`
+- [ ] `appwrite databases create --databaseId "fitkarma-db" --name "FitKarma Database"`
 
 ### 3.2 Collections — Creation
 
-- [x] `users` collection
-- [x] `food_logs` collection
-- [x] `bp_readings` collection
-- [x] `glucose_readings` collection
-- [x] `sleep_logs` collection
-- [x] `workouts` collection
-- [x] `habits` collection
-- [x] `journal` collection
-- [x] `lab_reports` collection
-- [x] `karma_events` collection
-- [x] `festivals` collection
-- [x] `medications` collection
-- [x] `water_logs` collection
-- [x] `social_posts` collection
-- [x] `groups` collection
-- [x] `share_tokens` collection *(used by report-share function)*
-- [x] `wedding_plans` collection *(derived from Drift tables — add remote collection)*
+- [ ] `users` collection
+- [ ] `food_logs` collection
+- [ ] `bp_readings` collection
+- [ ] `glucose_readings` collection
+- [ ] `sleep_logs` collection
+- [ ] `workouts` collection
+- [ ] `habits` collection
+- [ ] `journal` collection
+- [ ] `lab_reports` collection
+- [ ] `karma_events` collection
+- [ ] `festivals` collection
+- [ ] `medications` collection
+- [ ] `water_logs` collection
+- [ ] `social_posts` collection
+- [ ] `groups` collection
+- [ ] `share_tokens` collection *(used by report-share function)*
+- [ ] `wedding_plans` collection *(derived from Drift tables — add remote collection)*
 
 ### 3.3 Collections — Attributes (run all CLI attribute commands per §24.3)
 
-- [x] All `users` attributes (16 fields: userId, name, email, gender, dob, heightCm, weightKg, bloodGroup, fitnessGoal, activityLevel, dominantDosha, language, abhaId, abhaLinked, karmaLevel, karmaXP, conditions, firstLaunchTs)
-- [x] All `food_logs` attributes (15 fields)
-- [x] All `bp_readings` attributes (10 fields)
-- [x] All `glucose_readings` attributes (9 fields)
-- [x] All `sleep_logs` attributes (9 fields)
-- [x] All `workouts` attributes (12 fields)
-- [x] All `habits` attributes (9 fields)
-- [x] All `journal` attributes (10 fields)
-- [x] All `lab_reports` attributes (8 fields)
-- [x] All `karma_events` attributes (5 fields)
-- [x] All `festivals` attributes (10 fields)
-- [x] All `medications` attributes (8 fields)
-- [x] All `water_logs` attributes (4 fields)
-- [x] All `social_posts` attributes (7 fields)
-- [x] All `groups` attributes (5 fields)
-- [x] `share_tokens` attributes (token, reportId, userId, expiresAt, used)
+- [ ] All `users` attributes (16 fields: userId, name, email, gender, dob, heightCm, weightKg, bloodGroup, fitnessGoal, activityLevel, dominantDosha, language, abhaId, abhaLinked, karmaLevel, karmaXP, conditions, firstLaunchTs)
+- [ ] All `food_logs` attributes (15 fields)
+- [ ] All `bp_readings` attributes (10 fields)
+- [ ] All `glucose_readings` attributes (9 fields)
+- [ ] All `sleep_logs` attributes (9 fields)
+- [ ] All `workouts` attributes (12 fields)
+- [ ] All `habits` attributes (9 fields)
+- [ ] All `journal` attributes (10 fields)
+- [ ] All `lab_reports` attributes (8 fields)
+- [ ] All `karma_events` attributes (5 fields)
+- [ ] All `festivals` attributes (10 fields)
+- [ ] All `medications` attributes (8 fields)
+- [ ] All `water_logs` attributes (4 fields)
+- [ ] All `social_posts` attributes (7 fields)
+- [ ] All `groups` attributes (5 fields)
+- [ ] `share_tokens` attributes (token, reportId, userId, expiresAt, used)
 
 ### 3.4 Collections — Indexes
 
-- [x] `users` → `userId_idx` (unique, on `userId`)
-- [x] `food_logs` → `user_date_idx` (key, on `userId, loggedAt`)
-- [x] `bp_readings` → `user_time_idx` (key, on `userId, measuredAt`)
-- [x] `social_posts` → `feed_idx` (key, on `postedAt`)
-- [x] `festivals` → index on `startDate` (for range queries)
-- [x] `karma_events` → index on `userId, occurredAt`
+- [ ] `users` → `userId_idx` (unique, on `userId`)
+- [ ] `food_logs` → `user_date_idx` (key, on `userId, loggedAt`)
+- [ ] `bp_readings` → `user_time_idx` (key, on `userId, measuredAt`)
+- [ ] `social_posts` → `feed_idx` (key, on `postedAt`)
+- [ ] `festivals` → index on `startDate` (for range queries)
+- [ ] `karma_events` → index on `userId, occurredAt`
 
 ### 3.5 Storage Buckets
 
-- [x] Consolidated all buckets into `fitkarma-media` (20 MB max, PDF/JPG/PNG/MP4/MOV, encryption ON, antivirus ON, gzip ON)
-- [x] `lab-reports` → mapped to `fitkarma-media`
-- [x] `avatars` → mapped to `fitkarma-media`
-- [x] `social-media` → mapped to `fitkarma-media`
+- [ ] Consolidated all buckets into `fitkarma-media` (20 MB max, PDF/JPG/PNG/MP4/MOV, encryption ON, antivirus ON, gzip ON)
+- [ ] `lab-reports` → mapped to `fitkarma-media`
+- [ ] `avatars` → mapped to `fitkarma-media`
+- [ ] `social-media` → mapped to `fitkarma-media`
 
 ### 3.6 Appwrite Functions — Scaffolding
 
-- [x] Consolidated all functions into `fitkarma-core` (Dispatcher for XP, ABHA, and Sharing)
-- [x] `appwrite functions create --function-id "fitkarma-core" --name "FitKarma Core Dispatcher" --runtime "node-22"`
+- [ ] Consolidated all functions into `fitkarma-core` (Dispatcher for XP, ABHA, and Sharing)
+- [ ] `appwrite functions create --function-id "fitkarma-core" --name "FitKarma Core Dispatcher" --runtime "node-22"`
 
 ### 3.7 Function Environment Variables
 
-- [x] `fitkarma-core` → `ABHA_API_ENDPOINT` (Set to sandbox)
-- [x] `fitkarma-core` → `ABHA_CLIENT_ID` (Placeholder: REPLACE_ME)
-- [x] `fitkarma-core` → `ABHA_CLIENT_SECRET` (Placeholder: REPLACE_ME)
-- [x] `fitkarma-core` → `APP_BASE_URL` (Set to placeholder)
+- [ ] `fitkarma-core` → `ABHA_API_ENDPOINT` (Set to sandbox)
+- [ ] `fitkarma-core` → `ABHA_CLIENT_ID` (Placeholder: REPLACE_ME)
+- [ ] `fitkarma-core` → `ABHA_CLIENT_SECRET` (Placeholder: REPLACE_ME)
+- [ ] `fitkarma-core` → `APP_BASE_URL` (Set to placeholder)
 
 ### 3.8 Messaging Topics
 
-- [x] `appwrite messaging createTopic --topicId "health-reminders"`
-- [x] `appwrite messaging createTopic --topicId "karma-events"`
-- [x] `appwrite messaging createTopic --topicId "social-activity"`
+- [ ] `appwrite messaging createTopic --topicId "health-reminders"`
+- [ ] `appwrite messaging createTopic --topicId "karma-events"`
+- [ ] `appwrite messaging createTopic --topicId "social-activity"`
 
 ### 3.9 Platform Registration
 
-- [x] Register Android platform (`com.fitkarma.app`)
-- [x] Register iOS platform (`com.fitkarma.app`)
+- [ ] Register Android platform (`com.fitkarma.app`)
+- [ ] Register iOS platform (`com.fitkarma.app`)
 
 ### 3.10 Deploy
 
@@ -245,36 +245,36 @@
 
 ### 4.1 XP Calculator — `functions/xp-calculator/`
 
-- [x] `package.json` with `node-appwrite` dependency
-- [x] `src/main.js` — XP_TABLE constant (all 13 event types defined)
-- [x] `src/main.js` — Input validation (userId, eventType required)
-- [x] `src/main.js` — Create `karma_events` document
-- [x] `src/main.js` — Fetch user's current XP from `users` collection
-- [x] `src/main.js` — `_computeLevel(totalXP)` — all 13 level thresholds + names
-- [x] `src/main.js` — Update user `karmaXP` and `karmaLevel`
-- [x] `src/main.js` — Structured JSON response `{ ok, xpAwarded, totalXP, level }`
-- [x] `src/main.js` — Error logging via `error()` callback
+- [ ] `package.json` with `node-appwrite` dependency
+- [ ] `src/main.js` — XP_TABLE constant (all 13 event types defined)
+- [ ] `src/main.js` — Input validation (userId, eventType required)
+- [ ] `src/main.js` — Create `karma_events` document
+- [ ] `src/main.js` — Fetch user's current XP from `users` collection
+- [ ] `src/main.js` — `_computeLevel(totalXP)` — all 13 level thresholds + names
+- [ ] `src/main.js` — Update user `karmaXP` and `karmaLevel`
+- [ ] `src/main.js` — Structured JSON response `{ ok, xpAwarded, totalXP, level }`
+- [ ] `src/main.js` — Error logging via `error()` callback
 
 ### 4.2 ABHA Verify — `functions/abha-verify/`
 
-- [x] `package.json` with `node-appwrite` dependency
-- [x] `src/main.js` — ABHA ID format validation (14 digits, strips dashes)
-- [x] `src/main.js` — Step 1: Fetch ABDM OAuth2 token
-- [x] `src/main.js` — Step 1: POST OTP request to ABDM enrollment endpoint
-- [x] `src/main.js` — Step 2: Verify OTP (call ABDM verify endpoint)
-- [x] `src/main.js` — Step 2: Update `users` collection (`abhaId`, `abhaLinked: true`)
-- [x] `src/main.js` — Two-step response: `{ ok, step: 'otp_sent' }` and `{ ok, step: 'linked' }`
-- [x] `src/main.js` — Never log full ABHA ID — mask in logs
+- [ ] `package.json` with `node-appwrite` dependency
+- [ ] `src/main.js` — ABHA ID format validation (14 digits, strips dashes)
+- [ ] `src/main.js` — Step 1: Fetch ABDM OAuth2 token
+- [ ] `src/main.js` — Step 1: POST OTP request to ABDM enrollment endpoint
+- [ ] `src/main.js` — Step 2: Verify OTP (call ABDM verify endpoint)
+- [ ] `src/main.js` — Step 2: Update `users` collection (`abhaId`, `abhaLinked: true`)
+- [ ] `src/main.js` — Two-step response: `{ ok, step: 'otp_sent' }` and `{ ok, step: 'linked' }`
+- [ ] `src/main.js` — Never log full ABHA ID — mask in logs
 
 ### 4.3 Report Share — `functions/report-share/`
 
-- [x] `package.json` with `node-appwrite` dependency
-- [x] `src/main.js` — Input validation (reportId, userId required)
-- [x] `src/main.js` — `crypto.randomBytes(32).toString('hex')` token generation
-- [x] `src/main.js` — Compute `expiresAt` from `expiryHours` (default 168 = 7 days)
-- [x] `src/main.js` — Create `share_tokens` document
-- [x] `src/main.js` — Construct `shareUrl` from `APP_BASE_URL`
-- [x] `src/main.js` — Response `{ ok, shareUrl, expiresAt }`
+- [ ] `package.json` with `node-appwrite` dependency
+- [ ] `src/main.js` — Input validation (reportId, userId required)
+- [ ] `src/main.js` — `crypto.randomBytes(32).toString('hex')` token generation
+- [ ] `src/main.js` — Compute `expiresAt` from `expiryHours` (default 168 = 7 days)
+- [ ] `src/main.js` — Create `share_tokens` document
+- [ ] `src/main.js` — Construct `shareUrl` from `APP_BASE_URL`
+- [ ] `src/main.js` — Response `{ ok, shareUrl, expiresAt }`
 
 ---
 
@@ -282,32 +282,32 @@
 
 ### 5.1 Table Definitions — `lib/core/database/app_database.dart`
 
-- [x] `FoodLogs` table (id, userId, foodName, foodNameLocal, mealType, loggedAt, calories, proteinG, carbsG, fatG, portionUnit, portionQty, source, syncStatus, remoteId, failedAttempts)
-- [x] `BpReadings` table (id, userId, systolic, diastolic, pulse, measuredAt, notes, classification, syncStatus, remoteId, failedAttempts)
-- [x] `GlucoseReadings` table (id, userId, valueMgDl, readingType, measuredAt, classification, linkedFoodLogId, syncStatus, remoteId, failedAttempts)
-- [x] `SleepLogs` table (id, userId, sleepStart, sleepEnd, durationMinutes, qualityScore, source, syncStatus, remoteId, failedAttempts)
-- [x] `Workouts` table (id, userId, name, type, startedAt, durationMinutes, caloriesBurned, distanceKm, avgHeartRate, exercisesJson, syncStatus, remoteId, failedAttempts)
-- [x] `Habits` table (id, userId, name, icon, currentStreak, longestStreak, completedDates JSON, syncStatus, remoteId, failedAttempts)
-- [x] `JournalEntries` table (id, userId, title, body, moodEmoji, moodScore, tags JSON, createdAt, syncStatus, remoteId, failedAttempts)
-- [x] `WeddingPlans` table (id, userId, role, relation, firstEventTs, lastEventTs, eventsJson, prepWeeks, primaryGoal, currentPhase, syncStatus)
-- [x] `WeddingMealLogs` table (id, userId, planId, eventTag, timing, loggedAt, calories, notes, syncStatus)
-- [x] `@DriftDatabase(tables: [...])` annotation includes all tables
-- [x] `schemaVersion = 1`
-- [x] `MigrationStrategy` with `onCreate` and `onUpgrade` stubs
+- [ ] `FoodLogs` table (id, userId, foodName, foodNameLocal, mealType, loggedAt, calories, proteinG, carbsG, fatG, portionUnit, portionQty, source, syncStatus, remoteId, failedAttempts)
+- [ ] `BpReadings` table (id, userId, systolic, diastolic, pulse, measuredAt, notes, classification, syncStatus, remoteId, failedAttempts)
+- [ ] `GlucoseReadings` table (id, userId, valueMgDl, readingType, measuredAt, classification, linkedFoodLogId, syncStatus, remoteId, failedAttempts)
+- [ ] `SleepLogs` table (id, userId, sleepStart, sleepEnd, durationMinutes, qualityScore, source, syncStatus, remoteId, failedAttempts)
+- [ ] `Workouts` table (id, userId, name, type, startedAt, durationMinutes, caloriesBurned, distanceKm, avgHeartRate, exercisesJson, syncStatus, remoteId, failedAttempts)
+- [ ] `Habits` table (id, userId, name, icon, currentStreak, longestStreak, completedDates JSON, syncStatus, remoteId, failedAttempts)
+- [ ] `JournalEntries` table (id, userId, title, body, moodEmoji, moodScore, tags JSON, createdAt, syncStatus, remoteId, failedAttempts)
+- [ ] `WeddingPlans` table (id, userId, role, relation, firstEventTs, lastEventTs, eventsJson, prepWeeks, primaryGoal, currentPhase, syncStatus)
+- [ ] `WeddingMealLogs` table (id, userId, planId, eventTag, timing, loggedAt, calories, notes, syncStatus)
+- [ ] `@DriftDatabase(tables: [...])` annotation includes all tables
+- [ ] `schemaVersion = 1`
+- [ ] `MigrationStrategy` with `onCreate` and `onUpgrade` stubs
 
 ### 5.2 Database Queries — DAOs or extension methods
 
-- [x] `watchTodayFoodLogs(int userId, DateTime date)` — stream, filtered by date range
-- [x] `watchTodaySteps()` — from Health Connect, not Drift (but cache result)
-- [x] `getPendingRecords(TableInfo table)` — syncStatus = 'pending', failedAttempts < 3
-- [x] `getDLQRecords(TableInfo table)` — syncStatus = 'dlq'
-- [x] `markSynced(String localId, String remoteId, TableInfo table)`
-- [x] `incrementFailedAttempts(String localId, TableInfo table)`
-- [x] `watchHabitById(String id)` — stream for live habit detail
-- [x] `getJournalEntries(String userId, {int limit = 20})` — paginated
-- [x] `getBpHistory(String userId, int days)` — for chart
-- [x] `getGlucoseHistory(String userId, String readingType, int days)` — for chart
-- [x] `getSleepLogs(String userId, int days)` — for chart + debt calculation
+- [ ] `watchTodayFoodLogs(int userId, DateTime date)` — stream, filtered by date range
+- [ ] `watchTodaySteps()` — from Health Connect, not Drift (but cache result)
+- [ ] `getPendingRecords(TableInfo table)` — syncStatus = 'pending', failedAttempts < 3
+- [ ] `getDLQRecords(TableInfo table)` — syncStatus = 'dlq'
+- [ ] `markSynced(String localId, String remoteId, TableInfo table)`
+- [ ] `incrementFailedAttempts(String localId, TableInfo table)`
+- [ ] `watchHabitById(String id)` — stream for live habit detail
+- [ ] `getJournalEntries(String userId, {int limit = 20})` — paginated
+- [ ] `getBpHistory(String userId, int days)` — for chart
+- [ ] `getGlucoseHistory(String userId, String readingType, int days)` — for chart
+- [ ] `getSleepLogs(String userId, int days)` — for chart + debt calculation
 
 ---
 
@@ -315,153 +315,153 @@
 
 ### 6.1 Auth
 
-- [x] `AuthNotifier` — `build()` calls `account.get()`, returns `User?`
-- [x] `AuthNotifier.login(email, password)` — `createEmailPasswordSession`
-- [x] `AuthNotifier.register(name, email, password)` — `create` + session
-- [x] `AuthNotifier.loginWithGoogle()` — `createOAuth2Session`
-- [x] `AuthNotifier.logout()` — `deleteSession('current')`
+- [ ] `AuthNotifier` — `build()` calls `account.get()`, returns `User?`
+- [ ] `AuthNotifier.login(email, password)` — `createEmailPasswordSession`
+- [ ] `AuthNotifier.register(name, email, password)` — `create` + session
+- [ ] `AuthNotifier.loginWithGoogle()` — `createOAuth2Session`
+- [ ] `AuthNotifier.logout()` — `deleteSession('current')`
 
 ### 6.2 Food
 
-- [x] `FoodLogNotifier` — `build(DateTime date)` watches today's food logs from Drift
-- [x] `FoodLogNotifier.logFood(FoodLogsCompanion)` — local write first, then `_pushToRemote`
-- [x] `FoodLogNotifier._pushToRemote(String localId)` — (Handled by FoodRepository + SyncQueue)
-- [x] `todayCaloriesProvider` — narrow provider summing today's kcal
-- [x] `foodSearchProvider(String query)` — searches local DB + remote food API
+- [ ] `FoodLogNotifier` — `build(DateTime date)` watches today's food logs from Drift
+- [ ] `FoodLogNotifier.logFood(FoodLogsCompanion)` — local write first, then `_pushToRemote`
+- [ ] `FoodLogNotifier._pushToRemote(String localId)` — (Handled by FoodRepository + SyncQueue)
+- [ ] `todayCaloriesProvider` — narrow provider summing today's kcal
+- [ ] `foodSearchProvider(String query)` — searches local DB + remote food API
 
 ### 6.3 Health Metrics
 
-- [x] `BPNotifier` — CRUD for `bp_readings` with same optimistic pattern
-- [x] `BPNotifier.logReading(systolic, diastolic, pulse, notes)`
-- [x] `latestBpReadingProvider` — stream of most recent BpReading
-- [x] `bpHistoryProvider(int days)` — (Handled in UI/Domain via bpLogsProvider)
-- [x] `GlucoseNotifier` — CRUD for `glucose_readings`
-- [x] `GlucoseNotifier.logReading(value, readingType, linkedFoodLogId?)`
-- [x] `latestGlucoseProvider` — most recent reading
-- [x] `glucoseHistoryProvider(String type, int days)` — (Handled in UI/Domain)
-- [x] `SpO2Notifier` — log SpO2 + pulse (stored in `workouts` or separate table)
-- [x] `SleepNotifier` — CRUD for `sleep_logs`
-- [x] `SleepNotifier.logSleep(start, end, source)`
-- [x] `sleepHistoryProvider(int days)` — for chart
-- [x] `sleepDebtProvider` — calculates weekly deficit/surplus vs 7h target
+- [ ] `BPNotifier` — CRUD for `bp_readings` with same optimistic pattern
+- [ ] `BPNotifier.logReading(systolic, diastolic, pulse, notes)`
+- [ ] `latestBpReadingProvider` — stream of most recent BpReading
+- [ ] `bpHistoryProvider(int days)` — (Handled in UI/Domain via bpLogsProvider)
+- [ ] `GlucoseNotifier` — CRUD for `glucose_readings`
+- [ ] `GlucoseNotifier.logReading(value, readingType, linkedFoodLogId?)`
+- [ ] `latestGlucoseProvider` — most recent reading
+- [ ] `glucoseHistoryProvider(String type, int days)` — (Handled in UI/Domain)
+- [ ] `SpO2Notifier` — log SpO2 + pulse (stored in `workouts` or separate table)
+- [ ] `SleepNotifier` — CRUD for `sleep_logs`
+- [ ] `SleepNotifier.logSleep(start, end, source)`
+- [ ] `sleepHistoryProvider(int days)` — for chart
+- [ ] `sleepDebtProvider` — calculates weekly deficit/surplus vs 7h target
 
 ### 6.4 Workout
 
-- [x] `WorkoutNotifier` — CRUD for `workouts`
-- [x] `WorkoutNotifier.startWorkout(Workout)` — writes in-progress record
-- [x] `WorkoutNotifier.finishWorkout(String id, duration, calories)` — completes record
-- [x] `activeWorkoutProvider` — current in-progress workout (if any)
-- [x] `workoutHistoryProvider(int limit)`
-- [x] `personalRecordsProvider` — max weight/reps per exercise across all workouts
+- [ ] `WorkoutNotifier` — CRUD for `workouts`
+- [ ] `WorkoutNotifier.startWorkout(Workout)` — writes in-progress record
+- [ ] `WorkoutNotifier.finishWorkout(String id, duration, calories)` — completes record
+- [ ] `activeWorkoutProvider` — current in-progress workout (if any)
+- [ ] `workoutHistoryProvider(int limit)`
+- [ ] `personalRecordsProvider` — max weight/reps per exercise across all workouts
 
 ### 6.5 Habit
 
-- [x] `HabitNotifier` — CRUD for `habits`
-- [x] `HabitNotifier.completeHabit(String habitId)` — add today to completedDates, increment streak
-- [x] `HabitNotifier.recoverStreak(String habitId, String userId)` — once/month, costs 50 XP
-- [x] `todayHabitsProvider` — all habits with today's completion status
+- [ ] `HabitNotifier` — CRUD for `habits`
+- [ ] `HabitNotifier.completeHabit(String habitId)` — add today to completedDates, increment streak
+- [ ] `HabitNotifier.recoverStreak(String habitId, String userId)` — once/month, costs 50 XP
+- [ ] `todayHabitsProvider` — all habits with today's completion status
 
 ### 6.6 Steps
 
-- [x] `stepsProvider` — reads from Health Connect via `HealthService.todaySteps()`
-- [x] `stepHistoryProvider(int days)` — 7-day bar chart data
-- [x] `adaptiveGoalProvider` — 7-day average + suggested new goal
+- [ ] `stepsProvider` — reads from Health Connect via `HealthService.todaySteps()`
+- [ ] `stepHistoryProvider(int days)` — 7-day bar chart data
+- [ ] `adaptiveGoalProvider` — 7-day average + suggested new goal
 
 ### 6.7 Karma
 
-- [x] `KarmaService.awardXP(userId, eventType)` — calls `xp-calculator` function
-- [x] `xpFloatNotifierProvider` — shows floating "+X XP" animation
-- [x] `leaderboardProvider(LeaderboardType)` — friends/city/national/seasonal
-- [x] `userKarmaProvider` — streams user's current XP + level from Drift-cached user
+- [ ] `KarmaService.awardXP(userId, eventType)` — calls `xp-calculator` function
+- [ ] `xpFloatNotifierProvider` — shows floating "+X XP" animation
+- [ ] `leaderboardProvider(LeaderboardType)` — friends/city/national/seasonal
+- [ ] `userKarmaProvider` — streams user's current XP + level from Drift-cached user
 
 ### 6.8 Fasting
 
-- [x] `FastingTimerNotifier` — manages start/pause/stop with `Stopwatch`
-- [x] `fastingStageProvider` — computes current stage from elapsed hours
-- [x] `activeFastProvider` — persists timer state across app restarts (store start time in `flutter_secure_storage`)
+- [ ] `FastingTimerNotifier` — manages start/pause/stop with `Stopwatch`
+- [ ] `fastingStageProvider` — computes current stage from elapsed hours
+- [ ] `activeFastProvider` — persists timer state across app restarts (store start time in `flutter_secure_storage`)
 
 ### 6.9 Body Metrics
 
-- [x] `bodyMetricsProvider` — latest weight, BMI from user profile
-- [x] `weightHistoryProvider(int days)`
-- [x] `BodyMetricsNotifier.logWeight(double kg)`
+- [ ] `bodyMetricsProvider` — latest weight, BMI from user profile
+- [ ] `weightHistoryProvider(int days)`
+- [ ] `BodyMetricsNotifier.logWeight(double kg)`
 
 ### 6.10 Mood
 
-- [x] `MoodNotifier` — stores mood entry to `journal` table (moodScore + moodEmoji + tags)
-- [x] `todayMoodProvider` — today's logged mood if exists
-- [x] `moodHistoryProvider(int days)` — for 7-day heatmap
+- [ ] `MoodNotifier` — stores mood entry to `journal` table (moodScore + moodEmoji + tags)
+- [ ] `todayMoodProvider` — today's logged mood if exists
+- [ ] `moodHistoryProvider(int days)` — for 7-day heatmap
 
 ### 6.11 Journal
 
-- [x] `JournalNotifier` — CRUD for `journal_entries`
-- [x] `JournalNotifier.createEntry(title, body, moodScore, tags)`
-- [x] `journalEntriesProvider` — paginated list
-- [x] `journalPromptProvider` — generates prompt from logged data patterns
+- [ ] `JournalNotifier` — CRUD for `journal_entries`
+- [ ] `JournalNotifier.createEntry(title, body, moodScore, tags)`
+- [ ] `journalEntriesProvider` — paginated list
+- [ ] `journalPromptProvider` — generates prompt from logged data patterns
 
 ### 6.12 Festival
 
-- [x] `activeFestivalProvider` — queries `festivals` by current timestamp range
-- [x] `upcomingFestivalsProvider` — next 30 days
-- [x] `festivalDietProvider(String festivalKey)` — diet plan for specific festival
-- [x] `userFestivalFilterProvider` — user's religion/region preference for filtering
+- [ ] `activeFestivalProvider` — queries `festivals` by current timestamp range
+- [ ] `upcomingFestivalsProvider` — next 30 days
+- [ ] `festivalDietProvider(String festivalKey)` — diet plan for specific festival
+- [ ] `userFestivalFilterProvider` — user's religion/region preference for filtering
 
 ### 6.13 Wedding
 
-- [x] `WeddingPlanNotifier` — CRUD for `WeddingPlans` Drift table
-- [x] `WeddingPlanNotifier.createPlan(role, dates, events, prepWeeks, goal)`
-- [x] `activeWeddingPlanProvider` — current user's active wedding plan
-- [x] `weddingPhaseProvider` — computes current phase (pre/wedding week/post)
-- [x] `weddingEventDietProvider(String eventKey)` — per-event meal plan
+- [ ] `WeddingPlanNotifier` — CRUD for `WeddingPlans` Drift table
+- [ ] `WeddingPlanNotifier.createPlan(role, dates, events, prepWeeks, goal)`
+- [ ] `activeWeddingPlanProvider` — current user's active wedding plan
+- [ ] `weddingPhaseProvider` — computes current phase (pre/wedding week/post)
+- [ ] `weddingEventDietProvider(String eventKey)` — per-event meal plan
 
 ### 6.14 Social
 
-- [x] `SocialFeedNotifier` — paginated social posts
-- [x] `SocialFeedNotifier.createPost(content, mediaFileId?)`
-- [x] `SocialFeedNotifier.likePost(String postId)`
-- [x] `socialRealtimeProvider` — Appwrite Realtime subscription for live feed updates
-- [x] `groupsProvider` — community groups list
-- [x] `myGroupsProvider` — user's joined groups
+- [ ] `SocialFeedNotifier` — paginated social posts
+- [ ] `SocialFeedNotifier.createPost(content, mediaFileId?)`
+- [ ] `SocialFeedNotifier.likePost(String postId)`
+- [ ] `socialRealtimeProvider` — Appwrite Realtime subscription for live feed updates
+- [ ] `groupsProvider` — community groups list
+- [ ] `myGroupsProvider` — user's joined groups
 
 ### 6.15 Reports
 
-- [x] `labReportsProvider` — list of imported lab reports
-- [x] `LabReportNotifier.importFromOCR(File imageOrPdf)`
-- [x] `LabReportNotifier.uploadFile(File)` → Appwrite Storage → returns `fileId`
-- [x] `shareLinkProvider(String reportId)` — calls `report-share` function
-- [x] `healthReportProvider(String period)` — weekly/monthly summary
+- [ ] `labReportsProvider` — list of imported lab reports
+- [ ] `LabReportNotifier.importFromOCR(File imageOrPdf)`
+- [ ] `LabReportNotifier.uploadFile(File)` → Appwrite Storage → returns `fileId`
+- [ ] `shareLinkProvider(String reportId)` — calls `report-share` function
+- [ ] `healthReportProvider(String period)` — weekly/monthly summary
 
 ### 6.16 Settings
 
-- [x] `ThemeNotifier` — light/dark/system, persisted to `flutter_secure_storage`
-- [x] `LanguageNotifier` — 22-language selector, persisted
-- [x] `FontSizeNotifier` — slider value, drives `textScaleFactor`
-- [x] `DyslexiaFontNotifier` — toggles `OpenDyslexic`, persisted
-- [x] `BiometricLockNotifier` — enabled/disabled toggle, persisted
-- [x] `NotificationPrefsNotifier` — per-module notification toggles
-- [x] `wearablesProvider` — list of connected wearables
-- [x] `subscriptionStatusProvider` — free/monthly/quarterly/yearly/family
+- [ ] `ThemeNotifier` — light/dark/system, persisted to `flutter_secure_storage`
+- [ ] `LanguageNotifier` — 22-language selector, persisted
+- [ ] `FontSizeNotifier` — slider value, drives `textScaleFactor`
+- [ ] `DyslexiaFontNotifier` — toggles `OpenDyslexic`, persisted
+- [ ] `BiometricLockNotifier` — enabled/disabled toggle, persisted
+- [ ] `NotificationPrefsNotifier` — per-module notification toggles
+- [ ] `wearablesProvider` — list of connected wearables
+- [ ] `subscriptionStatusProvider` — free/monthly/quarterly/yearly/family
 
 ### 6.17 Correlation Engine
 
-- [x] `CorrelationEngine.sleepMoodInsight(userId)` — requires 14+ days both datasets
-- [x] `CorrelationEngine.foodGlucoseInsight(userId)` — post-meal glucose vs food
-- [x] `CorrelationEngine.stepsEnergyInsight(userId)` — steps vs mood score
-- [x] `dashboardInsightProvider` — selects best available insight for the day
+- [ ] `CorrelationEngine.sleepMoodInsight(userId)` — requires 14+ days both datasets
+- [ ] `CorrelationEngine.foodGlucoseInsight(userId)` — post-meal glucose vs food
+- [ ] `CorrelationEngine.stepsEnergyInsight(userId)` — steps vs mood score
+- [ ] `dashboardInsightProvider` — selects best available insight for the day
 
 ---
 
 ## 7. Sync Engine
 
-- [x] `SyncWorker` class — `syncPending()` iterates all pending Drift rows
-- [x] `SyncWorker._syncTable<T>()` — generic sync per table with error handling
-- [x] `SyncWorker` — DLQ promotion after 3 failed attempts (`failedAttempts >= 3` → `syncStatus = 'dlq'`)
-- [x] `connectivityStreamProvider` — `Connectivity().onConnectivityChanged` stream
-- [x] Listener in `ProviderScope` — calls `syncWorker.syncPending()` on connectivity restored
-- [x] Periodic background sync via `Workmanager` at tier-appropriate interval (6h / 30m / 15m)
-- [x] `dlqCountProvider` — `FutureProvider<int>` summing DLQ rows across all tables
-- [x] `SyncStatusBanner` widget reads `dlqCountProvider` and `connectivityStreamProvider`
-- [x] `pendingSyncCountProvider` — badge count for Settings → Data & Sync
+- [ ] `SyncWorker` class — `syncPending()` iterates all pending Drift rows
+- [ ] `SyncWorker._syncTable<T>()` — generic sync per table with error handling
+- [ ] `SyncWorker` — DLQ promotion after 3 failed attempts (`failedAttempts >= 3` → `syncStatus = 'dlq'`)
+- [ ] `connectivityStreamProvider` — `Connectivity().onConnectivityChanged` stream
+- [ ] Listener in `ProviderScope` — calls `syncWorker.syncPending()` on connectivity restored
+- [ ] Periodic background sync via `Workmanager` at tier-appropriate interval (6h / 30m / 15m)
+- [ ] `dlqCountProvider` — `FutureProvider<int>` summing DLQ rows across all tables
+- [ ] `SyncStatusBanner` widget reads `dlqCountProvider` and `connectivityStreamProvider`
+- [ ] `pendingSyncCountProvider` — badge count for Settings → Data & Sync
 
 ---
 
@@ -469,221 +469,221 @@
 
 All in `lib/shared/widgets/`. Every widget must be tier-aware via `deviceTierProvider`.
 
-- [x] `GlassCard` — backdrop blur (mid/high), solid surface1 (low), optional glow
-- [x] `BentoCard` — `BentoSize` enum, `_resolvedSize()` auto-promotion on 360dp screens
-- [x] `AmbientBlobs` — 3 blobs (high), 1 blob (mid), none (low)
-- [x] `ActivityRingsWidget` — 4 concentric rings, neon glow, animated arc fill, `metricLg` center
-- [x] `GlowingMetric` — CountUp animation, per-digit spring (high), whole-number (mid), static (low)
-- [x] `InsightCard` — lightbulb icon, amber glow border, 👍/👎 haptic rating
-- [x] `CorrelationInsightCard` — module icon pills, secondary glow border, 👍/👎
-- [x] `BilingualLabel` — English h3 + Devanagari hindi, 3px primary left border
-- [x] `EncryptionBadge` — AES-256 pill, teal glow, animated pulse on sensitive reveal
-- [x] `ABHALinkBadge` — large + compact variants, linked=success glow, unlinked=warning
-- [x] `ShimmerLoader` — `surface0` base + shimmer, dark/light aware
-- [x] `TrendChip` — ▲/▼/→ with appropriate color per direction
-- [x] `PulseRing` — animated pulsing ring for live metrics (HR, SpO2 alert)
-- [x] `StreakFlameWidget` — Lottie `streak_fire.json`, scale grows with streak count
-- [x] `QuickLogFAB` — orange FAB, speed-dial 6 sub-actions (Food, Water, Mood, Workout, BP, Glucose)
-- [x] `MealTypeTabBar` — floating pill tabs, glow on active, spring indicator
-- [x] `FoodItemCard` — glassmorphic, blurred food photo bg, bilingual name, portion, kcal, `+` spring tap
-- [x] `KarmaLevelCard` — `heroDeep` gradient, animated XP bar, level badge
-- [x] `DoshaDonutChart` — 3-segment `fl_chart` donut, animated draw, per-segment glow
-- [x] `ChallengeCarouselCard` — horizontal scroll, progress bar, XP reward, festival tag
-- [x] `MicronutrientBar` — compact animated bar (Iron/B12/VitD/Calcium), color-coded
-- [x] `LabValueRow` — metric row, inline edit field, classification pill, confirm checkbox
-- [x] `ErrorRetryWidget` — Lottie `error_state.json` + message + retry button
-- [x] `SyncStatusBanner` — DLQ amber / offline teal / low-data teal pill
-- [x] `FestivalCard` — gradient left border, bilingual name, fasting pill, region pill, CTA buttons
-- [x] `FestivalCountdownBanner` — full-width active festival, fasting mode badge, quick actions
-- [x] `WeddingCountdownCard` — gold gradient glass, days countdown, next event pill
-- [x] `WeddingRoleChip` — 150×160px illustrated card, spring select
-- [x] `EventDayCard` — wedding event, energy demand badge, pre/post meal
-- [x] `FestivalDietBadge` — fasting type pill (Nirjala/Phalahar/Roza/Feast), glow per type
-- [x] `GlassAppBar` — gains blur + glass bg on scroll
-- [x] `EmptyState` — Lottie asset + message + optional CTA (never text-only)
-- [x] `HealthShareCard` — expiry countdown ring, WhatsApp CTA, copy link, delete
-- [x] `HomeWidgetPreview` — phone mockup SVG, 60% scaled, live widget content inside
-- [x] `CardTapAnimation` — scale press feedback (1.0 → 0.97 → 1.0)
-- [x] `FitKarmaBottomNav` — glass pill nav bar, UXStage-aware label visibility
-- [x] `DLQAlertBanner` — (Integrated into SyncStatusBanner)
-- [x] `HealthScreen` error boundary pattern (via AsyncValueWidget)
+- [ ] `GlassCard` — backdrop blur (mid/high), solid surface1 (low), optional glow
+- [ ] `BentoCard` — `BentoSize` enum, `_resolvedSize()` auto-promotion on 360dp screens
+- [ ] `AmbientBlobs` — 3 blobs (high), 1 blob (mid), none (low)
+- [ ] `ActivityRingsWidget` — 4 concentric rings, neon glow, animated arc fill, `metricLg` center
+- [ ] `GlowingMetric` — CountUp animation, per-digit spring (high), whole-number (mid), static (low)
+- [ ] `InsightCard` — lightbulb icon, amber glow border, 👍/👎 haptic rating
+- [ ] `CorrelationInsightCard` — module icon pills, secondary glow border, 👍/👎
+- [ ] `BilingualLabel` — English h3 + Devanagari hindi, 3px primary left border
+- [ ] `EncryptionBadge` — AES-256 pill, teal glow, animated pulse on sensitive reveal
+- [ ] `ABHALinkBadge` — large + compact variants, linked=success glow, unlinked=warning
+- [ ] `ShimmerLoader` — `surface0` base + shimmer, dark/light aware
+- [ ] `TrendChip` — ▲/▼/→ with appropriate color per direction
+- [ ] `PulseRing` — animated pulsing ring for live metrics (HR, SpO2 alert)
+- [ ] `StreakFlameWidget` — Lottie `streak_fire.json`, scale grows with streak count
+- [ ] `QuickLogFAB` — orange FAB, speed-dial 6 sub-actions (Food, Water, Mood, Workout, BP, Glucose)
+- [ ] `MealTypeTabBar` — floating pill tabs, glow on active, spring indicator
+- [ ] `FoodItemCard` — glassmorphic, blurred food photo bg, bilingual name, portion, kcal, `+` spring tap
+- [ ] `KarmaLevelCard` — `heroDeep` gradient, animated XP bar, level badge
+- [ ] `DoshaDonutChart` — 3-segment `fl_chart` donut, animated draw, per-segment glow
+- [ ] `ChallengeCarouselCard` — horizontal scroll, progress bar, XP reward, festival tag
+- [ ] `MicronutrientBar` — compact animated bar (Iron/B12/VitD/Calcium), color-coded
+- [ ] `LabValueRow` — metric row, inline edit field, classification pill, confirm checkbox
+- [ ] `ErrorRetryWidget` — Lottie `error_state.json` + message + retry button
+- [ ] `SyncStatusBanner` — DLQ amber / offline teal / low-data teal pill
+- [ ] `FestivalCard` — gradient left border, bilingual name, fasting pill, region pill, CTA buttons
+- [ ] `FestivalCountdownBanner` — full-width active festival, fasting mode badge, quick actions
+- [ ] `WeddingCountdownCard` — gold gradient glass, days countdown, next event pill
+- [ ] `WeddingRoleChip` — 150×160px illustrated card, spring select
+- [ ] `EventDayCard` — wedding event, energy demand badge, pre/post meal
+- [ ] `FestivalDietBadge` — fasting type pill (Nirjala/Phalahar/Roza/Feast), glow per type
+- [ ] `GlassAppBar` — gains blur + glass bg on scroll
+- [ ] `EmptyState` — Lottie asset + message + optional CTA (never text-only)
+- [ ] `HealthShareCard` — expiry countdown ring, WhatsApp CTA, copy link, delete
+- [ ] `HomeWidgetPreview` — phone mockup SVG, 60% scaled, live widget content inside
+- [ ] `CardTapAnimation` — scale press feedback (1.0 → 0.97 → 1.0)
+- [ ] `FitKarmaBottomNav` — glass pill nav bar, UXStage-aware label visibility
+- [ ] `DLQAlertBanner` — (Integrated into SyncStatusBanner)
+- [ ] `HealthScreen` error boundary pattern (via AsyncValueWidget)
 
 ---
 
 ## 9. Navigation & Routing
 
-- [x] `GoRouter` registered in `appRouterProvider`
-- [x] All 25 routes registered (splash, auth/login, auth/register, onboarding, home/dashboard, home/food, home/workout, home/steps, profile, blood-pressure, glucose, sleep, karma, journal, lab-reports, abha, settings, emergency, festival-calendar, wedding-planner, wearables, reports, subscription, home-widgets, spo2)
-- [x] Additional sub-routes: `/home/food/log/:mealType`, `/home/food/detail/:id`, `/home/food/lab-scan`
-- [x] Additional sub-routes: `/home/workout/:id`, `/home/workout/:id/active`, `/home/workout/gps`, `/home/workout/custom`
-- [x] Additional sub-routes: `/festival-calendar/:festivalKey/diet`
-- [x] Additional sub-routes: `/wedding-planner/setup`, `/wedding-planner/event/:eventKey`, `/wedding-planner/recovery`
-- [x] Additional sub-routes: `/mental-health`, `/mood`, `/body-metrics`, `/fasting`, `/ayurveda`, `/habits`
-- [x] `redirect` guard wired to `authNotifierProvider`
-- [x] Biometric re-auth for sensitive routes: Journal, Period tracker, BP logs, Glucose logs
+- [ ] `GoRouter` registered in `appRouterProvider`
+- [ ] All 25 routes registered (splash, auth/login, auth/register, onboarding, home/dashboard, home/food, home/workout, home/steps, profile, blood-pressure, glucose, sleep, karma, journal, lab-reports, abha, settings, emergency, festival-calendar, wedding-planner, wearables, reports, subscription, home-widgets, spo2)
+- [ ] Additional sub-routes: `/home/food/log/:mealType`, `/home/food/detail/:id`, `/home/food/lab-scan`
+- [ ] Additional sub-routes: `/home/workout/:id`, `/home/workout/:id/active`, `/home/workout/gps`, `/home/workout/custom`
+- [ ] Additional sub-routes: `/festival-calendar/:festivalKey/diet`
+- [ ] Additional sub-routes: `/wedding-planner/setup`, `/wedding-planner/event/:eventKey`, `/wedding-planner/recovery`
+- [ ] Additional sub-routes: `/mental-health`, `/mood`, `/body-metrics`, `/fasting`, `/ayurveda`, `/habits`
+- [ ] `redirect` guard wired to `authNotifierProvider`
+- [ ] Biometric re-auth for sensitive routes: Journal, Period tracker, BP logs, Glucose logs
 
 ---
 
 ## 10. Screens — Onboarding & Auth
 
-- [x] **SplashScreen** — Rive `logo_reveal.riv`, tagline fade, linear progress bar; always dark
-- [x] **OnboardingFlow** — 6-step segmented progress bar (4px, radiusFull), swipe gesture + Next/Back buttons
-- [x] **Onboarding Step 1** — Name field, gender chip selector (4 chips, 44px tap targets), DOB date picker
-- [x] **Onboarding Step 2** — Height ruler widget, weight drum-roll picker, metric/imperial toggle, 4-card fitness goal grid, 5-card activity level stack
-- [x] **Onboarding Step 3** — 3-column condition chip grid, amber glass info card, Continue + Skip
-- [x] **Onboarding Step 4** — 12-question dosha quiz carousel, auto-advance 400ms, `DoshaDonutChart` result
-- [x] **Onboarding Step 5** — 22-language grid (4-column), health permission toggles (custom pill, not Material), privacy caption
-- [x] **Onboarding Step 6** — `ABHALinkBadge` large, ABHA 14-digit input, OTP 6-box input (spring slide-in), wearable row, Finish Setup
-- [x] **LoginScreen** — logo + tagline, glass card with email/password fields, Google + Apple OAuth buttons
-- [x] **RegisterScreen** — same as login + Name + Confirm Password fields
+- [ ] **SplashScreen** — Rive `logo_reveal.riv`, tagline fade, linear progress bar; always dark
+- [ ] **OnboardingFlow** — 6-step segmented progress bar (4px, radiusFull), swipe gesture + Next/Back buttons
+- [ ] **Onboarding Step 1** — Name field, gender chip selector (4 chips, 44px tap targets), DOB date picker
+- [ ] **Onboarding Step 2** — Height ruler widget, weight drum-roll picker, metric/imperial toggle, 4-card fitness goal grid, 5-card activity level stack
+- [ ] **Onboarding Step 3** — 3-column condition chip grid, amber glass info card, Continue + Skip
+- [ ] **Onboarding Step 4** — 12-question dosha quiz carousel, auto-advance 400ms, `DoshaDonutChart` result
+- [ ] **Onboarding Step 5** — 22-language grid (4-column), health permission toggles (custom pill, not Material), privacy caption
+- [ ] **Onboarding Step 6** — `ABHALinkBadge` large, ABHA 14-digit input, OTP 6-box input (spring slide-in), wearable row, Finish Setup
+- [ ] **LoginScreen** — logo + tagline, glass card with email/password fields, Google + Apple OAuth buttons
+- [ ] **RegisterScreen** — same as login + Name + Confirm Password fields
 
 ---
 
 ## 11. Screens — Core Dashboard & Karma
 
-- [x] **DashboardScreen** (`/home/dashboard`) — Pattern B scaffold, `heroDeep` gradient hero
-  - [x] Hero: avatar (48px, primary ring), namaste greeting, bilingual, XP amber pill, level indigo pill
-  - [x] Hero: `ABHALinkBadge` compact if ABHA not linked
-  - [x] Body bento grid: Row 1 `ActivityRingsWidget` full width
-  - [x] Body bento grid: Row 2 two half-cards (Latest Workout + Sleep Recovery)
-  - [x] Body bento grid: Row 3 `InsightCard` OR `CorrelationInsightCard` (max 1)
-  - [x] Body bento grid: Row 4+ Today's Meals with `MealTypeTabBar`
-  - [x] `QuickLogFAB` fixed bottom-right, 20px from nav bar
-  - [x] UXStage.firstWeek: only Steps + Food + 1 Insight visible by default
-  - [x] Dark mode glow blobs active; light mode warm glass cards
+- [ ] **DashboardScreen** (`/home/dashboard`) — Pattern B scaffold, `heroDeep` gradient hero
+  - [ ] Hero: avatar (48px, primary ring), namaste greeting, bilingual, XP amber pill, level indigo pill
+  - [ ] Hero: `ABHALinkBadge` compact if ABHA not linked
+  - [ ] Body bento grid: Row 1 `ActivityRingsWidget` full width
+  - [ ] Body bento grid: Row 2 two half-cards (Latest Workout + Sleep Recovery)
+  - [ ] Body bento grid: Row 3 `InsightCard` OR `CorrelationInsightCard` (max 1)
+  - [ ] Body bento grid: Row 4+ Today's Meals with `MealTypeTabBar`
+  - [ ] `QuickLogFAB` fixed bottom-right, 20px from nav bar
+  - [ ] UXStage.firstWeek: only Steps + Food + 1 Insight visible by default
+  - [ ] Dark mode glow blobs active; light mode warm glass cards
 
-- [x] **KarmaHubScreen** (`/karma`) — Pattern B, `heroDeep`
-  - [x] Hero: `displayLg` XP total, animated XP progress bar, level badge, coin Lottie on tap
-  - [x] Daily Rituals checklist glass cards (dosha-driven, green tick / empty ring)
-  - [x] Active Challenges `ChallengeCarouselCard` horizontal scroll
-  - [x] Leaderboard: pill tab bar (Friends/City/National/Seasonal), top-5 with gold/silver/bronze glow ranks
-  - [x] Karma Store glass card, Streak Recovery amber pill option
+- [ ] **KarmaHubScreen** (`/karma`) — Pattern B, `heroDeep`
+  - [ ] Hero: `displayLg` XP total, animated XP progress bar, level badge, coin Lottie on tap
+  - [ ] Daily Rituals checklist glass cards (dosha-driven, green tick / empty ring)
+  - [ ] Active Challenges `ChallengeCarouselCard` horizontal scroll
+  - [ ] Leaderboard: pill tab bar (Friends/City/National/Seasonal), top-5 with gold/silver/bronze glow ranks
+  - [ ] Karma Store glass card, Streak Recovery amber pill option
 
 ---
 
 ## 12. Screens — Food & Nutrition
 
-- [x] **FoodHomeScreen** (`/home/food`) — Pattern A
-  - [x] `MealTypeTabBar` sticky below app bar (not inside app bar)
-  - [x] Macro Summary full-width glass card: 4 animated rings (Calories/Protein/Carbs/Fat)
-  - [x] `MicronutrientBar` row: Iron, B12, Vitamin D, Calcium
-  - [x] "Copy Yesterday" amber glass banner (if today's log is empty)
-  - [x] Logged Meals by selected tab, swipe left → delete
+- [ ] **FoodHomeScreen** (`/home/food`) — Pattern A
+  - [ ] `MealTypeTabBar` sticky below app bar (not inside app bar)
+  - [ ] Macro Summary full-width glass card: 4 animated rings (Calories/Protein/Carbs/Fat)
+  - [ ] `MicronutrientBar` row: Iron, B12, Vitamin D, Calcium
+  - [ ] "Copy Yesterday" amber glass banner (if today's log is empty)
+  - [ ] Logged Meals by selected tab, swipe left → delete
 
-- [x] **FoodLogScreen** (`/home/food/log/:mealType`) — Pattern A
-  - [x] Glass search bar (radiusFull), mic icon, barcode icon
-  - [x] Quick-action chip row: Scan Label, Upload Plate, Lab/Rx Scan, Manual
-  - [x] "Frequent Indian Portions" 2×N bento grid of `FoodItemCard`
-  - [x] "Restaurant Results" section with Swiggy/Zomato attribution pills
-  - [x] "Recent Logs" list with re-log button
-  - [x] `[Confirm Meal]` full-width primary button (replaces FAB)
+- [ ] **FoodLogScreen** (`/home/food/log/:mealType`) — Pattern A
+  - [ ] Glass search bar (radiusFull), mic icon, barcode icon
+  - [ ] Quick-action chip row: Scan Label, Upload Plate, Lab/Rx Scan, Manual
+  - [ ] "Frequent Indian Portions" 2×N bento grid of `FoodItemCard`
+  - [ ] "Restaurant Results" section with Swiggy/Zomato attribution pills
+  - [ ] "Recent Logs" list with re-log button
+  - [ ] `[Confirm Meal]` full-width primary button (replaces FAB)
 
-- [x] **FoodDetailScreen** (`/home/food/detail/:id`) — Pattern B (food photo hero)
-  - [x] Hero: blurred food photo, bilingual name, kcal with primary glow
-  - [x] Indian serving size drum-roll picker (katori/piece/glass/tbsp)
-  - [x] Full macro table with animated bar fills
-  - [x] Micronutrient table: Iron, B12, VitD, Calcium with RDA %
-  - [x] `[Add to Log]` primary full-width
+- [ ] **FoodDetailScreen** (`/home/food/detail/:id`) — Pattern B (food photo hero)
+  - [ ] Hero: blurred food photo, bilingual name, kcal with primary glow
+  - [ ] Indian serving size drum-roll picker (katori/piece/glass/tbsp)
+  - [ ] Full macro table with animated bar fills
+  - [ ] Micronutrient table: Iron, B12, VitD, Calcium with RDA %
+  - [ ] `[Add to Log]` primary full-width
 
-- [x] **LabScanScreen** (`/home/food/lab-scan`) — Pattern A (Calm Zone)
-  - [x] Two half glass cards: Take Photo, Upload PDF
-  - [x] `ShimmerLoader` processing state with "Extracting health values..."
-  - [x] Extracted values scroll with `LabValueRow` per metric
-  - [x] Classification pill colors: green=Normal, amber=Borderline, red=High/Low
-  - [x] `EncryptionBadge` + privacy caption
-  - [x] `[Import to Health Data]` primary, `[Discard]` error text
+- [ ] **LabScanScreen** (`/home/food/lab-scan`) — Pattern A (Calm Zone)
+  - [ ] Two half glass cards: Take Photo, Upload PDF
+  - [ ] `ShimmerLoader` processing state with "Extracting health values..."
+  - [ ] Extracted values scroll with `LabValueRow` per metric
+  - [ ] Classification pill colors: green=Normal, amber=Borderline, red=High/Low
+  - [ ] `EncryptionBadge` + privacy caption
+  - [ ] `[Import to Health Data]` primary, `[Discard]` error text
 
 ---
 
 ## 13. Screens — Workout
 
-- [x] **WorkoutHomeScreen** (`/home/workout`) — Pattern A
-  - [x] `StreakFlameWidget` + "Day N Streak!" banner (orangeGradient bg, if active)
-  - [x] Featured workout card (Pattern B mini, photo hero, Start button)
-  - [x] Category chips horizontal scroll (Yoga/HIIT/Strength/Cardio/Dance/Bollywood/Cricket/Kabaddi/Pranayama)
-  - [x] WorkoutCard 2-column bento grid (photo bg, title, duration, premium lock)
+- [ ] **WorkoutHomeScreen** (`/home/workout`) — Pattern A
+  - [ ] `StreakFlameWidget` + "Day N Streak!" banner (orangeGradient bg, if active)
+  - [ ] Featured workout card (Pattern B mini, photo hero, Start button)
+  - [ ] Category chips horizontal scroll (Yoga/HIIT/Strength/Cardio/Dance/Bollywood/Cricket/Kabaddi/Pranayama)
+  - [ ] WorkoutCard 2-column bento grid (photo bg, title, duration, premium lock)
 
-- [x] **WorkoutDetailScreen** (`/home/workout/:id`) — Pattern B (thumbnail hero)
-  - [x] Hero: title displayLg, Duration badge, Difficulty badge, `[Start Workout]`
-  - [x] Description, equipment chips, exercise list glass cards
-  - [x] Exercise: name, Sets×Reps, RPE target, superset bracket letter (A/B/C left accent)
-  - [x] Similar workouts horizontal scroll
+- [ ] **WorkoutDetailScreen** (`/home/workout/:id`) — Pattern B (thumbnail hero)
+  - [ ] Hero: title displayLg, Duration badge, Difficulty badge, `[Start Workout]`
+  - [ ] Description, equipment chips, exercise list glass cards
+  - [ ] Exercise: name, Sets×Reps, RPE target, superset bracket letter (A/B/C left accent)
+  - [ ] Similar workouts horizontal scroll
 
-- [x] **ActiveWorkoutScreen** (`/home/workout/:id/active`) — Pattern C
-  - [x] Exercise name h1 centered
-  - [x] Set counter `monoXL` primary glow
-  - [x] Rep target `bodyLg`
-  - [x] Rest Timer: `PulseRing` countdown, configurable seconds, haptic + audio on complete, Skip button
-  - [x] HR Zone badge from wearable
-  - [x] RPE selector (1–10 gradient slider, haptic per notch)
-  - [x] Pause · Next · Finish glass dock (bottom)
+- [ ] **ActiveWorkoutScreen** (`/home/workout/:id/active`) — Pattern C
+  - [ ] Exercise name h1 centered
+  - [ ] Set counter `monoXL` primary glow
+  - [ ] Rep target `bodyLg`
+  - [ ] Rest Timer: `PulseRing` countdown, configurable seconds, haptic + audio on complete, Skip button
+  - [ ] HR Zone badge from wearable
+  - [ ] RPE selector (1–10 gradient slider, haptic per notch)
+  - [ ] Pause · Next · Finish glass dock (bottom)
 
-- [x] **GPSWorkoutScreen** (`/home/workout/gps`) — Pattern C
-  - [x] `flutter_map` full-bleed with custom dark tiles
-  - [x] Offline tile cache indicator teal pill
-  - [x] Stats overlay glass card: Distance `monoXL`, Duration, Pace `monoLg`, Avg HR `monoLg`
+- [ ] **GPSWorkoutScreen** (`/home/workout/gps`) — Pattern C
+  - [ ] `flutter_map` full-bleed with custom dark tiles
+  - [ ] Offline tile cache indicator teal pill
+  - [ ] Stats overlay glass card: Distance `monoXL`, Duration, Pace `monoLg`, Avg HR `monoLg`
 
-- [x] **CustomWorkoutBuilderScreen** (`/home/workout/custom`) — Pattern A
-  - [x] `ReorderableListView` drag-and-drop exercise rows
-  - [x] Each row: name, sets/reps/rest inline inputs, RPE input, superset A/B/C pills, drag handle
-  - [x] `[+ Add Exercise]` outlined full-width
-  - [x] `[Save Plan]` primary
+- [ ] **CustomWorkoutBuilderScreen** (`/home/workout/custom`) — Pattern A
+  - [ ] `ReorderableListView` drag-and-drop exercise rows
+  - [ ] Each row: name, sets/reps/rest inline inputs, RPE input, superset A/B/C pills, drag handle
+  - [ ] `[+ Add Exercise]` outlined full-width
+  - [ ] `[Save Plan]` primary
 
 ---
 
 ## 14. Screens — Steps & Activity
 
-- [x] **StepsScreen** (`/home/steps`) — Pattern B (`heroPrimary`)
-  - [x] Hero: step count `heroDisplay` 72sp white with success glow
-  - [x] `PulseRing` progress behind count
-  - [x] Goal label, confetti Lottie on goal completion
-  - [x] Hourly bar chart glass card (animated fill, success color)
-  - [x] 7-day trend line chart (area fill, success20)
-  - [x] Distance + Calories two half-cards `monoLg`
-  - [x] Adaptive goal card (teal border, Accept/Keep buttons)
-  - [x] Inactivity nudge card (amber glass, if >60 min inactive, `[Start Walk]` teal button)
+- [ ] **StepsScreen** (`/home/steps`) — Pattern B (`heroPrimary`)
+  - [ ] Hero: step count `heroDisplay` 72sp white with success glow
+  - [ ] `PulseRing` progress behind count
+  - [ ] Goal label, confetti Lottie on goal completion
+  - [ ] Hourly bar chart glass card (animated fill, success color)
+  - [ ] 7-day trend line chart (area fill, success20)
+  - [ ] Distance + Calories two half-cards `monoLg`
+  - [ ] Adaptive goal card (teal border, Accept/Keep buttons)
+  - [ ] Inactivity nudge card (amber glass, if >60 min inactive, `[Start Walk]` teal button)
 
 ---
 
 ## 15. Screens — Health Monitoring
 
-- [x] **BPScreen** (`/blood-pressure`) — Pattern B (`heroDeep`)
-  - [x] Hero: latest `metricXL` reading (e.g. "128/82"), neon white glow per number
-  - [x] AHA classification badge (color-coded glass pill)
-  - [x] Pulse `bodyLg`, `EncryptionBadge` in hero
-  - [x] BP Trend Chart: 7/30/90 day toggle, AHA reference bands, animated draw on tab switch
-  - [x] Log BP FAB → bottom sheet (Systolic, Diastolic, Pulse, Notes, EncryptionBadge, Save)
-  - [x] Morning/evening reminder glass card with edit toggle
+- [ ] **BPScreen** (`/blood-pressure`) — Pattern B (`heroDeep`)
+  - [ ] Hero: latest `metricXL` reading (e.g. "128/82"), neon white glow per number
+  - [ ] AHA classification badge (color-coded glass pill)
+  - [ ] Pulse `bodyLg`, `EncryptionBadge` in hero
+  - [ ] BP Trend Chart: 7/30/90 day toggle, AHA reference bands, animated draw on tab switch
+  - [ ] Log BP FAB → bottom sheet (Systolic, Diastolic, Pulse, Notes, EncryptionBadge, Save)
+  - [ ] Morning/evening reminder glass card with edit toggle
 
-- [x] **GlucoseScreen** (`/glucose`) — Pattern B (`heroDeep`)
-  - [x] Hero: latest `metricXL`, reading type tag, classification badge, `EncryptionBadge`
-  - [x] Reading type selector pills: Fasting/Post-meal/Random/Bedtime
-  - [x] Glucose history chart with target band per reading type, animated draw
-  - [x] HbA1c estimator card (glass, secondary glow, shown if ≥30 readings, with disclaimer)
-  - [x] Meal correlation row (linked food log for post-meal)
-  - [x] "Import from Lab Report →" row
+- [ ] **GlucoseScreen** (`/glucose`) — Pattern B (`heroDeep`)
+  - [ ] Hero: latest `metricXL`, reading type tag, classification badge, `EncryptionBadge`
+  - [ ] Reading type selector pills: Fasting/Post-meal/Random/Bedtime
+  - [ ] Glucose history chart with target band per reading type, animated draw
+  - [ ] HbA1c estimator card (glass, secondary glow, shown if ≥30 readings, with disclaimer)
+  - [ ] Meal correlation row (linked food log for post-meal)
+  - [ ] "Import from Lab Report →" row
 
-- [x] **SpO2Screen** (`/spo2`) — Pattern B (`heroDeep`)
-  - [x] Hero: latest SpO2 % `metricXL` teal glow, pulse `bodyLg`, timestamp caption
-  - [x] Alert banner if <95%: error glass, warning text, `PulseRing` error color
-  - [x] 7-day history chart (teal line, 95–100% target band)
-  - [x] Log SpO2 bottom sheet (% field, pulse optional, EncryptionBadge)
+- [ ] **SpO2Screen** (`/spo2`) — Pattern B (`heroDeep`)
+  - [ ] Hero: latest SpO2 % `metricXL` teal glow, pulse `bodyLg`, timestamp caption
+  - [ ] Alert banner if <95%: error glass, warning text, `PulseRing` error color
+  - [ ] 7-day history chart (teal line, 95–100% target band)
+  - [ ] Log SpO2 bottom sheet (% field, pulse optional, EncryptionBadge)
 
-- [x] **FastingTimerScreen** (`/fasting`) — Pattern B (`heroDeep`)
-  - [x] Hero: stage name `displayMd`, countdown `heroDisplay` with glow, `PulseRing` behind
-  - [x] Stage progress linear bar
-  - [x] Stage timeline horizontal glass card (Fed→Fasted 12h→Fat Burn 16h→Ketosis 24h→Autophagy 48h+)
-  - [x] Start/Pause/Stop glass buttons; fasting type chips when not started
-  - [x] Last fasting log glass card with TrendChip
-  - [x] Active festival link banner (if applicable)
+- [ ] **FastingTimerScreen** (`/fasting`) — Pattern B (`heroDeep`)
+  - [ ] Hero: stage name `displayMd`, countdown `heroDisplay` with glow, `PulseRing` behind
+  - [ ] Stage progress linear bar
+  - [ ] Stage timeline horizontal glass card (Fed→Fasted 12h→Fat Burn 16h→Ketosis 24h→Autophagy 48h+)
+  - [ ] Start/Pause/Stop glass buttons; fasting type chips when not started
+  - [ ] Last fasting log glass card with TrendChip
+  - [ ] Active festival link banner (if applicable)
 
-- [x] **BodyMetricsScreen** (`/body-metrics`) — Pattern B (`heroDeep`)
-  - [x] Hero: weight `metricXL`, BMI `monoLg` + classification badge
-  - [x] 30-day weight trend chart, target dashed line
-  - [x] Body composition half-cards (if wearable data available)
-  - [x] BMI history chart 90-day
-  - [x] Measurement log card (Waist/Chest/Hips, inline edit)
-  - [x] Log Weight FAB
+- [ ] **BodyMetricsScreen** (`/body-metrics`) — Pattern B (`heroDeep`)
+  - [ ] Hero: weight `metricXL`, BMI `monoLg` + classification badge
+  - [ ] 30-day weight trend chart, target dashed line
+  - [ ] Body composition half-cards (if wearable data available)
+  - [ ] BMI history chart 90-day
+  - [ ] Measurement log card (Waist/Chest/Hips, inline edit)
+  - [ ] Log Weight FAB
 
 ---
 
@@ -707,28 +707,28 @@ All in `lib/shared/widgets/`. Every widget must be tier-aware via `deviceTierPro
 
 ## 17. Screens — Lifestyle Trackers
 
-- [x] **SleepScreen** (`/sleep`) — Pattern B (`heroSleep` 3-stop gradient)
-  - [x] Hero: duration `metricXL`, quality emoji animated float, "Good/Poor Sleep" badge
-  - [x] 7-day sleep bar chart (green ≥7h / amber 6-7h / red <6h)
-  - [x] Sleep Debt card (secondary glow, deficit/credit animated bars)
-  - [x] Chronotype card (shown after 30+ days: Owl/Lark + optimal window)
-  - [x] Ayurvedic sleep tip (if avg <6h, teal border)
-  - [x] Log Sleep FAB
+- [ ] **SleepScreen** (`/sleep`) — Pattern B (`heroSleep` 3-stop gradient)
+  - [ ] Hero: duration `metricXL`, quality emoji animated float, "Good/Poor Sleep" badge
+  - [ ] 7-day sleep bar chart (green ≥7h / amber 6-7h / red <6h)
+  - [ ] Sleep Debt card (secondary glow, deficit/credit animated bars)
+  - [ ] Chronotype card (shown after 30+ days: Owl/Lark + optimal window)
+  - [ ] Ayurvedic sleep tip (if avg <6h, teal border)
+  - [ ] Log Sleep FAB
 
-- [x] **HabitTrackerScreen** (`/habits`) — Pattern A
-  - [x] Today's habits glass card stack (icon, name, target bar, `StreakFlameWidget`)
-  - [x] Streak Recovery amber pill (if streak broken ≤24h, once/month)
-  - [x] Weekly heatmap GitHub-style (surface1 → primary50 → primary100)
-  - [x] Streak stats: current vs longest, monoLg, side-by-side glass card
+- [ ] **HabitTrackerScreen** (`/habits`) — Pattern A
+  - [ ] Today's habits glass card stack (icon, name, target bar, `StreakFlameWidget`)
+  - [ ] Streak Recovery amber pill (if streak broken ≤24h, once/month)
+  - [ ] Weekly heatmap GitHub-style (surface1 → primary50 → primary100)
+  - [ ] Streak stats: current vs longest, monoLg, side-by-side glass card
 
-- [x] **MoodTrackerScreen** (`/mood`) — Pattern A
-  - [x] Today's mood: 5 emoji buttons (spring pop, primary ring on select)
-  - [x] Energy level slider (0–10, gradient)
-  - [x] Tags multi-select chips (Stressed/Happy/Tired/Calm/Anxious/Energised/Focused)
-  - [x] `[Save Today's Mood]` primary full-width
-  - [x] 7-day mood heatmap (tap day → detail overlay)
-  - [x] Mood-Sleep `CorrelationInsightCard` (shown after 14+ data points)
-  - [x] Mood trend spline chart (purple fill)
+- [ ] **MoodTrackerScreen** (`/mood`) — Pattern A
+  - [ ] Today's mood: 5 emoji buttons (spring pop, primary ring on select)
+  - [ ] Energy level slider (0–10, gradient)
+  - [ ] Tags multi-select chips (Stressed/Happy/Tired/Calm/Anxious/Energised/Focused)
+  - [ ] `[Save Today's Mood]` primary full-width
+  - [ ] 7-day mood heatmap (tap day → detail overlay)
+  - [ ] Mood-Sleep `CorrelationInsightCard` (shown after 14+ data points)
+  - [ ] Mood trend spline chart (purple fill)
 
 ---
 

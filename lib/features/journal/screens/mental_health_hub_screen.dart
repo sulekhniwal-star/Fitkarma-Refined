@@ -9,6 +9,7 @@ import '../../../core/theme/app_typography.dart';
 import '../../../shared/widgets/ambient_widgets.dart';
 import '../../../shared/widgets/glass_card.dart';
 import '../../../shared/widgets/status_widgets.dart';
+import '../../../shared/widgets/karma_widgets.dart';
 import '../../insights/providers/insight_provider.dart';
 
 // ── Static data ────────────────────────────────────────────────────────────────
@@ -125,16 +126,14 @@ class _MentalHealthHubScreenState
 
     return Scaffold(
       backgroundColor: bg1,
-      body: Stack(
-        children: [
-          const AmbientBlobs(),
-          SafeArea(
-            child: CustomScrollView(
-              slivers: [
-                SliverAppBar(
-                  backgroundColor: Colors.transparent,
-                  elevation: 0,
-                  pinned: true,
+      body: SafeArea(
+        child: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              backgroundColor: bg1,
+              elevation: 0,
+              pinned: true,
+              centerTitle: false,
                   leading: GestureDetector(
                     onTap: () => context.pop(),
                     child: Icon(Icons.arrow_back_ios_new_rounded,
@@ -159,10 +158,9 @@ class _MentalHealthHubScreenState
 
                       // ── CBT Insight card ──────────────────────
                       insightAsync.when(
-                        data: (insight) => InsightCard(
+                        data: (insight) => CorrelationInsightCard(
                           message: insight,
-                          onThumbsUp: () {},
-                          onThumbsDown: () {},
+                          icons: const [Icons.bedtime_rounded, Icons.sentiment_satisfied_rounded],
                         ),
                         loading: () => const SizedBox.shrink(),
                         error: (_, __) => const SizedBox.shrink(),
@@ -423,9 +421,9 @@ class _MentalHealthHubScreenState
               ],
             ),
           ),
-        ],
+        ),
       ),
-    );
+    )
   }
 }
 

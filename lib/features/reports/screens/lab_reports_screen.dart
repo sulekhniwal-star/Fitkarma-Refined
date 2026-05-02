@@ -7,7 +7,9 @@ import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../shared/widgets/glass_card.dart';
 import '../../../shared/widgets/status_widgets.dart';
+import '../../../shared/widgets/badge_widgets.dart';
 import '../../reports/providers/report_provider.dart';
+import '../providers/abha_provider.dart';
 
 // ── Screen ─────────────────────────────────────────────────────────────────────
 
@@ -24,7 +26,7 @@ class LabReportsScreen extends ConsumerWidget {
 
     // Calm Zone — no blobs, no glow
     // In a real app, this would come from a profile/settings provider
-    final bool abhaLinked = true; // Set to true for demonstration
+    final abhaLinked = ref.watch(aBHANotifierProvider).value ?? false;
 
     final reportsAsync = ref.watch(labReportsProvider);
 
@@ -33,6 +35,7 @@ class LabReportsScreen extends ConsumerWidget {
       appBar: AppBar(
         backgroundColor: bg1,
         elevation: 0,
+        centerTitle: false,
         leading: GestureDetector(
           onTap: () => context.pop(),
           child: Icon(Icons.arrow_back_ios_new_rounded,
@@ -54,12 +57,12 @@ class LabReportsScreen extends ConsumerWidget {
         children: [
           // ── Scan CTA card ─────────────────────────────────────
           _ScanCTACard(isDark: isDark, text0: text0, text2: text2),
-          const SizedBox(height: 20),
+          const SizedBox(height: 24),
 
           // ── Imported reports list ─────────────────────────────
           Text('Imported Reports',
               style: AppTypography.h4(color: text0)),
-          const SizedBox(height: 10),
+          const SizedBox(height: 12),
           reportsAsync.when(
             data: (reports) => reports.isEmpty
                 ? _EmptyReports(text2: text2)
@@ -67,7 +70,7 @@ class LabReportsScreen extends ConsumerWidget {
                     children: reports
                         .map((r) => Padding(
                               padding:
-                                  const EdgeInsets.only(bottom: 8),
+                                  const EdgeInsets.only(bottom: 12),
                               child: _ReportRow(
                                 report: r,
                                 isDark: isDark,
@@ -79,30 +82,32 @@ class LabReportsScreen extends ConsumerWidget {
                                       shareLinkProvider(r.id).future);
                                 },
                                 onDelete: () {
-                                  ref.read(labReportProvider.notifier).deleteReport(r.id);
+                                  ref.read(labReportNotifierProvider.notifier).deleteReport(r.id);
                                 },
                               ),
                             ))
                         .toList(),
                   ),
             loading: () => const Padding(
-              padding: EdgeInsets.symmetric(vertical: 32),
+              padding: EdgeInsets.symmetric(vertical: 48),
               child: Center(
                   child: CircularProgressIndicator(strokeWidth: 2)),
             ),
-            error: (_, __) => Padding(
+            error: (e, __) => Padding(
               padding: const EdgeInsets.symmetric(vertical: 24),
-              child: Text('Could not load reports',
+              child: Text('Could not load reports: $e',
                   style: AppTypography.bodySm(color: text2)),
             ),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 24),
 
           // ── Import from ABHA (if linked) ──────────────────────
-          // ignore: dead_code
           if (abhaLinked) ...[
             _ABHAImportCard(isDark: isDark, text0: text0, text2: text2),
-            const SizedBox(height: 20),
+            const SizedBox(height: 24),
+          ] else ...[
+             _ABHALinkCTA(isDark: isDark, text0: text0, text2: text2),
+             const SizedBox(height: 24),
           ],
 
           // ── Privacy footnote ──────────────────────────────────
@@ -133,7 +138,14 @@ class _ScanCTACard extends StatelessWidget {
               : AppColorsLight.surface0,
           borderRadius: BorderRadius.circular(AppRadius.md),
           border: Border.all(
-              color: AppColorsDark.teal.withValues(alpha: 0.35)),
+              color: AppColorsDark.teal.withValues(alpha: 0.5), width: 1.5),
+          boxShadow: [
+            BoxShadow(
+              color: AppColorsDark.teal.withValues(alpha: 0.15),
+              blurRadius: 20,
+              spreadRadius: 2,
+            ),
+          ],
         ),
         child: Row(
           children: [
@@ -146,16 +158,16 @@ class _ScanCTACard extends StatelessWidget {
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: AppColorsDark.teal.withValues(alpha: 0.3),
+                    color: AppColorsDark.teal.withValues(alpha: 0.4),
                     blurRadius: 15,
                     spreadRadius: 2,
                   ),
                 ],
               ),
               child: Lottie.network(
-                'https://assets9.lottiefiles.com/packages/lf20_u4j3cx7p.json', // OCR/Scan loop
-                width: 32,
-                height: 32,
+                'https://lottie.host/80249826-6663-4467-965a-063814838634/qY5N6Z6V7i.json', // New OCR scan loop
+                width: 36,
+                height: 36,
                 errorBuilder: (context, error, stackTrace) => const Icon(
                     Icons.document_scanner_rounded,
                     size: 28,
@@ -168,7 +180,9 @@ class _ScanCTACard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('Scan New Report',
-                      style: AppTypography.h3(color: text0)),
+                      style: AppTypography.h3(color: text0).copyWith(
+                        color: isDark ? AppColorsDark.teal : null,
+                      )),
                   const SizedBox(height: 4),
                   Text(
                     'Take a photo or upload a PDF to extract health values automatically.',
@@ -409,7 +423,50 @@ class _ABHAImportCard extends StatelessWidget {
       );
 }
 
-// ── Privacy footnote card ──────────────────────────────────────────────────────
+// ── ABHA Link CTA card (if NOT linked) ────────────────────────────────────────
+
+class _ABHALinkCTA extends StatelessWidget {
+  final bool isDark;
+  final Color text0, text2;
+  const _ABHALinkCTA(
+      {required this.isDark, required this.text0, required this.text2});
+
+  @override
+  Widget build(BuildContext context) => GlassCard(
+        borderRadius: AppRadius.md,
+        padding: const EdgeInsets.all(AppSpacing.cardH),
+        child: Row(
+          children: [
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: AppColorsDark.warning.withValues(alpha: 0.12),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.warning_amber_rounded,
+                  size: 20, color: AppColorsDark.warning),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('ABHA Not Linked',
+                      style: AppTypography.labelMd(color: text0)),
+                  Text('Link to auto-fetch records',
+                      style: AppTypography.bodySm(color: text2)),
+                ],
+              ),
+            ),
+            TextButton(
+              onPressed: () => context.push('/abha'),
+              child: const Text('Link Now'),
+            ),
+          ],
+        ),
+      );
+}
 
 class _PrivacyCard extends StatelessWidget {
   final bool isDark;

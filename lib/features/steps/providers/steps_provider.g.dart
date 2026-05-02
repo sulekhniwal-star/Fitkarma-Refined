@@ -151,4 +151,4 @@ final class AdaptiveGoalProvider
   }
 }
 
-String _$adaptiveGoalHash() => r'5f79f11d193b2c9f0d525b0b12b68f51450aabe3';
+String _$adaptiveGoalHash() => r'14bb5633eabebb4feaef3a9197655df54c72e1d5';

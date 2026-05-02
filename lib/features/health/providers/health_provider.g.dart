@@ -344,4 +344,4 @@ final class SleepDebtProvider
   }
 }
 
-String _$sleepDebtHash() => r'bc2d28331d61455009f02bbee507e5dfd91f7ea2';
+String _$sleepDebtHash() => r'ac44af7c4be8fa5d3720882739cc9de89d382cf6';
