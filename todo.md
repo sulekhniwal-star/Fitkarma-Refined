@@ -748,11 +748,11 @@ All in `lib/shared/widgets/`. Every widget must be tier-aware via `deviceTierPro
   - [ ] Burnout risk semicircle gauge (if score > 40)
   - [ ] Indian helplines glass card (iCall, Vandrevala, NIMHANS with `[📞 Call]` buttons)
 
-- [ ] **AyurvedaHubScreen** (`/ayurveda`) — Pattern A
-  - [ ] `DoshaDonutChart` large (180px), dominant dosha `displayMd`, Retake Quiz link
-  - [ ] Daily Rituals glass list (dosha-specific, bilingual, completion toggle)
-  - [ ] Seasonal Recommendations glass card (6 Indian seasons)
-  - [ ] Ayurvedic Food Guide: Good (teal chips) / Avoid (error chips) for dominant dosha
+- [x] **AyurvedaHubScreen** (`/ayurveda`) — Pattern A
+  - [x] `DoshaDonutChart` large (180px), dominant dosha `displayMd`, Retake Quiz link
+  - [x] Daily Rituals glass list (dosha-specific, bilingual, completion toggle)
+  - [x] Seasonal Recommendations glass card (6 Indian seasons)
+  - [x] Ayurvedic Food Guide: Good (teal chips) / Avoid (error chips) for dominant dosha
 
 ---
 
@@ -1147,7 +1147,7 @@ All in `lib/shared/widgets/`. Every widget must be tier-aware via `deviceTierPro
 | Sync Engine | 10 | 0 | 2 | 8 |
 | Shared Widgets | 42 | 34 | 0 | 8 |
 | Navigation | 12 | 8 | 0 | 4 |
-| Screens (all) | 147 | 65 | 0 | 82 |
+| Screens (all) | 147 | 70 | 0 | 77 |
 | Health Integrations | 10 | 0 | 0 | 10 |
 | Security | 8 | 0 | 0 | 8 |
 | Notifications | 15 | 0 | 0 | 15 |
@@ -1159,7 +1159,7 @@ All in `lib/shared/widgets/`. Every widget must be tier-aware via `deviceTierPro
 | CI/CD | 9 | 0 | 0 | 9 |
 | Performance | 15 | 0 | 0 | 15 |
 | Data Seeding | 9 | 0 | 0 | 9 |
-| **TOTAL** | **592** | **122** | **18** | **452** |
+| **TOTAL** | **592** | **127** | **18** | **447** |
 
 ---
 
