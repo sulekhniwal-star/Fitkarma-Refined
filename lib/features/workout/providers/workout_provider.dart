@@ -13,7 +13,7 @@ part 'workout_provider.g.dart';
 class WorkoutNotifier extends _$WorkoutNotifier {
   @override
   Stream<List<Workout>> build() {
-    final authState = ref.watch(authNotifierProvider);
+    final authState = ref.watch(authProvider);
     final user = authState.asData?.value;
     if (user == null) return Stream.value([]);
 
@@ -24,7 +24,7 @@ class WorkoutNotifier extends _$WorkoutNotifier {
     required String name,
     required String type,
   }) async {
-    final authState = ref.read(authNotifierProvider);
+    final authState = ref.read(authProvider);
     final user = authState.asData?.value;
     if (user == null) return;
 
@@ -73,8 +73,8 @@ class WorkoutNotifier extends _$WorkoutNotifier {
 }
 
 @riverpod
-Stream<Workout?> activeWorkout(ActiveWorkoutRef ref) {
-  final authState = ref.watch(authNotifierProvider);
+Stream<Workout?> activeWorkout(Ref ref) {
+  final authState = ref.watch(authProvider);
   final user = authState.asData?.value;
   if (user == null) return Stream.value(null);
 
@@ -82,8 +82,8 @@ Stream<Workout?> activeWorkout(ActiveWorkoutRef ref) {
 }
 
 @riverpod
-Stream<List<Workout>> workoutHistory(WorkoutHistoryRef ref, {int limit = 20}) {
-  final authState = ref.watch(authNotifierProvider);
+Stream<List<Workout>> workoutHistory(Ref ref, {int limit = 20}) {
+  final authState = ref.watch(authProvider);
   final user = authState.asData?.value;
   if (user == null) return Stream.value([]);
 
@@ -91,7 +91,7 @@ Stream<List<Workout>> workoutHistory(WorkoutHistoryRef ref, {int limit = 20}) {
 }
 
 @riverpod
-Map<String, dynamic> personalRecords(PersonalRecordsRef ref) {
+Map<String, dynamic> personalRecords(Ref ref) {
   final historyAsync = ref.watch(workoutHistoryProvider(limit: 100));
   
   return historyAsync.when(

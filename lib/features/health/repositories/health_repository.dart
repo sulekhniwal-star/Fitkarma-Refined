@@ -135,7 +135,7 @@ class HealthRepository {
 }
 
 @riverpod
-HealthRepository healthRepository(HealthRepositoryRef ref) {
+HealthRepository healthRepository(Ref ref) {
   return HealthRepository(
     ref.watch(appDatabaseProvider),
     ref.watch(appwriteTablesDBProvider),

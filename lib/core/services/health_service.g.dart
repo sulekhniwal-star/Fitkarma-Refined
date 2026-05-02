@@ -6,22 +6,46 @@ part of 'health_service.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$healthServiceHash() => r'635e038008b0bd321c437cc449886dca36179d6e';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [healthService].
 @ProviderFor(healthService)
-final healthServiceProvider = Provider<HealthService>.internal(
-  healthService,
-  name: r'healthServiceProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$healthServiceHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+final healthServiceProvider = HealthServiceProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef HealthServiceRef = ProviderRef<HealthService>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+final class HealthServiceProvider
+    extends $FunctionalProvider<HealthService, HealthService, HealthService>
+    with $Provider<HealthService> {
+  HealthServiceProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'healthServiceProvider',
+          isAutoDispose: false,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$healthServiceHash();
+
+  @$internal
+  @override
+  $ProviderElement<HealthService> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  HealthService create(Ref ref) {
+    return healthService(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(HealthService value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<HealthService>(value),
+    );
+  }
+}
+
+String _$healthServiceHash() => r'6272357e80b652ee576b5b8dff22523dac1c8f33';

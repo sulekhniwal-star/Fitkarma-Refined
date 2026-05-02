@@ -10,7 +10,7 @@ part 'body_metrics_provider.g.dart';
 class BodyMetricsNotifier extends _$BodyMetricsNotifier {
   @override
   Stream<Map<String, dynamic>> build() {
-    final authState = ref.watch(authNotifierProvider);
+    final authState = ref.watch(authProvider);
     final user = authState.asData?.value;
     if (user == null) return Stream.value({});
 
@@ -41,7 +41,7 @@ class BodyMetricsNotifier extends _$BodyMetricsNotifier {
   }
 
   Future<void> logWeight(double weight) async {
-    final authState = ref.read(authNotifierProvider);
+    final authState = ref.read(authProvider);
     final user = authState.asData?.value;
     if (user == null) return;
 
@@ -60,8 +60,8 @@ class BodyMetricsNotifier extends _$BodyMetricsNotifier {
 }
 
 @riverpod
-Stream<List<WeightLog>> weightHistory(WeightHistoryRef ref, int days) {
-  final authState = ref.watch(authNotifierProvider);
+Stream<List<WeightLog>> weightHistory(Ref ref, int days) {
+  final authState = ref.watch(authProvider);
   final user = authState.asData?.value;
   if (user == null) return Stream.value([]);
 

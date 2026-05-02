@@ -11,7 +11,7 @@ enum DeviceTier {
 }
 
 @riverpod
-Future<DeviceTier> deviceTier(DeviceTierRef ref) async {
+Future<DeviceTier> deviceTier(Ref ref) async {
   final deviceInfo = DeviceInfoPlugin();
   
   if (Platform.isAndroid) {

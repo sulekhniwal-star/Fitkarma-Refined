@@ -8,7 +8,6 @@ import '../../../shared/widgets/ambient_widgets.dart';
 import '../../../shared/widgets/food_widgets.dart';
 import '../../../shared/widgets/glass_card.dart';
 import '../../../shared/widgets/interaction_widgets.dart';
-import '../providers/food_provider.dart';
 
 // ── Static mock data ───────────────────────────────────────────────────────────
 

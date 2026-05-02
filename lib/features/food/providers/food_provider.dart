@@ -7,7 +7,7 @@ import 'package:fitkarma/features/food/repositories/food_repository.dart';
 part 'food_provider.g.dart';
 
 @riverpod
-FoodRepository foodRepository(FoodRepositoryRef ref) {
+FoodRepository foodRepository(Ref ref) {
   return FoodRepository(
     ref.watch(appDatabaseProvider),
     ref.watch(appwriteTablesDBProvider),
@@ -18,7 +18,7 @@ FoodRepository foodRepository(FoodRepositoryRef ref) {
 class FoodLogNotifier extends _$FoodLogNotifier {
   @override
   Stream<List<FoodLog>> build(DateTime date) {
-    final authState = ref.watch(authNotifierProvider);
+    final authState = ref.watch(authProvider);
     final user = authState.asData?.value;
     
     if (user == null) return Stream.value([]);
@@ -46,7 +46,7 @@ class FoodLogNotifier extends _$FoodLogNotifier {
 }
 
 @riverpod
-double todayCalories(TodayCaloriesRef ref) {
+double todayCalories(Ref ref) {
   final now = DateTime.now();
   final logsAsync = ref.watch(foodLogNotifierProvider(DateTime(now.year, now.month, now.day)));
   
@@ -58,7 +58,7 @@ double todayCalories(TodayCaloriesRef ref) {
 }
 
 @riverpod
-Future<List<FoodLog>> foodSearch(FoodSearchRef ref, String query) async {
+Future<List<FoodLog>> foodSearch(Ref ref, String query) async {
   if (query.trim().isEmpty) return [];
   
   final repo = ref.read(foodRepositoryProvider);

@@ -22,7 +22,7 @@ class WeddingPlanNotifier extends _$WeddingPlanNotifier {
     required String goal,
     String? relation,
   }) async {
-    final authState = ref.read(authNotifierProvider);
+    final authState = ref.read(authProvider);
     final user = authState.asData?.value;
     if (user == null) return;
 
@@ -60,8 +60,8 @@ class WeddingPlanNotifier extends _$WeddingPlanNotifier {
 }
 
 @riverpod
-Stream<WeddingPlan?> activeWeddingPlan(ActiveWeddingPlanRef ref) {
-  final authState = ref.watch(authNotifierProvider);
+Stream<WeddingPlan?> activeWeddingPlan(Ref ref) {
+  final authState = ref.watch(authProvider);
   final user = authState.asData?.value;
   if (user == null) return Stream.value(null);
 
@@ -69,7 +69,7 @@ Stream<WeddingPlan?> activeWeddingPlan(ActiveWeddingPlanRef ref) {
 }
 
 @riverpod
-String weddingPhase(WeddingPhaseRef ref) {
+String weddingPhase(Ref ref) {
   final planAsync = ref.watch(activeWeddingPlanProvider);
   
   return planAsync.when(
@@ -93,7 +93,7 @@ String weddingPhase(WeddingPhaseRef ref) {
 }
 
 @riverpod
-Map<String, dynamic> weddingEventDiet(WeddingEventDietRef ref, String eventKey) {
+Map<String, dynamic> weddingEventDiet(Ref ref, String eventKey) {
   // Logic for specific wedding events
   switch (eventKey.toLowerCase()) {
     case 'haldi':

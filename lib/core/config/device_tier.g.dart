@@ -6,21 +6,38 @@ part of 'device_tier.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$deviceTierHash() => r'3bfa1062ca1d6af7c94ffb3492e45f09d4835888';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [deviceTier].
 @ProviderFor(deviceTier)
-final deviceTierProvider = AutoDisposeFutureProvider<DeviceTier>.internal(
-  deviceTier,
-  name: r'deviceTierProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$deviceTierHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+final deviceTierProvider = DeviceTierProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef DeviceTierRef = AutoDisposeFutureProviderRef<DeviceTier>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+final class DeviceTierProvider extends $FunctionalProvider<
+        AsyncValue<DeviceTier>, DeviceTier, FutureOr<DeviceTier>>
+    with $FutureModifier<DeviceTier>, $FutureProvider<DeviceTier> {
+  DeviceTierProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'deviceTierProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$deviceTierHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<DeviceTier> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<DeviceTier> create(Ref ref) {
+    return deviceTier(ref);
+  }
+}
+
+String _$deviceTierHash() => r'c45651e7bf359ab0b7b4641c47c72bebd891aea8';

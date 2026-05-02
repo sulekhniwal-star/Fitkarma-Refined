@@ -6,13 +6,13 @@ import '../../../core/providers/core_providers.dart';
 part 'festival_provider.g.dart';
 
 @riverpod
-Stream<List<Festival>> activeFestivals(ActiveFestivalsRef ref) {
+Stream<List<Festival>> activeFestivals(Ref ref) {
   final db = ref.watch(appDatabaseProvider);
   return db.watchActiveFestivals(DateTime.now());
 }
 
 @riverpod
-Stream<List<Festival>> upcomingFestivals(UpcomingFestivalsRef ref) {
+Stream<List<Festival>> upcomingFestivals(Ref ref) {
   final db = ref.watch(appDatabaseProvider);
   return db.watchUpcomingFestivals(DateTime.now(), 30);
 }
@@ -35,7 +35,7 @@ class UserFestivalFilter extends _$UserFestivalFilter {
 }
 
 @riverpod
-Future<Map<String, dynamic>?> festivalDietPlan(FestivalDietPlanRef ref, String festivalId) async {
+Future<Map<String, dynamic>?> festivalDietPlan(Ref ref, String festivalId) async {
   final db = ref.watch(appDatabaseProvider);
   final festival = await db.getFestivalByKey(festivalId);
   if (festival?.dietPlanJson == null) return null;
@@ -48,7 +48,7 @@ Future<Map<String, dynamic>?> festivalDietPlan(FestivalDietPlanRef ref, String f
 }
 
 @riverpod
-List<Festival> filteredActiveFestivals(FilteredActiveFestivalsRef ref) {
+List<Festival> filteredActiveFestivals(Ref ref) {
   final festivals = ref.watch(activeFestivalsProvider).asData?.value ?? [];
   final filters = ref.watch(userFestivalFilterProvider);
   

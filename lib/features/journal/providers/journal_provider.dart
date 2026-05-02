@@ -14,7 +14,7 @@ part 'journal_provider.g.dart';
 class JournalNotifier extends _$JournalNotifier {
   @override
   FutureOr<List<JournalEntry>> build() async {
-    final authState = ref.watch(authNotifierProvider);
+    final authState = ref.watch(authProvider);
     final user = authState.asData?.value;
     if (user == null) return [];
 
@@ -28,7 +28,7 @@ class JournalNotifier extends _$JournalNotifier {
     String? moodEmoji,
     List<String>? tags,
   }) async {
-    final authState = ref.read(authNotifierProvider);
+    final authState = ref.read(authProvider);
     final user = authState.asData?.value;
     if (user == null) return;
 
@@ -69,8 +69,8 @@ class JournalNotifier extends _$JournalNotifier {
 }
 
 @riverpod
-Future<List<JournalEntry>> journalEntries(JournalEntriesRef ref, {int limit = 20, int offset = 0}) async {
-  final authState = ref.watch(authNotifierProvider);
+Future<List<JournalEntry>> journalEntries(Ref ref, {int limit = 20, int offset = 0}) async {
+  final authState = ref.watch(authProvider);
   final user = authState.asData?.value;
   if (user == null) return [];
 
@@ -78,7 +78,7 @@ Future<List<JournalEntry>> journalEntries(JournalEntriesRef ref, {int limit = 20
 }
 
 @riverpod
-String journalPrompt(JournalPromptRef ref) {
+String journalPrompt(Ref ref) {
   final steps = ref.watch(stepsProvider).asData?.value ?? 0;
   final habits = ref.watch(todayHabitsProvider).asData?.value ?? [];
   

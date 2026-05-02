@@ -87,7 +87,7 @@ class _FastingTimerScreenState extends ConsumerState<FastingTimerScreen> {
     final divider = isDark ? AppColorsDark.divider : AppColorsLight.divider;
     final surface0 = isDark ? AppColorsDark.surface0 : AppColorsLight.surface0;
 
-    final startTime = ref.watch(fastingTimerNotifierProvider);
+    final startTime = ref.watch(fastingTimerProvider);
     final stage = ref.watch(fastingStageProvider);
     final elapsed = ref.watch(fastingDurationProvider);
     final isActive = startTime != null;
@@ -361,10 +361,10 @@ class _FastingTimerScreenState extends ConsumerState<FastingTimerScreen> {
                   _ControlButtons(
                     isActive: isActive,
                     onStart: () => ref
-                        .read(fastingTimerNotifierProvider.notifier)
+                        .read(fastingTimerProvider.notifier)
                         .startFast(),
                     onStop: () => ref
-                        .read(fastingTimerNotifierProvider.notifier)
+                        .read(fastingTimerProvider.notifier)
                         .stopFast(),
                     text0: text0,
                     text2: text2,

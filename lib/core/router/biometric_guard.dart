@@ -22,7 +22,7 @@ class _BiometricGuardState extends ConsumerState<BiometricGuard> {
   }
 
   Future<void> _checkBiometrics() async {
-    final settings = ref.read(biometricLockNotifierProvider);
+    final settings = ref.read(biometricLockProvider);
     if (!settings) {
       setState(() => _isAuthorized = true);
       return;

@@ -29,6 +29,6 @@ class HealthService {
 }
 
 @Riverpod(keepAlive: true)
-HealthService healthService(HealthServiceRef ref) {
+HealthService healthService(Ref ref) {
   return HealthService();
 }

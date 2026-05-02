@@ -6,232 +6,214 @@ part of 'festival_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$activeFestivalsHash() => r'5ec7bc13a9bd50136377fefcc0ffa886d6b9ec0e';
+// ignore_for_file: type=lint, type=warning
 
-/// See also [activeFestivals].
 @ProviderFor(activeFestivals)
-final activeFestivalsProvider =
-    AutoDisposeStreamProvider<List<Festival>>.internal(
-  activeFestivals,
-  name: r'activeFestivalsProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$activeFestivalsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+final activeFestivalsProvider = ActiveFestivalsProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef ActiveFestivalsRef = AutoDisposeStreamProviderRef<List<Festival>>;
-String _$upcomingFestivalsHash() => r'51d93a64c9b55b9e83fb7765e5e3007d03f3f072';
-
-/// See also [upcomingFestivals].
-@ProviderFor(upcomingFestivals)
-final upcomingFestivalsProvider =
-    AutoDisposeStreamProvider<List<Festival>>.internal(
-  upcomingFestivals,
-  name: r'upcomingFestivalsProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$upcomingFestivalsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef UpcomingFestivalsRef = AutoDisposeStreamProviderRef<List<Festival>>;
-String _$festivalDietPlanHash() => r'7fe846e52e196283b9f252bcdaca4f6028ca6a68';
-
-/// Copied from Dart SDK
-class _SystemHash {
-  _SystemHash._();
-
-  static int combine(int hash, int value) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + value);
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-    return hash ^ (hash >> 6);
-  }
-
-  static int finish(int hash) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    // ignore: parameter_assignments
-    hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-}
-
-/// See also [festivalDietPlan].
-@ProviderFor(festivalDietPlan)
-const festivalDietPlanProvider = FestivalDietPlanFamily();
-
-/// See also [festivalDietPlan].
-class FestivalDietPlanFamily extends Family<AsyncValue<Map<String, dynamic>?>> {
-  /// See also [festivalDietPlan].
-  const FestivalDietPlanFamily();
-
-  /// See also [festivalDietPlan].
-  FestivalDietPlanProvider call(
-    String festivalId,
-  ) {
-    return FestivalDietPlanProvider(
-      festivalId,
-    );
-  }
-
-  @override
-  FestivalDietPlanProvider getProviderOverride(
-    covariant FestivalDietPlanProvider provider,
-  ) {
-    return call(
-      provider.festivalId,
-    );
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'festivalDietPlanProvider';
-}
-
-/// See also [festivalDietPlan].
-class FestivalDietPlanProvider
-    extends AutoDisposeFutureProvider<Map<String, dynamic>?> {
-  /// See also [festivalDietPlan].
-  FestivalDietPlanProvider(
-    String festivalId,
-  ) : this._internal(
-          (ref) => festivalDietPlan(
-            ref as FestivalDietPlanRef,
-            festivalId,
-          ),
-          from: festivalDietPlanProvider,
-          name: r'festivalDietPlanProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$festivalDietPlanHash,
-          dependencies: FestivalDietPlanFamily._dependencies,
-          allTransitiveDependencies:
-              FestivalDietPlanFamily._allTransitiveDependencies,
-          festivalId: festivalId,
+final class ActiveFestivalsProvider
+    extends $FunctionalProvider<AsyncValue<List<Festival>>, List<Festival>, Stream<List<Festival>>>
+    with $StreamModifier<List<Festival>>, $StreamProvider<List<Festival>> {
+  ActiveFestivalsProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'activeFestivalsProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
         );
 
-  FestivalDietPlanProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.festivalId,
-  }) : super.internal();
+  @override
+  String debugGetCreateSourceHash() => _$activeFestivalsHash();
 
-  final String festivalId;
+  @$internal
+  @override
+  $StreamProviderElement<List<Festival>> $createElement($ProviderPointer pointer) =>
+      $StreamProviderElement(pointer);
 
   @override
-  Override overrideWith(
-    FutureOr<Map<String, dynamic>?> Function(FestivalDietPlanRef provider)
-        create,
-  ) {
-    return ProviderOverride(
+  Stream<List<Festival>> create(Ref ref) {
+    return activeFestivals(ref);
+  }
+}
+
+String _$activeFestivalsHash() => r'activeFestivals_hash_placeholder';
+
+@ProviderFor(upcomingFestivals)
+final upcomingFestivalsProvider = UpcomingFestivalsProvider._();
+
+final class UpcomingFestivalsProvider
+    extends $FunctionalProvider<AsyncValue<List<Festival>>, List<Festival>, Stream<List<Festival>>>
+    with $StreamModifier<List<Festival>>, $StreamProvider<List<Festival>> {
+  UpcomingFestivalsProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'upcomingFestivalsProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$upcomingFestivalsHash();
+
+  @$internal
+  @override
+  $StreamProviderElement<List<Festival>> $createElement($ProviderPointer pointer) =>
+      $StreamProviderElement(pointer);
+
+  @override
+  Stream<List<Festival>> create(Ref ref) {
+    return upcomingFestivals(ref);
+  }
+}
+
+String _$upcomingFestivalsHash() => r'upcomingFestivals_hash_placeholder';
+
+@ProviderFor(UserFestivalFilter)
+final userFestivalFilterProvider = UserFestivalFilterProvider._();
+
+final class UserFestivalFilterProvider
+    extends $NotifierProvider<UserFestivalFilter, Map<String, String?>> {
+  UserFestivalFilterProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'userFestivalFilterProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$userFestivalFilterHash();
+
+  @$internal
+  @override
+  UserFestivalFilter create() => UserFestivalFilter();
+
+  Override overrideWithValue(Map<String, String?> value) {
+    return $ProviderOverride(
       origin: this,
-      override: FestivalDietPlanProvider._internal(
-        (ref) => create(ref as FestivalDietPlanRef),
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        festivalId: festivalId,
-      ),
+      providerOverride: $SyncValueProvider<Map<String, String?>>(value),
     );
   }
+}
 
+String _$userFestivalFilterHash() => r'userFestivalFilter_hash_placeholder';
+
+abstract class _$UserFestivalFilter extends $Notifier<Map<String, String?>> {
+  Map<String, String?> build();
+  @$mustCallSuper
   @override
-  AutoDisposeFutureProviderElement<Map<String, dynamic>?> createElement() {
-    return _FestivalDietPlanProviderElement(this);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return other is FestivalDietPlanProvider && other.festivalId == festivalId;
-  }
-
-  @override
-  int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, festivalId.hashCode);
-
-    return _SystemHash.finish(hash);
+  void runBuild() {
+    final ref = this.ref as $Ref<Map<String, String?>, Map<String, String?>>;
+    final element = ref.element as $ClassProviderElement<
+        AnyNotifier<Map<String, String?>, Map<String, String?>>,
+        Map<String, String?>,
+        Object?,
+        Object?>;
+    element.handleCreate(ref, build);
   }
 }
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin FestivalDietPlanRef
-    on AutoDisposeFutureProviderRef<Map<String, dynamic>?> {
-  /// The parameter `festivalId` of this provider.
-  String get festivalId;
-}
+@ProviderFor(festivalDietPlan)
+const festivalDietPlanProvider = FestivalDietPlanFamily._();
 
-class _FestivalDietPlanProviderElement
-    extends AutoDisposeFutureProviderElement<Map<String, dynamic>?>
-    with FestivalDietPlanRef {
-  _FestivalDietPlanProviderElement(super.provider);
+final class FestivalDietPlanProvider
+    extends $FunctionalProvider<AsyncValue<Map<String, dynamic>?>, Map<String, dynamic>?, FutureOr<Map<String, dynamic>?>>
+    with $FutureModifier<Map<String, dynamic>?>, $FutureProvider<Map<String, dynamic>?> {
+  const FestivalDietPlanProvider._(String festivalId)
+      : _festivalId = festivalId,
+        super(
+          from: festivalDietPlanProvider,
+          argument: festivalId,
+          retry: null,
+          name: r'festivalDietPlanProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  final String _festivalId;
 
   @override
-  String get festivalId => (origin as FestivalDietPlanProvider).festivalId;
+  String debugGetCreateSourceHash() => _$festivalDietPlanHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<Map<String, dynamic>?> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<Map<String, dynamic>?> create(Ref ref) {
+    return festivalDietPlan(ref, _festivalId);
+  }
 }
 
-String _$filteredActiveFestivalsHash() =>
-    r'574a9c8f13c1bad8aa02edf10e121599f3098ed4';
+final class FestivalDietPlanFamily extends Family {
+  const FestivalDietPlanFamily._()
+      : super(
+          retry: null,
+          name: r'festivalDietPlanProvider',
+          dependencies: null,
+          $allTransitiveDependencies: null,
+          isAutoDispose: true,
+        );
 
-/// See also [filteredActiveFestivals].
+  FestivalDietPlanProvider call(String festivalId) =>
+      FestivalDietPlanProvider._(festivalId);
+
+  @override
+  String debugGetCreateSourceHash() => _$festivalDietPlanHash();
+
+  @override
+  String toString() => r'festivalDietPlanProvider';
+}
+
+String _$festivalDietPlanHash() => r'festivalDietPlan_hash_placeholder';
+
 @ProviderFor(filteredActiveFestivals)
-final filteredActiveFestivalsProvider =
-    AutoDisposeProvider<List<Festival>>.internal(
-  filteredActiveFestivals,
-  name: r'filteredActiveFestivalsProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$filteredActiveFestivalsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+final filteredActiveFestivalsProvider = FilteredActiveFestivalsProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef FilteredActiveFestivalsRef = AutoDisposeProviderRef<List<Festival>>;
-String _$userFestivalFilterHash() =>
-    r'f607ce5bbeeb8807c162249a548e8d409676e1fc';
+final class FilteredActiveFestivalsProvider
+    extends $FunctionalProvider<List<Festival>, List<Festival>, List<Festival>>
+    with $Provider<List<Festival>> {
+  FilteredActiveFestivalsProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'filteredActiveFestivalsProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
 
-/// See also [UserFestivalFilter].
-@ProviderFor(UserFestivalFilter)
-final userFestivalFilterProvider = AutoDisposeNotifierProvider<
-    UserFestivalFilter, Map<String, String?>>.internal(
-  UserFestivalFilter.new,
-  name: r'userFestivalFilterProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$userFestivalFilterHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+  @override
+  String debugGetCreateSourceHash() => _$filteredActiveFestivalsHash();
 
-typedef _$UserFestivalFilter = AutoDisposeNotifier<Map<String, String?>>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+  @$internal
+  @override
+  $ProviderElement<List<Festival>> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  List<Festival> create(Ref ref) {
+    return filteredActiveFestivals(ref);
+  }
+
+  Override overrideWithValue(List<Festival> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<List<Festival>>(value),
+    );
+  }
+}
+
+String _$filteredActiveFestivalsHash() => r'filteredActiveFestivals_hash_placeholder';

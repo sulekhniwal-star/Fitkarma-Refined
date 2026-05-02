@@ -6,89 +6,195 @@ part of 'sync_worker.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$connectivityStreamHash() =>
-    r'16fc017b7071ec671b89b1f0b229f3f965f138a9';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [connectivityStream].
-@ProviderFor(connectivityStream)
-final connectivityStreamProvider =
-    AutoDisposeStreamProvider<ConnectivityResult>.internal(
-  connectivityStream,
-  name: r'connectivityStreamProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$connectivityStreamHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+@ProviderFor(SyncWorker)
+final syncWorkerProvider = SyncWorkerProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef ConnectivityStreamRef
-    = AutoDisposeStreamProviderRef<ConnectivityResult>;
-String _$dlqCountHash() => r'81d90bccf9941b72559936d0b3cbc665539b7ab1';
+final class SyncWorkerProvider extends $NotifierProvider<SyncWorker, void> {
+  SyncWorkerProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'syncWorkerProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
 
-/// See also [dlqCount].
-@ProviderFor(dlqCount)
-final dlqCountProvider = AutoDisposeFutureProvider<int>.internal(
-  dlqCount,
-  name: r'dlqCountProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$dlqCountHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+  @override
+  String debugGetCreateSourceHash() => _$syncWorkerHash();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef DlqCountRef = AutoDisposeFutureProviderRef<int>;
-String _$pendingSyncCountHash() => r'9c1e4971d2acffad3afce99f77d4d1ec14da7dd7';
+  @$internal
+  @override
+  SyncWorker create() => SyncWorker();
 
-/// See also [pendingSyncCount].
-@ProviderFor(pendingSyncCount)
-final pendingSyncCountProvider = AutoDisposeFutureProvider<int>.internal(
-  pendingSyncCount,
-  name: r'pendingSyncCountProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$pendingSyncCountHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(void value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<void>(value),
+    );
+  }
+}
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef PendingSyncCountRef = AutoDisposeFutureProviderRef<int>;
-String _$syncManagerHash() => r'4b9da29abd145d0038fca4533924052179561e1c';
-
-/// See also [syncManager].
-@ProviderFor(syncManager)
-final syncManagerProvider = AutoDisposeProvider<void>.internal(
-  syncManager,
-  name: r'syncManagerProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$syncManagerHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef SyncManagerRef = AutoDisposeProviderRef<void>;
 String _$syncWorkerHash() => r'72248529286510a4e45c4aeada6230f947f5588f';
 
-/// See also [SyncWorker].
-@ProviderFor(SyncWorker)
-final syncWorkerProvider =
-    AutoDisposeNotifierProvider<SyncWorker, void>.internal(
-  SyncWorker.new,
-  name: r'syncWorkerProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$syncWorkerHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+abstract class _$SyncWorker extends $Notifier<void> {
+  void build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<void, void>;
+    final element = ref.element as $ClassProviderElement<
+        AnyNotifier<void, void>, void, Object?, Object?>;
+    element.handleCreate(ref, build);
+  }
+}
 
-typedef _$SyncWorker = AutoDisposeNotifier<void>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+@ProviderFor(connectivityStream)
+final connectivityStreamProvider = ConnectivityStreamProvider._();
+
+final class ConnectivityStreamProvider extends $FunctionalProvider<
+        AsyncValue<ConnectivityResult>,
+        ConnectivityResult,
+        Stream<ConnectivityResult>>
+    with
+        $FutureModifier<ConnectivityResult>,
+        $StreamProvider<ConnectivityResult> {
+  ConnectivityStreamProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'connectivityStreamProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$connectivityStreamHash();
+
+  @$internal
+  @override
+  $StreamProviderElement<ConnectivityResult> $createElement(
+          $ProviderPointer pointer) =>
+      $StreamProviderElement(pointer);
+
+  @override
+  Stream<ConnectivityResult> create(Ref ref) {
+    return connectivityStream(ref);
+  }
+}
+
+String _$connectivityStreamHash() =>
+    r'2894935f798f4d0a2de919da66935d44ed0fd5db';
+
+@ProviderFor(dlqCount)
+final dlqCountProvider = DlqCountProvider._();
+
+final class DlqCountProvider
+    extends $FunctionalProvider<AsyncValue<int>, int, FutureOr<int>>
+    with $FutureModifier<int>, $FutureProvider<int> {
+  DlqCountProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'dlqCountProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$dlqCountHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<int> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<int> create(Ref ref) {
+    return dlqCount(ref);
+  }
+}
+
+String _$dlqCountHash() => r'b3967a7f8010c533123a3aa81d49627ef15879e5';
+
+@ProviderFor(pendingSyncCount)
+final pendingSyncCountProvider = PendingSyncCountProvider._();
+
+final class PendingSyncCountProvider
+    extends $FunctionalProvider<AsyncValue<int>, int, FutureOr<int>>
+    with $FutureModifier<int>, $FutureProvider<int> {
+  PendingSyncCountProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'pendingSyncCountProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$pendingSyncCountHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<int> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<int> create(Ref ref) {
+    return pendingSyncCount(ref);
+  }
+}
+
+String _$pendingSyncCountHash() => r'23f39f5a217e42ffb62162c91bf5c3e426a91a39';
+
+@ProviderFor(syncManager)
+final syncManagerProvider = SyncManagerProvider._();
+
+final class SyncManagerProvider extends $FunctionalProvider<void, void, void>
+    with $Provider<void> {
+  SyncManagerProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'syncManagerProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$syncManagerHash();
+
+  @$internal
+  @override
+  $ProviderElement<void> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  void create(Ref ref) {
+    return syncManager(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(void value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<void>(value),
+    );
+  }
+}
+
+String _$syncManagerHash() => r'e6a3b62434545801a009dd10bcec78ad9c8e4f11';

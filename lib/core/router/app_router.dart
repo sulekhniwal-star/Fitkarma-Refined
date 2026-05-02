@@ -28,9 +28,15 @@ import '../../features/health/screens/body_metrics_screen.dart';
 import '../../features/fasting/screens/fasting_timer_screen.dart';
 import '../../features/reports/screens/lab_reports_screen.dart';
 import '../../features/reports/screens/abha_screen.dart';
+import '../../features/health/screens/sleep_screen.dart';
+import '../../features/habit/screens/habit_tracker_screen.dart';
+import '../../features/journal/screens/mood_tracker_screen.dart';
+import '../../features/journal/screens/journal_screen.dart';
+import '../../features/journal/screens/mental_health_hub_screen.dart';
+import '../../features/journal/screens/ayurveda_hub_screen.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
-  final authState = ref.watch(authNotifierProvider);
+  final authState = ref.watch(authProvider);
 
   return GoRouter(
     initialLocation: '/splash',
@@ -107,16 +113,16 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/spo2',            builder: (_, __) => const SpO2Screen()),
       GoRoute(path: '/body-metrics',    builder: (_, __) => const BodyMetricsScreen()),
       GoRoute(path: '/fasting',         builder: (_, __) => const FastingTimerScreen()),
-      GoRoute(path: '/sleep',           builder: (_, __) => const _PlaceholderScreen(name: 'Sleep')),
+      GoRoute(path: '/sleep',           builder: (_, __) => const SleepScreen()),
       GoRoute(path: '/period-tracker',  builder: (_, __) => const BiometricGuard(child: _PlaceholderScreen(name: 'Period Tracker'))),
       
       // Intelligence & Insights
       GoRoute(path: '/karma',           builder: (_, __) => const KarmaHubScreen()),
-      GoRoute(path: '/journal',         builder: (_, __) => const BiometricGuard(child: _PlaceholderScreen(name: 'Journal'))),
-      GoRoute(path: '/mood',            builder: (_, __) => const _PlaceholderScreen(name: 'Mood Tracker')),
-      GoRoute(path: '/mental-health',   builder: (_, __) => const _PlaceholderScreen(name: 'Mental Health')),
-      GoRoute(path: '/ayurveda',        builder: (_, __) => const _PlaceholderScreen(name: 'Ayurveda Profile')),
-      GoRoute(path: '/habits',          builder: (_, __) => const _PlaceholderScreen(name: 'Habits')),
+      GoRoute(path: '/journal',         builder: (_, __) => const BiometricGuard(child: JournalScreen())),
+      GoRoute(path: '/mood',            builder: (_, __) => const MoodTrackerScreen()),
+      GoRoute(path: '/mental-health',   builder: (_, __) => const MentalHealthHubScreen()),
+      GoRoute(path: '/ayurveda',        builder: (_, __) => const AyurvedaHubScreen()),
+      GoRoute(path: '/habits',          builder: (_, __) => const HabitTrackerScreen()),
       
       // Specialized & Infrastructure
       GoRoute(path: '/lab-reports',     builder: (_, __) => const LabReportsScreen()),

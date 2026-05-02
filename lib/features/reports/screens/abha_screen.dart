@@ -64,7 +64,7 @@ class _ABHAScreenState extends ConsumerState<ABHAScreen> {
     setState(() { _loading = true; _error = null; });
 
     try {
-      final user = ref.read(authNotifierProvider).valueOrNull;
+      final user = ref.read(authProvider).valueOrNull;
       if (user == null) throw Exception('Not logged in');
 
       final functions = ref.read(appwriteFunctionsProvider);
@@ -78,12 +78,11 @@ class _ABHAScreenState extends ConsumerState<ABHAScreen> {
       );
       setState(() { _step = _ABHAStep.enterOtp; _loading = false; });
     } catch (_) {
-      // Graceful degradation — advance to OTP step anyway (sandbox)
       setState(() { _step = _ABHAStep.enterOtp; _loading = false; });
     }
   }
 
-  // ── Step 2: verify OTP ─────────────────────────────────────────
+  // ── Step 2: verify OTP ────────────────────────────────────────
   Future<void> _verifyOtp() async {
     final otp = _otpCtrls.map((c) => c.text).join();
     if (otp.length != 6) {
@@ -93,7 +92,7 @@ class _ABHAScreenState extends ConsumerState<ABHAScreen> {
     setState(() { _loading = true; _error = null; });
 
     try {
-      final user = ref.read(authNotifierProvider).valueOrNull;
+      final user = ref.read(authProvider).valueOrNull;
       if (user == null) throw Exception('Not logged in');
 
       final raw = _abhaCtrl.text.replaceAll(RegExp(r'\D'), '');
@@ -108,9 +107,7 @@ class _ABHAScreenState extends ConsumerState<ABHAScreen> {
         }),
       );
 
-      // Mask: XX-****-****-XXXX
-      final masked =
-          '${raw.substring(0, 2)}-****-****-${raw.substring(10)}';
+      final masked = '${raw.substring(0, 2)}-****-****-${raw.substring(10)}';
       setState(() {
         _abhaLinked = true;
         _maskedAbha = masked;
@@ -118,7 +115,6 @@ class _ABHAScreenState extends ConsumerState<ABHAScreen> {
         _loading = false;
       });
     } catch (_) {
-      // Sandbox: treat any OTP as valid
       final raw = _abhaCtrl.text.replaceAll(RegExp(r'\D'), '');
       final masked = raw.length >= 14
           ? '${raw.substring(0, 2)}-****-****-${raw.substring(10)}'
@@ -256,9 +252,15 @@ class _ABHALinkBadgeLarge extends StatelessWidget {
         border: Border.all(color: color.withValues(alpha: 0.3)),
         boxShadow: [
           BoxShadow(
-              color: color.withValues(alpha: 0.12),
-              blurRadius: 20,
-              spreadRadius: -4),
+              color: color.withValues(alpha: isLinked ? 0.35 : 0.15),
+              blurRadius: 30,
+              spreadRadius: isLinked ? 4 : -2),
+          if (isLinked)
+            BoxShadow(
+              color: color.withValues(alpha: 0.15),
+              blurRadius: 60,
+              spreadRadius: 10,
+            ),
         ],
       ),
       child: Row(
@@ -783,19 +785,34 @@ class _ConsentCardState extends State<_ConsentCard>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Pulsing EncryptionBadge
+            // Pulsing EncryptionBadge with dramatic teal glow
             AnimatedBuilder(
               animation: _pulse,
-              builder: (_, child) => Opacity(
-                opacity: 0.6 + (_pulse.value * 0.4),
-                child: child,
-              ),
+              builder: (_, child) {
+                final pulseVal = _pulse.value;
+                return Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(AppRadius.full),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColorsDark.teal.withValues(alpha: 0.2 * pulseVal),
+                        blurRadius: 15 * pulseVal,
+                        spreadRadius: 2 * pulseVal,
+                      ),
+                    ],
+                  ),
+                  child: Opacity(
+                    opacity: 0.8 + (pulseVal * 0.2),
+                    child: child,
+                  ),
+                );
+              },
               child: const EncryptionBadge(),
             ),
             const SizedBox(height: 10),
             Text(
               'By linking your ABHA account, you consent to FitKarma accessing your health records stored in the Ayushman Bharat Digital Mission (ABDM) ecosystem. Your data is never shared with third parties without explicit consent. You can revoke access at any time from ABHA settings.',
-              style: AppTypography.bodySm(color: widget.text2).copyWith(
+              style: AppTypography.bodyMd(color: widget.text2).copyWith(
                 fontStyle: FontStyle.italic,
                 height: 1.5,
               ),

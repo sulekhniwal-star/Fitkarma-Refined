@@ -64,15 +64,15 @@ class FastingTimerNotifier extends _$FastingTimerNotifier {
 }
 
 @riverpod
-Duration fastingDuration(FastingDurationRef ref) {
-  final startTime = ref.watch(fastingTimerNotifierProvider);
+Duration fastingDuration(Ref ref) {
+  final startTime = ref.watch(fastingTimerProvider);
   if (startTime == null) return Duration.zero;
 
   return DateTime.now().difference(startTime);
 }
 
 @riverpod
-FastingStage fastingStage(FastingStageRef ref) {
+FastingStage fastingStage(Ref ref) {
   final duration = ref.watch(fastingDurationProvider);
   if (duration == Duration.zero) return FastingStage.none;
 

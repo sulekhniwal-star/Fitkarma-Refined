@@ -14,7 +14,7 @@ part 'steps_provider.g.dart';
 class Steps extends _$Steps {
   @override
   Stream<int> build() async* {
-    final authState = ref.watch(authNotifierProvider);
+    final authState = ref.watch(authProvider);
     final user = authState.asData?.value;
     if (user == null) {
       yield 0;
@@ -54,8 +54,8 @@ class Steps extends _$Steps {
 }
 
 @riverpod
-Stream<List<StepCount>> stepHistory(StepHistoryRef ref, int days) {
-  final authState = ref.watch(authNotifierProvider);
+Stream<List<StepCount>> stepHistory(Ref ref, int days) {
+  final authState = ref.watch(authProvider);
   final user = authState.asData?.value;
   if (user == null) return Stream.value([]);
 
@@ -63,7 +63,7 @@ Stream<List<StepCount>> stepHistory(StepHistoryRef ref, int days) {
 }
 
 @riverpod
-double adaptiveGoal(AdaptiveGoalRef ref) {
+double adaptiveGoal(Ref ref) {
   final historyAsync = ref.watch(stepHistoryProvider(7));
 
   return historyAsync.when(

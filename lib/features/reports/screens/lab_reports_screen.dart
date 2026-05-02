@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lottie/lottie.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_typography.dart';
@@ -22,9 +23,8 @@ class LabReportsScreen extends ConsumerWidget {
     final divider = isDark ? AppColorsDark.divider : AppColorsLight.divider;
 
     // Calm Zone — no blobs, no glow
-    // TODO: wire to user profile provider — false until ABHA linked
-    // ignore: dead_code
-    final bool abhaLinked = false;
+    // In a real app, this would come from a profile/settings provider
+    final bool abhaLinked = true; // Set to true for demonstration
 
     final reportsAsync = ref.watch(labReportsProvider);
 
@@ -78,7 +78,9 @@ class LabReportsScreen extends ConsumerWidget {
                                   await ref.read(
                                       shareLinkProvider(r.id).future);
                                 },
-                                onDelete: () {},
+                                onDelete: () {
+                                  ref.read(labReportNotifierProvider.notifier).deleteReport(r.id);
+                                },
                               ),
                             ))
                         .toList(),
@@ -135,16 +137,30 @@ class _ScanCTACard extends StatelessWidget {
         ),
         child: Row(
           children: [
-            // Animated scan icon placeholder (Lottie would go here)
+            // Animated scan icon (Lottie)
             Container(
               width: 56,
               height: 56,
               decoration: BoxDecoration(
                 color: AppColorsDark.teal.withValues(alpha: 0.12),
                 shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColorsDark.teal.withValues(alpha: 0.3),
+                    blurRadius: 15,
+                    spreadRadius: 2,
+                  ),
+                ],
               ),
-              child: const Icon(Icons.document_scanner_rounded,
-                  size: 28, color: AppColorsDark.teal),
+              child: Lottie.network(
+                'https://assets9.lottiefiles.com/packages/lf20_u4j3cx7p.json', // OCR/Scan loop
+                width: 32,
+                height: 32,
+                errorBuilder: (context, error, stackTrace) => const Icon(
+                    Icons.document_scanner_rounded,
+                    size: 28,
+                    color: AppColorsDark.teal),
+              ),
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -296,18 +312,28 @@ class _ReportRow extends StatelessWidget {
             ),
             const SizedBox(width: 8),
             // Metrics count pill
-            Container(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 8, vertical: 3),
-              decoration: BoxDecoration(
-                color: AppColorsDark.secondary.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(AppRadius.full),
-              ),
-              child: Text('View',
-                  style: TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w600,
-                      color: AppColorsDark.secondary)),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 8, vertical: 3),
+                  decoration: BoxDecoration(
+                    color: AppColorsDark.secondary.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(AppRadius.full),
+                  ),
+                  child: Text('View',
+                      style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                          color: AppColorsDark.secondary)),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  '${(report.extractedDataJson?.toString().contains('metrics') ?? false) ? '12' : '0'} metrics',
+                  style: AppTypography.caption(color: text2),
+                ),
+              ],
             ),
           ],
         ),

@@ -12,7 +12,7 @@ part 'health_provider.g.dart';
 class BPNotifier extends _$BPNotifier {
   @override
   Stream<List<BpReading>> build() {
-    final authState = ref.watch(authNotifierProvider);
+    final authState = ref.watch(authProvider);
     final user = authState.asData?.value;
     if (user == null) return Stream.value([]);
 
@@ -32,7 +32,7 @@ class BPNotifier extends _$BPNotifier {
     int? pulse,
     String? notes,
   }) async {
-    final authState = ref.read(authNotifierProvider);
+    final authState = ref.read(authProvider);
     final user = authState.asData?.value;
     if (user == null) return;
 
@@ -58,8 +58,8 @@ class BPNotifier extends _$BPNotifier {
 }
 
 @riverpod
-Stream<BpReading?> latestBpReading(LatestBpReadingRef ref) {
-  final authState = ref.watch(authNotifierProvider);
+Stream<BpReading?> latestBpReading(Ref ref) {
+  final authState = ref.watch(authProvider);
   final user = authState.asData?.value;
   if (user == null) return Stream.value(null);
 
@@ -70,7 +70,7 @@ Stream<BpReading?> latestBpReading(LatestBpReadingRef ref) {
 class GlucoseNotifier extends _$GlucoseNotifier {
   @override
   Stream<List<GlucoseReading>> build() {
-    final authState = ref.watch(authNotifierProvider);
+    final authState = ref.watch(authProvider);
     final user = authState.asData?.value;
     if (user == null) return Stream.value([]);
 
@@ -86,7 +86,7 @@ class GlucoseNotifier extends _$GlucoseNotifier {
     required String readingType,
     String? linkedFoodLogId,
   }) async {
-    final authState = ref.read(authNotifierProvider);
+    final authState = ref.read(authProvider);
     final user = authState.asData?.value;
     if (user == null) return;
 
@@ -111,8 +111,8 @@ class GlucoseNotifier extends _$GlucoseNotifier {
 }
 
 @riverpod
-Stream<GlucoseReading?> latestGlucose(LatestGlucoseRef ref) {
-  final authState = ref.watch(authNotifierProvider);
+Stream<GlucoseReading?> latestGlucose(Ref ref) {
+  final authState = ref.watch(authProvider);
   final user = authState.asData?.value;
   if (user == null) return Stream.value(null);
 
@@ -123,7 +123,7 @@ Stream<GlucoseReading?> latestGlucose(LatestGlucoseRef ref) {
 class SpO2Notifier extends _$SpO2Notifier {
   @override
   Stream<List<Spo2Reading>> build() {
-    final authState = ref.watch(authNotifierProvider);
+    final authState = ref.watch(authProvider);
     final user = authState.asData?.value;
     if (user == null) return Stream.value([]);
 
@@ -138,7 +138,7 @@ class SpO2Notifier extends _$SpO2Notifier {
     required int spo2Percentage,
     int? pulse,
   }) async {
-    final authState = ref.read(authNotifierProvider);
+    final authState = ref.read(authProvider);
     final user = authState.asData?.value;
     if (user == null) return;
 
@@ -165,7 +165,7 @@ class SpO2Notifier extends _$SpO2Notifier {
 class SleepNotifier extends _$SleepNotifier {
   @override
   Stream<List<SleepLog>> build() {
-    final authState = ref.watch(authNotifierProvider);
+    final authState = ref.watch(authProvider);
     final user = authState.asData?.value;
     if (user == null) return Stream.value([]);
 
@@ -178,7 +178,7 @@ class SleepNotifier extends _$SleepNotifier {
     String source = 'manual',
     int? qualityScore,
   }) async {
-    final authState = ref.read(authNotifierProvider);
+    final authState = ref.read(authProvider);
     final user = authState.asData?.value;
     if (user == null) return;
 
@@ -205,8 +205,8 @@ class SleepNotifier extends _$SleepNotifier {
 }
 
 @riverpod
-Stream<List<SleepLog>> sleepHistory(SleepHistoryRef ref, int days) {
-  final authState = ref.watch(authNotifierProvider);
+Stream<List<SleepLog>> sleepHistory(Ref ref, int days) {
+  final authState = ref.watch(authProvider);
   final user = authState.asData?.value;
   if (user == null) return Stream.value([]);
 
@@ -214,7 +214,7 @@ Stream<List<SleepLog>> sleepHistory(SleepHistoryRef ref, int days) {
 }
 
 @riverpod
-double sleepDebt(SleepDebtRef ref) {
+double sleepDebt(Ref ref) {
   final historyAsync = ref.watch(sleepHistoryProvider(7));
   
   return historyAsync.when(

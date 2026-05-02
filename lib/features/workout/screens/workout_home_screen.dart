@@ -8,7 +8,6 @@ import '../../../core/theme/app_typography.dart';
 import '../../../shared/widgets/ambient_widgets.dart';
 import '../../../shared/widgets/animation_widgets.dart';
 import '../../../shared/widgets/glass_card.dart';
-import '../providers/workout_provider.dart';
 
 const _categories = [
   'All', 'Yoga', 'HIIT', 'Strength', 'Cardio',

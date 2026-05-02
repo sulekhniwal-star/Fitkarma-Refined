@@ -1,8 +1,4 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import '../../health/providers/health_provider.dart';
-import '../../steps/providers/steps_provider.dart';
-import '../../journal/providers/mood_provider.dart';
-import 'package:collection/collection.dart';
 
 part 'insight_provider.g.dart';
 
@@ -49,7 +45,7 @@ class CorrelationEngine extends _$CorrelationEngine {
 }
 
 @riverpod
-Future<String> dashboardInsight(DashboardInsightRef ref) async {
+Future<String> dashboardInsight(Ref ref) async {
   final engine = ref.read(correlationEngineProvider.notifier);
   
   final sleepMood = await engine.sleepMoodInsight();

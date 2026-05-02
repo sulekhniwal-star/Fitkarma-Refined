@@ -43,40 +43,58 @@ class SyncWorker extends _$SyncWorker {
 }
 
 @riverpod
-Stream<ConnectivityResult> connectivityStream(ConnectivityStreamRef ref) {
+Stream<ConnectivityResult> connectivityStream(Ref ref) {
   return Connectivity().onConnectivityChanged.map((results) => results.first);
 }
 
 @riverpod
-Future<int> dlqCount(DlqCountRef ref) async {
+Future<int> dlqCount(Ref ref) async {
   final db = ref.read(appDatabaseProvider);
   int count = 0;
   
-  count += (await db.getDLQRecords(db.foodLogs)).length;
-  count += (await db.getDLQRecords(db.bpReadings)).length;
-  count += (await db.getDLQRecords(db.glucoseReadings)).length;
-  count += (await db.getDLQRecords(db.spo2Readings)).length;
-  count += (await db.getDLQRecords(db.sleepLogs)).length;
+  final foodLogsDLQ = await db.getDLQRecords(db.foodLogs);
+  count += foodLogsDLQ.length.toInt();
+  
+  final bpReadingsDLQ = await db.getDLQRecords(db.bpReadings);
+  count += bpReadingsDLQ.length.toInt();
+  
+  final glucoseReadingsDLQ = await db.getDLQRecords(db.glucoseReadings);
+  count += glucoseReadingsDLQ.length.toInt();
+  
+  final spo2ReadingsDLQ = await db.getDLQRecords(db.spo2Readings);
+  count += spo2ReadingsDLQ.length.toInt();
+  
+  final sleepLogsDLQ = await db.getDLQRecords(db.sleepLogs);
+  count += sleepLogsDLQ.length.toInt();
   
   return count;
 }
 
 @riverpod
-Future<int> pendingSyncCount(PendingSyncCountRef ref) async {
+Future<int> pendingSyncCount(Ref ref) async {
   final db = ref.read(appDatabaseProvider);
   int count = 0;
   
-  count += (await db.getPendingRecords(db.foodLogs)).length;
-  count += (await db.getPendingRecords(db.bpReadings)).length;
-  count += (await db.getPendingRecords(db.glucoseReadings)).length;
-  count += (await db.getPendingRecords(db.spo2Readings)).length;
-  count += (await db.getPendingRecords(db.sleepLogs)).length;
+  final foodLogsPending = await db.getPendingRecords(db.foodLogs);
+  count += foodLogsPending.length.toInt();
+  
+  final bpReadingsPending = await db.getPendingRecords(db.bpReadings);
+  count += bpReadingsPending.length.toInt();
+  
+  final glucoseReadingsPending = await db.getPendingRecords(db.glucoseReadings);
+  count += glucoseReadingsPending.length.toInt();
+  
+  final spo2ReadingsPending = await db.getPendingRecords(db.spo2Readings);
+  count += spo2ReadingsPending.length.toInt();
+  
+  final sleepLogsPending = await db.getPendingRecords(db.sleepLogs);
+  count += sleepLogsPending.length.toInt();
   
   return count;
 }
 
 @riverpod
-void syncManager(SyncManagerRef ref) {
+void syncManager(Ref ref) {
   final connectivity = ref.watch(connectivityStreamProvider);
   
   connectivity.whenData((status) {

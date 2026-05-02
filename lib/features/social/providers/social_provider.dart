@@ -15,7 +15,7 @@ class SocialFeedNotifier extends _$SocialFeedNotifier {
   }
 
   Future<void> createPost({required String content, String? mediaFileId}) async {
-    final authState = ref.read(authNotifierProvider);
+    final authState = ref.read(authProvider);
     final user = authState.asData?.value;
     if (user == null) return;
 
@@ -49,18 +49,18 @@ class SocialFeedNotifier extends _$SocialFeedNotifier {
 }
 
 @riverpod
-Stream<void> socialRealtime(SocialRealtimeRef ref) {
+Stream<void> socialRealtime(Ref ref) {
   // Realtime subscription placeholder
   return const Stream.empty();
 }
 
 @riverpod
-Stream<List<CommunityGroup>> groups(GroupsRef ref) {
+Stream<List<CommunityGroup>> groups(Ref ref) {
   return ref.watch(appDatabaseProvider).watchAllGroups();
 }
 
 @riverpod
-Stream<List<CommunityGroup>> myGroups(MyGroupsRef ref) {
+Stream<List<CommunityGroup>> myGroups(Ref ref) {
   return ref.watch(appDatabaseProvider).watchJoinedGroups();
 }
 

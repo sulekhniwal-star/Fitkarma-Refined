@@ -24,7 +24,7 @@ class KarmaService {
 }
 
 @riverpod
-KarmaService karmaService(KarmaServiceRef ref) {
+KarmaService karmaService(Ref ref) {
   return KarmaService(ref.watch(appwriteFunctionsProvider));
 }
 
@@ -44,8 +44,8 @@ class XpFloatNotifier extends _$XpFloatNotifier {
 }
 
 @riverpod
-Stream<UserProfile?> userKarma(UserKarmaRef ref) {
-  final authState = ref.watch(authNotifierProvider);
+Stream<UserProfile?> userKarma(Ref ref) {
+  final authState = ref.watch(authProvider);
   final user = authState.asData?.value;
   if (user == null) return Stream.value(null);
 
@@ -53,7 +53,7 @@ Stream<UserProfile?> userKarma(UserKarmaRef ref) {
 }
 
 @riverpod
-Future<List<dynamic>> leaderboard(LeaderboardRef ref, String type) async {
+Future<List<dynamic>> leaderboard(Ref ref, String type) async {
   // Mocking leaderboard data for now as it usually requires a custom function or large query
   await Future.delayed(const Duration(seconds: 1));
   return [

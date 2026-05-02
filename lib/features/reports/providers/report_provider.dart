@@ -19,7 +19,7 @@ class LabReportNotifier extends _$LabReportNotifier {
   }
 
   Future<void> importFromOCR(File file) async {
-    final authState = ref.read(authNotifierProvider);
+    final authState = ref.read(authProvider);
     final user = authState.asData?.value;
     if (user == null) return;
 
@@ -33,15 +33,22 @@ class LabReportNotifier extends _$LabReportNotifier {
       fileName: file.path.split('/').last,
       fileId: fileId,
       createdAt: DateTime.now(),
+      reportDate: Value(DateTime.now()), // Default to now for mock
+      extractedDataJson: const Value('{"metrics": 12}'), // Mock extracted metrics
     );
 
     await db.into(db.labReports).insert(companion);
   }
+
+  Future<void> deleteReport(String id) async {
+    final db = ref.read(appDatabaseProvider);
+    await (db.delete(db.labReports)..where((t) => t.id.equals(id))).go();
+  }
 }
 
 @riverpod
-Stream<List<LabReport>> labReports(LabReportsRef ref) {
-  final authState = ref.watch(authNotifierProvider);
+Stream<List<LabReport>> labReports(Ref ref) {
+  final authState = ref.watch(authProvider);
   final user = authState.asData?.value;
   if (user == null) return Stream.value([]);
 
@@ -49,12 +56,12 @@ Stream<List<LabReport>> labReports(LabReportsRef ref) {
 }
 
 @riverpod
-Future<String> shareLink(ShareLinkRef ref, String reportId) async {
+Future<String> shareLink(Ref ref, String reportId) async {
   return "https://fitkarma.app/share/report/$reportId";
 }
 
 @riverpod
-Map<String, dynamic> healthReport(HealthReportRef ref, String period) {
+Map<String, dynamic> healthReport(Ref ref, String period) {
   final steps = ref.watch(stepsProvider).asData?.value ?? 0;
   
   return {

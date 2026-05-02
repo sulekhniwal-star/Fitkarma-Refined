@@ -152,13 +152,13 @@ class NotificationPrefsNotifier extends _$NotificationPrefsNotifier {
 }
 
 @riverpod
-List<String> wearables(WearablesRef ref) {
+List<String> wearables(Ref ref) {
   // Placeholder for connected devices
   return ['Health Connect', 'Google Fit'];
 }
 
 @riverpod
-String subscriptionStatus(SubscriptionStatusRef ref) {
+String subscriptionStatus(Ref ref) {
   // Placeholder for subscription state
   return 'free';
 }

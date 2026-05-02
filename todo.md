@@ -707,28 +707,28 @@ All in `lib/shared/widgets/`. Every widget must be tier-aware via `deviceTierPro
 
 ## 17. Screens — Lifestyle Trackers
 
-- [ ] **SleepScreen** (`/sleep`) — Pattern B (`heroSleep` 3-stop gradient)
-  - [ ] Hero: duration `metricXL`, quality emoji animated float, "Good/Poor Sleep" badge
-  - [ ] 7-day sleep bar chart (green ≥7h / amber 6-7h / red <6h)
-  - [ ] Sleep Debt card (secondary glow, deficit/credit animated bars)
-  - [ ] Chronotype card (shown after 30+ days: Owl/Lark + optimal window)
-  - [ ] Ayurvedic sleep tip (if avg <6h, teal border)
-  - [ ] Log Sleep FAB
+- [x] **SleepScreen** (`/sleep`) — Pattern B (`heroSleep` 3-stop gradient)
+  - [x] Hero: duration `metricXL`, quality emoji animated float, "Good/Poor Sleep" badge
+  - [x] 7-day sleep bar chart (green ≥7h / amber 6-7h / red <6h)
+  - [x] Sleep Debt card (secondary glow, deficit/credit animated bars)
+  - [x] Chronotype card (shown after 30+ days: Owl/Lark + optimal window)
+  - [x] Ayurvedic sleep tip (if avg <6h, teal border)
+  - [x] Log Sleep FAB
 
-- [ ] **HabitTrackerScreen** (`/habits`) — Pattern A
-  - [ ] Today's habits glass card stack (icon, name, target bar, `StreakFlameWidget`)
-  - [ ] Streak Recovery amber pill (if streak broken ≤24h, once/month)
-  - [ ] Weekly heatmap GitHub-style (surface1 → primary50 → primary100)
-  - [ ] Streak stats: current vs longest, monoLg, side-by-side glass card
+- [x] **HabitTrackerScreen** (`/habits`) — Pattern A
+  - [x] Today's habits glass card stack (icon, name, target bar, `StreakFlameWidget`)
+  - [x] Streak Recovery amber pill (if streak broken ≤24h, once/month)
+  - [x] Weekly heatmap GitHub-style (surface1 → primary50 → primary100)
+  - [x] Streak stats: current vs longest, monoLg, side-by-side glass card
 
-- [ ] **MoodTrackerScreen** (`/mood`) — Pattern A
-  - [ ] Today's mood: 5 emoji buttons (spring pop, primary ring on select)
-  - [ ] Energy level slider (0–10, gradient)
-  - [ ] Tags multi-select chips (Stressed/Happy/Tired/Calm/Anxious/Energised/Focused)
-  - [ ] `[Save Today's Mood]` primary full-width
-  - [ ] 7-day mood heatmap (tap day → detail overlay)
-  - [ ] Mood-Sleep `CorrelationInsightCard` (shown after 14+ data points)
-  - [ ] Mood trend spline chart (purple fill)
+- [x] **MoodTrackerScreen** (`/mood`) — Pattern A
+  - [x] Today's mood: 5 emoji buttons (spring pop, primary ring on select)
+  - [x] Energy level slider (0–10, gradient)
+  - [x] Tags multi-select chips (Stressed/Happy/Tired/Calm/Anxious/Energised/Focused)
+  - [x] `[Save Today's Mood]` primary full-width
+  - [x] 7-day mood heatmap (tap day → detail overlay)
+  - [x] Mood-Sleep `CorrelationInsightCard` (shown after 14+ data points)
+  - [x] Mood trend spline chart (purple fill)
 
 ---
 

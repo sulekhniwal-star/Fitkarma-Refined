@@ -6,22 +6,45 @@ part of 'habit_repository.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$habitRepositoryHash() => r'55fb2cc8315932c8d3c0d8e3f19d2e726e557ceb';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [habitRepository].
 @ProviderFor(habitRepository)
-final habitRepositoryProvider = AutoDisposeProvider<HabitRepository>.internal(
-  habitRepository,
-  name: r'habitRepositoryProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$habitRepositoryHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+final habitRepositoryProvider = HabitRepositoryProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef HabitRepositoryRef = AutoDisposeProviderRef<HabitRepository>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+final class HabitRepositoryProvider extends $FunctionalProvider<HabitRepository,
+    HabitRepository, HabitRepository> with $Provider<HabitRepository> {
+  HabitRepositoryProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'habitRepositoryProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$habitRepositoryHash();
+
+  @$internal
+  @override
+  $ProviderElement<HabitRepository> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  HabitRepository create(Ref ref) {
+    return habitRepository(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(HabitRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<HabitRepository>(value),
+    );
+  }
+}
+
+String _$habitRepositoryHash() => r'1b28557596a18b879987f926522de0e5aac2c260';

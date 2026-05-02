@@ -6,22 +6,47 @@ part of 'health_repository.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$healthRepositoryHash() => r'046d419e508d1b1890e374e46586898241ae02e3';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [healthRepository].
 @ProviderFor(healthRepository)
-final healthRepositoryProvider = AutoDisposeProvider<HealthRepository>.internal(
-  healthRepository,
-  name: r'healthRepositoryProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$healthRepositoryHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+final healthRepositoryProvider = HealthRepositoryProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef HealthRepositoryRef = AutoDisposeProviderRef<HealthRepository>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+final class HealthRepositoryProvider extends $FunctionalProvider<
+    HealthRepository,
+    HealthRepository,
+    HealthRepository> with $Provider<HealthRepository> {
+  HealthRepositoryProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'healthRepositoryProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$healthRepositoryHash();
+
+  @$internal
+  @override
+  $ProviderElement<HealthRepository> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  HealthRepository create(Ref ref) {
+    return healthRepository(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(HealthRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<HealthRepository>(value),
+    );
+  }
+}
+
+String _$healthRepositoryHash() => r'2943d41d48a207c6e1e76ca4077e235820c864d8';

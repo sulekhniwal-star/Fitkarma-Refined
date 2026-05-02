@@ -42,7 +42,7 @@ class WorkoutRepository {
 }
 
 @riverpod
-WorkoutRepository workoutRepository(WorkoutRepositoryRef ref) {
+WorkoutRepository workoutRepository(Ref ref) {
   return WorkoutRepository(
     ref.watch(appDatabaseProvider),
     ref.watch(appwriteTablesDBProvider),

@@ -18,7 +18,7 @@ class MoodNotifier extends _$MoodNotifier {
     required String emoji,
     List<String>? tags,
   }) async {
-    final authState = ref.read(authNotifierProvider);
+    final authState = ref.read(authProvider);
     final user = authState.asData?.value;
     if (user == null) return;
 
@@ -40,8 +40,8 @@ class MoodNotifier extends _$MoodNotifier {
 }
 
 @riverpod
-Stream<JournalEntry?> todayMood(TodayMoodRef ref) {
-  final authState = ref.watch(authNotifierProvider);
+Stream<JournalEntry?> todayMood(Ref ref) {
+  final authState = ref.watch(authProvider);
   final user = authState.asData?.value;
   if (user == null) return Stream.value(null);
 
@@ -49,8 +49,8 @@ Stream<JournalEntry?> todayMood(TodayMoodRef ref) {
 }
 
 @riverpod
-Stream<List<JournalEntry>> moodHistory(MoodHistoryRef ref, int days) {
-  final authState = ref.watch(authNotifierProvider);
+Stream<List<JournalEntry>> moodHistory(Ref ref, int days) {
+  final authState = ref.watch(authProvider);
   final user = authState.asData?.value;
   if (user == null) return Stream.value([]);
 

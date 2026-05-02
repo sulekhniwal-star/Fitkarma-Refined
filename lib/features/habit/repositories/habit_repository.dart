@@ -39,7 +39,7 @@ class HabitRepository {
 }
 
 @riverpod
-HabitRepository habitRepository(HabitRepositoryRef ref) {
+HabitRepository habitRepository(Ref ref) {
   return HabitRepository(
     ref.watch(appDatabaseProvider),
     ref.watch(appwriteTablesDBProvider),
