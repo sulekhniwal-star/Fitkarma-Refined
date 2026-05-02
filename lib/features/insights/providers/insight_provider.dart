@@ -1,4 +1,8 @@
+import 'package:collection/collection.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import '../../health/providers/health_provider.dart';
+import '../../journal/providers/mood_provider.dart';
+import '../../steps/providers/steps_provider.dart';
 
 part 'insight_provider.g.dart';
 
@@ -13,8 +17,8 @@ class CorrelationEngine extends _$CorrelationEngine {
 
     if (sleep.length < 5 || mood.length < 5) return null;
 
-    final avgSleep = sleep.map((e) => e.durationMinutes).average / 60.0;
-    final avgMood = mood.map((e) => e.moodScore ?? 5).average;
+    final avgSleep = sleep.map((e) => e.durationMinutes as int).average / 60.0;
+    final avgMood = mood.map((e) => (e.moodScore ?? 5) as int).average;
 
     if (avgSleep < 6 && avgMood < 6) {
       return "Low sleep (avg ${avgSleep.toStringAsFixed(1)}h) is correlating with lower mood. Try getting 7+ hours tonight.";
@@ -28,8 +32,8 @@ class CorrelationEngine extends _$CorrelationEngine {
 
     if (stepsHistory.length < 3 || moodHistory.length < 3) return null;
 
-    final avgSteps = stepsHistory.map((e) => e.count).average;
-    final avgMood = moodHistory.map((e) => e.moodScore ?? 5).average;
+    final avgSteps = stepsHistory.map((e) => e.count as int).average;
+    final avgMood = moodHistory.map((e) => (e.moodScore ?? 5) as int).average;
 
     if (avgSteps > 8000 && avgMood > 7) {
       return "Great job! High activity (avg ${avgSteps.toInt()} steps) is strongly linked to your peak mood scores.";

@@ -33,8 +33,13 @@ class _FoodHomeScreenState extends ConsumerState<FoodHomeScreen> {
 
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
-    final logsAsync = ref.watch(foodLogNotifierProvider(today));
+    final logsAsync = ref.watch(foodLogProvider(today));
     final totalCalories = ref.watch(todayCaloriesProvider);
+    final totalCaloriesValue = totalCalories.when(
+      data: (value) => value,
+      loading: () => 0.0,
+      error: (_, __) => 0.0,
+    );
 
     return Scaffold(
       backgroundColor: bg1,
@@ -94,7 +99,7 @@ class _FoodHomeScreenState extends ConsumerState<FoodHomeScreen> {
                               children: [
                                 _MacroRing(
                                   label: 'Calories',
-                                  value: totalCalories.toInt(),
+                                  value: totalCaloriesValue.toInt(),
                                   goal: 2000,
                                   unit: 'kcal',
                                   color: primary,
@@ -178,7 +183,7 @@ class _FoodHomeScreenState extends ConsumerState<FoodHomeScreen> {
                                 text0: text0,
                                 text2: text2,
                                 onDelete: () => ref
-                                    .read(foodLogNotifierProvider(today).notifier)
+                                    .read(foodLogProvider(today).notifier)
                                     .deleteFood(log.id),
                               ),
                             )).toList(),

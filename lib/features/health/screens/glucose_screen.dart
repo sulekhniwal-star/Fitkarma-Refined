@@ -59,7 +59,7 @@ class _GlucoseScreenState extends ConsumerState<GlucoseScreen> {
       builder: (_) => _LogGlucoseSheet(
         selectedType: _readingTypes[_typeIndex],
         onSave: (value, type) {
-          ref.read(glucoseNotifierProvider.notifier).logReading(
+          ref.read(glucoseProvider.notifier).logReading(
                 value: value,
                 readingType: type,
               );
@@ -80,7 +80,7 @@ class _GlucoseScreenState extends ConsumerState<GlucoseScreen> {
     final surface0 = isDark ? AppColorsDark.surface0 : AppColorsLight.surface0;
 
     final latestAsync = ref.watch(latestGlucoseProvider);
-    final allAsync = ref.watch(glucoseNotifierProvider);
+    final allAsync = ref.watch(glucoseProvider);
 
     final latest = latestAsync.asData?.value;
     final gClass = latest != null

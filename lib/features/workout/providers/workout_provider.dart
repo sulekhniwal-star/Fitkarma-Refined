@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:drift/drift.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
 import '../../../core/database/app_database.dart';
@@ -13,7 +12,7 @@ part 'workout_provider.g.dart';
 @riverpod
 class WorkoutNotifier extends _$WorkoutNotifier {
   @override
-  Stream<List<Workout>> build() {
+  Stream<List<dynamic>> build() {
     final authState = ref.watch(authProvider);
     final user = authState.asData?.value;
     if (user == null) return Stream.value([]);
@@ -74,7 +73,7 @@ class WorkoutNotifier extends _$WorkoutNotifier {
 }
 
 @riverpod
-Stream<Workout?> activeWorkout(Ref ref) {
+Stream<dynamic> activeWorkout(Ref ref) {
   final authState = ref.watch(authProvider);
   final user = authState.asData?.value;
   if (user == null) return Stream.value(null);
@@ -83,7 +82,7 @@ Stream<Workout?> activeWorkout(Ref ref) {
 }
 
 @riverpod
-Stream<List<Workout>> workoutHistory(Ref ref, {int limit = 20}) {
+Stream<List<dynamic>> workoutHistory(Ref ref, {int limit = 20}) {
   final authState = ref.watch(authProvider);
   final user = authState.asData?.value;
   if (user == null) return Stream.value([]);

@@ -1,5 +1,4 @@
 import 'package:drift/drift.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
 import '../../../core/database/app_database.dart';
@@ -55,7 +54,7 @@ class Steps extends _$Steps {
 }
 
 @riverpod
-Stream<List<StepCount>> stepHistory(Ref ref, int days) {
+Stream<List<dynamic>> stepHistory(Ref ref, int days) {
   final authState = ref.watch(authProvider);
   final user = authState.asData?.value;
   if (user == null) return Stream.value([]);
@@ -69,7 +68,7 @@ Future<double> adaptiveGoal(Ref ref) async {
 
   if (history.isEmpty) return 6000.0; // Default goal
 
-  final average = history.map((e) => e.count).average;
+  final average = history.map((e) => e.count as int).average;
   // Suggest goal 10% higher than average, min 5000, max 15000
   return (average * 1.1).clamp(5000.0, 15000.0);
 }

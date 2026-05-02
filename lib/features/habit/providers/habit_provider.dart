@@ -12,7 +12,7 @@ part 'habit_provider.g.dart';
 @riverpod
 class HabitNotifier extends _$HabitNotifier {
   @override
-  Stream<List<Habit>> build() {
+  Stream<List<dynamic>> build() {
     final authState = ref.watch(authProvider);
     final user = authState.asData?.value;
     if (user == null) return Stream.value([]);
@@ -117,7 +117,7 @@ class HabitNotifier extends _$HabitNotifier {
 }
 
 @riverpod
-Future<List<Habit>> todayHabits(Ref ref) async {
+Future<List<dynamic>> todayHabits(Ref ref) async {
   final authState = ref.watch(authProvider);
   final user = authState.asData?.value;
   if (user == null) return [];

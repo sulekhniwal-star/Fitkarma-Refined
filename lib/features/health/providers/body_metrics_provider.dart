@@ -60,7 +60,7 @@ class BodyMetricsNotifier extends _$BodyMetricsNotifier {
 }
 
 @riverpod
-Stream<List<WeightLog>> weightHistory(Ref ref, int days) {
+Stream<List<dynamic>> weightHistory(Ref ref, int days) {
   final authState = ref.watch(authProvider);
   final user = authState.asData?.value;
   if (user == null) return Stream.value([]);

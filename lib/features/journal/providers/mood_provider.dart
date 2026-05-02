@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:drift/drift.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
 import '../../../core/database/app_database.dart';
@@ -41,7 +40,7 @@ class MoodNotifier extends _$MoodNotifier {
 }
 
 @riverpod
-Stream<JournalEntry?> todayMood(Ref ref) {
+Stream<dynamic> todayMood(Ref ref) {
   final authState = ref.watch(authProvider);
   final user = authState.asData?.value;
   if (user == null) return Stream.value(null);
@@ -50,7 +49,7 @@ Stream<JournalEntry?> todayMood(Ref ref) {
 }
 
 @riverpod
-Stream<List<JournalEntry>> moodHistory(Ref ref, int days) {
+Stream<List<dynamic>> moodHistory(Ref ref, int days) {
   final authState = ref.watch(authProvider);
   final user = authState.asData?.value;
   if (user == null) return Stream.value([]);

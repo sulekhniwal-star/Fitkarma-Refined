@@ -238,9 +238,9 @@ class _StepsScreenState extends ConsumerState<StepsScreen> {
 
                   // ── Adaptive goal card ────────────────────────
                   if (!_goalAccepted &&
-                      suggestedGoal.round() != _dailyGoal)
+                      (suggestedGoal.asData?.value ?? _dailyGoal.toDouble()).round() != _dailyGoal)
                     _AdaptiveGoalCard(
-                      suggested: suggestedGoal.round(),
+                      suggested: (suggestedGoal.asData?.value ?? _dailyGoal.toDouble()).round(),
                       current: _dailyGoal,
                       isDark: isDark,
                       text0: text0,

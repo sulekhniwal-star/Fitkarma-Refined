@@ -1,5 +1,4 @@
 import 'package:drift/drift.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
 import '../../../core/database/app_database.dart';
@@ -12,7 +11,7 @@ part 'health_provider.g.dart';
 @riverpod
 class BPNotifier extends _$BPNotifier {
   @override
-  Stream<List<BpReading>> build() {
+  Stream<List<dynamic>> build() {
     final authState = ref.watch(authProvider);
     final user = authState.asData?.value;
     if (user == null) return Stream.value([]);
@@ -59,7 +58,7 @@ class BPNotifier extends _$BPNotifier {
 }
 
 @riverpod
-Stream<BpReading?> latestBpReading(Ref ref) {
+Stream<dynamic> latestBpReading(Ref ref) {
   final authState = ref.watch(authProvider);
   final user = authState.asData?.value;
   if (user == null) return Stream.value(null);
@@ -70,7 +69,7 @@ Stream<BpReading?> latestBpReading(Ref ref) {
 @riverpod
 class GlucoseNotifier extends _$GlucoseNotifier {
   @override
-  Stream<List<GlucoseReading>> build() {
+  Stream<List<dynamic>> build() {
     final authState = ref.watch(authProvider);
     final user = authState.asData?.value;
     if (user == null) return Stream.value([]);
@@ -112,7 +111,7 @@ class GlucoseNotifier extends _$GlucoseNotifier {
 }
 
 @riverpod
-Stream<GlucoseReading?> latestGlucose(Ref ref) {
+Stream<dynamic> latestGlucose(Ref ref) {
   final authState = ref.watch(authProvider);
   final user = authState.asData?.value;
   if (user == null) return Stream.value(null);
@@ -123,7 +122,7 @@ Stream<GlucoseReading?> latestGlucose(Ref ref) {
 @riverpod
 class SpO2Notifier extends _$SpO2Notifier {
   @override
-  Stream<List<Spo2Reading>> build() {
+  Stream<List<dynamic>> build() {
     final authState = ref.watch(authProvider);
     final user = authState.asData?.value;
     if (user == null) return Stream.value([]);
@@ -165,7 +164,7 @@ class SpO2Notifier extends _$SpO2Notifier {
 @riverpod
 class SleepNotifier extends _$SleepNotifier {
   @override
-  Stream<List<SleepLog>> build() {
+  Stream<List<dynamic>> build() {
     final authState = ref.watch(authProvider);
     final user = authState.asData?.value;
     if (user == null) return Stream.value([]);
@@ -206,7 +205,7 @@ class SleepNotifier extends _$SleepNotifier {
 }
 
 @riverpod
-Stream<List<SleepLog>> sleepHistory(Ref ref, int days) {
+Stream<List<dynamic>> sleepHistory(Ref ref, int days) {
   final authState = ref.watch(authProvider);
   final user = authState.asData?.value;
   if (user == null) return Stream.value([]);
@@ -221,7 +220,10 @@ Future<double> sleepDebt(Ref ref) async {
   if (logs.isEmpty) return 0.0;
   // Target: 7 hours (420 minutes) per day
   const targetMin = 420;
-  final totalMinutes = logs.fold(0, (sum, log) => sum + log.durationMinutes);
+  final totalMinutes = logs.fold<int>(
+    0,
+    (sum, log) => sum + (log.durationMinutes as int),
+  );
   final expectedMinutes = targetMin * 7;
   
   return (expectedMinutes - totalMinutes) / 60.0; // In hours

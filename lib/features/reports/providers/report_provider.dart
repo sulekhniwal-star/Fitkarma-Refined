@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:drift/drift.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
 import '../../../core/database/app_database.dart';
@@ -49,7 +48,7 @@ class LabReportNotifier extends _$LabReportNotifier {
 }
 
 @riverpod
-Stream<List<LabReport>> labReports(Ref ref) {
+Stream<List<dynamic>> labReports(Ref ref) {
   final authState = ref.watch(authProvider);
   final user = authState.asData?.value;
   if (user == null) return Stream.value([]);

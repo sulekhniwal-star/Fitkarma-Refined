@@ -1,5 +1,4 @@
 import 'package:drift/drift.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
 import '../../../core/database/app_database.dart';
@@ -11,7 +10,7 @@ part 'social_provider.g.dart';
 @riverpod
 class SocialFeedNotifier extends _$SocialFeedNotifier {
   @override
-  Stream<List<SocialPost>> build() {
+  Stream<List<dynamic>> build() {
     return ref.watch(appDatabaseProvider).watchSocialFeed();
   }
 
@@ -56,12 +55,12 @@ Stream<bool> socialRealtime(Ref ref) {
 }
 
 @riverpod
-Stream<List<CommunityGroup>> groups(Ref ref) {
+Stream<List<dynamic>> communityGroups(Ref ref) {
   return ref.watch(appDatabaseProvider).watchAllGroups();
 }
 
 @riverpod
-Stream<List<CommunityGroup>> myGroups(Ref ref) {
+Stream<List<dynamic>> myGroups(Ref ref) {
   return ref.watch(appDatabaseProvider).watchJoinedGroups();
 }
 

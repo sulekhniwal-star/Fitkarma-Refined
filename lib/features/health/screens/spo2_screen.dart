@@ -23,7 +23,7 @@ class SpO2Screen extends ConsumerWidget {
       backgroundColor: Colors.transparent,
       builder: (_) => _LogSpO2Sheet(
         onSave: (spo2, pulse) {
-          ref.read(spO2NotifierProvider.notifier).logReading(
+          ref.read(spO2Provider.notifier).logReading(
                 spo2Percentage: spo2,
                 pulse: pulse,
               );
@@ -41,8 +41,8 @@ class SpO2Screen extends ConsumerWidget {
     final surface1 = isDark ? AppColorsDark.surface1 : AppColorsLight.surface1;
     final divider = isDark ? AppColorsDark.divider : AppColorsLight.divider;
 
-    final latestAsync = ref.watch(spO2NotifierProvider);
-    final latest = latestAsync.asData?.value?.isNotEmpty == true
+    final latestAsync = ref.watch(spO2Provider);
+    final latest = latestAsync.asData?.value.isNotEmpty == true
         ? latestAsync.value!.first
         : null;
     final isLow = latest != null && latest.spo2Percentage < 95;

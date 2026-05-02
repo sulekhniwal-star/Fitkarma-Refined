@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:drift/drift.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
 import '../../../core/database/app_database.dart';
@@ -61,7 +60,7 @@ class WeddingPlanNotifier extends _$WeddingPlanNotifier {
 }
 
 @riverpod
-Stream<WeddingPlan?> activeWeddingPlan(Ref ref) {
+Stream<dynamic> activeWeddingPlan(Ref ref) {
   final authState = ref.watch(authProvider);
   final user = authState.asData?.value;
   if (user == null) return Stream.value(null);

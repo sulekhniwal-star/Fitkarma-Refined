@@ -23,7 +23,7 @@ class HabitTrackerScreen extends ConsumerWidget {
     final bg1 = isDark ? AppColorsDark.bg1 : AppColorsLight.bg1;
     final primary = isDark ? AppColorsDark.primary : AppColorsLight.primary;
 
-    final habitsAsync = ref.watch(habitNotifierProvider);
+    final habitsAsync = ref.watch(habitProvider);
     final habits = habitsAsync.asData?.value ?? [];
 
     final today = DateTime.now();
@@ -95,10 +95,10 @@ class HabitTrackerScreen extends ConsumerWidget {
                               text2: text2,
                               primary: primary,
                               onComplete: () => ref
-                                  .read(habitNotifierProvider.notifier)
+                                  .read(habitProvider.notifier)
                                   .completeHabit(h.id),
                               onRecover: () => ref
-                                  .read(habitNotifierProvider.notifier)
+                                  .read(habitProvider.notifier)
                                   .recoverStreak(h.id, ''),
                             ),
                           );
@@ -256,7 +256,7 @@ class HabitTrackerScreen extends ConsumerWidget {
                       onPressed: () {
                         if (nameCtrl.text.trim().isEmpty) return;
                         ref
-                            .read(habitNotifierProvider.notifier)
+                            .read(habitProvider.notifier)
                             .createHabit(
                                 name: nameCtrl.text.trim(),
                                 icon: selectedIcon);

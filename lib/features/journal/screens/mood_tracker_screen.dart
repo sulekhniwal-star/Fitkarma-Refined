@@ -44,7 +44,7 @@ class _MoodTrackerScreenState extends ConsumerState<MoodTrackerScreen> {
     if (_selectedMood == null) return;
     setState(() => _saving = true);
     HapticFeedback.mediumImpact();
-    await ref.read(moodNotifierProvider.notifier).logMood(
+    await ref.read(moodProvider.notifier).logMood(
           score: _selectedMood! + 1,
           emoji: _emojis[_selectedMood!],
           tags: _selectedTags.toList(),

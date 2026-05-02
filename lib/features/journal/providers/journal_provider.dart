@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:drift/drift.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
 import '../../../core/database/app_database.dart';
@@ -14,7 +13,7 @@ part 'journal_provider.g.dart';
 @riverpod
 class JournalNotifier extends _$JournalNotifier {
   @override
-  FutureOr<List<JournalEntry>> build() async {
+  FutureOr<List<dynamic>> build() async {
     final authState = ref.watch(authProvider);
     final user = authState.asData?.value;
     if (user == null) return [];
@@ -70,7 +69,7 @@ class JournalNotifier extends _$JournalNotifier {
 }
 
 @riverpod
-Future<List<JournalEntry>> journalEntries(Ref ref, {int limit = 20, int offset = 0}) async {
+Future<List<dynamic>> journalEntries(Ref ref, {int limit = 20, int offset = 0}) async {
   final authState = ref.watch(authProvider);
   final user = authState.asData?.value;
   if (user == null) return [];

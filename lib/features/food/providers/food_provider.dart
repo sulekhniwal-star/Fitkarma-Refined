@@ -1,7 +1,4 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:appwrite/appwrite.dart';
-import '../../../core/database/app_database.dart';
 import '../../../core/providers/core_providers.dart';
 import '../../auth/providers/auth_provider.dart';
 import '../repositories/food_repository.dart';
@@ -26,6 +23,11 @@ class FoodLogNotifier extends _$FoodLogNotifier {
     if (user == null) return Stream.value([]);
 
     return ref.watch(appDatabaseProvider).watchTodayFoodLogs(user.$id, date);
+  }
+
+  Future<void> deleteFood(String id) async {
+    final db = ref.read(appDatabaseProvider);
+    await (db.delete(db.foodLogs)..where((t) => t.id.equals(id))).go();
   }
 }
 

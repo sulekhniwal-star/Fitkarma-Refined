@@ -69,7 +69,7 @@ class _SleepScreenState extends ConsumerState<SleepScreen>
       backgroundColor: Colors.transparent,
       builder: (_) => _LogSleepSheet(
         onSave: (start, end) {
-          ref.read(sleepNotifierProvider.notifier).logSleep(
+          ref.read(sleepProvider.notifier).logSleep(
                 start: start,
                 end: end,
               );
@@ -93,6 +93,11 @@ class _SleepScreenState extends ConsumerState<SleepScreen>
 
     final history = historyAsync.asData?.value ?? [];
     final allHistory = allHistoryAsync.asData?.value ?? [];
+    final debtHoursValue = debtHours.when(
+      data: (value) => value,
+      loading: () => 0.0,
+      error: (_, __) => 0.0,
+    );
 
     // Latest sleep entry
     final latest = history.isNotEmpty ? history.first : null;
@@ -105,7 +110,10 @@ class _SleepScreenState extends ConsumerState<SleepScreen>
     // Avg sleep for Ayurvedic tip
     final avgMin = allHistory.isEmpty
         ? 0
-        : allHistory.fold(0, (s, l) => s + l.durationMinutes) ~/
+        : allHistory.fold<int>(
+              0,
+              (s, l) => s + (l.durationMinutes as int),
+            ) ~/
             allHistory.length;
     final showAyurveda = avgMin > 0 && avgMin < 360;
 
@@ -241,7 +249,7 @@ class _SleepScreenState extends ConsumerState<SleepScreen>
 
                   // ── Sleep debt card ───────────────────────────
                   _SleepDebtCard(
-                      debtHours: debtHours,
+                      debtHours: debtHoursValue,
                       isDark: isDark,
                       text0: text0,
                       text2: text2),

@@ -43,7 +43,7 @@ class _JournalScreenState extends ConsumerState<JournalScreen> {
     final body = jsonEncode(delta.toJson());
     if (body == '[{"insert":"\\n"}]') return; // empty
     setState(() => _saving = true);
-    await ref.read(journalNotifierProvider.notifier).createEntry(
+    await ref.read(journalProvider.notifier).createEntry(
           body: body,
           moodScore: _selectedMood != null ? _selectedMood! + 1 : null,
           moodEmoji: _selectedMood != null ? _emojis[_selectedMood!] : null,
@@ -91,8 +91,9 @@ class _JournalScreenState extends ConsumerState<JournalScreen> {
     final divider = isDark ? AppColorsDark.divider : AppColorsLight.divider;
     final primary = isDark ? AppColorsDark.primary : AppColorsLight.primary;
 
-    final prompt = ref.watch(journalPromptProvider);
-    final entriesAsync = ref.watch(journalNotifierProvider);
+    final prompt = ref.watch(journalPromptProvider).asData?.value
+        ?? 'How are you feeling today? What\'s one thing you\'re grateful for?';
+    final entriesAsync = ref.watch(journalProvider);
     final entries = entriesAsync.asData?.value ?? [];
     final showSentiment = entries.length >= 30;
 
@@ -181,7 +182,7 @@ class _JournalScreenState extends ConsumerState<JournalScreen> {
                         base: quill.QuillToolbarBaseButtonOptions(
                           iconTheme: quill.QuillIconTheme(
                             iconButtonSelectedData:
-                                IconButtonData(color: primary),
+                                quill.IconButtonData(color: primary),
                           ),
                         ),
                       ),

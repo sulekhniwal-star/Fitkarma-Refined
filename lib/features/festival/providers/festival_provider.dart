@@ -1,18 +1,17 @@
 import 'dart:convert';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import '../../../core/database/app_database.dart';
 import '../../../core/providers/core_providers.dart';
 
 part 'festival_provider.g.dart';
 
 @riverpod
-Stream<List<Festival>> activeFestivals(Ref ref) {
+Stream<List<dynamic>> activeFestivals(Ref ref) {
   final db = ref.watch(appDatabaseProvider);
   return db.watchActiveFestivals(DateTime.now());
 }
 
 @riverpod
-Stream<List<Festival>> upcomingFestivals(Ref ref) {
+Stream<List<dynamic>> upcomingFestivals(Ref ref) {
   final db = ref.watch(appDatabaseProvider);
   return db.watchUpcomingFestivals(DateTime.now(), 30);
 }
@@ -48,7 +47,7 @@ Future<Map<String, Object?>?> festivalDietPlan(Ref ref, String festivalId) async
 }
 
 @riverpod
-Future<List<Festival>> filteredActiveFestivals(Ref ref) async {
+Future<List<dynamic>> filteredActiveFestivals(Ref ref) async {
   final festivals = await ref.watch(activeFestivalsProvider.future);
   final filters = ref.watch(userFestivalFilterProvider);
   

@@ -45,7 +45,7 @@ class _BPScreenState extends ConsumerState<BPScreen> {
       backgroundColor: Colors.transparent,
       builder: (_) => _LogBPSheet(
         onSave: (sys, dia, pulse, notes) {
-          ref.read(bPNotifierProvider.notifier).logReading(
+          ref.read(bPProvider.notifier).logReading(
                 systolic: sys,
                 diastolic: dia,
                 pulse: pulse,
@@ -66,7 +66,7 @@ class _BPScreenState extends ConsumerState<BPScreen> {
     final divider = isDark ? AppColorsDark.divider : AppColorsLight.divider;
 
     final latestAsync = ref.watch(latestBpReadingProvider);
-    final historyAsync = ref.watch(bPNotifierProvider);
+    final historyAsync = ref.watch(bPProvider);
 
     final latest = latestAsync.asData?.value;
     final aha = latest != null

@@ -133,7 +133,7 @@ class _BodyMetricsScreenState extends ConsumerState<BodyMetricsScreen> {
                       final val = double.tryParse(ctrl.text);
                       if (val == null) return;
                       ref
-                          .read(bodyMetricsNotifierProvider.notifier)
+                          .read(bodyMetricsProvider.notifier)
                           .logWeight(val);
                       Navigator.pop(context);
                     },
@@ -166,7 +166,7 @@ class _BodyMetricsScreenState extends ConsumerState<BodyMetricsScreen> {
     final surface1 = isDark ? AppColorsDark.surface1 : AppColorsLight.surface1;
     final divider = isDark ? AppColorsDark.divider : AppColorsLight.divider;
 
-    final metricsAsync = ref.watch(bodyMetricsNotifierProvider);
+    final metricsAsync = ref.watch(bodyMetricsProvider);
     final weightHistoryAsync = ref.watch(weightHistoryProvider(30));
     final bmiHistoryAsync = ref.watch(weightHistoryProvider(90));
 

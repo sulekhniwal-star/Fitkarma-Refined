@@ -1,7 +1,5 @@
 import 'package:appwrite/appwrite.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import '../../../core/database/app_database.dart';
 import '../../../core/providers/core_providers.dart';
 import '../../auth/providers/auth_provider.dart';
 
@@ -45,7 +43,7 @@ class XpFloatNotifier extends _$XpFloatNotifier {
 }
 
 @riverpod
-Stream<UserProfile?> userKarma(Ref ref) {
+Stream<dynamic> userKarma(Ref ref) {
   final authState = ref.watch(authProvider);
   final user = authState.asData?.value;
   if (user == null) return Stream.value(null);
