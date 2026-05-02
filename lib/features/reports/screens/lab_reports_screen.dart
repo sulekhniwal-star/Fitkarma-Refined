@@ -26,7 +26,7 @@ class LabReportsScreen extends ConsumerWidget {
 
     // Calm Zone — no blobs, no glow
     // In a real app, this would come from a profile/settings provider
-    final abhaLinked = ref.watch(aBHANotifierProvider).value ?? false;
+    final abhaLinked = ref.watch(aBHAProvider).value ?? false;
 
     final reportsAsync = ref.watch(labReportsProvider);
 
@@ -82,7 +82,7 @@ class LabReportsScreen extends ConsumerWidget {
                                       shareLinkProvider(r.id).future);
                                 },
                                 onDelete: () {
-                                  ref.read(labReportNotifierProvider.notifier).deleteReport(r.id);
+                                  ref.read(labReportProvider.notifier).deleteReport(r.id);
                                 },
                               ),
                             ))

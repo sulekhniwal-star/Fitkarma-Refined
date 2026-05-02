@@ -41,7 +41,7 @@ final class ABHANotifierProvider
   }
 }
 
-String _$aBHANotifierHash() => r'6d840238e72f344b8318d7bc6a50998d4c6d29cc';
+String _$aBHANotifierHash() => r'd6081e4acdcfecb773725b5f13f89de7e21d1c27';
 
 abstract class _$ABHANotifier extends $Notifier<AsyncValue<bool>> {
   AsyncValue<bool> build();

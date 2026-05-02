@@ -1,10 +1,8 @@
-import 'package:appwrite/appwrite.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/database/app_database.dart';
+import '../../../core/database/tables_db.dart';
 import '../../../core/config/app_config.dart';
 import '../../../core/providers/core_providers.dart';
-
-part 'health_repository.g.dart';
 
 class HealthRepository {
   final AppDatabase _db;
@@ -132,12 +130,33 @@ class HealthRepository {
       rethrow;
     }
   }
+
+  Future<void> pushWeightToRemote(String localId) async {
+    try {
+      final log = await (_db.select(_db.weightLogs)..where((t) => t.id.equals(localId))).getSingle();
+      
+      await _tables.createRow(
+        databaseId: AppConfig.dbId,
+        tableId: AppConfig.weightLogsCol,
+        rowId: log.id,
+        data: {
+          'userId': log.userId,
+          'weightKg': log.weightKg,
+          'measuredAt': log.measuredAt.toIso8601String(),
+        },
+      );
+
+      await _db.markSynced(localId, log.id, 'weight_logs');
+    } catch (e) {
+      await _db.incrementFailedAttempts(localId, 'weight_logs');
+      rethrow;
+    }
+  }
 }
 
-@riverpod
-HealthRepository healthRepository(Ref ref) {
+final healthRepositoryProvider = Provider<HealthRepository>((ref) {
   return HealthRepository(
-    ref.watch(appDatabaseProvider),
-    ref.watch(appwriteTablesDBProvider),
+    ref.read(appDatabaseProvider),
+    ref.read(appwriteTablesDBProvider),
   );
-}
+});

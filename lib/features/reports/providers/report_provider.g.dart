@@ -41,7 +41,7 @@ final class LabReportNotifierProvider
   }
 }
 
-String _$labReportNotifierHash() => r'e008bc20733863112039580d794ea0c0442db454';
+String _$labReportNotifierHash() => r'1d4378f0c52ffaf89ac681477e358110a9305891';
 
 abstract class _$LabReportNotifier extends $Notifier<bool> {
   bool build();
@@ -140,7 +140,7 @@ final class ShareLinkProvider
   }
 }
 
-String _$shareLinkHash() => r'b9c3237bb8fb21ff1ebe0a436b341d00be46c871';
+String _$shareLinkHash() => r'05643e12e393a6d0aa923f31df5ec2df86a65085';
 
 final class ShareLinkFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<String>, String> {
@@ -166,12 +166,12 @@ final class ShareLinkFamily extends $Family
 final healthReportProvider = HealthReportFamily._();
 
 final class HealthReportProvider extends $FunctionalProvider<
-        AsyncValue<Map<String, Object?>>,
-        Map<String, Object?>,
-        FutureOr<Map<String, Object?>>>
+        AsyncValue<Map<String, dynamic>>,
+        Map<String, dynamic>,
+        FutureOr<Map<String, dynamic>>>
     with
-        $FutureModifier<Map<String, Object?>>,
-        $FutureProvider<Map<String, Object?>> {
+        $FutureModifier<Map<String, dynamic>>,
+        $FutureProvider<Map<String, dynamic>> {
   HealthReportProvider._(
       {required HealthReportFamily super.from, required String super.argument})
       : super(
@@ -194,12 +194,12 @@ final class HealthReportProvider extends $FunctionalProvider<
 
   @$internal
   @override
-  $FutureProviderElement<Map<String, Object?>> $createElement(
+  $FutureProviderElement<Map<String, dynamic>> $createElement(
           $ProviderPointer pointer) =>
       $FutureProviderElement(pointer);
 
   @override
-  FutureOr<Map<String, Object?>> create(Ref ref) {
+  FutureOr<Map<String, dynamic>> create(Ref ref) {
     final argument = this.argument as String;
     return healthReport(
       ref,
@@ -218,10 +218,10 @@ final class HealthReportProvider extends $FunctionalProvider<
   }
 }
 
-String _$healthReportHash() => r'e32f8713e265cfb463d53093f514bac3bff75ca2';
+String _$healthReportHash() => r'033c938312005e67fb645dcb6e71c118c6c81bc6';
 
 final class HealthReportFamily extends $Family
-    with $FunctionalFamilyOverride<FutureOr<Map<String, Object?>>, String> {
+    with $FunctionalFamilyOverride<FutureOr<Map<String, dynamic>>, String> {
   HealthReportFamily._()
       : super(
           retry: null,

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../core/providers/core_providers.dart';
+import '../../auth/providers/auth_provider.dart';
 
 part 'festival_provider.g.dart';
 
@@ -20,23 +21,28 @@ Stream<List<dynamic>> upcomingFestivals(Ref ref) {
 class UserFestivalFilter extends _$UserFestivalFilter {
   @override
   Map<String, String?> build() {
-    // In a real app, we would fetch this from the user's profile in the DB
-    // For now, returning empty to allow all festivals
+    final authState = ref.watch(authProvider);
+    final user = authState.asData?.value;
+    if (user == null) return {'religion': null, 'region': null};
+
+    // Note: In a real implementation, we would listen to the UserProfile stream
+    // and initialize the state with user preferences.
     return {'religion': null, 'region': null};
   }
 
   void updateFilter({String? religion, String? region}) {
     state = {
-      'religion': religion ?? state['religion'],
-      'region': region ?? state['region'],
+      ...state,
+      if (religion != null) 'religion': religion,
+      if (region != null) 'region': region,
     };
   }
 }
 
 @riverpod
-Future<Map<String, Object?>?> festivalDietPlan(Ref ref, String festivalId) async {
+Future<Map<String, dynamic>?> festivalDiet(Ref ref, String festivalKey) async {
   final db = ref.watch(appDatabaseProvider);
-  final festival = await db.getFestivalByKey(festivalId);
+  final festival = await db.getFestivalByKey(festivalKey);
   if (festival?.dietPlanJson == null) return null;
 
   try {
@@ -47,8 +53,7 @@ Future<Map<String, Object?>?> festivalDietPlan(Ref ref, String festivalId) async
 }
 
 @riverpod
-Future<List<dynamic>> filteredActiveFestivals(Ref ref) async {
-  final festivals = await ref.watch(activeFestivalsProvider.future);
+Future<List<dynamic>> filteredFestivals(Ref ref, List<dynamic> festivals) async {
   final filters = ref.watch(userFestivalFilterProvider);
   
   return festivals.where((f) {

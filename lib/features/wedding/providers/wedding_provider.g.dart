@@ -42,7 +42,7 @@ final class WeddingPlanNotifierProvider
 }
 
 String _$weddingPlanNotifierHash() =>
-    r'4972bd0d93debbc19ad9ac997e5de60faab9340f';
+    r'4907ad29b5cfb6c351bc34134889616628a22311';
 
 abstract class _$WeddingPlanNotifier extends $Notifier<void> {
   void build();

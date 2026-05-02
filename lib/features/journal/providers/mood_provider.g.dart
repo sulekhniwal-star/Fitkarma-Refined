@@ -40,7 +40,7 @@ final class MoodNotifierProvider extends $NotifierProvider<MoodNotifier, void> {
   }
 }
 
-String _$moodNotifierHash() => r'4f5ad81ce67dea6418ddeb7ced4d06856c678189';
+String _$moodNotifierHash() => r'e8f045f346f7acddf78bfd04dbdea5cc43a33b47';
 
 abstract class _$MoodNotifier extends $Notifier<void> {
   void build();

@@ -6,6 +6,8 @@ import '../../../core/database/app_database.dart';
 import '../../../core/providers/core_providers.dart';
 import '../../auth/providers/auth_provider.dart';
 
+import '../repositories/journal_repository.dart';
+
 part 'mood_provider.g.dart';
 
 @riverpod
@@ -33,9 +35,14 @@ class MoodNotifier extends _$MoodNotifier {
       moodScore: Value(score),
       tagsJson: Value(tags != null ? jsonEncode(tags) : null),
       createdAt: DateTime.now(),
+      syncStatus: const Value('pending'),
     );
 
     await db.into(db.journalEntries).insert(companion);
+    
+    try {
+      await ref.read(journalRepositoryProvider).pushEntryToRemote(id);
+    } catch (_) {}
   }
 }
 

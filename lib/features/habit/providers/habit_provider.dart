@@ -45,6 +45,22 @@ class HabitNotifier extends _$HabitNotifier {
     } catch (_) {}
   }
 
+  Future<void> updateHabit(String habitId, HabitsCompanion companion) async {
+    final db = ref.read(appDatabaseProvider);
+    await (db.update(db.habits)..where((t) => t.id.equals(habitId))).write(
+      companion.copyWith(syncStatus: const Value('pending')),
+    );
+    
+    try {
+      await ref.read(habitRepositoryProvider).pushHabitToRemote(habitId);
+    } catch (_) {}
+  }
+
+  Future<void> deleteHabit(String habitId) async {
+    final db = ref.read(appDatabaseProvider);
+    await (db.delete(db.habits)..where((t) => t.id.equals(habitId))).go();
+  }
+
   Future<void> completeHabit(String habitId) async {
     final db = ref.read(appDatabaseProvider);
     final habit = await (db.select(db.habits)..where((t) => t.id.equals(habitId))).getSingle();
@@ -63,16 +79,6 @@ class HabitNotifier extends _$HabitNotifier {
     
     // Calculate new streak
     int newCurrentStreak = habit.currentStreak + 1;
-    // Check if streak was broken (simplified: if yesterday wasn't completed)
-    final yesterday = today.subtract(const Duration(days: 1));
-    final yesterdayStr = DateTime(yesterday.year, yesterday.month, yesterday.day).toIso8601String();
-    
-    if (!completedDates.contains(yesterdayStr) && habit.currentStreak > 0) {
-      // Note: In a real app, you'd check for the actual gap. 
-      // For now, if they complete today, we just increment. 
-      // If yesterday was missing, we should have reset earlier, 
-      // but here we'll just keep it simple.
-    }
     
     int newLongestStreak = habit.longestStreak;
     if (newCurrentStreak > newLongestStreak) {
@@ -94,21 +100,29 @@ class HabitNotifier extends _$HabitNotifier {
   }
 
   Future<void> recoverStreak(String habitId, String userId) async {
-    // Logic for streak recovery (costs 50 XP, once a month)
-    // For now, we'll just restore the streak to 1 if it was 0
     final db = ref.read(appDatabaseProvider);
     final habit = await (db.select(db.habits)..where((t) => t.id.equals(habitId))).getSingle();
     
     if (habit.currentStreak > 0) return; // No need to recover
     
+    // Check user XP
+    final profile = await (db.select(db.userProfiles)..where((t) => t.id.equals(userId))).getSingleOrNull();
+    if (profile == null || profile.xp < 50) {
+      throw Exception('Insufficient XP to recover streak (50 XP required)');
+    }
+
+    // Deduct XP
+    await (db.update(db.userProfiles)..where((t) => t.id.equals(userId))).write(
+      UserProfilesCompanion(xp: Value(profile.xp - 50)),
+    );
+    
+    // Restore streak
     await (db.update(db.habits)..where((t) => t.id.equals(habitId))).write(
       const HabitsCompanion(
         currentStreak: Value(1),
         syncStatus: Value('pending'),
       ),
     );
-    
-    // In a real app, subtract 50 XP from User profile here
     
     try {
       await ref.read(habitRepositoryProvider).pushHabitToRemote(habitId);
@@ -117,10 +131,10 @@ class HabitNotifier extends _$HabitNotifier {
 }
 
 @riverpod
-Future<List<dynamic>> todayHabits(Ref ref) async {
+Stream<List<dynamic>> todayHabits(Ref ref) {
   final authState = ref.watch(authProvider);
   final user = authState.asData?.value;
-  if (user == null) return [];
+  if (user == null) return Stream.value([]);
 
-  return ref.watch(appDatabaseProvider).watchAllHabits(user.$id).first;
+  return ref.watch(appDatabaseProvider).watchAllHabits(user.$id);
 }

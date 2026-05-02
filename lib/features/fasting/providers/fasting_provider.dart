@@ -25,47 +25,49 @@ class FastingTimerNotifier extends _$FastingTimerNotifier {
   static const String _startTimeKey = 'fast_start_time';
 
   @override
-  DateTime? build() {
-    _loadStartTime();
-    return null;
+  FutureOr<DateTime?> build() async {
+    return _loadStartTime();
   }
 
-  Future<void> _loadStartTime() async {
+  Future<DateTime?> _loadStartTime() async {
     final storage = ref.read(secureStorageProvider);
     final startTimeStr = await storage.read(key: _startTimeKey);
     if (startTimeStr != null) {
-      state = DateTime.parse(startTimeStr);
+      final startTime = DateTime.parse(startTimeStr);
       _startTimer();
+      return startTime;
     }
+    return null;
   }
 
-  void startFast() async {
+  Future<void> startFast() async {
     final now = DateTime.now();
-    state = now;
     final storage = ref.read(secureStorageProvider);
     await storage.write(key: _startTimeKey, value: now.toIso8601String());
+    state = AsyncValue.data(now);
     _startTimer();
   }
 
-  void stopFast() async {
-    state = null;
+  Future<void> stopFast() async {
     final storage = ref.read(secureStorageProvider);
     await storage.delete(key: _startTimeKey);
+    state = const AsyncValue.data(null);
     _timer?.cancel();
   }
 
   void _startTimer() {
     _timer?.cancel();
-    _timer = Timer.periodic(const Duration(minutes: 1), (_) {
-      // Just to trigger UI updates if they watch the duration
-      ref.notifyListeners();
+    _timer = Timer.periodic(const Duration(seconds: 30), (_) {
+      // Re-trigger duration calculation by notifying listeners of the state
+      ref.invalidate(fastingDurationProvider);
     });
   }
 }
 
 @riverpod
 Duration fastingDuration(Ref ref) {
-  final startTime = ref.watch(fastingTimerProvider);
+  final startTimeAsync = ref.watch(fastingTimerProvider);
+  final startTime = startTimeAsync.asData?.value;
   if (startTime == null) return Duration.zero;
 
   return DateTime.now().difference(startTime);

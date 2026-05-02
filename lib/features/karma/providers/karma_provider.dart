@@ -5,6 +5,13 @@ import '../../auth/providers/auth_provider.dart';
 
 part 'karma_provider.g.dart';
 
+enum LeaderboardType {
+  friends,
+  city,
+  national,
+  seasonal,
+}
+
 class KarmaService {
   final Functions _functions;
 
@@ -52,13 +59,17 @@ Stream<dynamic> userKarma(Ref ref) {
 }
 
 @riverpod
-Future<List<Map<String, Object>>> leaderboard(Ref ref, String type) async {
-  // Mocking leaderboard data for now as it usually requires a custom function or large query
+Future<List<Map<String, dynamic>>> leaderboard(Ref ref, LeaderboardType type) async {
+  // TODO: Implement remote call to Appwrite Function to get real-time leaderboard
+  // For now, we return mock data based on the type
   await Future.delayed(const Duration(seconds: 1));
+  
+  final prefix = type.name.toUpperCase();
+  
   return [
-    {'name': 'You', 'xp': 1250, 'rank': 4},
-    {'name': 'Aarav', 'xp': 2100, 'rank': 1},
-    {'name': 'Ishani', 'xp': 1850, 'rank': 2},
-    {'name': 'Vihaan', 'xp': 1500, 'rank': 3},
+    {'name': 'You', 'xp': 1250, 'rank': 4, 'type': prefix},
+    {'name': 'Aarav', 'xp': 2100, 'rank': 1, 'type': prefix},
+    {'name': 'Ishani', 'xp': 1850, 'rank': 2, 'type': prefix},
+    {'name': 'Vihaan', 'xp': 1500, 'rank': 3, 'type': prefix},
   ];
 }

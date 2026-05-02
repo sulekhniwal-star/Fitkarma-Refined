@@ -1,10 +1,8 @@
-import 'package:appwrite/appwrite.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/database/app_database.dart';
+import '../../../core/database/tables_db.dart';
 import '../../../core/config/app_config.dart';
 import '../../../core/providers/core_providers.dart';
-
-part 'workout_repository.g.dart';
 
 class WorkoutRepository {
   final AppDatabase _db;
@@ -41,10 +39,9 @@ class WorkoutRepository {
   }
 }
 
-@riverpod
-WorkoutRepository workoutRepository(Ref ref) {
+final workoutRepositoryProvider = Provider<WorkoutRepository>((ref) {
   return WorkoutRepository(
-    ref.watch(appDatabaseProvider),
-    ref.watch(appwriteTablesDBProvider),
+    ref.read(appDatabaseProvider),
+    ref.read(appwriteTablesDBProvider),
   );
-}
+});

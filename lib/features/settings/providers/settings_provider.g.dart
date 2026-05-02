@@ -13,7 +13,7 @@ part of 'settings_provider.dart';
 final themeProvider = ThemeNotifierProvider._();
 
 final class ThemeNotifierProvider
-    extends $NotifierProvider<ThemeNotifier, ThemeMode> {
+    extends $AsyncNotifierProvider<ThemeNotifier, ThemeMode> {
   ThemeNotifierProvider._()
       : super(
           from: null,
@@ -31,26 +31,21 @@ final class ThemeNotifierProvider
   @$internal
   @override
   ThemeNotifier create() => ThemeNotifier();
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(ThemeMode value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<ThemeMode>(value),
-    );
-  }
 }
 
-String _$themeNotifierHash() => r'd757f9a0db8d83486b3a461260b86177bdcaa420';
+String _$themeNotifierHash() => r'665306a60538ecadd4944fe20dd6918607da2f2e';
 
-abstract class _$ThemeNotifier extends $Notifier<ThemeMode> {
-  ThemeMode build();
+abstract class _$ThemeNotifier extends $AsyncNotifier<ThemeMode> {
+  FutureOr<ThemeMode> build();
   @$mustCallSuper
   @override
   void runBuild() {
-    final ref = this.ref as $Ref<ThemeMode, ThemeMode>;
+    final ref = this.ref as $Ref<AsyncValue<ThemeMode>, ThemeMode>;
     final element = ref.element as $ClassProviderElement<
-        AnyNotifier<ThemeMode, ThemeMode>, ThemeMode, Object?, Object?>;
+        AnyNotifier<AsyncValue<ThemeMode>, ThemeMode>,
+        AsyncValue<ThemeMode>,
+        Object?,
+        Object?>;
     element.handleCreate(ref, build);
   }
 }
@@ -59,7 +54,7 @@ abstract class _$ThemeNotifier extends $Notifier<ThemeMode> {
 final languageProvider = LanguageNotifierProvider._();
 
 final class LanguageNotifierProvider
-    extends $NotifierProvider<LanguageNotifier, String> {
+    extends $AsyncNotifierProvider<LanguageNotifier, String> {
   LanguageNotifierProvider._()
       : super(
           from: null,
@@ -77,26 +72,21 @@ final class LanguageNotifierProvider
   @$internal
   @override
   LanguageNotifier create() => LanguageNotifier();
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(String value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<String>(value),
-    );
-  }
 }
 
-String _$languageNotifierHash() => r'c42c5101d45e89a834913dcfb4dbbceecf538df2';
+String _$languageNotifierHash() => r'9dc5d1fcb9bf7a7e57d9adafacf98ff21901b52d';
 
-abstract class _$LanguageNotifier extends $Notifier<String> {
-  String build();
+abstract class _$LanguageNotifier extends $AsyncNotifier<String> {
+  FutureOr<String> build();
   @$mustCallSuper
   @override
   void runBuild() {
-    final ref = this.ref as $Ref<String, String>;
+    final ref = this.ref as $Ref<AsyncValue<String>, String>;
     final element = ref.element as $ClassProviderElement<
-        AnyNotifier<String, String>, String, Object?, Object?>;
+        AnyNotifier<AsyncValue<String>, String>,
+        AsyncValue<String>,
+        Object?,
+        Object?>;
     element.handleCreate(ref, build);
   }
 }
@@ -105,7 +95,7 @@ abstract class _$LanguageNotifier extends $Notifier<String> {
 final fontSizeProvider = FontSizeNotifierProvider._();
 
 final class FontSizeNotifierProvider
-    extends $NotifierProvider<FontSizeNotifier, double> {
+    extends $AsyncNotifierProvider<FontSizeNotifier, double> {
   FontSizeNotifierProvider._()
       : super(
           from: null,
@@ -123,26 +113,21 @@ final class FontSizeNotifierProvider
   @$internal
   @override
   FontSizeNotifier create() => FontSizeNotifier();
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(double value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<double>(value),
-    );
-  }
 }
 
-String _$fontSizeNotifierHash() => r'fad7ff5c7ad8fefe16807a94a8a1dba034931b21';
+String _$fontSizeNotifierHash() => r'a7fbec0875279894dfd29d876034a70651aadcf7';
 
-abstract class _$FontSizeNotifier extends $Notifier<double> {
-  double build();
+abstract class _$FontSizeNotifier extends $AsyncNotifier<double> {
+  FutureOr<double> build();
   @$mustCallSuper
   @override
   void runBuild() {
-    final ref = this.ref as $Ref<double, double>;
+    final ref = this.ref as $Ref<AsyncValue<double>, double>;
     final element = ref.element as $ClassProviderElement<
-        AnyNotifier<double, double>, double, Object?, Object?>;
+        AnyNotifier<AsyncValue<double>, double>,
+        AsyncValue<double>,
+        Object?,
+        Object?>;
     element.handleCreate(ref, build);
   }
 }
@@ -151,7 +136,7 @@ abstract class _$FontSizeNotifier extends $Notifier<double> {
 final dyslexiaFontProvider = DyslexiaFontNotifierProvider._();
 
 final class DyslexiaFontNotifierProvider
-    extends $NotifierProvider<DyslexiaFontNotifier, bool> {
+    extends $AsyncNotifierProvider<DyslexiaFontNotifier, bool> {
   DyslexiaFontNotifierProvider._()
       : super(
           from: null,
@@ -169,27 +154,22 @@ final class DyslexiaFontNotifierProvider
   @$internal
   @override
   DyslexiaFontNotifier create() => DyslexiaFontNotifier();
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(bool value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<bool>(value),
-    );
-  }
 }
 
 String _$dyslexiaFontNotifierHash() =>
-    r'd039bdebe56e7526b958067d5fc81126edb5d6c1';
+    r'21c13bdfedc0031748d4ae22b02e0d5f06451a55';
 
-abstract class _$DyslexiaFontNotifier extends $Notifier<bool> {
-  bool build();
+abstract class _$DyslexiaFontNotifier extends $AsyncNotifier<bool> {
+  FutureOr<bool> build();
   @$mustCallSuper
   @override
   void runBuild() {
-    final ref = this.ref as $Ref<bool, bool>;
+    final ref = this.ref as $Ref<AsyncValue<bool>, bool>;
     final element = ref.element as $ClassProviderElement<
-        AnyNotifier<bool, bool>, bool, Object?, Object?>;
+        AnyNotifier<AsyncValue<bool>, bool>,
+        AsyncValue<bool>,
+        Object?,
+        Object?>;
     element.handleCreate(ref, build);
   }
 }
@@ -198,7 +178,7 @@ abstract class _$DyslexiaFontNotifier extends $Notifier<bool> {
 final biometricLockProvider = BiometricLockNotifierProvider._();
 
 final class BiometricLockNotifierProvider
-    extends $NotifierProvider<BiometricLockNotifier, bool> {
+    extends $AsyncNotifierProvider<BiometricLockNotifier, bool> {
   BiometricLockNotifierProvider._()
       : super(
           from: null,
@@ -216,27 +196,22 @@ final class BiometricLockNotifierProvider
   @$internal
   @override
   BiometricLockNotifier create() => BiometricLockNotifier();
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(bool value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<bool>(value),
-    );
-  }
 }
 
 String _$biometricLockNotifierHash() =>
-    r'32a267fab682fbc7c87034b2ef71198a109d595c';
+    r'afdb40a10667a85b3402760651d4a5e020673eba';
 
-abstract class _$BiometricLockNotifier extends $Notifier<bool> {
-  bool build();
+abstract class _$BiometricLockNotifier extends $AsyncNotifier<bool> {
+  FutureOr<bool> build();
   @$mustCallSuper
   @override
   void runBuild() {
-    final ref = this.ref as $Ref<bool, bool>;
+    final ref = this.ref as $Ref<AsyncValue<bool>, bool>;
     final element = ref.element as $ClassProviderElement<
-        AnyNotifier<bool, bool>, bool, Object?, Object?>;
+        AnyNotifier<AsyncValue<bool>, bool>,
+        AsyncValue<bool>,
+        Object?,
+        Object?>;
     element.handleCreate(ref, build);
   }
 }
@@ -244,8 +219,8 @@ abstract class _$BiometricLockNotifier extends $Notifier<bool> {
 @ProviderFor(NotificationPrefsNotifier)
 final notificationPrefsProvider = NotificationPrefsNotifierProvider._();
 
-final class NotificationPrefsNotifierProvider
-    extends $NotifierProvider<NotificationPrefsNotifier, Map<String, bool>> {
+final class NotificationPrefsNotifierProvider extends $AsyncNotifierProvider<
+    NotificationPrefsNotifier, Map<String, bool>> {
   NotificationPrefsNotifierProvider._()
       : super(
           from: null,
@@ -263,29 +238,22 @@ final class NotificationPrefsNotifierProvider
   @$internal
   @override
   NotificationPrefsNotifier create() => NotificationPrefsNotifier();
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(Map<String, bool> value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<Map<String, bool>>(value),
-    );
-  }
 }
 
 String _$notificationPrefsNotifierHash() =>
-    r'15d745885ed2bdc831d7e245cebc4f37d545ebcb';
+    r'305b3380dbd6f902432cf3dfc5eb25c563293316';
 
 abstract class _$NotificationPrefsNotifier
-    extends $Notifier<Map<String, bool>> {
-  Map<String, bool> build();
+    extends $AsyncNotifier<Map<String, bool>> {
+  FutureOr<Map<String, bool>> build();
   @$mustCallSuper
   @override
   void runBuild() {
-    final ref = this.ref as $Ref<Map<String, bool>, Map<String, bool>>;
+    final ref =
+        this.ref as $Ref<AsyncValue<Map<String, bool>>, Map<String, bool>>;
     final element = ref.element as $ClassProviderElement<
-        AnyNotifier<Map<String, bool>, Map<String, bool>>,
-        Map<String, bool>,
+        AnyNotifier<AsyncValue<Map<String, bool>>, Map<String, bool>>,
+        AsyncValue<Map<String, bool>>,
         Object?,
         Object?>;
     element.handleCreate(ref, build);
@@ -324,7 +292,7 @@ final class WearablesProvider extends $FunctionalProvider<
   }
 }
 
-String _$wearablesHash() => r'1c1f93210aa7f96be3435a501d4adf4166621cc0';
+String _$wearablesHash() => r'9b95c04e73f77a48df3b865779a870134b64d0b3';
 
 @ProviderFor(subscriptionStatus)
 final subscriptionStatusProvider = SubscriptionStatusProvider._();

@@ -48,7 +48,7 @@ final class FoodRepositoryProvider
   }
 }
 
-String _$foodRepositoryHash() => r'4726f4269ed6f763c6a5c9ead6f8be4aae5446a0';
+String _$foodRepositoryHash() => r'f929b7292142843b9dd4d671dc385415adfff518';
 
 @ProviderFor(FoodLogNotifier)
 final foodLogProvider = FoodLogNotifierFamily._();
@@ -91,7 +91,7 @@ final class FoodLogNotifierProvider
   }
 }
 
-String _$foodLogNotifierHash() => r'5e52aada973f9d2c5dbaaa3511d2e2bfd519764d';
+String _$foodLogNotifierHash() => r'd664c29bdc8256fdbc88165b5e1f28d7617e99b4';
 
 final class FoodLogNotifierFamily extends $Family
     with
@@ -170,7 +170,7 @@ final class TodayCaloriesProvider
   }
 }
 
-String _$todayCaloriesHash() => r'cfdf97c344d8620ff5f319e0aa3641046f9c943c';
+String _$todayCaloriesHash() => r'e8cb7e4dff8bc301f575d47bf3817a5edad70656';
 
 @ProviderFor(foodSearch)
 final foodSearchProvider = FoodSearchFamily._();
@@ -224,7 +224,7 @@ final class FoodSearchProvider extends $FunctionalProvider<
   }
 }
 
-String _$foodSearchHash() => r'5d49d17f6be2502d172a826308fc52d978abc1c1';
+String _$foodSearchHash() => r'00caeb9396475a6157e41863379fa70f8c6f13b4';
 
 final class FoodSearchFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<List<dynamic>>, String> {

@@ -26,6 +26,10 @@ class AppConfig {
   static const String habitsCol         = 'habits';
   static const String stepLogsCol       = 'step_logs';
   static const String weightLogsCol     = 'weight_logs';
+  static const String journalCol        = 'journal_entries';
+  static const String weddingPlansCol   = 'wedding_plans';
+  static const String postsCol          = 'social_posts';
+  static const String groupsCol         = 'community_groups';
 
   // Storage Buckets (Consolidated)
   static const String mediaBucket       = 'fitkarma-media';

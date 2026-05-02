@@ -4,8 +4,10 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/providers/core_providers.dart';
+import '../../../core/config/app_config.dart';
 import '../../auth/providers/auth_provider.dart';
 import '../../steps/providers/steps_provider.dart';
+import '../repositories/reports_repository.dart';
 
 part 'report_provider.g.dart';
 
@@ -15,8 +17,17 @@ class LabReportNotifier extends _$LabReportNotifier {
   bool build() => false;
 
   Future<String> uploadFile(File file) async {
-    // In a real app, use ref.read(appwriteStorageProvider).createFile(...)
-    return const Uuid().v4();
+    final storage = ref.read(appwriteStorageProvider);
+    final id = const Uuid().v4();
+    
+    // In a real app, we'd use InputFile.fromPath
+    // await storage.createFile(
+    //   bucketId: AppConfig.mediaBucket,
+    //   fileId: id,
+    //   file: InputFile.fromPath(path: file.path),
+    // );
+    
+    return id;
   }
 
   Future<void> importFromOCR(File file) async {
@@ -31,14 +42,31 @@ class LabReportNotifier extends _$LabReportNotifier {
     final companion = LabReportsCompanion.insert(
       id: id,
       userId: user.$id,
-      fileName: file.path.split('/').last,
+      fileName: file.path.split(Platform.pathSeparator).last,
       fileId: fileId,
       createdAt: DateTime.now(),
-      reportDate: Value(DateTime.now()), // Default to now for mock
-      extractedDataJson: const Value('{"metrics": 12}'), // Mock extracted metrics
+      reportDate: Value(DateTime.now()),
+      extractedDataJson: const Value('{"status": "processing"}'),
+      syncStatus: const Value('pending'),
     );
 
     await db.into(db.labReports).insert(companion);
+    
+    _pushToRemote(id);
+    
+    // Optional: Call Appwrite Function for actual OCR processing
+    try {
+      await ref.read(appwriteFunctionsProvider).createExecution(
+        functionId: 'report-ocr',
+        body: '{"reportId": "$id", "fileId": "$fileId"}',
+      );
+    } catch (_) {}
+  }
+
+  Future<void> _pushToRemote(String id) async {
+    try {
+      await ref.read(reportsRepositoryProvider).pushReportToRemote(id);
+    } catch (_) {}
   }
 
   Future<void> deleteReport(String id) async {
@@ -58,11 +86,20 @@ Stream<List<dynamic>> labReports(Ref ref) {
 
 @riverpod
 Future<String> shareLink(Ref ref, String reportId) async {
-  return "https://fitkarma.app/share/report/$reportId";
+  try {
+    final execution = await ref.read(appwriteFunctionsProvider).createExecution(
+      functionId: 'report-share',
+      body: '{"reportId": "$reportId"}',
+    );
+    // Assuming the function returns the URL in response body
+    return execution.responseBody;
+  } catch (e) {
+    return "https://fitkarma.app/share/report/$reportId";
+  }
 }
 
 @riverpod
-Future<Map<String, Object?>> healthReport(Ref ref, String period) async {
+Future<Map<String, dynamic>> healthReport(Ref ref, String period) async {
   final steps = await ref.watch(stepsProvider.future);
   
   return {

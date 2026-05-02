@@ -3,15 +3,19 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/providers/core_providers.dart';
+import '../../../core/config/app_config.dart';
 import '../../auth/providers/auth_provider.dart';
+
+import 'package:appwrite/appwrite.dart';
+import '../repositories/social_repository.dart';
 
 part 'social_provider.g.dart';
 
 @riverpod
 class SocialFeedNotifier extends _$SocialFeedNotifier {
   @override
-  Stream<List<dynamic>> build() {
-    return ref.watch(appDatabaseProvider).watchSocialFeed();
+  Stream<List<dynamic>> build({int limit = 20, int offset = 0}) {
+    return ref.watch(appDatabaseProvider).watchSocialFeed(limit: limit, offset: offset);
   }
 
   Future<void> createPost({required String content, String? mediaFileId}) async {
@@ -30,9 +34,12 @@ class SocialFeedNotifier extends _$SocialFeedNotifier {
       content: content,
       mediaFileId: Value(mediaFileId),
       createdAt: DateTime.now(),
+      syncStatus: const Value('pending'),
     );
 
     await db.into(db.socialPosts).insert(companion);
+    
+    _pushToRemote(id);
   }
 
   Future<void> likePost(String postId) async {
@@ -43,15 +50,26 @@ class SocialFeedNotifier extends _$SocialFeedNotifier {
       SocialPostsCompanion(
         isLiked: Value(!post.isLiked),
         likeCount: Value(post.isLiked ? post.likeCount - 1 : post.likeCount + 1),
+        syncStatus: const Value('pending'),
       ),
     );
+    
+    _pushToRemote(postId);
+  }
+
+  Future<void> _pushToRemote(String id) async {
+    try {
+      await ref.read(socialRepositoryProvider).pushPostToRemote(id);
+    } catch (_) {}
   }
 }
 
 @riverpod
-Stream<bool> socialRealtime(Ref ref) {
-  // Realtime subscription placeholder
-  return Stream.value(false);
+Stream<RealtimeMessage> socialRealtime(Ref ref) {
+  final realtime = ref.watch(appwriteRealtimeProvider);
+  return realtime.subscribe([
+    'databases.${AppConfig.dbId}.collections.${AppConfig.postsCol}.documents'
+  ]).stream;
 }
 
 @riverpod

@@ -133,14 +133,15 @@ String _$userKarmaHash() => r'a550833cccef8984ec57d9b8f90aef28427671ac';
 final leaderboardProvider = LeaderboardFamily._();
 
 final class LeaderboardProvider extends $FunctionalProvider<
-        AsyncValue<List<Map<String, Object>>>,
-        List<Map<String, Object>>,
-        FutureOr<List<Map<String, Object>>>>
+        AsyncValue<List<Map<String, dynamic>>>,
+        List<Map<String, dynamic>>,
+        FutureOr<List<Map<String, dynamic>>>>
     with
-        $FutureModifier<List<Map<String, Object>>>,
-        $FutureProvider<List<Map<String, Object>>> {
+        $FutureModifier<List<Map<String, dynamic>>>,
+        $FutureProvider<List<Map<String, dynamic>>> {
   LeaderboardProvider._(
-      {required LeaderboardFamily super.from, required String super.argument})
+      {required LeaderboardFamily super.from,
+      required LeaderboardType super.argument})
       : super(
           retry: null,
           name: r'leaderboardProvider',
@@ -161,13 +162,13 @@ final class LeaderboardProvider extends $FunctionalProvider<
 
   @$internal
   @override
-  $FutureProviderElement<List<Map<String, Object>>> $createElement(
+  $FutureProviderElement<List<Map<String, dynamic>>> $createElement(
           $ProviderPointer pointer) =>
       $FutureProviderElement(pointer);
 
   @override
-  FutureOr<List<Map<String, Object>>> create(Ref ref) {
-    final argument = this.argument as String;
+  FutureOr<List<Map<String, dynamic>>> create(Ref ref) {
+    final argument = this.argument as LeaderboardType;
     return leaderboard(
       ref,
       argument,
@@ -185,11 +186,12 @@ final class LeaderboardProvider extends $FunctionalProvider<
   }
 }
 
-String _$leaderboardHash() => r'95a922235b1cb412c1aa52b37b2b511aaa82b588';
+String _$leaderboardHash() => r'1fac6f961259bac5c41bc6dd29732b0c056e8a02';
 
 final class LeaderboardFamily extends $Family
     with
-        $FunctionalFamilyOverride<FutureOr<List<Map<String, Object>>>, String> {
+        $FunctionalFamilyOverride<FutureOr<List<Map<String, dynamic>>>,
+            LeaderboardType> {
   LeaderboardFamily._()
       : super(
           retry: null,
@@ -200,7 +202,7 @@ final class LeaderboardFamily extends $Family
         );
 
   LeaderboardProvider call(
-    String type,
+    LeaderboardType type,
   ) =>
       LeaderboardProvider._(argument: type, from: this);
 

@@ -8,6 +8,8 @@ import '../../auth/providers/auth_provider.dart';
 import '../../habit/providers/habit_provider.dart';
 import '../../steps/providers/steps_provider.dart';
 
+import '../repositories/journal_repository.dart';
+
 part 'journal_provider.g.dart';
 
 @riverpod
@@ -18,7 +20,7 @@ class JournalNotifier extends _$JournalNotifier {
     final user = authState.asData?.value;
     if (user == null) return [];
 
-    return ref.read(appDatabaseProvider).getJournalEntries(user.$id);
+    return ref.watch(appDatabaseProvider).getJournalEntries(user.$id);
   }
 
   Future<void> createEntry({
@@ -44,27 +46,47 @@ class JournalNotifier extends _$JournalNotifier {
       moodScore: Value(moodScore),
       tagsJson: Value(tags != null ? jsonEncode(tags) : null),
       createdAt: DateTime.now(),
+      syncStatus: const Value('pending'),
     );
 
     await db.into(db.journalEntries).insert(companion);
     ref.invalidateSelf();
+    
+    try {
+      await ref.read(journalRepositoryProvider).pushEntryToRemote(id);
+    } catch (_) {}
   }
 
-  Future<void> updateEntry(String id, {String? title, String? body}) async {
+  Future<void> updateEntry(String id, {
+    String? title, 
+    String? body,
+    int? moodScore,
+    String? moodEmoji,
+    List<String>? tags,
+  }) async {
     final db = ref.read(appDatabaseProvider);
     await (db.update(db.journalEntries)..where((t) => t.id.equals(id))).write(
       JournalEntriesCompanion(
         title: title != null ? Value(title) : const Value.absent(),
         body: body != null ? Value(body) : const Value.absent(),
+        moodScore: moodScore != null ? Value(moodScore) : const Value.absent(),
+        moodEmoji: moodEmoji != null ? Value(moodEmoji) : const Value.absent(),
+        tagsJson: tags != null ? Value(jsonEncode(tags)) : const Value.absent(),
+        syncStatus: const Value('pending'),
       ),
     );
     ref.invalidateSelf();
+    
+    try {
+      await ref.read(journalRepositoryProvider).pushEntryToRemote(id);
+    } catch (_) {}
   }
 
   Future<void> deleteEntry(String id) async {
     final db = ref.read(appDatabaseProvider);
     await (db.delete(db.journalEntries)..where((t) => t.id.equals(id))).go();
     ref.invalidateSelf();
+    // TODO: Add remote delete
   }
 }
 

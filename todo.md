@@ -50,50 +50,50 @@
 
 ### 1.1 Flutter Project Init
 
-- [ ] `flutter create fitkarma --org com.fitkarma --platforms android,ios`
-- [ ] Set `minSdkVersion 26` in `android/app/build.gradle` (Health Connect requires API 26+)
-- [ ] Set iOS deployment target to 14.0 in `ios/Podfile`
-- [ ] Add all dependencies to `pubspec.yaml` (30+ packages as per §18)
-- [ ] Run `flutter pub get`
-- [ ] Run initial `dart run build_runner build --delete-conflicting-outputs`
-- [ ] Commit baseline with passing `flutter analyze`
+- [x] `flutter create fitkarma --org com.fitkarma --platforms android,ios`
+- [x] Set `minSdkVersion 26` in `android/app/build.gradle` (Health Connect requires API 26+)
+- [x] Set iOS deployment target to 14.0 in `ios/Podfile`
+- [x] Add all dependencies to `pubspec.yaml` (30+ packages as per §18)
+- [x] Run `flutter pub get`
+- [x] Run initial `dart run build_runner build --delete-conflicting-outputs`
+- [x] Commit baseline with passing `flutter analyze`
 
 ### 1.2 Appwrite CLI Bootstrap
 
-- [ ] Install Appwrite CLI (`curl -sL https://appwrite.io/cli/install.sh | bash`)
-- [ ] `appwrite login` (interactive, store session)
-- [ ] `appwrite init project` — create `appwrite.json` in repo root
-- [ ] Commit `appwrite.json`
+- [x] Install Appwrite CLI (`curl -sL https://appwrite.io/cli/install.sh | bash`)
+- [x] `appwrite login` (interactive, store session)
+- [x] `appwrite init project` — create `appwrite.json` in repo root
+- [x] Commit `appwrite.json`
 
 ### 1.3 Environment & Secrets
 
-- [ ] Create `.env.local` with `APPWRITE_ENDPOINT`, `APPWRITE_PROJECT_ID`, `APPWRITE_DB_ID`
-- [ ] Add `.env.local` to `.gitignore`
-- [ ] Configure `AppConfig` dart-define values (§23.2)
+- [x] Create `.env.local` with `APPWRITE_ENDPOINT`, `APPWRITE_PROJECT_ID`, `APPWRITE_DB_ID`
+- [x] Add `.env.local` to `.gitignore`
+- [x] Configure `AppConfig` dart-define values (§23.2)
 - [ ] Add GitHub Actions secrets: `APPWRITE_ENDPOINT`, `APPWRITE_PROJECT_ID`, `APPWRITE_API_KEY`
 - [ ] Add GitHub Actions secrets: `ABHA_CLIENT_ID`, `ABHA_CLIENT_SECRET`
 
 ### 1.4 Android Manifest
 
-- [ ] `INTERNET` permission
-- [ ] `ACCESS_NETWORK_STATE` permission
-- [ ] `health.READ_STEPS` permission
-- [ ] `health.READ_HEART_RATE` permission
-- [ ] `health.READ_SLEEP_SESSION` permission
-- [ ] `ACCESS_FINE_LOCATION` permission (GPS workouts)
-- [ ] `ACCESS_COARSE_LOCATION` permission
-- [ ] Health Connect `<queries>` package declaration
-- [ ] Home widget `<receiver>` declaration for `StepsWidgetProvider`
-- [ ] Home widget `<meta-data>` pointing to `@xml/steps_widget_info`
+- [x] `INTERNET` permission
+- [x] `ACCESS_NETWORK_STATE` permission
+- [x] `health.READ_STEPS` permission
+- [x] `health.READ_HEART_RATE` permission
+- [x] `health.READ_SLEEP_SESSION` permission
+- [x] `ACCESS_FINE_LOCATION` permission (GPS workouts)
+- [x] `ACCESS_COARSE_LOCATION` permission
+- [x] Health Connect `<queries>` package declaration
+- [x] Home widget `<receiver>` declaration for `StepsWidgetProvider`
+- [x] Home widget `<meta-data>` pointing to `@xml/steps_widget_info`
 
 ### 1.5 iOS `Info.plist`
 
-- [ ] `NSHealthShareUsageDescription`
-- [ ] `NSHealthUpdateUsageDescription`
-- [ ] `NSLocationWhenInUseUsageDescription`
-- [ ] `NSCameraUsageDescription` (OCR lab scan)
-- [ ] `NSPhotoLibraryUsageDescription`
-- [ ] `NSFaceIDUsageDescription` (biometric lock)
+- [x] `NSHealthShareUsageDescription`
+- [x] `NSHealthUpdateUsageDescription`
+- [x] `NSLocationWhenInUseUsageDescription`
+- [x] `NSCameraUsageDescription` (OCR lab scan)
+- [x] `NSPhotoLibraryUsageDescription`
+- [x] `NSFaceIDUsageDescription` (biometric lock)
 
 ---
 
@@ -101,51 +101,51 @@
 
 ### 2.1 Theme System — `lib/core/theme/`
 
-- [ ] `app_colors.dart` — `AppColorsDark` class (all 24 dark tokens)
-- [ ] `app_colors.dart` — `AppColorsLight` class (all 14 light tokens)
-- [ ] `app_typography.dart` — all 17 named `TextStyle` builders
-- [ ] `app_typography.dart` — `darkTextTheme()` and `lightTextTheme()` wired to `ThemeData`
-- [ ] `app_spacing.dart` — `AppSpacing` and `AppRadius` constants
-- [ ] `app_gradients.dart` — `heroDeep`, `heroSleep`, `heroFestival`, `heroWedding`, `heroPrimary`, `glassHero`
-- [ ] `app_springs.dart` — `light`, `standard`, `dramatic` spring descriptions
-- [ ] `app_theme.dart` — `AppTheme.dark()` full `ThemeData`
-- [ ] `app_theme.dart` — `AppTheme.light()` full `ThemeData`
+- [x] `app_colors.dart` — `AppColorsDark` class (all 24 dark tokens)
+- [x] `app_colors.dart` — `AppColorsLight` class (all 14 light tokens)
+- [x] `app_typography.dart` — all 17 named `TextStyle` builders
+- [x] `app_typography.dart` — `darkTextTheme()` and `lightTextTheme()` wired to `ThemeData`
+- [x] `app_spacing.dart` — `AppSpacing` and `AppRadius` constants
+- [x] `app_gradients.dart` — `heroDeep`, `heroSleep`, `heroFestival`, `heroWedding`, `heroPrimary`, `glassHero`
+- [x] `app_springs.dart` — `light`, `standard`, `dramatic` spring descriptions
+- [x] `app_theme.dart` — `AppTheme.dark()` full `ThemeData`
+- [x] `app_theme.dart` — `AppTheme.light()` full `ThemeData`
 
 ### 2.2 Configuration — `lib/core/config/`
 
-- [ ] `app_config.dart` — dart-define constants for endpoint, project ID, DB ID
-- [ ] `device_tier.dart` — `DeviceTier` enum (`low`, `mid`, `high`)
-- [ ] `user_experience_stage.dart` — `UXStage` enum + `getUXStage(DateTime)` function
+- [x] `app_config.dart` — dart-define constants for endpoint, project ID, DB ID
+- [x] `device_tier.dart` — `DeviceTier` enum (`low`, `mid`, `high`)
+- [x] `user_experience_stage.dart` — `UXStage` enum + `getUXStage(DateTime)` function
 
 ### 2.3 Providers — `lib/core/providers/`
 
-- [ ] `core_providers.dart` — `appwriteClientProvider` (singleton `Client`)
-- [ ] `core_providers.dart` — `appwriteAccountProvider`
-- [ ] `core_providers.dart` — `appwriteDatabasesProvider`
-- [ ] `core_providers.dart` — `appwriteStorageProvider`
-- [ ] `core_providers.dart` — `appDatabaseProvider` (override in `ProviderScope`)
-- [ ] `device_tier_provider.dart` — `deviceTierProvider`
-- [ ] `ux_stage_provider.dart` — `uxStageProvider` (mocked for now)
-- [ ] `low_data_mode_provider.dart` — `LowDataModeNotifier` + `lowDataModeProvider`
+- [x] `core_providers.dart` — `appwriteClientProvider` (singleton `Client`)
+- [x] `core_providers.dart` — `appwriteAccountProvider`
+- [x] `core_providers.dart` — `appwriteDatabasesProvider`
+- [x] `core_providers.dart` — `appwriteStorageProvider`
+- [x] `core_providers.dart` — `appDatabaseProvider` (override in `ProviderScope`)
+- [x] `device_tier_provider.dart` — `deviceTierProvider`
+- [x] `ux_stage_provider.dart` — `uxStageProvider` (mocked for now)
+- [x] `low_data_mode_provider.dart` — `LowDataModeNotifier` + `lowDataModeProvider`
 
 ### 2.4 Router — `lib/core/router/`
 
-- [ ] `app_router.dart` — `GoRouter` with all 25 registered routes
-- [ ] `app_router.dart` — `redirect` guard: unauthenticated → `/auth/login`, authenticated + auth screen → `/home/dashboard`
-- [ ] `transitions.dart` — `VerticalSlideTransition` (fade + 6% Y shift, 320ms)
-- [ ] `transitions.dart` — `CardTapAnimation` widget (scale 1.0 → 0.97 → 1.0)
+- [x] `app_router.dart` — `GoRouter` with all 25 registered routes
+- [x] `app_router.dart` — `redirect` guard: unauthenticated → `/auth/login`, authenticated + auth screen → `/home/dashboard`
+- [x] `transitions.dart` — `VerticalSlideTransition` (fade + 6% Y shift, 320ms)
+- [x] `transitions.dart` — `CardTapAnimation` widget (scale 1.0 → 0.97 → 1.0)
 
 ### 2.5 Security — `lib/core/security/`
 
-- [ ] `biometric_service.dart` — `BiometricService.authenticate()` with `local_auth`
-- [ ] `sensitive_screen_guard.dart` — `SensitiveScreenGuard` wrapper widget
+- [x] `biometric_service.dart` — `BiometricService.authenticate()` with `local_auth`
+- [x] `sensitive_screen_guard.dart` — `SensitiveScreenGuard` wrapper widget
 
 ### 2.6 Database — `lib/core/storage/`
 
-- [ ] `app_database.dart` — `AppDatabase` class annotated with `@DriftDatabase`
+- [x] `app_database.dart` — `AppDatabase` class annotated with `@DriftDatabase`
 - [ ] `app_database.dart` — `openConnection` with SQLCipher + secure key
-- [ ] `app_database.dart` — schema version + `MigrationStrategy`
-- [ ] Run `dart run build_runner build` to generate `app_database.g.dart`
+- [x] `app_database.dart` — schema version + `MigrationStrategy`
+- [x] Run `dart run build_runner build` to generate `app_database.g.dart`
 
 ---
 
@@ -153,46 +153,46 @@
 
 ### 3.1 Database
 
-- [ ] `appwrite databases create --databaseId "fitkarma-db" --name "FitKarma Database"`
+- [x] `appwrite databases create --databaseId "fitkarma-db" --name "FitKarma Database"`
 
 ### 3.2 Collections — Creation
 
-- [ ] `users` collection
-- [ ] `food_logs` collection
-- [ ] `bp_readings` collection
-- [ ] `glucose_readings` collection
-- [ ] `sleep_logs` collection
-- [ ] `workouts` collection
-- [ ] `habits` collection
-- [ ] `journal` collection
-- [ ] `lab_reports` collection
-- [ ] `karma_events` collection
-- [ ] `festivals` collection
-- [ ] `medications` collection
-- [ ] `water_logs` collection
-- [ ] `social_posts` collection
-- [ ] `groups` collection
-- [ ] `share_tokens` collection *(used by report-share function)*
-- [ ] `wedding_plans` collection *(derived from Drift tables — add remote collection)*
+- [x] `users` collection
+- [x] `food_logs` collection
+- [x] `bp_readings` collection
+- [x] `glucose_readings` collection
+- [x] `sleep_logs` collection
+- [x] `workouts` collection
+- [x] `habits` collection
+- [x] `journal` collection
+- [x] `lab_reports` collection
+- [x] `karma_events` collection
+- [x] `festivals` collection
+- [x] `medications` collection
+- [x] `water_logs` collection
+- [x] `social_posts` collection
+- [x] `groups` collection
+- [x] `share_tokens` collection *(used by report-share function)*
+- [x] `wedding_plans` collection *(derived from Drift tables — add remote collection)*
 
 ### 3.3 Collections — Attributes (run all CLI attribute commands per §24.3)
 
-- [ ] All `users` attributes (16 fields: userId, name, email, gender, dob, heightCm, weightKg, bloodGroup, fitnessGoal, activityLevel, dominantDosha, language, abhaId, abhaLinked, karmaLevel, karmaXP, conditions, firstLaunchTs)
-- [ ] All `food_logs` attributes (15 fields)
-- [ ] All `bp_readings` attributes (10 fields)
-- [ ] All `glucose_readings` attributes (9 fields)
-- [ ] All `sleep_logs` attributes (9 fields)
-- [ ] All `workouts` attributes (12 fields)
-- [ ] All `habits` attributes (9 fields)
-- [ ] All `journal` attributes (10 fields)
-- [ ] All `lab_reports` attributes (8 fields)
-- [ ] All `karma_events` attributes (5 fields)
-- [ ] All `festivals` attributes (10 fields)
-- [ ] All `medications` attributes (8 fields)
-- [ ] All `water_logs` attributes (4 fields)
-- [ ] All `social_posts` attributes (7 fields)
-- [ ] All `groups` attributes (5 fields)
-- [ ] `share_tokens` attributes (token, reportId, userId, expiresAt, used)
+- [x] All `users` attributes (16 fields: userId, name, email, gender, dob, heightCm, weightKg, bloodGroup, fitnessGoal, activityLevel, dominantDosha, language, abhaId, abhaLinked, karmaLevel, karmaXP, conditions, firstLaunchTs)
+- [x] All `food_logs` attributes (15 fields)
+- [x] All `bp_readings` attributes (10 fields)
+- [x] All `glucose_readings` attributes (9 fields)
+- [x] All `sleep_logs` attributes (9 fields)
+- [x] All `workouts` attributes (12 fields)
+- [x] All `habits` attributes (9 fields)
+- [x] All `journal` attributes (10 fields)
+- [x] All `lab_reports` attributes (8 fields)
+- [x] All `karma_events` attributes (5 fields)
+- [x] All `festivals` attributes (10 fields)
+- [x] All `medications` attributes (8 fields)
+- [x] All `water_logs` attributes (4 fields)
+- [x] All `social_posts` attributes (7 fields)
+- [x] All `groups` attributes (5 fields)
+- [x] `share_tokens` attributes (token, reportId, userId, expiresAt, used)
 
 ### 3.4 Collections — Indexes
 
@@ -282,32 +282,32 @@
 
 ### 5.1 Table Definitions — `lib/core/database/app_database.dart`
 
-- [ ] `FoodLogs` table (id, userId, foodName, foodNameLocal, mealType, loggedAt, calories, proteinG, carbsG, fatG, portionUnit, portionQty, source, syncStatus, remoteId, failedAttempts)
-- [ ] `BpReadings` table (id, userId, systolic, diastolic, pulse, measuredAt, notes, classification, syncStatus, remoteId, failedAttempts)
-- [ ] `GlucoseReadings` table (id, userId, valueMgDl, readingType, measuredAt, classification, linkedFoodLogId, syncStatus, remoteId, failedAttempts)
-- [ ] `SleepLogs` table (id, userId, sleepStart, sleepEnd, durationMinutes, qualityScore, source, syncStatus, remoteId, failedAttempts)
-- [ ] `Workouts` table (id, userId, name, type, startedAt, durationMinutes, caloriesBurned, distanceKm, avgHeartRate, exercisesJson, syncStatus, remoteId, failedAttempts)
-- [ ] `Habits` table (id, userId, name, icon, currentStreak, longestStreak, completedDates JSON, syncStatus, remoteId, failedAttempts)
-- [ ] `JournalEntries` table (id, userId, title, body, moodEmoji, moodScore, tags JSON, createdAt, syncStatus, remoteId, failedAttempts)
-- [ ] `WeddingPlans` table (id, userId, role, relation, firstEventTs, lastEventTs, eventsJson, prepWeeks, primaryGoal, currentPhase, syncStatus)
-- [ ] `WeddingMealLogs` table (id, userId, planId, eventTag, timing, loggedAt, calories, notes, syncStatus)
-- [ ] `@DriftDatabase(tables: [...])` annotation includes all tables
-- [ ] `schemaVersion = 1`
-- [ ] `MigrationStrategy` with `onCreate` and `onUpgrade` stubs
+- [x] `FoodLogs` table (id, userId, foodName, foodNameLocal, mealType, loggedAt, calories, proteinG, carbsG, fatG, portionUnit, portionQty, source, syncStatus, remoteId, failedAttempts)
+- [x] `BpReadings` table (id, userId, systolic, diastolic, pulse, measuredAt, notes, classification, syncStatus, remoteId, failedAttempts)
+- [x] `GlucoseReadings` table (id, userId, valueMgDl, readingType, measuredAt, classification, linkedFoodLogId, syncStatus, remoteId, failedAttempts)
+- [x] `SleepLogs` table (id, userId, sleepStart, sleepEnd, durationMinutes, qualityScore, source, syncStatus, remoteId, failedAttempts)
+- [x] `Workouts` table (id, userId, name, type, startedAt, durationMinutes, caloriesBurned, distanceKm, avgHeartRate, exercisesJson, syncStatus, remoteId, failedAttempts)
+- [x] `Habits` table (id, userId, name, icon, currentStreak, longestStreak, completedDates JSON, syncStatus, remoteId, failedAttempts)
+- [x] `JournalEntries` table (id, userId, title, body, moodEmoji, moodScore, tags JSON, createdAt, syncStatus, remoteId, failedAttempts)
+- [x] `WeddingPlans` table (id, userId, role, relation, firstEventTs, lastEventTs, eventsJson, prepWeeks, primaryGoal, currentPhase, syncStatus)
+- [x] `WeddingMealLogs` table (id, userId, planId, eventTag, timing, loggedAt, calories, notes, syncStatus)
+- [x] `@DriftDatabase(tables: [...])` annotation includes all tables
+- [x] `schemaVersion = 1`
+- [x] `MigrationStrategy` with `onCreate` and `onUpgrade` stubs
 
 ### 5.2 Database Queries — DAOs or extension methods
 
-- [ ] `watchTodayFoodLogs(int userId, DateTime date)` — stream, filtered by date range
-- [ ] `watchTodaySteps()` — from Health Connect, not Drift (but cache result)
-- [ ] `getPendingRecords(TableInfo table)` — syncStatus = 'pending', failedAttempts < 3
-- [ ] `getDLQRecords(TableInfo table)` — syncStatus = 'dlq'
-- [ ] `markSynced(String localId, String remoteId, TableInfo table)`
-- [ ] `incrementFailedAttempts(String localId, TableInfo table)`
-- [ ] `watchHabitById(String id)` — stream for live habit detail
-- [ ] `getJournalEntries(String userId, {int limit = 20})` — paginated
-- [ ] `getBpHistory(String userId, int days)` — for chart
-- [ ] `getGlucoseHistory(String userId, String readingType, int days)` — for chart
-- [ ] `getSleepLogs(String userId, int days)` — for chart + debt calculation
+- [x] `watchTodayFoodLogs(int userId, DateTime date)` — stream, filtered by date range
+- [x] `watchTodaySteps()` — from Health Connect, not Drift (but cache result)
+- [x] `getPendingRecords(TableInfo table)` — syncStatus = 'pending', failedAttempts < 3
+- [x] `getDLQRecords(TableInfo table)` — syncStatus = 'dlq'
+- [x] `markSynced(String localId, String remoteId, TableInfo table)`
+- [x] `incrementFailedAttempts(String localId, TableInfo table)`
+- [x] `watchHabitById(String id)` — stream for live habit detail
+- [x] `getJournalEntries(String userId, {int limit = 20})` — paginated
+- [x] `getBpHistory(String userId, int days)` — for chart
+- [x] `getGlucoseHistory(String userId, String readingType, int days)` — for chart
+- [x] `getSleepLogs(String userId, int days)` — for chart + debt calculation
 
 ---
 
@@ -315,132 +315,132 @@
 
 ### 6.1 Auth
 
-- [ ] `AuthNotifier` — `build()` calls `account.get()`, returns `User?`
-- [ ] `AuthNotifier.login(email, password)` — `createEmailPasswordSession`
-- [ ] `AuthNotifier.register(name, email, password)` — `create` + session
-- [ ] `AuthNotifier.loginWithGoogle()` — `createOAuth2Session`
-- [ ] `AuthNotifier.logout()` — `deleteSession('current')`
+- [x] `AuthNotifier` — `build()` calls `account.get()`, returns `User?`
+- [x] `AuthNotifier.login(email, password)` — `createEmailPasswordSession`
+- [x] `AuthNotifier.register(name, email, password)` — `create` + session
+- [x] `AuthNotifier.loginWithGoogle()` — `createOAuth2Session`
+- [x] `AuthNotifier.logout()` — `deleteSession('current')`
 
 ### 6.2 Food
 
-- [ ] `FoodLogNotifier` — `build(DateTime date)` watches today's food logs from Drift
-- [ ] `FoodLogNotifier.logFood(FoodLogsCompanion)` — local write first, then `_pushToRemote`
-- [ ] `FoodLogNotifier._pushToRemote(String localId)` — (Handled by FoodRepository + SyncQueue)
-- [ ] `todayCaloriesProvider` — narrow provider summing today's kcal
-- [ ] `foodSearchProvider(String query)` — searches local DB + remote food API
+- [x] `FoodLogNotifier` — `build(DateTime date)` watches today's food logs from Drift
+- [x] `FoodLogNotifier.logFood(FoodLogsCompanion)` — local write first, then `_pushToRemote`
+- [x] `FoodLogNotifier._pushToRemote(String localId)` — (Handled by FoodRepository + SyncQueue)
+- [x] `todayCaloriesProvider` — narrow provider summing today's kcal
+- [x] `foodSearchProvider(String query)` — searches local DB + remote food API
 
 ### 6.3 Health Metrics
 
-- [ ] `BPNotifier` — CRUD for `bp_readings` with same optimistic pattern
-- [ ] `BPNotifier.logReading(systolic, diastolic, pulse, notes)`
-- [ ] `latestBpReadingProvider` — stream of most recent BpReading
-- [ ] `bpHistoryProvider(int days)` — (Handled in UI/Domain via bpLogsProvider)
-- [ ] `GlucoseNotifier` — CRUD for `glucose_readings`
-- [ ] `GlucoseNotifier.logReading(value, readingType, linkedFoodLogId?)`
-- [ ] `latestGlucoseProvider` — most recent reading
-- [ ] `glucoseHistoryProvider(String type, int days)` — (Handled in UI/Domain)
-- [ ] `SpO2Notifier` — log SpO2 + pulse (stored in `workouts` or separate table)
-- [ ] `SleepNotifier` — CRUD for `sleep_logs`
-- [ ] `SleepNotifier.logSleep(start, end, source)`
-- [ ] `sleepHistoryProvider(int days)` — for chart
-- [ ] `sleepDebtProvider` — calculates weekly deficit/surplus vs 7h target
+- [x] `BPNotifier` — CRUD for `bp_readings` with same optimistic pattern
+- [x] `BPNotifier.logReading(systolic, diastolic, pulse, notes)`
+- [x] `latestBpReadingProvider` — stream of most recent BpReading
+- [x] `bpHistoryProvider(int days)` — (Handled in UI/Domain via bpLogsProvider)
+- [x] `GlucoseNotifier` — CRUD for `glucose_readings`
+- [x] `GlucoseNotifier.logReading(value, readingType, linkedFoodLogId?)`
+- [x] `latestGlucoseProvider` — most recent reading
+- [x] `glucoseHistoryProvider(String type, int days)` — (Handled in UI/Domain)
+- [x] `SpO2Notifier` — log SpO2 + pulse (stored in `workouts` or separate table)
+- [x] `SleepNotifier` — CRUD for `sleep_logs`
+- [x] `SleepNotifier.logSleep(start, end, source)`
+- [x] `sleepHistoryProvider(int days)` — for chart
+- [x] `sleepDebtProvider` — calculates weekly deficit/surplus vs 7h target
 
 ### 6.4 Workout
 
-- [ ] `WorkoutNotifier` — CRUD for `workouts`
-- [ ] `WorkoutNotifier.startWorkout(Workout)` — writes in-progress record
-- [ ] `WorkoutNotifier.finishWorkout(String id, duration, calories)` — completes record
-- [ ] `activeWorkoutProvider` — current in-progress workout (if any)
-- [ ] `workoutHistoryProvider(int limit)`
-- [ ] `personalRecordsProvider` — max weight/reps per exercise across all workouts
+- [x] `WorkoutNotifier` — CRUD for `workouts`
+- [x] `WorkoutNotifier.startWorkout(Workout)` — writes in-progress record
+- [x] `WorkoutNotifier.finishWorkout(String id, duration, calories)` — completes record
+- [x] `activeWorkoutProvider` — current in-progress workout (if any)
+- [x] `workoutHistoryProvider(int limit)`
+- [x] `personalRecordsProvider` — max weight/reps per exercise across all workouts
 
 ### 6.5 Habit
 
-- [ ] `HabitNotifier` — CRUD for `habits`
-- [ ] `HabitNotifier.completeHabit(String habitId)` — add today to completedDates, increment streak
-- [ ] `HabitNotifier.recoverStreak(String habitId, String userId)` — once/month, costs 50 XP
-- [ ] `todayHabitsProvider` — all habits with today's completion status
+- [x] `HabitNotifier` — CRUD for `habits`
+- [x] `HabitNotifier.completeHabit(String habitId)` — add today to completedDates, increment streak
+- [x] `HabitNotifier.recoverStreak(String habitId, String userId)` — once/month, costs 50 XP
+- [x] `todayHabitsProvider` — all habits with today's completion status
 
 ### 6.6 Steps
 
-- [ ] `stepsProvider` — reads from Health Connect via `HealthService.todaySteps()`
-- [ ] `stepHistoryProvider(int days)` — 7-day bar chart data
-- [ ] `adaptiveGoalProvider` — 7-day average + suggested new goal
+- [x] `stepsProvider` — reads from Health Connect via `HealthService.todaySteps()`
+- [x] `stepHistoryProvider(int days)` — 7-day bar chart data
+- [x] `adaptiveGoalProvider` — 7-day average + suggested new goal
 
 ### 6.7 Karma
 
-- [ ] `KarmaService.awardXP(userId, eventType)` — calls `xp-calculator` function
-- [ ] `xpFloatNotifierProvider` — shows floating "+X XP" animation
-- [ ] `leaderboardProvider(LeaderboardType)` — friends/city/national/seasonal
-- [ ] `userKarmaProvider` — streams user's current XP + level from Drift-cached user
+- [x] `KarmaService.awardXP(userId, eventType)` — calls `xp-calculator` function
+- [x] `xpFloatNotifierProvider` — shows floating "+X XP" animation
+- [x] `leaderboardProvider(LeaderboardType)` — friends/city/national/seasonal
+- [x] `userKarmaProvider` — streams user's current XP + level from Drift-cached user
 
 ### 6.8 Fasting
 
-- [ ] `FastingTimerNotifier` — manages start/pause/stop with `Stopwatch`
-- [ ] `fastingStageProvider` — computes current stage from elapsed hours
-- [ ] `activeFastProvider` — persists timer state across app restarts (store start time in `flutter_secure_storage`)
+- [x] `FastingTimerNotifier` — manages start/pause/stop with `Stopwatch`
+- [x] `fastingStageProvider` — computes current stage from elapsed hours
+- [x] `activeFastProvider` — persists timer state across app restarts (store start time in `flutter_secure_storage`)
 
 ### 6.9 Body Metrics
 
-- [ ] `bodyMetricsProvider` — latest weight, BMI from user profile
-- [ ] `weightHistoryProvider(int days)`
-- [ ] `BodyMetricsNotifier.logWeight(double kg)`
+- [x] `bodyMetricsProvider` — latest weight, BMI from user profile
+- [x] `weightHistoryProvider(int days)`
+- [x] `BodyMetricsNotifier.logWeight(double kg)`
 
 ### 6.10 Mood
 
-- [ ] `MoodNotifier` — stores mood entry to `journal` table (moodScore + moodEmoji + tags)
-- [ ] `todayMoodProvider` — today's logged mood if exists
-- [ ] `moodHistoryProvider(int days)` — for 7-day heatmap
+- [x] `MoodNotifier` — stores mood entry to `journal` table (moodScore + moodEmoji + tags)
+- [x] `todayMoodProvider` — today's logged mood if exists
+- [x] `moodHistoryProvider(int days)` — for 7-day heatmap
 
 ### 6.11 Journal
 
-- [ ] `JournalNotifier` — CRUD for `journal_entries`
-- [ ] `JournalNotifier.createEntry(title, body, moodScore, tags)`
-- [ ] `journalEntriesProvider` — paginated list
-- [ ] `journalPromptProvider` — generates prompt from logged data patterns
+- [x] `JournalNotifier` — CRUD for `journal_entries`
+- [x] `JournalNotifier.createEntry(title, body, moodScore, tags)`
+- [x] `journalEntriesProvider` — paginated list
+- [x] `journalPromptProvider` — generates prompt from logged data patterns
 
 ### 6.12 Festival
 
-- [ ] `activeFestivalProvider` — queries `festivals` by current timestamp range
-- [ ] `upcomingFestivalsProvider` — next 30 days
-- [ ] `festivalDietProvider(String festivalKey)` — diet plan for specific festival
-- [ ] `userFestivalFilterProvider` — user's religion/region preference for filtering
+- [x] `activeFestivalProvider` — queries `festivals` by current timestamp range
+- [x] `upcomingFestivalsProvider` — next 30 days
+- [x] `festivalDietProvider(String festivalKey)` — diet plan for specific festival
+- [x] `userFestivalFilterProvider` — user's religion/region preference for filtering
 
 ### 6.13 Wedding
 
-- [ ] `WeddingPlanNotifier` — CRUD for `WeddingPlans` Drift table
-- [ ] `WeddingPlanNotifier.createPlan(role, dates, events, prepWeeks, goal)`
-- [ ] `activeWeddingPlanProvider` — current user's active wedding plan
-- [ ] `weddingPhaseProvider` — computes current phase (pre/wedding week/post)
-- [ ] `weddingEventDietProvider(String eventKey)` — per-event meal plan
+- [x] `WeddingPlanNotifier` — CRUD for `WeddingPlans` Drift table
+- [x] `WeddingPlanNotifier.createPlan(role, dates, events, prepWeeks, goal)`
+- [x] `activeWeddingPlanProvider` — current user's active wedding plan
+- [x] `weddingPhaseProvider` — computes current phase (pre/wedding week/post)
+- [x] `weddingEventDietProvider(String eventKey)` — per-event meal plan
 
 ### 6.14 Social
 
-- [ ] `SocialFeedNotifier` — paginated social posts
-- [ ] `SocialFeedNotifier.createPost(content, mediaFileId?)`
-- [ ] `SocialFeedNotifier.likePost(String postId)`
-- [ ] `socialRealtimeProvider` — Appwrite Realtime subscription for live feed updates
-- [ ] `groupsProvider` — community groups list
-- [ ] `myGroupsProvider` — user's joined groups
+- [x] `SocialFeedNotifier` — paginated social posts
+- [x] `SocialFeedNotifier.createPost(content, mediaFileId?)`
+- [x] `SocialFeedNotifier.likePost(String postId)`
+- [x] `socialRealtimeProvider` — Appwrite Realtime subscription for live feed updates
+- [x] `groupsProvider` — community groups list
+- [x] `myGroupsProvider` — user's joined groups
 
 ### 6.15 Reports
 
-- [ ] `labReportsProvider` — list of imported lab reports
-- [ ] `LabReportNotifier.importFromOCR(File imageOrPdf)`
-- [ ] `LabReportNotifier.uploadFile(File)` → Appwrite Storage → returns `fileId`
-- [ ] `shareLinkProvider(String reportId)` — calls `report-share` function
-- [ ] `healthReportProvider(String period)` — weekly/monthly summary
+- [x] `labReportsProvider` — list of imported lab reports
+- [x] `LabReportNotifier.importFromOCR(File imageOrPdf)`
+- [x] `LabReportNotifier.uploadFile(File)` → Appwrite Storage → returns `fileId`
+- [x] `shareLinkProvider(String reportId)` — calls `report-share` function
+- [x] `healthReportProvider(String period)` — weekly/monthly summary
 
 ### 6.16 Settings
 
-- [ ] `ThemeNotifier` — light/dark/system, persisted to `flutter_secure_storage`
-- [ ] `LanguageNotifier` — 22-language selector, persisted
-- [ ] `FontSizeNotifier` — slider value, drives `textScaleFactor`
-- [ ] `DyslexiaFontNotifier` — toggles `OpenDyslexic`, persisted
-- [ ] `BiometricLockNotifier` — enabled/disabled toggle, persisted
-- [ ] `NotificationPrefsNotifier` — per-module notification toggles
-- [ ] `wearablesProvider` — list of connected wearables
-- [ ] `subscriptionStatusProvider` — free/monthly/quarterly/yearly/family
+- [x] `ThemeNotifier` — light/dark/system, persisted to `flutter_secure_storage`
+- [x] `LanguageNotifier` — 22-language selector, persisted
+- [x] `FontSizeNotifier` — slider value, drives `textScaleFactor`
+- [x] `DyslexiaFontNotifier` — toggles `OpenDyslexic`, persisted
+- [x] `BiometricLockNotifier` — enabled/disabled toggle, persisted
+- [x] `NotificationPrefsNotifier` — per-module notification toggles
+- [x] `wearablesProvider` — list of connected wearables
+- [x] `subscriptionStatusProvider` — free/monthly/quarterly/yearly/family
 
 ### 6.17 Correlation Engine
 
@@ -1138,12 +1138,12 @@ All in `lib/shared/widgets/`. Every widget must be tier-aware via `deviceTierPro
 
 | Area | Total Items | Done | In Progress | Remaining |
 |---|---|---|---|---|
-| Project Bootstrap | 28 | 7 | 0 | 21 |
-| Core Layer | 37 | 16 | 0 | 21 |
-| Appwrite Backend | 51 | 0 | 5 | 46 |
-| Appwrite Functions | 21 | 0 | 1 | 20 |
-| Drift Tables | 26 | 12 | 0 | 14 |
-| State / Providers | 62 | 0 | 10 | 52 |
+| Project Bootstrap | 32 | 30 | 0 | 2 |
+| Core Layer | 37 | 29 | 0 | 8 |
+| Appwrite Backend | 51 | 36 | 5 | 10 |
+| Appwrite Functions | 21 | 19 | 2 | 0 |
+| Drift Tables | 26 | 23 | 0 | 3 |
+| State / Providers | 62 | 5 | 10 | 47 |
 | Sync Engine | 10 | 0 | 2 | 8 |
 | Shared Widgets | 42 | 34 | 0 | 8 |
 | Navigation | 12 | 8 | 0 | 4 |
@@ -1159,7 +1159,7 @@ All in `lib/shared/widgets/`. Every widget must be tier-aware via `deviceTierPro
 | CI/CD | 9 | 0 | 0 | 9 |
 | Performance | 15 | 0 | 0 | 15 |
 | Data Seeding | 9 | 0 | 0 | 9 |
-| **TOTAL** | **592** | **127** | **18** | **447** |
+| **TOTAL** | **592** | **254** | **19** | **319** |
 
 ---
 

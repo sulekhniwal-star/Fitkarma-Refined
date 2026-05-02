@@ -1,8 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:appwrite/appwrite.dart';
+import 'package:appwrite/appwrite.dart' hide TablesDB;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:dio/dio.dart';
 import '../config/app_config.dart';
 import '../database/app_database.dart';
+import '../database/tables_db.dart';
 
 // Appwrite Client — singleton
 final appwriteClientProvider = Provider<Client>((ref) {
@@ -33,8 +35,16 @@ final appwriteStorageProvider = Provider<Storage>((ref) {
   return Storage(ref.watch(appwriteClientProvider));
 });
 
+final appwriteRealtimeProvider = Provider<Realtime>((ref) {
+  return Realtime(ref.watch(appwriteClientProvider));
+});
+
 final secureStorageProvider = Provider<FlutterSecureStorage>((ref) {
   return const FlutterSecureStorage();
+});
+
+final dioProvider = Provider<Dio>((ref) {
+  return Dio();
 });
 
 // Local database — to be overridden in ProviderScope in main.dart

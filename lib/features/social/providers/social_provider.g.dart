@@ -10,14 +10,18 @@ part of 'social_provider.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(SocialFeedNotifier)
-final socialFeedProvider = SocialFeedNotifierProvider._();
+final socialFeedProvider = SocialFeedNotifierFamily._();
 
 final class SocialFeedNotifierProvider
     extends $StreamNotifierProvider<SocialFeedNotifier, List<dynamic>> {
-  SocialFeedNotifierProvider._()
+  SocialFeedNotifierProvider._(
+      {required SocialFeedNotifierFamily super.from,
+      required ({
+        int limit,
+        int offset,
+      })
+          super.argument})
       : super(
-          from: null,
-          argument: null,
           retry: null,
           name: r'socialFeedProvider',
           isAutoDispose: true,
@@ -28,16 +32,76 @@ final class SocialFeedNotifierProvider
   @override
   String debugGetCreateSourceHash() => _$socialFeedNotifierHash();
 
+  @override
+  String toString() {
+    return r'socialFeedProvider'
+        ''
+        '$argument';
+  }
+
   @$internal
   @override
   SocialFeedNotifier create() => SocialFeedNotifier();
+
+  @override
+  bool operator ==(Object other) {
+    return other is SocialFeedNotifierProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
 }
 
 String _$socialFeedNotifierHash() =>
-    r'48f821f229169b7ea531deb587e99d995c46124e';
+    r'763e757e8b36c51117c00c0cc3db175a578545fa';
+
+final class SocialFeedNotifierFamily extends $Family
+    with
+        $ClassFamilyOverride<
+            SocialFeedNotifier,
+            AsyncValue<List<dynamic>>,
+            List<dynamic>,
+            Stream<List<dynamic>>,
+            ({
+              int limit,
+              int offset,
+            })> {
+  SocialFeedNotifierFamily._()
+      : super(
+          retry: null,
+          name: r'socialFeedProvider',
+          dependencies: null,
+          $allTransitiveDependencies: null,
+          isAutoDispose: true,
+        );
+
+  SocialFeedNotifierProvider call({
+    int limit = 20,
+    int offset = 0,
+  }) =>
+      SocialFeedNotifierProvider._(argument: (
+        limit: limit,
+        offset: offset,
+      ), from: this);
+
+  @override
+  String toString() => r'socialFeedProvider';
+}
 
 abstract class _$SocialFeedNotifier extends $StreamNotifier<List<dynamic>> {
-  Stream<List<dynamic>> build();
+  late final _$args = ref.$arg as ({
+    int limit,
+    int offset,
+  });
+  int get limit => _$args.limit;
+  int get offset => _$args.offset;
+
+  Stream<List<dynamic>> build({
+    int limit = 20,
+    int offset = 0,
+  });
   @$mustCallSuper
   @override
   void runBuild() {
@@ -47,16 +111,21 @@ abstract class _$SocialFeedNotifier extends $StreamNotifier<List<dynamic>> {
         AsyncValue<List<dynamic>>,
         Object?,
         Object?>;
-    element.handleCreate(ref, build);
+    element.handleCreate(
+        ref,
+        () => build(
+              limit: _$args.limit,
+              offset: _$args.offset,
+            ));
   }
 }
 
 @ProviderFor(socialRealtime)
 final socialRealtimeProvider = SocialRealtimeProvider._();
 
-final class SocialRealtimeProvider
-    extends $FunctionalProvider<AsyncValue<bool>, bool, Stream<bool>>
-    with $FutureModifier<bool>, $StreamProvider<bool> {
+final class SocialRealtimeProvider extends $FunctionalProvider<
+        AsyncValue<RealtimeMessage>, RealtimeMessage, Stream<RealtimeMessage>>
+    with $FutureModifier<RealtimeMessage>, $StreamProvider<RealtimeMessage> {
   SocialRealtimeProvider._()
       : super(
           from: null,
@@ -73,16 +142,17 @@ final class SocialRealtimeProvider
 
   @$internal
   @override
-  $StreamProviderElement<bool> $createElement($ProviderPointer pointer) =>
+  $StreamProviderElement<RealtimeMessage> $createElement(
+          $ProviderPointer pointer) =>
       $StreamProviderElement(pointer);
 
   @override
-  Stream<bool> create(Ref ref) {
+  Stream<RealtimeMessage> create(Ref ref) {
     return socialRealtime(ref);
   }
 }
 
-String _$socialRealtimeHash() => r'a15c57b518004c6dc4563fb58e7b6608689af2c3';
+String _$socialRealtimeHash() => r'22fc2a519d2d625859badf66cb0657e038156beb';
 
 @ProviderFor(communityGroups)
 final communityGroupsProvider = CommunityGroupsProvider._();

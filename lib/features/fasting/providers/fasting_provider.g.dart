@@ -13,7 +13,7 @@ part of 'fasting_provider.dart';
 final fastingTimerProvider = FastingTimerNotifierProvider._();
 
 final class FastingTimerNotifierProvider
-    extends $NotifierProvider<FastingTimerNotifier, DateTime?> {
+    extends $AsyncNotifierProvider<FastingTimerNotifier, DateTime?> {
   FastingTimerNotifierProvider._()
       : super(
           from: null,
@@ -31,27 +31,22 @@ final class FastingTimerNotifierProvider
   @$internal
   @override
   FastingTimerNotifier create() => FastingTimerNotifier();
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(DateTime? value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<DateTime?>(value),
-    );
-  }
 }
 
 String _$fastingTimerNotifierHash() =>
-    r'd7eb51e446c9af54e5f4647b6aef661aecbd1cd1';
+    r'098f5e680c4d52df11bff93de62be1cd2823ab2c';
 
-abstract class _$FastingTimerNotifier extends $Notifier<DateTime?> {
-  DateTime? build();
+abstract class _$FastingTimerNotifier extends $AsyncNotifier<DateTime?> {
+  FutureOr<DateTime?> build();
   @$mustCallSuper
   @override
   void runBuild() {
-    final ref = this.ref as $Ref<DateTime?, DateTime?>;
+    final ref = this.ref as $Ref<AsyncValue<DateTime?>, DateTime?>;
     final element = ref.element as $ClassProviderElement<
-        AnyNotifier<DateTime?, DateTime?>, DateTime?, Object?, Object?>;
+        AnyNotifier<AsyncValue<DateTime?>, DateTime?>,
+        AsyncValue<DateTime?>,
+        Object?,
+        Object?>;
     element.handleCreate(ref, build);
   }
 }
@@ -95,7 +90,7 @@ final class FastingDurationProvider
   }
 }
 
-String _$fastingDurationHash() => r'6bf732137faf994eea198e6df5e4ada44c18e01c';
+String _$fastingDurationHash() => r'f8351ffa890fc3ad64c0af0a3c8407d06c49def0';
 
 @ProviderFor(fastingStage)
 final fastingStageProvider = FastingStageProvider._();

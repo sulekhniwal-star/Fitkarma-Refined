@@ -40,7 +40,7 @@ final class SyncWorkerProvider extends $NotifierProvider<SyncWorker, bool> {
   }
 }
 
-String _$syncWorkerHash() => r'0ef8adafeac2dbc8e4735544c1fcd5e6fcc11494';
+String _$syncWorkerHash() => r'4a7ba5b33cfa8188aa6c6df5a8a874125e2c300d';
 
 abstract class _$SyncWorker extends $Notifier<bool> {
   bool build();

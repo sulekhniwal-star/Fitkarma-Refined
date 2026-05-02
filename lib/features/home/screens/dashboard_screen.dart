@@ -32,7 +32,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final uxStage = ref.watch(uxStageProvider);
     final isFirstWeek = uxStage == UXStage.firstWeek;
-    final abhaLinked = ref.watch(aBHANotifierProvider).value ?? false;
+    final abhaLinked = ref.watch(aBHAProvider).value ?? false;
 
     final text0 = isDark ? AppColorsDark.textPrimary : AppColorsLight.textPrimary;
     final text2 = isDark ? AppColorsDark.textMuted : AppColorsLight.textMuted;

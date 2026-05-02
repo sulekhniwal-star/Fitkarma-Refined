@@ -110,7 +110,7 @@ final class UserFestivalFilterProvider
 }
 
 String _$userFestivalFilterHash() =>
-    r'f607ce5bbeeb8807c162249a548e8d409676e1fc';
+    r'371d9b2d45e97d1a36706283737dca6f1ddd2662';
 
 abstract class _$UserFestivalFilter extends $Notifier<Map<String, String?>> {
   Map<String, String?> build();
@@ -127,47 +127,46 @@ abstract class _$UserFestivalFilter extends $Notifier<Map<String, String?>> {
   }
 }
 
-@ProviderFor(festivalDietPlan)
-final festivalDietPlanProvider = FestivalDietPlanFamily._();
+@ProviderFor(festivalDiet)
+final festivalDietProvider = FestivalDietFamily._();
 
-final class FestivalDietPlanProvider extends $FunctionalProvider<
-        AsyncValue<Map<String, Object?>?>,
-        Map<String, Object?>?,
-        FutureOr<Map<String, Object?>?>>
+final class FestivalDietProvider extends $FunctionalProvider<
+        AsyncValue<Map<String, dynamic>?>,
+        Map<String, dynamic>?,
+        FutureOr<Map<String, dynamic>?>>
     with
-        $FutureModifier<Map<String, Object?>?>,
-        $FutureProvider<Map<String, Object?>?> {
-  FestivalDietPlanProvider._(
-      {required FestivalDietPlanFamily super.from,
-      required String super.argument})
+        $FutureModifier<Map<String, dynamic>?>,
+        $FutureProvider<Map<String, dynamic>?> {
+  FestivalDietProvider._(
+      {required FestivalDietFamily super.from, required String super.argument})
       : super(
           retry: null,
-          name: r'festivalDietPlanProvider',
+          name: r'festivalDietProvider',
           isAutoDispose: true,
           dependencies: null,
           $allTransitiveDependencies: null,
         );
 
   @override
-  String debugGetCreateSourceHash() => _$festivalDietPlanHash();
+  String debugGetCreateSourceHash() => _$festivalDietHash();
 
   @override
   String toString() {
-    return r'festivalDietPlanProvider'
+    return r'festivalDietProvider'
         ''
         '($argument)';
   }
 
   @$internal
   @override
-  $FutureProviderElement<Map<String, Object?>?> $createElement(
+  $FutureProviderElement<Map<String, dynamic>?> $createElement(
           $ProviderPointer pointer) =>
       $FutureProviderElement(pointer);
 
   @override
-  FutureOr<Map<String, Object?>?> create(Ref ref) {
+  FutureOr<Map<String, dynamic>?> create(Ref ref) {
     final argument = this.argument as String;
-    return festivalDietPlan(
+    return festivalDiet(
       ref,
       argument,
     );
@@ -175,7 +174,7 @@ final class FestivalDietPlanProvider extends $FunctionalProvider<
 
   @override
   bool operator ==(Object other) {
-    return other is FestivalDietPlanProvider && other.argument == argument;
+    return other is FestivalDietProvider && other.argument == argument;
   }
 
   @override
@@ -184,47 +183,54 @@ final class FestivalDietPlanProvider extends $FunctionalProvider<
   }
 }
 
-String _$festivalDietPlanHash() => r'09ec04e932ed8e1eb67929f038b154de124431d5';
+String _$festivalDietHash() => r'33a1c62c4f90014f1069d45ac05041b9bcd4eb2c';
 
-final class FestivalDietPlanFamily extends $Family
-    with $FunctionalFamilyOverride<FutureOr<Map<String, Object?>?>, String> {
-  FestivalDietPlanFamily._()
+final class FestivalDietFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<Map<String, dynamic>?>, String> {
+  FestivalDietFamily._()
       : super(
           retry: null,
-          name: r'festivalDietPlanProvider',
+          name: r'festivalDietProvider',
           dependencies: null,
           $allTransitiveDependencies: null,
           isAutoDispose: true,
         );
 
-  FestivalDietPlanProvider call(
-    String festivalId,
+  FestivalDietProvider call(
+    String festivalKey,
   ) =>
-      FestivalDietPlanProvider._(argument: festivalId, from: this);
+      FestivalDietProvider._(argument: festivalKey, from: this);
 
   @override
-  String toString() => r'festivalDietPlanProvider';
+  String toString() => r'festivalDietProvider';
 }
 
-@ProviderFor(filteredActiveFestivals)
-final filteredActiveFestivalsProvider = FilteredActiveFestivalsProvider._();
+@ProviderFor(filteredFestivals)
+final filteredFestivalsProvider = FilteredFestivalsFamily._();
 
-final class FilteredActiveFestivalsProvider extends $FunctionalProvider<
+final class FilteredFestivalsProvider extends $FunctionalProvider<
         AsyncValue<List<dynamic>>, List<dynamic>, FutureOr<List<dynamic>>>
     with $FutureModifier<List<dynamic>>, $FutureProvider<List<dynamic>> {
-  FilteredActiveFestivalsProvider._()
+  FilteredFestivalsProvider._(
+      {required FilteredFestivalsFamily super.from,
+      required List<dynamic> super.argument})
       : super(
-          from: null,
-          argument: null,
           retry: null,
-          name: r'filteredActiveFestivalsProvider',
+          name: r'filteredFestivalsProvider',
           isAutoDispose: true,
           dependencies: null,
           $allTransitiveDependencies: null,
         );
 
   @override
-  String debugGetCreateSourceHash() => _$filteredActiveFestivalsHash();
+  String debugGetCreateSourceHash() => _$filteredFestivalsHash();
+
+  @override
+  String toString() {
+    return r'filteredFestivalsProvider'
+        ''
+        '($argument)';
+  }
 
   @$internal
   @override
@@ -234,9 +240,42 @@ final class FilteredActiveFestivalsProvider extends $FunctionalProvider<
 
   @override
   FutureOr<List<dynamic>> create(Ref ref) {
-    return filteredActiveFestivals(ref);
+    final argument = this.argument as List<dynamic>;
+    return filteredFestivals(
+      ref,
+      argument,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is FilteredFestivalsProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
   }
 }
 
-String _$filteredActiveFestivalsHash() =>
-    r'e7fe113a58f6a7284bfe2cfd769edce2b47cdfa2';
+String _$filteredFestivalsHash() => r'26d33c2e190668678d2f81dc41f9624929b11c57';
+
+final class FilteredFestivalsFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<List<dynamic>>, List<dynamic>> {
+  FilteredFestivalsFamily._()
+      : super(
+          retry: null,
+          name: r'filteredFestivalsProvider',
+          dependencies: null,
+          $allTransitiveDependencies: null,
+          isAutoDispose: true,
+        );
+
+  FilteredFestivalsProvider call(
+    List<dynamic> festivals,
+  ) =>
+      FilteredFestivalsProvider._(argument: festivals, from: this);
+
+  @override
+  String toString() => r'filteredFestivalsProvider';
+}

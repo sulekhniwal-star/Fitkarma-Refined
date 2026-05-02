@@ -6,6 +6,8 @@ import '../../../core/database/app_database.dart';
 import '../../../core/providers/core_providers.dart';
 import '../../auth/providers/auth_provider.dart';
 
+import '../repositories/wedding_repository.dart';
+
 part 'wedding_provider.g.dart';
 
 @riverpod
@@ -41,16 +43,30 @@ class WeddingPlanNotifier extends _$WeddingPlanNotifier {
       primaryGoal: goal,
       currentPhase: 'prep',
       createdAt: DateTime.now(),
+      syncStatus: const Value('pending'),
     );
 
     await db.into(db.weddingPlans).insert(companion);
+    
+    _pushToRemote(id);
   }
 
   Future<void> updatePhase(String planId, String phase) async {
     final db = ref.read(appDatabaseProvider);
     await (db.update(db.weddingPlans)..where((t) => t.id.equals(planId))).write(
-      WeddingPlansCompanion(currentPhase: Value(phase)),
+      WeddingPlansCompanion(
+        currentPhase: Value(phase),
+        syncStatus: const Value('pending'),
+      ),
     );
+    
+    _pushToRemote(planId);
+  }
+
+  Future<void> _pushToRemote(String id) async {
+    try {
+      await ref.read(weddingRepositoryProvider).pushPlanToRemote(id);
+    } catch (_) {}
   }
 
   Future<void> deletePlan(String planId) async {

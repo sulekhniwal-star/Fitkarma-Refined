@@ -2,8 +2,14 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:drift/drift.dart';
 import '../providers/core_providers.dart';
-import '../../features/food/repositories/food_repository.dart';
+import '../../features/food/providers/food_provider.dart';
 import '../../features/health/repositories/health_repository.dart';
+import '../../features/journal/repositories/journal_repository.dart';
+import '../../features/workout/repositories/workout_repository.dart';
+import '../../features/habit/repositories/habit_repository.dart';
+import '../../features/wedding/repositories/wedding_repository.dart';
+import '../../features/social/repositories/social_repository.dart';
+import '../../features/reports/repositories/reports_repository.dart';
 
 part 'sync_worker.g.dart';
 
@@ -14,10 +20,7 @@ class SyncWorker extends _$SyncWorker {
 
   Future<void> syncPending() async {
     final db = ref.read(appDatabaseProvider);
-    final foodRepository = FoodRepository(
-      db,
-      ref.read(appwriteTablesDBProvider),
-    );
+    final foodRepository = ref.read(foodRepositoryProvider);
     
     // Iterate through all tables that support sync
     await _syncTable(db.foodLogs, foodRepository.pushToRemote);
@@ -25,6 +28,16 @@ class SyncWorker extends _$SyncWorker {
     await _syncTable(db.glucoseReadings, (id) => ref.read(healthRepositoryProvider).pushGlucoseToRemote(id));
     await _syncTable(db.spo2Readings, (id) => ref.read(healthRepositoryProvider).pushSpo2ToRemote(id));
     await _syncTable(db.sleepLogs, (id) => ref.read(healthRepositoryProvider).pushSleepToRemote(id));
+    await _syncTable(db.stepCounts, (id) => ref.read(healthRepositoryProvider).pushStepsToRemote(id));
+    await _syncTable(db.weightLogs, (id) => ref.read(healthRepositoryProvider).pushWeightToRemote(id));
+    
+    // Journal & Workouts
+    await _syncTable(db.journalEntries, (id) => ref.read(journalRepositoryProvider).pushEntryToRemote(id));
+    await _syncTable(db.workouts, (id) => ref.read(workoutRepositoryProvider).pushWorkoutToRemote(id));
+    await _syncTable(db.habits, (id) => ref.read(habitRepositoryProvider).pushHabitToRemote(id));
+    await _syncTable(db.weddingPlans, (id) => ref.read(weddingRepositoryProvider).pushPlanToRemote(id));
+    await _syncTable(db.socialPosts, (id) => ref.read(socialRepositoryProvider).pushPostToRemote(id));
+    await _syncTable(db.labReports, (id) => ref.read(reportsRepositoryProvider).pushReportToRemote(id));
   }
 
   Future<void> _syncTable<T extends HasResultSet, D>(

@@ -1,10 +1,8 @@
-import 'package:appwrite/appwrite.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/database/app_database.dart';
+import '../../../core/database/tables_db.dart';
 import '../../../core/config/app_config.dart';
 import '../../../core/providers/core_providers.dart';
-
-part 'habit_repository.g.dart';
 
 class HabitRepository {
   final AppDatabase _db;
@@ -38,10 +36,9 @@ class HabitRepository {
   }
 }
 
-@riverpod
-HabitRepository habitRepository(Ref ref) {
+final habitRepositoryProvider = Provider<HabitRepository>((ref) {
   return HabitRepository(
-    ref.watch(appDatabaseProvider),
-    ref.watch(appwriteTablesDBProvider),
+    ref.read(appDatabaseProvider),
+    ref.read(appwriteTablesDBProvider),
   );
-}
+});

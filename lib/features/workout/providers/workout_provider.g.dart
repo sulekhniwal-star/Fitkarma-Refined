@@ -33,7 +33,7 @@ final class WorkoutNotifierProvider
   WorkoutNotifier create() => WorkoutNotifier();
 }
 
-String _$workoutNotifierHash() => r'162e5e761d15059c9683ebac86b8444fd3357cbf';
+String _$workoutNotifierHash() => r'05ef01fc3e2eb7a8c2adc8a34b5262fc96432793';
 
 abstract class _$WorkoutNotifier extends $StreamNotifier<List<dynamic>> {
   Stream<List<dynamic>> build();
@@ -161,12 +161,12 @@ final class WorkoutHistoryFamily extends $Family
 final personalRecordsProvider = PersonalRecordsProvider._();
 
 final class PersonalRecordsProvider extends $FunctionalProvider<
-        AsyncValue<Map<String, Object?>>,
-        Map<String, Object?>,
-        FutureOr<Map<String, Object?>>>
+        AsyncValue<Map<String, dynamic>>,
+        Map<String, dynamic>,
+        FutureOr<Map<String, dynamic>>>
     with
-        $FutureModifier<Map<String, Object?>>,
-        $FutureProvider<Map<String, Object?>> {
+        $FutureModifier<Map<String, dynamic>>,
+        $FutureProvider<Map<String, dynamic>> {
   PersonalRecordsProvider._()
       : super(
           from: null,
@@ -183,14 +183,14 @@ final class PersonalRecordsProvider extends $FunctionalProvider<
 
   @$internal
   @override
-  $FutureProviderElement<Map<String, Object?>> $createElement(
+  $FutureProviderElement<Map<String, dynamic>> $createElement(
           $ProviderPointer pointer) =>
       $FutureProviderElement(pointer);
 
   @override
-  FutureOr<Map<String, Object?>> create(Ref ref) {
+  FutureOr<Map<String, dynamic>> create(Ref ref) {
     return personalRecords(ref);
   }
 }
 
-String _$personalRecordsHash() => r'f46b2008a789b61fbe1a906bedcc5bdbcb543001';
+String _$personalRecordsHash() => r'2e667074f6bf0f589ab523f85e9c6d9448a99b12';

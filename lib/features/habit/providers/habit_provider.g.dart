@@ -33,7 +33,7 @@ final class HabitNotifierProvider
   HabitNotifier create() => HabitNotifier();
 }
 
-String _$habitNotifierHash() => r'6512c2e4a8ce61664e437e53762e9acc74658116';
+String _$habitNotifierHash() => r'78c90679108bc5969820c5c4ecef02abc4e743b8';
 
 abstract class _$HabitNotifier extends $StreamNotifier<List<dynamic>> {
   Stream<List<dynamic>> build();
@@ -54,8 +54,8 @@ abstract class _$HabitNotifier extends $StreamNotifier<List<dynamic>> {
 final todayHabitsProvider = TodayHabitsProvider._();
 
 final class TodayHabitsProvider extends $FunctionalProvider<
-        AsyncValue<List<dynamic>>, List<dynamic>, FutureOr<List<dynamic>>>
-    with $FutureModifier<List<dynamic>>, $FutureProvider<List<dynamic>> {
+        AsyncValue<List<dynamic>>, List<dynamic>, Stream<List<dynamic>>>
+    with $FutureModifier<List<dynamic>>, $StreamProvider<List<dynamic>> {
   TodayHabitsProvider._()
       : super(
           from: null,
@@ -72,14 +72,14 @@ final class TodayHabitsProvider extends $FunctionalProvider<
 
   @$internal
   @override
-  $FutureProviderElement<List<dynamic>> $createElement(
+  $StreamProviderElement<List<dynamic>> $createElement(
           $ProviderPointer pointer) =>
-      $FutureProviderElement(pointer);
+      $StreamProviderElement(pointer);
 
   @override
-  FutureOr<List<dynamic>> create(Ref ref) {
+  Stream<List<dynamic>> create(Ref ref) {
     return todayHabits(ref);
   }
 }
 
-String _$todayHabitsHash() => r'f715593c46d2f1250ba8a92f796065413c6c0cbd';
+String _$todayHabitsHash() => r'cf6173a9afbf509bb346fb3cbd2f2a990a53cd8c';

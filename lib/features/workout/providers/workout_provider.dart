@@ -70,6 +70,22 @@ class WorkoutNotifier extends _$WorkoutNotifier {
       await ref.read(workoutRepositoryProvider).pushWorkoutToRemote(id);
     } catch (_) {}
   }
+  Future<void> updateWorkout(String id, WorkoutsCompanion companion) async {
+    final db = ref.read(appDatabaseProvider);
+    await (db.update(db.workouts)..where((t) => t.id.equals(id))).write(
+      companion.copyWith(syncStatus: const Value('pending')),
+    );
+    
+    try {
+      await ref.read(workoutRepositoryProvider).pushWorkoutToRemote(id);
+    } catch (_) {}
+  }
+
+  Future<void> deleteWorkout(String id) async {
+    final db = ref.read(appDatabaseProvider);
+    await (db.delete(db.workouts)..where((t) => t.id.equals(id))).go();
+    // TODO: Add remote delete if necessary
+  }
 }
 
 @riverpod
@@ -91,15 +107,16 @@ Stream<List<dynamic>> workoutHistory(Ref ref, {int limit = 20}) {
 }
 
 @riverpod
-Future<Map<String, Object?>> personalRecords(Ref ref) async {
+Future<Map<String, dynamic>> personalRecords(Ref ref) async {
   final workouts = await ref.watch(workoutHistoryProvider(limit: 100).future);
   
   final records = <String, dynamic>{};
   
   for (final workout in workouts) {
-    if (workout.exercisesJson == null) continue;
+    final dynamic w = workout;
+    if (w.exercisesJson == null) continue;
     try {
-      final List<dynamic> exercises = jsonDecode(workout.exercisesJson!);
+      final List<dynamic> exercises = jsonDecode(w.exercisesJson as String);
       for (final ex in exercises) {
         final name = ex['exercise'] as String;
         final sets = ex['sets'] as List<dynamic>;
@@ -109,7 +126,11 @@ Future<Map<String, Object?>> personalRecords(Ref ref) async {
           final reps = (set['reps'] as num?)?.toInt() ?? 0;
           
           if (!records.containsKey(name) || weight > (records[name]['weight'] as double)) {
-            records[name] = {'weight': weight, 'reps': reps, 'date': workout.startedAt};
+            records[name] = {
+              'weight': weight, 
+              'reps': reps, 
+              'date': w.startedAt,
+            };
           }
         }
       }

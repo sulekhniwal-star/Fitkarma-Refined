@@ -94,7 +94,7 @@ class _ABHAScreenState extends ConsumerState<ABHAScreen> {
 
     try {
       final raw = _abhaCtrl.text.replaceAll(RegExp(r'\D'), '');
-      await ref.read(aBHANotifierProvider.notifier).linkAccount(raw, otp);
+      await ref.read(aBHAProvider.notifier).linkAccount(raw, otp);
       
       final masked = '${raw.substring(0, 2)}-****-****-${raw.substring(10)}';
       setState(() {
@@ -118,7 +118,7 @@ class _ABHAScreenState extends ConsumerState<ABHAScreen> {
     final bg1 = isDark ? AppColorsDark.bg1 : AppColorsLight.bg1;
     final divider = isDark ? AppColorsDark.divider : AppColorsLight.divider;
 
-    final abhaLinked = ref.watch(aBHANotifierProvider).value ?? false;
+    final abhaLinked = ref.watch(aBHAProvider).value ?? false;
 
     return Scaffold(
       backgroundColor: bg1,

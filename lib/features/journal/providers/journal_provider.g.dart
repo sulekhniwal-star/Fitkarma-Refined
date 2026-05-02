@@ -33,7 +33,7 @@ final class JournalNotifierProvider
   JournalNotifier create() => JournalNotifier();
 }
 
-String _$journalNotifierHash() => r'72db778cc5a66fb55d2096e292673f3160abc779';
+String _$journalNotifierHash() => r'b1715ad8c0a65e34dce5a2d02f6fed10fa7c6a77';
 
 abstract class _$JournalNotifier extends $AsyncNotifier<List<dynamic>> {
   FutureOr<List<dynamic>> build();
