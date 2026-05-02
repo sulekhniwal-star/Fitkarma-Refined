@@ -1,4 +1,5 @@
 import 'package:appwrite/appwrite.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/providers/core_providers.dart';
@@ -53,7 +54,7 @@ Stream<UserProfile?> userKarma(Ref ref) {
 }
 
 @riverpod
-Future<List<dynamic>> leaderboard(Ref ref, String type) async {
+Future<List<Map<String, Object>>> leaderboard(Ref ref, String type) async {
   // Mocking leaderboard data for now as it usually requires a custom function or large query
   await Future.delayed(const Duration(seconds: 1));
   return [

@@ -1,4 +1,5 @@
 import 'package:drift/drift.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
 import '../../../core/database/app_database.dart';
@@ -49,9 +50,9 @@ class SocialFeedNotifier extends _$SocialFeedNotifier {
 }
 
 @riverpod
-Stream<void> socialRealtime(Ref ref) {
+Stream<bool> socialRealtime(Ref ref) {
   // Realtime subscription placeholder
-  return const Stream.empty();
+  return Stream.value(false);
 }
 
 @riverpod

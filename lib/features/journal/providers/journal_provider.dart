@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:drift/drift.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
 import '../../../core/database/app_database.dart';
@@ -78,9 +79,9 @@ Future<List<JournalEntry>> journalEntries(Ref ref, {int limit = 20, int offset =
 }
 
 @riverpod
-String journalPrompt(Ref ref) {
-  final steps = ref.watch(stepsProvider).asData?.value ?? 0;
-  final habits = ref.watch(todayHabitsProvider).asData?.value ?? [];
+Future<String> journalPrompt(Ref ref) async {
+  final stepsValue = await ref.watch(stepsProvider.future);
+  final habits = await ref.watch(todayHabitsProvider.future);
   
   final todayStr = DateTime.now().toIso8601String().substring(0, 10);
   final completedHabits = habits.where((h) {
@@ -88,7 +89,7 @@ String journalPrompt(Ref ref) {
     return h.completedDatesJson!.contains(todayStr);
   }).length;
 
-  if (steps > 10000) {
+  if (stepsValue > 10000) {
     return "You've walked over 10,000 steps today! How do your legs feel, and what was the best part of your walk?";
   }
   

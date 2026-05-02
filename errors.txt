@@ -1,0 +1,402 @@
+DART ANALYSIS ERRORS
+====================
+
+Error 1: lib\core\config\device_tier.dart:14:31
+- Undefined class 'DeviceTierRef'. Try changing the name to the name of an existing class, or creating a class with the name 'DeviceTierRef'.
+- Type: undefined_class
+
+Error 2: lib\core\services\health_service.dart:32:29
+- Undefined class 'HealthServiceRef'. Try changing the name to the name of an existing class, or creating a class with the name 'HealthServiceRef'.
+- Type: undefined_class
+
+Error 3: lib\core\storage\app_database.dart:8:6
+- Target of URI hasn't been generated: 'package:fitkarma/core/storage/app_database.g.dart'. Try running the generator that will generate the file referenced by the URI.
+- Type: uri_has_not_been_generated
+
+Error 4: lib\core\sync\sync_worker.dart:50:47
+- Undefined class 'ConnectivityStreamRef'. Try changing the name to the name of an existing class, or creating a class with the name 'ConnectivityStreamRef'.
+- Type: undefined_class
+
+Error 5: lib\core\sync\sync_worker.dart:55:22
+- Undefined class 'DlqCountRef'. Try changing the name to the name of an existing class, or creating a class with the name 'DlqCountRef'.
+- Type: undefined_class
+
+Error 6: lib\core\sync\sync_worker.dart:60:12
+- A value of type 'double' can't be assigned to a variable of type 'int'. Try changing the type of the variable, or casting the right-hand type to 'int'.
+- Type: invalid_assignment
+
+Error 7: lib\core\sync\sync_worker.dart:63:12
+- A value of type 'double' can't be assigned to a variable of type 'int'. Try changing the type of the variable, or casting the right-hand type to 'int'.
+- Type: invalid_assignment
+
+Error 8: lib\core\sync\sync_worker.dart:66:12
+- A value of type 'double' can't be assigned to a variable of type 'int'. Try changing the type of the variable, or casting the right-hand type to 'int'.
+- Type: invalid_assignment
+
+Error 9: lib\core\sync\sync_worker.dart:69:12
+- A value of type 'double' can't be assigned to a variable of type 'int'. Try changing the type of the variable, or casting the right-hand type to 'int'.
+- Type: invalid_assignment
+
+Error 10: lib\core\sync\sync_worker.dart:72:12
+- A value of type 'double' can't be assigned to a variable of type 'int'. Try changing the type of the variable, or casting the right-hand type to 'int'.
+- Type: invalid_assignment
+
+Error 11: lib\core\sync\sync_worker.dart:78:30
+- Undefined class 'PendingSyncCountRef'. Try changing the name to the name of an existing class, or creating a class with the name 'PendingSyncCountRef'.
+- Type: undefined_class
+
+Error 12: lib\core\sync\sync_worker.dart:83:12
+- A value of type 'double' can't be assigned to a variable of type 'int'. Try changing the type of the variable, or casting the right-hand type to 'int'.
+- Type: invalid_assignment
+
+Error 13: lib\core\sync\sync_worker.dart:86:12
+- A value of type 'double' can't be assigned to a variable of type 'int'. Try changing the type of the variable, or casting the right-hand type to 'int'.
+- Type: invalid_assignment
+
+Error 14: lib\core\sync\sync_worker.dart:89:12
+- A value of type 'double' can't be assigned to a variable of type 'int'. Try changing the type of the variable, or casting the right-hand type to 'int'.
+- Type: invalid_assignment
+
+Error 15: lib\core\sync\sync_worker.dart:92:12
+- A value of type 'double' can't be assigned to a variable of type 'int'. Try changing the type of the variable, or casting the right-hand type to 'int'.
+- Type: invalid_assignment
+
+Error 16: lib\core\sync\sync_worker.dart:95:12
+- A value of type 'double' can't be assigned to a variable of type 'int'. Try changing the type of the variable, or casting the right-hand type to 'int'.
+- Type: invalid_assignment
+
+Error 17: lib\core\sync\sync_worker.dart:103:8
+- The body might complete normally, causing 'null' to be returned, but the return type, 'bool', is a potentially non-nullable type. Try adding either a return or a throw statement at the end.
+- Type: body_might_complete_normally
+
+Error 18: lib\features\fasting\providers\fasting_provider.dart:67:26
+- Undefined class 'FastingDurationRef'. Try changing the name to the name of an existing class, or creating a class with the name 'FastingDurationRef'.
+- Type: undefined_class
+
+Error 19: lib\features\fasting\providers\fasting_provider.dart:75:27
+- Undefined class 'FastingStageRef'. Try changing the name to the name of an existing class, or creating a class with the name 'FastingStageRef'.
+- Type: undefined_class
+
+Error 20: lib\features\fasting\screens\fasting_timer_screen.dart:97:19
+- Undefined name 'activeFestivalsProvider'. Try correcting the name to one that is defined, or defining the name.
+- Type: undefined_identifier
+
+Error 21: lib\features\festival\providers\festival_provider.dart:6:6
+- Target of URI hasn't been generated: 'package:fitkarma/features/festival/providers/festival_provider.g.dart'. Try running the generator that will generate the file referenced by the URI.
+- Type: uri_has_not_been_generated
+
+Error 22: lib\features\festival\providers\festival_provider.dart:9:40
+- Undefined class 'ActiveFestivalsRef'. Try changing the name to the name of an existing class, or creating a class with the name 'ActiveFestivalsRef'.
+- Type: undefined_class
+
+Error 23: lib\features\festival\providers\festival_provider.dart:15:42
+- Undefined class 'UpcomingFestivalsRef'. Try changing the name to the name of an existing class, or creating a class with the name 'UpcomingFestivalsRef'.
+- Type: undefined_class
+
+Error 24: lib\features\festival\providers\festival_provider.dart:30:5
+- Undefined name 'state'. Try correcting the name to one that is defined, or defining the name.
+- Type: undefined_identifier
+
+Error 25: lib\features\festival\providers\festival_provider.dart:31:31
+- Undefined name 'state'. Try correcting the name to one that is defined, or defining the name.
+- Type: undefined_identifier
+
+Error 26: lib\features\festival\providers\festival_provider.dart:32:27
+- Undefined name 'state'. Try correcting the name to one that is defined, or defining the name.
+- Type: undefined_identifier
+
+Error 27: lib\features\festival\providers\festival_provider.dart:38:48
+- Undefined class 'FestivalDietPlanRef'. Try changing the name to the name of an existing class, or creating a class with the name 'FestivalDietPlanRef'.
+- Type: undefined_class
+
+Error 28: lib\features\festival\providers\festival_provider.dart:51:48
+- Undefined class 'FilteredActiveFestivalsRef'. Try changing the name to the name of an existing class, or creating a class with the name 'FilteredActiveFestivalsRef'.
+- Type: undefined_class
+
+Error 29: lib\features\festival\providers\festival_provider.dart:52:37
+- Undefined name 'activeFestivalsProvider'. Try correcting the name to one that is defined, or defining the name.
+- Type: undefined_identifier
+
+Error 30: lib\features\festival\providers\festival_provider.dart:53:29
+- Undefined name 'userFestivalFilterProvider'. Try correcting the name to one that is defined, or defining the name.
+- Type: undefined_identifier
+
+Error 31: lib\features\food\providers\food_provider.dart:12:31
+- Undefined class 'FoodRepositoryRef'. Try changing the name to the name of an existing class, or creating a class with the name 'FoodRepositoryRef'.
+- Type: undefined_class
+
+Error 32: lib\features\food\providers\food_provider.dart:33:30
+- Undefined class 'TodayCaloriesRef'. Try changing the name to the name of an existing class, or creating a class with the name 'TodayCaloriesRef'.
+- Type: undefined_class
+
+Error 33: lib\features\food\providers\food_provider.dart:38:34
+- Undefined class 'FoodSearchRef'. Try changing the name to the name of an existing class, or creating a class with the name 'FoodSearchRef'.
+- Type: undefined_class
+
+Error 34: lib\features\food\screens\food_home_screen.dart:36:33
+- The method 'foodLogNotifierProvider' isn't defined for the type '_FoodHomeScreenState'. Try correcting the name to the name of an existing method, or defining a method named 'foodLogNotifierProvider'.
+- Type: undefined_method
+
+Error 35: lib\features\food\screens\food_home_screen.dart:97:56
+- The method 'toInt' isn't defined for the type 'AsyncValue'. Try correcting the name to the name of an existing method, or defining a method named 'toInt'.
+- Type: undefined_method
+
+Error 36: lib\features\food\screens\food_home_screen.dart:181:43
+- The method 'foodLogNotifierProvider' isn't defined for the type '_FoodHomeScreenState'. Try correcting the name to the name of an existing method, or defining a method named 'foodLogNotifierProvider'.
+- Type: undefined_method
+
+Error 37: lib\features\food\screens\food_log_screen.dart:68:21
+- The method 'foodSearchProvider' isn't defined for the type '_FoodLogScreenState'. Try correcting the name to the name of an existing method, or defining a method named 'foodSearchProvider'.
+- Type: undefined_method
+
+Error 38: lib\features\habit\providers\habit_provider.dart:10:6
+- Target of URI hasn't been generated: 'package:fitkarma/features/habit/providers/habit_provider.g.dart'. Try running the generator that will generate the file referenced by the URI.
+- Type: uri_has_not_been_generated
+
+Error 39: lib\features\habit\providers\habit_provider.dart:16:23
+- Undefined name 'ref'. Try correcting the name to one that is defined, or defining the name.
+- Type: undefined_identifier
+
+Error 40: lib\features\habit\providers\habit_provider.dart:20:12
+- Undefined name 'ref'. Try correcting the name to one that is defined, or defining the name.
+- Type: undefined_identifier
+
+Error 41: lib\features\habit\providers\habit_provider.dart:27:23
+- Undefined name 'ref'. Try correcting the name to one that is defined, or defining the name.
+- Type: undefined_identifier
+
+Error 42: lib\features\habit\providers\habit_provider.dart:31:16
+- Undefined name 'ref'. Try correcting the name to one that is defined, or defining the name.
+- Type: undefined_identifier
+
+Error 43: lib\features\habit\providers\habit_provider.dart:44:13
+- Undefined name 'ref'. Try correcting the name to one that is defined, or defining the name.
+- Type: undefined_identifier
+
+Error 44: lib\features\habit\providers\habit_provider.dart:49:16
+- Undefined name 'ref'. Try correcting the name to one that is defined, or defining the name.
+- Type: undefined_identifier
+
+Error 45: lib\features\habit\providers\habit_provider.dart:92:13
+- Undefined name 'ref'. Try correcting the name to one that is defined, or defining the name.
+- Type: undefined_identifier
+
+Error 46: lib\features\habit\providers\habit_provider.dart:99:16
+- Undefined name 'ref'. Try correcting the name to one that is defined, or defining the name.
+- Type: undefined_identifier
+
+Error 47: lib\features\habit\providers\habit_provider.dart:114:13
+- Undefined name 'ref'. Try correcting the name to one that is defined, or defining the name.
+- Type: undefined_identifier
+
+Error 48: lib\features\habit\providers\habit_provider.dart:120:35
+- Undefined class 'TodayHabitsRef'. Try changing the name to the name of an existing class, or creating a class with the name 'TodayHabitsRef'.
+- Type: undefined_class
+
+Error 49: lib\features\habit\repositories\habit_repository.dart:42:33
+- Undefined class 'HabitRepositoryRef'. Try changing the name to the name of an existing class, or creating a class with the name 'HabitRepositoryRef'.
+- Type: undefined_class
+
+Error 50: lib\features\habit\screens\habit_tracker_screen.dart:26:35
+- Undefined name 'habitNotifierProvider'. Try correcting the name to one that is defined, or defining the name.
+- Type: undefined_identifier
+
+Error 51: lib\features\habit\screens\habit_tracker_screen.dart:98:41
+- Undefined name 'habitNotifierProvider'. Try correcting the name to one that is defined, or defining the name.
+- Type: undefined_identifier
+
+Error 52: lib\features\habit\screens\habit_tracker_screen.dart:101:41
+- Undefined name 'habitNotifierProvider'. Try correcting the name to one that is defined, or defining the name.
+- Type: undefined_identifier
+
+Error 53: lib\features\habit\screens\habit_tracker_screen.dart:259:35
+- Undefined name 'habitNotifierProvider'. Try correcting the name to one that is defined, or defining the name.
+- Type: undefined_identifier
+
+Error 54: lib\features\health\providers\body_metrics_provider.dart:7:6
+- Target of URI hasn't been generated: 'package:fitkarma/features/health/providers/body_metrics_provider.g.dart'. Try running the generator that will generate the file referenced by the URI.
+- Type: uri_has_not_been_generated
+
+Error 55: lib\features\health\providers\body_metrics_provider.dart:13:23
+- Undefined name 'ref'. Try correcting the name to one that is defined, or defining the name.
+- Type: undefined_identifier
+
+Error 56: lib\features\health\providers\body_metrics_provider.dart:17:16
+- Undefined name 'ref'. Try correcting the name to one that is defined, or defining the name.
+- Type: undefined_identifier
+
+Error 57: lib\features\health\providers\body_metrics_provider.dart:23:38
+- The getter 'weightKg' isn't defined for the type 'Object'. Try importing the library that defines 'weightKg', correcting the name to the name of an existing getter, or defining a getter or field named 'weightKg'.
+- Type: undefined_getter
+
+Error 58: lib\features\health\providers\body_metrics_provider.dart:24:33
+- The getter 'heightCm' isn't defined for the type 'Object'. Try importing the library that defines 'heightCm', correcting the name to the name of an existing getter, or defining a getter or field named 'heightCm'.
+- Type: undefined_getter
+
+Error 59: lib\features\health\providers\body_metrics_provider.dart:35:29
+- The getter 'level' isn't defined for the type 'Object'. Try importing the library that defines 'level', correcting the name to the name of an existing getter, or defining a getter or field named 'level'.
+- Type: undefined_getter
+
+Error 60: lib\features\health\providers\body_metrics_provider.dart:36:26
+- The getter 'xp' isn't defined for the type 'Object'. Try importing the library that defines 'xp', correcting the name to the name of an existing getter, or defining a getter or field named 'xp'.
+- Type: undefined_getter
+
+Error 61: lib\features\health\providers\body_metrics_provider.dart:37:28
+- The getter 'rank' isn't defined for the type 'Object'. Try importing the library that defines 'rank', correcting the name to the name of an existing getter, or defining a getter or field named 'rank'.
+- Type: undefined_getter
+
+Error 62: lib\features\health\providers\body_metrics_provider.dart:44:23
+- Undefined name 'ref'. Try correcting the name to one that is defined, or defining the name.
+- Type: undefined_identifier
+
+Error 63: lib\features\health\providers\body_metrics_provider.dart:48:16
+- Undefined name 'ref'. Try correcting the name to one that is defined, or defining the name.
+- Type: undefined_identifier
+
+Error 64: lib\features\health\providers\body_metrics_provider.dart:63:39
+- Undefined class 'WeightHistoryRef'. Try changing the name to the name of an existing class, or creating a class with the name 'WeightHistoryRef'.
+- Type: undefined_class
+
+Error 65: lib\features\health\providers\health_provider.dart:10:6
+- Target of URI hasn't been generated: 'package:fitkarma/features/health/providers/health_provider.g.dart'. Try running the generator that will generate the file referenced by the URI.
+- Type: uri_has_not_been_generated
+
+Error 66: lib\features\health\providers\health_provider.dart:16:23
+- Undefined name 'ref'. Try correcting the name to one that is defined, or defining the name.
+- Type: undefined_identifier
+
+Error 67: lib\features\health\providers\health_provider.dart:22:16
+- Undefined name 'ref'. Try correcting the name to one that is defined, or defining the name.
+- Type: undefined_identifier
+
+Error 68: lib\features\health\providers\health_provider.dart:36:23
+- Undefined name 'ref'. Try correcting the name to one that is defined, or defining the name.
+- Type: undefined_identifier
+
+Error 69: lib\features\health\providers\health_provider.dart:40:16
+- Undefined name 'ref'. Try correcting the name to one that is defined, or defining the name.
+- Type: undefined_identifier
+
+Error 70: lib\features\health\providers\health_provider.dart:56:13
+- Undefined name 'ref'. Try correcting the name to one that is defined, or defining the name.
+- Type: undefined_identifier
+
+Error 71: lib\features\health\providers\health_provider.dart:62:33
+- Undefined class 'LatestBpReadingRef'. Try changing the name to the name of an existing class, or creating a class with the name 'LatestBpReadingRef'.
+- Type: undefined_class
+
+Error 72: lib\features\health\providers\health_provider.dart:74:23
+- Undefined name 'ref'. Try correcting the name to one that is defined, or defining the name.
+- Type: undefined_identifier
+
+Error 73: lib\features\health\providers\health_provider.dart:78:16
+- Undefined name 'ref'. Try correcting the name to one that is defined, or defining the name.
+- Type: undefined_identifier
+
+Error 74: lib\features\health\providers\health_provider.dart:90:23
+- Undefined name 'ref'. Try correcting the name to one that is defined, or defining the name.
+- Type: undefined_identifier
+
+Error 75: lib\features\health\providers\health_provider.dart:94:16
+- Undefined name 'ref'. Try correcting the name to one that is defined, or defining the name.
+- Type: undefined_identifier
+
+Error 76: lib\features\health\providers\health_provider.dart:109:13
+- Undefined name 'ref'. Try correcting the name to one that is defined, or defining the name.
+- Type: undefined_identifier
+
+Error 77: lib\features\health\providers\health_provider.dart:115:31
+- Undefined class 'LatestGlucoseRef'. Try changing the name to the name of an existing class, or creating a class with the name 'LatestGlucoseRef'.
+- Type: undefined_class
+
+Error 78: lib\features\health\providers\health_provider.dart:127:23
+- Undefined name 'ref'. Try correcting the name to one that is defined, or defining the name.
+- Type: undefined_identifier
+
+Error 79: lib\features\health\providers\health_provider.dart:131:16
+- Undefined name 'ref'. Try correcting the name to one that is defined, or defining the name.
+- Type: undefined_identifier
+
+Error 80: lib\features\health\providers\health_provider.dart:142:23
+- Undefined name 'ref'. Try correcting the name to one that is defined, or defining the name.
+- Type: undefined_identifier
+
+Error 81: lib\features\health\providers\health_provider.dart:146:16
+- Undefined name 'ref'. Try correcting the name to one that is defined, or defining the name.
+- Type: undefined_identifier
+
+Error 82: lib\features\health\providers\health_provider.dart:160:13
+- Undefined name 'ref'. Try correcting the name to one that is defined, or defining the name.
+- Type: undefined_identifier
+
+Error 83: lib\features\health\providers\health_provider.dart:169:23
+- Undefined name 'ref'. Try correcting the name to one that is defined, or defining the name.
+- Type: undefined_identifier
+
+Error 84: lib\features\health\providers\health_provider.dart:173:12
+- Undefined name 'ref'. Try correcting the name to one that is defined, or defining the name.
+- Type: undefined_identifier
+
+Error 85: lib\features\health\providers\health_provider.dart:182:23
+- Undefined name 'ref'. Try correcting the name to one that is defined, or defining the name.
+- Type: undefined_identifier
+
+Error 86: lib\features\health\providers\health_provider.dart:186:16
+- Undefined name 'ref'. Try correcting the name to one that is defined, or defining the name.
+- Type: undefined_identifier
+
+Error 87: lib\features\health\providers\health_provider.dart:203:13
+- Undefined name 'ref'. Try correcting the name to one that is defined, or defining the name.
+- Type: undefined_identifier
+
+Error 88: lib\features\health\providers\health_provider.dart:209:36
+- Undefined class 'SleepHistoryRef'. Try changing the name to the name of an existing class, or creating a class with the name 'SleepHistoryRef'.
+- Type: undefined_class
+
+Error 89: lib\features\health\providers\health_provider.dart:218:26
+- Undefined class 'SleepDebtRef'. Try changing the name to the name of an existing class, or creating a class with the name 'SleepDebtRef'.
+- Type: undefined_class
+
+Error 90: lib\features\health\providers\health_provider.dart:219:32
+- The function 'sleepHistoryProvider' isn't defined. Try importing the library that defines 'sleepHistoryProvider', correcting the name to the name of an existing function, or defining a function named 'sleepHistoryProvider'.
+- Type: undefined_function
+
+Error 91: lib\features\health\repositories\health_repository.dart:138:35
+- Undefined class 'HealthRepositoryRef'. Try changing the name to the name of an existing class, or creating a class with the name 'HealthRepositoryRef'.
+- Type: undefined_class
+
+Error 92: lib\features\health\screens\body_metrics_screen.dart:136:33
+- Undefined name 'bodyMetricsNotifierProvider'. Try correcting the name to one that is defined, or defining the name.
+- Type: undefined_identifier
+
+Error 93: lib\features\health\screens\body_metrics_screen.dart:169:36
+- Undefined name 'bodyMetricsNotifierProvider'. Try correcting the name to one that is defined, or defining the name.
+- Type: undefined_identifier
+
+Error 94: lib\features\health\screens\body_metrics_screen.dart:170:42
+- The method 'weightHistoryProvider' isn't defined for the type '_BodyMetricsScreenState'. Try correcting the name to the name of an existing method, or defining a method named 'weightHistoryProvider'.
+- Type: undefined_method
+
+Error 95: lib\features\health\screens\body_metrics_screen.dart:171:39
+- The method 'weightHistoryProvider' isn't defined for the type '_BodyMetricsScreenState'. Try correcting the name to the name of an existing method, or defining a method named 'weightHistoryProvider'.
+- Type: undefined_method
+
+Error 96: lib\features\health\screens\bp_screen.dart:48:20
+- Undefined name 'bPNotifierProvider'. Try correcting the name to one that is defined, or defining the name.
+- Type: undefined_identifier
+
+Error 97: lib\features\health\screens\bp_screen.dart:68:35
+- Undefined name 'latestBpReadingProvider'. Try correcting the name to one that is defined, or defining the name.
+- Type: undefined_identifier
+
+Error 98: lib\features\health\screens\bp_screen.dart:69:36
+- Undefined name 'bPNotifierProvider'. Try correcting the name to one that is defined, or defining the name.
+- Type: undefined_identifier
+
+Error 99: lib\features\health\screens\glucose_screen.dart:62:20
+- Undefined name 'glucoseNotifierProvider'. Try correcting the name to one that is defined, or defining the name.
+- Type: undefined_identifier
+
+Error 100: lib\features\health\screens\glucose_screen.dart:82:35
+- Undefined name 'latestGlucoseProvider'. Try correcting the name to one that is defined, or defining the name.
+- Type: undefined_identifier

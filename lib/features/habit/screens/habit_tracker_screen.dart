@@ -24,7 +24,7 @@ class HabitTrackerScreen extends ConsumerWidget {
     final primary = isDark ? AppColorsDark.primary : AppColorsLight.primary;
 
     final habitsAsync = ref.watch(habitNotifierProvider);
-    final habits = habitsAsync.valueOrNull ?? [];
+    final habits = habitsAsync.asData?.value ?? [];
 
     final today = DateTime.now();
     final todayStr =

@@ -38,7 +38,7 @@ class _StepsScreenState extends ConsumerState<StepsScreen> {
     final historyAsync = ref.watch(stepHistoryProvider(7));
     final suggestedGoal = ref.watch(adaptiveGoalProvider);
 
-    final steps = stepsAsync.valueOrNull ?? 0;
+    final steps = stepsAsync.asData?.value ?? 0;
     final progress = (steps / _dailyGoal).clamp(0.0, 1.0);
     final goalMet = steps >= _dailyGoal;
 

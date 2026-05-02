@@ -91,8 +91,8 @@ class _SleepScreenState extends ConsumerState<SleepScreen>
     final allHistoryAsync = ref.watch(sleepHistoryProvider(30));
     final debtHours = ref.watch(sleepDebtProvider);
 
-    final history = historyAsync.valueOrNull ?? [];
-    final allHistory = allHistoryAsync.valueOrNull ?? [];
+    final history = historyAsync.asData?.value ?? [];
+    final allHistory = allHistoryAsync.asData?.value ?? [];
 
     // Latest sleep entry
     final latest = history.isNotEmpty ? history.first : null;

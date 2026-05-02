@@ -9,7 +9,7 @@ part 'body_metrics_provider.g.dart';
 @riverpod
 class BodyMetricsNotifier extends _$BodyMetricsNotifier {
   @override
-  Stream<Map<String, dynamic>> build() {
+  Stream<Map<String, Object>> build() {
     final authState = ref.watch(authProvider);
     final user = authState.asData?.value;
     if (user == null) return Stream.value({});

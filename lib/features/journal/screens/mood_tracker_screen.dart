@@ -67,11 +67,11 @@ class _MoodTrackerScreenState extends ConsumerState<MoodTrackerScreen> {
     final allHistoryAsync = ref.watch(moodHistoryProvider(30));
     final insightAsync = ref.watch(dashboardInsightProvider);
 
-    final history = historyAsync.valueOrNull ?? [];
-    final allHistory = allHistoryAsync.valueOrNull ?? [];
+    final history = historyAsync.asData?.value ?? [];
+    final allHistory = allHistoryAsync.asData?.value ?? [];
     final showCorrelation = allHistory.length >= 14;
 
-    final alreadyLogged = todayMoodAsync.valueOrNull != null;
+    final alreadyLogged = todayMoodAsync.asData?.value != null;
 
     return Scaffold(
       backgroundColor: bg1,

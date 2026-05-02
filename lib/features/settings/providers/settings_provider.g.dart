@@ -295,9 +295,9 @@ abstract class _$NotificationPrefsNotifier
 @ProviderFor(wearables)
 final wearablesProvider = WearablesProvider._();
 
-final class WearablesProvider
-    extends $FunctionalProvider<List<String>, List<String>, List<String>>
-    with $Provider<List<String>> {
+final class WearablesProvider extends $FunctionalProvider<
+        AsyncValue<List<String>>, List<String>, FutureOr<List<String>>>
+    with $FutureModifier<List<String>>, $FutureProvider<List<String>> {
   WearablesProvider._()
       : super(
           from: null,
@@ -314,30 +314,24 @@ final class WearablesProvider
 
   @$internal
   @override
-  $ProviderElement<List<String>> $createElement($ProviderPointer pointer) =>
-      $ProviderElement(pointer);
+  $FutureProviderElement<List<String>> $createElement(
+          $ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
 
   @override
-  List<String> create(Ref ref) {
+  FutureOr<List<String>> create(Ref ref) {
     return wearables(ref);
-  }
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(List<String> value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<List<String>>(value),
-    );
   }
 }
 
-String _$wearablesHash() => r'a30ac9bf6c872b45a7090d70df862901e61cb2f0';
+String _$wearablesHash() => r'1c1f93210aa7f96be3435a501d4adf4166621cc0';
 
 @ProviderFor(subscriptionStatus)
 final subscriptionStatusProvider = SubscriptionStatusProvider._();
 
 final class SubscriptionStatusProvider
-    extends $FunctionalProvider<String, String, String> with $Provider<String> {
+    extends $FunctionalProvider<AsyncValue<String>, String, FutureOr<String>>
+    with $FutureModifier<String>, $FutureProvider<String> {
   SubscriptionStatusProvider._()
       : super(
           from: null,
@@ -354,22 +348,14 @@ final class SubscriptionStatusProvider
 
   @$internal
   @override
-  $ProviderElement<String> $createElement($ProviderPointer pointer) =>
-      $ProviderElement(pointer);
+  $FutureProviderElement<String> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
 
   @override
-  String create(Ref ref) {
+  FutureOr<String> create(Ref ref) {
     return subscriptionStatus(ref);
-  }
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(String value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<String>(value),
-    );
   }
 }
 
 String _$subscriptionStatusHash() =>
-    r'b4e8a6be95be8b83c8ca6f668c8c4c0367a90a5b';
+    r'173bb5d18cb9c145b641bc8d9b5251bb32937092';

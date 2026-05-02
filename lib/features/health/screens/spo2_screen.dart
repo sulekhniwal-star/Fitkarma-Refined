@@ -42,13 +42,13 @@ class SpO2Screen extends ConsumerWidget {
     final divider = isDark ? AppColorsDark.divider : AppColorsLight.divider;
 
     final latestAsync = ref.watch(spO2NotifierProvider);
-    final latest = latestAsync.valueOrNull?.isNotEmpty == true
+    final latest = latestAsync.asData?.value?.isNotEmpty == true
         ? latestAsync.value!.first
         : null;
     final isLow = latest != null && latest.spo2Percentage < 95;
 
     // Build 7-day history from all readings
-    final allReadings = latestAsync.valueOrNull ?? [];
+    final allReadings = latestAsync.asData?.value ?? [];
 
     return Scaffold(
       backgroundColor: isDark ? AppColorsDark.bg0 : AppColorsLight.bg0,

@@ -163,14 +163,12 @@ class WeddingMealLogs extends Table {
   WeddingPlans, WeddingMealLogs,
 ])
 class AppDatabase extends _$AppDatabase {
-  AppDatabase(super.e);
+  AppDatabase(QueryExecutor e) : super(e);
   
   factory AppDatabase.authenticated() => AppDatabase(openConnection());
 
-  @override
   int get schemaVersion => 1;
 
-  @override
   MigrationStrategy get migration => MigrationStrategy(
     onCreate: (m) => m.createAll(),
     onUpgrade: (m, from, to) async {

@@ -1,4 +1,5 @@
 import 'package:drift/drift.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
 import '../../../core/database/app_database.dart';
@@ -63,21 +64,14 @@ Stream<List<StepCount>> stepHistory(Ref ref, int days) {
 }
 
 @riverpod
-double adaptiveGoal(Ref ref) {
-  final historyAsync = ref.watch(stepHistoryProvider(7));
+Future<double> adaptiveGoal(Ref ref) async {
+  final history = await ref.watch(stepHistoryProvider(7).future);
 
-  return historyAsync.when(
-    data: (logs) {
-      if (logs.isEmpty) return 6000.0; // Default goal
+  if (history.isEmpty) return 6000.0; // Default goal
 
-      final average = logs.map((e) => e.count).average;
-      // Suggest goal 10% higher than average, min 5000, max 15000
-      final suggested = (average * 1.1).clamp(5000.0, 15000.0);
-      return suggested;
-    },
-    loading: () => 6000.0,
-    error: (_, __) => 6000.0,
-  );
+  final average = history.map((e) => e.count).average;
+  // Suggest goal 10% higher than average, min 5000, max 15000
+  return (average * 1.1).clamp(5000.0, 15000.0);
 }
 
 extension StreamStartWith<T> on Stream<T> {

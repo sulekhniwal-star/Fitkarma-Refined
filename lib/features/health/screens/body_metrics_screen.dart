@@ -170,7 +170,7 @@ class _BodyMetricsScreenState extends ConsumerState<BodyMetricsScreen> {
     final weightHistoryAsync = ref.watch(weightHistoryProvider(30));
     final bmiHistoryAsync = ref.watch(weightHistoryProvider(90));
 
-    final metrics = metricsAsync.valueOrNull ?? {};
+    final metrics = metricsAsync.asData?.value ?? {};
     final weight = (metrics['weight'] as double?) ?? 0.0;
     final bmi = (metrics['bmi'] as double?) ?? 0.0;
     final bmiClass = bmi > 0 ? _bmiClassify(bmi) : null;

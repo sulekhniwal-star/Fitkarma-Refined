@@ -7,6 +7,7 @@ import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../shared/widgets/glass_card.dart';
 import '../../../shared/widgets/status_widgets.dart';
+import '../../../shared/widgets/badge_widgets.dart';
 import '../../reports/providers/report_provider.dart';
 
 // ── Screen ─────────────────────────────────────────────────────────────────────

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:drift/drift.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
 import '../../../core/database/app_database.dart';
@@ -91,35 +92,29 @@ Stream<List<Workout>> workoutHistory(Ref ref, {int limit = 20}) {
 }
 
 @riverpod
-Map<String, dynamic> personalRecords(Ref ref) {
-  final historyAsync = ref.watch(workoutHistoryProvider(limit: 100));
+Future<Map<String, Object?>> personalRecords(Ref ref) async {
+  final workouts = await ref.watch(workoutHistoryProvider(limit: 100).future);
   
-  return historyAsync.when(
-    data: (workouts) {
-      final records = <String, dynamic>{};
-      
-      for (final workout in workouts) {
-        if (workout.exercisesJson == null) continue;
-        try {
-          final List<dynamic> exercises = jsonDecode(workout.exercisesJson!);
-          for (final ex in exercises) {
-            final name = ex['exercise'] as String;
-            final sets = ex['sets'] as List<dynamic>;
-            
-            for (final set in sets) {
-              final weight = (set['weight'] as num?)?.toDouble() ?? 0.0;
-              final reps = (set['reps'] as num?)?.toInt() ?? 0;
-              
-              if (!records.containsKey(name) || weight > (records[name]['weight'] as double)) {
-                records[name] = {'weight': weight, 'reps': reps, 'date': workout.startedAt};
-              }
-            }
+  final records = <String, dynamic>{};
+  
+  for (final workout in workouts) {
+    if (workout.exercisesJson == null) continue;
+    try {
+      final List<dynamic> exercises = jsonDecode(workout.exercisesJson!);
+      for (final ex in exercises) {
+        final name = ex['exercise'] as String;
+        final sets = ex['sets'] as List<dynamic>;
+        
+        for (final set in sets) {
+          final weight = (set['weight'] as num?)?.toDouble() ?? 0.0;
+          final reps = (set['reps'] as num?)?.toInt() ?? 0;
+          
+          if (!records.containsKey(name) || weight > (records[name]['weight'] as double)) {
+            records[name] = {'weight': weight, 'reps': reps, 'date': workout.startedAt};
           }
-        } catch (_) {}
+        }
       }
-      return records;
-    },
-    loading: () => {},
-    error: (_, __) => {},
-  );
+    } catch (_) {}
+  }
+  return records;
 }

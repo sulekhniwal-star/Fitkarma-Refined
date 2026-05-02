@@ -64,7 +64,7 @@ class _ABHAScreenState extends ConsumerState<ABHAScreen> {
     setState(() { _loading = true; _error = null; });
 
     try {
-      final user = ref.read(authProvider).valueOrNull;
+      final user = ref.read(authProvider).asData?.value;
       if (user == null) throw Exception('Not logged in');
 
       final functions = ref.read(appwriteFunctionsProvider);
@@ -92,7 +92,7 @@ class _ABHAScreenState extends ConsumerState<ABHAScreen> {
     setState(() { _loading = true; _error = null; });
 
     try {
-      final user = ref.read(authProvider).valueOrNull;
+      final user = ref.read(authProvider).asData?.value;
       if (user == null) throw Exception('Not logged in');
 
       final raw = _abhaCtrl.text.replaceAll(RegExp(r'\D'), '');

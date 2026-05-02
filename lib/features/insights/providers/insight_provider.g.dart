@@ -13,7 +13,7 @@ part of 'insight_provider.dart';
 final correlationEngineProvider = CorrelationEngineProvider._();
 
 final class CorrelationEngineProvider
-    extends $NotifierProvider<CorrelationEngine, void> {
+    extends $NotifierProvider<CorrelationEngine, bool> {
   CorrelationEngineProvider._()
       : super(
           from: null,
@@ -33,24 +33,24 @@ final class CorrelationEngineProvider
   CorrelationEngine create() => CorrelationEngine();
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(void value) {
+  Override overrideWithValue(bool value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<void>(value),
+      providerOverride: $SyncValueProvider<bool>(value),
     );
   }
 }
 
-String _$correlationEngineHash() => r'e3daf496d0291ecae5c798f7645f0c8966b3983c';
+String _$correlationEngineHash() => r'300ba36041d4174173d0e031728ae8ca18c85fb1';
 
-abstract class _$CorrelationEngine extends $Notifier<void> {
-  void build();
+abstract class _$CorrelationEngine extends $Notifier<bool> {
+  bool build();
   @$mustCallSuper
   @override
   void runBuild() {
-    final ref = this.ref as $Ref<void, void>;
+    final ref = this.ref as $Ref<bool, bool>;
     final element = ref.element as $ClassProviderElement<
-        AnyNotifier<void, void>, void, Object?, Object?>;
+        AnyNotifier<bool, bool>, bool, Object?, Object?>;
     element.handleCreate(ref, build);
   }
 }

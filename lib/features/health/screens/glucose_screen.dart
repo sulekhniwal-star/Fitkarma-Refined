@@ -82,12 +82,12 @@ class _GlucoseScreenState extends ConsumerState<GlucoseScreen> {
     final latestAsync = ref.watch(latestGlucoseProvider);
     final allAsync = ref.watch(glucoseNotifierProvider);
 
-    final latest = latestAsync.valueOrNull;
+    final latest = latestAsync.asData?.value;
     final gClass = latest != null
         ? _glucoseClassify(latest.valueMgDl, latest.readingType)
         : null;
 
-    final allReadings = allAsync.valueOrNull ?? [];
+    final allReadings = allAsync.asData?.value ?? [];
     final filteredReadings = allReadings
         .where((r) => r.readingType == _readingTypes[_typeIndex])
         .toList();

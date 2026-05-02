@@ -5,7 +5,7 @@ part 'insight_provider.g.dart';
 @riverpod
 class CorrelationEngine extends _$CorrelationEngine {
   @override
-  void build() {}
+  bool build() => false;
 
   Future<String?> sleepMoodInsight() async {
     final sleep = await ref.read(sleepHistoryProvider(14).future);

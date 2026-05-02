@@ -12,7 +12,7 @@ part of 'sync_worker.dart';
 @ProviderFor(SyncWorker)
 final syncWorkerProvider = SyncWorkerProvider._();
 
-final class SyncWorkerProvider extends $NotifierProvider<SyncWorker, void> {
+final class SyncWorkerProvider extends $NotifierProvider<SyncWorker, bool> {
   SyncWorkerProvider._()
       : super(
           from: null,
@@ -32,24 +32,24 @@ final class SyncWorkerProvider extends $NotifierProvider<SyncWorker, void> {
   SyncWorker create() => SyncWorker();
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(void value) {
+  Override overrideWithValue(bool value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<void>(value),
+      providerOverride: $SyncValueProvider<bool>(value),
     );
   }
 }
 
-String _$syncWorkerHash() => r'72248529286510a4e45c4aeada6230f947f5588f';
+String _$syncWorkerHash() => r'0ef8adafeac2dbc8e4735544c1fcd5e6fcc11494';
 
-abstract class _$SyncWorker extends $Notifier<void> {
-  void build();
+abstract class _$SyncWorker extends $Notifier<bool> {
+  bool build();
   @$mustCallSuper
   @override
   void runBuild() {
-    final ref = this.ref as $Ref<void, void>;
+    final ref = this.ref as $Ref<bool, bool>;
     final element = ref.element as $ClassProviderElement<
-        AnyNotifier<void, void>, void, Object?, Object?>;
+        AnyNotifier<bool, bool>, bool, Object?, Object?>;
     element.handleCreate(ref, build);
   }
 }
@@ -124,7 +124,7 @@ final class DlqCountProvider
   }
 }
 
-String _$dlqCountHash() => r'b3967a7f8010c533123a3aa81d49627ef15879e5';
+String _$dlqCountHash() => r'e5724e56589ecd0d50f9ed7ba686bdd60adbd75b';
 
 @ProviderFor(pendingSyncCount)
 final pendingSyncCountProvider = PendingSyncCountProvider._();
@@ -157,13 +157,12 @@ final class PendingSyncCountProvider
   }
 }
 
-String _$pendingSyncCountHash() => r'23f39f5a217e42ffb62162c91bf5c3e426a91a39';
+String _$pendingSyncCountHash() => r'c7e9f0e3132a4c36c0fab34b69741c326ca66480';
 
-@ProviderFor(syncManager)
+@ProviderFor(SyncManager)
 final syncManagerProvider = SyncManagerProvider._();
 
-final class SyncManagerProvider extends $FunctionalProvider<void, void, void>
-    with $Provider<void> {
+final class SyncManagerProvider extends $NotifierProvider<SyncManager, bool> {
   SyncManagerProvider._()
       : super(
           from: null,
@@ -180,21 +179,27 @@ final class SyncManagerProvider extends $FunctionalProvider<void, void, void>
 
   @$internal
   @override
-  $ProviderElement<void> $createElement($ProviderPointer pointer) =>
-      $ProviderElement(pointer);
-
-  @override
-  void create(Ref ref) {
-    return syncManager(ref);
-  }
+  SyncManager create() => SyncManager();
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(void value) {
+  Override overrideWithValue(bool value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<void>(value),
+      providerOverride: $SyncValueProvider<bool>(value),
     );
   }
 }
 
-String _$syncManagerHash() => r'e6a3b62434545801a009dd10bcec78ad9c8e4f11';
+String _$syncManagerHash() => r'f74ae7b420cc731a0eecfecf18714204e8455058';
+
+abstract class _$SyncManager extends $Notifier<bool> {
+  bool build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<bool, bool>;
+    final element = ref.element as $ClassProviderElement<
+        AnyNotifier<bool, bool>, bool, Object?, Object?>;
+    element.handleCreate(ref, build);
+  }
+}

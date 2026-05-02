@@ -94,7 +94,7 @@ class _FastingTimerScreenState extends ConsumerState<FastingTimerScreen> {
     final stageColor = _stageColor(stage);
 
     final activeFestivals =
-        ref.watch(activeFestivalsProvider).valueOrNull ?? [];
+        ref.watch(activeFestivalsProvider).asData?.value ?? [];
 
     return Scaffold(
       backgroundColor: isDark ? AppColorsDark.bg0 : AppColorsLight.bg0,

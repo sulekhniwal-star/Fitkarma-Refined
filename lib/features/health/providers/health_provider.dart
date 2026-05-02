@@ -1,4 +1,5 @@
 import 'package:drift/drift.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
 import '../../../core/database/app_database.dart';
@@ -214,20 +215,14 @@ Stream<List<SleepLog>> sleepHistory(Ref ref, int days) {
 }
 
 @riverpod
-double sleepDebt(Ref ref) {
-  final historyAsync = ref.watch(sleepHistoryProvider(7));
+Future<double> sleepDebt(Ref ref) async {
+  final logs = await ref.watch(sleepHistoryProvider(7).future);
   
-  return historyAsync.when(
-    data: (logs) {
-      if (logs.isEmpty) return 0.0;
-      // Target: 7 hours (420 minutes) per day
-      const targetMin = 420;
-      final totalMinutes = logs.fold(0, (sum, log) => sum + log.durationMinutes);
-      final expectedMinutes = targetMin * 7;
-      
-      return (expectedMinutes - totalMinutes) / 60.0; // In hours
-    },
-    loading: () => 0.0,
-    error: (_, __) => 0.0,
-  );
+  if (logs.isEmpty) return 0.0;
+  // Target: 7 hours (420 minutes) per day
+  const targetMin = 420;
+  final totalMinutes = logs.fold(0, (sum, log) => sum + log.durationMinutes);
+  final expectedMinutes = targetMin * 7;
+  
+  return (expectedMinutes - totalMinutes) / 60.0; // In hours
 }

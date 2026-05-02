@@ -117,10 +117,10 @@ class HabitNotifier extends _$HabitNotifier {
 }
 
 @riverpod
-Stream<List<Habit>> todayHabits(Ref ref) {
+Future<List<Habit>> todayHabits(Ref ref) async {
   final authState = ref.watch(authProvider);
   final user = authState.asData?.value;
-  if (user == null) return Stream.value([]);
+  if (user == null) return [];
 
-  return ref.watch(appDatabaseProvider).watchAllHabits(user.$id);
+  return ref.watch(appDatabaseProvider).watchAllHabits(user.$id).first;
 }

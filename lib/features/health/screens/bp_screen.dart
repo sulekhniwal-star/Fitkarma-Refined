@@ -68,7 +68,7 @@ class _BPScreenState extends ConsumerState<BPScreen> {
     final latestAsync = ref.watch(latestBpReadingProvider);
     final historyAsync = ref.watch(bPNotifierProvider);
 
-    final latest = latestAsync.valueOrNull;
+    final latest = latestAsync.asData?.value;
     final aha = latest != null
         ? _ahaClassify(latest.systolic, latest.diastolic)
         : null;

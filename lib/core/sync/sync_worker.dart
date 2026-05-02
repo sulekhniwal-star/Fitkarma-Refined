@@ -2,7 +2,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:drift/drift.dart';
 import '../providers/core_providers.dart';
-import '../../features/food/providers/food_provider.dart';
+import '../../features/food/repositories/food_repository.dart';
 import '../../features/health/repositories/health_repository.dart';
 
 part 'sync_worker.g.dart';
@@ -10,13 +10,17 @@ part 'sync_worker.g.dart';
 @riverpod
 class SyncWorker extends _$SyncWorker {
   @override
-  void build() {}
+  bool build() => false;
 
   Future<void> syncPending() async {
     final db = ref.read(appDatabaseProvider);
+    final foodRepository = FoodRepository(
+      db,
+      ref.read(appwriteTablesDBProvider),
+    );
     
     // Iterate through all tables that support sync
-    await _syncTable(db.foodLogs, (id) => ref.read(foodRepositoryProvider).pushToRemote(id));
+    await _syncTable(db.foodLogs, foodRepository.pushToRemote);
     await _syncTable(db.bpReadings, (id) => ref.read(healthRepositoryProvider).pushBpToRemote(id));
     await _syncTable(db.glucoseReadings, (id) => ref.read(healthRepositoryProvider).pushGlucoseToRemote(id));
     await _syncTable(db.spo2Readings, (id) => ref.read(healthRepositoryProvider).pushSpo2ToRemote(id));
@@ -53,19 +57,19 @@ Future<int> dlqCount(Ref ref) async {
   int count = 0;
   
   final foodLogsDLQ = await db.getDLQRecords(db.foodLogs);
-  count += foodLogsDLQ.length.toInt();
+  count += foodLogsDLQ.length;
   
   final bpReadingsDLQ = await db.getDLQRecords(db.bpReadings);
-  count += bpReadingsDLQ.length.toInt();
+  count += bpReadingsDLQ.length;
   
   final glucoseReadingsDLQ = await db.getDLQRecords(db.glucoseReadings);
-  count += glucoseReadingsDLQ.length.toInt();
+  count += glucoseReadingsDLQ.length;
   
   final spo2ReadingsDLQ = await db.getDLQRecords(db.spo2Readings);
-  count += spo2ReadingsDLQ.length.toInt();
+  count += spo2ReadingsDLQ.length;
   
   final sleepLogsDLQ = await db.getDLQRecords(db.sleepLogs);
-  count += sleepLogsDLQ.length.toInt();
+  count += sleepLogsDLQ.length;
   
   return count;
 }
@@ -76,30 +80,35 @@ Future<int> pendingSyncCount(Ref ref) async {
   int count = 0;
   
   final foodLogsPending = await db.getPendingRecords(db.foodLogs);
-  count += foodLogsPending.length.toInt();
+  count += foodLogsPending.length;
   
   final bpReadingsPending = await db.getPendingRecords(db.bpReadings);
-  count += bpReadingsPending.length.toInt();
+  count += bpReadingsPending.length;
   
   final glucoseReadingsPending = await db.getPendingRecords(db.glucoseReadings);
-  count += glucoseReadingsPending.length.toInt();
+  count += glucoseReadingsPending.length;
   
   final spo2ReadingsPending = await db.getPendingRecords(db.spo2Readings);
-  count += spo2ReadingsPending.length.toInt();
+  count += spo2ReadingsPending.length;
   
   final sleepLogsPending = await db.getPendingRecords(db.sleepLogs);
-  count += sleepLogsPending.length.toInt();
+  count += sleepLogsPending.length;
   
   return count;
 }
 
 @riverpod
-void syncManager(Ref ref) {
-  final connectivity = ref.watch(connectivityStreamProvider);
-  
-  connectivity.whenData((status) {
-    if (status != ConnectivityResult.none) {
-      ref.read(syncWorkerProvider.notifier).syncPending();
-    }
-  });
+class SyncManager extends _$SyncManager {
+  @override
+  bool build() {
+    final connectivity = ref.watch(connectivityStreamProvider);
+    
+    connectivity.whenData((status) {
+      if (status != ConnectivityResult.none) {
+        ref.read(syncWorkerProvider.notifier).syncPending();
+      }
+    });
+
+    return false;
+  }
 }

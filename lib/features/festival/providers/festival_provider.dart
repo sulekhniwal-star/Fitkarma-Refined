@@ -35,7 +35,7 @@ class UserFestivalFilter extends _$UserFestivalFilter {
 }
 
 @riverpod
-Future<Map<String, dynamic>?> festivalDietPlan(Ref ref, String festivalId) async {
+Future<Map<String, Object?>?> festivalDietPlan(Ref ref, String festivalId) async {
   final db = ref.watch(appDatabaseProvider);
   final festival = await db.getFestivalByKey(festivalId);
   if (festival?.dietPlanJson == null) return null;
@@ -48,8 +48,8 @@ Future<Map<String, dynamic>?> festivalDietPlan(Ref ref, String festivalId) async
 }
 
 @riverpod
-List<Festival> filteredActiveFestivals(Ref ref) {
-  final festivals = ref.watch(activeFestivalsProvider).asData?.value ?? [];
+Future<List<Festival>> filteredActiveFestivals(Ref ref) async {
+  final festivals = await ref.watch(activeFestivalsProvider.future);
   final filters = ref.watch(userFestivalFilterProvider);
   
   return festivals.where((f) {

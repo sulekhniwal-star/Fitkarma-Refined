@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:drift/drift.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
 import '../../../core/database/app_database.dart';
@@ -11,7 +13,7 @@ part 'report_provider.g.dart';
 @riverpod
 class LabReportNotifier extends _$LabReportNotifier {
   @override
-  void build() {}
+  bool build() => false;
 
   Future<String> uploadFile(File file) async {
     // In a real app, use ref.read(appwriteStorageProvider).createFile(...)
@@ -61,8 +63,8 @@ Future<String> shareLink(Ref ref, String reportId) async {
 }
 
 @riverpod
-Map<String, dynamic> healthReport(Ref ref, String period) {
-  final steps = ref.watch(stepsProvider).asData?.value ?? 0;
+Future<Map<String, Object?>> healthReport(Ref ref, String period) async {
+  final steps = await ref.watch(stepsProvider.future);
   
   return {
     'period': period,

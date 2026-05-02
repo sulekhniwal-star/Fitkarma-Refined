@@ -93,7 +93,7 @@ class _JournalScreenState extends ConsumerState<JournalScreen> {
 
     final prompt = ref.watch(journalPromptProvider);
     final entriesAsync = ref.watch(journalNotifierProvider);
-    final entries = entriesAsync.valueOrNull ?? [];
+    final entries = entriesAsync.asData?.value ?? [];
     final showSentiment = entries.length >= 30;
 
     return Scaffold(

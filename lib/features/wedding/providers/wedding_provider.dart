@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:drift/drift.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
 import '../../../core/database/app_database.dart';
@@ -69,31 +70,25 @@ Stream<WeddingPlan?> activeWeddingPlan(Ref ref) {
 }
 
 @riverpod
-String weddingPhase(Ref ref) {
-  final planAsync = ref.watch(activeWeddingPlanProvider);
+Future<String> weddingPhase(Ref ref) async {
+  final plan = await ref.watch(activeWeddingPlanProvider.future);
   
-  return planAsync.when(
-    data: (plan) {
-      if (plan == null) return 'none';
-      
-      final now = DateTime.now();
-      if (now.isBefore(plan.firstEventTs)) {
-        final daysToWedding = plan.firstEventTs.difference(now).inDays;
-        if (daysToWedding <= 7) return 'wedding_week';
-        return 'prep';
-      } else if (now.isAfter(plan.lastEventTs)) {
-        return 'post_wedding';
-      } else {
-        return 'active_wedding';
-      }
-    },
-    loading: () => 'loading',
-    error: (_, __) => 'error',
-  );
+  if (plan == null) return 'none';
+  
+  final now = DateTime.now();
+  if (now.isBefore(plan.firstEventTs)) {
+    final daysToWedding = plan.firstEventTs.difference(now).inDays;
+    if (daysToWedding <= 7) return 'wedding_week';
+    return 'prep';
+  } else if (now.isAfter(plan.lastEventTs)) {
+    return 'post_wedding';
+  } else {
+    return 'active_wedding';
+  }
 }
 
 @riverpod
-Map<String, dynamic> weddingEventDiet(Ref ref, String eventKey) {
+Future<Map<String, Object?>> weddingEventDiet(Ref ref, String eventKey) async {
   // Logic for specific wedding events
   switch (eventKey.toLowerCase()) {
     case 'haldi':
